@@ -196,6 +196,9 @@ enum class TriggerType : uint8_t {
                                  // ability's Energy cost rides in triggering_spell_energy_spent
     WhenIBecomeExhausted,        // "When I become exhausted," — any ready -> exhausted change
                                  // announced as ObjectStateChangedEvent "exhausted"
+    WhenAnotherFriendlyUnitBecomesExhausted, // "When another friendly unit becomes exhausted,"
+                                 // — fires on the controller's other on-board cards;
+                                 // triggering_subject = the exhausted unit
     WhenFirstPlayHereEachTurn,   // battlefield: "the first time [a player] plays a unit or
                                  // gear here each turn" — fired for the playing player
 };
@@ -292,6 +295,8 @@ struct ActivationCost {
     // gear"): 0 = any card, else 1 + static_cast<int>(CardType).
     int discard_type_filter = 0;
     bool kill_friendly_unit = false; // "Kill a friendly unit" as a cost (Escaped Grayback)
+    bool exhaust_friendly_unit = false; // "Exhaust a friendly unit" as a cost (Riven, Deserter);
+                                        // the unit rides in the intent's targets[0]
 };
 
 // ─── Complete effect script ─────────────────────────────────────────────────

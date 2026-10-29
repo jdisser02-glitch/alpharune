@@ -967,6 +967,7 @@ void register_card_966(CardRegistry&);
 void register_card_967(CardRegistry&);
 void register_card_968(CardRegistry&);
 void register_card_969(CardRegistry&);
+void register_card_970(CardRegistry&);
 
 void registerAllCards(CardRegistry& registry) {
     register_card_1(registry);
@@ -1933,6 +1934,7 @@ void registerAllCards(CardRegistry& registry) {
     register_card_967(registry);
     register_card_968(registry);
     register_card_969(registry);
+    register_card_970(registry);
 }
 
 } // namespace riftbound

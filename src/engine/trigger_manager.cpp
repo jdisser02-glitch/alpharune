@@ -1130,6 +1130,19 @@ void TriggerManager::onObjectStateChanged(const ObjectStateChangedEvent& e) {
         if (xobj.card_def_id != kInvalidId && xobj.location.has_value() &&
             cardFiresOn(card_registry_, xobj.card_def_id, TriggerType::WhenIBecomeExhausted))
             fireTrigger(e.object, controller, 0, TriggerType::WhenIBecomeExhausted);
+        if (xobj.isUnit() && xobj.location.has_value()) {
+            std::vector<GameObjectId> watchers;
+            for (auto& [id, obj] : state_.objects) {
+                if (id == e.object || obj.controller != controller || !obj.location.has_value()) continue;
+                if (obj.card_def_id == kInvalidId) continue;
+                if (cardFiresOn(card_registry_, obj.card_def_id,
+                                TriggerType::WhenAnotherFriendlyUnitBecomesExhausted))
+                    watchers.push_back(id);
+            }
+            for (auto wid : watchers)
+                fireTrigger(wid, controller, 0, TriggerType::WhenAnotherFriendlyUnitBecomesExhausted,
+                            /*subject=*/e.object);
+        }
         return;
     }
 

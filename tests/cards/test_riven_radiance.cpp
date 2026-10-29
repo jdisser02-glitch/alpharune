@@ -19,6 +19,7 @@ constexpr CardDefId kRivenBrokenBlade = 963;
 constexpr CardDefId kStranger         = 964;
 constexpr CardDefId kInnovator        = 965;
 constexpr CardDefId kHuntersCircle    = 966;
+constexpr CardDefId kRivenDeserter    = 970;
 constexpr CardDefId kOtterpus         = 840;  // 2-energy 2-Might unit, no play or exhaust text
 
 /// Answers yes/no and mode prompts from a queue of int answers, picks `want`
@@ -460,6 +461,45 @@ TEST_F(RivenRadianceTest, HuntersCircle_NoDiscountOnTheOpponentsTurn) {
     EXPECT_EQ(hc->playCostReductionHere(s(), s().battlefields[0], P1, s().getObject(unit)), 0);
     s().turn.turn_player = P1;
     EXPECT_EQ(hc->playCostReductionHere(s(), s().battlefields[0], P1, s().getObject(unit)), 1);
+}
+
+// ─── RAD-114 Riven, Deserter ────────────────────────────────────────────────
+
+TEST_F(RivenRadianceTest, Deserter_GainsMightWhenAnotherFriendlyUnitExhausts) {
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    auto deserter = boardObject(P1, kRivenDeserter);
+    auto other = boardObject(P1, kOtterpus);
+    moveToBf1(other);
+    EXPECT_EQ(s().getObject(deserter).current_might, 6) << "5 + 1 this turn";
+}
+
+TEST_F(RivenRadianceTest, Deserter_ExhaustAFriendlyUnitToReadyAUnitOncePerTurn) {
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    auto deserter = boardObject(P1, kRivenDeserter);
+    auto payer = boardObject(P1, kOtterpus);
+    auto tired = boardObject(P1, kOtterpus);
+    s().getObject(tired).is_exhausted = true;
+    p1_.want = tired;
+    auto activations = [&] {
+        int n = 0;
+        for (const auto& a : engine_->generateLegalActions())
+            if (a.type == IntentType::ActivateAbility && a.ability_source == deserter) ++n;
+        return n;
+    };
+    EXPECT_EQ(activations(), 2) << "the Deserter or the ready Otterpus can pay";
+    Intent act;
+    act.type = IntentType::ActivateAbility;
+    act.player = P1;
+    act.ability_source = deserter;
+    act.targets = {payer};
+    engine_->testHook_executeIntent(act);
+    engine_->testHook_runChain();
+    EXPECT_TRUE(s().getObject(payer).is_exhausted) << "the cost";
+    EXPECT_FALSE(s().getObject(tired).is_exhausted) << "readied";
+    EXPECT_EQ(s().getObject(deserter).current_might, 6) << "the payer exhausting also triggers +1";
+    EXPECT_EQ(activations(), 0) << "once each turn";
 }
 
 }  // namespace

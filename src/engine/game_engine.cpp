@@ -1452,6 +1452,10 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
     // "Disempower this," as a cost (Questionable Tome, Hextech Disc, ...).
     if (act_cost.disempower_self)
         effect_executor_->disempower(intent.ability_source);
+    // "Exhaust a friendly unit" as a cost: the chosen unit rides in targets.
+    if (act_cost.exhaust_friendly_unit && !intent.targets.empty() &&
+        state_.objectExists(intent.targets[0]))
+        effect_executor_->exhaustObject(intent.targets[0]);
     // "Kill a friendly unit" as a cost: the chosen unit rides in targets.
     if (act_cost.kill_friendly_unit && !intent.targets.empty() &&
         state_.objectExists(intent.targets[0]))
