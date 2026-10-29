@@ -184,6 +184,8 @@ def validate(deck: dict, reg: Registry) -> list[str]:
             if not c:
                 continue
             copies[c["name"]] += k
+            if c.get("banned"):
+                errors.append(f"{s}: '{n}' is banned")
             if legend and c["domains"] and not set(c["domains"]) <= domains:
                 errors.append(f"{s}: '{n}' is outside the legend's domains {sorted(domains)}")
             if c.get("super_type") == "signature":
@@ -197,6 +199,8 @@ def validate(deck: dict, reg: Registry) -> list[str]:
         errors.append(f"too many signature cards: {sig} (max 3)")
     for n, k in deck["battlefields"].items():
         c = card(n, "battlefields")
+        if c and c.get("banned"):
+            errors.append(f"battlefields: '{n}' is banned")
         if c and c["card_type"] != "battlefield":
             errors.append(f"battlefield slot holds a {c['card_type']}: {n}")
     for n, k in deck["runes"].items():

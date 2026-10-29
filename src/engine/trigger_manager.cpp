@@ -23,6 +23,8 @@ void TriggerManager::subscribe() {
         [this](const CombatEndedEvent& e) { onCombatEnded(e); }));
     connections_.push_back(events_.on_unit_died.connect(
         [this](const UnitDiedEvent& e) { onUnitDied(e); }));
+    connections_.push_back(events_.on_left_board.connect(
+        [this](const LeftBoardEvent& e) { onLeftBoard(e); }));
     connections_.push_back(events_.on_score.connect(
         [this](const ScoreEvent& e) { onScore(e); }));
     connections_.push_back(events_.on_unit_moved.connect(
@@ -602,6 +604,23 @@ void TriggerManager::onCombatEnded(const CombatEndedEvent& e) {
     }
 }
 
+void TriggerManager::onLeftBoard(const LeftBoardEvent& e) {
+    // A gear's own "When this dies" (units go through onUnitDied). Gear killed
+    // by an effect, a [Deploy] hold kill or a kill cost all land here.
+    if (e.card_type != CardType::Gear || !e.was_killed) return;
+    if (!state_.objectExists(e.object)) return;
+    auto& obj = state_.getObject(e.object);
+    // "If a friendly gear died this turn" (turn_number + 1; 0 = never).
+    obj.card_counters["__died_turn"] = state_.turn.turn_number + 1;
+    if (obj.card_def_id == kInvalidId ||
+        !cardFiresOn(card_registry_, obj.card_def_id, TriggerType::WhenIDie))
+        return;
+    events_.logTrace("GEAR DIES: " + obj.name + " -> its death ability triggers");
+    chain_.addAbility(e.object, e.controller, obj.card_def_id);
+    if (!state_.chain.items.empty())
+        state_.chain.items.back().fired_trigger = TriggerType::WhenIDie;
+}
+
 void TriggerManager::onUnitDied(const UnitDiedEvent& e) {
     // "When an enemy unit here dies," — watchers at the location it died at.
     {
@@ -791,19 +810,22 @@ void TriggerManager::onScore(const ScoreEvent& e) {
         }
     }
 
-    // "When you conquer here" on the scorer's unattached gear at that
-    // battlefield ([Deploy] gear such as Concert Poster).
-    if (e.method == ScoreMethod::Conquer) {
+    // "When you conquer here" / "When you hold here" on the scorer's
+    // unattached gear at that battlefield ([Deploy] gear such as Concert
+    // Poster or Dockside Lock-Up).
+    {
+        const TriggerType here_trigger = e.method == ScoreMethod::Conquer
+            ? TriggerType::WhenYouConquerHere : TriggerType::WhenYouHoldHere;
         std::vector<GameObjectId> gear_watchers;
         for (auto& [id, obj] : state_.objects) {
             if (!obj.isGear() || obj.controller != e.player || obj.attached_to.has_value()) continue;
             if (obj.battlefieldId() != std::optional<BattlefieldId>{e.battlefield}) continue;
             if (obj.card_def_id != kInvalidId &&
-                cardFiresOn(card_registry_, obj.card_def_id, TriggerType::WhenYouConquerHere))
+                cardFiresOn(card_registry_, obj.card_def_id, here_trigger))
                 gear_watchers.push_back(id);
         }
         for (auto gid : gear_watchers)
-            fireTrigger(gid, e.player, 0, TriggerType::WhenYouConquerHere);
+            fireTrigger(gid, e.player, 0, here_trigger);
     }
 
     // Battlefield triggers

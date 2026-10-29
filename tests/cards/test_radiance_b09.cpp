@@ -375,10 +375,10 @@ TEST_F(RadianceB09Test, LockUp_BanishesAUnitHereThenHoldPlaysItForYou) {
     engine_->testHook_runChain();
     EXPECT_TRUE(p1_.int_prompts.empty());
 
-    // Held here this turn: kill this to play the banished card.
-    s().player(P1).battlefields_scored_this_turn.insert(0);
+    // Held here: kill this to play the banished card.
+    s().battlefields[0].controller = P1;
     p1_.answers = {1, 0};   // yes; play it to base
-    events.emit(PhaseChangedEvent{TurnPhase::DrawPhase, TurnPhase::MainPhase, P1});
+    engine_->testHook_scoreHold(P1, 0);
     engine_->testHook_runChain();
     EXPECT_EQ(s().getObject(lockup).zone, ZoneType::Trash) << "the cost: kill this";
     const auto& u = s().getObject(enemy);

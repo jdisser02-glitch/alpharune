@@ -17,26 +17,12 @@ public:
     const CardDef& def() const override { return def_; }
     bool deploys() const override { return true; }
 
-    // [Deploy] is engine-handled through deploys().
-    // "While you or an ally control this battlefield, that player may hide an
-    //  additional card here."
-    // Raises the battlefield's facedown capacity by one per Bushwhack Trap
-    // there whose controller controls the battlefield (only the battlefield's
-    // controller may hide there, so the extra slot is theirs; 1v1 has no
-    // allies). The amount this card family added is remembered on the
-    // battlefield's card object so each aura pass replaces it rather than
-    // adding again: "__bwt_added" (slots added) and "__bwt_written" (the
-    // capacity last written). If the capacity was changed by anything else
-    // since (an engine reset, another card), that value is taken as the base.
-    //
-    // ENGINE-GAP: recalculateAuras never resets
-    // BattlefieldState::facedown_max_occupancy, and a card's passive aura runs
-    // only while it is on the board. So the extra slot is withdrawn when the
-    // controller loses the battlefield (the trap is still there to run), but
-    // lingers after the last Bushwhack Trap leaves the board until another
-    // one's aura runs. Adding `bf.facedown_max_occupancy = 1;` to the per-BF
-    // reset in recalculateAuras fixes that, and this logic keeps working with
-    // it (Bandle Tree re-raises its own each pass).
+    // Facedown capacity is reset to 1 on every aura pass (recalculateAuras);
+    // Bandle Tree (273) raises its own battlefield to 2. This aura can run
+    // once per trap and in any order with Bandle Tree's, so it writes the
+    // whole capacity rather than adding to it: 1, +1 on Bandle Tree, +1 per
+    // trap whose controller controls the battlefield.
+    static constexpr CardDefId kBandleTreeId_1060 = 273;
     void applyPassiveAura(GameState& state, PlayerId /*controller*/) const override {
         for (auto& bf : state.battlefields) {
             if (!state.objectExists(bf.card_object_id)) continue;
@@ -46,17 +32,9 @@ public:
                 if (obj.battlefieldId() != std::optional<BattlefieldId>{bf.id}) continue;
                 if (bf.controller == std::optional<PlayerId>{obj.controller}) ++n;
             }
-            auto& counters = state.getObject(bf.card_object_id).card_counters;
-            auto wit = counters.find("__bwt_written");
-            auto ait = counters.find("__bwt_added");
-            const int written = wit != counters.end() ? wit->second : 0;
-            const int added = ait != counters.end() ? ait->second : 0;
-            if (n == 0 && added == 0) continue;
-            const int base = (written > 0 && bf.facedown_max_occupancy == written)
-                ? written - added : bf.facedown_max_occupancy;
-            bf.facedown_max_occupancy = std::max(1, base + n);
-            counters["__bwt_added"] = n;
-            counters["__bwt_written"] = bf.facedown_max_occupancy;
+            if (n == 0) continue;
+            const bool bandle = state.getObject(bf.card_object_id).card_def_id == kBandleTreeId_1060;
+            bf.facedown_max_occupancy = std::max(bf.facedown_max_occupancy, 1 + (bandle ? 1 : 0) + n);
         }
     }
 private:

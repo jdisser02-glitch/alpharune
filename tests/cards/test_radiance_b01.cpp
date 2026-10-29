@@ -520,9 +520,7 @@ TEST_F(RadianceB01Test, Ziggs_FriendlyGearAbilitiesDealOneBonusDamage) {
     EXPECT_EQ(s().getObject(bomb).spell_bonus_damage, 1);
     p1_.want = enemy;
     auto& ex = engine_->testHook_executor();
-    ex.killObject(bomb);
-    // The engine has no gear death dispatch: queue the Bomb's death ability.
-    ex.queueTriggeredAbility(bomb, P1, TriggerType::WhenIDie);
+    ex.killObject(bomb);   // the engine triggers the gear's death ability
     engine_->testHook_runChain();
     EXPECT_EQ(s().getObject(enemy).damage_marked, 3) << "2 + 1 Bonus Damage from Ziggs";
 }
@@ -548,7 +546,6 @@ TEST_F(RadianceB01Test, Bomb_WithoutZiggsDealsTwo) {
     p1_.want = enemy;
     auto& ex = engine_->testHook_executor();
     ex.killObject(bomb);
-    ex.queueTriggeredAbility(bomb, P1, TriggerType::WhenIDie);
     engine_->testHook_runChain();
     EXPECT_EQ(s().getObject(enemy).damage_marked, 2);
 }

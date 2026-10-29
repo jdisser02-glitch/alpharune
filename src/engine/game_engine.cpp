@@ -4508,6 +4508,10 @@ bool GameEngine::canGainWinningPointViaConquer(PlayerId player) const {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 void GameEngine::recalculateAuras() {
+    // Facedown capacity: 1 per battlefield (CR 811), raised again below by
+    // the cards that grant more (Bandle Tree, Bushwhack Trap).
+    for (auto& bf : state_.battlefields) bf.facedown_max_occupancy = 1;
+
     // Step 1: Clear all aura effects from all objects
     for (auto& [id, obj] : state_.objects) {
         obj.aura_effects.clear();

@@ -31,14 +31,9 @@ public:
     //    here (then "one of them" is that unit). An attack here by two or more
     //    friendly units gives nothing until the engine announces combat starts
     //    to [Deploy] gear (as it does conquers, WhenYouConquerHere).
-    //  * Hold: "When you hold here" is dispatched to battlefield cards only.
-    //    Holds are scored in the Beginning Phase, so at the start of the
-    //    controller's Main Phase the gear asks whether its battlefield was
-    //    scored this turn (PlayerState::battlefields_scored_this_turn — the
-    //    engine announces a hold only when it is scored) and then offers the
-    //    return to hand.
+    //  * Hold: "When you hold here" reaches gear at the scored battlefield.
     std::vector<TriggerType> triggerTypes() const override {
-        return {TriggerType::WhenAUnitAttacksOrDefendsAlone, TriggerType::AtStartOfMain};
+        return {TriggerType::WhenAUnitAttacksOrDefendsAlone, TriggerType::WhenYouHoldHere};
     }
 
     bool triggerCondition(const GameState& state, GameObjectId source, PlayerId controller,
@@ -54,8 +49,7 @@ public:
             return u.isUnit() && u.controller == controller &&
                    u.combat_designation == CombatDesignation::Attacker && u.battlefieldId() == here;
         }
-        if (trigger == TriggerType::AtStartOfMain)
-            return state.player(controller).battlefields_scored_this_turn.count(*here) > 0;
+        if (trigger == TriggerType::WhenYouHoldHere) return true;
         return false;
     }
 
@@ -71,7 +65,7 @@ public:
             ctx.events.logTrace("DEMACIAN STANDARD: " + u.name + " attacks here -> +2 [M] this turn");
             return;
         }
-        if (ctx.firing_trigger == TriggerType::AtStartOfMain) {
+        if (ctx.firing_trigger == TriggerType::WhenYouHoldHere) {
             auto here_ok = [&]() {
                 return ctx.state.objectExists(ctx.source) &&
                        ctx.state.getObject(ctx.source).location.has_value();

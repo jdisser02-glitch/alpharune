@@ -415,10 +415,8 @@ TEST_F(RadianceB11Test, DemacianStandard_AfterHoldingHereMayReturnToHand) {
     setLegend(P1); setLegend(P2);
     auto gear = boardObject(P1, kStandard, 0);
     controlBf(0, P1);
-    engine_->testHook_scoreHold(P1, 0);
-    engine_->testHook_runChain();
     p1_.answers = {1};
-    events.emit(PhaseChangedEvent{TurnPhase::ScoringStep, TurnPhase::MainPhase, P1});
+    engine_->testHook_scoreHold(P1, 0);   // "When you hold here" reaches the gear
     engine_->testHook_runChain();
     EXPECT_TRUE(inHand(P1, gear));
     EXPECT_FALSE(s().getObject(gear).location.has_value());

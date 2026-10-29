@@ -87,6 +87,7 @@ private:
     /// Fires WhenIDie/Deathknell for the dying unit.
     /// Also fires WhenAFriendlyUnitDies for other objects the controller owns.
     void onUnitDied(const UnitDiedEvent& e);
+    void onLeftBoard(const LeftBoardEvent& e);
 
     /// Fires WhenIConquer, WhenIHold, WhenIConquerOrHold for units at the BF.
     /// Also fires WhenYouConquerHere, WhenYouHoldHere for the battlefield card.

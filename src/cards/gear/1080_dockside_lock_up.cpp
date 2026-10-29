@@ -28,32 +28,22 @@ public:
     //  a battlefield you control (CR 355.2.a). "Kill this" is the cost, paid
     //  as the ability is finalized; it is optional ([cost] to [effect]).
     //
-    // APPROXIMATION (engine gap): TriggerManager fires WhenYouHoldHere only on
-    // battlefield cards, not on gear at the battlefield (it does for
-    // WhenYouConquerHere). The hold ability is put on the chain at the start
-    // of your Main Phase instead (AtStartOfMain) if you scored this
-    // battlefield earlier this turn — before the Main Phase that can only be
-    // the Scoring Step's hold.
     static constexpr int kAwaitLocation = 20;
     static constexpr int kDone = 21;
     static constexpr const char* kCardKey = "__dlu_card";
 
     std::vector<TriggerType> triggerTypes() const override {
-        return {TriggerType::WhenYouPlayThis, TriggerType::AtStartOfMain};
+        return {TriggerType::WhenYouPlayThis, TriggerType::WhenYouHoldHere};
     }
-    bool triggerCondition(const GameState& state, GameObjectId source, PlayerId controller,
+    bool triggerCondition(const GameState& state, GameObjectId source, PlayerId /*controller*/,
                           TriggerType trigger, GameObjectId /*subject*/) const override {
-        if (trigger != TriggerType::AtStartOfMain) return true;
+        if (trigger != TriggerType::WhenYouHoldHere) return true;
         if (!state.objectExists(source)) return false;
-        const auto& self = state.getObject(source);
-        const auto here = self.battlefieldId();
-        if (!here.has_value()) return false;
-        if (!state.player(controller).battlefields_scored_this_turn.count(*here)) return false;
-        return banishedCard(state, self) != kInvalidId;
+        return banishedCard(state, state.getObject(source)) != kInvalidId;
     }
 
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
-        if (ctx.firing_trigger == TriggerType::AtStartOfMain) { holdHere(ctx); return; }
+        if (ctx.firing_trigger == TriggerType::WhenYouHoldHere) { holdHere(ctx); return; }
 
         // When you play this: banish a unit here.
         std::vector<GameObjectId> here_units;

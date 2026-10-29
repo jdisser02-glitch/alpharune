@@ -23,23 +23,10 @@ public:
     // "When you play this, discard 1, then draw 3."
     // "When you hold here, return this to its owner's hand."
     //
-    // ENGINE-GAP: TriggerManager::onScore fires "When you conquer here" on the
-    // scorer's unattached gear at the scored battlefield, but "When you hold
-    // here" only on battlefield cards. The card registers WhenYouHoldHere (so
-    // it works as printed once the engine dispatches it to gear) and, as a
-    // fallback, AtStartOfMain: if its controller scored its battlefield
-    // earlier this turn — before the Main Phase that can only be a hold — it
-    // returns then. So the return happens at the start of the Main Phase
-    // rather than in the Scoring step. (Once the gear is back in hand the
-    // fallback cannot fire, so the two never both return it.)
+    // "When you hold here" reaches gear at the scored battlefield
+    // (TriggerManager::onScore).
     std::vector<TriggerType> triggerTypes() const override {
-        return {TriggerType::WhenYouPlayThis, TriggerType::WhenYouHoldHere,
-                TriggerType::AtStartOfMain};
-    }
-    bool triggerCondition(const GameState& state, GameObjectId source, PlayerId controller,
-                          TriggerType trigger, GameObjectId /*subject*/) const override {
-        if (trigger != TriggerType::AtStartOfMain) return true;
-        return heldHereThisTurn(state, source, controller);
+        return {TriggerType::WhenYouPlayThis, TriggerType::WhenYouHoldHere};
     }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
         if (ctx.firing_trigger == TriggerType::WhenYouPlayThis) {
@@ -50,21 +37,12 @@ public:
                               });
             return;
         }
-        if (ctx.firing_trigger == TriggerType::AtStartOfMain &&
-            !heldHereThisTurn(ctx.state, ctx.source, ctx.controller))
-            return;
         if (!ctx.state.objectExists(ctx.source)) return;
         if (!ctx.state.getObject(ctx.source).location.has_value()) return;
         ctx.executor.bounceToHand(ctx.source);
         ctx.events.logTrace("THE GOOD STUFF: you held here -> returned to its owner's hand");
     }
 private:
-    static bool heldHereThisTurn(const GameState& state, GameObjectId source, PlayerId controller) {
-        if (!state.objectExists(source)) return false;
-        const auto here = state.getObject(source).battlefieldId();
-        if (!here.has_value()) return false;
-        return state.player(controller).battlefields_scored_this_turn.count(*here) > 0;
-    }
     const CardDef def_ = [] {
         CardDef d;
         d.id = 1059;
