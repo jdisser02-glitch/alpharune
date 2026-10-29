@@ -3,7 +3,9 @@
 
    frame: one replay frame from the engine ({board:{players, battlefields, chain, phase, turn, turn_player}, ...});
           an optional frame.legal = [{index, text, card?, battlefield?}] highlights playable cards / destinations
-          and renders a clickable list (opts.onPick(index, entry)).
+          and renders a clickable list (opts.onPick(index, entry));
+          an optional frame.focus = [{card?, battlefield?}] marks cards / battlefields with a soft ring (the move being
+          looked at in a replay) — no list, no click, independent of frame.legal.
    opts:  cards      array (or Map) of card records {id, name, image_url, type, energy, power, might, domains, super, tags}
           viewer     1 | 2  seat drawn at the bottom (default 1)
           hands      "both" | "viewer"  whether the opponent's hand is face up (default "both")
@@ -62,14 +64,22 @@
 
   // ── legal-action helpers ───────────────────────────────────────────────────
   function legalIndex(frame) {
-    const L = { cards: new Map(), bfs: new Map(), any: Array.isArray(frame.legal) && frame.legal.length > 0 };
-    for (const e of frame.legal || []) {
-      const add = (m, k) => { if (k == null) return; k = String(k).toLowerCase(); if (!m.has(k)) m.set(k, e); };
-      if (e.card != null) { add(L.cards, e.card); if (typeof e.card === "object") { add(L.cards, e.card.name); add(L.cards, e.card.id); } }
-      if (e.battlefield != null) { add(L.bfs, e.battlefield); if (typeof e.battlefield === "object") { add(L.bfs, e.battlefield.name); add(L.bfs, e.battlefield.index); } }
-    }
+    const legal = Array.isArray(frame.legal) ? frame.legal : [], focus = Array.isArray(frame.focus) ? frame.focus : [];
+    const L = { cards: new Map(), bfs: new Map(), fcards: new Map(), fbfs: new Map(), any: legal.length > 0 || focus.length > 0 };
+    const fill = (list, cards, bfs) => {
+      for (const e of list) {
+        const add = (m, k) => { if (k == null) return; k = String(k).toLowerCase(); if (!m.has(k)) m.set(k, e); };
+        if (e.card != null) { add(cards, e.card); if (typeof e.card === "object") { add(cards, e.card.name); add(cards, e.card.id); } }
+        if (e.battlefield != null) { add(bfs, e.battlefield); if (typeof e.battlefield === "object") { add(bfs, e.battlefield.name); add(bfs, e.battlefield.index); } }
+      }
+    };
+    fill(legal, L.cards, L.bfs); fill(focus, L.fcards, L.fbfs);
     return L;
   }
+  const EMPTY = new Map();
+  /** The same index without the clickable (legal) part: the opponent's hand only takes focus rings. */
+  const focusOnly = L => L && (L.fcards.size || L.fbfs.size) ? { cards: EMPTY, bfs: EMPTY, fcards: L.fcards, fbfs: L.fbfs, any: true } : null;
+  const inFocus = (L, name, c, ref) => !!(L && L.fcards.size && (L.fcards.get(String(name).toLowerCase()) || (c && L.fcards.get(String(c.id))) || (ref && typeof ref === "object" && ref.card != null && L.fcards.get(String(ref.card)))));
   const pickAttr = e => e ? ` data-pick="${e.index}"` : "";
 
   // ── element builders ───────────────────────────────────────────────────────
@@ -80,7 +90,7 @@
     const legal = L && (L.cards.get(name.toLowerCase()) || (c && L.cards.get(String(c.id))) || (ref && ref.card != null && L.cards.get(String(ref.card))) || (ref && typeof ref === "object" && ref.id != null && L.cards.get(String(ref.id))));
     const k = zoomKey({ card: c, name, state: extraState || (typeOf(c) ? typeOf(c) + " in hand" : "in hand") });
     const cost = costOf(c);
-    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}">${img(c, name, 200) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}</div>`;
+    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, ref) ? "rb-focus-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}">${img(c, name, 200) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}</div>`;
   }
   function unitEl(u, p, L, where, isGear) {
     const c = card(u), name = nameOf(u);
@@ -98,7 +108,7 @@
     for (const kw of u.keywords || []) tags.push(`<span class="rb-tag kw">${esc(String(kw).slice(0, 10))}</span>`);
     const gear = (u.gear || []).map(g => `<i title="${esc(g)}"></i>`).join("");
     const aria = `${name}${!isGear && u.might != null ? ", " + u.might + " might" : ""}${states.length ? ", " + states.join(", ") : ""}`;
-    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${u.facedown ? "facedown" : ""} ${legal ? "rb-legal-hl" : ""}" data-z="${k}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
+    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${u.facedown ? "facedown" : ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
       <div class="rb-art">${u.facedown ? "" : img(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
       ${tags.length ? `<div class="rb-tags">${tags.join("")}</div>` : ""}${gear ? `<div class="rb-gearline">${gear}</div>` : ""}
       ${!isGear && u.might != null && !u.facedown ? `<div class="rb-might ${u.buffs ? "buffed" : ""} ${u.damage ? "hurt" : ""}">${u.might}</div>` : ""}
@@ -142,7 +152,7 @@
     const hidden = !showHand || hand.some(h => h == null);
     const handHtml = hidden || !hand.length
       ? `<div class="rb-backs" role="img" aria-label="${handCount} cards in hand">${Array.from({ length: Math.min(handCount, 10) }, () => `<div class="rb-back"></div>`).join("")}</div>`
-      : `<div class="rb-cards">${hand.map(h => cardEl(h, p, mine ? "" : "sm", mine ? L : null)).join("")}</div>`;
+      : `<div class="rb-cards">${hand.map(h => cardEl(h, p, mine ? "" : "sm", mine ? L : focusOnly(L))).join("")}</div>`;
     const legend = pl.legend ? cardEl(pl.legend, p, "legend", null, "legend" + (pl.legend.exhausted ? ", exhausted" : "")) : "";
     const units = [...(pl.base_units || []).map(u => unitEl(u, p, L, "in base", false)), ...(pl.base_gear || []).map(g => unitEl(g, p, L, "in base", true))];
     const pips = Array.from({ length: target }, (_, k) => `<i class="${k < (pl.score || 0) ? "on" : ""}"></i>`).join("");
@@ -162,11 +172,12 @@
     const opp = viewer === 1 ? 2 : 1;
     const theirs = bf["p" + opp] || [], mine = bf["p" + viewer] || [];
     const legal = L && (L.bfs.get(String(bf.name).toLowerCase()) || L.bfs.get(String(idx)));
+    const focus = L && L.fbfs.size && (L.fbfs.get(String(bf.name).toLowerCase()) || L.fbfs.get(String(idx)));
     const held = bf.controller ? `held-${bf.controller}` : "";
     const contested = theirs.length && mine.length;
     const k = zoomKey({ card: c, name: bf.name, land: true, state: `battlefield ${bf.controller ? "held by P" + bf.controller : "unheld"}${bf.combat ? ", combat" : ""}` });
     const art = imgUrl(c, 600);
-    return `<article class="rb-bf ${held} ${bf.combat ? "combat" : ""} ${legal ? "rb-legal-bf" : ""} ${art ? "" : "noart"}"${pickAttr(legal)} aria-label="${esc(bf.name)}">
+    return `<article class="rb-bf ${held} ${bf.combat ? "combat" : ""} ${legal ? "rb-legal-bf" : ""} ${focus ? "rb-focus-bf" : ""} ${art ? "" : "noart"}"${pickAttr(legal)} aria-label="${esc(bf.name)}">
       ${art ? `<img class="rb-bfart" src="${esc(art)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : `<div class="rb-bfart"></div>`}
       <header class="rb-bfhead"><span class="rb-bfidx">${idx + 1}</span><span class="rb-bfname" data-z="${k}" tabindex="0" role="button" aria-label="${esc(bf.name)}, show card">${esc(bf.name)}</span>
         ${bf.combat ? `<span class="rb-badge combat">combat</span>` : ""}
