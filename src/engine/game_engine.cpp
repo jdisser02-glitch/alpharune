@@ -1710,15 +1710,16 @@ void GameEngine::executePlayCard(const Intent& intent) {
     if (card.card_def_id != kInvalidId) {
         energy_spent = card_db_.get(card.card_def_id).energy_cost;
     }
+    // Store the play location on the game object so resolvePermanent can use it.
+    // Permanents choose location during finalization (CR 355.2.a), before
+    // "when you play me" triggers look at where they were played.
+    card.location = intent.play_location.value_or(BaseLocation{intent.player});
     events_.emit(CardPlayedEvent{intent.card, intent.player,
         card.card_type, ps.cards_played_this_turn, energy_spent});
 
     if (intent.play_source != Intent::PlaySource::Hand)
         events_.emit(ObjectStateChangedEvent{intent.card, "played_not_from_hand"});
 
-    // Store the play location on the game object so resolvePermanent can use it.
-    // Permanents choose location during finalization (CR 355.2.a).
-    card.location = intent.play_location.value_or(BaseLocation{intent.player});
     // "The first unit or gear [a player] plays here [each turn]": record the
     // play at its battlefield and announce the first one of the turn.
     if ((card.isUnit() || card.isGear()) && intent.play_location.has_value() &&
