@@ -1,8 +1,327 @@
-/* Riven Lab — Decks view.
-   TODO redesign: see DESIGN.md. This stub mounts the previous implementation (legacy.js) unchanged;
-   replace it with a module that builds the screen from lib.js components. Router contract: render(container, params, ctx) / destroy().
-   params.name selects a deck path (#/decks/<path>). */
-import { mount, unmount } from "./legacy.js";
+/* Riven Lab — Decks: every list the lab knows, one at a time.
+   #/decks                 picker by group (Riven lists, variants, meta decks by event, engine test decks) + the default list
+   #/decks/<path>[?vs=<p>] the deck page: legend and champion, the list as card images grouped by type, energy curve,
+                           runes, battlefields, validity, results across tests, "Compare with…" diff, and the variant builder.
+   The builder's draft lives in localStorage under rl.draft and "Test this variant" queues the spec in rl.launch, the
+   same shape the Launch screen reads ({name, decks, variants:[{name, base, note, changes:{maindeck}}], opponents, agent, games}).
+   Screen styles are in decks.css (injected once). */
+import { data, esc, pct0, num, interval, fmtDate, plural, store, navigate, badge, chip, pageHead, empty, notice, toast,
+         cardByName, card, cardImg, cardChip, portrait, domainDots, rate, table, enhance, wilson, pooled,
+         deckByPath, allDecks, groupDecks, deckFace, legendShort, isPlumbing, testsByDate, $ } from "./lib.js";
 
-export function render(container, params) { mount("decks", container, params); }
-export function destroy() { unmount("decks"); }
+const DEFAULT = "decks/riven_sacramento.txt";
+const LAUNCH_DEFAULT = { name: "", decks: [DEFAULT], variants: [], opponents: [], agent: "standard", games: 100 };
+const GROUPS = ["Riven lists", "Variants", "Meta (tournaments)", "Engine test decks"];
+const GROUP_TITLES = { "Riven lists": "Riven lists", "Variants": "Variants", "Meta (tournaments)": "Meta decks", "Engine test decks": "Engine test decks" };
+const TYPE_ORDER = ["unit", "spell", "gear", "other"];
+const TYPE_TITLES = { unit: "Units", spell: "Spells", gear: "Gear", other: "Other cards" };
+
+let st = { path: DEFAULT, vs: "", group: null, q: "" };
+let draft = store("rl.draft") || null;
+let root = null, cssDone = false;
+
+function ensureCss() {
+  if (cssDone || document.querySelector('link[data-view-css="decks"]')) { cssDone = true; return; }
+  const l = document.createElement("link"); l.rel = "stylesheet"; l.href = new URL("./decks.css", import.meta.url).href; l.dataset.viewCss = "decks";
+  document.head.append(l); cssDone = true;
+}
+
+// ── names ───────────────────────────────────────────────────────────────────
+const stem = p => String(p || "").split("/").pop().replace(/\.txt$/, "");
+const groupOf = d => d.path.startsWith("lab/variants/") ? "Variants" : d.path.startsWith("lab/decks/meta/") ? "Meta (tournaments)" : /riven_/.test(d.path) ? "Riven lists" : "Engine test decks";
+const pilotOf = d => { const m = ((d.comments || [])[0] || "").match(/^(\d+) - (.+?) - (.+)$/); return m ? { place: +m[1], pilot: m[2], name: m[3] } : null; };
+/** "radiance_release_2026-10-24" → "Radiance release · 24 Oct 2026" */
+function eventLabel(id) {
+  const m = String(id).match(/^(.*?)_?(\d{4}-\d{2}-\d{2})$/); const words = (m ? m[1] : String(id)).split("_").filter(Boolean);
+  const name = words.map((w, i) => /\d/.test(w) && w.length <= 6 ? w.toUpperCase() : i === 0 ? w[0].toUpperCase() + w.slice(1) : w).join(" ");
+  return m ? `${name} · ${fmtDate(m[2])}` : name;
+}
+const eventOf = d => d.path.startsWith("lab/decks/meta/") ? d.path.split("/")[3] : "";
+/** The "maindeck: -1 Gust, +1 Ki Burst" line of a generated variant, as [[name, delta]]. */
+function variantChanges(d) {
+  const line = (d.comments || []).find(c => /^maindeck:/.test(c)); if (!line) return [];
+  return line.replace(/^maindeck:\s*/, "").split(/,\s*(?=[+-]\d)/).map(s => { const m = s.match(/^([+-]\d+)\s+(.+)$/); return m ? [m[2].trim(), +m[1]] : null; }).filter(Boolean);
+}
+const baseOf = d => { const l = (d.comments || []).find(c => /^Base:/.test(c)); return l ? l.replace(/^Base:\s*/, "").trim() : ""; };
+/** The champion's name from a deck record: "Kennen, Heart of the Tempest" → "Kennen" (legendShort can answer a region tag). Candidate for lib.js. */
+const heroName = d => { const l = String(d.legend || ""); if (l.includes(", ")) return l.split(", ")[0]; const c = String(d.champion || ""); return c.includes(", ") ? c.split(", ")[0] : legendShort(l); };
+/** A short name that is never a list of changes: the stem for variants, the title otherwise (compare labels, legends). */
+const name = d => variantChanges(d).length ? stem(d.path) : title(d);
+const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
+/** Short title for a tile or a heading. */
+function title(d) {
+  const p = pilotOf(d); if (p) return `${heroName(d)} (${p.pilot})`;
+  const ch = variantChanges(d); if (ch.length) return ch.map(([n, k]) => `${k > 0 ? "+" : "−"}${Math.abs(k)} ${n}`).join(", ");
+  if (d.path === DEFAULT) return "Riven (Nam Dang)";
+  return `${heroName(d)} · ${stem(d.path).replace(/_/g, " ")}`;
+}
+/** One line under the title: where the list comes from. */
+function subtitle(d) {
+  const p = pilotOf(d); if (p) return `${ordinal(p.place)} at ${eventLabel(eventOf(d))}`;
+  const b = baseOf(d); if (b) return `Variant of ${deckByPath(b) ? title(deckByPath(b)) : b}, generated by the lab`;
+  const c = (d.comments || [])[0] || ""; return c.replace(/^[^—]+—\s*/, "").replace(/\.$/, "") || `${heroName(d)} list from the engine's test decks`;
+}
+const deltaBadge = k => `<span class="dk-delta ${k > 0 ? "add" : "rem"}">${k > 0 ? "+" : "−"}${Math.abs(k)}</span>`;
+const changeChips = ch => `<span class="dk-changes">${ch.map(([n, k]) => `${deltaBadge(k)}${cardChip(n, { cls: "sm" })}`).join("")}</span>`;
+
+// ── pieces ──────────────────────────────────────────────────────────────────
+function picker() {
+  const groups = groupDecks(), sel = deckByPath(st.path);
+  if (!st.group) st.group = sel ? groupOf(sel) : GROUPS[0];
+  const tabs = `<div class="segmented dk-tabs" role="tablist" aria-label="deck groups">${GROUPS.map(g => `<button role="tab" data-group="${esc(g)}" aria-pressed="${st.group === g}" aria-selected="${st.group === g}">${esc(GROUP_TITLES[g])} <span class="dk-n">${(groups[g] || []).length}</span></button>`).join("")}</div>`;
+  const tile = d => `<a class="dk-tile ${d.path === st.path ? "sel" : ""} ${(d.errors || []).length ? "bad" : ""}" href="#/decks/${encodeURIComponent(d.path)}" aria-current="${d.path === st.path}" title="${esc(d.path)}">${portrait(deckFace(d) || heroName(d), { size: "md" })}<span class="dk-tile-t"><span class="dk-tile-n">${esc(title(d))}</span><span class="dk-tile-s">${esc(st.group === "Variants" ? stem(d.path) : st.group === "Meta (tournaments)" ? `${ordinal(pilotOf(d)?.place || 0)} · ${heroName(d)}` : stem(d.path))}</span></span>${(d.errors || []).length ? `<span class="dk-tile-x" title="not playable in the engine">!</span>` : ""}</a>`;
+  let body;
+  const list = groups[st.group] || [];
+  if (st.group === "Meta (tournaments)") {
+    const byEv = new Map(); for (const d of list) { const e = eventOf(d); if (!byEv.has(e)) byEv.set(e, []); byEv.get(e).push(d); }
+    body = [...byEv.entries()].sort((a, b) => b[0].slice(-10).localeCompare(a[0].slice(-10))).map(([e, ds]) => `<div class="dk-event"><h3>${esc(eventLabel(e))}</h3><div class="dk-tiles">${ds.sort((x, y) => (pilotOf(x)?.place || 99) - (pilotOf(y)?.place || 99)).map(tile).join("")}</div></div>`).join("");
+  } else body = `<div class="dk-tiles">${list.map(tile).join("")}</div>`;
+  const blurb = { "Riven lists": "The reference list and the lab's own builds of Riven, The Exile.", "Variants": "One-change lists generated by the optimizer or the builder below; each names its base.", "Meta (tournaments)": "Top lists from recent events, used as opponents in the gauntlet.", "Engine test decks": "One list per legend, kept to exercise the engine; not tuned to win." }[st.group];
+  return `<section class="panel dk-picker" id="dk-picker" aria-label="choose a deck">${tabs}<p class="small muted" style="margin-top:10px">${esc(blurb)}</p>${list.length ? body : empty("No list in this group", "")}</section>`;
+}
+
+/** Inline SVG bar chart of energy curves. series: [{label, curve:{cost:count}, color}]. */
+function curveSvg(series, opts = {}) {
+  const costs = new Set(); series.forEach(s => Object.keys(s.curve || {}).forEach(c => costs.add(+c)));
+  if (!costs.size) return `<p class="small muted">No curve: the list has no card the engine knows.</p>`;
+  const lo = Math.min(...costs, 1), hi = Math.max(...costs); const xs = []; for (let c = lo; c <= hi; c++) xs.push(c);
+  const maxN = Math.max(1, ...series.flatMap(s => Object.values(s.curve || {})));
+  const W = 520, H = 200, L = 30, R = 8, T = 16, B = 26, n = series.length, bw = (W - L - R) / xs.length, gw = (bw * 0.72) / n;
+  const y = v => T + (H - T - B) * (1 - v / maxN);
+  const step = maxN > 12 ? 5 : maxN > 6 ? 2 : 1;
+  let s = `<svg class="dk-curve" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(opts.label || "energy curve")}: ${esc(series.map(x => `${x.label}: ${xs.map(c => `${(x.curve || {})[c] || 0} at ${c}`).join(", ")}`).join("; "))}">`;
+  for (let g = 0; g <= maxN; g += step) s += `<line x1="${L}" x2="${W - R}" y1="${y(g)}" y2="${y(g)}" stroke="var(--line)"/><text x="${L - 6}" y="${y(g) + 4}" text-anchor="end">${g}</text>`;
+  xs.forEach((c, i) => {
+    series.forEach((sr, k) => { const v = (sr.curve || {})[c] || 0, x0 = L + i * bw + bw * 0.14 + k * gw, h = H - B - y(v);
+      s += `<rect x="${x0}" y="${y(v)}" width="${Math.max(2, gw - 3)}" height="${Math.max(0, h)}" rx="3" fill="${sr.color}" opacity="${n > 1 && k === 0 ? .9 : 1}"><title>${esc(sr.label)}: ${v} at ${c}</title></rect>`;
+      if (v) s += `<text x="${x0 + (gw - 3) / 2}" y="${y(v) - 4}" text-anchor="middle" style="fill:var(--ink-2)">${v}</text>`; });
+    s += `<text x="${L + i * bw + bw / 2}" y="${H - 8}" text-anchor="middle">${c}</text>`;
+  });
+  s += `</svg>`;
+  return s + `<div class="dk-legend">${n > 1 ? series.map(x => `<span><i style="background:${x.color}"></i>${esc(x.label)}</span>`).join("") : ""}<span class="faint">cards per energy cost, left to right</span></div>`;
+}
+const runeStrip = split => { const es = Object.entries(split || {}); if (!es.length) return `<span class="muted">no runes listed</span>`; return `<span class="dk-runes" title="${esc(es.map(([d, k]) => `${k} ${d}`).join(", "))}">${es.map(([d, k]) => Array.from({ length: k }, () => `<i class="dom ${esc(d)}"></i>`).join("")).join("")}</span><span class="small">${es.map(([d, k]) => `${k} ${d[0].toUpperCase()}${d.slice(1)}`).join(" · ")}</span>`; };
+
+/** The maindeck as entries grouped by card type, each sorted by cost then name. */
+function grouped(list) {
+  const g = {}; for (const [n, k] of Object.entries(list || {})) { const c = card(n), t = c && TYPE_ORDER.includes(c.type) ? c.type : "other"; (g[t] ||= []).push({ n, k, c }); }
+  for (const t in g) g[t].sort((a, b) => ((a.c && a.c.energy) ?? 99) - ((b.c && b.c.energy) ?? 99) || a.n.localeCompare(b.n));
+  return g;
+}
+/** Card grid with count and cost badges. entries: [{n, k, c, delta?}] */
+function grid(entries, opts = {}) {
+  return `<div class="card-grid dk-grid" style="--w:${opts.w || 104}px">${entries.map(e => `<figure class="dk-card ${e.cls || ""}">${cardImg(e.c || e.n, { size: "md", w: 300, count: e.k, alt: e.n, cls: opts.champion && opts.champion.has(e.n) ? "champion" : "" })}${e.c && /^(unit|spell|gear)$/.test(e.c.type) ? `<span class="dk-cost" title="energy cost">${e.c.energy}${e.c.power ? `<small>+${e.c.power}</small>` : ""}</span>` : ""}${e.delta ? deltaBadge(e.delta) : ""}<figcaption title="${esc(e.n)}">${esc(e.n)}</figcaption></figure>`).join("")}</div>`;
+}
+
+/** This deck's results across tests: tested lists and appearances as an opponent, pooled per test. */
+function results(path) {
+  const rows = [];
+  for (const t of testsByDate()) {
+    for (const d of t.decks || []) if (d.path === path) { const p = pooled(d); rows.push({ t, role: "tested", label: d.label, games: p.games, wins: p.wins, rate: d.weighted_win_rate ?? p.rate, ci: p.ci }); }
+    let g = 0, w = 0, seen = false;
+    for (const d of t.decks || []) for (const m of d.matchups || []) if (m.opponent_deck === path) { seen = true; g += m.games || 0; w += (m.games || 0) - (m.wins || 0); }
+    if (seen && g) rows.push({ t, role: "opponent", label: "", games: g, wins: w, rate: w / g, ci: wilson(w, g) });
+  }
+  return rows;
+}
+function resultsPanel(d) {
+  const rows = results(d.path);
+  const cols = [
+    { key: "test", label: "Test", sort: r => r.t.started_utc, render: r => `<a href="#/tests/${encodeURIComponent(r.t.id)}" class="lead">${esc(r.t.name)}</a><span class="sub">${esc(fmtDate(r.t.started_utc))}${r.label && r.label !== title(d) ? ` · as "${esc(r.label)}"` : ""}</span>` },
+    { key: "role", label: "Role", render: r => isPlumbing(r.t) ? badge("plumbing", "neutral") : r.role === "tested" ? badge("tested", "gold") : badge("opponent", "neutral") },
+    { key: "games", label: "Games", num: true, sort: true },
+    { key: "wins", label: "Wins", num: true, sort: true },
+    { key: "rate", label: "Win rate and 95% interval", sort: true, render: r => rate(r.rate, r.ci) },
+  ];
+  return `<section class="panel" aria-labelledby="dk-res-h"><div class="panel-head"><h2 id="dk-res-h">Results across tests</h2>${rows.length ? `<span class="small muted">${plural(rows.reduce((a, r) => a + r.games, 0), "game")} in ${plural(new Set(rows.map(r => r.t.id)).size, "test")}</span>` : ""}</div>
+    ${rows.length ? `<p class="small muted" style="margin-top:8px">"Tested" rows are this list's weighted rate in that test; "opponent" rows are how often it won when it was the gauntlet's side of the table. Plumbing tests use random players and say nothing about strength.</p>${table(cols, rows, { rowAttrs: r => isPlumbing(r.t) ? 'class="dk-plumb"' : "" })}`
+      : `<div style="margin-top:12px">${empty("No test with this list yet", `Queue one in <a href="#/launch">Launch</a>, or build a variant of it below.`)}</div>`}</section>`;
+}
+
+const flatList = d => ({ ...((d.list || {}).maindeck || {}), ...((d.list || {}).champion || {}) });
+function comparePanel(a) {
+  const b = st.vs ? deckByPath(st.vs) : null;
+  const options = Object.entries(groupDecks()).map(([g, ds]) => `<optgroup label="${esc(GROUP_TITLES[g])}">${ds.filter(d => d.path !== a.path).map(d => `<option value="${esc(d.path)}" ${d.path === st.vs ? "selected" : ""}>${esc(title(d))}${g === "Variants" ? ` — ${esc(stem(d.path))}` : g === "Meta (tournaments)" ? ` — ${esc(eventLabel(eventOf(d)))}` : ""}</option>`).join("")}</optgroup>`).join("");
+  let diff = "";
+  if (b) {
+    const ma = flatList(a), mb = flatList(b), names = [...new Set([...Object.keys(ma), ...Object.keys(mb)])];
+    const out = names.filter(n => (ma[n] || 0) > (mb[n] || 0)).map(n => ({ n, k: (ma[n] || 0) - (mb[n] || 0), c: card(n), delta: -((ma[n] || 0) - (mb[n] || 0)) }));
+    const inn = names.filter(n => (mb[n] || 0) > (ma[n] || 0)).map(n => ({ n, k: (mb[n] || 0) - (ma[n] || 0), c: card(n), delta: (mb[n] || 0) - (ma[n] || 0) }));
+    const sortE = es => es.sort((x, y) => ((x.c && x.c.energy) ?? 99) - ((y.c && y.c.energy) ?? 99) || x.n.localeCompare(y.n));
+    const nOut = out.reduce((s, e) => s + e.k, 0), nIn = inn.reduce((s, e) => s + e.k, 0);
+    const bfa = Object.keys((a.list || {}).battlefields || {}), bfb = Object.keys((b.list || {}).battlefields || {});
+    const bfDiff = bfa.filter(x => !bfb.includes(x)).length || bfb.filter(x => !bfa.includes(x)).length;
+    const avgA = a.stats && a.stats.avg_energy, avgB = b.stats && b.stats.avg_energy;
+    const lead = !nOut && !nIn ? `Same 40 cards.` : `${plural(Math.max(nOut, nIn), "card")} differ${Math.max(nOut, nIn) === 1 ? "s" : ""}. ${avgA != null && avgB != null ? `Average cost ${avgA.toFixed(2)} here, ${avgB.toFixed(2)} there${Math.abs(avgA - avgB) < 0.005 ? ", the same" : avgB < avgA ? ": the other list is lighter" : ": the other list is heavier"}.` : ""}`;
+    diff = `<div class="stack" style="margin-top:var(--sp-4)">
+      <p>${lead}${a.legend !== b.legend ? ` Different legends: ${esc(a.legend)} here, ${esc(b.legend)} there.` : ""}${bfDiff ? ` The battlefields differ too (${bfa.map(esc).join(", ")} vs ${bfb.map(esc).join(", ")}).` : ""}</p>
+      ${nOut || nIn ? `<div class="grid2 dk-diff">
+        <div class="stack tight"><h3>Out <span class="muted">· only in ${esc(name(a))}</span></h3>${out.length ? grid(sortE(out), { w: 92 }) : `<p class="small muted">Nothing.</p>`}</div>
+        <div class="stack tight"><h3>In <span class="muted">· ${esc(name(b))} plays instead</span></h3>${inn.length ? grid(sortE(inn), { w: 92 }) : `<p class="small muted">Nothing.</p>`}</div>
+      </div>` : ""}
+      <div class="stack tight"><h3>Curves side by side</h3>${curveSvg([{ label: name(a), curve: a.stats.curve, color: "var(--gold)" }, { label: name(b), curve: b.stats.curve, color: "var(--info)" }], { label: "energy curves of both lists" })}</div>
+      <p class="small"><a href="#/decks/${encodeURIComponent(b.path)}?vs=${encodeURIComponent(a.path)}">Open ${esc(name(b))} and compare the other way →</a></p>
+    </div>`;
+  }
+  return `<section class="panel" id="dk-compare" aria-labelledby="dk-cmp-h"><div class="panel-head"><h2 id="dk-cmp-h">Compare with…</h2><span class="small muted">cards in and out against another list</span></div>
+    <div class="toolbar" style="margin-top:12px"><label class="f" style="flex:1 1 280px;max-width:520px">Other list<select id="dk-vs"><option value="">— choose a list —</option>${options}</select></label>${b ? `<button type="button" data-act="clear-vs">Clear</button>` : ""}</div>${diff}</section>`;
+}
+
+// ── variant builder ─────────────────────────────────────────────────────────
+function builderState(sel) {
+  let base = draft && deckByPath(draft.base);
+  const dirty = draft && (Object.keys(draft.changes || {}).length || draft.name || draft.note);
+  if (!base || !dirty) { base = sel; if (!draft || draft.base !== sel.path) draft = { base: sel.path, name: "", note: "", changes: {} }; }
+  const legend = cardByName(base.legend) || data().cards.find(c => c.type === "legend" && (c.tags || []).some(t => (base.legend || "").startsWith(t)));
+  const doms = new Set(legend ? legend.domains : []);
+  const cur = { ...((base.list || {}).maindeck || {}) };
+  for (const [n, d] of Object.entries(draft.changes || {})) { cur[n] = (cur[n] || 0) + d; if (cur[n] <= 0) delete cur[n]; }
+  const champ = (base.list || {}).champion || {};
+  const total = Object.values(cur).reduce((a, b) => a + b, 0) + Object.values(champ).reduce((a, b) => a + b, 0);
+  const errs = [];
+  if (total !== 40) errs.push(`${total} cards instead of 40 (the champion counts).`);
+  for (const [n, k] of Object.entries(cur)) {
+    const c = card(n), all = k + (champ[n] || 0);
+    if (!c) errs.push(`${n}: the engine does not know this card.`);
+    else if ((c.domains || []).length && !c.domains.every(d => doms.has(d))) errs.push(`${n}: outside the legend's domains (${[...doms].join(", ")}).`);
+    if (all > 3) errs.push(`${n}: ${all} copies, 3 at most.`);
+  }
+  const curve = {}; for (const [n, k] of [...Object.entries(cur), ...Object.entries(champ)]) { const c = card(n); if (c) curve[c.energy] = (curve[c.energy] || 0) + k; }
+  const changes = Object.fromEntries(Object.entries(draft.changes || {}).filter(([, d]) => d));
+  const spec = { name: draft.name || "my-variant", base: draft.base, note: draft.note || "", changes: { maindeck: changes } };
+  return { base, legend, doms, cur, champ, total, errs, curve, changes, spec };
+}
+function pool(doms) {
+  return data().cards.filter(c => /^(unit|spell|gear)$/.test(c.type) && c.super !== "token" && (!(c.domains || []).length || c.domains.every(d => doms.has(d)))).sort((a, b) => (a.energy || 0) - (b.energy || 0) || a.name.localeCompare(b.name));
+}
+function searchResults(b) {
+  const q = st.q.trim().toLowerCase();
+  if (!q) return `<p class="small muted">Type a card name or a tag. Only cards in the legend's domains (${[...b.doms].map(d => `<i class="dom ${esc(d)}"></i>${esc(d)}`).join(" ")}) are offered; the count next to a card is how many the list already has.</p>`;
+  const hits = pool(b.doms).filter(c => c.name.toLowerCase().includes(q) || (c.tags || []).some(t => t.toLowerCase().includes(q)) || c.type === q);
+  if (!hits.length) return `<p class="small muted">No card matches "${esc(st.q)}" in these domains.</p>`;
+  return `<div class="dk-hits">${hits.slice(0, 14).map(c => { const have = (b.cur[c.name] || 0) + (b.champ[c.name] || 0); return `<div class="dk-hit">${cardChip(c.name, have ? { count: have } : {})}<span class="xs muted">${c.energy}${c.power ? `+${c.power}` : ""} · ${esc(c.type)}${c.set === "RAD" ? " · Radiance" : ""}</span><button type="button" class="btn-sm" data-act="add" data-n="${esc(c.name)}" ${have >= 3 ? "disabled" : ""} aria-label="add ${esc(c.name)}">+ Add</button></div>`; }).join("")}${hits.length > 14 ? `<p class="xs muted">${hits.length - 14} more: narrow the search.</p>` : ""}</div>`;
+}
+function builderPanel(sel) {
+  const b = builderState(sel);
+  const rows = Object.entries(b.cur).map(([n, k]) => ({ n, k, c: card(n), d: draft.changes[n] || 0 })).sort((x, y) => ((x.c && x.c.energy) ?? 99) - ((y.c && y.c.energy) ?? 99) || x.n.localeCompare(y.n));
+  const removed = Object.entries(draft.changes).filter(([n, d]) => d < 0 && !b.cur[n]);
+  const nChanges = Object.values(b.changes).reduce((a, d) => a + Math.abs(d), 0);
+  const canTest = !b.errs.length && !!draft.name;
+  return `<section class="panel dk-builder" id="dk-builder" aria-labelledby="dk-b-h">
+    <div class="panel-head"><h2 id="dk-b-h">Build a variant</h2><span class="small muted">starts from ${esc(name(b.base))}${b.base.path !== sel.path ? "" : ", the list above"}</span></div>
+    <p class="small muted" style="margin-top:8px">Add or remove cards; the count, the curve and the legality update as you go. The draft is kept in this browser. "Test this variant" adds it to the test set-up in Launch.</p>
+    ${b.base.path !== sel.path ? notice(`This draft starts from <b>${esc(name(b.base))}</b>, not from the list shown above. <button type="button" class="btn-sm" data-act="rebase" style="margin-left:8px">Start from ${esc(name(sel))} instead</button> <span class="muted">(drops the changes)</span>`, "info") : ""}
+    <div class="toolbar" style="margin-top:12px"><label class="f">Name<input type="text" id="dk-name" value="${esc(draft.name)}" placeholder="e.g. sacramento-no-heron" autocomplete="off"></label>
+      <label class="f" style="flex:1 1 260px">Why<input type="text" id="dk-note" value="${esc(draft.note || "")}" placeholder="e.g. 3 Heron replaced by 2 Deserter and 1 Baron"></label></div>
+    <div class="grid2 dk-bgrid">
+      <div class="stack">
+        <h3>List · <span class="${b.total === 40 ? "win" : "loss"}">${b.total}/40</span>${nChanges ? ` <span class="muted">· ${plural(nChanges, "change")}</span>` : ""}</h3>
+        <div class="dk-brows">${Object.keys(b.champ).map(n => `<div class="dk-brow champ">${cardChip(n, { count: b.champ[n] })}<span class="xs muted">champion</span><span></span></div>`).join("")}
+          ${rows.map(r => `<div class="dk-brow ${r.d ? (r.d > 0 ? "added" : "cut") : ""}"><span class="dk-bcost mono">${(r.c && r.c.energy) ?? "?"}</span>${cardChip(r.n, { count: r.k })}${r.d ? deltaBadge(r.d) : "<span></span>"}<span class="dk-bbtns"><button type="button" class="icon-btn" data-act="dec" data-n="${esc(r.n)}" aria-label="remove one ${esc(r.n)}">−</button><button type="button" class="icon-btn" data-act="add" data-n="${esc(r.n)}" aria-label="add one ${esc(r.n)}" ${r.k + (b.champ[r.n] || 0) >= 3 ? "disabled" : ""}>+</button></span></div>`).join("")}
+          ${removed.map(([n, d]) => `<div class="dk-brow gone"><span class="dk-bcost mono">·</span>${cardChip(n)}${deltaBadge(d)}<span class="dk-bbtns"><button type="button" class="icon-btn" data-act="add" data-n="${esc(n)}" aria-label="put back ${esc(n)}">+</button></span></div>`).join("")}</div>
+        <div class="stack tight"><label class="f search">Add a card<input type="search" id="dk-q" value="${esc(st.q)}" placeholder="card name or tag" autocomplete="off"></label><div id="dk-hits">${searchResults(b)}</div></div>
+      </div>
+      <div class="stack">
+        <h3>Curve · base vs variant</h3>
+        ${curveSvg([{ label: "base", curve: b.base.stats.curve, color: "var(--gold)" }, { label: "variant", curve: b.curve, color: "var(--info)" }], { label: "energy curve of the base list and the variant" })}
+        ${b.errs.length ? notice(`<b>Not legal yet.</b><ul style="margin-top:4px">${b.errs.map(e => `<li>${esc(e)}</li>`).join("")}</ul>`, "error") : notice(`Legal list: 40 cards, 3 copies at most, every card in the legend's domains.${!draft.name ? " Give it a name to test it." : ""}`, "ok")}
+        <div class="toolbar"><button type="button" class="primary" data-act="test" ${canTest ? "" : "disabled"} title="${canTest ? "Add this variant to the test set-up" : b.errs.length ? "Fix the list first" : "Give the variant a name first"}">Test this variant</button><button type="button" data-act="reset" ${nChanges || draft.name || draft.note ? "" : "disabled"}>Reset to base</button></div>
+        <details><summary class="small muted">Spec (lab/specs format)</summary><div class="log" style="margin-top:8px">${esc(JSON.stringify(b.spec, null, 1))}</div></details>
+      </div>
+    </div></section>`;
+}
+const saveDraft = () => store("rl.draft", draft);
+function refreshBuilder(sel, focusSearch) {
+  const host = $("#dk-builder", root); if (!host) return;
+  host.outerHTML = builderPanel(sel);
+  if (focusSearch) { const q = $("#dk-q", root); if (q) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); } }
+}
+
+// ── page ────────────────────────────────────────────────────────────────────
+function deckPage(d) {
+  const legend = cardByName(d.legend), champs = Object.keys((d.list || {}).champion || {}), champSet = new Set(champs);
+  const ok = !(d.errors || []).length, stats = d.stats || {}, g = grouped((d.list || {}).maindeck || {});
+  const bfs = Object.keys((d.list || {}).battlefields || {});
+  const nMain = Object.values((d.list || {}).maindeck || {}).reduce((a, b) => a + b, 0), nCh = champs.reduce((a, c) => a + ((d.list || {}).champion[c] || 0), 0);
+  const vch = variantChanges(d), base = baseOf(d);
+  const doms = legend ? legend.domains : [...new Set(Object.keys(stats.rune_split || {}))];
+  return `<article class="stack loose dk-page" aria-labelledby="dk-title">
+    <section class="panel gilt dk-hero">
+      <div class="dk-hero-cards">${cardImg(legend || d.legend, { size: "lg", alt: d.legend })}${champs.map(c => cardImg(c, { size: "lg", cls: "champion" })).join("")}</div>
+      <div class="dk-hero-copy">
+        <div class="eyebrow">${esc(GROUP_TITLES[groupOf(d)])}${d.path.startsWith("lab/decks/meta/") ? ` · ${esc(eventLabel(eventOf(d)))}` : ""}</div>
+        <h2 id="dk-title">${esc(title(d))}</h2>
+        <p class="dk-sub">${esc(subtitle(d))}${base && deckByPath(base) ? ` · <a href="#/decks/${encodeURIComponent(base)}?vs=${encodeURIComponent(d.path)}">compare with the base</a>` : ""}</p>
+        ${vch.length ? `<div>${changeChips(vch)}</div>` : ""}
+        <div class="row tight dk-facts">${badge(ok ? "valid list" : "not playable", ok ? "win" : "loss")}<span class="chip">${domainDots(doms)} ${esc(doms.map(x => x[0].toUpperCase() + x.slice(1)).join(" and "))}</span>${chip(`${num(stats.cards ?? nMain + nCh)} cards`)}${stats.avg_energy != null ? chip(`average cost ${stats.avg_energy.toFixed(2)}`) : ""}${stats.two_drops != null ? chip(`${num(stats.two_drops)} at 2 or less`) : ""}${Object.entries(stats.types || {}).map(([k, v]) => chip(`${v} ${esc(k)}${v === 1 ? "" : k === "gear" ? "" : "s"}`)).join("")}</div>
+        <div class="dk-legend-line"><span class="small muted">Legend</span> ${cardChip(legend ? legend.name : d.legend)} ${champs.length ? `<span class="small muted">Champion</span> ${champs.map(c => cardChip(c)).join(" ")}` : ""}</div>
+        ${ok ? "" : notice(`Not playable in the engine yet: ${(d.errors || []).map(esc).join("; ")}.`, "error")}
+      </div>
+    </section>
+
+    <div class="grid2 dk-two">
+      <section class="panel"><div class="panel-head"><h3>Energy curve</h3><span class="xs muted">cards per energy cost, champion included</span></div>${curveSvg([{ label: title(d), curve: stats.curve, color: "var(--gold)" }], { label: "energy curve" })}
+        <div class="dk-runeline"><span class="small muted">Runes</span>${runeStrip((d.list || {}).runes && Object.keys(d.list.runes).length ? Object.fromEntries(Object.entries(d.list.runes).map(([n, k]) => [n.toLowerCase().replace(/ rune$/, ""), k])) : stats.rune_split)}</div></section>
+      <section class="panel"><div class="panel-head"><h3>Battlefields</h3><span class="xs muted">${bfs.length ? `${bfs.length} brought to the table` : ""}</span></div>
+        ${bfs.length ? `<div class="dk-bfs">${bfs.map(n => { const c = card(n); return `<figure class="dk-bf">${cardImg(c || n, { size: "lg", alt: n })}<figcaption><b>${esc(n)}</b>${c && c.text ? `<span>${esc(c.text)}</span>` : ""}</figcaption></figure>`; }).join("")}</div>` : `<p class="small muted" style="margin-top:8px">No battlefield listed.</p>`}</section>
+    </div>
+
+    <section class="section" aria-labelledby="dk-list-h"><div class="section-head"><h2 id="dk-list-h">The list</h2><span class="small muted">${num(nMain)} cards in the main deck${nCh ? ` plus the champion` : ""} · hover or tap a card to read it</span></div>
+      ${TYPE_ORDER.filter(t => g[t]).map(t => `<div class="panel dk-group"><div class="panel-head"><h3>${TYPE_TITLES[t]}</h3><span class="xs muted">${plural(g[t].reduce((a, e) => a + e.k, 0), "card")}, ${plural(g[t].length, "name")}</span></div>${grid(g[t], { champion: champSet })}</div>`).join("")}
+    </section>
+
+    ${resultsPanel(d)}
+    ${comparePanel(d)}
+    ${builderPanel(d)}
+    ${(d.comments || []).length ? `<details class="panel"><summary><b>File notes</b> <span class="small muted">· the deck file's own comments</span></summary><div class="log" style="margin-top:12px">${d.comments.map(esc).join("\n")}</div></details>` : ""}
+  </article>`;
+}
+
+function draw(container) {
+  const d = deckByPath(st.path);
+  container.innerHTML = `<div class="v-decks stack loose">
+    ${pageHead({ title: "Decks", eyebrow: `${num(allDecks().length)} lists`, sub: `Every list the lab can play: the Riven reference list and its variants, the tournament decks it is tested against, and the engine's own test decks. Pick one to see its cards, its energy curve and how it has done in tests, compare it with another list, or build a variant of it to test.` })}
+    ${picker()}
+    ${d ? deckPage(d) : empty("Deck not found", `No list at <span class="mono">${esc(st.path)}</span>. Pick one above.`)}
+  </div>`;
+  root = $(".v-decks", container);
+  wire(container, d);
+  enhance(container);
+}
+function wire(container, d) {
+  root.addEventListener("click", e => {
+    const tab = e.target.closest("[data-group]"); if (tab) { st.group = tab.dataset.group; const p = $("#dk-picker", root); if (p) p.outerHTML = picker(); return; }
+    const b = e.target.closest("[data-act]"); if (!b || !d) return;
+    const act = b.dataset.act, n = b.dataset.n, fromSearch = !!b.closest("#dk-hits");
+    if (act === "add" || act === "dec") { draft.changes[n] = (draft.changes[n] || 0) + (act === "add" ? 1 : -1); if (!draft.changes[n]) delete draft.changes[n]; saveDraft(); refreshBuilder(d, fromSearch); }
+    else if (act === "reset") { draft = { base: builderState(d).base.path, name: "", note: "", changes: {} }; st.q = ""; saveDraft(); refreshBuilder(d); toast("Draft reset to the base list"); }
+    else if (act === "rebase") { draft = { base: d.path, name: "", note: "", changes: {} }; st.q = ""; saveDraft(); refreshBuilder(d); }
+    else if (act === "clear-vs") { navigate(`#/decks/${encodeURIComponent(d.path)}`); }
+    else if (act === "test") {
+      const { spec, errs } = builderState(d); if (errs.length || !draft.name) return;
+      const launch = store("rl.launch") || { ...LAUNCH_DEFAULT, decks: [...LAUNCH_DEFAULT.decks] };
+      launch.variants = (launch.variants || []).filter(v => v.name !== spec.name); launch.variants.push(spec); store("rl.launch", launch);
+      toast(`Variant "${spec.name}" added to the test set-up`, "ok"); navigate("#/launch");
+    }
+  });
+  root.addEventListener("change", e => {
+    const t = e.target;
+    if (t.id === "dk-vs") { navigate(`#/decks/${encodeURIComponent(st.path)}${t.value ? `?vs=${encodeURIComponent(t.value)}` : ""}`); }
+    else if (t.id === "dk-name") { draft.name = t.value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, ""); saveDraft(); refreshBuilder(d); }
+    else if (t.id === "dk-note") { draft.note = t.value; saveDraft(); }
+  });
+  root.addEventListener("input", e => {
+    if (e.target.id === "dk-q") { st.q = e.target.value; const h = $("#dk-hits", root); if (h) h.innerHTML = searchResults(builderState(d)); }
+  });
+}
+
+// ── module contract ─────────────────────────────────────────────────────────
+export async function render(container, params = {}) {
+  ensureCss();
+  if (params.name && deckByPath(params.name)) st.path = params.name; else if (!deckByPath(st.path)) st.path = DEFAULT;
+  st.vs = params.vs && deckByPath(params.vs) && params.vs !== st.path ? params.vs : "";
+  const sel = deckByPath(st.path); if (sel) st.group = groupOf(sel);
+  draw(container);
+}
+export function update(container, params = {}) { return render(container, params); }
+export function destroy() { root = null; }

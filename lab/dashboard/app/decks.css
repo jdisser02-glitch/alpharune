@@ -1,0 +1,84 @@
+/* Riven Lab — Decks screen. Everything is scoped under .v-decks; tokens and components come from app.css. */
+
+/* ── picker ── */
+.v-decks .dk-tabs { max-width: 100%; }
+.v-decks .dk-tabs .dk-n { font: 600 11px/1 var(--mono); color: var(--ink-faint); margin-left: 4px; }
+.v-decks .dk-tabs > [aria-pressed="true"] .dk-n { color: var(--gold-dim); }
+.v-decks .dk-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 196px), 1fr)); gap: var(--sp-2); margin-top: var(--sp-3); }
+.v-decks .dk-event { margin-top: var(--sp-3); }
+.v-decks .dk-event h3 { margin-top: var(--sp-2); }
+.v-decks .dk-tile { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--r-2); background: var(--s2); border: 1px solid var(--line); color: inherit; min-width: 0; transition: border-color .12s ease, background .12s ease; }
+.v-decks .dk-tile:hover { border-color: var(--gold-dim); background: var(--s3); text-decoration: none; }
+.v-decks .dk-tile.sel { border-color: var(--gold); background: var(--gold-soft); box-shadow: inset 0 0 0 1px rgba(214, 178, 94, .25); }
+.v-decks .dk-tile.bad { border-style: dashed; opacity: .75; }
+.v-decks .dk-tile-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.v-decks .dk-tile-n { font: 600 13.5px/1.25 var(--display); color: var(--parch); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.v-decks .dk-tile-s { font: 11.5px/1.2 var(--mono); color: var(--ink-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-decks .dk-tile-x { position: absolute; top: 6px; right: 8px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; font: 700 11px/1 var(--mono); color: var(--loss); border: 1px solid currentColor; }
+
+/* ── hero: legend + champion large, copy on the right ── */
+.v-decks .dk-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--sp-5); align-items: start; }
+.v-decks .dk-hero-cards { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+.v-decks .dk-hero-cards .card-img { --w: clamp(120px, 16vw, 200px); }
+.v-decks .dk-hero-cards .card-img.champion { box-shadow: 0 0 0 1px var(--gold), 0 0 18px rgba(214, 178, 94, .3); }
+.v-decks .dk-hero-copy { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.v-decks .dk-hero-copy h2 { font-size: 26px; }
+.v-decks .dk-sub { color: var(--ink-2); max-width: 70ch; }
+.v-decks .dk-facts .chip { gap: 4px; }
+.v-decks .dk-legend-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+@media (max-width: 860px) {
+  .v-decks .dk-hero { grid-template-columns: minmax(0, 1fr); }
+  .v-decks .dk-hero-cards .card-img { --w: clamp(104px, 28vw, 160px); }
+}
+
+/* ── curve, runes, battlefields ── */
+.v-decks .dk-curve { display: block; margin-top: 8px; }
+.v-decks .dk-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink-dim); margin-top: 6px; }
+.v-decks .dk-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.v-decks .dk-runeline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.v-decks .dk-runes { display: inline-flex; flex-wrap: wrap; gap: 3px; }
+.v-decks .dk-runes .dom { width: 12px; height: 12px; margin: 0; }
+.v-decks .dk-bfs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: var(--sp-3); margin-top: 10px; }
+.v-decks .dk-bf { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.v-decks .dk-bf .card-img { width: 100%; --w: 100%; }
+.v-decks .dk-bf figcaption { font-size: 12.5px; color: var(--ink-dim); display: flex; flex-direction: column; gap: 2px; }
+.v-decks .dk-bf figcaption b { font: 600 13px/1.2 var(--display); color: var(--parch); }
+
+/* ── card grid with cost and count badges ── */
+.v-decks .dk-group .card-grid { margin-top: 10px; }
+.v-decks .dk-card { position: relative; }
+.v-decks .dk-cost { position: absolute; top: 5px; left: 5px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 999px; background: rgba(10, 13, 24, .9); color: var(--parch); border: 1px solid var(--line-strong); font: 700 11.5px/20px var(--mono); text-align: center; pointer-events: none; }
+.v-decks .dk-cost small { font-size: 9px; color: var(--ink-dim); margin-left: 1px; }
+.v-decks .dk-card .dk-delta { position: absolute; top: 5px; right: 5px; }
+.v-decks .dk-delta { display: inline-flex; align-items: center; font: 700 12px/1 var(--mono); padding: 4px 6px; border-radius: 999px; background: rgba(10, 13, 24, .92); border: 1px solid currentColor; }
+.v-decks .dk-delta.add { color: var(--win); } .v-decks .dk-delta.rem { color: var(--loss); }
+.v-decks .dk-changes { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.v-decks .dk-changes .dk-delta { padding: 3px 5px; border-radius: 4px; border: 0; background: var(--s0); }
+
+/* ── results, compare ── */
+.v-decks tr.dk-plumb td { opacity: .6; }
+.v-decks .dk-diff h3 .muted { text-transform: none; letter-spacing: 0; font-weight: 500; }
+
+/* ── builder ── */
+.v-decks .dk-bgrid { margin-top: var(--sp-4); }
+.v-decks .dk-brows { display: flex; flex-direction: column; gap: 2px; }
+.v-decks .dk-brow { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 3px 6px; border-radius: var(--r-1); min-width: 0; }
+.v-decks .dk-brow:hover { background: var(--s2); }
+.v-decks .dk-brow.champ { grid-template-columns: minmax(0, 1fr) auto auto; background: var(--gold-soft); margin-bottom: 4px; }
+.v-decks .dk-brow.added { background: rgba(79, 207, 138, .07); } .v-decks .dk-brow.cut { background: rgba(239, 93, 85, .06); }
+.v-decks .dk-brow.gone .card-chip { opacity: .55; text-decoration: line-through; }
+.v-decks .dk-brow .card-chip { min-width: 0; }
+.v-decks .dk-bcost { text-align: center; color: var(--ink-dim); font-size: 12px; }
+.v-decks .dk-bbtns { display: inline-flex; gap: 4px; }
+.v-decks .dk-bbtns .icon-btn { width: 28px; height: 28px; font-size: 16px; line-height: 1; }
+.v-decks .dk-hits { display: flex; flex-direction: column; gap: 4px; }
+.v-decks .dk-hit { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 3px 6px; border-radius: var(--r-1); }
+.v-decks .dk-hit:hover { background: var(--s2); }
+.v-decks .dk-builder .notice ul { padding-left: 1.1em; font-size: 13.5px; }
+.v-decks .dk-builder details summary { cursor: pointer; }
+@media (max-width: 480px) {
+  .v-decks .dk-brow:not(.champ) { grid-template-columns: 22px minmax(0, 1fr) auto; }
+  .v-decks .dk-brow:not(.champ) > :nth-child(3) { display: none; }
+  .v-decks .dk-hit { grid-template-columns: minmax(0, 1fr) auto; }
+  .v-decks .dk-hit .xs { display: none; }
+}
