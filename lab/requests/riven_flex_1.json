@@ -1,0 +1,83 @@
+{
+  "name": "riven-flex-1",
+  "description": "Sacramento Riven: one-for-one swaps of its flexible slots against cards other Riven lists (and Radiance) play, plus the study's Heron-less list, vs a meta-weighted gauntlet.",
+  "base": "decks/riven_sacramento.txt",
+  "agent": "ismcts:sims=20,eval=net:lab/learn/nets/net_000.rbvn",
+  "opponents": [
+    {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/05_alex_shans_riven.txt",
+      "label": "Riven (Alex Shans)",
+      "weight": 4
+    },
+    {
+      "deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+      "label": "Kennen (Simple)",
+      "weight": 2
+    },
+    {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+      "label": "Kai'Sa (IcrazyFool)",
+      "weight": 1.5
+    },
+    {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/03_mvg_kh_nglongxinhx_n_ornn.txt",
+      "label": "Ornn (MVG)",
+      "weight": 1.5
+    },
+    {
+      "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/02_calvin_jin_viktor.txt",
+      "label": "Viktor (Calvin Jin)",
+      "weight": 1
+    }
+  ],
+  "candidates": [
+    {
+      "name": "Heron-less (study)",
+      "changes": {
+        "maindeck": {
+          "Astral Heron": -3,
+          "Riven, Deserter": 2,
+          "Blitzcrank, Impassive": 1
+        }
+      }
+    },
+    {
+      "name": "-2 Scuttle Crab +2 Riven, Deserter",
+      "changes": {
+        "maindeck": {
+          "Scuttle Crab": -2,
+          "Riven, Deserter": 2
+        }
+      }
+    }
+  ],
+  "swap": {
+    "out": [
+      "Scuttle Crab",
+      "Tideturner",
+      "Battle Preparations",
+      "Gust",
+      "Switcheroo",
+      "Not So Fast",
+      "Blitzcrank, Impassive"
+    ],
+    "in": [
+      "Riven, Deserter",
+      "Ki Burst",
+      "Traveling Merchant",
+      "Meditation",
+      "Evelynn, Entrancing",
+      "Baron Nashor"
+    ],
+    "max": 14,
+    "seed": 3
+  },
+  "rounds": [
+    4,
+    8,
+    16
+  ],
+  "keep": 0.5,
+  "threads": 4,
+  "seed": 11
+}
