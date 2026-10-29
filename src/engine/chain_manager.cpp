@@ -303,6 +303,7 @@ bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
             if (card.is_hidden && card.hidden_at != kInvalidId)
                 permanent_dest = BattlefieldLocation{card.hidden_at};
 
+            const bool from_facedown = card.is_hidden;
             if (card.is_hidden) {
                 // Playing from facedown — remove from BF facedown zone, no cost
                 for (auto& bf : state_.battlefields) {
@@ -328,10 +329,19 @@ bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
 
             // Track play
             ps.cards_played_this_turn++;
-            int energy_spent = (card.card_def_id != kInvalidId)
+            int energy_spent = (card.card_def_id != kInvalidId && !from_facedown)
                 ? card_db_.get(card.card_def_id).energy_cost : 0;
+            if (from_facedown) {
+                // Same bookkeeping as GameEngine::executePlayFromHidden: the
+                // card's own "if I was played from face down" and "when you
+                // play a card from face down" (CR 811) see this play.
+                card.card_counters["__played_from_facedown"] = 1;
+                events_.emit(PlayedFromFacedownEvent{chosen.card, current});
+            }
             events_.emit(CardPlayedEvent{chosen.card, current,
                 card.card_type, ps.cards_played_this_turn, energy_spent});
+            if (from_facedown)
+                events_.emit(ObjectStateChangedEvent{chosen.card, "played_not_from_hand"});
 
             // Add to chain. A unit or gear played with Reaction timing
             // ([Ambush] — CR 822.1.b, a [Hidden] permanent, "play me as a

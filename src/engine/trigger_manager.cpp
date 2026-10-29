@@ -791,6 +791,21 @@ void TriggerManager::onScore(const ScoreEvent& e) {
         }
     }
 
+    // "When you conquer here" on the scorer's unattached gear at that
+    // battlefield ([Deploy] gear such as Concert Poster).
+    if (e.method == ScoreMethod::Conquer) {
+        std::vector<GameObjectId> gear_watchers;
+        for (auto& [id, obj] : state_.objects) {
+            if (!obj.isGear() || obj.controller != e.player || obj.attached_to.has_value()) continue;
+            if (obj.battlefieldId() != std::optional<BattlefieldId>{e.battlefield}) continue;
+            if (obj.card_def_id != kInvalidId &&
+                cardFiresOn(card_registry_, obj.card_def_id, TriggerType::WhenYouConquerHere))
+                gear_watchers.push_back(id);
+        }
+        for (auto gid : gear_watchers)
+            fireTrigger(gid, e.player, 0, TriggerType::WhenYouConquerHere);
+    }
+
     // Battlefield triggers
     for (auto& bf : state_.battlefields) {
         if (bf.id != e.battlefield) continue;

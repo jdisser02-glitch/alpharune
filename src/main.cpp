@@ -165,6 +165,7 @@ struct AgentSpec {
     std::string raw;       // original spec string
     std::string kind;      // "random", "human", "mcts", "ismcts"
     int sims = 0;          // populated for mcts/ismcts
+    SearchOptions search;  // eval=, c=, det=, final= (mcts/ismcts)
 };
 
 AgentSpec parseAgentSpec(const std::string& s) {
@@ -190,6 +191,10 @@ AgentSpec parseAgentSpec(const std::string& s) {
                 auto key = rest.substr(i, eq - i);
                 auto val = rest.substr(eq + 1, comma - eq - 1);
                 if (key == "sims") out.sims = std::stoi(val);
+                else if (key == "eval") out.search.eval = val;
+                else if (key == "c") out.search.uct_c = std::stod(val);
+                else if (key == "det") out.search.determinize = val != "0";
+                else if (key == "final") out.search.final_policy = val;
             }
             i = comma + 1;
         }
@@ -227,11 +232,13 @@ std::unique_ptr<AgentInterface> buildAgent(const AgentSpec& spec,
     }
     if (spec.kind == "mcts") {
         return std::make_unique<MctsAgent>(deck1, deck2, registry,
-                                            game_seed, derived_seed, spec.sims);
+                                            game_seed, derived_seed, spec.sims,
+                                            spec.search);
     }
     if (spec.kind == "ismcts") {
         return std::make_unique<IsMctsAgent>(deck1, deck2, registry,
-                                              game_seed, derived_seed, spec.sims);
+                                              game_seed, derived_seed, spec.sims,
+                                              spec.search);
     }
     throw std::runtime_error("Unsupported agent spec '" + spec.raw + "'");
 }
@@ -266,10 +273,16 @@ int main(int argc, char* argv[]) {
         "                    so interactive use is fine but cost grows with\n"
         "                    decision depth.\n"
         "  ismcts:sims=N     OpenSpiel ISMCTSBot for imperfect-info search.\n"
-        "                    Same N semantics as MCTS. Currently behaves\n"
-        "                    like MCTS at search time — proper hidden-info\n"
-        "                    determinization (sampling from the unseen card\n"
-        "                    pool) is queued as a follow-up. Caveat:\n"
+        "                    Each simulation samples the hidden cards (the\n"
+        "                    opponent's hand, deck orders, facedown cards),\n"
+        "                    so it only uses what the player can know.\n"
+        "                    Options (comma-separated after sims=N):\n"
+        "                      eval=score|board  leaf evaluation (default score)\n"
+        "                      c=X               exploration constant\n"
+        "                      det=0             search the real state (cheats)\n"
+        "                      final=max|sample  final move choice (default max)\n"
+        "                    mcts accepts eval= and c= and always sees the real\n"
+        "                    state (perfect information). Caveat:\n"
         "                    StateEditor god-mode edits do not participate\n"
         "                    in MCTS planning; the bot sees the state\n"
         "                    implied by action_history alone.\n"
@@ -334,6 +347,11 @@ int main(int argc, char* argv[]) {
          "Show hand contents in stdout / replay renders (debug aid).")
         ("wild", po::bool_switch()->default_value(false),
          "Wild format: allow banned cards in decks (skips the ban-list check).")
+        ("review-dir", po::value<std::string>()->default_value(""),
+         "Batch mode: write game-review JSON here (games.ndjson for every game,\n"
+         "game_<n>.json with every decision for the first --review-games).")
+        ("review-games", po::value<int>()->default_value(2),
+         "How many games of the batch get a full decision record.")
     ;
 
     po::variables_map vm;
@@ -553,6 +571,10 @@ int main(int argc, char* argv[]) {
         cfg.total_games   = num_games;
         cfg.agent1_spec   = spec1.raw;
         cfg.agent2_spec   = spec2.raw;
+        cfg.deck1_label   = deck1_path;
+        cfg.deck2_label   = deck2_path;
+        cfg.json_replay_dir   = vm["review-dir"].as<std::string>();
+        cfg.json_replay_games = vm["review-games"].as<int>();
         cfg.agent_factory = std::move(factory);
 
         AggregateResults results;

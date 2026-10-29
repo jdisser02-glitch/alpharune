@@ -1548,6 +1548,15 @@ void GameEngine::executeIntent(const Intent& intent) {
             }
             break;
         }
+        case IntentType::PlayReaction: {
+            // Reaction-timed plays outside a chain priority window (showdowns,
+            // the open main phase): from face down (CR 811), or from hand.
+            auto& card = state_.getObject(intent.card);
+            if (card.is_hidden) executePlayFromHidden(intent);
+            else if (card.isSpell()) executePlaySpell(intent);
+            else executePlayCard(intent);
+            break;
+        }
         case IntentType::ActivateAbility:
         case IntentType::ActivateActionAbility: {
             if (payAndQueueAbility(intent)) runChain();
@@ -2858,12 +2867,25 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         if (locked_out) break;
         auto& card = state_.getObject(card_id);
         if (!card.isGear()) continue;
-        if (!canAfford(player, card_id)) continue;
 
         Intent play_intent;
         play_intent.type = IntentType::PlayCard;
         play_intent.player = player;
         play_intent.card = card_id;
+        // [Deploy] (CR 830.1.b.1): only to a battlefield, any battlefield.
+        const Card* gear_card = card.card_def_id != kInvalidId
+            ? card_registry_.get(card.card_def_id) : nullptr;
+        if (gear_card && gear_card->deploys()) {
+            for (const auto& bf : state_.battlefields) {
+                const LocationId where = BattlefieldLocation{bf.id};
+                if (!canAfford(player, card_id, 0, playLocationDiscount(player, card_id, where)))
+                    continue;
+                play_intent.play_location = where;
+                actions.push_back(play_intent);
+            }
+            continue;
+        }
+        if (!canAfford(player, card_id)) continue;
         play_intent.play_location = BaseLocation{player};
         actions.push_back(play_intent);
     }
@@ -4412,6 +4434,21 @@ void GameEngine::scoreConquer(PlayerId player, BattlefieldId bf) {
 void GameEngine::scoreHold(PlayerId player, BattlefieldId bf) {
     auto& ps = state_.player(player);
 
+    // [Deploy]: "When an opponent holds here, kill this." (CR 830.1.b)
+    {
+        std::vector<GameObjectId> doomed;
+        for (const auto& [id, obj] : state_.objects) {
+            if (!obj.isGear() || obj.controller == player || obj.attached_to.has_value()) continue;
+            if (obj.battlefieldId() != std::optional<BattlefieldId>{bf}) continue;
+            const Card* c = obj.card_def_id != kInvalidId ? card_registry_.get(obj.card_def_id) : nullptr;
+            if (c && c->deploys()) doomed.push_back(id);
+        }
+        for (auto id : doomed) {
+            events_.logTrace("DEPLOY: " + state_.getObject(id).name + " dies (opponent holds here)");
+            effect_executor_->killObject(id);
+        }
+    }
+
     // Continuous "can't gain points" lock (Tianna Crownguard, set via aura).
     if (ps.cannot_gain_points) {
         events_.logTrace(std::string("SCORE_BLOCKED: ") + toString(player) +
@@ -5214,8 +5251,11 @@ void GameEngine::recallMisplacedObjects() {
         if (obj.controller == PlayerId::None) continue;
         const LocationId home{BaseLocation{obj.controller}};
         bool recall = false;
-        if (obj.isGear() && !obj.attached_to.has_value() && obj.isAtBattlefield())
-            recall = true;
+        if (obj.isGear() && !obj.attached_to.has_value() && obj.isAtBattlefield()) {
+            // [Deploy] gear is not recalled (CR 830.1.b.3).
+            const Card* c = obj.card_def_id != kInvalidId ? card_registry_.get(obj.card_def_id) : nullptr;
+            recall = !(c && c->deploys());
+        }
         if ((obj.isPermanent() || obj.isRune()) && !obj.attached_to.has_value() &&
             obj.isAtBase() && *obj.location != home)
             recall = true;
@@ -5680,6 +5720,18 @@ static int powerCostDelta(const GameState& state, PlayerId player, const GameObj
     return delta;
 }
 
+namespace {
+// Domains whose Power pays a card's Power cost. A card with no domain prints
+// its Power as [A]: any domain pays it (cf. CR 805.1.b.2).
+std::vector<Domain> powerPayingDomains(const CardDef& def) {
+    if (!def.domains.empty()) return def.domains;
+    std::vector<Domain> all;
+    for (int d = 0; d < static_cast<int>(Domain::Count); ++d) all.push_back(static_cast<Domain>(d));
+    return all;
+}
+
+}  // namespace
+
 int GameEngine::playLocationDiscount(PlayerId player, GameObjectId card_obj,
                                      const std::optional<LocationId>& loc) const {
     if (!loc.has_value() || !std::holds_alternative<BattlefieldLocation>(*loc)) return 0;
@@ -5787,6 +5839,7 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
     // for power) lets a single ready rune provide BOTH 1 energy and
     // 1 power: exhaust it in step 1, recycle it in step 2.
     auto base_loc = BaseLocation{player};
+    const std::vector<Domain> pay_domains = powerPayingDomains(def);
     int ready_total = 0;
     int matching_ready = 0;
     int matching_exhausted = 0;
@@ -5795,7 +5848,7 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
         if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
         bool matches_domain = false;
         if (power_needed > 0) {
-            for (auto d : def.domains) {
+            for (auto d : pay_domains) {
                 for (auto rd : obj.domains) {
                     if (d == rd) { matches_domain = true; break; }
                 }
@@ -5827,7 +5880,7 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
     //     `energy_needed` ready runes, and we're free to pick the
     //     matching-domain ones first when doing so).
     int power_from_pool = pool.universal_power;
-    for (auto d : def.domains) {
+    for (auto d : pay_domains) {
         int di = static_cast<int>(d);
         if (di >= 0 && di < static_cast<int>(Domain::Count)) {
             power_from_pool += pool.power[di];
@@ -5999,7 +6052,7 @@ GameEngine::CostPaymentAdvance GameEngine::beginCostPayment(
 
     // Spend floating Power the same way: this card's domains first, then [A].
     if (power_needed > 0) {
-        for (auto d : def.domains) {
+        for (auto d : powerPayingDomains(def)) {
             int di = static_cast<int>(d);
             if (di < 0 || di >= static_cast<int>(Domain::Count)) continue;
             int from_pool = std::min(ps.rune_pool.power[di], power_needed);
@@ -6017,7 +6070,7 @@ GameEngine::CostPaymentAdvance GameEngine::beginCostPayment(
     cur.player = player;
     cur.energy_remaining = energy_needed;
     cur.power_remaining = power_needed;
-    cur.power_domains = def.domains;
+    cur.power_domains = powerPayingDomains(def);
     cur.phase = (energy_needed > 0)
         ? GameState::CostPaymentCursor::Phase::PayingEnergy
         : ((power_needed > 0)

@@ -1,8 +1,11 @@
 #include "game_runner.h"
 #include "agents/random_agent.h"
+#include "io/decision_log.h"
 #include "io/replay_writer.h"
 #include "io/state_renderer.h"
 
+#include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <random>
@@ -121,6 +124,18 @@ GameResult GameRunner::run() {
     auto agent1 = makeAgent(0, config_.agent1_spec);
     auto agent2 = makeAgent(1, config_.agent2_spec);
 
+    // Game review record (JSON) for the first json_replay_games games.
+    std::unique_ptr<DecisionLog> review;
+    std::vector<std::string> review_lines;
+    if (!config_.json_replay_dir.empty() && config_.game_index < config_.json_replay_games) {
+        review = std::make_unique<DecisionLog>();
+        events.on_log.connect([&review_lines](const LogEvent& e) {
+            if (e.level == LogLevel::Debug || e.level == LogLevel::Info ||
+                (e.level == LogLevel::Trace && review_lines.size() < 200))
+                review_lines.push_back(e.message);
+        });
+    }
+
     // Decision callback feeds the HTML replay writer when --render is on.
     engine.on_decision = [&](const GameState& state,
                               const std::vector<Intent>& actions,
@@ -128,9 +143,32 @@ GameResult GameRunner::run() {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
         }
+        if (review) {
+            const AgentInterface& who = chosen.player == PlayerId::Player2 ? *agent2 : *agent1;
+            review->record(state, actions, chosen, who.lastSearch(), std::move(review_lines));
+            review_lines.clear();
+        }
     };
 
     auto result = engine.runGame(deck1_, deck2_, *agent1, *agent2, game_seed);
+
+    if (!config_.json_replay_dir.empty()) {
+        nlohmann::json header = {
+            {"game", config_.game_index + 1}, {"seed", game_seed}, {"uuid", game_uuid},
+            {"deck1", config_.deck1_label}, {"deck2", config_.deck2_label},
+            {"agent1", config_.agent1_spec}, {"agent2", config_.agent2_spec},
+            {"winner", result.winner == PlayerId::Player1 ? 1 : result.winner == PlayerId::Player2 ? 2 : 0},
+            {"scores", {result.final_scores[0], result.final_scores[1]}},
+            {"turns", result.total_turns}, {"decisions", result.total_decisions},
+            {"reason", result.termination_reason}};
+        std::filesystem::create_directories(config_.json_replay_dir);
+        if (review)
+            review->finish(header, config_.json_replay_dir + "/game_" +
+                                   std::to_string(config_.game_index + 1) + ".json");
+        std::lock_guard<std::mutex> lock(results_.console_mutex);
+        std::ofstream(config_.json_replay_dir + "/games.ndjson", std::ios::app)
+            << header.dump() << "\n";
+    }
 
     // Finalize outputs
     if (replay) {

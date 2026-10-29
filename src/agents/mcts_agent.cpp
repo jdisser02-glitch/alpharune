@@ -13,6 +13,8 @@
 #include "open_spiel/algorithms/is_mcts.h"
 
 #include <algorithm>
+#include <cmath>
+#include <random>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -41,6 +43,8 @@ namespace {
 //   • Tertiary: hand size advantage (very small weight).
 class RiftboundHeuristicEvaluator : public ::open_spiel::algorithms::Evaluator {
 public:
+    explicit RiftboundHeuristicEvaluator(std::string mode = "score") : mode_(std::move(mode)) {}
+
     std::vector<double> Evaluate(const ::open_spiel::State& state) override {
         // Terminal: use the canonical Returns directly so MCTS sees
         // unambiguous win/loss signals at known game-ends.
@@ -64,9 +68,35 @@ public:
         // to disentangle them via tree expansion. With more sims this
         // could be reintroduced as a tunable; today, keep it minimal.
         double val = static_cast<double>(p1.score - p2.score) / victory;
+        if (mode_ == "board") val = boardValue(s, val);
         if (val >  1.0) val =  1.0;
         if (val < -1.0) val = -1.0;
         return {val, -val};
+    }
+
+    // "board": the score difference still dominates; the rest breaks ties
+    // between positions with the same score — who has more Might on the
+    // battlefields (the next conquer / hold), who holds more battlefields
+    // (points at the next Beginning Phase), and cards and runes in reserve.
+    static double boardValue(const GameState& s, double score_term) {
+        double might[2] = {0, 0}, held[2] = {0, 0}, runes[2] = {0, 0};
+        for (const auto& [id, o] : s.objects) {
+            if (!o.location.has_value()) continue;
+            const int p = o.controller == PlayerId::Player1 ? 0 : 1;
+            if (o.isUnit() && o.isAtBattlefield()) might[p] += o.current_might;
+            else if (o.isRune()) runes[p] += 1;
+        }
+        for (const auto& bf : s.battlefields)
+            if (bf.controller.has_value())
+                held[*bf.controller == PlayerId::Player1 ? 0 : 1] += 1;
+        const double nbf = std::max<size_t>(1, s.battlefields.size());
+        const double hand = static_cast<double>(s.player(PlayerId::Player1).hand.size()) -
+                            static_cast<double>(s.player(PlayerId::Player2).hand.size());
+        return 0.55 * score_term
+             + 0.20 * std::tanh((might[0] - might[1]) / 8.0)
+             + 0.15 * (held[0] - held[1]) / nbf
+             + 0.05 * std::tanh(hand / 4.0)
+             + 0.05 * std::tanh((runes[0] - runes[1]) / 4.0);
     }
 
     ::open_spiel::ActionsAndProbs Prior(const ::open_spiel::State& state) override {
@@ -170,6 +200,9 @@ public:
         }
         return out;
     }
+
+private:
+    std::string mode_;
 };
 
 } // namespace
@@ -214,18 +247,39 @@ std::unique_ptr<::open_spiel::State> buildOpenSpielStateAt(
     return state;
 }
 
+/// (encoded action, weight) pairs -> (index into `legal`, share). Several
+/// Intents can share one encoded action; the share goes to the first.
+std::vector<std::pair<int, double>> sharesByLegalIndex(
+    const std::vector<std::pair<::open_spiel::Action, double>>& weights,
+    const std::vector<Intent>& legal, const GameState& state) {
+    double total = 0;
+    for (const auto& [a, w] : weights) total += w;
+    std::vector<std::pair<int, double>> out;
+    if (total <= 0) return out;
+    for (const auto& [a, w] : weights) {
+        for (size_t i = 0; i < legal.size(); ++i) {
+            if (openspiel::encodeAction(legal[i], state) == static_cast<int>(a)) {
+                out.emplace_back(static_cast<int>(i), w / total);
+                break;
+            }
+        }
+    }
+    return out;
+}
+
 } // namespace
 
 // ─── MctsAgent ─────────────────────────────────────────────────────────────
 
 struct MctsAgent::Impl {
+    std::vector<std::pair<int, double>> last_search;
     std::shared_ptr<const ::open_spiel::Game> game;
     std::unique_ptr<::open_spiel::algorithms::MCTSBot> bot;
     int sims;
     uint64_t engine_seed;
 
     Impl(std::string d1, std::string d2, std::string reg,
-         uint64_t eng_seed, uint64_t mcts_seed, int sim_count)
+         uint64_t eng_seed, uint64_t mcts_seed, int sim_count, const SearchOptions& opts)
         : sims(sim_count), engine_seed(eng_seed) {
         const uint64_t engine_seed = eng_seed;  // alias for the body below
         // OpenSpiel's RiftboundGame uses this seed to seed the engine
@@ -251,10 +305,10 @@ struct MctsAgent::Impl {
         // a deterministic, slightly-correlated signal beats a noisy
         // strong one.
         (void)mcts_seed;  // unused for heuristic; bot keeps its own seed below
-        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>();
+        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval);
         bot = std::make_unique<::open_spiel::algorithms::MCTSBot>(
             *game, evaluator,
-            /*uct_c=*/1.4,
+            /*uct_c=*/opts.uct_c > 0 ? opts.uct_c : 1.4,
             /*max_simulations=*/sims,
             /*max_memory_mb=*/256,
             /*solve=*/false,
@@ -277,11 +331,12 @@ MctsAgent::MctsAgent(std::string deck1_path,
                      std::string registry_path,
                      uint64_t    engine_seed,
                      uint64_t    mcts_seed,
-                     int         sims)
+                     int         sims,
+                     SearchOptions opts)
     : impl_(std::make_unique<Impl>(std::move(deck1_path),
                                    std::move(deck2_path),
                                    std::move(registry_path),
-                                   engine_seed, mcts_seed, sims)) {}
+                                   engine_seed, mcts_seed, sims, opts)) {}
 
 MctsAgent::~MctsAgent() = default;
 
@@ -341,6 +396,12 @@ Intent MctsAgent::selectAction(const GameState& state,
         return legal_actions[0];
     }
     ::open_spiel::Action chosen_action = root->BestChild().action;
+    {
+        std::vector<std::pair<::open_spiel::Action, double>> visits;
+        for (const auto& ch : root->children)
+            visits.emplace_back(ch.action, static_cast<double>(ch.explore_count));
+        impl_->last_search = sharesByLegalIndex(visits, legal_actions, state);
+    }
     if (dbg) {
         std::cerr << "[MCTS] chose_action=" << chosen_action
                   << " explore=" << root->explore_count
@@ -376,13 +437,16 @@ Intent MctsAgent::selectAction(const GameState& state,
 // ─── IsMctsAgent ───────────────────────────────────────────────────────────
 
 struct IsMctsAgent::Impl {
+    std::vector<std::pair<int, double>> last_search;
+    bool final_max = true;
+    std::mt19937_64 pick_rng;
     std::shared_ptr<const ::open_spiel::Game> game;
     std::unique_ptr<::open_spiel::algorithms::ISMCTSBot> bot;
     int sims;
     uint64_t engine_seed;
 
     Impl(std::string d1, std::string d2, std::string reg,
-         uint64_t eng_seed, uint64_t mcts_seed, int sim_count)
+         uint64_t eng_seed, uint64_t mcts_seed, int sim_count, const SearchOptions& opts)
         : sims(sim_count), engine_seed(eng_seed) {
         const uint64_t engine_seed = eng_seed;  // alias for the body below
         game = ::open_spiel::LoadGame(buildGameStr(d1, d2, reg, engine_seed));
@@ -391,29 +455,36 @@ struct IsMctsAgent::Impl {
                 "IsMctsAgent: LoadGame('riftbound') returned null — "
                 "check deck/registry paths and OpenSpiel registration.");
         }
-        (void)mcts_seed;  // unused for evaluator; bot still uses its own seed below
-        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>();
+        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval);
         bot = std::make_unique<::open_spiel::algorithms::ISMCTSBot>(
             /*seed=*/static_cast<int>(mcts_seed ^ 0x3C3C3C3C),
             evaluator,
-            /*uct_c=*/2.0,
+            /*uct_c=*/opts.uct_c > 0 ? opts.uct_c : 2.0,
             /*max_simulations=*/sims,
             /*max_world_samples=*/
                 ::open_spiel::algorithms::kUnlimitedNumWorldSamples,
+            // Visit shares are kept for review; the move is picked from them
+            // in selectAction (most visited, or sampled with final=sample).
             /*final_policy_type=*/
                 ::open_spiel::algorithms::ISMCTSFinalPolicyType::kNormalizedVisitCount,
             /*use_observation_string=*/true,
-            /*allow_inconsistent_action_sets=*/false);
-        // Minimum-viable resampler: Clone() rather than determinize hidden
-        // info. Same TODO as openspiel_match — proper resampling from the
-        // unseen card pool is queued.
-        bot->SetResampler(
-            [](const ::open_spiel::State& st,
-               ::open_spiel::Player /*pl*/,
-               std::function<double()> /*rng*/)
-                -> std::unique_ptr<::open_spiel::State> {
-                return st.Clone();
-            });
+            // Sampled worlds give the opponent different hands, so the
+            // actions available at an opponent node differ between samples.
+            /*allow_inconsistent_action_sets=*/opts.determinize);
+        if (!opts.determinize) {
+            // Search the real state (perfect information).
+            bot->SetResampler(
+                [](const ::open_spiel::State& st,
+                   ::open_spiel::Player /*pl*/,
+                   std::function<double()> /*rng*/)
+                    -> std::unique_ptr<::open_spiel::State> {
+                    return st.Clone();
+                });
+        }
+        // determinize: no resampler set, so ISMCTSBot calls
+        // RiftboundState::ResampleFromInfostate.
+        final_max = opts.final_policy != "sample";
+        pick_rng.seed(mcts_seed ^ 0x9E3779B97F4A7C15ull);
     }
 };
 
@@ -422,11 +493,12 @@ IsMctsAgent::IsMctsAgent(std::string deck1_path,
                          std::string registry_path,
                          uint64_t    engine_seed,
                          uint64_t    mcts_seed,
-                         int         sims)
+                         int         sims,
+                         SearchOptions opts)
     : impl_(std::make_unique<Impl>(std::move(deck1_path),
                                    std::move(deck2_path),
                                    std::move(registry_path),
-                                   engine_seed, mcts_seed, sims)) {}
+                                   engine_seed, mcts_seed, sims, opts)) {}
 
 IsMctsAgent::~IsMctsAgent() = default;
 
@@ -443,8 +515,19 @@ Intent IsMctsAgent::selectAction(const GameState& state,
         impl_->game, impl_->engine_seed,
         state, snap_step, ::riftbound::GameResult{});
 
+    impl_->last_search.clear();
     if (!os_state || os_state->IsTerminal()) return legal_actions[0];
-    ::open_spiel::Action chosen_action = impl_->bot->Step(*os_state);
+    ::open_spiel::ActionsAndProbs policy = impl_->bot->GetPolicy(*os_state);
+    if (policy.empty()) return legal_actions[0];
+    impl_->last_search = sharesByLegalIndex(policy, legal_actions, state);
+    ::open_spiel::Action chosen_action = policy.front().first;
+    if (impl_->final_max) {
+        double best = -1;
+        for (const auto& [a, p] : policy) if (p > best) { best = p; chosen_action = a; }
+    } else {
+        double r = std::uniform_real_distribution<double>(0.0, 1.0)(impl_->pick_rng), acc = 0;
+        for (const auto& [a, p] : policy) { acc += p; chosen_action = a; if (acc >= r) break; }
+    }
     const Intent* intent = openspiel::decodeAction(
         static_cast<int>(chosen_action), legal_actions, state);
     if (!intent) return legal_actions[0];
@@ -452,3 +535,8 @@ Intent IsMctsAgent::selectAction(const GameState& state,
 }
 
 } // namespace riftbound
+
+namespace riftbound {
+std::vector<std::pair<int, double>> MctsAgent::lastSearch() const { return impl_->last_search; }
+std::vector<std::pair<int, double>> IsMctsAgent::lastSearch() const { return impl_->last_search; }
+}  // namespace riftbound

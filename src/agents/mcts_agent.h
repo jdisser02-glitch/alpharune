@@ -30,6 +30,21 @@
 
 namespace riftbound {
 
+/// Search settings shared by the MCTS agents (parsed from the agent spec,
+/// e.g. "ismcts:sims=200,eval=board,c=1.4").
+struct SearchOptions {
+    /// Leaf evaluation: "score" (score difference only) or "board" (score,
+    /// Might at battlefields, battlefields held, cards and runes).
+    std::string eval = "score";
+    /// Exploration constant; <= 0 keeps the agent's default.
+    double uct_c = 0.0;
+    /// ISMCTS: sample hidden information per simulation (honest search).
+    /// false = search the real state (sees the opponent's hand and deck order).
+    bool determinize = true;
+    /// ISMCTS final move: "max" (most visited) or "sample" (visit-proportional).
+    std::string final_policy = "max";
+};
+
 class MctsAgent : public AgentInterface {
 public:
     /// `deck1_path` / `deck2_path` / `registry_path` MUST match the
@@ -52,7 +67,8 @@ public:
               std::string registry_path,
               uint64_t    engine_seed,
               uint64_t    mcts_seed,
-              int         sims);
+              int         sims,
+              SearchOptions opts = {});
     ~MctsAgent() override;
 
     MctsAgent(const MctsAgent&) = delete;
@@ -62,6 +78,7 @@ public:
         const GameState& state,
         const std::vector<Intent>& legal_actions
     ) override;
+    std::vector<std::pair<int, double>> lastSearch() const override;
 
 private:
     struct Impl;
@@ -69,9 +86,10 @@ private:
 };
 
 /// Information-set MCTS variant — same wiring shape as MctsAgent but
-/// uses `ISMCTSBot`. Currently behaves like perfect-info MCTS because
-/// the resampler is a Clone (no hidden-info determinization yet — see
-/// CLAUDE.md "Phase 6b" backlog).
+/// uses `ISMCTSBot`. With SearchOptions::determinize (the default) each
+/// simulation starts from RiftboundState::ResampleFromInfostate, a world in
+/// which the opponent's hidden cards and every deck order are re-dealt, so
+/// the search only uses what the acting player can know.
 class IsMctsAgent : public AgentInterface {
 public:
     IsMctsAgent(std::string deck1_path,
@@ -79,7 +97,8 @@ public:
                 std::string registry_path,
                 uint64_t    engine_seed,
                 uint64_t    mcts_seed,
-                int         sims);
+                int         sims,
+                SearchOptions opts = {});
     ~IsMctsAgent() override;
 
     IsMctsAgent(const IsMctsAgent&) = delete;
@@ -89,6 +108,7 @@ public:
         const GameState& state,
         const std::vector<Intent>& legal_actions
     ) override;
+    std::vector<std::pair<int, double>> lastSearch() const override;
 
 private:
     struct Impl;

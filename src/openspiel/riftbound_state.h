@@ -178,6 +178,20 @@ public:
     /// is still reproducible by re-running with --seed <value>.
     uint64_t engineSeed() const { return engine_seed_; }
 
+    /// Determinization for information-set search (ISMCTS). Returns a clone in
+    /// which everything `player_id` cannot see is re-dealt at random from the
+    /// cards that could be there: the opponent's hand, Main Deck and facedown
+    /// cards share one pool (facedown slots only take cards with [Hidden]),
+    /// and both players' Main Deck and Rune Deck orders are shuffled. Public
+    /// zones and the observer's own hand are untouched, so the observation
+    /// (and the ISMCTS infostate key) is the same as this state's.
+    std::unique_ptr<::open_spiel::State> ResampleFromInfostate(
+        int player_id, std::function<double()> rng) const override;
+
+    /// Objects re-dealt by ResampleFromInfostate (object -> card id).
+    const std::vector<std::pair<::riftbound::GameObjectId, ::riftbound::CardDefId>>&
+    identityOverrides() const { return identity_overrides_; }
+
 protected:
     void DoApplyAction(::open_spiel::Action action) override;
 
@@ -226,6 +240,17 @@ private:
     /// faithfully. Without this, Clone()'s fresh engine would seed itself
     /// with `std::random_device{}()` and play a different game.
     uint64_t engine_seed_;
+
+    // Determinization (ResampleFromInfostate). A clone that is not at a
+    // clean boundary is rebuilt by replaying action_history from the real
+    // start of the game, which restores the real hidden cards; ensureLive
+    // re-applies these identities after replaying the first
+    // `override_history_len_` actions (the moment the world was sampled), and
+    // reseeds the engine RNG with `world_seed_`.
+    std::vector<std::pair<::riftbound::GameObjectId, ::riftbound::CardDefId>> identity_overrides_;
+    int override_history_len_ = -1;
+    uint64_t world_seed_ = 0;
+    void applyIdentityOverrides(::riftbound::GameState& gs) const;
 };
 
 } // namespace riftbound::openspiel

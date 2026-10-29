@@ -179,6 +179,12 @@ public:
     /// "This enters exhausted." (gear normally enters ready, CR 149.1).
     virtual bool entersExhausted() const { return false; }
 
+    /// [Deploy] (CR 830, gear): "This may be played to any battlefield; play
+    /// this only to a battlefield; if this is not a unit, it is not recalled in
+    /// cleanups; when an opponent holds here, kill this." A characteristic
+    /// other effects may check ("a friendly gear with [Deploy]").
+    virtual bool deploys() const { return false; }
+
     /// Play-legality gate independent of cost/targets ("I can't be played on
     /// your first, second, or third turns" — Ol' Poro). Default: playable.
     virtual bool canBePlayed(const GameState& /*state*/, PlayerId /*player*/) const { return true; }

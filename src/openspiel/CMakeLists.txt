@@ -98,3 +98,19 @@ target_include_directories(riftbound_parity_baseline PRIVATE
 )
 
 # Kuhn Poker CFR validation moved to riftbound-trainer alongside cfr_tabular.
+
+# Determinization test (RiftboundState::ResampleFromInfostate): sampled worlds
+# keep the observer's view and re-deal only what the observer cannot see.
+add_executable(riftbound_determinization_test
+    determinization_test.cpp
+    riftbound_game.cpp
+    riftbound_state.cpp
+)
+target_link_libraries(riftbound_determinization_test PRIVATE
+    riftbound_core open_spiel_core
+    absl::algorithm absl::flags absl::flags_parse absl::flat_hash_map
+    absl::optional absl::random_random absl::str_format absl::strings absl::time
+)
+target_include_directories(riftbound_determinization_test PRIVATE
+    ${open_spiel_SOURCE_DIR}
+)

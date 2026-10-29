@@ -12,6 +12,9 @@ static_assert(::riftbound::openspiel::kNumCardDefIds == ::riftbound::ml::kCardVo
 #include "open_spiel/spiel_utils.h"
 
 #include <algorithm>
+#include <atomic>
+#include <map>
+#include <set>
 #include <cstdio>
 #include <cstring>
 #include <random>
@@ -128,7 +131,8 @@ void RiftboundState::ensureLive() const {
         // Fast path — skip beginGame + replay entirely. resumeFromSnapshot
         // initialises subsystems on the new EventBus and spawns the worker
         // thread which dispatches based on state_.turn.phase.
-        engine_->resumeFromSnapshot(std::move(moved_state), engine_seed_);
+        engine_->resumeFromSnapshot(std::move(moved_state),
+                                    world_seed_ != 0 ? world_seed_ : engine_seed_);
     } else {
         // Legacy replay path for the few clones that snapshot during
         // Setup/Mulligan. Re-extract action history from the moved
@@ -136,8 +140,20 @@ void RiftboundState::ensureLive() const {
         std::vector<int64_t> history_to_replay =
             std::move(moved_state.action_history);
         engine_->beginGame(rb_game_.deck1(), rb_game_.deck2(), engine_seed_);
+        // A determinized world: the replay first rebuilds the real game up to
+        // the moment the world was sampled, then the sampled identities and
+        // RNG take over (see ResampleFromInfostate).
+        auto applyWorld = [this]() {
+            if (identity_overrides_.empty()) return;
+            applyIdentityOverrides(engine_->mutableState());
+            if (world_seed_ != 0) engine_->reseedRng(world_seed_);
+        };
+        size_t replayed = 0;
+        if (override_history_len_ == 0) applyWorld();
         for (auto action_id : history_to_replay) {
             if (engine_->isStepDone()) break;
+            if (static_cast<int>(replayed) == override_history_len_ && replayed > 0) applyWorld();
+            ++replayed;
             const auto& legal = engine_->currentStep().legal;
             const auto& state = engine_->state();
             int legal_index = -1;
@@ -151,6 +167,9 @@ void RiftboundState::ensureLive() const {
             engine_->mutableState().action_history.push_back(action_id);
             engine_->applyChoice(legal_index);
         }
+        if (override_history_len_ > 0 && static_cast<int>(replayed) == override_history_len_ &&
+            !engine_->isStepDone())
+            applyWorld();
     }
 }
 
@@ -324,20 +343,163 @@ std::unique_ptr<::open_spiel::State> RiftboundState::Clone() const {
     //
     // Clone-of-clone is also lazy: if the source is itself a lazy clone,
     // we just copy the lazy_ fields directly — no engine ever spawns.
+    std::unique_ptr<RiftboundState> out;
     if (is_lazy_) {
-        return std::unique_ptr<::open_spiel::State>(new RiftboundState(
+        out.reset(new RiftboundState(
             game_, engine_seed_,
             lazy_state_, lazy_step_, lazy_result_, SnapshotTag{}));
+    } else {
+        auto snapshot_state  = engine_->state();          // copy
+        auto snapshot_step   = engine_->currentStep();    // by value already
+        auto snapshot_result = engine_->stepResult();     // copy
+        out.reset(new RiftboundState(
+            game_, engine_seed_,
+            std::move(snapshot_state),
+            std::move(snapshot_step),
+            std::move(snapshot_result),
+            SnapshotTag{}));
     }
-    auto snapshot_state  = engine_->state();          // copy
-    auto snapshot_step   = engine_->currentStep();    // by value already
-    auto snapshot_result = engine_->stepResult();     // copy
-    return std::unique_ptr<::open_spiel::State>(new RiftboundState(
-        game_, engine_seed_,
-        std::move(snapshot_state),
-        std::move(snapshot_step),
-        std::move(snapshot_result),
-        SnapshotTag{}));
+    out->identity_overrides_ = identity_overrides_;
+    out->override_history_len_ = override_history_len_;
+    out->world_seed_ = world_seed_;
+    return out;
+}
+
+void RiftboundState::applyIdentityOverrides(::riftbound::GameState& gs) const {
+    const auto& db = rb_game_.cardDb();
+    for (const auto& [oid, def_id] : identity_overrides_) {
+        if (!gs.objectExists(oid) || def_id == ::riftbound::kInvalidId) continue;
+        auto& obj = gs.getObject(oid);
+        const auto& def = db.get(def_id);
+        obj.card_def_id   = def_id;
+        obj.name          = def.name;
+        obj.card_type     = def.card_type;
+        obj.super_type    = def.super_type;
+        obj.tags          = def.tags;
+        obj.domains       = def.domains;
+        obj.base_might    = def.might;
+        obj.current_might = def.might;
+        obj.keywords      = def.keywords;
+        obj.assault_value = def.assault_value;
+        obj.shield_value  = def.shield_value;
+        obj.deflect_value = def.deflect_value;
+        obj.might_bonus   = def.might_bonus;
+    }
+}
+
+std::unique_ptr<::open_spiel::State> RiftboundState::ResampleFromInfostate(
+    int player_id, std::function<double()> rng) const {
+    using ::riftbound::GameObjectId;
+    using ::riftbound::CardDefId;
+    auto base = Clone();
+    auto* out = static_cast<RiftboundState*>(base.get());
+    if (out->IsTerminal() || !out->is_lazy_) return base;
+    ::riftbound::GameState& gs = out->lazy_state_;
+    const auto& db = rb_game_.cardDb();
+    const auto observer = player_id == 0 ? ::riftbound::PlayerId::Player1
+                                         : ::riftbound::PlayerId::Player2;
+    const auto opp = ::riftbound::opponent(observer);
+
+    auto pick = [&](size_t n) {
+        size_t k = static_cast<size_t>(rng() * static_cast<double>(n));
+        return k >= n ? n - 1 : k;
+    };
+    auto shuffle = [&](std::vector<CardDefId>& v) {
+        for (size_t i = v.size(); i > 1; --i) std::swap(v[i - 1], v[pick(i)]);
+    };
+    // Objects the chain refers to (an ability whose source went back to hand,
+    // a target) are known to the observer: never re-deal them.
+    std::set<GameObjectId> pinned;
+    auto pinItem = [&](const ::riftbound::ChainItem& it) {
+        pinned.insert(it.source);
+        pinned.insert(it.targets.begin(), it.targets.end());
+        pinned.insert(it.chosen_objects.begin(), it.chosen_objects.end());
+    };
+    for (const auto& it : gs.chain.items) pinItem(it);
+    if (gs.chain.resuming.has_value()) pinItem(*gs.chain.resuming);
+    auto free = [&](GameObjectId oid) {
+        return gs.objectExists(oid) && !pinned.count(oid) &&
+               gs.getObject(oid).card_def_id != ::riftbound::kInvalidId;
+    };
+    std::map<GameObjectId, CardDefId> assign;
+    auto deal = [&](const std::vector<GameObjectId>& slots) {
+        std::vector<GameObjectId> live;
+        std::vector<CardDefId> ids;
+        for (auto oid : slots) {
+            if (!free(oid)) continue;
+            live.push_back(oid);
+            ids.push_back(gs.getObject(oid).card_def_id);
+        }
+        shuffle(ids);
+        for (size_t i = 0; i < live.size(); ++i) assign[live[i]] = ids[i];
+    };
+
+    // The opponent's hidden cards: hand + Main Deck + facedown share a pool.
+    {
+        const auto& ps = gs.player(opp);
+        std::vector<GameObjectId> facedown;
+        for (const auto& bf : gs.battlefields)
+            for (auto oid : bf.facedown)
+                if (free(oid) && gs.getObject(oid).controller == opp)
+                    facedown.push_back(oid);
+        std::vector<GameObjectId> slots;
+        for (auto oid : ps.hand) if (free(oid)) slots.push_back(oid);
+        for (auto oid : ps.main_deck) if (free(oid)) slots.push_back(oid);
+        std::vector<CardDefId> pool;
+        for (auto oid : slots) pool.push_back(gs.getObject(oid).card_def_id);
+        for (auto oid : facedown) pool.push_back(gs.getObject(oid).card_def_id);
+        shuffle(pool);
+        // Facedown slots first, each from a card that could be hidden.
+        for (auto oid : facedown) {
+            for (size_t i = 0; i < pool.size(); ++i) {
+                if (db.get(pool[i]).keywords.has(::riftbound::Keyword::Hidden)) {
+                    assign[oid] = pool[i];
+                    pool.erase(pool.begin() + static_cast<long>(i));
+                    break;
+                }
+            }
+            if (!assign.count(oid)) {   // no hideable card left: keep it
+                auto own = gs.getObject(oid).card_def_id;
+                auto it = std::find(pool.begin(), pool.end(), own);
+                if (it != pool.end()) pool.erase(it);
+                assign[oid] = own;
+            }
+        }
+        size_t k = 0;
+        for (auto oid : slots)
+            if (k < pool.size()) assign[oid] = pool[k++];
+    }
+    // Deck orders the observer does not know: its own Main Deck, both Rune Decks.
+    deal(gs.player(observer).main_deck);
+    deal(gs.player(observer).rune_deck);
+    deal(gs.player(opp).rune_deck);
+
+    // Compose with an earlier determinization of the same state, if any.
+    std::map<GameObjectId, CardDefId> merged(out->identity_overrides_.begin(),
+                                             out->identity_overrides_.end());
+    for (const auto& [oid, def] : assign) merged[oid] = def;
+    out->identity_overrides_.assign(merged.begin(), merged.end());
+    out->override_history_len_ = static_cast<int>(gs.action_history.size());
+    out->world_seed_ = 1 + static_cast<uint64_t>(rng() * 9.0e15);
+    out->applyIdentityOverrides(gs);
+
+    // The sampled world must look the same to the observer. If it does not,
+    // something the observer can see was re-dealt: report the differing
+    // observation features once and fall back to the unchanged state.
+    if (out->ObservationString(player_id) != ObservationString(player_id)) {
+        static std::atomic<int> reported{0};
+        if (reported.fetch_add(1) < 3) {
+            const auto a = ::riftbound::ml::extractStateFeatures(engineState(), observer, db);
+            const auto b = ::riftbound::ml::extractStateFeatures(gs, observer, db);
+            std::fprintf(stderr, "[determinize] observation changed at decision %d; features:",
+                         static_cast<int>(gs.decision_index));
+            for (size_t q = 0; q < std::min(a.size(), b.size()); ++q)
+                if (a[q] != b[q]) std::fprintf(stderr, " %zu:%g->%g", q, a[q], b[q]);
+            std::fprintf(stderr, "\n");
+        }
+        return Clone();
+    }
+    return base;
 }
 
 void RiftboundState::DoApplyAction(::open_spiel::Action action) {

@@ -333,6 +333,7 @@ add_library(riftbound_core
     src/engine/trigger_manager.cpp
     src/io/state_renderer.cpp
     src/io/replay_writer.cpp
+    src/io/decision_log.cpp
     src/io/state_editor.cpp
     src/cards/card.cpp
     src/cards/card_registry.cpp

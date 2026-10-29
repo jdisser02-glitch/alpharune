@@ -10,6 +10,7 @@
 #include "core/game_state.h"
 #include "core/intent.h"
 
+#include <utility>
 #include <vector>
 
 namespace riftbound {
@@ -23,6 +24,11 @@ public:
         const GameState& state,
         const std::vector<Intent>& legal_actions
     ) = 0;
+
+    /// After selectAction: how the agent's search split over the options it
+    /// was given, as (index into legal_actions, share of the search). Empty
+    /// for agents that do not search. Used for game review.
+    virtual std::vector<std::pair<int, double>> lastSearch() const { return {}; }
 };
 
 } // namespace riftbound

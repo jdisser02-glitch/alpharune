@@ -502,5 +502,59 @@ TEST_F(RivenRadianceTest, Deserter_ExhaustAFriendlyUnitToReadyAUnitOncePerTurn) 
     EXPECT_EQ(activations(), 0) << "once each turn";
 }
 
+// ─── Engine fixes found while adding Radiance ───────────────────────────────
+
+TEST_F(RivenRadianceTest, DomainlessPowerCostIsPaidByAnyRune) {
+    // Hush (no domain, [1][A][A]): two ready runes of any domain pay it.
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    rune(P1, Domain::Calm);
+    rune(P1, Domain::Chaos);
+    auto hush = cardInHand(P1, 971);
+    EXPECT_TRUE(engine_->testHook_canAfford(P1, hush));
+}
+
+TEST_F(RivenRadianceTest, PlayingAHiddenCardMarksItPlayedFromFaceDown) {
+    // Elnuk Herd: "then recycle me if I was played from face down" — played
+    // from its facedown slot through the engine's PlayReaction path.
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    controlBf(0, P1);
+    auto ally = boardObject(P1, kOtterpus, 0);
+    auto elnuk = cardInHand(P1, 981);
+    auto& ps = s().player(P1);
+    ps.hand.erase(std::find(ps.hand.begin(), ps.hand.end(), elnuk));
+    auto& e = s().getObject(elnuk);
+    e.is_hidden = true;
+    e.hidden_at = 0;
+    e.zone = ZoneType::FacedownZone;
+    e.location = BattlefieldLocation{0};
+    s().battlefields[0].facedown.push_back(elnuk);
+    p1_.want = ally;
+    Intent play;
+    play.type = IntentType::PlayReaction;
+    play.player = P1;
+    play.card = elnuk;
+    engine_->testHook_executeIntent(play);
+    engine_->testHook_runChain();
+    EXPECT_EQ(s().getObject(ally).current_might, 5) << "2 + 3 this turn";
+    EXPECT_EQ(s().getObject(elnuk).zone, ZoneType::MainDeck) << "recycled: it was played from face down";
+}
+
+TEST_F(RivenRadianceTest, Deploy_ConcertPosterGoesOnlyToABattlefieldAndDiesWhenTheOpponentHolds) {
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    rune(P1, Domain::Order);
+    auto poster = cardInHand(P1, 983);
+    EXPECT_FALSE(offersPlayAt(poster, LocationId{BaseLocation{P1}})) << "[Deploy]: only to a battlefield";
+    EXPECT_TRUE(offersPlayAt(poster, LocationId{BattlefieldLocation{1}})) << "any battlefield";
+    p1_.answers = {0};   // decline the [1] Recruit
+    play(poster, LocationId{BattlefieldLocation{1}});
+    engine_->testHook_cleanup();
+    ASSERT_TRUE(s().getObject(poster).isAtBattlefield()) << "not recalled in cleanup";
+    engine_->testHook_scoreHold(P2, 1);
+    EXPECT_FALSE(s().getObject(poster).location.has_value()) << "killed when the opponent holds here";
+}
+
 }  // namespace
 }  // namespace riftbound::test

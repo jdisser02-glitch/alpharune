@@ -31,6 +31,15 @@ struct GameConfig {
     int total_games = 1;          // for progress display
     std::string agent1_spec = "random";
     std::string agent2_spec = "random";
+    std::string deck1_label;
+    std::string deck2_label;
+
+    /// Game review output. When set, the first `json_replay_games` games of the
+    /// batch write <dir>/game_<n>.json (one frame per decision: board, options,
+    /// choice, search shares, trace lines) and every game appends one summary
+    /// line to <dir>/games.ndjson.
+    std::string json_replay_dir;
+    int json_replay_games = 0;
 
     /// Optional agent factory — when set, replaces GameRunner's built-in
     /// "random-only" factory. The seat index is 0 for P1 and 1 for P2.

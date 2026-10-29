@@ -210,6 +210,10 @@ public:
     }
     void testHook_executeIntent(const Intent& i) { executeIntent(i); }
     void testHook_runChain() { runChain(); }
+    /// Reseed the engine RNG (shuffles, coin flips, random effects). Used by
+    /// determinized search so a sampled world does not replay the real
+    /// game's future randomness.
+    void reseedRng(uint64_t seed) { rng_.seed(seed); }
     // Install agents directly without going through run(). Required so
     // tests can exercise paths that invoke chain priority loops
     // (runChain → processFEPR → getAgent).

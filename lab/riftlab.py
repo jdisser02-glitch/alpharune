@@ -254,6 +254,10 @@ def stats(deck: dict, reg: Registry) -> dict:
     }
 
 
+def _slug(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")[:60]
+
+
 def deck_hash(path: Path) -> str:
     return hashlib.sha1(Path(path).read_bytes()).hexdigest()[:10]
 
@@ -275,10 +279,13 @@ def wilson(wins: float, n: int, z: float = 1.96) -> tuple[float, float]:
 
 
 def play_batch(deck1: str, deck2: str, agent1: str, agent2: str, games: int,
-               threads: int, seed: int) -> dict:
+               threads: int, seed: int, review_dir: str | None = None,
+               review_games: int = 0) -> dict:
     cmd = [str(ENGINE), "--deck1", deck1, "--deck2", deck2, "--agent1", agent1,
            "--agent2", agent2, "--games", str(max(games, 2)), "--threads", str(threads),
            "--seed", str(seed), "--render-html", "off", "--web", "off"]
+    if review_dir:
+        cmd += ["--review-dir", review_dir, "--review-games", str(review_games)]
     t0 = time.time()
     p = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     wall = time.time() - t0
@@ -345,6 +352,7 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
     agent = spec.get("agent", "random")
     opp_agent = spec.get("opp_agent", agent)
     games = int(spec.get("games", 100))
+    review_games = int(spec.get("review_games", 1))
     threads = int(spec.get("threads", os.cpu_count() or 1))
     seed = int(spec.get("seed", 1))
     started = _dt.datetime.now(_dt.timezone.utc)
@@ -375,8 +383,11 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
         for i, o in enumerate(opponents):
             half = games // 2
             s1 = seed + 100000 * i
-            a = play_batch(path, o["deck"], agent, opp_agent, half, threads, s1)
-            b = play_batch(o["deck"], path, opp_agent, agent, games - half, threads, s1 + 50000)
+            rdir = LAB / "replays" / result["id"] / f"{_slug(label)}__vs__{_slug(o['label'])}"
+            a = play_batch(path, o["deck"], agent, opp_agent, half, threads, s1,
+                           str((rdir / "seat1").relative_to(ROOT)), review_games)
+            b = play_batch(o["deck"], path, opp_agent, agent, games - half, threads, s1 + 50000,
+                           str((rdir / "seat2").relative_to(ROOT)), review_games)
             wins = a["p1"] + b["p2"]
             n = a["p1"] + a["p2"] + a["draws"] + b["p1"] + b["p2"] + b["draws"]
             lo, hi = wilson(wins, n)
@@ -386,6 +397,7 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
                  "as_p1": {"games": a["p1"] + a["p2"] + a["draws"], "wins": a["p1"]},
                  "as_p2": {"games": b["p1"] + b["p2"] + b["draws"], "wins": b["p2"]},
                  "avg_turns": a["avg_turns"], "wall_s": round(a["wall_s"] + b["wall_s"], 1),
+                 "replays": str(rdir.relative_to(ROOT)),
                  "commands": [a["cmd"], b["cmd"]]}
             drec["matchups"].append(m)
             wsum += o["weight"]

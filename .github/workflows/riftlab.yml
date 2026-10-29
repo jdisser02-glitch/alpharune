@@ -1,0 +1,87 @@
+# Runs simulation requests for the Riven test lab.
+#
+# To launch a test, commit a test spec (same format as lab/specs/*.json, see
+# lab/README.md) to lab/requests/ on this branch. This workflow builds the
+# engine, runs every request added by the push, writes the results to
+# lab/results/, moves the request to lab/requests/done/ and pushes both.
+name: riftlab
+
+on:
+  push:
+    paths:
+      - "lab/requests/*.json"
+  workflow_dispatch:
+    inputs:
+      request:
+        description: "Path of a test spec to run (e.g. lab/specs/smoke_random.json)"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: riftlab-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
+
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .ccache
+            build/_deps
+          key: riftlab-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+          restore-keys: riftlab-${{ runner.os }}-
+
+      - name: Build engine
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          CCACHE_BASEDIR: ${{ github.workspace }}
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
+          cmake --build build --target riftbound riftbound_tests -j4
+          RIFTBOUND_ROOT=. ./build/riftbound_tests --gtest_brief=1
+
+      - name: Run requests
+        id: run
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            requests="${{ github.event.inputs.request }}"
+          else
+            requests=$(git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'lab/requests/*.json' || true)
+          fi
+          echo "requests: $requests"
+          mkdir -p lab/requests/done
+          for r in $requests; do
+            [ -f "$r" ] || continue
+            python3 lab/riftlab.py run "$r" --threads 4 | tee -a lab/.run.log
+            if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+              git mv "$r" lab/requests/done/
+            fi
+          done
+
+      - name: Push results
+        run: |
+          git config user.name "riftlab-bot"
+          git config user.email "riftlab-bot@users.noreply.github.com"
+          git add lab/results lab/variants lab/requests
+          git commit -m "riftlab: results for ${{ github.sha }}" || exit 0
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
