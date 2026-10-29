@@ -31,6 +31,7 @@ spec = {
 from __future__ import annotations
 
 import argparse
+import concurrent.futures as cf
 import datetime as dt
 import json
 import os
@@ -114,15 +115,24 @@ def main(argv: list[str]) -> int:
     alive = list(cands)
     log = []
     for r, g in enumerate(rounds):
+        # One engine process per (candidate, opponent, seat), `threads` at a
+        # time: batches are small, so parallelism comes from running many.
+        jobs = []
         for c in alive:
             for i, o in enumerate(opponents):
                 s1 = seed + 1000003 * r + 10007 * i        # same seeds for every candidate
                 half = max(1, g // 2)
-                x = riftlab.play_batch(c["path"], o["deck"], agent, opp_agent, half, threads, s1)
-                y = riftlab.play_batch(o["deck"], c["path"], opp_agent, agent, max(1, g - half), threads, s1 + 50000)
+                jobs.append((c, o, 1, (c["path"], o["deck"], agent, opp_agent, half, 1, s1)))
+                jobs.append((c, o, 2, (o["deck"], c["path"], opp_agent, agent, max(1, g - half), 1, s1 + 50000)))
+        with cf.ThreadPoolExecutor(max_workers=threads) as pool:
+            futs = {pool.submit(riftlab.play_batch, *args): (c, o, seat) for c, o, seat, args in jobs}
+            for f in cf.as_completed(futs):
+                c, o, seat = futs[f]
+                x = f.result()
                 res = c["results"][o["label"]]
-                res["games"] += x["p1"] + x["p2"] + x["draws"] + y["p1"] + y["p2"] + y["draws"]
-                res["wins"] += x["p1"] + y["p2"]
+                res["games"] += x["p1"] + x["p2"] + x["draws"]
+                res["wins"] += x["p1"] if seat == 1 else x["p2"]
+        for c in alive:
             print(f"round {r + 1}  {c['label']:<48} {100 * rate(c):5.1f}%  "
                   f"({sum(v['games'] for v in c['results'].values())} games)", flush=True)
         alive.sort(key=rate, reverse=True)
