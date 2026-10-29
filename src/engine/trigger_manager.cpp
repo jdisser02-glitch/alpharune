@@ -163,12 +163,13 @@ static bool cardFiresOn(const CardRegistry& reg, CardDefId def_id, TriggerType t
 }
 
 void TriggerManager::fireBattlefieldTriggers(TriggerType t, PlayerId player,
-                                              BattlefieldId at_battlefield) {
+                                              BattlefieldId at_battlefield,
+                                              GameObjectId subject) {
     for (auto& bf : state_.battlefields) {
         if (at_battlefield != kInvalidId && bf.id != at_battlefield) continue;
         if (!state_.objectExists(bf.card_object_id)) continue;
         if (cardFiresOn(card_registry_, state_.getObject(bf.card_object_id).card_def_id, t)) {
-            fireTrigger(bf.card_object_id, player, 0, t);
+            fireTrigger(bf.card_object_id, player, 0, t, subject);
         }
     }
 }
@@ -293,11 +294,19 @@ void TriggerManager::onCardPlayed(const CardPlayedEvent& e) {
     if (e.card_type != CardType::Spell) {
         std::vector<std::pair<GameObjectId, TriggerType>> fires;
         for (auto& [id, other] : state_.objects) {
-            if (id == e.object || other.card_def_id == kInvalidId) continue;
+            if (other.card_def_id == kInvalidId) continue;
             if (!other.location.has_value() && other.zone != ZoneType::LegendZone) continue;
+            // CR 420.4.a: "when you play a card" triggers when the play is
+            // completed by the card's resolution — the played permanent is on
+            // the board by then, so its own such ability sees itself being
+            // played (Astral Heron played as the first card of the turn to a
+            // battlefield discounts the next card). CR 383.4.a.4 keeps this
+            // apart from Play Effects ("when you play me"), which are not
+            // WhenYouPlayACard.
             if (other.controller == e.player &&
                 cardFiresOn(card_registry_, other.card_def_id, TriggerType::WhenYouPlayACard))
                 fires.push_back({id, TriggerType::WhenYouPlayACard});
+            if (id == e.object) continue;
             if (other.controller != e.player && e.card_type == CardType::Gear &&
                 cardFiresOn(card_registry_, other.card_def_id, TriggerType::WhenOpponentPlaysAGear))
                 fires.push_back({id, TriggerType::WhenOpponentPlaysAGear});
@@ -364,7 +373,8 @@ void TriggerManager::onCardPlayed(const CardPlayedEvent& e) {
     if (e.card_type == CardType::Unit && state_.objectExists(e.object)) {
         auto played_bf = state_.getObject(e.object).battlefieldId();
         if (played_bf) {
-            fireBattlefieldTriggers(TriggerType::WhenYouPlayAUnit, e.player, *played_bf);
+            fireBattlefieldTriggers(TriggerType::WhenYouPlayAUnit, e.player, *played_bf,
+                                    /*subject=*/e.object);
         }
     }
 

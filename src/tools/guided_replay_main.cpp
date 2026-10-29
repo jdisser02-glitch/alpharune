@@ -7,6 +7,7 @@
 ///        [--agent ismcts:sims=40,eval=net:lab/learn/nets/net_004.rbvn]
 ///        [--out lab/human_replays/<stem>_g1] [--both] [--no-bot] [--verbose]
 
+#include "agents/ismcts_search.h"
 #include "agents/mcts_agent.h"
 #include "agents/random_agent.h"
 #include "cards/card_registry.h"
@@ -36,14 +37,14 @@ struct GuidedAgentSpec {
 };
 
 /// Same grammar as the riftbound CLI: kind[:key=value,...] with
-/// sims=, eval=, c=, det=, final=.
+/// sims=, eval=, c=, det=, final=, threads=, worlds=, prior=.
 GuidedAgentSpec parseGuidedAgentSpec(const std::string& s) {
     GuidedAgentSpec out;
     out.raw = s;
     const auto colon = s.find(':');
     out.kind = colon == std::string::npos ? s : s.substr(0, colon);
-    if (out.kind != "random" && out.kind != "mcts" && out.kind != "ismcts" && out.kind != "none")
-        throw std::runtime_error("Unknown agent kind '" + out.kind + "' (random, mcts, ismcts, none)");
+    if (out.kind != "random" && out.kind != "mcts" && out.kind != "ismcts" && out.kind != "pmcts" && out.kind != "none")
+        throw std::runtime_error("Unknown agent kind '" + out.kind + "' (random, mcts, ismcts, pmcts, none)");
     if (colon != std::string::npos) {
         const std::string rest = s.substr(colon + 1);
         size_t i = 0;
@@ -58,11 +59,14 @@ GuidedAgentSpec parseGuidedAgentSpec(const std::string& s) {
                 else if (key == "c") out.search.uct_c = std::stod(val);
                 else if (key == "det") out.search.determinize = val != "0";
                 else if (key == "final") out.search.final_policy = val;
+                else if (key == "threads") out.search.threads = std::stoi(val);
+                else if (key == "worlds") out.search.worlds = std::stoi(val);
+                else if (key == "prior") out.search.prior = val;
             }
             i = comma + 1;
         }
     }
-    if ((out.kind == "mcts" || out.kind == "ismcts") && out.sims <= 0)
+    if ((out.kind == "mcts" || out.kind == "ismcts" || out.kind == "pmcts") && out.sims <= 0)
         throw std::runtime_error("Agent '" + out.kind + "' requires sims=N");
     return out;
 }
@@ -145,6 +149,9 @@ int main(int argc, char* argv[]) {
             bot = std::make_unique<MctsAgent>(deck1_path, deck2_path, "", engine_seed, engine_seed * 2 + 1, spec.sims, spec.search);
         else if (spec.kind == "ismcts")
             bot = std::make_unique<IsMctsAgent>(deck1_path, deck2_path, "", engine_seed, engine_seed * 2 + 1, spec.sims, spec.search);
+        else if (spec.kind == "pmcts")
+            bot = std::make_unique<search::PuctAgent>(db, registry, d1.deck, d2.deck, engine_seed, engine_seed * 2 + 1,
+                                                      spec.sims, spec.search);
 
         std::cout << game.stem << " game " << index << ": " << game.players[0] << " (" << d1.notes["legend"].get<std::string>()
                   << ") vs " << game.players[1] << " (" << d2.notes["legend"].get<std::string>() << "), "

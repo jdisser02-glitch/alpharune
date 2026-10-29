@@ -2546,20 +2546,28 @@ void GameEngine::executeHideCard(const Intent& intent) {
     auto it = std::find(ps.hand.begin(), ps.hand.end(), intent.card);
     if (it != ps.hand.end()) ps.hand.erase(it);
 
-    // Pay [A] cost — recycle a ready rune (universal power cost)
+    // Pay [A] cost — recycle a rune (universal power cost, CR 164.2.b). A
+    // rune is recycled ready or exhausted; an exhausted one is preferred so
+    // the hide costs no Energy the player could still spend.
     auto base_loc = BaseLocation{intent.player};
+    GameObjectId pay_with = kInvalidId;
     for (auto& [id, obj] : state_.objects) {
-        if (!obj.isRune() || obj.controller != intent.player || obj.is_exhausted) continue;
+        if (!obj.isRune() || obj.controller != intent.player) continue;
         if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
-        // Recycle the rune for [A]
+        if (pay_with == kInvalidId || (obj.is_exhausted && !state_.getObject(pay_with).is_exhausted))
+            pay_with = id;
+        if (obj.is_exhausted) break;
+    }
+    if (pay_with != kInvalidId) {
+        auto& obj = state_.getObject(pay_with);
         events_.logTrace("HIDE_COST: recycled " + obj.name + " (id=" +
-                         std::to_string(id) + ") to pay [A]");
+                         std::to_string(pay_with) + ") to pay [A]");
         obj.location = std::nullopt;
         obj.zone = ZoneType::RuneDeck;
-        ps.rune_deck.insert(ps.rune_deck.begin(), id);
-        events_.emit(LeftBoardEvent{id, intent.player, CardType::Rune,
+        obj.is_exhausted = false;
+        ps.rune_deck.insert(ps.rune_deck.begin(), pay_with);
+        events_.emit(LeftBoardEvent{pay_with, intent.player, CardType::Rune,
             base_loc, ZoneType::RuneDeck, false});
-        break;
     }
 
     // Place facedown at the chosen battlefield
@@ -2665,6 +2673,14 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
 
     // Standard Move: exhaust ready units to move them
     auto all_units = state_.allUnitsControlledBy(player);
+    // (origin, destination) -> the ready units that may make that move, for
+    // the simultaneous moves of CR 144.3 below.
+    std::vector<std::pair<std::pair<LocationId, LocationId>, std::vector<GameObjectId>>> move_groups;
+    auto noteMove = [&](GameObjectId unit_id, const LocationId& from, const LocationId& to) {
+        for (auto& g : move_groups)
+            if (g.first.first == from && g.first.second == to) { g.second.push_back(unit_id); return; }
+        move_groups.push_back({{from, to}, {unit_id}});
+    };
     for (auto unit_id : all_units) {
         auto& unit = state_.getObject(unit_id);
         if (unit.is_exhausted) continue; // must be ready
@@ -2680,6 +2696,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
                 LocationId dest = BattlefieldLocation{bf.id};
                 actions.push_back(Intent::standardMove(
                     player, {unit_id}, dest));
+                noteMove(unit_id, *unit.location, dest);
             }
         } else if (unit.isAtBattlefield()) {
             // Can normally move back to base (CR 144.4.b). Vilemaw's Lair
@@ -2695,6 +2712,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
             if (allow_to_base) {
                 actions.push_back(Intent::standardMove(
                     player, {unit_id}, BaseLocation{player}));
+                noteMove(unit_id, *unit.location, LocationId{BaseLocation{player}});
             }
 
             // BF→BF moves allowed when EITHER:
@@ -2711,7 +2729,32 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
                 if (!can_move) continue;
                 actions.push_back(Intent::standardMove(
                     player, {unit_id}, BattlefieldLocation{bf.id}));
+                noteMove(unit_id, *unit.location, LocationId{BattlefieldLocation{bf.id}});
             }
+        }
+    }
+    // CR 144.3: several units' standard moves may be performed at once as
+    // one action (same destination; the costs are paid simultaneously), so
+    // two units can attack together before the showdown opens. Every
+    // subset of two or more units sharing an origin and a destination is
+    // one action while the group is small; larger groups offer only the
+    // whole group. These come after the single moves: the action vocab
+    // keys a move by its destination alone, so the first intent per
+    // destination (a single move) keeps its slot.
+    for (const auto& [od, units] : move_groups) {
+        if (units.size() < 2) continue;
+        const auto& dest = od.second;
+        if (units.size() <= 4) {
+            const unsigned n = static_cast<unsigned>(units.size());
+            for (unsigned mask = 1; mask < (1u << n); ++mask) {
+                if (__builtin_popcount(mask) < 2) continue;
+                std::vector<GameObjectId> group;
+                for (unsigned k = 0; k < n; ++k)
+                    if (mask & (1u << k)) group.push_back(units[k]);
+                actions.push_back(Intent::standardMove(player, std::move(group), dest));
+            }
+        } else {
+            actions.push_back(Intent::standardMove(player, units, dest));
         }
     }
 
@@ -2965,17 +3008,11 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         auto& card = state_.getObject(card_id);
         if (!card.keywords.has(Keyword::Hidden)) continue;
 
-        // Need at least one rune to pay [A] cost
-        bool has_rune = false;
-        auto base_loc = BaseLocation{player};
-        for (auto& [id, obj] : state_.objects) {
-            if (obj.isRune() && obj.controller == player && !obj.is_exhausted &&
-                obj.location.has_value() && *obj.location == LocationId{base_loc}) {
-                has_rune = true;
-                break;
-            }
-        }
-        if (!has_rune) continue;
+        // The [A] cost is paid by recycling a rune (CR 164.2.b); a rune is
+        // recycled ready or exhausted, so an all-exhausted base still pays
+        // it (the human client logs "paid 4E — Exhaust 4" and then
+        // "recycled 1 Calm rune" for a hide).
+        if (availableAnyPower(player) <= 0) continue;
 
         // Can hide at any controlled BF with available facedown slot
         for (auto& bf : state_.battlefields) {
@@ -3801,6 +3838,22 @@ void GameEngine::runShowdown(BattlefieldId bf_id) {
     auto p1_units = state_.unitsAt(BattlefieldLocation{bf_id}, PlayerId::Player1);
     auto p2_units = state_.unitsAt(BattlefieldLocation{bf_id}, PlayerId::Player2);
 
+    // CR 323.13: enemy units that arrived while the showdown was open (a
+    // spell moved them in, an Ambush unit was played there) stage a Combat
+    // there, and the non-combat showdown becomes a Combat showdown. Its
+    // focus passing is done; the combat continues with the damage step now,
+    // in this turn, rather than at the next cleanup that finds it staged.
+    if (!p1_units.empty() && !p2_units.empty() && !state_.game_over) {
+        if (bf.contested_by == PlayerId::None) bf.contested_by = state_.turn.turn_player;
+        bf.is_contested = true;
+        bf.showdown_staged = false;
+        bf.combat_staged = false;
+        events_.logTrace("SHOWDOWN->COMBAT: BF#" + std::to_string(bf_id) +
+                         " (units of both players present when the showdown closed)");
+        runCombat(bf_id, /*showdown_already_closed=*/true);
+        return;
+    }
+
     PlayerId sole_player = PlayerId::None;
     if (!p1_units.empty() && p2_units.empty()) sole_player = PlayerId::Player1;
     if (p1_units.empty() && !p2_units.empty()) sole_player = PlayerId::Player2;
@@ -3935,7 +3988,7 @@ void GameEngine::runShowdownLoop(BattlefieldId bf_id) {
     }
 }
 
-void GameEngine::runCombat(BattlefieldId bf_id) {
+void GameEngine::runCombat(BattlefieldId bf_id, bool showdown_already_closed) {
     auto& bf = getBattlefield(bf_id);
     bf.combat_in_progress = true;
 
@@ -4002,8 +4055,9 @@ void GameEngine::runCombat(BattlefieldId bf_id) {
     }
 
     // Step 1: Combat Showdown — players can play Action/Reaction spells
+    // (already held when a non-combat showdown turned into this combat).
     bf.combat_phase = CombatPhase::ShowdownStep;
-    runShowdownLoop(bf_id);
+    if (!showdown_already_closed) runShowdownLoop(bf_id);
 
     // After showdown: check if combat can continue (CR 460.1)
     // Damage step only occurs if both sides still have units

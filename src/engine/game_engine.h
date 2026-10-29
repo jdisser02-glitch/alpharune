@@ -203,6 +203,9 @@ public:
     // exercise the showdown / combat trigger drain + action-type
     // dispatch in isolation without driving a full turn.
     void testHook_runCombat(BattlefieldId bf) { runCombat(bf); }
+    /// One main-phase advance: staged showdowns / combats run, then the
+    /// legal actions are generated (CR 323.11-13 paths).
+    void testHook_advanceMainPhase() { int n = 0; (void)advanceMainPhase(n); }
     std::optional<PlayerId> testHook_resolveShowdownDecision(
         BattlefieldId bf, const Intent& chosen, PlayerId current_focus,
         int& action_count) {
@@ -566,7 +569,10 @@ private:
     // ── Combat ──
     void runShowdown(BattlefieldId bf);
     void runShowdownLoop(BattlefieldId bf);
-    void runCombat(BattlefieldId bf);
+    /// `showdown_already_closed`: the combat was staged while a non-combat
+    /// showdown was open there and that showdown has just closed (CR
+    /// 323.13); go straight to combat damage instead of a second showdown.
+    void runCombat(BattlefieldId bf, bool showdown_already_closed = false);
     void combatDamageStep(BattlefieldId bf);
     void combatResolutionStep(BattlefieldId bf);
 

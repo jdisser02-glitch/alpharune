@@ -34,8 +34,11 @@ nlohmann::json ev(int game, const char* text, nlohmann::json actor, const char* 
 
 /// A mirror match of two Riven players. Alice (capture player) goes first and
 /// ends her first turn; Bob plays Scuttle Crab; Alice plays Scuttle Crab; Bob
-/// moves his Crab to Emperor's Dais, both pass, Bob conquers.
-nlohmann::json syntheticGame() {
+/// moves his Crab to Emperor's Dais, both pass, Bob conquers. With
+/// `rewind_after_draw`, Bob "rewinds" right after the Crab's draw resolved —
+/// the client only undoes the last action, so the Crab (whose draw was
+/// already public) stays on the board, as it does in recorded games.
+nlohmann::json syntheticGame(bool rewind_after_draw = false) {
     nlohmann::json legend = {{"legend", "Riven, The Exile"},
                              {"cards", {{{"name", "Riven, The Exile"}, {"code", "RAD-149"}},
                                         {{"name", "Riven, Broken Blade"}, {"code", "RAD-043"}}}}};
@@ -60,6 +63,11 @@ nlohmann::json syntheticGame() {
         ev(1, "Bob conquered Emperor's Dais and scored 1.", "Bob", "conquered", {{"battlefield", "Emperor's Dais"}, {"amount", 1}}),
         ev(1, "Bob ended their turn.", "Bob", "ended_turn"),
     });
+    if (rewind_after_draw) {
+        // after "Chain resolved: Scuttle Crab." (index 9): the draw, then the rewind
+        events.insert(events.begin() + 9, ev(1, "Bob drew 1 card.", "Bob", "drew", {{"amount", 1}}));
+        events.insert(events.begin() + 11, ev(1, "Bob rewound to before their last action.", "Bob", "rewound"));
+    }
     return {{"players", {"Alice", "Bob"}}, {"capture_player", "Alice"}, {"opponent", "Bob"},
             {"legends", {{"Alice", legend}, {"Bob", legend}}},
             {"games", {{{"game", 1}, {"events", {0, static_cast<int>(events.size())}}, {"first_player", "Alice"},
@@ -163,4 +171,61 @@ TEST_F(GuidedReplayTest, MissingCardIsPulledFromTheDeckOrCreated) {
     EXPECT_EQ(st.getObject(ps.hand.back()).name, "Stupefy");
     EXPECT_EQ(st.getObject(ps.hand.back()).owner, PlayerId::Player1);
     EXPECT_EQ(ps.main_deck.size(), deck_before - 1);
+}
+
+TEST_F(GuidedReplayTest, ActorLessSpellLinesFollowTheirPayment) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // Bob pays, an actor-less "Played Defy" follows: Bob's spell, whatever the importer wrote.
+    events.push_back(ev(1, "Bob paid 1E / 1P — Exhaust 1 · Recycle 1 Calm rune.", "Bob", "paid"));
+    events.push_back(ev(1, "Played Defy from hand.", "Alice", "played",
+                        {{"card", "Defy"}, {"from", "hand"}, {"actor_inferred", true}}));
+    // Alice exhausts a rune and a unit (Kai'Sa-style free spell), then her spell.
+    events.push_back(ev(1, "Alice exhausted 1 Mind rune.", "Alice", "exhausted"));
+    events.push_back(ev(1, "Alice exhausted Scuttle Crab.", "Alice", "exhausted", {{"card", "Scuttle Crab"}}));
+    events.push_back(ev(1, "Played Stupefy from hand.", "Alice", "played",
+                        {{"card", "Stupefy"}, {"from", "hand"}, {"actor_inferred", true}}));
+    // Bob hid a card at Emperor's Dais earlier: a card played from there is his.
+    events.push_back(ev(1, "Bob put a hidden card to Emperor's Dais.", "Bob", "hidden_card_placed", {{"to", "Emperor's Dais"}}));
+    events.push_back(ev(1, "Played Switcheroo from Emperor's Dais.", "Alice", "played",
+                        {{"card", "Switcheroo"}, {"from", "Emperor's Dais"}, {"actor_inferred", true}}));
+    // Nothing says who played this one.
+    events.push_back(ev(1, "Chain resolved: Switcheroo.", nullptr, "chain_resolved"));
+    events.push_back(ev(1, "Played Rebuke from trash.", "Alice", "played",
+                        {{"card", "Rebuke"}, {"from", "trash"}, {"actor_inferred", true}}));
+    // An explicit line of Bob's right after Alice's payment is left alone.
+    events.push_back(ev(1, "Alice paid 2E — Exhaust 2.", "Alice", "paid"));
+    events.push_back(ev(1, "Bob played Tideturner from hand to base.", "Bob", "played",
+                        {{"card", "Tideturner"}, {"from", "hand"}, {"to", "base"}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto line = [&](const char* card) -> const guided::LogLine& {
+        for (const auto& e : game.events) if (e.kind == "played" && e.card == card) return e;
+        throw std::runtime_error(card);
+    };
+    EXPECT_EQ(line("Defy").actor, "Bob");
+    EXPECT_FALSE(line("Defy").actor_uncertain);
+    EXPECT_EQ(line("Stupefy").actor, "Alice");
+    EXPECT_FALSE(line("Stupefy").actor_uncertain);
+    EXPECT_EQ(line("Switcheroo").actor, "Bob");
+    EXPECT_EQ(line("Rebuke").actor, "Alice");
+    EXPECT_TRUE(line("Rebuke").actor_uncertain);
+    EXPECT_EQ(line("Tideturner").actor, "Bob");
+    EXPECT_FALSE(line("Tideturner").actor_inferred);
+}
+
+TEST_F(GuidedReplayTest, ARewindAfterTheDrawDoesNotUndoThePlay) {
+    auto game = guided::humanGameFromJson(syntheticGame(/*rewind_after_draw=*/true), 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    EXPECT_EQ(s["rewinds_ignored"].get<int>(), 1) << s.dump(1);
+    EXPECT_EQ(s["rewinds_applied"].get<int>(), 0);
+    // The Crab stayed: its later move to Emperor's Dais and the conquest replay.
+    EXPECT_EQ(s["desyncs"].get<int>(), 0) << s["desync_list"].dump(1);
+    EXPECT_EQ(s["result"]["engine_scores"][1].get<int>(), 1) << s.dump(1);
 }

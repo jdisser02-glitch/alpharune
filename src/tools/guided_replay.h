@@ -51,6 +51,8 @@ struct LogLine {
     int score_to = -1;              // scored: the score after the line
     std::vector<std::string> cards; // revealed_hand / hid_hand
     bool token = false;             // played: a token made by an effect, not a card from hand
+    bool actor_inferred = false;    // the importer attributed an actor-less line to the capture player
+    bool actor_uncertain = false;   // ... and nothing in the log says who really acted (see inferActors)
 
     /// A recorded play of a real card (not a token).
     bool isCardPlay() const { return kind == "played" && !token && from != "token"; }
@@ -73,6 +75,15 @@ struct HumanGame {
     std::map<std::string, int> score_from_log;
     std::vector<LogLine> events;             // this game's lines only
 };
+
+/// Actor-less lines ("Played Defy from hand.") are attributed to the capture
+/// player by the importer, whoever played them. Re-attribute each such play
+/// to the player whose payment line ("<X> paid 1E / 1P", "<X> exhausted 1
+/// Calm rune", "<X> exhausted <unit>") immediately precedes it, or, for a
+/// card played from a battlefield, to the player who hid a card there; lines
+/// with neither stay with the capture player and are marked `actor_uncertain`.
+/// Returns how many lines changed actor.
+int inferActors(HumanGame& game);
 
 /// Parse `games[game_number]` of a human-game file. Throws std::runtime_error
 /// when the file or the game is missing.
