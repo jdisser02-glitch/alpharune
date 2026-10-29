@@ -111,9 +111,9 @@ svg text { fill: var(--muted); font: 11px var(--mono); }
     <a href="#decks" data-tab="decks">Decks</a>
     <a href="#replays" data-tab="replays">Replays</a>
     <a href="#bot" data-tab="bot">Bot</a>
-    <a href="#launch" data-tab="launch">Lancer</a>
+    <a href="#launch" data-tab="launch">Launch</a>
   </nav>
-  <div class="meta" id="meta">chargement…</div>
+  <div class="meta" id="meta">loading…</div>
 </div></header>
 
 <main class="wrap">
@@ -128,7 +128,7 @@ svg text { fill: var(--muted); font: 11px var(--mono); }
 "use strict";
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const pct = x => x == null ? "—" : (100 * x).toFixed(1) + " %";
+const pct = x => x == null ? "—" : (100 * x).toFixed(1) + "%";
 const DOM = {fury:"#d4483b", calm:"#138a6e", mind:"#3a7bd5", body:"#d9822b", chaos:"#6b46e0", order:"#c9a227"};
 let D = null;                      // data.json
 let state = { test: null, deck: null, compare: null, replay: null, frame: 0, rep: null };
@@ -141,7 +141,7 @@ function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage
 function wrBar(rate, ci) {
   const w = 120, x = v => Math.max(0, Math.min(w, v * w));
   const color = rate == null ? "var(--plumb)" : rate >= 0.55 ? "var(--win)" : rate <= 0.45 ? "var(--loss)" : "var(--warn)";
-  return `<svg width="${w}" height="14" viewBox="0 0 ${w} 14" role="img" aria-label="taux ${pct(rate)}">
+  return `<svg width="${w}" height="14" viewBox="0 0 ${w} 14" role="img" aria-label="rate ${pct(rate)}">
     <rect x="0" y="5" width="${w}" height="4" rx="2" fill="var(--sunk)"/>
     <line x1="${w/2}" x2="${w/2}" y1="1" y2="13" stroke="var(--line)"/>
     ${ci ? `<rect x="${x(ci[0])}" y="4" width="${Math.max(1, x(ci[1]) - x(ci[0]))}" height="6" rx="3" fill="${color}" opacity=".3"/>` : ""}
@@ -156,11 +156,11 @@ function curveChart(decks) {
   const maxN = Math.max(1, ...decks.flatMap(d => Object.values(d.curve || {})));
   const W = 520, H = 180, L = 28, B = 22, T = 10, bw = (W - L - 8) / xs.length, gw = bw * 0.8 / decks.length;
   const y = n => T + (H - T - B) * (1 - n / maxN);
-  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="courbe d'énergie">`;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="energy curve">`;
   for (let g = 0; g <= maxN; g += Math.max(1, Math.ceil(maxN / 4))) s += `<line x1="${L}" x2="${W-4}" y1="${y(g)}" y2="${y(g)}" stroke="var(--line)"/><text x="${L-6}" y="${y(g)+4}" text-anchor="end">${g}</text>`;
   xs.forEach((c, i) => {
     decks.forEach((d, k) => { const n = (d.curve || {})[c] || 0; const x0 = L + i * bw + bw * 0.1 + k * gw;
-      s += `<rect x="${x0}" y="${y(n)}" width="${gw - 2}" height="${H - B - y(n)}" rx="2" fill="${d.color}"><title>${esc(d.label)} : ${n} carte(s) à ${c}</title></rect>`;
+      s += `<rect x="${x0}" y="${y(n)}" width="${gw - 2}" height="${H - B - y(n)}" rx="2" fill="${d.color}"><title>${esc(d.label)}: ${n} card(s) at ${c}</title></rect>`;
       if (n) s += `<text x="${x0 + gw/2 - 1}" y="${y(n) - 3}" text-anchor="middle">${n}</text>`; });
     s += `<text x="${L + i * bw + bw/2}" y="${H - 6}" text-anchor="middle">${c}</text>`; });
   return s + `</svg>`;
@@ -173,8 +173,8 @@ function deckLabel(p) {
   const d = deckByPath(p); if (!d) return p;
   const head = (d.comments || [])[0] || "";
   const m = head.match(/^(\d+) - (.+?) - (.+)$/);
-  if (m) return `${m[3]} — ${m[2]} (${m[1]}e, ${p.split("/")[3] || ""})`;
-  return p.replace(/^decks\//, "").replace(/^lab\/variants\//, "variante ").replace(/\.txt$/, "");
+  if (m) return `${m[3]} — ${m[2]} (#${m[1]}, ${p.split("/")[3] || ""})`;
+  return p.replace(/^decks\//, "").replace(/^lab\/variants\//, "variant ").replace(/\.txt$/, "");
 }
 const isPlumbing = t => /^random$/.test(t.agent || "") && /^random$/.test(t.opp_agent || t.agent || "");
 
@@ -190,19 +190,19 @@ function viewTests() {
   const nRad = D.cards.filter(c => c.set === "RAD").length;
   el.innerHTML = `
     <div class="kpis">
-      <div class="kpi"><b>${tests.length}</b><span>tests enregistrés (${real.length} avec un bot qui réfléchit)</span></div>
-      <div class="kpi"><b>${nRad}</b><span>cartes Radiance jouables / ${D.cards.length} au total</span></div>
-      <div class="kpi"><b>${lastBot ? pct(lastBot.vs_random.rate) : "—"}</b><span>bot actuel contre un joueur aléatoire${lastBot ? ` (itération ${lastBot.iteration})` : ""}</span></div>
-      <div class="kpi"><b>${best ? pct(best.d.weighted_win_rate) : "—"}</b><span>${best ? "meilleure liste : " + esc(best.d.label) : "pas encore de test avec un vrai bot"}</span></div>
+      <div class="kpi"><b>${tests.length}</b><span>recorded tests (${real.length} with a thinking bot)</span></div>
+      <div class="kpi"><b>${nRad}</b><span>playable Radiance cards / ${D.cards.length} total</span></div>
+      <div class="kpi"><b>${lastBot ? pct(lastBot.vs_random.rate) : "—"}</b><span>current bot vs a random player${lastBot ? ` (iteration ${lastBot.iteration})` : ""}</span></div>
+      <div class="kpi"><b>${best ? pct(best.d.weighted_win_rate) : "—"}</b><span>${best ? "best list: " + esc(best.d.label) : "no test with a real bot yet"}</span></div>
     </div>
     <div class="panel"><h2>Tests</h2>
-      <p class="small muted">Chaque test joue chaque deck contre chaque adversaire, moitié des parties en premier joueur, moitié en second. L'intervalle (95 %) dit à quel point le chiffre est sûr : deux listes dont les intervalles se chevauchent ne sont pas départagées. Les tests marqués <span class="pill plumb">plomberie</span> utilisent des joueurs aléatoires : ils vérifient que tout tourne, ils ne disent rien de la force d'un deck.</p>
-      <div class="tablewrap"><table><thead><tr><th>Test</th><th>Date</th><th>Joueurs</th><th>Parties</th><th>Résultat par deck (pondéré)</th></tr></thead><tbody>
+      <p class="small muted">Each test plays every deck against every opponent, half the games on the play, half on the draw. The 95% interval shows how sure the number is: two lists whose intervals overlap are not separated. Tests marked <span class="pill plumb">plumbing</span> use random players: they check that everything runs, and say nothing about a deck's strength.</p>
+      <div class="tablewrap"><table><thead><tr><th>Test</th><th>Date</th><th>Players</th><th>Games</th><th>Result per deck (weighted)</th></tr></thead><tbody>
       ${tests.map((t, i) => `<tr class="click ${state.test === i ? "sel" : ""}" data-i="${i}">
         <td><b>${esc(t.name)}</b><div class="small muted">${esc(t.description || "")}</div></td>
         <td class="mono">${esc((t.started_utc || "").replace("T", " ").slice(0, 16))}</td>
-        <td>${isPlumbing(t) ? `<span class="pill plumb">plomberie</span>` : `<span class="pill bot">${esc(t.agent)}</span>${t.opp_agent && t.opp_agent !== t.agent ? `<div class="small muted">contre ${esc(t.opp_agent)}</div>` : ""}`}</td>
-        <td class="mono">${t.games_per_matchup}/duel</td>
+        <td>${isPlumbing(t) ? `<span class="pill plumb">plumbing</span>` : `<span class="pill bot">${esc(t.agent)}</span>${t.opp_agent && t.opp_agent !== t.agent ? `<div class="small muted">vs ${esc(t.opp_agent)}</div>` : ""}`}</td>
+        <td class="mono">${t.games_per_matchup}/matchup</td>
         <td>${t.decks.map(d => `<div><span class="small">${esc(d.label)}</span>${wr(d.weighted_win_rate, null)}</div>`).join("")}</td></tr>`).join("")}
       </tbody></table></div></div>
     <div id="testDetail"></div>`;
@@ -213,27 +213,27 @@ function viewTests() {
 function renderTestDetail(t) {
   const el = $("#testDetail");
   el.innerHTML = `<div class="panel stack"><div><h2>${esc(t.name)}</h2><p class="small muted">${esc(t.description || "")}</p></div>
-    <div class="row small"><span class="chip">moteur ${esc(t.engine_commit)}</span><span class="chip">graine ${t.seed}</span><span class="chip">${t.games_per_matchup} parties par duel, sièges alternés</span><span class="chip">${esc(t.agent)} contre ${esc(t.opp_agent || t.agent)}</span></div>
-    ${t.decks.map(d => `<div class="stack"><h3>${esc(d.label)} — ${pct(d.weighted_win_rate)} pondéré</h3>
-      ${d.errors && d.errors.length ? `<div class="notice">Deck invalide : ${d.errors.map(esc).join(" ; ")}</div>` : ""}
-      <div class="tablewrap"><table><thead><tr><th>Adversaire</th><th>Poids</th><th>Victoires</th><th>Taux et intervalle 95 %</th><th>Premier / second</th><th>Durée</th><th></th></tr></thead><tbody>
+    <div class="row small"><span class="chip">engine ${esc(t.engine_commit)}</span><span class="chip">seed ${t.seed}</span><span class="chip">${t.games_per_matchup} games per matchup, alternating seats</span><span class="chip">${esc(t.agent)} vs ${esc(t.opp_agent || t.agent)}</span></div>
+    ${t.decks.map(d => `<div class="stack"><h3>${esc(d.label)} — ${pct(d.weighted_win_rate)} weighted</h3>
+      ${d.errors && d.errors.length ? `<div class="notice">Invalid deck: ${d.errors.map(esc).join("; ")}</div>` : ""}
+      <div class="tablewrap"><table><thead><tr><th>Opponent</th><th>Weight</th><th>Wins</th><th>Rate and 95% interval</th><th>On the play / draw</th><th>Time</th><th></th></tr></thead><tbody>
       ${(d.matchups || []).map(m => `<tr><td>${esc(m.opponent)}</td><td class="mono">${m.weight}</td><td class="mono">${m.wins}/${m.games}</td><td>${wr(m.win_rate, m.ci95)}</td>
         <td class="mono">${m.as_p1.wins}/${m.as_p1.games} · ${m.as_p2.wins}/${m.as_p2.games}</td><td class="mono">${m.wall_s} s</td>
         <td>${D.replays.some(r => r.test_id === t.id) ? `<a href="#replays" data-test="${esc(t.id)}" class="small">replays</a>` : ""}</td></tr>`).join("")}
       </tbody></table></div>
-      <details><summary class="small muted">Commandes exactes (pour rejouer ce test)</summary><div class="log">${(d.matchups || []).flatMap(m => m.commands || []).map(esc).join("\n")}</div></details></div>`).join("")}
+      <details><summary class="small muted">Exact commands (to rerun this test)</summary><div class="log">${(d.matchups || []).flatMap(m => m.commands || []).map(esc).join("\n")}</div></details></div>`).join("")}
   </div>`;
   el.querySelectorAll("a[data-test]").forEach(a => a.onclick = () => { state.repFilter = a.dataset.test; });
 }
 
 // ── Decks view ──────────────────────────────────────────────────────────────
 function groupDecks() {
-  const g = { "Listes Riven": [], "Variantes": [], "Méta (tournois)": [], "Decks de test du moteur": [] };
+  const g = { "Riven lists": [], "Variants": [], "Meta (tournaments)": [], "Engine test decks": [] };
   D.decks.forEach(d => {
-    if (d.path.startsWith("lab/variants/")) g["Variantes"].push(d);
-    else if (d.path.startsWith("lab/decks/meta/")) g["Méta (tournois)"].push(d);
-    else if (/riven_/.test(d.path)) g["Listes Riven"].push(d);
-    else g["Decks de test du moteur"].push(d);
+    if (d.path.startsWith("lab/variants/")) g["Variants"].push(d);
+    else if (d.path.startsWith("lab/decks/meta/")) g["Meta (tournaments)"].push(d);
+    else if (/riven_/.test(d.path)) g["Riven lists"].push(d);
+    else g["Engine test decks"].push(d);
   });
   return g;
 }
@@ -258,26 +258,26 @@ function viewDecks() {
     const ma = {...(a.list.maindeck || {}), ...(a.list.champion || {})}, mb = {...(b.list.maindeck || {}), ...(b.list.champion || {})};
     const names = [...new Set([...Object.keys(ma), ...Object.keys(mb)])].sort();
     const ch = names.map(n => [n, (mb[n] || 0) - (ma[n] || 0)]).filter(([, d]) => d);
-    return ch.length ? `<div class="list">${ch.map(([n, d]) => `<div class="small ${d > 0 ? "delta-add" : "delta-rem"}">${d > 0 ? "+" : ""}${d} ${esc(n)}</div>`).join("")}</div>` : `<p class="small muted">Mêmes cartes.</p>`;
+    return ch.length ? `<div class="list">${ch.map(([n, d]) => `<div class="small ${d > 0 ? "delta-add" : "delta-rem"}">${d > 0 ? "+" : ""}${d} ${esc(n)}</div>`).join("")}</div>` : `<p class="small muted">Same cards.</p>`;
   };
   el.innerHTML = `
     <div class="panel"><div class="toolbar">
       <label class="f">Deck<select id="dk">${deckOptions(sel)}</select></label>
-      <label class="f">Comparer avec<select id="dk2"><option value="">—</option>${deckOptions(cmp)}</select></label>
+      <label class="f">Compare with<select id="dk2"><option value="">—</option>${deckOptions(cmp)}</select></label>
     </div></div>
     ${a ? `<div class="grid2">
       <div class="panel stack"><h2>${esc(deckLabel(a.path))}</h2>
-        ${a.errors && a.errors.length ? `<div class="notice">Ne peut pas encore être joué : ${a.errors.map(esc).join(" ; ")}</div>` : `<div class="notice ok">Deck valide et jouable dans le moteur.</div>`}
-        <div class="row small"><span class="chip">légende ${esc(a.legend)}</span><span class="chip">coût moyen ${a.stats.avg_energy}</span><span class="chip">${a.stats.two_drops} cartes à 2 ou moins</span>
+        ${a.errors && a.errors.length ? `<div class="notice">Not playable yet: ${a.errors.map(esc).join("; ")}</div>` : `<div class="notice ok">Valid deck, playable in the engine.</div>`}
+        <div class="row small"><span class="chip">legend ${esc(a.legend)}</span><span class="chip">avg cost ${a.stats.avg_energy}</span><span class="chip">${a.stats.two_drops} cards at 2 or less</span>
           ${Object.entries(a.stats.types || {}).map(([k, v]) => `<span class="chip">${v} ${esc(k)}</span>`).join("")}
-          ${Object.entries(a.stats.rune_split || {}).map(([k, v]) => `<span class="chip"><i class="dom" style="background:${DOM[k]}"></i>${v} runes ${esc(k)}</span>`).join("")}</div>
+          ${Object.entries(a.stats.rune_split || {}).map(([k, v]) => `<span class="chip"><i class="dom" style="background:${DOM[k]}"></i>${v} ${esc(k)} runes</span>`).join("")}</div>
         <div>${curveChart([{label: deckLabel(a.path), curve: a.stats.curve, color: "var(--calm)"}, ...(b ? [{label: deckLabel(b.path), curve: b.stats.curve, color: "var(--chaos)"}] : [])])}</div>
-        ${b ? `<p class="small"><i class="dom" style="background:var(--calm)"></i>${esc(deckLabel(a.path))} &nbsp; <i class="dom" style="background:var(--chaos)"></i>${esc(deckLabel(b.path))}</p><h3>Différences (de gauche à droite)</h3>${diff()}` : ""}
-        ${(a.comments || []).length ? `<details><summary class="small muted">Notes du fichier</summary><div class="log">${a.comments.map(esc).join("\n")}</div></details>` : ""}
+        ${b ? `<p class="small"><i class="dom" style="background:var(--calm)"></i>${esc(deckLabel(a.path))} &nbsp; <i class="dom" style="background:var(--chaos)"></i>${esc(deckLabel(b.path))}</p><h3>Differences (left to right)</h3>${diff()}` : ""}
+        ${(a.comments || []).length ? `<details><summary class="small muted">File notes</summary><div class="log">${a.comments.map(esc).join("\n")}</div></details>` : ""}
       </div>
-      <div class="panel stack"><h2>Liste</h2>${cardList(a.list)}
-        <h3>Champs de bataille</h3><p class="small">${Object.keys(a.list.battlefields || {}).map(esc).join(" · ")}</p></div>
-    </div>` : `<div class="empty">Deck introuvable.</div>`}
+      <div class="panel stack"><h2>List</h2>${cardList(a.list)}
+        <h3>Battlefields</h3><p class="small">${Object.keys(a.list.battlefields || {}).map(esc).join(" · ")}</p></div>
+    </div>` : `<div class="empty">Deck not found.</div>`}
     <div class="panel stack" id="builder"></div>`;
   $("#dk").onchange = e => { state.deck = e.target.value; viewDecks(); };
   $("#dk2").onchange = e => { state.compare = e.target.value; viewDecks(); };
@@ -298,32 +298,32 @@ function renderBuilder() {
   const champ = base.list.champion || {};
   const total = Object.values(cur).reduce((a, b) => a + b, 0) + Object.values(champ).reduce((a, b) => a + b, 0);
   const errs = [];
-  if (total !== 40) errs.push(`${total} cartes au lieu de 40 (champion compris)`);
+  if (total !== 40) errs.push(`${total} cards instead of 40 (champion included)`);
   for (const [n, k] of Object.entries(cur)) {
     const c = idx.get(n.toLowerCase());
     const all = k + (champ[n] || 0);
-    if (!c) errs.push(`${n} : carte inconnue du moteur`);
-    else if (c.domains.length && !c.domains.every(d => doms.has(d))) errs.push(`${n} : hors des domaines de la légende`);
-    if (all > 3) errs.push(`${n} : ${all} exemplaires (3 au maximum)`);
+    if (!c) errs.push(`${n}: card unknown to the engine`);
+    else if (c.domains.length && !c.domains.every(d => doms.has(d))) errs.push(`${n}: outside the legend's domains`);
+    if (all > 3) errs.push(`${n}: ${all} copies (3 max)`);
   }
   const curve = {}; for (const [n, k] of [...Object.entries(cur), ...Object.entries(champ)]) { const c = idx.get(n.toLowerCase()); if (c) curve[c.energy] = (curve[c.energy] || 0) + k; }
   const pool = D.cards.filter(c => !["legend", "battlefield", "rune"].includes(c.type) && (!c.domains.length || c.domains.every(d => doms.has(d))) && c.super !== "token").sort((a, b) => a.energy - b.energy || a.name.localeCompare(b.name));
-  const spec = { name: draft.name || "ma-variante", base: draft.base, note: draft.note, changes: { maindeck: Object.fromEntries(Object.entries(draft.changes).filter(([, d]) => d)) } };
-  el.innerHTML = `<h2>Créer une variante</h2>
-    <p class="small muted">Part de la liste choisie en haut, ajoute ou retire des cartes ; la courbe et la légalité se mettent à jour. Ensuite, « Tester cette variante » la prépare dans l'onglet Lancer.</p>
-    <div class="toolbar"><label class="f">Nom<input type="text" id="vn" value="${esc(draft.name)}" placeholder="ex. sacramento-sans-heron"></label>
-      <label class="f" style="flex:1">Pourquoi<input type="text" id="vnote" value="${esc(draft.note)}" placeholder="ex. 3 Heron remplacés par 2 Deserter et 1 Baron"></label></div>
+  const spec = { name: draft.name || "my-variant", base: draft.base, note: draft.note, changes: { maindeck: Object.fromEntries(Object.entries(draft.changes).filter(([, d]) => d)) } };
+  el.innerHTML = `<h2>Build a variant</h2>
+    <p class="small muted">Starts from the list selected above; add or remove cards and the curve and legality update. Then "Test this variant" queues it in the Launch tab.</p>
+    <div class="toolbar"><label class="f">Name<input type="text" id="vn" value="${esc(draft.name)}" placeholder="e.g. sacramento-no-heron"></label>
+      <label class="f" style="flex:1">Why<input type="text" id="vnote" value="${esc(draft.note)}" placeholder="e.g. 3 Heron replaced by 2 Deserter and 1 Baron"></label></div>
     <div class="grid2">
-      <div class="stack"><h3>Liste (${total}/40)</h3><div class="list">${Object.entries(cur).sort((a, b) => (idx.get(a[0].toLowerCase())?.energy ?? 9) - (idx.get(b[0].toLowerCase())?.energy ?? 9)).map(([n, k]) => {
+      <div class="stack"><h3>List (${total}/40)</h3><div class="list">${Object.entries(cur).sort((a, b) => (idx.get(a[0].toLowerCase())?.energy ?? 9) - (idx.get(b[0].toLowerCase())?.energy ?? 9)).map(([n, k]) => {
           const d = draft.changes[n] || 0; const c = idx.get(n.toLowerCase()) || {};
-          return `<div class="cardrow"><span class="cost">${c.energy ?? "?"}</span><span>${esc(n)} ${d ? `<b class="${d > 0 ? "delta-add" : "delta-rem"}">${d > 0 ? "+" : ""}${d}</b>` : ""}</span><span><button data-n="${esc(n)}" data-d="-1" aria-label="retirer ${esc(n)}">−</button></span><span><button data-n="${esc(n)}" data-d="1" aria-label="ajouter ${esc(n)}">+</button></span></div>`; }).join("")}
+          return `<div class="cardrow"><span class="cost">${c.energy ?? "?"}</span><span>${esc(n)} ${d ? `<b class="${d > 0 ? "delta-add" : "delta-rem"}">${d > 0 ? "+" : ""}${d}</b>` : ""}</span><span><button data-n="${esc(n)}" data-d="-1" aria-label="remove ${esc(n)}">−</button></span><span><button data-n="${esc(n)}" data-d="1" aria-label="add ${esc(n)}">+</button></span></div>`; }).join("")}
         ${Object.entries(draft.changes).filter(([n, d]) => d < 0 && !cur[n]).map(([n, d]) => `<div class="cardrow"><span class="cost">·</span><span class="delta-rem">${esc(n)} ${d}</span><span></span><span><button data-n="${esc(n)}" data-d="1">+</button></span></div>`).join("")}</div>
-        <div class="toolbar"><label class="f" style="flex:1">Ajouter une carte (domaines de la légende)<select id="addc"><option value="">—</option>${pool.map(c => `<option value="${esc(c.name)}">${c.energy} · ${esc(c.name)} (${esc(c.type)}${c.set === "RAD" ? ", Radiance" : ""})</option>`).join("")}</select></label><button id="addb">Ajouter</button></div>
+        <div class="toolbar"><label class="f" style="flex:1">Add a card (legend's domains)<select id="addc"><option value="">—</option>${pool.map(c => `<option value="${esc(c.name)}">${c.energy} · ${esc(c.name)} (${esc(c.type)}${c.set === "RAD" ? ", Radiance" : ""})</option>`).join("")}</select></label><button id="addb">Add</button></div>
       </div>
-      <div class="stack"><h3>Courbe : base contre variante</h3>${curveChart([{label: "base", curve: base.stats.curve, color: "var(--calm)"}, {label: "variante", curve, color: "var(--chaos)"}])}
-        ${errs.length ? `<div class="notice">${errs.map(esc).join("<br>")}</div>` : `<div class="notice ok">Liste légale.</div>`}
-        <div class="toolbar"><button class="primary" id="vtest" ${errs.length || !draft.name ? "disabled" : ""}>Tester cette variante</button><button id="vreset">Repartir de la base</button></div>
-        <details><summary class="small muted">Spécification (format lab/specs)</summary><div class="log">${esc(JSON.stringify(spec, null, 1))}</div></details></div>
+      <div class="stack"><h3>Curve: base vs variant</h3>${curveChart([{label: "base", curve: base.stats.curve, color: "var(--calm)"}, {label: "variant", curve, color: "var(--chaos)"}])}
+        ${errs.length ? `<div class="notice">${errs.map(esc).join("<br>")}</div>` : `<div class="notice ok">Legal list.</div>`}
+        <div class="toolbar"><button class="primary" id="vtest" ${errs.length || !draft.name ? "disabled" : ""}>Test this variant</button><button id="vreset">Reset to base</button></div>
+        <details><summary class="small muted">Spec (lab/specs format)</summary><div class="log">${esc(JSON.stringify(spec, null, 1))}</div></details></div>
     </div>`;
   const save = () => store("rl.draft", draft);
   el.querySelectorAll("button[data-n]").forEach(b => b.onclick = () => { const n = b.dataset.n; draft.changes[n] = (draft.changes[n] || 0) + +b.dataset.d; if (!draft.changes[n]) delete draft.changes[n]; save(); renderBuilder(); });
@@ -343,19 +343,19 @@ async function loadReplay(file) {
   viewReplays();
 }
 function boardHtml(b) {
-  const units = (arr, p) => (arr || []).map(u => `<span class="unit p${p} ${u.exhausted ? "ex" : ""}" title="${esc(u.name)}">${esc(u.name)}${u.might != null ? ` <span class="m">${u.might}</span>` : ""}${u.buffs ? " +" + u.buffs : ""}${u.stunned ? " ⊘" : ""}${u.gear ? ` <span class="small muted">[${u.gear.map(esc).join(", ")}]</span>` : ""}${u.facedown ? " (face cachée)" : ""}</span>`).join("") || `<span class="small muted">—</span>`;
-  const side = (p, i) => { const pl = b.players[i]; return `<div class="side p${p}"><header><b>Joueur ${p}</b><span>${pl.score} pts</span><span>${pl.runes_ready} runes prêtes / ${pl.runes_exhausted} épuisées</span><span>deck ${pl.deck}</span>${pl.legend ? `<span>légende ${esc(pl.legend.name)}${pl.legend.exhausted ? " (épuisée)" : ""}</span>` : ""}</header>
-    <div class="small"><b>Main</b> (${pl.hand.length}) : ${pl.hand.map(esc).join(", ") || "—"}</div>
-    <div class="small"><b>Base</b> : ${units(pl.base_units, p)} ${(pl.base_gear || []).map(g => `<span class="unit">${esc(g.name)}</span>`).join("")}</div></div>`; };
+  const units = (arr, p) => (arr || []).map(u => `<span class="unit p${p} ${u.exhausted ? "ex" : ""}" title="${esc(u.name)}">${esc(u.name)}${u.might != null ? ` <span class="m">${u.might}</span>` : ""}${u.buffs ? " +" + u.buffs : ""}${u.stunned ? " ⊘" : ""}${u.gear ? ` <span class="small muted">[${u.gear.map(esc).join(", ")}]</span>` : ""}${u.facedown ? " (facedown)" : ""}</span>`).join("") || `<span class="small muted">—</span>`;
+  const side = (p, i) => { const pl = b.players[i]; return `<div class="side p${p}"><header><b>Player ${p}</b><span>${pl.score} pts</span><span>${pl.runes_ready} runes ready / ${pl.runes_exhausted} exhausted</span><span>deck ${pl.deck}</span>${pl.legend ? `<span>legend ${esc(pl.legend.name)}${pl.legend.exhausted ? " (exhausted)" : ""}</span>` : ""}</header>
+    <div class="small"><b>Hand</b> (${pl.hand.length}): ${pl.hand.map(esc).join(", ") || "—"}</div>
+    <div class="small"><b>Base</b>: ${units(pl.base_units, p)} ${(pl.base_gear || []).map(g => `<span class="unit">${esc(g.name)}</span>`).join("")}</div></div>`; };
   return `<div class="board">${side(2, 1)}
-    <div class="bfs">${b.battlefields.map(bf => `<div class="bf"><h4><span>${esc(bf.name)}</span><span class="small ${bf.controller ? "" : "muted"}">${bf.controller ? "contrôlé par J" + bf.controller : "libre"}${bf.combat ? " · combat" : ""}</span></h4><div>${units(bf.p2, 2)}</div><div>${units(bf.p1, 1)}</div></div>`).join("")}</div>
+    <div class="bfs">${b.battlefields.map(bf => `<div class="bf"><h4><span>${esc(bf.name)}</span><span class="small ${bf.controller ? "" : "muted"}">${bf.controller ? "held by P" + bf.controller : "open"}${bf.combat ? " · combat" : ""}</span></h4><div>${units(bf.p2, 2)}</div><div>${units(bf.p1, 1)}</div></div>`).join("")}</div>
     ${side(1, 0)}
-    ${b.chain && b.chain.length ? `<div class="small"><b>Chaîne :</b> ${b.chain.map(c => esc(c.source) + " (J" + c.player + ")").join(" → ")}</div>` : ""}</div>`;
+    ${b.chain && b.chain.length ? `<div class="small"><b>Chain:</b> ${b.chain.map(c => esc(c.source) + " (P" + c.player + ")").join(" → ")}</div>` : ""}</div>`;
 }
 function viewReplays() {
   const el = $("#v-replays");
   const reps = D.replays.filter(r => !state.repFilter || r.test_id === state.repFilter);
-  if (!D.replays.length) { el.innerHTML = `<div class="empty">Aucun replay enregistré pour l'instant.</div>`; return; }
+  if (!D.replays.length) { el.innerHTML = `<div class="empty">No replays recorded yet.</div>`; return; }
   const rep = state.rep, frames = rep && rep.frames || [];
   const f = frames[state.frame];
   const key = state.replay + "|" + (f ? f.n : "");
@@ -364,29 +364,29 @@ function viewReplays() {
   const shares = new Map((f && f.search || []).map(([i, s]) => [i, s]));
   el.innerHTML = `
     <div class="panel"><div class="toolbar">
-      <label class="f" style="flex:1">Partie<select id="rsel"><option value="">— choisir —</option>${reps.map(r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${esc(r.agent1)} (J1) contre ${esc(r.agent2)} (J2) — ${r.winner ? "gagnée par J" + r.winner : "nulle"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} tours — ${esc(r.test_id)}</option>`).join("")}</select></label>
-      ${state.repFilter ? `<button id="rclear">Tous les tests</button>` : ""}
+      <label class="f" style="flex:1">Game<select id="rsel"><option value="">— choose —</option>${reps.map(r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${esc(r.agent1)} (P1) vs ${esc(r.agent2)} (P2) — ${r.winner ? "won by P" + r.winner : "draw"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} turns — ${esc(r.test_id)}</option>`).join("")}</select></label>
+      ${state.repFilter ? `<button id="rclear">All tests</button>` : ""}
     </div></div>
-    ${!state.replay ? `<div class="empty">Choisis une partie pour la revoir coup par coup.</div>` : !rep ? `<div class="empty">Chargement…</div>` : rep.error ? `<div class="notice">${esc(rep.error)}</div>` : `
+    ${!state.replay ? `<div class="empty">Pick a game to step through it move by move.</div>` : !rep ? `<div class="empty">Loading…</div>` : rep.error ? `<div class="notice">${esc(rep.error)}</div>` : `
     <div class="panel"><div class="toolbar">
-      <button id="fprev" aria-label="décision précédente">◀</button>
-      <input type="range" id="fr" min="0" max="${frames.length - 1}" value="${state.frame}" style="flex:1" aria-label="décision">
-      <button id="fnext" aria-label="décision suivante">▶</button>
-      <button id="fchoice">Prochaine vraie décision du bot ▶▶</button>
-      <span class="mono small">${state.frame + 1}/${frames.length} · tour ${f.board.turn} · ${esc(f.board.phase)}</span></div>
-      <p class="small muted" style="margin-top:6px">${esc(rep.deck1)} (J1) contre ${esc(rep.deck2)} (J2). Les deux mains sont visibles ici pour la revue ; le bot, lui, ne voyait pas la main adverse.</p></div>
+      <button id="fprev" aria-label="previous decision">◀</button>
+      <input type="range" id="fr" min="0" max="${frames.length - 1}" value="${state.frame}" style="flex:1" aria-label="decision">
+      <button id="fnext" aria-label="next decision">▶</button>
+      <button id="fchoice">Next real bot decision ▶▶</button>
+      <span class="mono small">${state.frame + 1}/${frames.length} · turn ${f.board.turn} · ${esc(f.board.phase)}</span></div>
+      <p class="small muted" style="margin-top:6px">${esc(rep.deck1)} (P1) vs ${esc(rep.deck2)} (P2). Both hands are shown here for review; the bot could not see the opponent's hand.</p></div>
     <div class="grid2">
       <div class="panel">${boardHtml(f.board)}</div>
-      <div class="panel stack"><h2>Décision du joueur ${f.player} <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
-        <p class="small muted">${shares.size ? "La barre montre la part de sa réflexion que le bot a passée sur chaque option : une option nettement en tête est un choix assuré, des barres égales veulent dire qu'il hésitait." : "Ce joueur ne réfléchit pas (aléatoire) ou n'avait qu'une option."}</p>
-        <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="J'aurais joué ça">moi</button></span></div>`).join("")}</div>
-        ${f.chosen < 0 ? `<p class="small">Joué : ${esc(f.chosen_text || "")}</p>` : ""}
-        <div class="stack"><h3>Ton avis sur ce coup</h3>
-          ${db ? `<textarea id="acomment" placeholder="Ce que tu aurais fait et pourquoi">${esc(ann ? ann.comment || "" : "")}</textarea>
-            <div class="toolbar"><button class="primary" id="asave">Enregistrer</button>${ann ? `<span class="small muted">enregistré${ann.would_play != null ? " — tu aurais joué : " + esc(f.options[ann.would_play] || "") : ""}</span>` : ""}</div>`
-          : `<p class="small muted">Les annotations s'enregistrent quand la page est ouverte sur claude.ai avec ton compte.</p>`}
+      <div class="panel stack"><h2>Player ${f.player} decision <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
+        <p class="small muted">${shares.size ? "Each bar shows the share of its search the bot spent on that option: a clear leader is a confident choice, even bars mean it was undecided." : "This player does not search (random) or had only one option."}</p>
+        <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`).join("")}</div>
+        ${f.chosen < 0 ? `<p class="small">Played: ${esc(f.chosen_text || "")}</p>` : ""}
+        <div class="stack"><h3>Your take on this move</h3>
+          ${db ? `<textarea id="acomment" placeholder="What you would have done and why">${esc(ann ? ann.comment || "" : "")}</textarea>
+            <div class="toolbar"><button class="primary" id="asave">Save</button>${ann ? `<span class="small muted">saved${ann.would_play != null ? " — you would have played: " + esc(f.options[ann.would_play] || "") : ""}</span>` : ""}</div>`
+          : `<p class="small muted">Annotations are saved when the page is opened on claude.ai with your account.</p>`}
         </div>
-        ${f.log && f.log.length ? `<details><summary class="small muted">Ce qui s'est passé avant cette décision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : ""}
+        ${f.log && f.log.length ? `<details><summary class="small muted">What happened before this decision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : ""}
       </div></div>`}`;
   const r = $("#rsel"); if (r) r.onchange = e => e.target.value && loadReplay(e.target.value);
   const rc = $("#rclear"); if (rc) rc.onclick = () => { state.repFilter = null; viewReplays(); };
@@ -405,7 +405,7 @@ async function saveAnnotation(f, would) {
   const doc = { replay: state.replay, frame: f.n, turn: f.board.turn, player: f.player, options: f.options, bot_choice: f.chosen,
                 would_play: would, comment, author: meId || "", at: new Date().toISOString() };
   try { await db.collection("annotations").doc(id).set(doc); annotations.set(state.replay + "|" + f.n, doc); viewReplays(); }
-  catch (e) { alert && 0; const n = document.createElement("div"); n.className = "notice"; n.textContent = "Annotation non enregistrée : " + (e.message || e.code); $("#v-replays").prepend(n); }
+  catch (e) { alert && 0; const n = document.createElement("div"); n.className = "notice"; n.textContent = "Annotation not saved: " + (e.message || e.code); $("#v-replays").prepend(n); }
 }
 
 // ── Bot view ────────────────────────────────────────────────────────────────
@@ -418,30 +418,30 @@ function viewBot() {
     const x = i => L + (n === 1 ? (W - L) / 2 : i * (W - L - 12) / (n - 1));
     const y = v => T + (H - T - B) * (1 - v);
     const line = (key, color) => it.map((r, i) => `${i ? "L" : "M"}${x(i)},${y(key(r) ?? 0.5)}`).join(" ");
-    let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="progression du bot">`;
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="bot progress">`;
     [0, .25, .5, .75, 1].forEach(v => s += `<line x1="${L}" x2="${W-4}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${v*100}%</text>`);
     s += `<path d="${line(r => r.vs_random && r.vs_random.rate)}" fill="none" stroke="var(--calm)" stroke-width="2"/>`;
     s += `<path d="${line(r => r.val_acc)}" fill="none" stroke="var(--chaos)" stroke-width="2" stroke-dasharray="4 3"/>`;
     it.forEach((r, i) => { s += `<circle cx="${x(i)}" cy="${y(r.vs_random ? r.vs_random.rate : .5)}" r="4" fill="${r.accepted ? "var(--calm)" : "var(--panel)"}" stroke="var(--calm)" stroke-width="2"/><text x="${x(i)}" y="${H-6}" text-anchor="middle">${r.iteration}</text>`; });
-    return s + `</svg><p class="small"><i class="dom" style="background:var(--calm)"></i>victoires contre un joueur aléatoire (point plein = version adoptée) &nbsp; <i class="dom" style="background:var(--chaos)"></i>précision du réseau à prédire le vainqueur</p>`;
+    return s + `</svg><p class="small"><i class="dom" style="background:var(--calm)"></i>win rate vs a random player (filled dot = adopted version) &nbsp; <i class="dom" style="background:var(--chaos)"></i>network accuracy at predicting the winner</p>`;
   };
   el.innerHTML = `<div class="grid2">
-    <div class="panel stack"><h2>Comment le bot joue</h2>
-      <p>À chaque décision, le bot imagine des centaines de suites possibles avant de choisir (recherche ISMCTS). Il ne voit pas ta main ni l'ordre des decks : à chaque simulation, il redistribue au hasard ce qu'il ne peut pas connaître, parmi les cartes encore possibles.</p>
-      <p>Pour juger une position sans jouer la partie jusqu'au bout, il utilise un petit réseau de neurones qui estime « qui va gagner d'ici ». Ce réseau apprend en regardant le bot jouer contre lui-même : chaque itération produit des parties, le réseau s'entraîne dessus, et la nouvelle version n'est adoptée que si elle bat l'ancienne.</p>
-      <p class="small muted">Les premières versions sont faibles : la courbe de droite doit monter au fil des itérations. Tant que le bot ne bat pas nettement un joueur aléatoire, les résultats des tests de decks restent indicatifs.</p></div>
-    <div class="panel stack"><h2>Progression</h2>${it.length ? chart() : `<div class="empty">L'apprentissage n'a pas encore produit d'itération.</div>`}</div></div>
-    <div class="panel"><h2>Itérations</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>Parties d'entraînement</th><th>Positions</th><th>Précision</th><th>Contre l'aléatoire</th><th>Contre la version actuelle</th><th>Adoptée</th><th>Durée</th></tr></thead><tbody>
-    ${it.map(r => `<tr><td class="mono">${r.iteration}</td><td class="small">${r.self_play_games} × ${esc(r.player)}</td><td class="mono">${r.records}</td><td class="mono">${pct(r.val_acc)}</td><td>${r.vs_random ? wr(r.vs_random.rate, null) : "—"}</td><td>${r.vs_current ? wr(r.vs_current.rate, r.vs_current.ci95) : "—"}</td><td>${r.accepted ? `<span class="pill ok">oui</span>` : `<span class="pill bad">non</span>`}</td><td class="mono">${r.minutes} min</td></tr>`).join("")}
+    <div class="panel stack"><h2>How the bot plays</h2>
+      <p>At each decision, the bot plays out hundreds of possible continuations before choosing (ISMCTS search). It cannot see your hand or the deck order: on each simulation it randomly redeals what it cannot know, from the cards that are still possible.</p>
+      <p>To judge a position without playing the game to the end, it uses a small neural network that estimates "who wins from here". The network learns by watching the bot play itself: each iteration produces games, the network trains on them, and the new version is only adopted if it beats the old one.</p>
+      <p class="small muted">Early versions are weak: the curve on the right should rise over the iterations. Until the bot clearly beats a random player, deck test results are only indicative.</p></div>
+    <div class="panel stack"><h2>Progress</h2>${it.length ? chart() : `<div class="empty">Training has not produced an iteration yet.</div>`}</div></div>
+    <div class="panel"><h2>Iterations</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>Training games</th><th>Positions</th><th>Accuracy</th><th>Vs random</th><th>Vs current version</th><th>Adopted</th><th>Time</th></tr></thead><tbody>
+    ${it.map(r => `<tr><td class="mono">${r.iteration}</td><td class="small">${r.self_play_games} × ${esc(r.player)}</td><td class="mono">${r.records}</td><td class="mono">${pct(r.val_acc)}</td><td>${r.vs_random ? wr(r.vs_random.rate, null) : "—"}</td><td>${r.vs_current ? wr(r.vs_current.rate, r.vs_current.ci95) : "—"}</td><td>${r.accepted ? `<span class="pill ok">yes</span>` : `<span class="pill bad">no</span>`}</td><td class="mono">${r.minutes} min</td></tr>`).join("")}
     </tbody></table></div></div>`;
 }
 
 // ── Launch view ─────────────────────────────────────────────────────────────
 const launchDraft = store("rl.launch") || { name: "", decks: ["decks/riven_sacramento.txt"], variants: [], opponents: [], agent: "standard", games: 100 };
 const PRESETS = {
-  plumbing: { label: "Vérification rapide (joueurs aléatoires, quelques secondes)", agent: "random" },
-  standard: { label: "Bot standard (≈ 30 s par partie et par thread)", agent: "ismcts:sims=30,eval=net:@current" },
-  strong:   { label: "Bot renforcé (≈ 2 min par partie et par thread)", agent: "ismcts:sims=100,eval=net:@current" },
+  plumbing: { label: "Quick check (random players, a few seconds)", agent: "random" },
+  standard: { label: "Standard bot (≈ 30 s per game per thread)", agent: "ismcts:sims=30,eval=net:@current" },
+  strong:   { label: "Strong bot (≈ 2 min per game per thread)", agent: "ismcts:sims=100,eval=net:@current" },
 };
 function metaGauntlet() {
   // Weights: matches against Riven per opponent in the RiftDecks matrix (study, 26 Oct).
@@ -465,7 +465,7 @@ function estimate(spec) {
   const pairs = spec.decks.length * spec.opponents.length, games = pairs * spec.games;
   const per = /random/.test(spec.agent) ? 0.005 : /sims=100/.test(spec.agent) ? 120 : 30;
   const mins = games * per / 4 / 60;
-  return `${games} parties (${pairs} duels) — environ ${mins < 1 ? "moins d'une minute" : mins < 90 ? Math.round(mins) + " min" : (mins / 60).toFixed(1) + " h"} sur 4 cœurs`;
+  return `${games} games (${pairs} matchups) — about ${mins < 1 ? "under a minute" : mins < 90 ? Math.round(mins) + " min" : (mins / 60).toFixed(1) + " h"} on 4 cores`;
 }
 function viewLaunch() {
   const el = $("#v-launch");
@@ -473,25 +473,25 @@ function viewLaunch() {
   const spec = buildSpec();
   const gauntlet = launchDraft.opponents.length ? launchDraft.opponents : metaGauntlet();
   el.innerHTML = `<div class="grid2">
-    <div class="panel stack"><h2>Préparer un test</h2>
-      <div class="toolbar"><label class="f" style="flex:1">Nom du test<input type="text" id="ln" value="${esc(launchDraft.name)}" placeholder="ex. heron-ou-deserter"></label></div>
-      <label class="f">Question posée<input type="text" id="ld" value="${esc(launchDraft.description || "")}" placeholder="ex. Que coûte le retrait des Heron contre le méta ?"></label>
-      <h3>Decks testés</h3>
-      <div class="list">${launchDraft.decks.map((p, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) auto"><span>${esc(deckLabel(p))}</span><button data-rmd="${i}">retirer</button></div>`).join("")}
-        ${launchDraft.variants.map((v, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) auto"><span>variante <b>${esc(v.name)}</b> <span class="small muted">${esc(v.note || "")}</span></span><button data-rmv="${i}">retirer</button></div>`).join("")}</div>
-      <div class="toolbar"><select id="lad" style="flex:1"><option value="">ajouter un deck…</option>${deckOptions("")}</select></div>
-      <h3>Adversaires ${launchDraft.opponents.length ? "" : "(gauntlet méta par défaut, pondéré par fréquence)"}</h3>
-      <div class="list">${gauntlet.map((o, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) 70px auto"><span>${esc(o.label)}</span><input type="number" min="0" value="${o.weight}" data-w="${i}" aria-label="poids"><button data-rmo="${i}">retirer</button></div>`).join("")}</div>
-      <div class="toolbar"><select id="lao" style="flex:1"><option value="">ajouter un adversaire…</option>${deckOptions("")}</select></div>
-      <div class="toolbar"><label class="f" style="flex:1">Niveau de jeu<select id="lag">${Object.entries(PRESETS).map(([k, p]) => `<option value="${k}" ${k === launchDraft.agent ? "selected" : ""}>${esc(p.label)}</option>`).join("")}</select></label>
-        <label class="f">Parties par duel<input type="number" id="lgames" min="2" step="2" value="${launchDraft.games}"></label></div>
-      <p class="small muted">${esc(estimate(spec))}. 100 parties par duel donnent un intervalle d'environ ±10 points, 400 parties environ ±5.</p>
+    <div class="panel stack"><h2>Set up a test</h2>
+      <div class="toolbar"><label class="f" style="flex:1">Test name<input type="text" id="ln" value="${esc(launchDraft.name)}" placeholder="e.g. heron-or-deserter"></label></div>
+      <label class="f">Question<input type="text" id="ld" value="${esc(launchDraft.description || "")}" placeholder="e.g. What does cutting Heron cost against the meta?"></label>
+      <h3>Decks under test</h3>
+      <div class="list">${launchDraft.decks.map((p, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) auto"><span>${esc(deckLabel(p))}</span><button data-rmd="${i}">remove</button></div>`).join("")}
+        ${launchDraft.variants.map((v, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) auto"><span>variant <b>${esc(v.name)}</b> <span class="small muted">${esc(v.note || "")}</span></span><button data-rmv="${i}">remove</button></div>`).join("")}</div>
+      <div class="toolbar"><select id="lad" style="flex:1"><option value="">add a deck…</option>${deckOptions("")}</select></div>
+      <h3>Opponents ${launchDraft.opponents.length ? "" : "(default meta gauntlet, weighted by frequency)"}</h3>
+      <div class="list">${gauntlet.map((o, i) => `<div class="cardrow" style="grid-template-columns:minmax(0,1fr) 70px auto"><span>${esc(o.label)}</span><input type="number" min="0" value="${o.weight}" data-w="${i}" aria-label="weight"><button data-rmo="${i}">remove</button></div>`).join("")}</div>
+      <div class="toolbar"><select id="lao" style="flex:1"><option value="">add an opponent…</option>${deckOptions("")}</select></div>
+      <div class="toolbar"><label class="f" style="flex:1">Play strength<select id="lag">${Object.entries(PRESETS).map(([k, p]) => `<option value="${k}" ${k === launchDraft.agent ? "selected" : ""}>${esc(p.label)}</option>`).join("")}</select></label>
+        <label class="f">Games per matchup<input type="number" id="lgames" min="2" step="2" value="${launchDraft.games}"></label></div>
+      <p class="small muted">${esc(estimate(spec))}. 100 games per matchup give an interval of about ±10 points, 400 games about ±5.</p>
     </div>
-    <div class="panel stack"><h2>Envoyer</h2>
-      <p class="small">« Envoyer à Claude » transmet ce test à la session de travail du labo : Claude le lance (ici ou sur GitHub), puis met à jour ce tableau de bord avec le résultat. Si cette session est fermée, une nouvelle session Claude Code est ouverte pour le faire.</p>
-      <div class="toolbar"><button class="primary" id="lsend" ${spec.decks.length && spec.opponents.length && launchDraft.name ? "" : "disabled"}>Envoyer à Claude</button><button id="lcopy">Copier la demande</button></div>
+    <div class="panel stack"><h2>Send</h2>
+      <p class="small">"Send to Claude" passes this test to the lab's working session: Claude runs it (here or on GitHub), then updates this dashboard with the result. If that session is closed, a new Claude Code session is opened to do it.</p>
+      <div class="toolbar"><button class="primary" id="lsend" ${spec.decks.length && spec.opponents.length && launchDraft.name ? "" : "disabled"}>Send to Claude</button><button id="lcopy">Copy request</button></div>
       <div id="lstatus"></div>
-      <details open><summary class="small muted">Demande (format lab/specs)</summary><div class="log" id="lspec">${esc(JSON.stringify(spec, null, 1))}</div></details>
+      <details open><summary class="small muted">Request (lab/specs format)</summary><div class="log" id="lspec">${esc(JSON.stringify(spec, null, 1))}</div></details>
       <div id="lhist"></div>
     </div></div>`;
   const rerender = () => viewLaunch();
@@ -505,37 +505,37 @@ function viewLaunch() {
   el.querySelectorAll("[data-w]").forEach(i => i.onchange = () => { if (!launchDraft.opponents.length) launchDraft.opponents = metaGauntlet(); launchDraft.opponents[+i.dataset.w].weight = +i.value; rerender(); });
   $("#lag").onchange = e => { launchDraft.agent = e.target.value; rerender(); };
   $("#lgames").onchange = e => { launchDraft.games = Math.max(2, +e.target.value || 2); rerender(); };
-  $("#lcopy").onclick = async () => { const t = JSON.stringify(buildSpec(), null, 1); try { await navigator.clipboard.writeText(t); status("Demande copiée : colle-la dans une conversation avec Claude.", true); } catch (e) { const r = document.createRange(); r.selectNodeContents($("#lspec")); getSelection().removeAllRanges(); getSelection().addRange(r); status("Sélectionnée : copie-la avec Ctrl+C.", true); } };
+  $("#lcopy").onclick = async () => { const t = JSON.stringify(buildSpec(), null, 1); try { await navigator.clipboard.writeText(t); status("Request copied: paste it into a conversation with Claude.", true); } catch (e) { const r = document.createRange(); r.selectNodeContents($("#lspec")); getSelection().removeAllRanges(); getSelection().addRange(r); status("Selected: copy it with Ctrl+C.", true); } };
   $("#lsend").onclick = () => sendRequest(buildSpec());
   renderHistory();
 }
 function status(msg, ok) { const s = $("#lstatus"); if (s) s.innerHTML = `<div class="notice ${ok ? "ok" : ""}">${esc(msg)}</div>`; }
 async function sendRequest(spec) {
   const btn = $("#lsend"); btn.disabled = true;
-  const message = `[Demande du tableau de bord Riven Lab]\nLance ce test avec lab/riftlab.py (ou en le déposant dans lab/requests/ pour GitHub Actions), puis reconstruis et republie le tableau de bord avec le résultat.\n\n${JSON.stringify(spec, null, 1)}`;
+  const message = `[Request from the Riven Lab dashboard]\nRun this test with lab/riftlab.py (or by dropping it into lab/requests/ for GitHub Actions), then rebuild and republish the dashboard with the result.\n\n${JSON.stringify(spec, null, 1)}`;
   let how = "";
-  if (!mcp) { status("Envoi impossible depuis cette vue : copie la demande et colle-la à Claude.", false); btn.disabled = false; return; }
+  if (!mcp) { status("Cannot send from this view: copy the request and paste it to Claude.", false); btn.disabled = false; return; }
   try {
     await mcp.callTool("Claude Code Remote", "send_message", { session_id: D.session_id, message });
-    how = "envoyé à la session du labo";
+    how = "sent to the lab session";
   } catch (e) {
     try {
-      await mcp.callTool("Claude Code Remote", "create_session", { environment_id: D.environment_id, source_url: "https://github.com/" + D.repo, source_revision: D.branch, title: "Riven Lab : " + spec.name, prompt: message + `\n\nTravaille sur la branche ${D.branch} du dépôt ${D.repo} ; lis lab/README.md d'abord.` });
-      how = "nouvelle session Claude Code ouverte";
+      await mcp.callTool("Claude Code Remote", "create_session", { environment_id: D.environment_id, source_url: "https://github.com/" + D.repo, source_revision: D.branch, title: "Riven Lab: " + spec.name, prompt: message + `\n\nWork on branch ${D.branch} of repo ${D.repo}; read lab/README.md first.` });
+      how = "new Claude Code session opened";
     } catch (e2) {
       const code = e2.code || e.code;
-      status(code === "not_in_manifest" || code === "not_granted" ? "Le connecteur Claude Code n'est pas autorisé pour cette page : autorise-le dans le menu Autorisations, ou copie la demande." : code === "server_not_connected" ? "Le connecteur Claude Code Remote n'est pas disponible ici : copie la demande et colle-la à Claude." : "Envoi échoué (" + (e2.message || code) + ") : copie la demande et colle-la à Claude.", false);
+      status(code === "not_in_manifest" || code === "not_granted" ? "The Claude Code connector is not allowed for this page: allow it in the Permissions menu, or copy the request." : code === "server_not_connected" ? "The Claude Code Remote connector is not available here: copy the request and paste it to Claude." : "Send failed (" + (e2.message || code) + "): copy the request and paste it to Claude.", false);
       btn.disabled = false; return;
     }
   }
   if (db) { try { await db.collection("requests").add({ spec, sent: how, at: new Date().toISOString(), author: meId || "" }); } catch (e) {} }
-  status("Demande envoyée (" + how + "). Le résultat apparaîtra dans l'onglet Tests quand Claude aura republié la page.", true);
+  status("Request sent (" + how + "). The result will show up in the Tests tab once Claude has republished the page.", true);
   btn.disabled = false; renderHistory();
 }
 async function renderHistory() {
   const h = $("#lhist"); if (!h || !db) return;
   try { const snap = await db.collection("requests").orderBy("at", "desc").limit(10).get();
-    h.innerHTML = snap.empty ? "" : `<h3>Demandes envoyées</h3><div class="list">${snap.docs.map(d => { const v = d.data(); return `<div class="small"><span class="mono">${esc((v.at || "").slice(0, 16).replace("T", " "))}</span> — <b>${esc(v.spec && v.spec.name)}</b> <span class="muted">${esc(v.sent || "")}</span></div>`; }).join("")}</div>`;
+    h.innerHTML = snap.empty ? "" : `<h3>Sent requests</h3><div class="list">${snap.docs.map(d => { const v = d.data(); return `<div class="small"><span class="mono">${esc((v.at || "").slice(0, 16).replace("T", " "))}</span> — <b>${esc(v.spec && v.spec.name)}</b> <span class="muted">${esc(v.sent || "")}</span></div>`; }).join("")}</div>`;
   } catch (e) { h.innerHTML = ""; }
 }
 
@@ -550,8 +550,8 @@ function route() {
 window.addEventListener("hashchange", route);
 (async function boot() {
   try { D = await (await fetch("data.json")).json(); }
-  catch (e) { $("#v-tests").innerHTML = `<div class="notice">Les données du labo n'ont pas pu être chargées (${esc(String(e))}).</div>`; return; }
-  $("#meta").textContent = `moteur ${D.engine_commit} · données du ${D.generated_utc.replace("T", " ").slice(0, 16)} UTC`;
+  catch (e) { $("#v-tests").innerHTML = `<div class="notice">Could not load the lab data (${esc(String(e))}).</div>`; return; }
+  $("#meta").textContent = `engine ${D.engine_commit} · data from ${D.generated_utc.replace("T", " ").slice(0, 16)} UTC`;
   const t = store("rl.test"); if (t != null && D.tests[t]) state.test = t;
   route();
   const c = window.claude;
