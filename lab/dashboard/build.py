@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Assemble the lab dashboard's data files into lab/dashboard/dist/.
 
-dist/index.html     the page (copied from lab/dashboard/, with board.js + board.css)
+dist/index.html     the app shell (copied from lab/dashboard/ with app.css, board.js, board.css, engine.worker.js)
+dist/app/*.js       the view modules and shared library (lab/dashboard/app/, copied as is)
+dist/home.json      the Home screen's editable copy, from lab/dashboard/home.yml (or home.json)
 dist/data.json      tests (full results), decks with stats, variants, learning ladder
 dist/replays/*.json game records referenced by data.json (the most recent ones)
 
@@ -20,7 +22,8 @@ DIST = LAB / "dashboard" / "dist"
 sys.path.insert(0, str(LAB))
 import riftlab  # noqa: E402
 
-PAGE_FILES = ["index.html", "board.js", "board.css", "engine.worker.js"]   # page, board renderer, engine worker: copied as is
+PAGE_FILES = ["index.html", "app.css", "board.js", "board.css", "engine.worker.js"]   # shell, design system, board renderer, engine worker: copied as is
+APP_DIR = LAB / "dashboard" / "app"                                                   # view modules + lib (ES modules), copied as a directory
 # The WebAssembly engine for the Play tab (built with -DRIFTBOUND_WASM into build-wasm/) and the value net the
 # in-browser bot evaluates with. Copied into dist/engine/ when present; the page hides the Play tab otherwise.
 ENGINE_FILES = {"engine/riftbound.js": ROOT / "build-wasm" / "riftbound.js",
@@ -29,6 +32,18 @@ DEFAULT_NET = LAB / "learn" / "nets" / "net_000.rbvn"
 SESSION = {"session_id": "session_01F68srW6k6CBYFTm9oVwNVu",
            "environment_id": "env_01TgKU1MBDD1jDjD7f3iW6Gm",
            "repo": "jdisser02-glitch/alpharune", "branch": "claude/zen-goodall-hb2ssu"}
+
+
+def load_home():
+    """Home screen copy: lab/dashboard/home.yml (needs PyYAML) or home.json; {} when neither exists."""
+    y, j = LAB / "dashboard" / "home.yml", LAB / "dashboard" / "home.json"
+    if y.exists():
+        try:
+            import yaml
+            return yaml.safe_load(y.read_text()) or {}
+        except ImportError:
+            print("  PyYAML is not installed: home.yml ignored" + (", using home.json" if j.exists() else ""))
+    return json.loads(j.read_text()) if j.exists() else {}
 
 
 def main(argv):
@@ -157,6 +172,8 @@ def main(argv):
     (DIST / "data.json").write_text(json.dumps(data, separators=(",", ":")))
     for name in PAGE_FILES:
         shutil.copy(LAB / "dashboard" / name, DIST / name)
+    shutil.copytree(APP_DIR, DIST / "app", ignore=shutil.ignore_patterns("*.md", ".*"))
+    (DIST / "home.json").write_text(json.dumps(load_home(), ensure_ascii=False, indent=1))
     size = sum(p.stat().st_size for p in DIST.rglob("*") if p.is_file())
     print(f"dist: {len(tests)} tests, {len(index['decks'])} decks, {len(replays)} replays, "
           f"{len(ladder.get('iterations', []))} learning iterations, {size / 1e6:.1f} MB")
