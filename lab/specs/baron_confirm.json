@@ -1,0 +1,19 @@
+{
+  "name": "baron-confirm",
+  "description": "Confirmation of the list search's winner: Sacramento Riven with -1 Scuttle Crab +1 Baron Nashor vs the unchanged list, same meta gauntlet, 60 games per opponent, stronger search.",
+  "agent": "ismcts:sims=40,eval=net:lab/learn/nets/net_004.rbvn",
+  "games": 60,
+  "review_games": 2,
+  "seed": 31,
+  "decks": [
+    {"deck": "decks/riven_sacramento.txt", "label": "base (Nam Dang)"},
+    {"name": "baron-swap", "base": "decks/riven_sacramento.txt", "changes": {"maindeck": {"Scuttle Crab": -1, "Baron Nashor": 1}}}
+  ],
+  "opponents": [
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/05_alex_shans_riven.txt", "label": "Riven (Alex Shans)", "weight": 4},
+    {"deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt", "label": "Kennen (Simple)", "weight": 2},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt", "label": "Kai'Sa (IcrazyFool)", "weight": 1.5},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/03_mvg_kh_nglongxinhx_n_ornn.txt", "label": "Ornn (MVG)", "weight": 1.5},
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/02_calvin_jin_viktor.txt", "label": "Viktor (Calvin Jin)", "weight": 1}
+  ]
+}
