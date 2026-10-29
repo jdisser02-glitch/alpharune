@@ -76,11 +76,19 @@ def main(argv):
     net_path = ROOT / net_rel if net_rel and (ROOT / net_rel).exists() else DEFAULT_NET
     if all(p.exists() for p in ENGINE_FILES.values()):
         (DIST / "engine").mkdir(exist_ok=True)
-        for rel, src in {**ENGINE_FILES, **({"engine/value_net.rbvn": net_path} if net_path.exists() else {})}.items():
+        for rel, src in ENGINE_FILES.items():
             shutil.copy(src, DIST / rel)
             print(f"  {rel:<24} {src.stat().st_size / 1e6:.2f} MB  (from {src.relative_to(ROOT)})")
+        net_rel_out = ""
+        if net_path.exists():
+            # The hosting serves only known file types, so the binary net travels base64-encoded in a JSON file.
+            import base64
+            net_rel_out = "engine/value_net.json"
+            (DIST / net_rel_out).write_text(json.dumps({"source": str(net_path.relative_to(ROOT)),
+                                                        "base64": base64.b64encode(net_path.read_bytes()).decode()}))
+            print(f"  {net_rel_out:<24} {(DIST / net_rel_out).stat().st_size / 1e6:.2f} MB  (from {net_path.relative_to(ROOT)})")
         engine = {"js": "engine/riftbound.js", "wasm": "engine/riftbound.wasm",
-                  "net": "engine/value_net.rbvn" if net_path.exists() else "", "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else ""}
+                  "net": net_rel_out, "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else ""}
     else:
         print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
 

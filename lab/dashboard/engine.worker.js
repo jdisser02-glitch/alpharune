@@ -54,7 +54,11 @@ const CMDS = {
     let netOk = false;
     if (net) {
       try {
-        const bytes = await fetchBytes(net, "net");
+        let bytes = await fetchBytes(net, "net");
+        if (/\.json$/i.test(net)) {           // base64 inside JSON (the hosting serves no raw binaries)
+          const b64 = JSON.parse(new TextDecoder().decode(bytes)).base64, bin = atob(b64);
+          bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        }
         const ptr = M._malloc(bytes.length); M.HEAPU8.set(bytes, ptr);
         const rc = api.loadNet(ptr, bytes.length); M._free(ptr);
         if (rc !== 0) console.warn("[engine] value net rejected: " + api.lastError()); else netOk = true;
