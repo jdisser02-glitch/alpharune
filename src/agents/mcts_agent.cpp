@@ -23,6 +23,20 @@
 
 namespace riftbound {
 
+/// OpenSpiel's SPIEL_CHECK_* failures call SpielFatalError, whose default
+/// handler exits the process. Route them to an exception instead so a search
+/// that fails on one decision (see IsMctsAgent::selectAction) does not kill a
+/// batch of games.
+void installSpielErrorHandler() {
+    static const bool once = [] {
+        ::open_spiel::SetErrorHandler([](const std::string& msg) {
+            throw std::runtime_error("OpenSpiel: " + msg);
+        });
+        return true;
+    }();
+    (void)once;
+}
+
 namespace {
 
 // A heuristic evaluator that scores Riftbound positions directly from
@@ -350,20 +364,6 @@ MctsAgent::MctsAgent(std::string deck1_path,
                                    engine_seed, mcts_seed, sims, opts)) {}
 
 MctsAgent::~MctsAgent() = default;
-
-/// OpenSpiel's SPIEL_CHECK_* failures call SpielFatalError, whose default
-/// handler exits the process. Route them to an exception instead so a search
-/// that fails on one decision (see IsMctsAgent::selectAction) does not kill a
-/// batch of games.
-void installSpielErrorHandler() {
-    static const bool once = [] {
-        ::open_spiel::SetErrorHandler([](const std::string& msg) {
-            throw std::runtime_error("OpenSpiel: " + msg);
-        });
-        return true;
-    }();
-    (void)once;
-}
 
 /// Pick the player who actually has to act at this state. The engine's
 /// `turn_player` reports the player whose TURN it is, but on chain
