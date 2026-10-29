@@ -96,7 +96,9 @@ jobs:
           git config user.email "riftlab-bot@users.noreply.github.com"
           # Only the run's own outputs: generated files such as lab/index.json
           # are rebuilt by build.py and would conflict with the session's commits.
-          git add -A lab/results lab/requests lab/replays lab/variants
+          for d in lab/results lab/requests lab/replays lab/variants; do
+            [ -d "$d" ] && git add -A "$d"
+          done; true
           git commit -m "riftlab: results for ${{ github.sha }}" || exit 0
           for i in 1 2 3 4; do
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
