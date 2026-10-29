@@ -16,12 +16,18 @@ class EphemeralWard : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
 
-    // "Your units have +2 [M]."
-    // NOT overridden here on purpose: GameEngine::recalculateAuras' Step 2
-    // still pattern-matches "your units have +N [M]" in every on-board card's
-    // ability_text and already grants this +2 to each friendly unit (one aura
-    // per Ward). A Card::applyPassiveAura override would apply it a second
-    // time (+4) — the text scan has no per-card opt-out.
+    bool usesTextAuras() const override { return false; }  // aura is in code below
+
+    // "Your units have +2 [M]." (one aura per Ward)
+    void applyPassiveAura(GameState& state, PlayerId controller) const override {
+        forEachSelfOnce(*this, state, controller, [&](GameObjectId sid, GameObject& /*self*/) {
+            for (auto& [uid, u] : state.objects) {
+                if (!u.isUnit() || u.controller != controller) continue;
+                if (!u.location.has_value()) continue;
+                auraMight(u, sid, 2);
+            }
+        });
+    }
 
     // "When you play a unit, kill this."
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayAUnit; }

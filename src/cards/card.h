@@ -550,6 +550,13 @@ public:
     /// `applyPassiveAura` on each on-board card.
     virtual void applyPassiveAura(GameState& state, PlayerId controller) const {}
 
+    /// Whether `recalculateAuras`' legacy ability-text matcher ("other friendly
+    /// units here have ...", "your units have +N [M]", ...) reads this card.
+    /// Return false when the class implements its continuous "units have ..."
+    /// effects itself (usually in `applyPassiveAura`), so they are not applied
+    /// a second time by the text scan.
+    virtual bool usesTextAuras() const { return true; }
+
     // ── Replacement effects ──
     /// Whether this card has a replacement effect (intercepts killUnit etc.).
     virtual bool hasReplacementEffect() const { return false; }

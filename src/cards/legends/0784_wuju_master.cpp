@@ -14,16 +14,12 @@ namespace {
 class WujuMaster : public LegendCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     // "[Level 6] Your units have +1 [M]."   (inline xp>=6 gate)
     // "[Level 11] Your units enter ready."  (inline xp>=11 gate — see note)
     //
-    // NOTE: this matches the Purifier (#502) legend-aura pattern, BUT
-    // GameEngine::recalculateAuras only calls applyPassiveAura on objects with
-    // a board `location` (Step 1b skips LegendZone objects). Legends have no
-    // location, so this hook does not currently fire for legends — the Level-6
-    // buff will not take effect until the engine extends the aura pass to
-    // legend-zone cards. Code is left in place so it activates for free once
-    // that engine gap is closed.
+    // GameEngine::recalculateAuras (Step 1b) calls applyPassiveAura for
+    // LegendZone objects too, so the Level-6 buff applies from here.
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         // Confirm an on-board (LegendZone) instance of this legend.
         bool present = false;

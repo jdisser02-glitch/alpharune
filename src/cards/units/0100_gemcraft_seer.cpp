@@ -14,6 +14,7 @@ namespace {
 class GemcraftSeer : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
 
     // Clause 1: "[Vision]" on me — engine-handled (TriggerManager::onCardPlayed
     // peeks the top card on play for any unit with the Vision keyword).

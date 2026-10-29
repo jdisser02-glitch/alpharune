@@ -14,6 +14,7 @@ namespace {
 class GarenCommander : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
 
     // "Other friendly units have +1 [M] here." Static buff to every OTHER
     // friendly unit at the same battlefield as me.

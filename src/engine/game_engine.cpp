@@ -4636,6 +4636,11 @@ void GameEngine::recalculateAuras() {
         // loop above). A token battlefield's card object has a location, so
         // without this its text would also be read as a unit's "here" aura.
         if (src.card_type == CardType::Battlefield) continue;
+        // Cards that implement their "units have ..." clauses in code opt out
+        // of the text scan, or the effect would be applied twice.
+        if (const Card* src_card = card_registry_.get(src.card_def_id);
+            src_card && !src_card->usesTextAuras())
+            continue;
 
         const auto& def = card_db_.get(src.card_def_id);
         auto& text = def.ability_text;
@@ -4728,7 +4733,7 @@ void GameEngine::recalculateAuras() {
 
         // "Other friendly units here have ..."
         d = {}; d.friendly = true; d.here_only = true; d.other_only = true;
-        findAura("other friendly units here have", d);
+        const bool other_friendly_here = findAura("other friendly units here have", d);
 
         // "Other friendly units have ..."
         d = {}; d.friendly = true; d.all_friendly = true; d.other_only = true;
@@ -4738,9 +4743,27 @@ void GameEngine::recalculateAuras() {
         d = {}; d.friendly = true; d.all_friendly = true;
         findAura("your units have", d);
 
-        // "Units here have ..."
-        d = {}; d.here_only = true;
-        findAura("units here have", d);
+        // "Units here have ..." — only the unqualified phrase. "Friendly units
+        // here have", "enemy units here have" etc. contain it too and must not
+        // widen to every unit at the battlefield.
+        {
+            bool qualified = other_friendly_here;
+            for (size_t pos = clean.find("units here have"); pos != std::string::npos;
+                 pos = clean.find("units here have", pos + 1)) {
+                const std::string before = clean.substr(pos >= 12 ? pos - 12 : 0, pos >= 12 ? 12 : pos);
+                if (before.find("friendly ") != std::string::npos ||
+                    before.find("enemy ") != std::string::npos ||
+                    before.find("other ") != std::string::npos ||
+                    before.find("your ") != std::string::npos) {
+                    qualified = true;
+                } else {
+                    qualified = false;
+                    break;
+                }
+            }
+            d = {}; d.here_only = true;
+            if (!qualified) findAura("units here have", d);
+        }
 
         // "Stunned enemy units here have ..."
         d = {}; d.enemy = true; d.here_only = true; d.stunned_only = true;

@@ -14,6 +14,7 @@ namespace {
 class CaptainFarron : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
 
     // "Other friendly units here have [Assault]." Grant the Assault keyword
     // (and its +1 [M] while attacking) to every OTHER friendly unit at the

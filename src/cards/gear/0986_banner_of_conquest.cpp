@@ -15,16 +15,13 @@ namespace {
 class BannerOfConquest : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     // [Deploy] (CR 830): the engine restricts its play to battlefields, keeps
     // it there through cleanups and kills it when an opponent holds here.
     bool deploys() const override { return true; }
 
     // "Friendly units here have [Assault]." (+1 [M] while attacking; auraKeyword
     // carries the conditional Might.)
-    // NOTE: GameEngine::recalculateAuras also text-matches "units here have"
-    // in this ability text and grants a keyword-only [Assault] (no Might) to
-    // every unit here, enemies included; only the friendly grant below adds
-    // Might.
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         forEachSelfOnce(*this, state, controller, [&](GameObjectId sid, GameObject& self) {
             if (self.attached_to.has_value()) return;

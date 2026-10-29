@@ -14,6 +14,7 @@ namespace {
 class Forecaster : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
 
     // "Your Mechs have [Vision]." The engine's aura text-matcher only handles
     // "your mechs EACH have", not "your mechs have", so grant Vision here.

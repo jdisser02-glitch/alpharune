@@ -15,6 +15,7 @@ namespace {
 class AllayEagerAdmirer : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         for (auto& [sid, self] : state.objects) {
             if (self.card_def_id != cardDefId()) continue;

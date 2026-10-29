@@ -22,6 +22,7 @@ namespace {
 class HuntingBlind : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     bool deploys() const override { return true; }
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
 

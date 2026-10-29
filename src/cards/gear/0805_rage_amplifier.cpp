@@ -15,6 +15,7 @@ namespace {
 class RageAmplifier : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     // "[Empower] [6][R]"
     EmpowerSpec empowerSpec() const override { return empowerCost(6, 1, Domain::Fury); }
     // "Your units have +1 [M]. If I'm [Empowered], they have +2 [M] instead."

@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,6 +15,7 @@ namespace {
 class RumbleHotheaded : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
 
     // ── Part 1: "Your Mechs each have [Assault]." ──
@@ -27,15 +29,13 @@ public:
         }
         if (self_id == kInvalidId) return;
         for (auto& [uid, u] : state.objects) {
-            if (!u.isUnit() || u.controller != controller) continue;
+            if (!u.isUnit() || u.controller != controller || !u.location.has_value())
+                continue;
             bool is_mech = false;
             for (auto& tag : u.tags)
                 if (tag == "Mech") { is_mech = true; break; }
             if (!is_mech) continue;
-            GameObject::AuraEffect ae;
-            ae.source = self_id;
-            ae.keyword = Keyword::Assault;
-            u.aura_effects.push_back(ae);
+            auraKeyword(u, self_id, Keyword::Assault, 1);  // +1 [M] while attacking
         }
     }
 

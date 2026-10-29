@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,6 +15,7 @@ namespace {
 class TaricProtector : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     // "Other friendly units here have [Shield]." Static aura: for each on-board
     //  instance of me, grant Shield to every OTHER friendly unit sharing my
     //  location (base or battlefield). Mirrors Forecaster's keyword-grant aura.
@@ -25,11 +27,7 @@ public:
                 if (uid == sid) continue;             // "Other"
                 if (!u.isUnit() || u.controller != controller) continue;
                 if (!u.location.has_value() || *u.location != *self.location) continue;  // "here"
-                GameObject::AuraEffect ae;
-                ae.source = sid;
-                ae.keyword = Keyword::Shield;
-                ae.keyword_value = 1;
-                u.aura_effects.push_back(ae);
+                auraKeyword(u, sid, Keyword::Shield, 1);  // +1 [M] while defending
             }
         }
     }

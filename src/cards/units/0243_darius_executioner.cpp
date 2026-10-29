@@ -3,6 +3,7 @@
 #include "core/game_state.h"
 #include "core/events.h"
 #include "engine/effect_executor.h"
+#include "cards/card_helpers.h"
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -20,6 +21,19 @@ public:
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
     bool requiresLegion() const override { return true; }
+    // "Other friendly units have +1 [M] here." — other friendly units at my
+    // location. Implemented here; the text matcher would ignore "here".
+    bool usesTextAuras() const override { return false; }
+    void applyPassiveAura(GameState& state, PlayerId controller) const override {
+        forEachSelfOnce(*this, state, controller, [&](GameObjectId sid, GameObject& self) {
+            if (!self.location.has_value()) return;
+            for (auto& [uid, u] : state.objects) {
+                if (uid == sid || !u.isUnit() || u.controller != self.controller) continue;
+                if (u.location != self.location) continue;
+                auraMight(u, sid, 1);
+            }
+        });
+    }
 private:
     const CardDef def_ = [] {
         CardDef d;

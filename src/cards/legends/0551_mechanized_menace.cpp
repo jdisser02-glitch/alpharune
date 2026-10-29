@@ -19,15 +19,13 @@ namespace {
 class MechanizedMenace : public LegendCard {
 public:
     const CardDef& def() const override { return def_; }
+    bool usesTextAuras() const override { return false; }  // aura is in code below
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         for (auto& [id, obj] : state.objects) {
             if (!obj.isUnit() || obj.controller != controller) continue;
             if (!obj.location.has_value()) continue;
             if (!hasTag(obj, "Mech")) continue;
-            GameObject::AuraEffect ae;
-            ae.source = id;
-            ae.keyword = Keyword::Shield;
-            obj.aura_effects.push_back(ae);
+            auraKeyword(obj, id, Keyword::Shield, 1);  // +1 [M] while defending
         }
     }
 private:
