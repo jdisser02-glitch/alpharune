@@ -3,6 +3,10 @@
    panel) · result · phone (options as a bottom sheet). */
 
 .v-play { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+/* a game in progress: tighter page gutters so the table and the hand fit the viewport on a laptop (see board.css --rb-hand-w) */
+body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-3); }
+.v-play .vp-game .vp-main { gap: 10px; }
+.v-play .vp-game .vp-bar { padding: 6px 14px; }
 .v-play .panel > h3:first-child { margin-bottom: 10px; }
 .v-play .hint { font-size: 13px; color: var(--ink-dim); }
 .v-play .min0 { min-width: 0; }

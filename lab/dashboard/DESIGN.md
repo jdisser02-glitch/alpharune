@@ -15,7 +15,9 @@ lab/dashboard/
   app/lib.js        data, formatting, cards, imagery, stats, components
   app/<view>.js     one module per screen: home tests decks replays play bot launch cards
   app/<view>.css    that screen's own classes (prefix .v-<view>), loaded by the module with cssOnce()
-  build.py          assembles dist/ (data.json, replays, engine, home.json, app/)
+  art.py            downloads the card art once and packs the sprite sheets into art/ (committed)
+  art/              thumb-NN.webp, large-NN.webp (+ *land* sheets for battlefields) and art.json, the cell map
+  build.py          assembles dist/ (data.json with data.art, replays, engine, home.json, app/, art/)
 ```
 
 ## 1. Module contract
@@ -54,11 +56,14 @@ Routes: `#/home` (default) `#/tests` `#/tests/<id>` `#/decks` `#/decks/<path>` `
 | Cards | `cardById`, `cardByName` (also "Tag, Name" legends), `card(ref)`, `legendShort(name)` → the champion's name ("Kennen" for "Heart of the Tempest"), `isLandscape`, `SETS`, `setName(code)`, `findCards(text)`, `chipText(text, {cls, preview})` (card names in free text → chips) |
 | Decks | `deckByPath`, `allDecks`, `deckLabel`, `deckShort(path)` → "Kennen (Dylan Sumner)", `deckHero`, `deckPilot(deck)` → `{place, pilot, name}`, `deckEvent(path)` → slug, `eventLabel(slug)` → "Sacramento showdown, 24 Oct 2026", `groupDecks`, `deckFace(deck|path)` (legend art, else champion), `legendFace(name)` |
 | Tests | `isPlumbing(test)`, `testsByDate()`, `testById`, `bestList()` (ranked by the interval's lower bound), `testConclusion(test)` (one sentence), `testFaces(test)` → `{mine, theirs}`, `botSpec(raw)` → `{kind, sims, net, label, short, text}`, `botBadge(raw)`, `netName(path)` |
-| Imagery | `cardImage(url, w)` (CDN webp rendition), `fallbackFrame`, `cardImg(ref, {size, w, crop, hover, count, cls})`, `portrait(ref, {size})`, `portraits(refs, {size, max})`, `cardChip(name, {count, cls, preview})` (`preview:false` inside buttons: no focus stop of its own), `cardGrid(list, {champion, w, captions})`, `installCardPreview()` (hides the hover preview when its element leaves the DOM), `showPreview`, `hidePreview` |
+| Imagery | `sprite(card, large)` → `{sheet, land, style}` (the card's cell in art.json), `cardArt(card, {large, w, name, eager})` → `.card-art` element, `watchArt(root)` (lazy sheet loading; `enhance` calls it), `cardImage(url, w)` (CDN webp rendition, fallback only), `fallbackFrame`, `cardImg(ref, {size, w, crop, hover, count, cls})`, `portrait(ref, {size})`, `portraits(refs, {size, max})`, `cardChip(name, {count, cls, preview})` (`preview:false` inside buttons: no focus stop of its own), `cardGrid(list, {champion, w, captions})`, `installCardPreview()` (hides the hover preview when its element leaves the DOM), `showPreview`, `hidePreview` |
 | Components | `kpi({...})`, `badge(text, kind)`, `chip(html)`, `pageHead({title, sub, actions, eyebrow})`, `empty(title, hint)`, `loadingBox`, `errorBox`, `notice(html, kind)`, `rateBar(rate, ci, w)`, `rate(rate, ci)`, `table(columns, rows, opts)`, `enhance(root)`, `toast(msg, kind)`, `modal({title, body, actions})` |
 
-`cardImage` is the one implementation of the CDN rule for app code (`?w=&fm=webp&q=78` on
-`cmsassets.rgpub.io`); `board.js` carries its own copy because it is a standalone script.
+Card art is served from the page itself: `art.py` packs every card into sprite sheets under
+`art/` and `build.py` embeds the cell map (`art.json`) in `data.json` as `data.art`. The hosting
+blocks the official CDN, so no screen may load `cmsassets.rgpub.io`; `cardImage` stays only as the
+fallback for a card that has no sprite entry (`board.js` carries its own copy of both rules because
+it is a standalone script, and takes the map as `opts.art`).
 
 ## 2. Tokens (`:root` in app.css)
 
@@ -143,12 +148,16 @@ Layout: `.wrap` · `.stack` (column, 16px; `.tight` 8, `.loose` 32) · `.row` (w
 | Keys | `.kbd` | Keyboard hints |
 | Log | `.log` | Mono, scrollable, for commands and engine output |
 
-**Card image sizes**: chips 22px crop (`w=120` from the CDN); portraits 28–88px (`w=200`);
-`.card-img` xs 44 / sm 72 / md 120 / lg 200 / xl 280 wide (`w=120…600`); the preview
-260px (`w=600`, 800 for battlefields); the table (board.js) 200–240 for hand and units, 600
-for battlefield art. Always `loading="lazy" decoding="async" referrerpolicy="no-referrer"`;
-the helpers do this. When no image is known or it fails, `.cfb` draws a frame in the card's
-domain colours with its name, cost and type — never a broken image icon.
+**Card image sizes**: two sprite sets. The **thumb** set (240×335 cells, 36 per sheet) draws
+chips (22px crop), portraits (28–88px), `.card-img` xs 44 / sm 72 / md 120 / lg 200 and the
+table's hand and units; the **large** set (600×838 cells, 9 per sheet) draws `.card-img.xl`
+(280), the preview (260px), the zoom and the battlefield panels. Battlefields are landscape and
+live on their own `*land*` sheets. Every picture is a `.card-art` element (a `div` with the
+sheet as background, positioned by `background-size/position`), sized by its container like
+the `img` it replaced; sheets load when the element nears the viewport (`watchArt`). Cards are
+packed in id order, so a deck list touches a handful of sheets. When a card has no sprite and
+no image, `.cfb` draws a frame in the card's domain colours with its name, cost and type —
+never a broken image icon.
 
 ## 4. Layout rules
 

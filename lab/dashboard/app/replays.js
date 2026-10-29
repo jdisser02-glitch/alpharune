@@ -280,7 +280,7 @@ function renderViewer() {
   $$("[data-goto]", host).forEach(b => b.onclick = () => { const k = frames.findIndex(f => f.n === +b.dataset.goto); if (k >= 0) { go(k); $("#rb-host", host).scrollIntoView({ behavior: "smooth", block: "start" }); } });
   $("#t-tl", host).addEventListener("click", e => { const r = e.currentTarget.getBoundingClientRect(); go(Math.round((e.clientX - r.left) / Math.max(1, r.width) * (n - 1))); });
   enhance(host);
-  RiftBoard.mount($("#rb-host", host), { cards: data().cards, players: [playerInfo(rep, 1), playerInfo(rep, 2)] }); boardMounted = true;
+  RiftBoard.mount($("#rb-host", host), { cards: data().cards, art: data().art, players: [playerInfo(rep, 1), playerInfo(rep, 2)] }); boardMounted = true;
   renderFrame();
 }
 function jump(pred, none) {

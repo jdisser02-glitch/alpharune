@@ -267,10 +267,14 @@ table .sub { display: block; font-size: 12.5px; color: var(--ink-dim); font-weig
 /* ── card imagery ───────────────────────────────────────────────────────── */
 .card-img { position: relative; display: inline-block; width: var(--w, 120px); aspect-ratio: 744 / 1039; border-radius: calc(var(--w, 120px) * .045); overflow: hidden; background: var(--s2); box-shadow: 0 0 0 1px rgba(0, 0, 0, .5), var(--sh-1); vertical-align: middle; flex: 0 0 auto; }
 .card-img.land { aspect-ratio: 1039 / 744; }
-.card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* .card-art: the card's picture — a sprite cell (div, background) or the CDN image (img) — sized like the card inside its box */
+.card-art { display: block; background-repeat: no-repeat; background-color: transparent; }
+img.card-art { object-fit: cover; }
+.card-img .card-art { position: absolute; inset: 0; width: 100%; height: 100%; }
 .card-img.xs { --w: 44px; } .card-img.sm { --w: 72px; } .card-img.md { --w: 120px; } .card-img.lg { --w: 200px; } .card-img.xl { --w: 280px; }
 .card-img.crop { aspect-ratio: 1 / 1; border-radius: var(--r-1); }
-.card-img.crop img { object-position: 50% 16%; }
+.card-img.crop .card-art { inset: auto; left: 0; top: -6.3%; width: 100%; height: auto; aspect-ratio: 744 / 1039; }
+.card-img.crop .card-art.land { left: -19.8%; top: 0; width: auto; height: 100%; aspect-ratio: 1039 / 744; }
 .card-img.hover { cursor: zoom-in; transition: transform .15s ease, box-shadow .15s ease; }
 .card-img.hover:hover, .card-img.hover:focus-visible { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 0 1px var(--gold), var(--sh-2); z-index: 1; }
 .card-img .cg-n { position: absolute; right: 5px; bottom: 5px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: rgba(10, 13, 24, .9); color: var(--parch); border: 1px solid var(--gold-dim); font: 700 11.5px/20px var(--mono); text-align: center; }
@@ -283,7 +287,8 @@ table .sub { display: block; font-size: 12.5px; color: var(--ink-dim); font-weig
 .card-img { container-type: inline-size; }
 /* portraits: a round art crop for legends and champions */
 .portrait { position: relative; display: inline-block; width: var(--w, 40px); height: var(--w, 40px); border-radius: 50%; overflow: hidden; background: var(--s2); box-shadow: 0 0 0 2px var(--s0), 0 0 0 3px var(--gold-dim); flex: 0 0 auto; vertical-align: middle; container-type: inline-size; }
-.portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 14%; transform: scale(1.35); transform-origin: 50% 22%; }
+.portrait .card-art { position: absolute; left: 0; top: -5.5%; width: 100%; height: auto; aspect-ratio: 744 / 1039; transform: scale(1.35); transform-origin: 50% 20%; }
+.portrait .card-art.land { left: -19.8%; top: 0; width: auto; height: 100%; aspect-ratio: 1039 / 744; transform: none; }
 .portrait.sm { --w: 28px; } .portrait.md { --w: 40px; } .portrait.lg { --w: 56px; } .portrait.xl { --w: 88px; }
 .portrait .cfb { justify-content: center; align-items: center; text-align: center; padding: 10%; }
 .portrait .cfb .cfb-n { -webkit-line-clamp: 2; font-size: clamp(7px, 22cqw, 13px); }
@@ -297,7 +302,8 @@ table .sub { display: block; font-size: 12.5px; color: var(--ink-dim); font-weig
 .card-chip { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; padding: 2px 9px 2px 2px; border-radius: 999px; background: var(--s2); border: 1px solid var(--line); color: var(--parch); font-size: 13.5px; line-height: 1.2; vertical-align: middle; cursor: zoom-in; text-decoration: none; white-space: nowrap; }
 .card-chip:hover, .card-chip:focus-visible { border-color: var(--gold-dim); background: var(--s3); text-decoration: none; }
 .card-chip .cc-art { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; position: relative; background: var(--s3); flex: 0 0 auto; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); container-type: inline-size; }
-.card-chip .cc-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 14%; transform: scale(1.4); transform-origin: 50% 22%; }
+.card-chip .cc-art .card-art { position: absolute; left: 0; top: -5.5%; width: 100%; height: auto; aspect-ratio: 744 / 1039; transform: scale(1.4); transform-origin: 50% 20%; }
+.card-chip .cc-art .card-art.land { left: -19.8%; top: 0; width: auto; height: 100%; aspect-ratio: 1039 / 744; transform: none; }
 .card-chip .cc-art .cfb { padding: 0; justify-content: center; }
 .card-chip .cc-art .cfb .cfb-n, .card-chip .cc-art .cfb .cfb-t, .card-chip .cc-art .cfb .cfb-c { display: none; }
 .card-chip .cc-name { overflow: hidden; text-overflow: ellipsis; }
@@ -317,7 +323,7 @@ table .sub { display: block; font-size: 12.5px; color: var(--ink-dim); font-weig
 .card-preview.modal { pointer-events: auto; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); width: min(320px, 86vw); }
 .card-preview .cp-card { width: 100%; aspect-ratio: 744 / 1039; border-radius: 12px; overflow: hidden; position: relative; background: var(--s2); box-shadow: 0 0 0 1px var(--gold), var(--sh-3); container-type: inline-size; }
 .card-preview .cp-card.land { aspect-ratio: 1039 / 744; }
-.card-preview .cp-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-preview .cp-card .card-art { position: absolute; inset: 0; width: 100%; height: 100%; }
 .card-preview .cp-info { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: rgba(10, 13, 24, .94); border: 1px solid var(--chrome); color: var(--ink); font-size: 12.5px; box-shadow: var(--sh-2); }
 .card-preview .cp-info b { font: 600 14px/1.2 var(--display); color: var(--parch); display: block; }
 .card-preview .cp-close { position: absolute; top: -10px; right: -10px; width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 1px solid var(--gold); background: #1a1406; color: var(--gold); font-size: 16px; line-height: 1; display: none; }

@@ -6,6 +6,7 @@ dist/app/*.js       the view modules and shared library (lab/dashboard/app/, cop
 dist/home.json      the Home screen's editable copy, from lab/dashboard/home.yml (or home.json)
 dist/data.json      tests (full results), decks with stats, variants, learning ladder
 dist/replays/*.json game records referenced by data.json (the most recent ones)
+dist/art/*.webp     card art sprite sheets (lab/dashboard/art/, built by art.py); their map art.json travels inside data.json as data.art
 
 usage: build.py [--max-replays 40]
 """
@@ -24,6 +25,7 @@ import riftlab  # noqa: E402
 
 PAGE_FILES = ["index.html", "app.css", "board.js", "board.css", "engine.worker.js"]   # shell, design system, board renderer, engine worker: copied as is
 APP_DIR = LAB / "dashboard" / "app"                                                   # view modules + lib (ES modules), copied as a directory
+ART_DIR = LAB / "dashboard" / "art"                                                   # sprite sheets + art.json (art.py), copied as a directory
 # The WebAssembly engine for the Play tab (built with -DRIFTBOUND_WASM into build-wasm/) and the value net the
 # in-browser bot evaluates with. Copied into dist/engine/ when present; the page hides the Play tab otherwise.
 ENGINE_FILES = {"engine/riftbound.js": ROOT / "build-wasm" / "riftbound.js",
@@ -159,9 +161,19 @@ def main(argv):
     else:
         print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
 
+    # Card art: the sprite sheets are copied as is; the map rides in data.json so the page learns it with its one fetch.
+    art = {}
+    if (ART_DIR / "art.json").exists():
+        art = json.loads((ART_DIR / "art.json").read_text())
+        shutil.copytree(ART_DIR, DIST / "art", ignore=shutil.ignore_patterns("art.json", ".*"))
+        sheets = list((DIST / "art").glob("*.webp"))
+        print(f"  art/: {len(sheets)} sprite sheets, {sum(p.stat().st_size for p in sheets) / 1e6:.1f} MB, {len(art.get('cards', {}))} cards mapped")
+    else:
+        print("  no sprite sheets in lab/dashboard/art/ (run art.py): cards fall back to the CDN, which the hosting may block")
+
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
-            "ladder": ladder, "replays": replays, "engine": engine, "human_review": human,
+            "ladder": ladder, "replays": replays, "engine": engine, "human_review": human, "art": art,
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),

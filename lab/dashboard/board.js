@@ -7,12 +7,13 @@
           an optional frame.focus = [{card?, battlefield?}] marks cards / battlefields with a soft ring (the move being
           looked at in a replay) — no list, no click, independent of frame.legal.
    opts:  cards      array (or Map) of card records {id, name, image_url, type, energy, power, might, domains, super, tags}
+          art        the sprite map (art/art.json, data.art): cards are drawn from the bundled sheets; without it, from image_url
           viewer     1 | 2  seat drawn at the bottom (default 1)
           hands      "both" | "viewer"  whether the opponent's hand is face up (default "both")
           players    [{label, deck, runes:{calm:7, mind:5}, champion:"Riven, Broken Blade"}] per seat, cosmetic
           target     points to win (default 8)
           onPick     function(index, legalEntry)
-          imageParams  true: ask the CDN for small webp renditions (default true)
+          imageParams  true: ask the CDN for small webp renditions when a card has no sprite (default true)
           showText   battlefield rules text under its name (default true)
           animate    false disables the FLIP transition of units between frames (default true)
           banner / bannerKind   short status text in the top bar ("Bot is thinking…"), kind "me" | "bot" | "over"
@@ -51,6 +52,15 @@
     return url + (url.includes("?") ? "&" : "?") + `w=${w}&fm=webp&q=78`;
   }
   const imgUrl = (c, w) => c && (c.image_url || c.image) ? cardImage(c.image_url || c.image, w) : "";
+  /** The sprite cell of a card in opts.art (same layout as lib.js `sprite`): {sheet, land, style} or null. */
+  function sprite(c, large) {
+    const A = S.opts.art, id = c && (c.id ?? c.card_id), e = A && id != null ? A.cards[String(id)] : null; if (!e) return null;
+    const cell = large ? e.l : e.t, set = (large ? "large" : "thumb") + (e.land ? "_land" : ""), sh = cell && (A.sheets[set] || [])[cell[0]]; if (!sh) return null;
+    const [file, cols, rows] = sh;
+    const px = cols > 1 ? +(100 * cell[1] / (cols - 1)).toFixed(4) : 0, py = rows > 1 ? +(100 * cell[2] / (rows - 1)).toFixed(4) : 0;
+    const sheet = "art/" + file;
+    return { sheet, land: !!e.land, style: `background-image:url('${esc(sheet)}');background-size:${cols * 100}% ${rows * 100}%;background-position:${px}% ${py}%` };
+  }
   function domStyle(c) {
     const d = (c && c.domains) || []; const a = DOMAINS[d[0]] || "#4a4466", b = DOMAINS[d[1]] || a;
     return `--d1:${a};--d2:${b}`;
@@ -59,7 +69,12 @@
     const cost = /^(unit|spell|gear)$/.test(typeOf(c)) ? costOf(c) : null;
     return `<div class="rb-fb" style="${domStyle(c)}">${cost != null ? `<span class="rb-fbc">${cost}</span>` : ""}${might != null ? `<span class="rb-fbm">${might}</span>` : ""}<div class="rb-fbn">${esc(name)}</div><div class="rb-fbt">${esc(typeOf(c) || kind || "card")}</div></div>`;
   }
-  const img = (c, name, w, extra = "") => imgUrl(c, w) ? `<img src="${esc(imgUrl(c, w))}" alt="${esc(name)}" referrerpolicy="no-referrer" loading="lazy" decoding="async" ${extra}>` : "";
+  /** A card's picture: a sprite cell (div.rb-pic with the sheet as background) or, without a sprite, the CDN image; "" when neither. */
+  function pic(c, name, w, cls = "") {
+    const sp = sprite(c, w > 300);
+    if (sp) return `<div class="rb-pic ${cls} ${sp.land ? "land" : ""}" style="${sp.style}" role="img" aria-label="${esc(name)}"></div>`;
+    return imgUrl(c, w) ? `<img class="rb-pic ${cls}" src="${esc(imgUrl(c, w))}" alt="${esc(name)}" loading="lazy" decoding="async">` : "";
+  }
   function zoomKey(data) { S.z.push(data); return S.z.length - 1; }
 
   // ── legal-action helpers ───────────────────────────────────────────────────
@@ -89,8 +104,9 @@
     if (facedown) return `<div class="rb-back" role="img" aria-label="face-down card"></div>`;
     const legal = L && (L.cards.get(name.toLowerCase()) || (c && L.cards.get(String(c.id))) || (ref && ref.card != null && L.cards.get(String(ref.card))) || (ref && typeof ref === "object" && ref.id != null && L.cards.get(String(ref.id))));
     const k = zoomKey({ card: c, name, state: extraState || (typeOf(c) ? typeOf(c) + " in hand" : "in hand") });
-    const cost = costOf(c);
-    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, ref) ? "rb-focus-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}">${img(c, name, 200) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}</div>`;
+    const cost = /^(unit|spell|gear)$/.test(typeOf(c)) ? costOf(c) : null, pw = c && (c.power ?? c.power_cost);
+    const badge = cost != null && cls !== "legend" ? `<span class="rb-cost" aria-hidden="true">${cost}${pw ? `<i>${"•".repeat(Math.min(pw, 3))}</i>` : ""}</span>` : "";
+    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, ref) ? "rb-focus-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}${legal ? ", playable" : ""}">${pic(c, name, 240) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}${badge}</div>`;
   }
   function unitEl(u, p, L, where, isGear) {
     const c = card(u), name = nameOf(u);
@@ -109,7 +125,7 @@
     const gear = (u.gear || []).map(g => `<i title="${esc(g)}"></i>`).join("");
     const aria = `${name}${!isGear && u.might != null ? ", " + u.might + " might" : ""}${states.length ? ", " + states.join(", ") : ""}`;
     return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${u.facedown ? "facedown" : ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
-      <div class="rb-art">${u.facedown ? "" : img(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
+      <div class="rb-art">${u.facedown ? "" : pic(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
       ${tags.length ? `<div class="rb-tags">${tags.join("")}</div>` : ""}${gear ? `<div class="rb-gearline">${gear}</div>` : ""}
       ${!isGear && u.might != null && !u.facedown ? `<div class="rb-might ${u.buffs ? "buffed" : ""} ${u.damage ? "hurt" : ""}">${u.might}</div>` : ""}
       <div class="rb-name">${u.facedown ? "face down" : esc(name)}</div></div>`;
@@ -152,14 +168,15 @@
     const hidden = !showHand || hand.some(h => h == null);
     const handHtml = hidden || !hand.length
       ? `<div class="rb-backs" role="img" aria-label="${handCount} cards in hand">${Array.from({ length: Math.min(handCount, 10) }, () => `<div class="rb-back"></div>`).join("")}</div>`
-      : `<div class="rb-cards">${hand.map(h => cardEl(h, p, mine ? "" : "sm", mine ? L : focusOnly(L))).join("")}</div>`;
+      : `<div class="rb-cards ${hand.length > 7 ? "fan" : ""}" style="--n:${hand.length}">${hand.map(h => `<div class="rb-hc">${cardEl(h, p, mine ? "" : "sm", mine ? L : focusOnly(L))}</div>`).join("")}</div>`;
+    const nLegal = mine && L ? hand.filter(h => { const c = card(h), n = nameOf(h).toLowerCase(); return L.cards.get(n) || (c && L.cards.get(String(c.id))) || (h && typeof h === "object" && h.card != null && L.cards.get(String(h.card))); }).length : 0;
     const legend = pl.legend ? cardEl(pl.legend, p, "legend", null, "legend" + (pl.legend.exhausted ? ", exhausted" : "")) : "";
     const units = [...(pl.base_units || []).map(u => unitEl(u, p, L, "in base", false)), ...(pl.base_gear || []).map(g => unitEl(g, p, L, "in base", true))];
     const pips = Array.from({ length: target }, (_, k) => `<i class="${k < (pl.score || 0) ? "on" : ""}"></i>`).join("");
     const active = board.turn_player === p;
-    return `<section class="rb-rail ${bottom ? "rb-me" : "rb-opp"}" aria-label="Player ${p}">
+    return `<section class="rb-rail ${bottom ? "rb-me" : "rb-opp"} ${hidden || !hand.length ? "rb-hand-hidden" : ""}" aria-label="Player ${p}">
       <div class="rb-side p${p}">${active ? `<span class="rb-active">turn</span>` : ""}<span class="rb-who"><b>P${p}</b> ${esc(info.label || (bottom ? "viewer" : "opponent"))}</span><div class="rb-sc">${pl.score || 0}<small>/${target}</small></div><div class="rb-pips" aria-hidden="true">${pips}</div>${pl.energy_pool ? `<span class="rb-energy">energy <b>${pl.energy_pool}</b></span>` : ""}${info.deck ? `<span class="rb-deck" title="${esc(info.deck)}">${esc(info.deck)}</span>` : ""}</div>
-      <div class="rb-hand"><span class="rb-hcount">Hand <b>${handCount}</b></span>${handHtml}</div>
+      <div class="rb-hand"><span class="rb-hcount">${bottom ? "Hand" : "Hand"} · <b>${handCount}</b>${nLegal ? `<span class="rb-hplay">· ${nLegal} playable</span>` : ""}</span>${handHtml}</div>
       <div class="rb-zone">
         <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info)}</div>
         <div class="rb-base"><span class="rb-zlabel">Base</span><div class="rb-units">${units.join("") || `<span class="rb-none">no units in base</span>`}</div></div>
@@ -176,9 +193,9 @@
     const held = bf.controller ? `held-${bf.controller}` : "";
     const contested = theirs.length && mine.length;
     const k = zoomKey({ card: c, name: bf.name, land: true, state: `battlefield ${bf.controller ? "held by P" + bf.controller : "unheld"}${bf.combat ? ", combat" : ""}` });
-    const art = imgUrl(c, 600);
-    return `<article class="rb-bf ${held} ${bf.combat ? "combat" : ""} ${legal ? "rb-legal-bf" : ""} ${focus ? "rb-focus-bf" : ""} ${art ? "" : "noart"}"${pickAttr(legal)} aria-label="${esc(bf.name)}">
-      ${art ? `<img class="rb-bfart" src="${esc(art)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : `<div class="rb-bfart"></div>`}
+    const sp = sprite(c, true), art = sp ? "" : imgUrl(c, 600);
+    return `<article class="rb-bf ${held} ${bf.combat ? "combat" : ""} ${legal ? "rb-legal-bf" : ""} ${focus ? "rb-focus-bf" : ""} ${sp || art ? "" : "noart"}"${pickAttr(legal)} aria-label="${esc(bf.name)}">
+      ${sp ? `<div class="rb-bfart sprite" style="${sp.style}"></div>` : art ? `<img class="rb-bfart" src="${esc(art)}" alt="" loading="lazy" decoding="async">` : `<div class="rb-bfart"></div>`}
       <header class="rb-bfhead"><span class="rb-bfidx">${idx + 1}</span><span class="rb-bfname" data-z="${k}" tabindex="0" role="button" aria-label="${esc(bf.name)}, show card">${esc(bf.name)}</span>
         ${bf.combat ? `<span class="rb-badge combat">combat</span>` : ""}
         <span class="rb-badge ${held || (contested ? "contested" : "")}">${bf.controller ? "held by P" + bf.controller : contested ? "contested" : "open"}</span></header>
@@ -228,9 +245,8 @@
     const c = d.card; const dom = (c && c.domains || []).map(x => `<i class="rb-dom" style="background:${DOMAINS[x] || "#888"}"></i>${x}`).join(" ");
     const cost = costOf(c); const pw = c && (c.power ?? c.power_cost);
     const land = d.land || (c && /1038x744|1039x744/.test(c.image_url || ""));
-    const src = imgUrl(c, land ? 800 : 600);
     const line = [typeOf(c), c && (c.super || c.super_type), cost != null ? `cost ${cost}${pw ? " + " + pw + " power" : ""}` : "", c && c.might != null && typeOf(c) === "unit" ? `${c.might} might` : "", (c && c.tags || []).join(", ")].filter(Boolean).join(" · ");
-    return `<button type="button" class="rb-zclose" aria-label="close">×</button><div class="rb-zcard ${land ? "land" : ""}">${src ? `<img src="${esc(src)}" alt="${esc(d.name)}" referrerpolicy="no-referrer" decoding="async">` : fallback(c, d.name, d.might, d.kind)}</div>
+    return `<button type="button" class="rb-zclose" aria-label="close">×</button><div class="rb-zcard ${land ? "land" : ""}">${pic(c, d.name, land ? 800 : 600) || fallback(c, d.name, d.might, d.kind)}</div>
       <div class="rb-zinfo"><b>${esc(d.name)}</b>${line ? `<div>${esc(line)}</div>` : ""}${dom ? `<div>${dom}</div>` : ""}${d.state ? `<div class="rb-zstate">${esc(d.state)}${d.might != null && c && c.might != null && d.might !== c.might ? ` — might now ${d.might}` : ""}</div>` : ""}</div>`;
   }
   function showZoom(key, modal, x, y) {
@@ -274,7 +290,7 @@
       const im = e.target; if (!(im instanceof HTMLImageElement)) return;
       if (im.classList.contains("rb-bfart")) { im.closest(".rb-bf").classList.add("noart"); im.replaceWith(Object.assign(document.createElement("div"), { className: "rb-bfart" })); return; }
       const host = im.closest("[data-z]"); const d = host && S.z[+host.dataset.z];
-      const box = im.parentElement; im.remove(); if (box) box.insertAdjacentHTML("beforeend", fallback(d && d.card, d ? d.name : im.alt, d ? d.might : null, d && d.kind));
+      const box = im.parentElement; im.remove(); if (box) box.insertAdjacentHTML("afterbegin", fallback(d && d.card, d ? d.name : im.alt, d ? d.might : null, d && d.kind));
     }, true);
     on(document, "keydown", e => { if (e.key === "Escape") hideZoom(); });
     on(document, "click", e => { if (S.zoom && S.zoom.classList.contains("modal") && e.target.closest(".rb-zclose")) hideZoom(); });
@@ -308,6 +324,6 @@
     S.handlers = []; if (S.zoom) S.zoom.remove(); if (S.backdrop) S.backdrop.remove(); S.zoom = S.backdrop = null;
     if (S.el) { S.el.classList.remove("rb"); S.el.innerHTML = ""; } S.el = null; S.frame = null; S.z = [];
   }
-  const API = { mount, render, destroy, cardImage, card, DOMAINS };
+  const API = { mount, render, destroy, cardImage, sprite, card, DOMAINS };
   window.RiftBoard = API;
 })();

@@ -213,14 +213,16 @@ export function groupDecks(decks = allDecks()) {
   });
   return g;
 }
+/** Does a card have a picture (a sprite cell, else an image url)? */
+export const hasArt = c => !!(c && (sprite(c) || c.image_url));
 /** The legend card of a deck, or its champion when the legend has no art, or null. */
 export function deckFace(deckOrPath) {
   const d = typeof deckOrPath === "string" ? deckByPath(deckOrPath) : deckOrPath; if (!d) return null;
-  const leg = cardByName(d.legend); if (leg && leg.image_url) return leg;
+  const leg = cardByName(d.legend); if (hasArt(leg)) return leg;
   const ch = cardByName(d.champion || Object.keys((d.list || {}).champion || {})[0]); return ch || leg || null;
 }
 /** Face card for a legend name as human games record it ("The Exile", "Curator of the Sands"). */
-export function legendFace(name) { const c = cardByName(name); if (c && c.image_url) return c; const tag = c && (c.tags || [])[0]; if (tag) { const ch = (D.cards || []).find(x => x.super === "champion" && (x.tags || []).includes(tag) && x.image_url); if (ch) return ch; } return c; }
+export function legendFace(name) { const c = cardByName(name); if (hasArt(c)) return c; const tag = c && (c.tags || [])[0]; if (tag) { const ch = (D.cards || []).find(x => x.super === "champion" && (x.tags || []).includes(tag) && hasArt(x)); if (ch) return ch; } return c; }
 export const isPlumbing = t => /^random$/.test(t.agent || "") && /^random$/.test(t.opp_agent || t.agent || "");
 /** Tests newest first. */
 export const testsByDate = () => [...(D.tests || [])].sort((a, b) => String(b.started_utc).localeCompare(String(a.started_utc)));
@@ -262,7 +264,12 @@ export function testFaces(t) {
 }
 
 // ── card imagery ────────────────────────────────────────────────────────────
-/** CDN rendition: small webp from cmsassets.rgpub.io (same rule as board.js). */
+/* Card art comes from the sprite sheets in art/ (built by art.py, mapped by data.art = art.json): every helper draws a
+   `.card-art` element whose background is one cell of a sheet. The thumb set (240 px cells) serves everything up to about
+   260 px wide, the large set (600 px cells) the preview and big portraits. Sheets load lazily: the element carries its sheet
+   in data-sheet and the global IntersectionObserver (installCardPreview) sets the background when it nears the viewport.
+   The CDN rendition (`cardImage`) is only the fallback for a card that has no sprite entry. */
+/** CDN rendition: small webp from cmsassets.rgpub.io. Fallback only: the hosting may block the CDN, the sprites never fail. */
 export function cardImage(url, w) {
   if (!url) return "";
   if (!/cmsassets\.rgpub\.io/.test(url)) return url;
@@ -270,6 +277,34 @@ export function cardImage(url, w) {
 }
 export const isLandscape = c => !!(c && (c.type === "battlefield" || /10[34]\dx744/.test(c.image_url || "")));
 const domStyle = c => { const d = (c && c.domains) || []; const a = domainColor(d[0]), b = d[1] ? domainColor(d[1]) : a; return `--d1:${a};--d2:${b}`; };
+/** The sprite cell of a card: {sheet (url), land, style (background-size/position)} or null when the card has none.
+    art.json: sheets[set] = [[file, cols, rows], …], cards[id] = {t:[sheet, col, row], l:[…], land}. A cell (col,row) of a cols×rows
+    sheet is background-size cols*100% rows*100% at position col/(cols-1), row/(rows-1) on an element with the cell's aspect. */
+export function sprite(c, large = false) {
+  const A = D && D.art, e = A && c && c.id != null ? A.cards[String(c.id)] : null; if (!e) return null;
+  const cell = large ? e.l : e.t, set = (large ? "large" : "thumb") + (e.land ? "_land" : ""), sh = cell && (A.sheets[set] || [])[cell[0]]; if (!sh) return null;
+  const [file, cols, rows] = sh;
+  const px = cols > 1 ? +(100 * cell[1] / (cols - 1)).toFixed(4) : 0, py = rows > 1 ? +(100 * cell[2] / (rows - 1)).toFixed(4) : 0;
+  return { sheet: "art/" + file, land: !!e.land, style: `background-size:${cols * 100}% ${rows * 100}%;background-position:${px}% ${py}%` };
+}
+/** A card's picture as an element: the sprite cell (lazy), else the CDN image (lazy), else "" (callers draw the fallback frame).
+    opts: large (600 px cells), w (CDN px for the fallback), name (accessible name), eager (sheet set at once: previews). */
+export function cardArt(c, opts = {}) {
+  const name = opts.name || (c && c.name) || "card", s = c && sprite(c, !!opts.large);
+  if (s) return `<div class="card-art ${s.land ? "land" : ""}" ${opts.eager ? `style="background-image:url('${esc(s.sheet)}');${s.style}"` : `data-sheet="${esc(s.sheet)}" style="${s.style}"`} role="img" aria-label="${esc(name)}"></div>`;
+  const src = c && c.image_url ? cardImage(c.image_url, opts.w || 300) : "";
+  return src ? `<img class="card-art ${isLandscape(c) ? "land" : ""}" src="${esc(src)}" alt="${esc(name)}" loading="lazy" decoding="async" data-name="${esc(name)}">` : "";
+}
+let artIO = null;
+const loadArt = e => { const s = e.dataset.sheet; if (s) { e.style.backgroundImage = `url("${s}")`; delete e.dataset.sheet; } };
+/** Start loading the sheets of the `.card-art` elements under root that are near the viewport (the rest when they get there). */
+export function watchArt(root = document) {
+  const list = root.nodeType === 1 && root.matches(".card-art[data-sheet]") ? [root] : $$(".card-art[data-sheet]", root);
+  if (!list.length) return;
+  if (!("IntersectionObserver" in window)) { list.forEach(loadArt); return; }
+  if (!artIO) artIO = new IntersectionObserver(es => { for (const x of es) if (x.isIntersecting) { loadArt(x.target); artIO.unobserve(x.target); } }, { rootMargin: "320px 0px" });
+  list.forEach(e => artIO.observe(e));
+}
 /** The styled frame shown when a card has no image (or it fails to load). */
 export function fallbackFrame(c, name) {
   const cost = c && /^(unit|spell|gear)$/.test(c.type) ? c.energy : null;
@@ -280,17 +315,17 @@ const SIZE_W = { xs: 120, sm: 200, md: 300, lg: 400, xl: 600 };
 export function cardImg(ref, opts = {}) {
   const c = card(ref), name = opts.alt || (c && c.name) || (typeof ref === "string" ? ref : "card");
   const size = opts.size || "md", w = opts.w || SIZE_W[size] || 300;
-  const src = c && c.image_url ? cardImage(c.image_url, w) : "";
+  const art = cardArt(c, { large: size === "xl" || w >= 600, w, name });
   const cls = ["card-img", size, opts.crop ? "crop" : "", isLandscape(c) && !opts.crop ? "land" : "", opts.hover !== false && c ? "hover" : "", opts.cls || ""].filter(Boolean).join(" ");
   const preview = opts.hover !== false && c ? ` data-card="${esc(c.name)}" tabindex="0" role="img" aria-label="${esc(name)}"` : ` role="img" aria-label="${esc(name)}"`;
-  return `<span class="${cls}"${preview} style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async" data-name="${esc(name)}">` : fallbackFrame(c, name)}${opts.count != null ? `<span class="cg-n">×${opts.count}</span>` : ""}</span>`;
+  return `<span class="${cls}"${preview} style="${domStyle(c)}">${art || fallbackFrame(c, name)}${opts.count != null ? `<span class="cg-n">×${opts.count}</span>` : ""}</span>`;
 }
 /** Round art crop for a legend / champion. size sm|md|lg|xl. */
 export function portrait(ref, opts = {}) {
   const c = typeof ref === "string" && !card(ref) ? legendFace(ref) : card(ref);
   const name = opts.alt || (c && c.name) || String(ref || "?");
-  const src = c && c.image_url ? cardImage(c.image_url, opts.w || 200) : "";
-  return `<span class="portrait ${opts.size || "md"} ${opts.cls || ""}" title="${esc(name)}" role="img" aria-label="${esc(name)}"${c ? ` data-card="${esc(c.name)}" tabindex="0"` : ""} style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async" data-name="${esc(name)}">` : fallbackFrame(c, legendShort(name))}</span>`;
+  const art = cardArt(c, { w: opts.w || 200, name });
+  return `<span class="portrait ${opts.size || "md"} ${opts.cls || ""}" title="${esc(name)}" role="img" aria-label="${esc(name)}"${c ? ` data-card="${esc(c.name)}" tabindex="0"` : ""} style="${domStyle(c)}">${art || fallbackFrame(c, legendShort(name))}</span>`;
 }
 /** Several portraits overlapping; `max` shown, the rest counted. */
 export function portraits(refs, opts = {}) {
@@ -301,9 +336,9 @@ export function portraits(refs, opts = {}) {
     stop (for a chip inside a button or link: hover still previews, the parent keeps the keyboard). */
 export function cardChip(name, opts = {}) {
   const c = card(name), label = (c && c.name) || String(name);
-  const src = c && c.image_url ? cardImage(c.image_url, 120) : "";
+  const art = cardArt(c, { w: 120, name: label });
   const hook = c ? ` data-card="${esc(c.name)}"${opts.preview === false ? "" : ` tabindex="0"`}` : "";
-  return `<span class="card-chip ${opts.cls || ""}"${hook}><span class="cc-art" style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : fallbackFrame(c, label)}</span><span class="cc-name">${esc(label)}</span>${opts.count != null ? `<span class="cc-n">×${opts.count}</span>` : ""}</span>`;
+  return `<span class="card-chip ${opts.cls || ""}"${hook}><span class="cc-art" style="${domStyle(c)}">${art || fallbackFrame(c, label)}</span><span class="cc-name">${esc(label)}</span>${opts.count != null ? `<span class="cc-n">×${opts.count}</span>` : ""}</span>`;
 }
 /** Card names (3+ letters) longest first, for finding them inside free text. */
 function nameIndex() {
@@ -347,9 +382,9 @@ export function cardGrid(list, opts = {}) {
 // ── global card preview layer (index.html provides #card-preview + #card-backdrop) ──
 let pv = null, pvBack = null, pvName = null, pvAnchor = null, touch = false, raf = 0, pvInstalled = false;
 function previewHtml(c) {
-  const land = isLandscape(c), src = c.image_url ? cardImage(c.image_url, land ? 800 : 600) : "";
+  const land = isLandscape(c), art = cardArt(c, { large: true, w: land ? 800 : 600, name: c.name, eager: true });
   const line = [c.type, c.super, c.energy != null && /^(unit|spell|gear)$/.test(c.type) ? `cost ${c.energy}${c.power ? " + " + c.power + " power" : ""}` : "", c.type === "unit" && c.might != null ? `${c.might} might` : "", (c.tags || []).join(", ")].filter(Boolean).join(" · ");
-  return `<button type="button" class="cp-close" aria-label="close">×</button><div class="cp-card ${land ? "land" : ""}" style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="${esc(c.name)}" referrerpolicy="no-referrer" decoding="async">` : fallbackFrame(c, c.name)}</div>
+  return `<button type="button" class="cp-close" aria-label="close">×</button><div class="cp-card ${land ? "land" : ""}" style="${domStyle(c)}">${art || fallbackFrame(c, c.name)}</div>
     <div class="cp-info"><b>${esc(c.name)}</b>${line ? `<div>${esc(line)}</div>` : ""}${(c.domains || []).length ? `<div>${(c.domains || []).map(d => `${domainDot(d)}${esc(d)}`).join(" ")}</div>` : ""}${c.text ? `<div class="small muted">${esc(c.text)}</div>` : ""}</div>`;
 }
 function placePreview(x, y) {
@@ -389,9 +424,13 @@ export function installCardPreview() {
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape") hidePreview(); const t = e.target.closest && e.target.closest("[data-card]"); if (t && !inBoard(t) && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showPreview(t.dataset.card, { modal: true, anchor: t }); } });
   pvBack.addEventListener("click", hidePreview);
-  // the hovered / focused element was re-rendered away (a repaint under the pointer): drop a hover preview that has no anchor left
-  new MutationObserver(() => { if (pvAnchor && !pvAnchor.isConnected && pv.classList.contains("on") && !pv.classList.contains("modal")) hidePreview(); })
-    .observe(document.body, { childList: true, subtree: true });
+  // the hovered / focused element was re-rendered away (a repaint under the pointer): drop a hover preview that has no anchor left;
+  // and every freshly inserted card picture joins the lazy sheet loader
+  new MutationObserver(muts => {
+    if (pvAnchor && !pvAnchor.isConnected && pv.classList.contains("on") && !pv.classList.contains("modal")) hidePreview();
+    for (const m of muts) for (const n of m.addedNodes) if (n.nodeType === 1) watchArt(n);
+  }).observe(document.body, { childList: true, subtree: true });
+  watchArt(document);
   // image failed: swap in the styled frame (outside the table; board.js handles its own)
   document.addEventListener("error", e => {
     const im = e.target; if (!(im instanceof HTMLImageElement) || im.closest(".rb")) return;
@@ -438,6 +477,7 @@ export function table(columns, rows, opts = {}) {
 /** Wire behaviours inside a freshly rendered root: sortable headers. Call after setting innerHTML. */
 export function enhance(root = document) {
   $$("th[data-sort]", root).forEach(th => { if (th.dataset.wired) return; th.dataset.wired = "1"; th.addEventListener("click", () => sortTable(th)); });
+  watchArt(root);
 }
 function sortTable(th) {
   const table = th.closest("table"), tbody = table.tBodies[0], idx = [...th.parentNode.children].indexOf(th);

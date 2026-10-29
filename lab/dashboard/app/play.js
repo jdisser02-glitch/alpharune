@@ -304,7 +304,7 @@ function drawGame() {
       <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
     </div>`;
   G.boardEl = $("#vp-board", G.root);
-  RiftBoard.mount(G.boardEl, { cards: data().cards, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), players: players() });
+  RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), players: players() });
   G.root.addEventListener("click", e => {
     const opt = e.target.closest(".po-opt[data-pick]");
     if (opt) { e.stopPropagation(); /* the chip inside must not open the card preview on tap */ pick(+opt.dataset.pick); return; }
