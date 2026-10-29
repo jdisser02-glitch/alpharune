@@ -6,10 +6,10 @@
    The table is RiftBoard (board.js, a global) with the human's seat at the bottom and the bot's hand face down; the options are
    the board's gold highlights plus the list under the table. The game lives in module scope: leaving the screen and coming back
    finds it where it was. Router contract: render(container) / destroy(); no params. Styles: app/play.css (prefix .v-play). */
-import { data, esc, $, $$, el, store, card, cardByName, cardImage, cardImg, fallbackFrame, portrait, domainDots, pageHead, chip,
-         empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, groupDecks, legendShort, num, fmtDate, plural } from "./lib.js";
+import { data, esc, $, $$, store, sleep, card, cardByName, cardImg, portrait, domainDots, pageHead, chip, cssOnce, chipText as libChipText,
+         empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural } from "./lib.js";
 
-const CSS_ID = "v-play-css";
+const CSS = new URL("./play.css", import.meta.url).href;
 const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "quick", autopay: true };
 /* Bot presets: what rb_new_game's bot spec accepts is "greedy[:det=<redeals>,budget=<ms>,steps=<n>,wide=<n>]" or "random". */
 const LEVELS = {
@@ -28,7 +28,7 @@ const G = {
   busy: false, thinking: false, thinkStart: 0, timer: 0, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1,
   tally: null, result: null, lastHint: "", error: null,
 };
-let keysBound = false, nameRe = null;
+let keysBound = false;
 
 // ── engine worker ───────────────────────────────────────────────────────────
 function call(cmd, args) {
@@ -63,15 +63,11 @@ const playable = () => data().decks.filter(d => !(d.errors || []).length && d.te
 /** Groups of playable decks as the Decks screen names them, empty groups dropped. */
 function deckGroups() { const g = groupDecks(playable()); for (const k of Object.keys(g)) if (!g[k].length) delete g[k]; return g; }
 const groupOf = path => Object.entries(deckGroups()).find(([, ds]) => ds.some(d => d.path === path))?.[0] || Object.keys(deckGroups())[0];
-function prettyEvent(slug) {
-  const m = String(slug).match(/^(.*?)_?(\d{4}-\d{2}-\d{2})$/), name = (m ? m[1] : String(slug)).replace(/_/g, " ").trim();
-  const cap = name ? name[0].toUpperCase() + name.slice(1) : ""; return m ? `${cap}${cap ? ", " : ""}${fmtDate(m[2])}` : cap;
-}
 /** {name, sub} for a deck tile: "Riven (Nam Dang)" + "#1 · Sacramento showdown, 24 Oct 2026". */
 function deckMeta(d) {
-  const cs = d.comments || [], head = cs[0] || "", m = head.match(/^(\d+) - (.+?) - (.+)$/);
+  const cs = d.comments || [], head = cs[0] || "", p = deckPilot(d);
   const ev = (cs.find(c => /^Event:/.test(c)) || "").replace(/^Event:\s*/, "");
-  if (m) return { name: `${m[3]} (${m[2]})`, sub: `#${m[1]}${ev ? " · " + prettyEvent(ev) : ""}` };
+  if (p && ev) return { name: deckShort(d.path), sub: `#${p.place} · ${eventLabel(ev)}` };
   if (d.path.startsWith("lab/variants/")) return { name: deckShort(d.path), sub: "variant of the reference list" };
   if (head.includes(" — ")) return { name: deckShort(d.path), sub: head.split(" — ").slice(1).join(" — ").replace(/[.\s]+$/, "") };
   return { name: deckShort(d.path), sub: "engine test deck" };
@@ -97,24 +93,9 @@ function legalHints(legal) {
     return e;
   });
 }
-/** Option text with every card it names shown as an art chip (longest names first, whole words only). */
-function chipText(text, cls = "") {
-  if (!nameRe) {
-    const names = [...new Set(data().cards.map(c => c.name))].filter(n => n.length >= 4).sort((a, b) => b.length - a.length);
-    nameRe = new RegExp("(?<![\\w'’])(" + names.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")(?![\\w'’])", "g");
-  }
-  const s = String(text ?? ""), parts = []; let last = 0;
-  for (const m of s.matchAll(nameRe)) { parts.push(esc(s.slice(last, m.index)), artChip(m[1], cls)); last = m.index + m[0].length; }
-  parts.push(esc(s.slice(last)));
-  return parts.join("");
-}
-/** A card chip without its own focus stop (it sits inside an option button); hover still previews the card. */
-function artChip(name, cls = "") {
-  const c = card(name); if (!c) return esc(name);
-  const src = c.image_url ? cardImage(c.image_url, 120) : "", d = c.domains || [];
-  return `<span class="card-chip ${cls}" data-card="${esc(c.name)}"><span class="cc-art" style="--d1:${esc(domColor(d[0]))};--d2:${esc(domColor(d[1] || d[0]))}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : fallbackFrame(c, c.name)}</span><span class="cc-name">${esc(c.name)}</span></span>`;
-}
-const domColor = d => ({ fury: "#d4483b", calm: "#27a97e", mind: "#3f86e0", body: "#e38a2e", chaos: "#8e5cf0", order: "#e1b83a" })[String(d || "").toLowerCase()] || "#4a4466";
+/** Option text with every card it names shown as an art chip. The chips sit inside option buttons, so they take no focus stop
+    of their own (hover still previews the card). */
+const chipText = (text, cls = "") => libChipText(text, { cls, preview: false });
 
 // ── game flow ───────────────────────────────────────────────────────────────
 function noteLog(st) {
@@ -180,7 +161,6 @@ async function endGame(again) {
   stopTimer(); G.stage = "setup"; G.st = null; G.busy = false; G.thinking = false;
   if (again) start(); else draw();
 }
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 function stopTimer() { if (G.timer) clearInterval(G.timer); G.timer = 0; }
 function tickTimer() {
   if (G.timer || !G.host) return;
@@ -189,7 +169,7 @@ function tickTimer() {
 
 // ── rendering ───────────────────────────────────────────────────────────────
 export async function render(container) {
-  if (!$("#" + CSS_ID)) document.head.append(el("link", { id: CSS_ID, rel: "stylesheet", href: "app/play.css" }));
+  await cssOnce(CSS);
   G.host = container; bindKeys(); draw();
 }
 export function destroy() {
@@ -314,7 +294,7 @@ function players() {
   return G.seat === 1 ? [me, bot] : [bot, me];
 }
 function drawGame() {
-  G.root.innerHTML = `<div class="vp-game" id="vp-game">
+  G.root.innerHTML = `<h1 class="sr-only">Play the bot</h1><div class="vp-game" id="vp-game">
       <div class="vp-main">
         <div class="vp-bar" id="vp-bar" role="status" aria-live="polite"></div>
         <div id="vp-result"></div>

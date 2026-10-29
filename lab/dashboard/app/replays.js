@@ -5,8 +5,9 @@
    shares, "played" / "bot" marks for real games, "me" votes and comments saved with the claude.ai db.
    Real games (lab/human_replays, RiftLite logs replayed through the engine) add the comparison strip and the About panel.
    Router contract: render(container, params, ctx) · update(container, params, ctx) · destroy(). Styles: app/replays.css (.v-replays). */
-import { data, esc, $, $$, store, pct, num, fmtDate, badge, chip, pageHead, empty, loadingBox, errorBox, notice, portrait, cardChip, cardImg, cardGrid, cardByName,
-         legendShort, legendFace, deckByPath, deckLabel, deckShort, deckFace, testById, testsByDate, runtime, domainDot, table, enhance, toast, rateBar } from "./lib.js";
+import { data, esc, $, $$, store, pct, num, fmtDate, badge, chip, pageHead, empty, loadingBox, errorBox, notice, portrait, cardChip, cardImg, cardGrid,
+         legendShort, legendFace, deckByPath, deckLabel, deckShort, deckFace, testById, testsByDate, runtime, domainDot, table, enhance, toast, rateBar,
+         cssOnce, botSpec, botBadge, findCards, chipText } from "./lib.js";
 
 // ── state (module scope: survives navigation within the view) ───────────────
 const st = {
@@ -19,8 +20,9 @@ let host = null, keyHandler = null, loadToken = 0, boardMounted = false;
 const SPEEDS = [0.5, 1, 2, 4];
 
 // ── lifecycle ───────────────────────────────────────────────────────────────
+const CSS = new URL("./replays.css", import.meta.url).href;
 export async function render(container, params = {}) {
-  injectCss();
+  await cssOnce(CSS);
   if (!keyHandler) { keyHandler = onKey; document.addEventListener("keydown", keyHandler); }
   ensureRuntime();
   return update(container, params);
@@ -28,17 +30,14 @@ export async function render(container, params = {}) {
 export function update(container, params = {}) {
   host = container; container.classList.add("v-replays");
   if (params.file) { if (params.file !== st.file || (!st.rep && !st.error)) return openGame(params.file); return renderViewer(); }
-  st.filter.test = params.test || "";
+  // ?test=<id> narrows to one test; ?test=human (the Bot screen's link) means the real games
+  if (params.test === "human") { st.filter.kind = "human"; st.filter.test = ""; } else st.filter.test = params.test || "";
   stopAutoplay(); return renderLibrary();
 }
 export function destroy() {
   stopAutoplay();
   if (keyHandler) document.removeEventListener("keydown", keyHandler); keyHandler = null;
-  unmountBoard(); host = null;
-}
-function injectCss() {
-  if ($("#css-v-replays")) return;
-  const l = document.createElement("link"); l.id = "css-v-replays"; l.rel = "stylesheet"; l.href = new URL("./replays.css", import.meta.url).href; document.head.append(l);
+  unmountBoard(); host.classList.remove("v-replays"); host = null;
 }
 function unmountBoard() { if (boardMounted && window.RiftBoard) { try { RiftBoard.destroy(); } catch (e) { /* already gone */ } } boardMounted = false; }
 async function ensureRuntime() {
@@ -54,26 +53,11 @@ const humanGameOf = file => ((data().human_review || {}).games || []).find(g => 
 const isCompared = f => !!(f && f.human_known && f.agree != null);
 const isReal = f => !!(f && ((f.search && f.search.length > 1) || (!f.search && f.options && f.options.length > 1)));
 const phaseName = p => String(p || "").replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
-function agentLabel(a) {
-  if (!a) return "unknown"; if (/^human:/.test(a)) return a.slice(6); if (/random/.test(a)) return "random player";
-  const m = a.match(/sims=(\d+)/); return m ? `bot, ${m[1]} simulations` : "bot";
-}
-const agentKind = a => /^human:/.test(a || "") ? "gold" : /random/.test(a || "") ? "neutral" : "bot";
-/** Short legend name for display. Like lib's legendShort, but prefers the tag a champion card is named after
-    ("Heart of the Tempest" is tagged Yordle, Kennen → "Kennen"). Candidate for lib.js. */
-let CHAMP_TAGS = null;
-function shortLegend(name) {
-  const c = cardByName(name); if (!c || c.type !== "legend") return legendShort(name);
-  if (!CHAMP_TAGS) { CHAMP_TAGS = new Set(); for (const x of data().cards || []) if (x.super === "champion") CHAMP_TAGS.add(String(x.name).split(",")[0].trim().toLowerCase()); }
-  const tags = c.tags || [], hit = tags.find(t => CHAMP_TAGS.has(String(t).toLowerCase()));
-  return hit || legendShort(name);
-}
-/** "Kennen (Simple)" style label for a deck path: the legend's short name plus the pilot when the file says so. */
-function shortDeck(path) {
-  const d = deckByPath(path); if (!d) return deckShort(path);
-  const head = (d.comments || [])[0] || "", m = head.match(/^(\d+) - (.+?) - (.+)$/), leg = shortLegend(d.legend);
-  return m ? `${leg} (${m[2]})` : d.path.startsWith("lab/variants/") ? deckShort(path) : leg;
-}
+/** Prose name of a player: "the bot (40 continuations per move, network 0)", "a random player", a human's name. */
+const agentLabel = a => botSpec(a).text;
+/** Both players in one line: "the bot (…) on both sides" or "the bot (…) as P1 against a random player". */
+const sidesLine = (a, b, seatA) => a === b ? `${agentLabel(a)} on both sides` : `${agentLabel(a)}${seatA ? ` as P${seatA}` : ""} against ${agentLabel(b)}`;
+const shortLegend = legendShort, shortDeck = deckShort;
 /** Seat of the side the game is about: the list under test (bot games) or the captured player (real games). */
 function featuredSeat(meta) { if (!meta) return 1; if (meta.human) return meta.capture_seat || 1; const m = /seat(\d)/.exec(meta.seat || ""); return m ? +m[1] : 1; }
 /** Both sides of a game as {seat, name, legend, face, deck, agent}, featured first. */
@@ -83,7 +67,7 @@ function sides(meta) {
     const agent = p === 1 ? meta.agent1 : meta.agent2;
     if (meta.human) {
       const legend = (meta.legends || {})["P" + p] || "", player = (meta.players || [])[p - 1] || "P" + p;
-      return { seat: p, name: `${player} (${shortLegend(legend)})`, player, legend: shortLegend(legend), legendName: legend, face: legendFace(legend), deck: `${shortLegend(legend)} (inferred list)`, agent };
+      return { seat: p, name: `${player} (${shortLegend(legend)})`, player, legend: shortLegend(legend), legendName: legend, face: legendFace(legend), deck: `${shortLegend(legend)} · inferred list`, agent };
     }
     const path = p === 1 ? meta.deck1 : meta.deck2, d = deckByPath(path);
     return { seat: p, name: shortDeck(path), player: shortDeck(path), legend: shortLegend(d ? d.legend : ""), legendName: d ? d.legend : "", face: deckFace(path), deck: deckLabel(path), agent };
@@ -101,39 +85,9 @@ function resultOf(meta) {
 }
 const resultBadge = meta => { const r = resultOf(meta); return `<span title="${esc(r.source)}">${badge(`${r.outcome}${r.scores.length ? " " + r.scores.join("–") : ""}`, r.outcome === "won" ? "win" : r.outcome === "lost" ? "loss" : "neutral")}</span>`; };
 const gameDate = meta => meta.human ? meta.date : (testById(meta.test_id) || {}).started_utc;
-const qs = () => st.filter.test ? `?test=${encodeURIComponent(st.filter.test)}` : "";
-
-// ── card names inside option texts → chips ──────────────────────────────────
-let NAMES = null;
-function nameIndex() {
-  if (NAMES) return NAMES; const seen = new Set(); NAMES = [];
-  for (const c of data().cards || []) { const l = String(c.name || "").toLowerCase(); if (l.length < 3 || seen.has(l)) continue; seen.add(l); NAMES.push({ l, c }); }
-  NAMES.sort((a, b) => b.l.length - a.l.length); return NAMES;
-}
-const isWord = ch => /[a-z0-9]/i.test(ch || "");
-/** Card names found in a text, longest first, non-overlapping: [{start, end, card}] in text order. */
-function findCards(text) {
-  const t = String(text || "").toLowerCase(), out = []; if (!t) return out;
-  const taken = new Uint8Array(t.length);
-  for (const e of nameIndex()) {
-    let from = 0, i;
-    while ((i = t.indexOf(e.l, from)) >= 0) {
-      from = i + 1; const j = i + e.l.length;
-      if (isWord(t[i - 1]) || isWord(t[j])) continue;
-      let free = true; for (let k = i; k < j; k++) if (taken[k]) { free = false; break; }
-      if (!free) continue;
-      taken.fill(1, i, j); out.push({ start: i, end: j, card: e.c });
-    }
-  }
-  return out.sort((a, b) => a.start - b.start);
-}
-/** The option text with every card name turned into a card chip. */
-function optionHtml(text) {
-  const m = findCards(text); if (!m.length) return esc(text);
-  let out = "", pos = 0;
-  for (const x of m) { out += esc(text.slice(pos, x.start)) + cardChip(x.card, { cls: "sm" }); pos = x.end; }
-  return out + esc(text.slice(pos));
-}
+/** The library URL for the current filter: ?test=<id>, or ?test=human for the real games alone. */
+const qs = () => st.filter.test ? `?test=${encodeURIComponent(st.filter.test)}` : st.filter.kind === "human" ? "?test=human" : "";
+const optionHtml = text => chipText(text, { cls: "sm" });
 /** The move a frame ended with, as RiftBoard focus entries (cards + battlefield named by the option). */
 function frameFocus(f) {
   const i = f.human_known && f.human_choice != null && f.human_choice >= 0 ? f.human_choice : f.chosen;
@@ -171,7 +125,7 @@ function renderLibrary() {
     </div>
     ${!shown.length ? empty("No game matches", `Clear a filter, or run a test in <a href="#/launch">Launch</a>: its games show up here.`) : ""}
     ${humans.length ? `<section class="section v-replays-group" aria-labelledby="rg-human">
-      <div class="section-head"><h2 id="rg-human">Real games</h2><span class="small muted">${humans.length} from RiftLite, replayed through the engine · the bot asked: ${esc(agentLabel(hr.agent))}</span></div>
+      <div class="section-head"><h2 id="rg-human">Real games</h2><span class="small muted">${humans.length} from RiftLite, replayed through the engine and compared with ${esc(agentLabel(hr.agent))}</span></div>
       <p class="small muted">At each move of the captured player the bot was asked what it would do. Agreement is how often its first choice was the move the human made; with 5 to 20 legal moves a random player agrees around 10 to 20%.</p>
       <div class="v-replays-games">${humans.map(gameCard).join("")}</div></section>` : ""}
     ${order.map(id => {
@@ -179,10 +133,10 @@ function renderLibrary() {
       const title = t ? (t.description || t.name) : (id || "Other games");
       return `<section class="section v-replays-group" aria-label="${esc(title)}">
         <div class="section-head"><h2>${esc(title)}</h2>${t ? `<a class="more" href="#/tests/${encodeURIComponent(id)}">Test details →</a>` : ""}</div>
-        <div class="row tight small muted">${t && t.description ? `<span class="mono xs faint">${esc(t.name)}</span>` : ""}${t ? `<span>${esc(agentLabel(t.agent))} against ${esc(agentLabel(t.opp_agent || t.agent))}</span><span>${esc(fmtDate(t.started_utc))}</span>` : ""}<span>${games.length} of the test's games recorded</span></div>
+        <div class="row tight small muted">${t && t.description ? `<span class="mono xs faint">${esc(t.name)}</span>` : ""}${t ? `<span>${esc(sidesLine(t.agent, t.opp_agent || t.agent))}</span><span>${esc(fmtDate(t.started_utc))}</span>` : ""}<span>${games.length} of the test's games recorded</span></div>
         <div class="v-replays-games">${games.map(gameCard).join("")}</div></section>`; }).join("")}`;
 
-  $$("#rf-kind button", host).forEach(b => b.onclick = () => { f.kind = b.dataset.kind; renderLibrary(); });
+  $$("#rf-kind button", host).forEach(b => b.onclick = () => { f.kind = b.dataset.kind; history.replaceState(null, "", "#/replays" + qs()); renderLibrary(); });
   $("#rf-test", host).onchange = e => { f.test = e.target.value; history.replaceState(null, "", "#/replays" + qs()); renderLibrary(); };
   $("#rf-legend", host).onchange = e => { f.legend = e.target.value; renderLibrary(); };
   $("#rf-result", host).onchange = e => { f.result = e.target.value; renderLibrary(); };
@@ -197,7 +151,7 @@ function gameCard(r) {
       <span class="g-badges">${r.human ? badge("real game", "gold") : badge("bot game", "bot")}${resultBadge(r)}</span>
     </div>
     <div class="g-title">${esc(s.featured.name)} <span class="g-vs">vs</span> ${esc(s.opp.name)}</div>
-    <div class="g-sub">${r.human ? `${esc(s.featured.player)} captured the game · seat P${s.fs}` : `${esc(agentLabel(s.featured.agent))} as P${s.fs} · ${esc(agentLabel(s.opp.agent))} as P${3 - s.fs}${r.game ? ` · game ${r.game}` : ""}`}</div>
+    <div class="g-sub">${r.human ? `${esc(s.featured.player)} captured the game · seat P${s.fs}` : `${esc(sidesLine(s.featured.agent, s.opp.agent, s.fs))}${r.game ? ` · game ${r.game}` : ""}`}</div>
     <div class="g-foot">
       ${agree != null ? `<span class="g-agree" title="how often the bot's first choice was the human's move"><span class="bar"><i style="width:${(100 * agree).toFixed(0)}%"></i></span><b class="mono">${pct(agree, 0)}</b><span class="xs muted">bot agrees · ${r.decisions_compared || 0} compared</span></span>` : ""}
       <span class="spacer"></span>
@@ -225,10 +179,10 @@ function playerInfo(rep, p) {
   if (hg) {
     const dk = ((hg.summary || {}).decks || {})["P" + p] || {}, runes = {};
     for (const [n, k] of Object.entries((dk.list && dk.list.runes) || {})) runes[n.toLowerCase().replace(/ rune$/, "")] = k;
-    return { label: (hg.players || [])[p - 1] || "P" + p, deck: `${shortLegend(dk.legend || (hg.legends || {})["P" + p])} (inferred list)`, runes, champion: dk.champion || "" };
+    return { label: (hg.players || [])[p - 1] || "P" + p, deck: `${shortLegend(dk.legend || (hg.legends || {})["P" + p])} · inferred list`, runes, champion: dk.champion || "" };
   }
   const path = p === 1 ? rep.deck1 : rep.deck2, d = deckByPath(path), agent = p === 1 ? rep.agent1 : rep.agent2;
-  return { label: /random/.test(agent || "") ? "random" : "bot", deck: deckLabel(path), runes: d ? d.stats.rune_split : {}, champion: d ? Object.keys(d.list.champion || {})[0] : "" };
+  return { label: /random/.test(agent || "") ? "random" : "bot", deck: deckShort(path), runes: d ? d.stats.rune_split : {}, champion: d ? Object.keys(d.list.champion || {})[0] : "" };
 }
 const ICON = {
   first: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2v12" class="s"/><path d="M13 2 5 8l8 6z"/></svg>`,
@@ -257,7 +211,7 @@ function renderViewer() {
   const seatLabel = p => s ? (p === s.featured.seat ? s.featured : s.opp).player : "P" + p;
   const t = meta && !meta.human ? testById(meta.test_id) : null;
   const metaRow = meta ? [meta.human ? badge("real game", "gold") : badge("bot game", "bot"), resultBadge(meta),
-    chip(`${meta.turns != null ? meta.turns : "?"} turns`), chip(`${num(meta.decisions || n)} decisions`),
+    chip(`${meta.turns != null ? meta.turns : "?"} turns`), chip(`${num(n || meta.decisions || 0)} decisions`),
     rep && rep.seed != null && !meta.human ? chip(`seed <b class="mono">${esc(rep.seed)}</b>`) : "",
     t ? `<a class="chip" href="#/tests/${encodeURIComponent(t.id)}" title="${esc(t.description || "")}">test <b>${esc(t.name)}</b> →</a>` : "",
     hg && hg.source_url ? `<a class="chip" href="${esc(hg.source_url)}" target="_blank" rel="noopener">RiftLite replay ↗</a>` : "",
@@ -360,7 +314,7 @@ function renderFrame() {
   // decision panel
   const key = st.file + "|" + f.n, ann = st.annotations.get(key), shares = new Map((f.search || []).map(([i, x]) => [i, x]));
   const agent = f.player === 1 ? rep.agent1 : rep.agent2;
-  const head = hg ? humanHead(f, hg, who) : `<div class="d-head"><div class="eyebrow">Decision ${f.n} · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}</div><h2>${esc(who)}'s move ${badge(agentLabel(agent), agentKind(agent))}</h2>
+  const head = hg ? humanHead(f, hg, who) : `<div class="d-head"><div class="eyebrow">Decision ${f.n} · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}</div><h2>${esc(who)}'s move ${botBadge(agent)}</h2>
       <p class="small muted">${shares.size ? "Bars: the share of the bot's search per option." : /random/.test(agent || "") ? "A random player: no search, the option was drawn at random." : f.options.length < 2 ? "Only one option: nothing to choose." : "No search recorded for this decision."}</p></div>`;
   const rows = (f.options || []).map((o, i) => {
     const played = hg ? (f.human_known && i === f.human_choice) : i === f.chosen, bot = hg && f.bot_choice === i, mine = ann && ann.would_play === i;
@@ -444,7 +398,7 @@ function aboutPanel(hg, frames) {
       <div class="row tight">${chip(`<b>${ag.n || 0}</b> decisions compared, <b>${ag.agree || 0}</b> agree (${pct(ag.rate, 0)})`)}${chip(`clean boundary ${ag.clean_boundary ? `<b>${ag.clean_boundary.agree}/${ag.clean_boundary.n}</b> (${pct(ag.clean_boundary.rate, 0)})` : "—"}`)}${chip(`<b>${hg.desyncs ?? 0}</b> desyncs`)}${chip(`stopped: ${esc(hg.stop_reason || "—")}`)}${chip(`engine score <b class="mono">${(res.engine_scores || hg.engine_scores || []).join("–")}</b> · log score <b class="mono">${(res.log_scores || hg.log_scores || []).join("–")}</b>`)}${hg.first_player ? chip(`${esc(hg.first_player)} went first`) : ""}${hg.source_url ? `<a class="chip" href="${esc(hg.source_url)}" target="_blank" rel="noopener">RiftLite replay ↗</a>` : ""}</div>
       <div class="grid2 about-grid">
         <div class="stack tight"><h3>What this shows</h3>
-          <p class="small">The engine re-creates the game from the RiftLite log. At each decision of ${esc(hg.capture_player)}, the bot (${esc(agentLabel(hg.bot))}) is asked what it would do; it agrees when its first choice is the move the human made.</p>
+          <p class="small">The engine re-creates the game from the RiftLite log. At each decision of ${esc(hg.capture_player)}, ${esc(agentLabel(hg.bot))} is asked what it would do; it agrees when its first choice is the move the human made.</p>
           <p class="small">Limits: the log hides hands (a card joins the hand when it is played, and the opponent's hand is a guess), both decks are inferred from the cards seen and filled up from a lab list, and the engine can lose the log (a desync): after one it re-synchronises when it can and stops after a few. "Clean boundary" counts only the decisions taken right after the log and the engine agreed on the state.</p></div>
         <div class="stack tight"><h3>Agreement by kind of decision</h3>${kinds.length ? table([
           { key: "kind", label: "Decision", sort: true, render: r => `<span class="lead">${esc(r.kind)}</span>` },

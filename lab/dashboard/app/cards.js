@@ -2,23 +2,21 @@
    sort, an image grid with the hover preview, and a detail drawer with the full card, its facts and the lab decks
    that play it. Router contract: render(container, params) / update(container, params) / destroy(); ?q=<text>
    prefills the search. Styles: app/cards.css (prefix .v-cards). */
-import { data, esc, el, num, plural, cardImg, cardById, cardByName, pageHead, empty, badge, DOMAIN_NAMES, domainDot,
+import { data, esc, num, plural, cardImg, cardById, cardByName, pageHead, empty, badge, DOMAIN_NAMES, domainDot, cssOnce, setName,
          deckByPath, allDecks, deckShort, deckFace, portrait, groupDecks, $, $$ } from "./lib.js";
 
 const CSS = new URL("./cards.css", import.meta.url).href;
-function css() { if (!document.querySelector(`link[href="${CSS}"]`)) document.head.append(el("link", { rel: "stylesheet", href: CSS })); }
 
 const TYPES = ["all", "unit", "spell", "gear", "legend", "battlefield", "rune"];
-const KINDS = [["all", "any kind"], ["champion", "champions"], ["signature", "signature cards"], ["token", "tokens"], ["playable", "no tokens"]];
+const KINDS = [["all", "Any kind"], ["champion", "Champions"], ["signature", "Signature cards"], ["token", "Tokens"], ["playable", "No tokens"]];
 const SORTS = [["cost", "Cost"], ["name", "Name"], ["might", "Might"], ["type", "Type"], ["set", "Set"]];
-const SETS = { OGN: "Origins", OGS: "Origins starter", SFD: "Spiritforged", VEN: "Vendetta", RAD: "Radiance" };
 const TYPE_ORDER = { unit: 0, spell: 1, gear: 2, legend: 3, rune: 4, battlefield: 5 };
 const PAGE = 96, COST_MAX = 8, MIGHT_MAX = 8;   // the last bucket is "8+"
 let st = { q: "", type: "all", doms: new Set(), set: "all", cost: new Set(), might: new Set(), kind: "all", sort: "cost", shown: PAGE, open: null };
 let root = null, shown = [], deckIdx = null, onKey = null;
 
-export function render(container, params = {}) {
-  css(); root = container;
+export async function render(container, params = {}) {
+  await cssOnce(CSS); root = container;
   if (params.q != null) st.q = params.q;
   const C = data().cards, sets = [...new Set(C.map(c => c.set).filter(Boolean))].sort();
   container.innerHTML = `<div class="v-cards">
@@ -27,7 +25,7 @@ export function render(container, params = {}) {
       <div class="toolbar">
         <label class="f search" style="flex:1 1 260px">Search<input type="search" id="c-q" value="${esc(st.q)}" placeholder="name, tag or rules text" autocomplete="off"></label>
         <label class="f">Sort by<select id="c-sort">${SORTS.map(([k, l]) => `<option value="${k}" ${st.sort === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
-        <label class="f">Set<select id="c-set"><option value="all">all sets</option>${sets.map(s => `<option value="${esc(s)}" ${st.set === s ? "selected" : ""}>${esc(setName(s))}</option>`).join("")}</select></label>
+        <label class="f">Set<select id="c-set"><option value="all">All sets</option>${sets.map(s => `<option value="${esc(s)}" ${st.set === s ? "selected" : ""}>${esc(setName(s))}</option>`).join("")}</select></label>
         <label class="f">Kind<select id="c-kind">${KINDS.map(([k, l]) => `<option value="${k}" ${st.kind === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       </div>
       <div class="v-cards-filterrow">
@@ -51,7 +49,6 @@ export function render(container, params = {}) {
 export function update(container, params = {}) { if (params.q != null && params.q !== st.q) { st.q = params.q; const i = $("#c-q", container); if (i) i.value = st.q; st.shown = PAGE; grid(); } }
 export function destroy() { if (onKey) { document.removeEventListener("keydown", onKey); onKey = null; } document.body.classList.remove("v-cards-open"); root = null; }
 
-const setName = s => SETS[s] ? `${SETS[s]} (${s})` : s;
 function bucketButtons(key, max, set, from = 0) { let out = ""; for (let i = from; i <= max; i++) out += `<button class="btn-sm" data-${key}="${i}" aria-pressed="${set.has(i)}">${i === max ? `${i}+` : i}</button>`; return out; }
 const bucket = (v, max) => Math.min(max, v || 0);
 
@@ -80,7 +77,7 @@ function activeFilters() {
   if (st.type !== "all") f.push({ k: "type", label: st.type + "s" });
   st.doms.forEach(d => f.push({ k: "dom", v: d, label: `${domainDot(d)}${d}` }));
   if (st.set !== "all") f.push({ k: "set", label: setName(st.set) });
-  if (st.kind !== "all") f.push({ k: "kind", label: KINDS.find(x => x[0] === st.kind)[1] });
+  if (st.kind !== "all") f.push({ k: "kind", label: KINDS.find(x => x[0] === st.kind)[1].toLowerCase() });
   [...st.cost].sort((a, b) => a - b).forEach(v => f.push({ k: "cost", v, label: `cost ${v === COST_MAX ? v + "+" : v}` }));
   [...st.might].sort((a, b) => a - b).forEach(v => f.push({ k: "might", v, label: `might ${v === MIGHT_MAX ? v + "+" : v}` }));
   return f;
@@ -179,7 +176,7 @@ function drawerHtml(c) {
           ${(c.tags || []).length ? `<div><dt>Tags</dt><dd>${c.tags.map(t => `<button class="chip v-cards-tag" data-tag="${esc(t)}">${esc(t)}</button>`).join(" ")}</dd></div>` : ""}
           ${c.id != null ? `<div><dt>Engine id</dt><dd class="mono">${c.id}</dd></div>` : ""}
         </dl>
-        ${c.text ? `<p class="v-cards-text">${esc(c.text)}</p>` : `<p class="small muted">The rules text is on the card image; the lab data carries it only for battlefields.</p>`}
+        ${c.text ? `<p class="v-cards-text">${esc(c.text)}</p>` : `<p class="small muted">No rules text: a vanilla card.</p>`}
         <h3>In lab decks ${total ? `<span class="muted">(${total})</span>` : ""}</h3>
         ${total ? groups.map(g => `<div class="v-cards-dgroup"><div class="xs muted">${esc(g.title)}</div><ul class="v-cards-decks">${g.rows.map(r => `<li><a href="#/decks/${encodeURIComponent(r.path)}">${portrait(deckFace(r.path) || deckShort(r.path), { size: "sm" })}<span class="n">${esc(deckShort(r.path))}</span><span class="k mono">${r.main ? `×${r.main}` : ""}${r.side ? `<span class="muted"> +${r.side} side</span>` : ""}</span></a></li>`).join("")}</ul></div>`).join("")
           : `<p class="small muted">No lab deck plays this card. The lists are in <a href="#/decks">Decks</a>.</p>`}

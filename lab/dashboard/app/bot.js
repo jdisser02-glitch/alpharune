@@ -2,16 +2,13 @@
    bot agrees with human players. Everything comes from data.json (`ladder`, `engine`, `tests`, `human_review`).
    Router contract: render(container, params, ctx) / destroy(). No params. Styles: app/bot.css (prefix .v-bot). */
 import { data, esc, el, pct, pct0, num, interval, fmtDate, fmtDateTime, ago, plural, wilson, kpi, badge, chip, pageHead, empty,
-         rate, table, enhance, portrait, legendFace, legendShort, $ } from "./lib.js";
+         rate, table, enhance, portrait, legendFace, legendShort, netName, botSpec, cssOnce, $ } from "./lib.js";
 
 const CSS = new URL("./bot.css", import.meta.url).href;
-function css() { if (!document.querySelector(`link[href="${CSS}"]`)) document.head.append(el("link", { rel: "stylesheet", href: CSS })); }
-
-const netName = p => String(p || "").split("/").pop().replace(/\.rbvn$/, "") || "—";
 const usesNet = (agent, net) => !!(net && String(agent || "").includes(net));
 
-export function render(container) {
-  css();
+export async function render(container) {
+  await cssOnce(CSS);
   const D = data(), ladder = D.ladder || {}, it = [...(ladder.iterations || [])].sort((a, b) => a.iteration - b.iteration);
   const net = ladder.current_net || "";
   const current = it.find(r => r.net === net) || it.filter(r => r.accepted).slice(-1)[0] || null;
@@ -63,7 +60,7 @@ export function render(container) {
           <ul class="v-bot-uses">
             <li>${badge(playUsesIt ? "yes" : "no", playUsesIt ? "win" : "neutral")} <a href="#/play">Play tab</a>: ${playUsesIt ? "the in-browser bot evaluates with this network" : D.engine && D.engine.net ? `the in-browser bot still runs ${esc(netName(D.engine.net_source))}` : "the engine is not built for the browser in this version"}</li>
             <li>${badge(tests.length ? String(tests.length) : "none", tests.length ? "info" : "neutral")} <a href="#/tests">Tests</a>: ${tests.length ? `${plural(tests.length, "test")} played with it${tests.length <= 3 ? ` (${tests.map(t => esc(t.name)).join(", ")})` : ""}` : "no test has used it yet; new tests launched from Launch will"}</li>
-            <li>${badge(usesNet(hr.agent, net) ? "yes" : "no", usesNet(hr.agent, net) ? "win" : "neutral")} <a href="#/replays?test=human">Human games</a>: ${hr.agent ? `compared with ${esc(hr.agent.replace(/,eval=net:.*/, "").replace("ismcts:sims=", "a bot searching ")) } continuations per move, network ${esc(netName((hr.agent.match(/eval=net:(\S+)/) || [])[1]))}` : "no comparison yet"}</li>
+            <li>${badge(usesNet(hr.agent, net) ? "yes" : "no", usesNet(hr.agent, net) ? "win" : "neutral")} <a href="#/replays?test=human">Real games</a>: ${hr.agent ? `compared with ${esc(botSpec(hr.agent).text)}` : "no comparison yet"}</li>
           </ul>
           ${latest && latest.iteration !== current.iteration ? `<p class="small muted">Iteration ${latest.iteration} was tried ${esc(ago(latest.started_utc))} and rejected: it won ${pct0(latest.vs_current.rate)} of its gate (interval ${interval(latest.vs_current.ci95)}).</p>` : ""}`
         : empty("No network yet", "The first ladder iteration produces one; see lab/learn in the repository.")}
@@ -81,10 +78,10 @@ export function render(container) {
     </section>
 
     <section class="v-bot panel stack" aria-labelledby="bot-human">
-      <div class="panel-head"><h2 id="bot-human">Does it play like a person?</h2><a class="more" href="#/replays?test=human">Human games in Replays →</a></div>
+      <div class="panel-head"><h2 id="bot-human">Does it play like a person?</h2><a class="more" href="#/replays?test=human">Real games in Replays →</a></div>
       ${hg.length ? `
         <p>Real games from RiftLite are replayed through the engine. At each decision of the captured player the bot is asked what it would do; agreement is how often its first choice is the move the human made. Across ${plural(hg.length, "game")} the bot agrees <b>${pct0(agreed / compared)}</b> of the time (${num(Math.round(agreed))} of ${num(compared)} decisions, interval ${interval(wilson(agreed, compared))}).${cleanN ? ` Counting only decisions where the engine's state was verified against the log just before, it agrees ${pct0(cleanAgreed / cleanN)} (${num(cleanN)} decisions).` : ""} With 5 to 20 legal moves a random player agrees around 10 to 20%, so a figure near that means the bot has no opinion yet.</p>
-        <div class="row tight">${chip(`bot: <b>${esc(hr.agent ? hr.agent.replace(/,eval=net:.*/, "").replace("ismcts:sims=", "") + " continuations per move" : "—")}</b>`)}${chip(`${num(hg.reduce((a, g) => a + (g.desyncs || 0), 0))} desyncs, points where the engine could not follow the log`)}${hr.generated ? chip(`compared ${esc(ago(hr.generated))}`) : ""}</div>
+        <div class="row tight">${chip(`compared with <b>${esc(hr.agent ? botSpec(hr.agent).text : "—")}</b>`)}${chip(`${num(hg.reduce((a, g) => a + (g.desyncs || 0), 0))} desyncs, points where the engine could not follow the log`)}${hr.generated ? chip(`compared ${esc(ago(hr.generated))}`) : ""}</div>
         ${humanTable(hg)}`
       : empty("No human game compared yet", "Captured RiftLite games are replayed through the engine by lab/tools/human_review.py; the results appear here and in <a href=\"#/replays\">Replays</a>.")}
     </section>`;
@@ -158,7 +155,7 @@ function iterationTable(it) {
     { key: "self_play_games", label: "Self-play games", num: true, sort: true, render: r => `${num(r.self_play_games)}<span class="sub">${r.player === "random" ? "random players" : `${r.sims} sims, ${esc(netName((String(r.player).match(/eval=net:(\S+)/) || [])[1]))}`}</span>` },
     { key: "records", label: "Positions", num: true, sort: true, render: r => num(r.records) },
     { key: "val_loss", label: "Val loss", num: true, sort: true, render: r => r.val_loss == null ? "—" : num(r.val_loss, 3) },
-    { key: "val_acc", label: "Val acc", num: true, sort: true, render: r => pct(r.val_acc) },
+    { key: "val_acc", label: "Val accuracy", num: true, sort: true, render: r => pct(r.val_acc) },
     { key: "vs_current", label: "Vs previous bot", sort: r => r.vs_current ? r.vs_current.rate : -1, num: true, cls: "v-bot-rate", render: r => r.vs_current ? `${rate(r.vs_current.rate, r.vs_current.ci95, 90)}<span class="sub">${r.vs_current.wins}/${r.vs_current.games}${r.vs_current.opponent === "random" ? ", vs random (first gate)" : ""}</span>` : "—" },
     { key: "vs_random", label: "Vs random", sort: r => r.vs_random ? r.vs_random.rate : -1, num: true, cls: "v-bot-rate", render: r => r.vs_random ? `${rate(r.vs_random.rate, wilson(r.vs_random.wins, r.vs_random.games), 90)}<span class="sub">${r.vs_random.wins}/${r.vs_random.games}</span>` : "—" },
     { key: "accepted", label: "Adopted", sort: r => r.accepted ? 1 : 0, num: true, render: r => badge(r.accepted ? "yes" : "no", r.accepted ? "win" : "loss") },

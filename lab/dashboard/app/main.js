@@ -9,7 +9,7 @@
      update(container, params, ctx)   optional; called instead of destroy+render when only the params changed
    ctx = { data, params, route: {view, params}, navigate }.
    Modules are imported on first use (lazy) and cached. Legacy "#tests" hashes are accepted. */
-import { loadData, installCardPreview, navigate, esc, fmtDateTime, errorBox, $, $$ } from "./lib.js";
+import { loadData, installCardPreview, navigate, fmtDateTime, errorBox, $, $$ } from "./lib.js";
 
 const VIEWS = { home: {}, tests: { param: "id" }, decks: { param: "name" }, replays: { param: "file" }, play: {}, bot: {}, launch: {}, cards: {} };
 const TITLES = { home: "Riven Lab", tests: "Tests", decks: "Decks", replays: "Replays", play: "Play the bot", bot: "The bot", launch: "Launch a test", cards: "Cards" };

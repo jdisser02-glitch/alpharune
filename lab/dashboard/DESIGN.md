@@ -14,7 +14,7 @@ lab/dashboard/
   app/main.js       hash router + view lifecycle
   app/lib.js        data, formatting, cards, imagery, stats, components
   app/<view>.js     one module per screen: home tests decks replays play bot launch cards
-  app/legacy.js     the old page's views, wrapped by the stubs until each is redesigned
+  app/<view>.css    that screen's own classes (prefix .v-<view>), loaded by the module with cssOnce()
   build.py          assembles dist/ (data.json, replays, engine, home.json, app/)
 ```
 
@@ -46,15 +46,15 @@ Routes: `#/home` (default) `#/tests` `#/tests/<id>` `#/decks` `#/decks/<path>` `
 
 | Group | Exports |
 | --- | --- |
-| DOM | `$`, `$$`, `esc`, `html` (tagged template, escapes; `raw()` opts out), `el`, `store(key[, value])` (localStorage, `null` removes), `navigate(hash)`, `sleep` |
+| DOM | `$`, `$$`, `esc`, `html` (tagged template, escapes; `raw()` opts out), `el`, `store(key[, value])` (localStorage, `null` removes), `navigate(hash)`, `sleep`, `cssOnce(url)` (loads a stylesheet once; await it before painting) |
 | Data | `loadData()` (promise, once), `data()` (sync after load), `runtime()` → `{db, user, mcp, meId}` on claude.ai (nulls elsewhere) |
 | Format | `pct(x, digits=1)`, `pct0`, `num`, `interval([lo,hi])` → "41–63%", `halfWidth`, `fmtDate`, `fmtDateTime`, `ago`, `duration`, `plural` |
 | Stats | `wilson(wins, n)`, `overlaps(ciA, ciB)`, `pooled(deck)` → `{games, wins, rate, ci, weighted}` |
 | Colour | `DOMAINS`, `DOMAIN_NAMES`, `domainColor`, `domainDot`, `domainDots`, `rateTone(r)` → win/warn/loss/neutral, `rateColor` |
-| Cards | `cardById`, `cardByName` (also "Tag, Name" legends), `card(ref)`, `legendShort`, `isLandscape` |
-| Decks | `deckByPath`, `allDecks`, `deckLabel`, `deckShort`, `groupDecks`, `deckFace(deck|path)` (legend art, else champion), `legendFace(name)` |
-| Tests | `isPlumbing(test)`, `testsByDate()`, `testById`, `bestList()`, `testConclusion(test)` (one sentence), `testFaces(test)` → `{mine, theirs}` |
-| Imagery | `cardImage(url, w)` (CDN webp rendition), `fallbackFrame`, `cardImg(ref, {size, w, crop, hover, count, cls})`, `portrait(ref, {size})`, `portraits(refs, {size, max})`, `cardChip(name, {count, cls})`, `cardGrid(list, {champion, w, captions})`, `installCardPreview()`, `showPreview`, `hidePreview` |
+| Cards | `cardById`, `cardByName` (also "Tag, Name" legends), `card(ref)`, `legendShort(name)` → the champion's name ("Kennen" for "Heart of the Tempest"), `isLandscape`, `SETS`, `setName(code)`, `findCards(text)`, `chipText(text, {cls, preview})` (card names in free text → chips) |
+| Decks | `deckByPath`, `allDecks`, `deckLabel`, `deckShort(path)` → "Kennen (Dylan Sumner)", `deckHero`, `deckPilot(deck)` → `{place, pilot, name}`, `deckEvent(path)` → slug, `eventLabel(slug)` → "Sacramento showdown, 24 Oct 2026", `groupDecks`, `deckFace(deck|path)` (legend art, else champion), `legendFace(name)` |
+| Tests | `isPlumbing(test)`, `testsByDate()`, `testById`, `bestList()` (ranked by the interval's lower bound), `testConclusion(test)` (one sentence), `testFaces(test)` → `{mine, theirs}`, `botSpec(raw)` → `{kind, sims, net, label, short, text}`, `botBadge(raw)`, `netName(path)` |
+| Imagery | `cardImage(url, w)` (CDN webp rendition), `fallbackFrame`, `cardImg(ref, {size, w, crop, hover, count, cls})`, `portrait(ref, {size})`, `portraits(refs, {size, max})`, `cardChip(name, {count, cls, preview})` (`preview:false` inside buttons: no focus stop of its own), `cardGrid(list, {champion, w, captions})`, `installCardPreview()` (hides the hover preview when its element leaves the DOM), `showPreview`, `hidePreview` |
 | Components | `kpi({...})`, `badge(text, kind)`, `chip(html)`, `pageHead({title, sub, actions, eyebrow})`, `empty(title, hint)`, `loadingBox`, `errorBox`, `notice(html, kind)`, `rateBar(rate, ci, w)`, `rate(rate, ci)`, `table(columns, rows, opts)`, `enhance(root)`, `toast(msg, kind)`, `modal({title, body, actions})` |
 
 `cardImage` is the one implementation of the CDN rule for app code (`?w=&fm=webp&q=78` on
@@ -124,7 +124,7 @@ Layout: `.wrap` · `.stack` (column, 16px; `.tight` 8, `.loose` 32) · `.row` (w
 | Page header | `pageHead({title, sub, actions, eyebrow})` → `.page-head` | One per screen, title in sentence case |
 | Panel | `.panel` (+ `.raised`, `.sunk`, `.gilt`), `.panel-head` with `.actions` | `details.panel` for collapsible sections |
 | KPI tile | `kpi({label, value, unit, sub, tone, art, href})` → `.kpi` in a `.kpis` grid | Value in display 30px; `tone` colours the left bar; `art` takes a `portrait()` |
-| Badge | `badge(text, kind)` → `.badge.win/.loss/.warn/.disagree/.neutral/.gold/.bot/.p1/.p2/.solid/.mono` | Uppercase, 10.5px; one or two words. `.pill.ok/.bad/.warn/.plumb/.bot` are legacy aliases |
+| Badge | `badge(text, kind)` → `.badge.win/.loss/.warn/.disagree/.neutral/.gold/.bot/.p1/.p2/.solid/.mono` | Uppercase, 10.5px; one or two words. `botBadge(spec)` names a bot readably |
 | Chip | `chip(html)` → `.chip` | Facts in a row: "seed 42", "20 games per matchup" |
 | Card chip | `cardChip(name, {count})` → `.card-chip` | Tiny round art crop + name; hover/tap shows the card. Use wherever a card is named in text or a table |
 | Card image | `cardImg(ref, {size: xs 44·sm 72·md 120·lg 200·xl 280, crop, count})` → `.card-img` | Full card; `crop` gives a square art crop; battlefields are landscape automatically |
@@ -142,9 +142,6 @@ Layout: `.wrap` · `.stack` (column, 16px; `.tight` 8, `.loose` 32) · `.row` (w
 | Modal | `modal({title, body, actions:[{label, value, primary}]})` → promise | Esc / backdrop dismiss with `null` |
 | Keys | `.kbd` | Keyboard hints |
 | Log | `.log` | Mono, scrollable, for commands and engine output |
-
-Legacy classes still in `legacy.js` (`.cardrow`, `.opt`, `.cmpstrip`, `.frames`, `.result`,
-`.replay/.decision`) are styled at the end of `app.css` and go away with their views.
 
 **Card image sizes**: chips 22px crop (`w=120` from the CDN); portraits 28–88px (`w=200`);
 `.card-img` xs 44 / sm 72 / md 120 / lg 200 / xl 280 wide (`w=120…600`); the preview

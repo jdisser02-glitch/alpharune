@@ -166,8 +166,8 @@ def main(argv):
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),
                        "set": c.get("set"), "image_url": c.get("image_url") or "",
-                       # rules text only for battlefields: the board renderer prints it on the panel
-                       **({"text": c.get("ability_text") or ""} if c["card_type"] == "battlefield" else {})}
+                       # rules text for every card (~140 KB): the Cards drawer, the hover preview and the board's battlefield panel
+                       **({"text": c["ability_text"]} if c.get("ability_text") else {})}
                       for c in reg.cards]}
     (DIST / "data.json").write_text(json.dumps(data, separators=(",", ":")))
     for name in PAGE_FILES:

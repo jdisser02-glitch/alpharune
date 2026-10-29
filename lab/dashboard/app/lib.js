@@ -22,6 +22,19 @@ export const el = (tag, props = {}, children = []) => { const e = document.creat
 export function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k)); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
 export const navigate = hash => { location.hash = hash.startsWith("#") ? hash : "#" + hash; };
 export const sleep = ms => new Promise(r => setTimeout(r, ms));
+/** Loads a stylesheet once (a view's own CSS: `cssOnce(new URL("./tests.css", import.meta.url).href)`).
+    Resolves when the sheet is in (or immediately when it already is), so a view can await it before painting. */
+const cssLoaded = new Map();
+export function cssOnce(url) {
+  const href = new URL(url, location.href).href;
+  if (cssLoaded.has(href)) return cssLoaded.get(href);
+  const p = new Promise(resolve => {
+    const l = el("link", { rel: "stylesheet", href }); l.dataset.cssOnce = "1";
+    l.onload = l.onerror = () => resolve(); document.head.append(l);
+    setTimeout(resolve, 1500);                                   // never block a render on a slow host
+  });
+  cssLoaded.set(href, p); return p;
+}
 
 // ── data ────────────────────────────────────────────────────────────────────
 let D = null, loading = null;
@@ -32,9 +45,9 @@ export function loadData() {
 }
 /** Synchronous access after loadData() resolved (the router awaits it before rendering a view). */
 export const data = () => D;
-let byName = new Map(), byId = new Map(), byPath = new Map();
+let byName = new Map(), byId = new Map(), byPath = new Map(), champNames = null, nameList = null;
 function index(d) {
-  byName = new Map(); byId = new Map(); byPath = new Map();
+  byName = new Map(); byId = new Map(); byPath = new Map(); champNames = null; nameList = null;
   for (const c of d.cards || []) {
     if (c.id != null && !byId.has(+c.id)) byId.set(+c.id, c);
     const n = c.name.toLowerCase(); if (!byName.has(n)) byName.set(n, c);
@@ -101,24 +114,94 @@ export function cardByName(name) {
   return null;
 }
 export const card = ref => ref == null ? null : typeof ref === "object" ? ref : typeof ref === "number" ? cardById(ref) : cardByName(ref);
-/** Short name of a legend ("Riven" for "Riven, The Exile" / "The Exile"), else the name as given. */
-export function legendShort(name) { const c = cardByName(name); return (c && c.type === "legend" && (c.tags || [])[0]) || String(name || "?").split(", ")[0]; }
+/** First names of the champion cards ("Kennen", "Kai'Sa"): the tag a legend is named after. */
+function championNames() {
+  if (!champNames) { champNames = new Set(); for (const c of (D && D.cards) || []) if (c.super === "champion") champNames.add(String(c.name).split(",")[0].trim().toLowerCase()); }
+  return champNames;
+}
+/** The champion's name for a legend: "Kennen" for "Heart of the Tempest", "Kennen, Heart of the Tempest" or "Dark Child - Starter"
+    (the legend's champion tag, never a region or race tag), else the name up to the first comma. */
+export function legendShort(name) {
+  const s = String(name || "?"), c = cardByName(s);
+  if (c && c.type === "legend") {
+    const tags = c.tags || [], i = s.indexOf(", ");
+    if (i > 0 && tags.some(t => t.toLowerCase() === s.slice(0, i).toLowerCase())) return s.slice(0, i);
+    const hit = tags.find(t => championNames().has(t.toLowerCase()));
+    return hit || tags[0] || s.split(", ")[0];
+  }
+  return s.split(", ")[0];
+}
 /** Deck records by path, and a readable label built from the file's first comment line. */
 export const deckByPath = p => byPath.get(p) || null;
 export const allDecks = () => (D && D.decks) || [];
+/** Tournament provenance from the deck file's first comment ("1 - Simple - Kennen"): {place, pilot, name} or null. */
+export function deckPilot(deckOrPath) {
+  const d = typeof deckOrPath === "string" ? deckByPath(deckOrPath) : deckOrPath;
+  const m = (((d && d.comments) || [])[0] || "").match(/^(\d+) - (.+?) - (.+)$/);
+  if (m) return { place: +m[1], pilot: m[2], name: m[3] };
+  // "Riven, The Exile — Nam Dang, 1st of 755, Riftbound Showdown … (2026-10-24)." (the reference list's own header)
+  const r = (((d && d.comments) || [])[0] || "").match(/^.+? — ([^,]+), (\d+)(?:st|nd|rd|th) of \d+/);
+  return r ? { place: +r[2], pilot: r[1], name: legendShort(d.legend) } : null;
+}
+/** Event slug of a tournament list ("sacramento_showdown_2026-10-24"), "" for the others. */
+export const deckEvent = p => { const m = String(typeof p === "string" ? p : (p && p.path) || "").match(/^lab\/decks\/meta\/([^/]+)\//); return m ? m[1] : ""; };
+/** "Sacramento showdown, 24 Oct 2026" from an event slug; {date:false} drops the date. Short tokens with digits stay upper case ("RRO25"). */
+export function eventLabel(slug, opts = {}) {
+  const s = String(slug || ""); if (!s) return "";
+  const m = s.match(/^(.*?)_?(\d{4}-\d{2}-\d{2})$/), words = (m ? m[1] : s).split("_").filter(Boolean);
+  const name = words.map((w, i) => /\d/.test(w) && w.length <= 6 ? w.toUpperCase() : i === 0 ? w[0].toUpperCase() + w.slice(1) : w).join(" ");
+  return m && opts.date !== false ? `${name}${name ? ", " : ""}${fmtDate(m[2])}` : name;
+}
+export const prettyEvent = eventLabel;
+/** The champion's name a deck is built around: from its legend ("Kennen"), else from its champion card. */
+export function deckHero(deckOrPath) {
+  const d = typeof deckOrPath === "string" ? deckByPath(deckOrPath) : deckOrPath; if (!d) return String(deckOrPath || "?");
+  if (d.legend) return legendShort(d.legend);
+  const ch = d.champion || Object.keys((d.list || {}).champion || {})[0] || ""; return ch.split(", ")[0] || "?";
+}
 export function deckLabel(p) {
   const d = deckByPath(p); if (!d) return p;
-  const head = (d.comments || [])[0] || "";
-  const m = head.match(/^(\d+) - (.+?) - (.+)$/);
-  if (m) return `${m[3]} — ${m[2]} (#${m[1]}, ${p.split("/")[3] || ""})`;
+  const m = deckPilot(d);
+  if (m && deckEvent(p)) return `${m.name} — ${m.pilot} (#${m.place}, ${p.split("/")[3] || ""})`;
   return p.replace(/^decks\//, "").replace(/^lab\/variants\//, "variant ").replace(/\.txt$/, "");
 }
-/** "Riven (Nam Dang)" style short label: the legend's champion name plus the pilot when the file says so. */
+/** "Kennen (Dylan Sumner)": the champion's name plus the pilot when the file says so; a variant's stem; else the champion's name. */
 export function deckShort(p) {
-  const d = deckByPath(p); if (!d) return p;
-  const head = (d.comments || [])[0] || "", m = head.match(/^(\d+) - (.+?) - (.+)$/);
-  const leg = legendShort(d.legend);
-  return m ? `${leg} (${m[2]})` : d.path.startsWith("lab/variants/") ? d.path.split("/").pop().replace(/\.txt$/, "") : leg;
+  const d = deckByPath(p); if (!d) return String(p || "?").split("/").pop().replace(/\.txt$/, "");
+  const m = deckPilot(d);
+  if (m) return `${m.name} (${m.pilot})`;
+  if (d.path.startsWith("lab/variants/")) return d.path.split("/").pop().replace(/\.txt$/, "");
+  return deckHero(d);
+}
+/** Set codes → names (UNL stays a code: the engine's unlisted cards). */
+export const SETS = { OGN: "Origins", OGS: "Origins starter", SFD: "Spiritforged", VEN: "Vendetta", RAD: "Radiance" };
+export const setName = code => SETS[code] ? `${SETS[code]} (${code})` : String(code || "");
+/** "net_004" from "lab/learn/nets/net_004.rbvn". */
+export const netName = p => String(p || "").split("/").pop().replace(/\.rbvn$/, "") || "—";
+/** Reads an agent spec into {kind, sims, eval, net, raw, label, short, text}.
+    "ismcts:sims=40,eval=net:lab/learn/nets/net_004.rbvn" → label "Thinking bot · 40 sims · net 4" (badges), text "the bot (40
+    continuations per move, network 4)" (prose); "random" → "Random player" / "a random player"; "human:Name" → the name. */
+export function botSpec(raw) {
+  const s = String(raw || ""), out = { raw: s, kind: "unknown", sims: null, eval: null, net: null };
+  if (!s) return { ...out, label: "unknown player", short: "unknown", text: "an unknown player" };
+  if (/^human:/.test(s)) { const n = s.slice(6); return { ...out, kind: "human", label: n, short: n, text: n }; }
+  if (/^random$/i.test(s)) return { ...out, kind: "random", label: "Random player", short: "random", text: "a random player" };
+  if (/^(ismcts|mcts)/i.test(s)) {
+    out.kind = "ismcts";
+    const sims = s.match(/sims=(\d+)/); if (sims) out.sims = +sims[1];
+    const ev = s.match(/eval=([a-z]+)(?::([^,]+))?/i); if (ev) { out.eval = ev[1]; if (ev[2]) out.net = ev[2]; }
+    const parts = ["Thinking bot"], prose = []; if (out.sims) { parts.push(`${out.sims} sims`); prose.push(`${out.sims} continuations per move`); }
+    if (out.eval === "net") { const n = (out.net || "").match(/net_(\d+)/); parts.push(n ? `net ${+n[1]}` : "value net"); prose.push(n ? `network ${+n[1]}` : "a value network"); }
+    else if (out.eval === "board") { parts.push("board eval"); prose.push("board heuristic"); } else if (out.eval) { parts.push(`${out.eval} eval`); prose.push(`${out.eval} heuristic`); } else { parts.push("score eval"); prose.push("score heuristic"); }
+    return { ...out, label: parts.join(" · "), short: parts.slice(0, 2).join(" · "), text: `the bot (${prose.join(", ")})` };
+  }
+  if (/^greedy/i.test(s)) return { ...out, kind: "greedy", label: "One-ply bot", short: "greedy", text: "the one-ply bot" };
+  return { ...out, label: s, short: s, text: s };
+}
+/** A readable badge for a bot, the raw spec in the tooltip. */
+export function botBadge(raw, cls = "") {
+  const b = botSpec(raw), kind = b.kind === "random" ? "neutral" : b.kind === "human" ? "gold" : "bot";
+  return `<span class="badge ${kind} ${cls}" title="${esc(b.raw)}">${esc(b.label)}</span>`;
 }
 export function groupDecks(decks = allDecks()) {
   const g = { "Riven lists": [], "Variants": [], "Meta (tournaments)": [], "Engine test decks": [] };
@@ -142,11 +225,16 @@ export const isPlumbing = t => /^random$/.test(t.agent || "") && /^random$/.test
 /** Tests newest first. */
 export const testsByDate = () => [...(D.tests || [])].sort((a, b) => String(b.started_utc).localeCompare(String(a.started_utc)));
 export const testById = id => (D.tests || []).find(t => t.id === id) || null;
-/** Best deck across tests with a thinking bot: {test, deck, pooled} or null. */
+/** Best deck across tests with a thinking bot: {test, deck, pooled} or null. Ranked by the lower bound of the 95% interval, so a
+    list with many games beats one with the same rate over a handful (an optimizer candidate cut after round 1 cannot be "best"). */
 export function bestList() {
-  let best = null;
-  for (const t of D.tests || []) if (!isPlumbing(t)) for (const d of t.decks || []) if (d.weighted_win_rate != null && (!best || d.weighted_win_rate > best.deck.weighted_win_rate)) best = { test: t, deck: d };
-  return best ? { ...best, pooled: pooled(best.deck) } : null;
+  let best = null, bestLo = -1;
+  for (const t of D.tests || []) if (!isPlumbing(t) && !/random/.test(t.opp_agent || "")) for (const d of t.decks || []) {
+    if (d.weighted_win_rate == null) continue;
+    const p = pooled(d), lo = p.ci ? p.ci[0] : -1;
+    if (!best || lo > bestLo || (lo === bestLo && d.weighted_win_rate > best.deck.weighted_win_rate)) { best = { test: t, deck: d, pooled: p }; bestLo = lo; }
+  }
+  return best;
 }
 /** A one-line conclusion for a test, written for a player. */
 export function testConclusion(t) {
@@ -157,7 +245,8 @@ export function testConclusion(t) {
   const top = ranked[0], tp = pooled(top), opps = (top.matchups || []).length;
   if (n === 1) {
     const vs = opps === 1 ? `against ${top.matchups[0].opponent}` : `against ${opps} opponents`;
-    if (/random/.test(t.opp_agent || "")) return `The bot (${t.agent}) wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games against a random player, interval ${interval(tp.ci)}.`;
+    if (/^(ismcts|mcts|greedy)/i.test(top.label || "")) { const b = botSpec(top.label).text; return `${b[0].toUpperCase()}${b.slice(1)} wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games ${/random/.test(t.opp_agent || "") ? "against a random player" : vs}, interval ${interval(tp.ci)}.`; }
+    if (/random/.test(t.opp_agent || "")) { const b = botSpec(t.agent).text; return `${b[0].toUpperCase()}${b.slice(1)} wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games against a random player, interval ${interval(tp.ci)}.`; }
     return `${top.label} wins ${pct0(top.weighted_win_rate)} ${vs} over ${num(tp.games)} games, interval ${interval(tp.ci)}.`;
   }
   const base = ranked.find(d => /base|control/i.test(d.label)) || ranked[ranked.length - 1];
@@ -208,12 +297,45 @@ export function portraits(refs, opts = {}) {
   const max = opts.max || 4, shown = refs.slice(0, max);
   return `<span class="portraits" style="--w:${{ sm: 28, md: 40, lg: 56, xl: 88 }[opts.size || "md"]}px">${shown.map(r => portrait(r, opts)).join("")}${refs.length > max ? `<span class="more">+${refs.length - max}</span>` : ""}</span>`;
 }
-/** Inline chip: tiny art crop + name (+ count). Hover / tap opens the card preview. */
+/** Inline chip: tiny art crop + name (+ count). Hover / tap opens the card preview. {preview:false} drops the chip's own focus
+    stop (for a chip inside a button or link: hover still previews, the parent keeps the keyboard). */
 export function cardChip(name, opts = {}) {
   const c = card(name), label = (c && c.name) || String(name);
   const src = c && c.image_url ? cardImage(c.image_url, 120) : "";
-  return `<span class="card-chip ${opts.cls || ""}"${c ? ` data-card="${esc(c.name)}" tabindex="0"` : ""}><span class="cc-art" style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : fallbackFrame(c, label)}</span><span class="cc-name">${esc(label)}</span>${opts.count != null ? `<span class="cc-n">×${opts.count}</span>` : ""}</span>`;
+  const hook = c ? ` data-card="${esc(c.name)}"${opts.preview === false ? "" : ` tabindex="0"`}` : "";
+  return `<span class="card-chip ${opts.cls || ""}"${hook}><span class="cc-art" style="${domStyle(c)}">${src ? `<img src="${esc(src)}" alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async">` : fallbackFrame(c, label)}</span><span class="cc-name">${esc(label)}</span>${opts.count != null ? `<span class="cc-n">×${opts.count}</span>` : ""}</span>`;
 }
+/** Card names (3+ letters) longest first, for finding them inside free text. */
+function nameIndex() {
+  if (nameList) return nameList; const seen = new Set(); nameList = [];
+  for (const c of (D && D.cards) || []) { const l = String(c.name || "").toLowerCase(); if (l.length < 3 || seen.has(l)) continue; seen.add(l); nameList.push({ l, c }); }
+  nameList.sort((a, b) => b.l.length - a.l.length); return nameList;
+}
+const isWordCh = ch => /[a-z0-9]/i.test(ch || "");
+/** Card names found in a text (whole words, longest match first, non-overlapping): [{start, end, card}] in text order. */
+export function findCards(text) {
+  const t = String(text || "").toLowerCase(), out = []; if (!t) return out;
+  const taken = new Uint8Array(t.length);
+  for (const e of nameIndex()) {
+    let from = 0, i;
+    while ((i = t.indexOf(e.l, from)) >= 0) {
+      from = i + 1; const j = i + e.l.length;
+      if (isWordCh(t[i - 1]) || isWordCh(t[j])) continue;
+      let free = true; for (let k = i; k < j; k++) if (taken[k]) { free = false; break; }
+      if (!free) continue;
+      taken.fill(1, i, j); out.push({ start: i, end: j, card: e.c });
+    }
+  }
+  return out.sort((a, b) => a.start - b.start);
+}
+/** Free text (an option, a log line) with every card it names turned into a card chip. opts: {cls: "sm", preview} as cardChip. */
+export function chipText(text, opts = {}) {
+  const s = String(text ?? ""), m = findCards(s); if (!m.length) return esc(s);
+  let out = "", pos = 0;
+  for (const x of m) { out += esc(s.slice(pos, x.start)) + cardChip(x.card, { cls: opts.cls ?? "sm", preview: opts.preview }); pos = x.end; }
+  return out + esc(s.slice(pos));
+}
+export const optionHtml = chipText;
 /** Grid of real card images from a {name: count} list, champion first then by cost. */
 export function cardGrid(list, opts = {}) {
   const champ = new Set(Object.keys(opts.champion || {}));
@@ -223,7 +345,7 @@ export function cardGrid(list, opts = {}) {
 }
 
 // ── global card preview layer (index.html provides #card-preview + #card-backdrop) ──
-let pv = null, pvBack = null, pvName = null, touch = false, raf = 0, pvInstalled = false;
+let pv = null, pvBack = null, pvName = null, pvAnchor = null, touch = false, raf = 0, pvInstalled = false;
 function previewHtml(c) {
   const land = isLandscape(c), src = c.image_url ? cardImage(c.image_url, land ? 800 : 600) : "";
   const line = [c.type, c.super, c.energy != null && /^(unit|spell|gear)$/.test(c.type) ? `cost ${c.energy}${c.power ? " + " + c.power + " power" : ""}` : "", c.type === "unit" && c.might != null ? `${c.might} might` : "", (c.tags || []).join(", ")].filter(Boolean).join(" · ");
@@ -238,14 +360,15 @@ function placePreview(x, y) {
   top = Math.max(8, Math.min(vh - h - 8, top));
   pv.style.left = left + "px"; pv.style.top = top + "px";
 }
-export function showPreview(name, { modal = false, x = 0, y = 0 } = {}) {
+export function showPreview(name, { modal = false, x = 0, y = 0, anchor = null } = {}) {
   const c = card(name); if (!c || !pv) return;
   if (pvName !== c.name || modal) { pv.innerHTML = previewHtml(c); pvName = c.name; }
+  pvAnchor = anchor;
   pv.classList.toggle("modal", modal); pvBack.classList.toggle("on", modal);
   pv.classList.add("on"); pv.setAttribute("aria-hidden", "false");
   if (!modal) placePreview(x, y);
 }
-export function hidePreview() { if (!pv) return; pv.classList.remove("on", "modal"); pvBack.classList.remove("on"); pv.setAttribute("aria-hidden", "true"); pvName = null; }
+export function hidePreview() { if (!pv) return; pv.classList.remove("on", "modal"); pvBack.classList.remove("on"); pv.setAttribute("aria-hidden", "true"); pvName = null; pvAnchor = null; }
 /** Installs the delegated hover / focus / tap handlers for [data-card] elements and the image-error fallback. Idempotent. */
 export function installCardPreview() {
   if (pvInstalled) return; pvInstalled = true;
@@ -254,18 +377,21 @@ export function installCardPreview() {
   pv.setAttribute("aria-hidden", "true");
   const inBoard = t => !!t.closest(".rb");   // RiftBoard has its own zoom layer
   document.addEventListener("pointerdown", e => { touch = e.pointerType === "touch"; }, true);
-  document.addEventListener("mouseover", e => { if (touch) return; const t = e.target.closest("[data-card]"); if (t && !inBoard(t)) showPreview(t.dataset.card, { x: e.clientX, y: e.clientY }); });
+  document.addEventListener("mouseover", e => { if (touch) return; const t = e.target.closest("[data-card]"); if (t && !inBoard(t)) showPreview(t.dataset.card, { x: e.clientX, y: e.clientY, anchor: t }); });
   document.addEventListener("mousemove", e => { if (touch || !pv.classList.contains("on") || pv.classList.contains("modal") || raf) return; raf = requestAnimationFrame(() => { raf = 0; placePreview(e.clientX, e.clientY); }); });
   document.addEventListener("mouseout", e => { const t = e.target.closest("[data-card]"); if (t && !(e.relatedTarget && t.contains(e.relatedTarget)) && !pv.classList.contains("modal")) hidePreview(); });
-  document.addEventListener("focusin", e => { const t = e.target.closest("[data-card]"); if (t && !inBoard(t)) { const r = t.getBoundingClientRect(); showPreview(t.dataset.card, { x: r.right, y: r.top + r.height / 2 }); } });
+  document.addEventListener("focusin", e => { const t = e.target.closest("[data-card]"); if (t && !inBoard(t)) { const r = t.getBoundingClientRect(); showPreview(t.dataset.card, { x: r.right, y: r.top + r.height / 2, anchor: t }); } });
   document.addEventListener("focusout", e => { const t = e.target.closest("[data-card]"); if (t && !pv.classList.contains("modal")) hidePreview(); });
   document.addEventListener("click", e => {
     if (e.target.closest(".cp-close") || e.target === pvBack) { hidePreview(); return; }
     const t = e.target.closest("[data-card]"); if (!t || inBoard(t) || t.closest("a[href]")) return;
-    if (touch || e.detail === 0) { showPreview(t.dataset.card, { modal: true }); e.preventDefault(); }
+    if (touch || e.detail === 0) { showPreview(t.dataset.card, { modal: true, anchor: t }); e.preventDefault(); }
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") hidePreview(); const t = e.target.closest && e.target.closest("[data-card]"); if (t && !inBoard(t) && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showPreview(t.dataset.card, { modal: true }); } });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hidePreview(); const t = e.target.closest && e.target.closest("[data-card]"); if (t && !inBoard(t) && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showPreview(t.dataset.card, { modal: true, anchor: t }); } });
   pvBack.addEventListener("click", hidePreview);
+  // the hovered / focused element was re-rendered away (a repaint under the pointer): drop a hover preview that has no anchor left
+  new MutationObserver(() => { if (pvAnchor && !pvAnchor.isConnected && pv.classList.contains("on") && !pv.classList.contains("modal")) hidePreview(); })
+    .observe(document.body, { childList: true, subtree: true });
   // image failed: swap in the styled frame (outside the table; board.js handles its own)
   document.addEventListener("error", e => {
     const im = e.target; if (!(im instanceof HTMLImageElement) || im.closest(".rb")) return;

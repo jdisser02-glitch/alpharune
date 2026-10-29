@@ -4,11 +4,10 @@
    pushes variants into `draft.variants` ({name, base, note, changes}). Sent requests are kept in the db collection
    "requests" on claude.ai (locally under "rl.requests" elsewhere).
    Router contract: render(container, params, ctx) / destroy(). No params. Styles: app/launch.css (prefix .v-launch). */
-import { data, esc, el, store, num, halfWidth, duration, fmtDate, ago, plural, wilson, badge, pageHead, notice, empty,
+import { data, esc, store, num, halfWidth, duration, ago, plural, wilson, badge, pageHead, notice, empty, cssOnce, deckEvent, eventLabel,
          portrait, cardChip, deckByPath, allDecks, deckShort, deckLabel, groupDecks, deckFace, cardByName, legendShort, runtime, toast, $, $$ } from "./lib.js";
 
 const CSS = new URL("./launch.css", import.meta.url).href;
-function css() { if (!document.querySelector(`link[href="${CSS}"]`)) document.head.append(el("link", { rel: "stylesheet", href: CSS })); }
 
 const DEFAULT_DECK = "decks/riven_sacramento.txt";
 const PRESETS = {
@@ -43,8 +42,7 @@ function metaGauntlet() {
   });
   return out.sort((a, b) => b.weight - a.weight);
 }
-/** "Kennen (Simple)": the champion and pilot from the deck file's comment line, else lib's deckShort. */
-function shortLabel(p) { const d = deckByPath(p), m = ((d && d.comments || [])[0] || "").match(/^(\d+) - (.+?) - (.+)$/); return m ? `${m[3]} (${m[2]})` : deckShort(p); }
+const shortLabel = deckShort;   // "Kennen (Simple)": the champion and pilot from the deck file's comment line
 const gauntlet = () => draft.opponents.length ? draft.opponents : metaGauntlet();
 const ownGauntlet = () => { if (!draft.opponents.length) draft.opponents = metaGauntlet(); return draft.opponents; };
 const slug = s => String(s || "").trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-+|-+$/g, "");
@@ -96,7 +94,7 @@ function problems(spec) {
 
 /* ── render ─────────────────────────────────────────────────────────────── */
 export async function render(container) {
-  css(); root = container; loadDraft(); save();
+  await cssOnce(CSS); root = container; loadDraft(); save();
   rt = rt || runtime();
   paint();
 }
@@ -242,11 +240,10 @@ function refreshSide() {
 }
 
 /* ── labels ─────────────────────────────────────────────────────────────── */
+/** Where a list comes from, in a few words: the event for a tournament list, else the file's stem. */
 function eventOf(path) {
-  const m = path.match(/^lab\/decks\/meta\/([^/]+)\//); if (!m) return path.startsWith("lab/variants/") ? "lab variant" : path.replace(/^decks\//, "").replace(/\.txt$/, "");
-  const ev = m[1], dm = ev.match(/_(\d{4}-\d{2}-\d{2})$/);
-  const name = ev.replace(/_\d{4}-\d{2}-\d{2}$/, "").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()).replace(/Rro25/, "RRO25");
-  return dm ? `${name}, ${fmtDate(dm[1])}` : name;
+  const ev = deckEvent(path); if (ev) return eventLabel(ev);
+  return path.startsWith("lab/variants/") ? "lab variant" : path.replace(/^decks\//, "").replace(/\.txt$/, "");
 }
 function deckOptions(exclude, selected = "") {
   const g = groupDecks();

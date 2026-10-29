@@ -3,45 +3,16 @@
    #/tests/<id>   conclusion first, facts, opponents and their weights, per tested deck the matchup table + card grid,
                   the optimizer's round-by-round standings when the test ran rounds, commands and raw spec for the curious.
    Everything is derived from data.json through lib.js; screen-specific styles are in tests.css (injected once). */
-import { data, esc, pct, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice,
-         portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, overlaps, pooled,
-         isPlumbing, testsByDate, testById, bestList, testConclusion, testFaces, deckFace, deckByPath, legendShort, $ } from "./lib.js";
+import { data, esc, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice,
+         portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, pooled, cssOnce, botSpec, botBadge,
+         isPlumbing, testsByDate, testById, bestList, testConclusion, testFaces, deckFace, deckByPath, deckHero, legendShort } from "./lib.js";
 
-let cssDone = false;
-function ensureCss() {
-  if (cssDone || document.querySelector('link[data-view-css="tests"]')) { cssDone = true; return; }
-  const l = document.createElement("link"); l.rel = "stylesheet"; l.href = new URL("./tests.css", import.meta.url).href; l.dataset.viewCss = "tests";
-  document.head.append(l); cssDone = true;
-}
+const CSS = new URL("./tests.css", import.meta.url).href;
 
-// ── bot labels ──────────────────────────────────────────────────────────────
-/** Reads an agent spec ("ismcts:sims=40,eval=net:lab/learn/nets/net_004.rbvn", "random") into {kind, sims, eval, net, raw, label, short}.
-    Candidate for lib.js: the Launch and Replays screens name the same bots. */
-export function botSpec(raw) {
-  const s = String(raw || ""), out = { raw: s, kind: "unknown", sims: null, eval: null, net: null };
-  if (!s) return { ...out, label: "unknown player", short: "unknown" };
-  if (/^random$/i.test(s)) return { ...out, kind: "random", label: "Random player", short: "random" };
-  if (/^(ismcts|mcts)/i.test(s)) {
-    out.kind = "ismcts";
-    const sims = s.match(/sims=(\d+)/); if (sims) out.sims = +sims[1];
-    const ev = s.match(/eval=([a-z]+)(?::([^,]+))?/i); if (ev) { out.eval = ev[1]; if (ev[2]) out.net = ev[2]; }
-    const parts = ["Thinking bot"]; if (out.sims) parts.push(`${out.sims} sims`);
-    if (out.eval === "net") { const n = (out.net || "").match(/net_(\d+)/); parts.push(n ? `net ${+n[1]}` : "value net"); }
-    else if (out.eval === "board") parts.push("board eval"); else if (out.eval) parts.push(`${out.eval} eval`); else parts.push("score eval");
-    return { ...out, label: parts.join(" · "), short: parts.slice(0, 2).join(" · ") };
-  }
-  if (/^greedy/i.test(s)) return { ...out, kind: "greedy", label: "One-ply bot", short: "greedy" };
-  return { ...out, label: s, short: s };
-}
-/** A readable badge for a bot, the raw spec in the tooltip. */
-export function botBadge(raw, cls = "") {
-  const b = botSpec(raw);
-  return `<span class="badge ${b.kind === "random" ? "neutral" : "bot"} ${cls}" title="${esc(b.raw)}">${esc(b.label)}</span>`;
-}
-/** Both sides of a test in one phrase: "Thinking bot · 40 sims · net 0 on both sides" / "… against a random player". */
+/** Both sides of a test in one phrase: "the bot (40 continuations per move, network 0) on both sides" / "… against a random player". */
 function sidesText(t) {
   const a = botSpec(t.agent), b = botSpec(t.opp_agent || t.agent);
-  return a.raw === b.raw ? `${a.label} on both sides` : `${a.label} against ${b.kind === "random" ? "a random player" : b.label}`;
+  return a.raw === b.raw ? `${a.text} on both sides` : `${a.text} against ${b.text}`;
 }
 
 // ── shared numbers ──────────────────────────────────────────────────────────
@@ -49,9 +20,9 @@ const testGames = t => (t.decks || []).reduce((a, d) => a + pooled(d).games, 0);
 const ranked = t => (t.decks || []).filter(d => d.weighted_win_rate != null).sort((a, b) => b.weighted_win_rate - a.weighted_win_rate);
 const isOptimize = t => !!(t.optimize && (t.optimize.rounds || []).length);
 const isControl = label => /\b(control|base)\b/i.test(label || "");
+/** A tested list's label; the ladder tests label their side with the raw agent spec, which reads better as the bot's name. */
+const labelOf = d => /^(ismcts|mcts|random|greedy)/i.test(d.label || "") ? botSpec(d.label).label : (d.label || "");
 const hasReplays = t => (data().replays || []).some(r => r.test_id === t.id);
-/** The champion's name from a deck record: "Kennen, Heart of the Tempest" → "Kennen" (legendShort can answer a region tag). Candidate for lib.js. */
-const heroName = dk => { const l = String((dk && dk.legend) || ""); if (l.includes(", ")) return l.split(", ")[0]; const c = String((dk && dk.champion) || ""); return c.includes(", ") ? c.split(", ")[0] : legendShort(l); };
 const opponentsOf = t => {
   const seen = new Map();
   for (const d of t.decks || []) for (const m of d.matchups || []) if (!seen.has(m.opponent_deck || m.opponent)) seen.set(m.opponent_deck || m.opponent, { label: m.opponent, deck: m.opponent_deck, weight: m.weight ?? 1 });
@@ -79,7 +50,7 @@ function renderList(container) {
     kpi({ label: "Tests", value: num(tests.length), tone: "info", sub: real.length === tests.length ? "all with a thinking bot" : `${num(real.length)} with a thinking bot, ${num(tests.length - real.length)} plumbing` }),
     kpi({ label: "Games played", value: num(games), tone: "info", sub: real.length ? `${num(real.reduce((a, t) => a + testGames(t), 0))} of them with a thinking bot` : "none with a thinking bot yet" }),
     kpi({ label: "Best list so far", value: best ? pct0(best.deck.weighted_win_rate) : "—", tone: best ? rateTone(best.deck.weighted_win_rate) : "neutral",
-          sub: best ? `${esc(best.deck.label)} · ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")}` : "No test with a thinking bot yet",
+          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · interval ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")}` : "No test with a thinking bot yet",
           art: best ? portrait(deckFace(best.deck.path) || best.deck.label, { size: "lg" }) : "", href: best ? `#/tests/${encodeURIComponent(best.test.id)}` : "" }),
     kpi({ label: "Latest test", value: latest ? ago(latest.started_utc) : "—", tone: "neutral", sub: latest ? `${esc(fmtDate(latest.started_utc))} · ${esc(latest.name)}` : "Set one up in Launch", href: latest ? `#/tests/${encodeURIComponent(latest.id)}` : "" }),
   ].join("");
@@ -89,7 +60,7 @@ function renderList(container) {
     const per = t.games_per_matchup ? `${num(t.games_per_matchup)} per matchup` : "";
     const results = plumb
       ? `<div class="t-res-note">${esc(testConclusion(t))}</div>`
-      : shown.length ? `<div class="t-results">${shown.map(d => { const p = pooled(d); return `<div class="t-res"><span class="t-res-l" title="${esc(d.label)}">${isControl(d.label) ? badge("control", "neutral") + " " : ""}${esc(d.label)}</span>${rateBar(d.weighted_win_rate, p.ci, 110)}<span class="mono t-res-n">${pct0(d.weighted_win_rate)} <span class="muted">${interval(p.ci)} · ${num(p.games)} g</span></span></div>`; }).join("")}${rk.length > shown.length ? `<div class="xs muted">and ${rk.length - shown.length} more lists</div>` : ""}</div>` : `<div class="t-res-note muted">No result recorded.</div>`;
+      : shown.length ? `<div class="t-results">${shown.map(d => { const p = pooled(d); return `<div class="t-res"><span class="t-res-l" title="${esc(labelOf(d))}">${isControl(d.label) ? badge("control", "neutral") + " " : ""}${esc(labelOf(d))}</span>${rateBar(d.weighted_win_rate, p.ci, 110)}<span class="mono t-res-n">${pct0(d.weighted_win_rate)} <span class="muted">${interval(p.ci)} · ${num(p.games)} games</span></span></div>`; }).join("")}${rk.length > shown.length ? `<div class="xs muted">and ${rk.length - shown.length} more lists</div>` : ""}</div>` : `<div class="t-res-note muted">No result recorded.</div>`;
     return `<a class="t-row ${plumb ? "plumb" : ""}" href="#/tests/${encodeURIComponent(t.id)}" aria-label="${esc(t.name)}">
       <div class="t-who"><span class="versus">${portraits(faces.mine.length ? faces.mine : [null], { size: "md", max: 2 })}<span class="vs">vs</span>${portraits(faces.theirs.length ? faces.theirs : [null], { size: "md", max: 3 })}</span></div>
       <div class="t-main">
@@ -129,7 +100,7 @@ function humanGames(D) {
     { key: "open", label: "", render: g => (D.replays || []).some(x => x.file === g.replay) ? `<a href="#/replays/${encodeURIComponent(g.replay)}">Open</a>` : "" },
   ];
   return `<section class="section" aria-labelledby="t-human-h">
-    <div class="section-head"><h2 id="t-human-h">Human games: does the bot play like a person?</h2><a class="more" href="#/replays">Replays →</a></div>
+    <div class="section-head"><h2 id="t-human-h">Real games: does the bot play like a person?</h2><a class="more" href="#/replays">Replays →</a></div>
     <p class="muted">Each row is a real RiftLite game replayed through the engine. At every decision of the captured player the bot (${botBadge(hr.agent)}) was asked what it would do. Agreement is the share of those decisions where the bot's first choice is the move the human made, with its 95% interval; "clean" counts only decisions taken right after the engine's state was checked against the log. With 5 to 20 legal moves a random player agrees around 10 to 20%, so a figure near that means the bot has no opinion yet. Desyncs are points where the engine could not follow the log; the replay stops after a few.</p>
     ${table(cols, games, { empty: "No human game compared yet." })}
   </section>`;
@@ -180,8 +151,8 @@ function deckSection(d, t, i, open) {
   const seats = (d.matchups || []).reduce((a, m) => { if (m.as_p1 && m.as_p2) { a.p1g += m.as_p1.games; a.p1w += m.as_p1.wins; a.p2g += m.as_p2.games; a.p2w += m.as_p2.wins; } return a; }, { p1g: 0, p1w: 0, p2g: 0, p2w: 0 });
   const head = `<summary class="t-deck-head">
       ${portrait(face, { size: "lg" })}
-      <div class="t-deck-title"><h2>${esc(d.label)}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}</h2>
-        <div class="t-deck-sub">${dk ? `<a href="#/decks/${encodeURIComponent(dk.path)}">${esc(heroName(dk))}${dk.path.startsWith("lab/variants/") ? ` · ${esc(dk.path.split("/").pop().replace(/\.txt$/, ""))}` : ""} · open the list</a>` : `<span class="mono muted">${esc(d.path || "")}</span>`}${changeChips(d.changes)}</div></div>
+      <div class="t-deck-title"><h2>${esc(labelOf(d))}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}</h2>
+        <div class="t-deck-sub">${dk ? `<a href="#/decks/${encodeURIComponent(dk.path)}">${esc(deckHero(dk))}${dk.path.startsWith("lab/variants/") ? ` · ${esc(dk.path.split("/").pop().replace(/\.txt$/, ""))}` : ""} · open the list</a>` : `<span class="mono muted">${esc(d.path || "")}</span>`}${changeChips(d.changes)}</div></div>
       <div class="t-deck-rate">${d.weighted_win_rate != null ? `${rateBar(d.weighted_win_rate, p.ci, 150)}<span class="t-deck-num">${pct0(d.weighted_win_rate)}</span><span class="xs muted">${interval(p.ci)} · ${plural(p.games, "game")}${t.decks.some(x => (x.matchups || []).length > 1) ? " · weighted" : ""}</span>` : `<span class="muted">no result</span>`}</div>
     </summary>`;
   return `<details class="panel t-deck" ${open ? "open" : ""} id="deck-${i}">${head}
@@ -212,13 +183,13 @@ function roundsPanel(t) {
     if (!s) return `<td class="t-rnd out"><span class="muted">—</span></td>`;
     const g = r.games_per_opponent * nOpp, wins = Math.round(s.rate * g), ci = wilson(wins, g), next = rounds[ri + 1], on = next ? next.standings.some(x => x.label === l) : true;
     const pos = r.standings.findIndex(x => x.label === l) + 1;
-    return `<td class="t-rnd ${on ? "on" : "cut"}" data-v="${s.rate}"><span class="t-rnd-top"><span class="mono t-rnd-pos">${pos}.</span>${rateBar(s.rate, ci, 90)}<span class="mono">${pct0(s.rate)}</span></span><span class="xs muted">${interval(ci)} · ${num(g)} g${!on ? " · cut" : next ? " · on" : ""}</span></td>`;
+    return `<td class="t-rnd ${on ? "on" : "cut"}" data-v="${s.rate}"><span class="t-rnd-top"><span class="mono t-rnd-pos">${pos}.</span>${rateBar(s.rate, ci, 90)}<span class="mono">${pct0(s.rate)}</span></span><span class="xs muted">${interval(ci)} · ${num(g)} games${!on ? " · cut" : next ? " · on" : ""}</span></td>`;
   };
   const rows = order.map(({ l }) => {
     const d = byLabel.get(l), p = d ? pooled(d) : null, ctrl = isControl(l), fin = survived[labels.indexOf(l)] === rounds.length;
     return `<tr class="${fin ? "finalist" : ""} ${ctrl ? "control" : ""}"><td class="lead t-cand"><span>${esc(l)}</span>${ctrl ? badge("control", "neutral") : ""}${fin ? badge("finalist", "gold") : ""}${d ? changeChips(d.changes) : ""}</td>
       ${rounds.map((_, ri) => cell(l, ri)).join("")}
-      <td class="t-rnd" data-v="${d ? d.weighted_win_rate : ""}">${d && d.weighted_win_rate != null ? `<span class="t-rnd-top">${rateBar(d.weighted_win_rate, p.ci, 90)}<span class="mono">${pct0(d.weighted_win_rate)}</span></span><span class="xs muted">${interval(p.ci)} · ${num(p.games)} g</span>` : `<span class="muted">—</span>`}</td></tr>`;
+      <td class="t-rnd" data-v="${d ? d.weighted_win_rate : ""}">${d && d.weighted_win_rate != null ? `<span class="t-rnd-top">${rateBar(d.weighted_win_rate, p.ci, 90)}<span class="mono">${pct0(d.weighted_win_rate)}</span></span><span class="xs muted">${interval(p.ci)} · ${num(p.games)} games</span>` : `<span class="muted">—</span>`}</td></tr>`;
   }).join("");
   const r1 = rounds[0], last = rounds[rounds.length - 1];
   return `<section class="panel t-rounds-panel" aria-labelledby="t-rounds-h">
@@ -229,15 +200,15 @@ function roundsPanel(t) {
 }
 
 function renderDetail(container, id) {
-  const D = data(), t = testById(id);
+  const t = testById(id);
   if (!t) { container.innerHTML = `<div class="v-tests stack">${pageHead({ title: "Test not found", sub: `No test is recorded under <span class="mono">${esc(id)}</span>.` })}${empty("Nothing here", `See <a href="#/tests">all tests</a>.`)}</div>`; return; }
-  const plumb = isPlumbing(t), faces = testFaces(t), rk = ranked(t), games = testGames(t), opt = isOptimize(t);
+  const plumb = isPlumbing(t), faces = testFaces(t), games = testGames(t), opt = isOptimize(t);
   const dur = t.finished_utc && t.started_utc ? (new Date(t.finished_utc) - new Date(t.started_utc)) / 1000 : null;
   const decks = opt ? [...t.decks].sort((a, b) => (b.weighted_win_rate ?? -1) - (a.weighted_win_rate ?? -1)) : t.decks || [];
   const actions = `${hasReplays(t) ? `<a class="btn btn-primary" href="#/replays?test=${encodeURIComponent(t.id)}">Watch the replays</a>` : `<span class="small muted">No replay recorded for this test</span>`}<a class="btn" href="#/tests">All tests</a>`;
   const facts = [
     chip(`${num(games)} games`), t.games_per_matchup ? chip(`${num(t.games_per_matchup)} per matchup`) : "", chip(`started ${esc(fmtDateTime(t.started_utc))}`),
-    dur != null && dur > 0 ? chip(`took ${esc(duration(dur))}`) : "", t.threads ? chip(`${num(t.threads)} threads`) : "", t.seed != null ? chip(`seed <span class="mono">${esc(t.seed)}</span>`) : "", t.engine_commit ? chip(`engine <span class="mono">${esc(t.engine_commit)}</span>`) : "",
+    dur != null && dur > 0 ? chip(`took ${esc(duration(dur))}`) : "", t.threads ? chip(`on ${num(t.threads)} cores`) : "", t.seed != null ? chip(`seed <span class="mono">${esc(t.seed)}</span>`) : "", t.engine_commit ? chip(`engine <span class="mono">${esc(t.engine_commit)}</span>`) : "",
   ].filter(Boolean).join("");
   const commands = (t.decks || []).flatMap(d => (d.matchups || []).flatMap(m => m.commands || []));
   container.innerHTML = `<div class="v-tests stack loose">
@@ -260,7 +231,7 @@ function renderDetail(container, id) {
 // ── module contract ─────────────────────────────────────────────────────────
 let lastId;
 export async function render(container, params = {}) {
-  ensureCss(); lastId = params.id || "";
+  await cssOnce(CSS); lastId = params.id || "";
   if (params.id) renderDetail(container, params.id); else renderList(container);
 }
 export function update(container, params = {}) {

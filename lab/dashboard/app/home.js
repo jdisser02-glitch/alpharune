@@ -2,7 +2,7 @@
    Sections: hero · right now (KPIs) · latest results · what's next (home.json, edited in lab/dashboard/home.yml) ·
    how to read the numbers. Everything is derived from data.json through lib.js. */
 import { data, esc, pct0, num, interval, ago, fmtDate, kpi, portrait, portraits, cardImg, badge, rateBar, rateTone,
-         bestList, testsByDate, testConclusion, testFaces, isPlumbing, pooled, deckFace, deckShort, plural } from "./lib.js";
+         bestList, testsByDate, testConclusion, testFaces, isPlumbing, pooled, deckFace, deckShort, deckPilot, plural } from "./lib.js";
 
 let homeCopy = null;
 async function copy() {
@@ -29,7 +29,7 @@ export async function render(container) {
 
   const kpis = [
     kpi({ label: "Best list so far", value: best ? pct0(best.deck.weighted_win_rate) : "—", tone: best ? rateTone(best.deck.weighted_win_rate) : "neutral",
-          sub: best ? `${esc(best.deck.label)} · interval ${interval(best.pooled.ci)} over ${num(best.pooled.games)} games` : "No test with a thinking bot yet",
+          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · interval ${interval(best.pooled.ci)} over ${num(best.pooled.games)} games` : "No test with a thinking bot yet",
           art: best ? portrait(deckFace(best.deck.path) || best.deck.label, { size: "lg" }) : "", href: best ? `#/tests/${encodeURIComponent(best.test.id)}` : "#/tests" }),
     kpi({ label: "Bot strength", value: adopted ? pct0(adopted.vs_random.rate) : "—", tone: adopted ? (adopted.vs_random.rate >= 0.75 ? "win" : "warn") : "neutral",
           sub: adopted ? `wins against a random player · iteration ${adopted.iteration} in use${latest && latest.iteration !== adopted.iteration ? `, iteration ${latest.iteration} tried and not adopted` : ""}` : "The ladder has not produced a bot yet",
@@ -63,7 +63,7 @@ export async function render(container) {
         <h1 id="hero-title" class="display-xl">${esc(title.replace(/\.$/, ""))}</h1>
         <p class="lede">${esc(lede)}</p>
         <div class="hero-actions"><a class="btn btn-primary btn-lg" href="#/tests">See the test results</a><a class="btn btn-lg" href="#/play">Play against the bot</a><a class="btn btn-ghost btn-lg" href="#how">How to read the numbers</a></div>
-        ${riven ? `<p class="small muted">Reference list: ${esc(deckShort(riven.path))} — ${esc(((riven.comments || [])[0] || "").replace(/^Riven, The Exile — /, "").split(" (")[0])}.</p>` : ""}
+        ${riven ? `<p class="small muted">Reference list: <a href="#/decks/${encodeURIComponent(riven.path)}">${esc(deckShort(riven.path))}</a>${rivenNote(riven)}.</p>` : ""}
       </div>
       <div class="hero-art" aria-hidden="true">${cardImg("Blade of the Exile", { size: "lg", cls: "a1", hover: false })}${cardImg("Riven, Broken Blade", { size: "lg", cls: "a2", hover: false })}${cardImg("Riven, Deserter", { size: "lg", cls: "a3", hover: false })}</div>
     </section>
@@ -92,6 +92,13 @@ export async function render(container) {
 }
 
 export function destroy() {}
+
+/** " — 1st of 755, Riftbound Showdown 25k LDXP Sacramento" from the reference list's header comment, without repeating the pilot. */
+function rivenNote(d) {
+  const head = ((d.comments || [])[0] || "").replace(/^[^—]+—\s*/, "").split(" (")[0].replace(/\.$/, ""), p = deckPilot(d);
+  const note = p ? head.replace(new RegExp("^" + p.pilot.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ",\\s*"), "") : head;
+  return note ? ` — ${esc(note)}` : "";
+}
 
 /** Three lists with their intervals: A and B overlap (not separated), C is clear of both. */
 function ciIllustration() {
