@@ -362,6 +362,24 @@ PlayerId actingPlayer(const GameState& state) {
     return state.turn.turn_player;
 }
 
+/// The player making this decision. Every option the engine offers names
+/// the player it is offered to; that is authoritative (a mulligan, a
+/// defender's damage assignment or a "you may" on an opponent's trigger is
+/// decided by someone other than the turn / priority player). The timing
+/// fields above are the fallback for option lists that name nobody.
+PlayerId decidingPlayer(const GameState& state, const std::vector<Intent>& legal) {
+    for (const auto& in : legal)
+        if (in.player == PlayerId::Player1 || in.player == PlayerId::Player2) {
+            static const bool dbg = std::getenv("RIFTBOUND_PERSPECTIVE_DEBUG") != nullptr;
+            if (dbg && in.player != actingPlayer(state))
+                std::cerr << "[persp] decision " << state.decision_index << ": options for P"
+                          << static_cast<int>(in.player) << ", timing says P"
+                          << static_cast<int>(actingPlayer(state)) << " (" << in.describe() << ")\n";
+            return in.player;
+        }
+    return actingPlayer(state);
+}
+
 Intent MctsAgent::selectAction(const GameState& state,
                                const std::vector<Intent>& legal_actions) {
     if (legal_actions.empty()) {
@@ -376,7 +394,7 @@ Intent MctsAgent::selectAction(const GameState& state,
     ::riftbound::StepResult snap_step;
     snap_step.kind        = ::riftbound::StepKind::NeedDecision;
     snap_step.legal       = legal_actions;
-    snap_step.perspective = actingPlayer(state);
+    snap_step.perspective = decidingPlayer(state, legal_actions);
     auto os_state = openspiel::RiftboundState::makeFromSnapshot(
         impl_->game, impl_->engine_seed,
         state,            // GameState — deep-copied by value
@@ -520,7 +538,7 @@ Intent IsMctsAgent::selectAction(const GameState& state,
     ::riftbound::StepResult snap_step;
     snap_step.kind        = ::riftbound::StepKind::NeedDecision;
     snap_step.legal       = legal_actions;
-    snap_step.perspective = actingPlayer(state);
+    snap_step.perspective = decidingPlayer(state, legal_actions);
     auto os_state = openspiel::RiftboundState::makeFromSnapshot(
         impl_->game, impl_->engine_seed,
         state, snap_step, ::riftbound::GameResult{});
