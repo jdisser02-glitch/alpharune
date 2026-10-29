@@ -128,6 +128,7 @@ def main(argv):
     print(f"{n} records ({len(tr)} train / {len(va)} validation), dim {dim}, "
           f"{int((inv_std > 0).sum())} live features; baseline val log-loss {base_loss:.4f}")
     history = []
+    best = (float("inf"), None, 0)          # (val loss, params, epoch): early stopping
     for ep in range(a.epochs):
         order = rng.permutation(tr)
         for k in range(0, len(order), a.batch):
@@ -152,6 +153,10 @@ def main(argv):
         vl, vacc = evaluate(va)
         history.append({"epoch": ep + 1, "train_loss": tl, "train_acc": ta, "val_loss": vl, "val_acc": vacc})
         print(f"epoch {ep + 1:2d}: train loss {tl:.4f} acc {ta:.3f} | val loss {vl:.4f} acc {vacc:.3f}", flush=True)
+        if vl < best[0]:
+            best = (vl, [p.copy() for p in params], ep + 1)
+    params = best[1]
+    print(f"kept epoch {best[2]} (val loss {best[0]:.4f})")
 
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -167,6 +172,8 @@ def main(argv):
         if len(rows) >= 20:
             by_phase[name] = {"records": int(len(rows)), "acc": evaluate(rows)[1]}
     report = {"records": n, "train": len(tr), "validation": len(va), "dim": dim, "hidden": H,
+              "best_epoch": best[2], "best_val_loss": best[0],
+              "best_val_acc": next(h["val_acc"] for h in history if h["epoch"] == best[2]),
               "baseline_val_loss": base_loss, "history": history, "by_phase": by_phase,
               "data": a.data}
     out.with_suffix(".json").write_text(json.dumps(report, indent=1))
