@@ -1,0 +1,164 @@
+/* Riven Lab — Play screen styles, injected by app/play.js. Everything is prefixed .v-play; tokens and components come from app.css,
+   the table itself from board.css. Sections: setup (matchup strip, deck tiles, fields, start) · game (top bar, table, options, side
+   panel) · result · phone (options as a bottom sheet). */
+
+.v-play { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+.v-play .panel > h3:first-child { margin-bottom: 10px; }
+.v-play .hint { font-size: 13px; color: var(--ink-dim); }
+.v-play .min0 { min-width: 0; }
+
+/* ── setup: the matchup strip ───────────────────────────────────────────── */
+.v-play .vp-matchup { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--sp-4); align-items: center; }
+.v-play .vp-seat { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.v-play .vp-seat.bot { flex-direction: row-reverse; text-align: right; }
+.v-play .vp-seat .card-img { --w: 84px; flex: 0 0 auto; }
+.v-play .vp-seat .who { font: 600 11.5px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.v-play .vp-seat .name { font: 600 19px/1.2 var(--display); color: var(--parch); margin-top: 4px; overflow-wrap: anywhere; }
+.v-play .vp-seat .sub { font-size: 13px; color: var(--ink-dim); margin-top: 2px; }
+.v-play .vp-seat .doms { margin-top: 6px; }
+.v-play .vp-vs { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--chrome); background: var(--gold-soft); display: grid; place-items: center; font: 700 12px/1 var(--display); letter-spacing: .16em; color: var(--gold-2); }
+
+/* ── setup: deck tiles ──────────────────────────────────────────────────── */
+.v-play .vp-picker .segmented { margin-top: 2px; }
+.v-play .vp-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 228px), 1fr)); gap: 8px; max-height: 330px; overflow: auto; padding: 2px; margin-top: 10px; scrollbar-width: thin; }
+.v-play .vp-tile { display: grid; grid-template-columns: 46px minmax(0, 1fr) 18px; gap: 10px; align-items: center; text-align: left; padding: 8px; border-radius: var(--r-2); background: var(--s2); border: 1px solid var(--line); white-space: normal; font-weight: 400; min-width: 0; }
+.v-play .vp-tile:hover { border-color: var(--gold-dim); background: var(--s3); }
+.v-play .vp-tile .card-img { --w: 46px; }
+.v-play .vp-tile .t-body { min-width: 0; }
+.v-play .vp-tile .t-name { display: block; font: 600 14px/1.2 var(--display); color: var(--parch); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v-play .vp-tile .t-sub { display: block; font-size: 12px; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
+.v-play .vp-tile .t-doms { display: block; margin-top: 4px; }
+.v-play .vp-tile .t-check { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line-strong); display: grid; place-items: center; font: 700 11px/1 var(--display); color: transparent; }
+.v-play .vp-tile[aria-checked="true"] { border-color: var(--gold); background: var(--gold-soft); box-shadow: inset 0 0 0 1px rgba(214, 178, 94, .35); }
+.v-play .vp-tile[aria-checked="true"] .t-check { background: var(--gold); border-color: var(--gold); color: #1a1406; }
+.v-play .vp-tiles .empty { grid-column: 1 / -1; }
+
+/* ── setup: fields and start ────────────────────────────────────────────── */
+.v-play .vp-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: var(--sp-4); align-items: start; }
+.v-play .vp-fields .segmented { display: flex; width: 100%; }
+.v-play .vp-fields .segmented > button { flex: 1 1 auto; }
+.v-play .vp-fields .f-help { font: 400 12.5px/1.4 var(--text); letter-spacing: 0; text-transform: none; color: var(--ink-dim); }
+.v-play .vp-fields input.seed { font-family: var(--mono); width: 100%; }
+.v-play .switch { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font: 400 14px/1.3 var(--text); letter-spacing: 0; text-transform: none; color: var(--ink); margin-top: 6px; }
+.v-play .switch input { appearance: none; -webkit-appearance: none; width: 38px; height: 22px; border-radius: 999px; background: var(--s0); border: 1px solid var(--line-strong); position: relative; margin: 0; cursor: pointer; flex: 0 0 auto; transition: background .15s ease, border-color .15s ease; }
+.v-play .switch input::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink-dim); transition: transform .15s ease, background .15s ease; }
+.v-play .switch input:checked { background: var(--gold-soft); border-color: var(--gold); }
+.v-play .switch input:checked::after { transform: translateX(16px); background: var(--gold); }
+.v-play .vp-start { display: flex; flex-wrap: wrap; gap: var(--sp-3) var(--sp-4); align-items: center; }
+.v-play .vp-start .engine { font-size: 13px; color: var(--ink-dim); }
+.v-play .vp-prog { display: grid; gap: 8px; max-width: 560px; width: 100%; }
+.v-play .vp-prog .lbl { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--ink-2); }
+.v-play .vp-prog .lbl .mono { color: var(--ink-dim); }
+.v-play .vp-prog .prog { margin-bottom: 0; }
+.v-play .vp-last { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.v-play .vp-how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: var(--sp-4); margin-top: 12px; }
+.v-play .vp-how h4 { color: var(--parch); margin-bottom: 4px; }
+.v-play .vp-how p { font-size: 14px; color: var(--ink-2); }
+
+/* ── game layout ────────────────────────────────────────────────────────── */
+.v-play .vp-game { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-4); align-items: start; }
+.v-play .vp-main { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.v-play .vp-aside { position: sticky; top: calc(var(--header-h) + 12px); display: flex; flex-direction: column; gap: var(--sp-3); max-height: calc(100vh - var(--header-h) - 24px); overflow: auto; min-width: 0; scrollbar-width: thin; }
+.v-play .vp-bar { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding: 8px 14px; background: var(--s1); border: 1px solid var(--chrome); border-radius: var(--r-2); font-size: 13.5px; box-shadow: var(--sh-1); }
+.v-play .vp-bar .turn { display: inline-flex; align-items: baseline; gap: 8px; }
+.v-play .vp-bar .turn b { font: 600 15px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
+.v-play .vp-bar .turn span { color: var(--ink-dim); }
+.v-play .vp-bar .who { display: inline-flex; align-items: center; gap: 8px; font: 600 11px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; padding: 6px 11px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.v-play .vp-bar .who.me { color: #1a1406; background: var(--gold); border-color: var(--gold); box-shadow: 0 0 14px rgba(214, 178, 94, .4); }
+.v-play .vp-bar .who.bot { color: var(--p2); }
+.v-play .vp-bar .who.bot::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--p2); animation: vp-pulse 1s ease-in-out infinite; }
+.v-play .vp-bar .who.wait { color: var(--ink-dim); }
+.v-play .vp-bar .who.over { color: var(--win); }
+.v-play .vp-bar .who .mono { font-size: 11px; letter-spacing: 0; }
+.v-play .vp-bar .seats { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
+.v-play .vp-bar .seats .lbl { font-size: 12.5px; color: var(--ink-dim); white-space: nowrap; }
+.v-play .vp-bar .seats .lbl b { color: var(--ink); font-weight: 600; }
+.v-play .vp-bar .seats .sc { font: 600 20px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
+.v-play .vp-bar .seats .dash { color: var(--gold-dim); }
+.v-play .vp-bar .seats .p1 { color: var(--p1); } .v-play .vp-bar .seats .p2 { color: var(--p2); }
+.v-play .vp-board { overflow-x: auto; min-width: 0; border-radius: var(--r-2); }
+.v-play .vp-board .rb-legal { display: none; }          /* the options list below replaces the table's own bar */
+@keyframes vp-pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+/* ── options list ───────────────────────────────────────────────────────── */
+.v-play .vp-opts .po-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.v-play .vp-opts .po-head h3 { margin: 0; }
+.v-play .vp-opts .po-head .state { font-size: 13px; color: var(--ink-dim); }
+.v-play .vp-opts .po-head .keys { margin-left: auto; font-size: 12.5px; color: var(--ink-dim); display: inline-flex; gap: 6px; align-items: center; }
+.v-play .vp-opts .po-toggle { display: none; }
+.v-play .po-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 6px; margin-top: 10px; }
+.v-play .po-opt { display: flex; align-items: center; gap: 8px; justify-content: flex-start; text-align: left; white-space: normal; padding: 6px 10px; background: var(--s2); min-height: 42px; font-weight: 500; line-height: 1.3; }
+.v-play .po-opt.hot { border-color: var(--gold-dim); box-shadow: inset 0 0 0 1px rgba(214, 178, 94, .18); }
+.v-play .po-opt:hover:not(:disabled) { border-color: var(--gold); background: var(--s3); }
+.v-play .po-opt:disabled { opacity: .5; }
+.v-play .po-opt .kbd { flex: 0 0 auto; min-width: 22px; text-align: center; }
+.v-play .po-opt .kbd.blank { visibility: hidden; }
+.v-play .po-opt .po-text { min-width: 0; display: inline; overflow-wrap: anywhere; }
+.v-play .po-opt .card-chip, .v-play .share .card-chip, .v-play .lb-move .card-chip { vertical-align: middle; max-width: 100%; }
+.v-play .po-opt .card-chip { font-size: 13px; padding-right: 7px; cursor: inherit; }
+.v-play .po-none { padding: 12px 0 2px; font-size: 13.5px; color: var(--ink-dim); }
+.v-play .vp-game[data-turn="bot"] .vp-opts h3, .v-play .vp-game[data-turn="wait"] .vp-opts h3 { color: var(--ink-faint); }
+
+/* ── side panel ─────────────────────────────────────────────────────────── */
+.v-play .lb-move { display: flex; align-items: center; gap: 6px 8px; flex-wrap: wrap; font-weight: 600; color: var(--parch); line-height: 1.5; }
+.v-play .lb-meta { font-size: 12.5px; color: var(--ink-dim); margin-top: 4px; }
+.v-play .shares { display: flex; flex-direction: column; gap: 2px; margin-top: 10px; }
+.v-play .share { display: grid; grid-template-columns: minmax(0, 1fr) 84px 40px; gap: 8px; align-items: center; font-size: 13px; padding: 3px 6px; border-radius: 5px; min-width: 0; }
+.v-play .share .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1.6; }
+.v-play .share .txt .card-chip { max-width: calc(100% - 8px); }
+.v-play .share .txt .card-chip .cc-name { min-width: 0; }
+.v-play .share.chosen { background: var(--gold-soft); color: var(--parch); font-weight: 600; }
+.v-play .share .pc { font: 12px var(--mono); text-align: right; color: var(--ink-2); }
+.v-play .counters { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-play .vp-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.v-play details.panel > summary .n { margin-left: auto; font: 12px var(--mono); color: var(--ink-faint); }
+.v-play details.panel .log { margin-top: 10px; max-height: 260px; }
+
+/* ── result ─────────────────────────────────────────────────────────────── */
+.v-play .vp-result { display: grid; gap: var(--sp-4); text-align: center; padding: var(--sp-5); }
+.v-play .vp-result .r-title { font: 700 clamp(36px, 5vw, 52px)/1 var(--display); letter-spacing: .05em; text-transform: uppercase; margin: 4px 0 6px; }
+.v-play .vp-result .r-title.win { color: var(--win); text-shadow: 0 0 28px rgba(79, 207, 138, .35); }
+.v-play .vp-result .r-title.loss { color: var(--loss); text-shadow: 0 0 28px rgba(239, 93, 85, .3); }
+.v-play .vp-result .r-title.draw { color: var(--parch); }
+.v-play .vp-result .r-score { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font: 600 34px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
+.v-play .vp-result .r-score .dash { color: var(--gold-dim); font-weight: 500; }
+.v-play .vp-result .r-score small { font: 500 13px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+.v-play .vp-result .r-hint { font-size: 16px; color: var(--ink-2); margin: 0 auto; max-width: 60ch; }
+.v-play .vp-result .r-decks { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--sp-4); align-items: start; }
+.v-play .r-deck { display: flex; flex-direction: column; gap: 8px; align-items: center; min-width: 0; }
+.v-play .r-deck .r-who { font: 600 11.5px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.v-play .r-deck.winner .r-who { color: var(--gold); }
+.v-play .r-deck .r-name { font: 600 16px/1.2 var(--display); color: var(--parch); }
+.v-play .r-deck .cards { display: flex; gap: 6px; justify-content: center; align-items: flex-end; flex-wrap: wrap; }
+.v-play .r-deck .cards .card-img { --w: 62px; }
+.v-play .r-deck .cards .card-img.key { --w: 84px; box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(214, 178, 94, .3); }
+.v-play .r-facts { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.v-play .r-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+/* ── narrow screens ─────────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .v-play .vp-game { grid-template-columns: minmax(0, 1fr); }
+  .v-play .vp-aside { position: static; max-height: none; overflow: visible; }
+}
+@media (max-width: 760px) {
+  .v-play .vp-matchup { grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
+  .v-play .vp-seat.bot { flex-direction: row; text-align: left; }
+  .v-play .vp-seat .card-img { --w: 64px; }
+  .v-play .vp-vs { justify-self: center; width: 36px; height: 36px; font-size: 10.5px; }
+  .v-play .vp-tiles { max-height: 260px; }
+  .v-play .vp-bar { gap: 6px 12px; padding: 8px 12px; }
+  .v-play .vp-bar .seats { margin-left: 0; width: 100%; }
+  .v-play .vp-bar .seats .portrait { --w: 24px; }
+  /* the options become a bottom sheet so the table keeps the screen */
+  .v-play .vp-game[data-turn]:not([data-turn="over"]) { padding-bottom: 44vh; }
+  .v-play .vp-game.sheet-closed { padding-bottom: 76px; }
+  .v-play .vp-game:not([data-turn="over"]) .vp-opts { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; margin: 0; border-radius: var(--r-3) var(--r-3) 0 0; border-color: var(--chrome); box-shadow: var(--sh-3); max-height: 44vh; overflow: auto; padding: 12px 16px max(12px, env(safe-area-inset-bottom, 0px)); background: rgba(17, 22, 42, .97); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .v-play .vp-opts .po-toggle { display: inline-flex; margin-left: auto; }
+  .v-play .vp-opts .po-head .keys { display: none; }
+  .v-play .vp-game.sheet-closed .po-list, .v-play .vp-game.sheet-closed .po-none { display: none; }
+  .v-play .po-list { grid-template-columns: minmax(0, 1fr); }
+  .v-play .vp-result { padding: var(--sp-4); }
+  .v-play .vp-result .r-decks { grid-template-columns: minmax(0, 1fr); }
+  .v-play .vp-result .r-decks .vp-vs { justify-self: center; }
+}
+@media (prefers-reduced-motion: no-preference) { .v-play .share .bar i { transition: width .25s ease; } }
