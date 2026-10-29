@@ -63,7 +63,8 @@ inline constexpr int kPerUnitExtFieldsT2  = 8;   // T2/3 per-unit: assault, shie
 // Card-def id space for the multi-hot zones. Registered ids run 1..955
 // (Origins/Proving Grounds/Spiritforged/Unleashed 1..787, Vendetta 788..960);
 // 961..1100 is reserved for Radiance so its release doesn't shift the layout
-// (and invalidate checkpoints) a second time.
+// (and invalidate checkpoints) a second time. Radiance cards registered so far:
+// 961..969.
 inline constexpr int kCardVocabSize       = 1100;
 inline constexpr int kZoneVectorOffset    = 470;  // first multi-hot zone starts here
 inline constexpr int kNumZoneVectors      = 5;    // self deck/trash/banish, opp trash/banish

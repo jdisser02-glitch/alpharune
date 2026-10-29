@@ -318,6 +318,9 @@ struct BattlefieldState {
     int paid_play_power = 0;
     std::string paid_play_tag;
     int empower_cost_reduction[2] = {0, 0}; // Risen Altar: per-player [Empower] discount for units here
+    // Turn number of each player's last unit or gear play here (-1 = never).
+    // "The first unit or gear they play here [each turn]" (Hunters' Circle, Rakelstake).
+    int last_play_here_turn[2] = {-1, -1};
     bool is_contested = false;
     PlayerId contested_by = PlayerId::None;
     PlayerId contributed_by = PlayerId::None;  // who brought this BF to the game

@@ -1411,9 +1411,10 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
             if (has_target || gear_card->needsEquipTimeTarget()) {
                 CardContext equip_ctx{state_, events_, *effect_executor_,
                                      intent.player, intent.ability_source};
-                GameObjectId target = has_target ? intent.targets[0]
-                                                  : kInvalidId;
-                if (gear_card->onEquip(equip_ctx, target)) {
+                const bool done = has_target
+                    ? gear_card->onEquipWith(equip_ctx, intent.targets)
+                    : gear_card->onEquip(equip_ctx, kInvalidId);
+                if (done) {
                     cleanup();
                 }
                 return false;
@@ -1634,6 +1635,9 @@ void GameEngine::executePlayCard(const Intent& intent) {
             }
         }
     }
+    // A battlefield's discount for cards played there (Hunters' Circle).
+    if (!intent.use_alt_play_cost)
+        prepay_discount += playLocationDiscount(intent.player, intent.card, intent.play_location);
     ps.transient_play_discount += prepay_discount;
 
     ps.current_play_source = intent.play_source;
@@ -1695,12 +1699,27 @@ void GameEngine::executePlayCard(const Intent& intent) {
     }
     events_.emit(CardPlayedEvent{intent.card, intent.player,
         card.card_type, ps.cards_played_this_turn, energy_spent});
+
     if (intent.play_source != Intent::PlaySource::Hand)
         events_.emit(ObjectStateChangedEvent{intent.card, "played_not_from_hand"});
 
     // Store the play location on the game object so resolvePermanent can use it.
     // Permanents choose location during finalization (CR 355.2.a).
     card.location = intent.play_location.value_or(BaseLocation{intent.player});
+    // "The first unit or gear [a player] plays here [each turn]": record the
+    // play at its battlefield and announce the first one of the turn.
+    if ((card.isUnit() || card.isGear()) && intent.play_location.has_value() &&
+        std::holds_alternative<BattlefieldLocation>(*intent.play_location)) {
+        const auto bf_id = std::get<BattlefieldLocation>(*intent.play_location).id;
+        const int p = intent.player == PlayerId::Player1 ? 0 : 1;
+        for (auto& bf : state_.battlefields) {
+            if (bf.id != bf_id) continue;
+            const bool first = bf.last_play_here_turn[p] != state_.turn.turn_number;
+            bf.last_play_here_turn[p] = state_.turn.turn_number;
+            if (first) events_.emit(ObjectStateChangedEvent{intent.card, "first_play_here"});
+            break;
+        }
+    }
 
     // CR 135.2.b.3 + CR 355.1 — "As you play me" / "As I am played"
     // instructions execute during the play action itself, not as a
@@ -2175,6 +2194,21 @@ void GameEngine::resolvePermanent(const ChainItem& item) {
                 // conditional ready (Monch) can consult state. Default
                 // impl falls through to the no-arg version.
                 if (cdef->entersReadyOnPlay(state_, card.controller, card)) enters_ready = true;
+            }
+        }
+        // A continuous effect of the controller's board or legend (Riven, The
+        // Exile: "Units you play to battlefields you control enter ready").
+        if (!enters_ready) {
+            for (const auto& [oid, obj] : state_.objects) {
+                if (oid == item.source || obj.controller != card.controller) continue;
+                if (!obj.location.has_value() && obj.zone != ZoneType::LegendZone) continue;
+                if (obj.card_def_id == kInvalidId) continue;
+                const Card* granter = card_registry_.get(obj.card_def_id);
+                if (granter && granter->grantsEnterReadyTo(state_, oid, card)) {
+                    events_.logTrace("ENTERS_READY: " + card.name + " (" + obj.name + ")");
+                    enters_ready = true;
+                    break;
+                }
             }
         }
         card.is_exhausted = !enters_ready;
@@ -2673,7 +2707,19 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         auto& card = state_.getObject(card_id);
         if (!card.isUnit()) continue;
         if (card.card_def_id == kInvalidId) continue;  // tokens have no CardDef
-        if (!canAfford(player, card_id)) continue;
+        // Affordable somewhere: at full cost, or with a battlefield's discount
+        // for cards played there (Hunters' Circle).
+        const bool afford_full = canAfford(player, card_id);
+        auto affordAt = [&](const LocationId& where) {
+            int disc = playLocationDiscount(player, card_id, where);
+            return disc > 0 ? canAfford(player, card_id, 0, disc) : afford_full;
+        };
+        if (!afford_full) {
+            bool anywhere = false;
+            for (const auto& bf : state_.battlefields)
+                if (affordAt(BattlefieldLocation{bf.id})) { anywhere = true; break; }
+            if (!anywhere) continue;
+        }
 
         // Check play-to-location abilities from ability_text
         const auto& def = card_db_.get(card.card_def_id);
@@ -2696,6 +2742,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         const Card* card_obj = card_registry_.get(card.card_def_id);
         if (card_obj && card_obj->restrictsPlayLocations()) {
             for (const auto& loc : card_obj->getPlayLocations(state_, player)) {
+                if (!affordAt(loc)) continue;
                 Intent restricted = play_intent;
                 restricted.play_location = loc;
                 actions.push_back(restricted);
@@ -2705,7 +2752,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
 
         // Can always play to base (CR 355.2.a)
         play_intent.play_location = BaseLocation{player};
-        actions.push_back(play_intent);
+        if (afford_full) actions.push_back(play_intent);
 
         // Mageseeker Warden: while it restricts this player, units may be
         // played ONLY to base — skip all battlefield plays.
@@ -2724,10 +2771,11 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
             if (can_play_any_bf) can_play_here = true;
 
             if (can_play_here) {
+                if (!affordAt(BattlefieldLocation{bf.id})) continue;
                 Intent bf_play = play_intent;
                 bf_play.play_location = BattlefieldLocation{bf.id};
                 actions.push_back(bf_play);
-            } else if (bf.paid_play_power > 0 &&
+            } else if (afford_full && bf.paid_play_power > 0 &&
                        std::find(card.tags.begin(), card.tags.end(), bf.paid_play_tag) !=
                            card.tags.end() &&
                        canAfford(player, card_id, bf.paid_play_power)) {
@@ -2745,13 +2793,28 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
     if (ps.champion_zone != kInvalidId) {
         auto& champ = state_.getObject(ps.champion_zone);
         if (champ.zone == ZoneType::ChampionZone) {
+            Intent play_intent;
+            play_intent.type = IntentType::PlayCard;
+            play_intent.player = player;
+            play_intent.card = ps.champion_zone;
             if (canAfford(player, ps.champion_zone)) {
-                Intent play_intent;
-                play_intent.type = IntentType::PlayCard;
-                play_intent.player = player;
-                play_intent.card = ps.champion_zone;
                 play_intent.play_location = BaseLocation{player};
                 actions.push_back(play_intent);
+            }
+            // A Chosen Champion is played like a unit from hand (CR 420.1.a):
+            // to its controller's base or to a battlefield they control.
+            if (!ps.units_play_base_only) {
+                for (const auto& bf : state_.battlefields) {
+                    if (bf.blocks_unit_play) continue;
+                    if (!bf.controller.has_value() || *bf.controller != player) continue;
+                    const LocationId where = BattlefieldLocation{bf.id};
+                    if (!canAfford(player, ps.champion_zone, 0,
+                                   playLocationDiscount(player, ps.champion_zone, where)))
+                        continue;
+                    Intent bf_play = play_intent;
+                    bf_play.play_location = where;
+                    actions.push_back(bf_play);
+                }
             }
             // Alternative play cost (Jhin, Meticulous Killer): offer "play me for
             // <alt>" when the condition holds and the alt cost is affordable —
@@ -2827,6 +2890,20 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
 
         Card* gear_card = card_registry_.get(obj.card_def_id);
         if (!gear_card || !gear_card->hasEquipAbility()) continue;
+
+        // Alternative equip costs (Card::equipOptions): one intent per
+        // (unit, way to pay) the gear lists.
+        if (auto options = gear_card->equipOptions(state_, player, id)) {
+            for (auto& targets : *options) {
+                Intent equip;
+                equip.type = IntentType::ActivateAbility;
+                equip.player = player;
+                equip.ability_source = id;
+                equip.targets = std::move(targets);
+                actions.push_back(equip);
+            }
+            continue;
+        }
 
         if (gear_card->needsEquipTimeTarget()) {
             // One intent per gear; target chosen at resolve via pickTarget.
@@ -5599,7 +5676,22 @@ static int powerCostDelta(const GameState& state, PlayerId player, const GameObj
     return delta;
 }
 
-bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power) const {
+int GameEngine::playLocationDiscount(PlayerId player, GameObjectId card_obj,
+                                     const std::optional<LocationId>& loc) const {
+    if (!loc.has_value() || !std::holds_alternative<BattlefieldLocation>(*loc)) return 0;
+    const auto bf_id = std::get<BattlefieldLocation>(*loc).id;
+    for (const auto& bf : state_.battlefields) {
+        if (bf.id != bf_id || !state_.objectExists(bf.card_object_id)) continue;
+        const auto* bf_card = dynamic_cast<const BattlefieldCard*>(
+            card_registry_.get(state_.getObject(bf.card_object_id).card_def_id));
+        if (!bf_card) return 0;
+        return bf_card->playCostReductionHere(state_, bf, player, state_.getObject(card_obj));
+    }
+    return 0;
+}
+
+bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power,
+                           int energy_discount) const {
     // Play-legality gates that sit in front of every play generator.
     if (state_.objectExists(card_obj)) {
         const auto& gate_obj = state_.getObject(card_obj);
@@ -5677,6 +5769,7 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
     // Irelia, Graceful (462): per-target discount staged in executePlaySpell when
     // this spell chose her ("your spells that choose me cost [1]/[A] less").
     energy_needed -= ps_const.transient_play_discount;
+    energy_needed -= energy_discount;   // play-location discount (Hunters' Circle)
     energy_needed = std::max(min_cost, energy_needed);
     energy_needed = std::max(0, energy_needed);
     // Effect-driven play that ignores part of the cost (EffectExecutor::playPayingCost).

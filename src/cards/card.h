@@ -16,6 +16,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -27,6 +28,7 @@ struct GameObject;
 class EventBus;
 class EffectExecutor;
 class CardRegistry;
+struct BattlefieldState;
 
 /// Context passed to all Card virtual methods.
 /// Provides access to game services and identifies the card instance.
@@ -570,6 +572,21 @@ public:
     /// per-target enumeration).
     virtual bool needsEquipTimeTarget() const { return false; }
 
+    /// Equip cost with alternatives ("[Equip] — [A] or exhaust a friendly
+    /// unit"). When this returns a value, the action generator emits one equip
+    /// intent per entry, with that entry as the intent's targets: targets[0]
+    /// is the unit to attach to, the rest is whatever the chosen way to pay
+    /// needs (the unit to exhaust). nullopt (default) = one intent per
+    /// friendly unit. The engine executes these through onEquipWith.
+    virtual std::optional<std::vector<std::vector<GameObjectId>>> equipOptions(
+        const GameState& /*state*/, PlayerId /*player*/, GameObjectId /*gear*/) const {
+        return std::nullopt;
+    }
+    /// Equip with the intent's whole target list. Default: onEquip(targets[0]).
+    virtual bool onEquipWith(CardContext& ctx, const std::vector<GameObjectId>& targets) {
+        return !targets.empty() && onEquip(ctx, targets[0]);
+    }
+
     /// Trigger type that fires on the equipped UNIT (from effect_text).
     /// e.g., "When I conquer" in effect_text → WhenIConquer on the unit.
     virtual TriggerType equippedTriggerType() const { return TriggerType::None; }
@@ -719,6 +736,15 @@ public:
     /// play ("Increase the points needed to win the game by 1").
     virtual int victoryScoreModifier() const { return 0; }
 
+    /// A continuous effect that makes a unit being played enter ready ("Units
+    /// you play to battlefields you control enter ready" — Riven, The Exile).
+    /// Asked of each card the unit's controller has on the board or in their
+    /// Legend Zone, with the unit already at its destination.
+    virtual bool grantsEnterReadyTo(const GameState& /*state*/, GameObjectId /*self*/,
+                                    const GameObject& /*played*/) const {
+        return false;
+    }
+
     /// What the engine calls: also given the unit being played, already at its
     /// destination ("If you play me to a battlefield, I enter ready").
     virtual bool entersReadyOnPlay(const GameState& state, PlayerId controller,
@@ -748,6 +774,16 @@ public:
     /// 0 (default) = no restriction. Read once by GameEngine::setupBattlefields
     /// into BattlefieldState::min_turn_to_score.
     virtual int minTurnToScore() const { return 0; }
+
+    /// Energy discount for a unit or gear `player` plays to this battlefield
+    /// (Hunters' Circle: "the first unit or gear they play here on their turn
+    /// costs [1] less"). Asked by the play generator and the cost payment for
+    /// the battlefield the card is being played to.
+    virtual int playCostReductionHere(const GameState& /*state*/,
+                                      const BattlefieldState& /*here*/, PlayerId /*player*/,
+                                      const GameObject& /*played*/) const {
+        return 0;
+    }
 };
 
 class RuneCard : public Card {};

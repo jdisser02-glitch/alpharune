@@ -209,6 +209,7 @@ public:
         return resolveShowdownDecision(bf, chosen, current_focus, action_count);
     }
     void testHook_executeIntent(const Intent& i) { executeIntent(i); }
+    void testHook_runChain() { runChain(); }
     // Install agents directly without going through run(). Required so
     // tests can exercise paths that invoke chain priority loops
     // (runChain → processFEPR → getAgent).
@@ -575,7 +576,12 @@ private:
     /// Check if a player can afford a card's cost with available runes.
     /// `extra_any_power`: [A] owed on top of everything else (a battlefield's
     /// pay-to-play-here cost).
-    bool canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power = 0) const;
+    bool canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power = 0,
+                   int energy_discount = 0) const;
+    /// Energy discount the battlefield at `loc` gives `card` as `player` plays
+    /// it there (Card::playCostReductionHere). 0 for a base or no battlefield.
+    int playLocationDiscount(PlayerId player, GameObjectId card,
+                             const std::optional<LocationId>& loc) const;
 
     /// Auto-pay a card's cost by exhausting/recycling runes.
     /// Returns false if payment failed (shouldn't happen if canAfford was checked).

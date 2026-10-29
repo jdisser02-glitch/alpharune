@@ -1123,6 +1123,24 @@ void TriggerManager::onObjectStateChanged(const ObjectStateChangedEvent& e) {
         return;
     }
 
+    // "When I become exhausted," — exhaustObject, an [E] cost and a move
+    // announce the ready -> exhausted change as "exhausted".
+    if (e.what_changed == "exhausted") {
+        const auto& xobj = state_.getObject(e.object);
+        if (xobj.card_def_id != kInvalidId && xobj.location.has_value() &&
+            cardFiresOn(card_registry_, xobj.card_def_id, TriggerType::WhenIBecomeExhausted))
+            fireTrigger(e.object, controller, 0, TriggerType::WhenIBecomeExhausted);
+        return;
+    }
+
+    // A player's first unit or gear play at a battlefield this turn (Rakelstake).
+    // The played card is the event object; the battlefield is where it was played.
+    if (e.what_changed == "first_play_here") {
+        if (auto bf = state_.getObject(e.object).battlefieldId())
+            fireBattlefieldTriggers(TriggerType::WhenFirstPlayHereEachTurn, controller, *bf);
+        return;
+    }
+
     if (e.what_changed == "became_ready") {
         if (state_.getObject(e.object).card_def_id != kInvalidId &&
             cardFiresOn(card_registry_, state_.getObject(e.object).card_def_id,

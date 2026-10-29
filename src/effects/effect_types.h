@@ -194,6 +194,10 @@ enum class TriggerType : uint8_t {
     WhenYouActivateAnAbility,    // "When you play ... an activated ability" (Curator of the
                                  // Sands); triggering_subject = the ability's source, and the
                                  // ability's Energy cost rides in triggering_spell_energy_spent
+    WhenIBecomeExhausted,        // "When I become exhausted," — any ready -> exhausted change
+                                 // announced as ObjectStateChangedEvent "exhausted"
+    WhenFirstPlayHereEachTurn,   // battlefield: "the first time [a player] plays a unit or
+                                 // gear here each turn" — fired for the playing player
 };
 
 // ─── Conditions ─────────────────────────────────────────────────────────────

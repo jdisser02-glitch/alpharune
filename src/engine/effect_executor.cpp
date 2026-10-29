@@ -981,6 +981,7 @@ void EffectExecutor::healObject(GameObjectId target) {
 void EffectExecutor::exhaustObject(GameObjectId target) {
     if (!state_.objectExists(target)) return;
     auto& obj = state_.getObject(target);
+    if (obj.is_exhausted) return;   // already exhausted: nothing becomes exhausted
     obj.is_exhausted = true;
     events_.emit(ObjectStateChangedEvent{target, "exhausted"});
 }
