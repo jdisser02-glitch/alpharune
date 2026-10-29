@@ -526,6 +526,10 @@ Intent IsMctsAgent::selectAction(const GameState& state,
         state, snap_step, ::riftbound::GameResult{});
 
     impl_->last_search.clear();
+    // Which rune pays a cost is not worth a search: every option leaves the
+    // same resources except the rune's domain, and the payment logic already
+    // offers matching runes. Take the first.
+    if (state.cost_cursor.has_value()) return legal_actions[0];
     if (!os_state || os_state->IsTerminal()) return legal_actions[0];
     ::open_spiel::ActionsAndProbs policy = impl_->bot->GetPolicy(*os_state);
     if (policy.empty()) return legal_actions[0];
