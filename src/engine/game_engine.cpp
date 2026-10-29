@@ -1749,8 +1749,10 @@ void GameEngine::executePlayCard(const Intent& intent) {
         }
     }
 
-    // Route through chain — permanent resolves immediately at Finalize (CR 337.1.c)
-    chain_manager_->addPermanent(intent.card, intent.player);
+    // Route through chain — permanent resolves immediately at Finalize (CR 337.1.c).
+    // A [Quick-Draw] gear carries the unit it attaches to.
+    chain_manager_->addPermanent(intent.card, intent.player,
+                                 card.isGear() ? intent.targets : std::vector<GameObjectId>{});
     runChain();
 }
 

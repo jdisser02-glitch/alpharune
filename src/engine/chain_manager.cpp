@@ -68,7 +68,8 @@ ChainItemId ChainManager::addSpell(GameObjectId spell_obj, PlayerId controller,
 }
 
 ChainItemId ChainManager::addPermanent(GameObjectId card_obj,
-                                         PlayerId controller) {
+                                         PlayerId controller,
+                                         const std::vector<GameObjectId>& targets) {
     auto& chain = state_.chain;
     bool was_empty = !chain.exists();
 
@@ -79,6 +80,7 @@ ChainItemId ChainManager::addPermanent(GameObjectId card_obj,
     item.card_def_id = state_.getObject(card_obj).card_def_id;
     item.controller = controller;
     item.is_permanent = true;
+    item.targets = targets;   // [Quick-Draw]: the unit the gear attaches to
 
     chain.items.push_back(item);
 
@@ -351,7 +353,7 @@ bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
                 addSpell(chosen.card, current, chosen.targets);
             } else {
                 card.location = permanent_dest;
-                addPermanent(chosen.card, current);
+                addPermanent(chosen.card, current, chosen.targets);
             }
 
             return true; // Item added → restart FEPR from Finalize
