@@ -409,6 +409,8 @@ add_library(riftbound_core
     src/cards/cards_init.cpp
     ${RIFTBOUND_CARD_OBJECTS}
     src/engine/game_runner.cpp
+    src/engine/determinize.cpp
+    src/agents/ismcts_search.cpp
     ${RIFTBOUND_CORE_NATIVE_SRCS}
     src/engine/step_driver.cpp
     src/ml/feature_extractor.cpp

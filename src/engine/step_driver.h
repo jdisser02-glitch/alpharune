@@ -82,6 +82,12 @@ public:
     bool isDone() const { return done_.load(std::memory_order_acquire); }
 
 private:
+    // Set by the destructor of a driver whose game is still running: the
+    // next selectAction resume throws instead of returning a choice, so
+    // the engine stack unwinds (destructors run) instead of the game being
+    // played out to the end with option 0. Clones and search simulations
+    // are torn down this way on both backends.
+    bool abandoned_ = false;
 #ifdef __EMSCRIPTEN__
     // WebAssembly backend: Emscripten's Asyncify-based fibers
     // (<emscripten/fiber.h>, needs -sASYNCIFY). The engine fiber owns a
@@ -94,11 +100,6 @@ private:
     std::unique_ptr<EmFiber> em_;
     std::function<void()> game_fn_;
     bool started_ = false;
-    // Set by the destructor of a driver whose game is still running: the
-    // next selectAction resume throws instead of returning a choice, so
-    // the engine stack unwinds (destructors run) instead of the game being
-    // played out to the end with option 0. Clones are torn down this way.
-    bool abandoned_ = false;
     static void emFiberEntry(void* self);
     void swapToEngine();
     void swapToCaller();

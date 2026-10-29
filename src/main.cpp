@@ -19,6 +19,7 @@
 /// See docs/play-api.md for the WS wire protocol.
 
 #include "agents/human_agent.h"
+#include "agents/ismcts_search.h"
 #include "agents/mcts_agent.h"
 #include "agents/random_agent.h"
 #include "cards/card_registry.h"
@@ -174,10 +175,10 @@ AgentSpec parseAgentSpec(const std::string& s) {
     auto colon = s.find(':');
     out.kind = (colon == std::string::npos) ? s : s.substr(0, colon);
     if (out.kind != "random" && out.kind != "human" &&
-        out.kind != "mcts" && out.kind != "ismcts") {
+        out.kind != "mcts" && out.kind != "ismcts" && out.kind != "pmcts") {
         throw std::runtime_error(
             "Unknown agent kind '" + out.kind + "'. Expected one of: "
-            "random, human, mcts, ismcts.");
+            "random, human, mcts, ismcts, pmcts.");
     }
     if (colon != std::string::npos) {
         auto rest = s.substr(colon + 1);
@@ -195,10 +196,13 @@ AgentSpec parseAgentSpec(const std::string& s) {
                 else if (key == "c") out.search.uct_c = std::stod(val);
                 else if (key == "det") out.search.determinize = val != "0";
                 else if (key == "final") out.search.final_policy = val;
+                else if (key == "threads") out.search.threads = std::stoi(val);
+                else if (key == "worlds") out.search.worlds = std::stoi(val);
+                else if (key == "prior") out.search.prior = val;
             }
             i = comma + 1;
         }
-        if ((out.kind == "mcts" || out.kind == "ismcts") && out.sims <= 0) {
+        if ((out.kind == "mcts" || out.kind == "ismcts" || out.kind == "pmcts") && out.sims <= 0) {
             throw std::runtime_error(
                 "Agent '" + out.kind + "' requires sims=N (e.g. " + out.kind + ":sims=50).");
         }
@@ -217,14 +221,29 @@ AgentSpec parseAgentSpec(const std::string& s) {
 ///
 /// `derived_seed` is per-seat, used for non-stateful internal RNG
 /// (RandomAgent action picks, MCTS exploration tiebreaks).
+/// `pmcts` (the engine's own searcher, agents/ismcts_search.h) takes the card
+/// table, the card registry and the two deck submissions directly: it
+/// rebuilds in-flight decisions by replaying action_history from beginGame.
+struct EngineRefs {
+    const CardDB& db;
+    const CardRegistry& registry;
+    const DeckSubmission& deck1;
+    const DeckSubmission& deck2;
+};
+
 std::unique_ptr<AgentInterface> buildAgent(const AgentSpec& spec,
                                            uint64_t game_seed,
                                            uint64_t derived_seed,
                                            const std::string& deck1,
                                            const std::string& deck2,
                                            const std::string& registry,
-                                           HumanAgent** human_out) {
+                                           HumanAgent** human_out,
+                                           const EngineRefs& refs) {
     if (spec.kind == "random") return std::make_unique<RandomAgent>(derived_seed);
+    if (spec.kind == "pmcts") {
+        return std::make_unique<search::PuctAgent>(refs.db, refs.registry, refs.deck1, refs.deck2,
+                                                   game_seed, derived_seed, spec.sims, spec.search);
+    }
     if (spec.kind == "human") {
         auto a = std::make_unique<HumanAgent>();
         if (human_out) *human_out = a.get();
@@ -310,10 +329,10 @@ int main(int argc, char* argv[]) {
          "(validation/export tool; does not require decks)")
         ("agent1", po::value<std::string>()->default_value("random"),
          "Player 1 agent spec (see top of --help for full descriptions). "
-         "One of: random | human | mcts:sims=N | ismcts:sims=N")
+         "One of: random | human | mcts:sims=N | ismcts:sims=N | pmcts:sims=N")
         ("agent2", po::value<std::string>()->default_value("random"),
          "Player 2 agent spec (see top of --help for full descriptions). "
-         "One of: random | human | mcts:sims=N | ismcts:sims=N")
+         "One of: random | human | mcts:sims=N | ismcts:sims=N | pmcts:sims=N")
         ("web", po::value<std::string>()->default_value("auto"),
          "Web UI mode: auto (default — ON if any seat is human, else OFF), "
          "on (force ON), off (force OFF, even with human seats)")
@@ -354,8 +373,8 @@ int main(int argc, char* argv[]) {
          "How many games of the batch get a full decision record.")
         ("value-data", po::value<std::string>()->default_value(""),
          "Batch mode: append self-play value-training records to this file.")
-        ("value-samples", po::value<int>()->default_value(12),
-         "Decisions sampled per game for --value-data.")
+        ("value-samples", po::value<int>()->default_value(0),
+         "Decisions sampled per game for --value-data (0 = every decision of both players).")
     ;
 
     po::variables_map vm;
@@ -554,8 +573,9 @@ int main(int argc, char* argv[]) {
         // RandomAgent / MCTS-exploration RNGs distinct between seats.
         auto factory_spec1 = spec1;
         auto factory_spec2 = spec2;
+        const EngineRefs refs{card_db, card_registry, deck1, deck2};
         auto factory =
-            [factory_spec1, factory_spec2,
+            [factory_spec1, factory_spec2, refs,
              d1 = deck1_path, d2 = deck2_path, r = registry_path]
             (int seat, uint64_t game_seed) -> std::unique_ptr<AgentInterface> {
                 const AgentSpec& s = (seat == 0) ? factory_spec1 : factory_spec2;
@@ -563,7 +583,7 @@ int main(int argc, char* argv[]) {
                     throw std::runtime_error("batch mode cannot use human seats");
                 }
                 uint64_t derived = game_seed * 2 + static_cast<uint64_t>(seat);
-                return buildAgent(s, game_seed, derived, d1, d2, r, nullptr);
+                return buildAgent(s, game_seed, derived, d1, d2, r, nullptr, refs);
             };
 
         GameConfig cfg;
@@ -587,6 +607,19 @@ int main(int argc, char* argv[]) {
         BatchRunner batch(card_db, card_registry, num_threads);
         batch.runBatch(deck1, deck2, num_games, cfg, results);
 
+        if (spec1.kind == "pmcts" || spec2.kind == "pmcts") {
+            const auto st = search::globalSearchStats();
+            std::cout << "\npmcts: " << st.simulations << " simulations over " << st.decisions
+                      << " searched decisions in " << std::fixed << std::setprecision(1) << st.seconds
+                      << " s of search (" << (st.seconds > 0 ? st.simulations / st.seconds : 0.0)
+                      << " sims/s summed over threads; " << st.replayed << " decisions rebuilt by replay, "
+                      << st.replay_rejected << " rebuilt worlds rejected, " << st.failed << " failed simulations)\n"
+                      << "       resumed decisions: " << (st.simulations - st.simulations_replayed) << " sims in "
+                      << (st.seconds - st.seconds_replayed) << " s ("
+                      << ((st.seconds - st.seconds_replayed) > 0 ? (st.simulations - st.simulations_replayed) / (st.seconds - st.seconds_replayed) : 0.0)
+                      << " sims/s); replayed decisions: " << st.simulations_replayed << " sims in " << st.seconds_replayed
+                      << " s (" << (st.seconds_replayed > 0 ? st.simulations_replayed / st.seconds_replayed : 0.0) << " sims/s)\n";
+        }
         std::cout << "\nResults (" << num_games << " games):\n"
                   << "  P1 wins: " << results.p1_wins.load() << "\n"
                   << "  P2 wins: " << results.p2_wins.load() << "\n"
@@ -608,8 +641,9 @@ int main(int argc, char* argv[]) {
     try {
         // game_seed flows through verbatim so MCTS-style agents seed their
         // internal OpenSpiel state with the same value runGame uses below.
-        agent1 = buildAgent(spec1, game_seed, game_seed * 2,     deck1_path, deck2_path, registry_path, &p1_human_ptr);
-        agent2 = buildAgent(spec2, game_seed, game_seed * 2 + 1, deck1_path, deck2_path, registry_path, &p2_human_ptr);
+        const EngineRefs refs{card_db, card_registry, deck1, deck2};
+        agent1 = buildAgent(spec1, game_seed, game_seed * 2,     deck1_path, deck2_path, registry_path, &p1_human_ptr, refs);
+        agent2 = buildAgent(spec2, game_seed, game_seed * 2 + 1, deck1_path, deck2_path, registry_path, &p2_human_ptr, refs);
     } catch (const std::exception& e) {
         std::cerr << "Failed to build agents: " << e.what() << "\n";
         return 1;

@@ -10,10 +10,8 @@
 namespace riftbound {
 
 namespace {
-#ifdef __EMSCRIPTEN__
 /// Thrown inside the engine fiber when its driver is destroyed mid-game.
 struct FiberAbandoned {};
-#endif
 
 // Per-fiber stack size. 256KB is plenty for the engine's deepest call
 // stacks (chain resolution + triggers + cleanup) while keeping per-
@@ -54,10 +52,10 @@ Intent StepDriver::selectAction(
     // pending_choice_ populated.
 #ifdef __EMSCRIPTEN__
     swapToCaller();
-    if (abandoned_) throw FiberAbandoned{};
 #else
     yield_target_ = std::move(yield_target_).resume();
 #endif
+    if (abandoned_) throw FiberAbandoned{};
 
     at_decision_ = false;
     int chosen = pending_choice_.value_or(0);
@@ -178,10 +176,18 @@ void StepDriver::provideChoice(int legal_index) {
 
 StepDriver::~StepDriver() {
     // If the fiber is still alive (engine paused at a decision, caller
-    // abandoned the engine), drain it by repeatedly providing a "first
-    // legal" choice until it terminates. Mirrors the old thread-based
-    // drain logic in GameEngine::~GameEngine, but the drain happens at
-    // fiber switch time, not on a separate thread.
+    // abandoned the engine), resume it once with abandoned_ set so
+    // selectAction throws and the engine stack unwinds (destructors run);
+    // the entry's catch marks done. This is what makes a search
+    // simulation cheap to discard: before, the drain below played the
+    // rest of the game out with option 0 — hundreds of engine steps per
+    // abandoned clone. The drain stays as the fallback should the engine
+    // somehow survive the unwind.
+    if (engine_fiber_ && !done_.load(std::memory_order_acquire)) {
+        abandoned_ = true;
+        pending_choice_ = 0;
+        engine_fiber_ = std::move(engine_fiber_).resume();
+    }
     while (engine_fiber_ && !done_.load(std::memory_order_acquire)) {
         pending_choice_ = 0;
         engine_fiber_ = std::move(engine_fiber_).resume();

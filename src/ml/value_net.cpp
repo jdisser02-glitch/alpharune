@@ -1,6 +1,7 @@
 #include "ml/value_net.h"
 #include "ml/feature_extractor.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -63,11 +64,26 @@ void ValueNet::load(std::istream& f, const std::string& path) {
     readInto(f, b1_.data(), b1_.size(), path);
     readInto(f, w2_.data(), w2_.size(), path);
     readInto(f, &b2_, 1, path);
+
+    // Fold the standardisation of zero inputs into the bias:
+    //   a_h = b1_h + sum_i w1[h][i] * (x_i - mean_i) * inv_std_i
+    //       = (b1_h - sum_i w1[h][i] * mean_i * inv_std_i) + sum_{x_i != 0} w1[h][i] * inv_std_i * x_i
+    // and keep w1 * inv_std transposed so each non-zero input touches one
+    // contiguous row of `hidden_` weights.
+    w1t_.assign(static_cast<size_t>(in_dim_) * hidden_, 0.0f);
+    b1_eff_.assign(hidden_, 0.0f);
+    for (int h = 0; h < hidden_; ++h) {
+        const float* row = &w1_[static_cast<size_t>(h) * in_dim_];
+        double fold = b1_[h];
+        for (int i = 0; i < in_dim_; ++i) {
+            fold -= static_cast<double>(row[i]) * mean_[i] * inv_std_[i];
+            w1t_[static_cast<size_t>(i) * hidden_ + h] = row[i] * inv_std_[i];
+        }
+        b1_eff_[h] = static_cast<float>(fold);
+    }
 }
 
-double ValueNet::winProbability(const std::vector<float>& x) const {
-    // Standardize once; most features are zero, but zero standardizes to
-    // -mean*inv_std, so the dense pass is simplest and still cheap (~400k MACs).
+double ValueNet::winProbabilityDense(const std::vector<float>& x) const {
     std::vector<float> z(in_dim_);
     const size_t n = std::min<size_t>(x.size(), static_cast<size_t>(in_dim_));
     for (size_t i = 0; i < static_cast<size_t>(in_dim_); ++i)
@@ -79,6 +95,40 @@ double ValueNet::winProbability(const std::vector<float>& x) const {
         for (int i = 0; i < in_dim_; ++i) a += row[i] * z[i];
         if (a > 0) out += w2_[h] * a;
     }
+    return 1.0 / (1.0 + std::exp(-out));
+}
+
+double ValueNet::winProbability(const std::vector<float>& x) const {
+    float acc[1024];
+    std::vector<float> heap;
+    float* a = acc;
+    if (hidden_ > 1024) { heap.resize(hidden_); a = heap.data(); }
+    std::memcpy(a, b1_eff_.data(), sizeof(float) * hidden_);
+    const size_t n = std::min<size_t>(x.size(), static_cast<size_t>(in_dim_));
+    for (size_t i = 0; i < n; ++i) {
+        const float v = x[i];
+        if (v == 0.0f) continue;
+        const float* col = &w1t_[i * hidden_];
+        for (int h = 0; h < hidden_; ++h) a[h] += col[h] * v;
+    }
+    double out = b2_;
+    for (int h = 0; h < hidden_; ++h) if (a[h] > 0) out += w2_[h] * a[h];
+    return 1.0 / (1.0 + std::exp(-out));
+}
+
+double ValueNet::winProbabilitySparse(const std::vector<std::pair<uint16_t, float>>& x) const {
+    float acc[1024];
+    std::vector<float> heap;
+    float* a = acc;
+    if (hidden_ > 1024) { heap.resize(hidden_); a = heap.data(); }
+    std::memcpy(a, b1_eff_.data(), sizeof(float) * hidden_);
+    for (const auto& [i, v] : x) {
+        if (i >= in_dim_ || v == 0.0f) continue;
+        const float* col = &w1t_[static_cast<size_t>(i) * hidden_];
+        for (int h = 0; h < hidden_; ++h) a[h] += col[h] * v;
+    }
+    double out = b2_;
+    for (int h = 0; h < hidden_; ++h) if (a[h] > 0) out += w2_[h] * a[h];
     return 1.0 / (1.0 + std::exp(-out));
 }
 
@@ -98,33 +148,40 @@ std::shared_ptr<const ValueNet> ValueNet::shared(const std::string& path) {
     return net;
 }
 
-void appendValueRecords(const std::string& path, int dim,
-                        const std::vector<std::pair<PlayerId, std::vector<float>>>& samples,
-                        const std::vector<int>& turns, PlayerId winner) {
+std::vector<std::pair<uint16_t, float>> sparsify(const std::vector<float>& x) {
+    std::vector<std::pair<uint16_t, float>> nz;
+    for (size_t i = 0; i < x.size() && i < 65535; ++i)
+        if (x[i] != 0.0f) nz.emplace_back(static_cast<uint16_t>(i), x[i]);
+    return nz;
+}
+
+void appendValueRecords(const std::string& path, int dim, const std::vector<ValueSample>& samples,
+                        PlayerId winner, int score_p1, int score_p2, int victory_score,
+                        uint32_t game_id) {
     static std::mutex mu;
     std::lock_guard<std::mutex> lock(mu);
     const bool fresh = !std::ifstream(path).good();
     std::ofstream f(path, std::ios::binary | std::ios::app);
     if (fresh) {
-        f.write("RBVD", 4);
+        f.write("RBV2", 4);
         int32_t d = dim;
         f.write(reinterpret_cast<const char*>(&d), 4);
     }
-    for (size_t k = 0; k < samples.size(); ++k) {
-        const auto& [who, x] = samples[k];
-        int8_t label = winner == who ? 1 : 0;
-        int32_t turn = k < turns.size() ? turns[k] : 0;
-        std::vector<std::pair<uint16_t, float>> nz;
-        for (size_t i = 0; i < x.size() && i < 65535; ++i)
-            if (x[i] != 0.0f) nz.emplace_back(static_cast<uint16_t>(i), x[i]);
-        uint16_t nnz = static_cast<uint16_t>(std::min<size_t>(nz.size(), 65535));
-        f.write(reinterpret_cast<const char*>(&label), 1);
-        f.write(reinterpret_cast<const char*>(&turn), 4);
-        f.write(reinterpret_cast<const char*>(&nnz), 2);
-        for (size_t j = 0; j < nnz; ++j) {
-            f.write(reinterpret_cast<const char*>(&nz[j].first), 2);
-            f.write(reinterpret_cast<const char*>(&nz[j].second), 4);
-        }
+    auto put = [&](const void* p, size_t n) { f.write(reinterpret_cast<const char*>(p), static_cast<std::streamsize>(n)); };
+    auto clamp8 = [](int v) { return static_cast<int8_t>(std::max(-127, std::min(127, v))); };
+    for (const auto& s : samples) {
+        if (s.who != PlayerId::Player1 && s.who != PlayerId::Player2) continue;
+        const int8_t label = winner == PlayerId::None ? 2 : (winner == s.who ? 1 : 0);
+        const int8_t persp = s.who == PlayerId::Player1 ? 1 : 2;
+        const int8_t own = clamp8(s.who == PlayerId::Player1 ? score_p1 : score_p2);
+        const int8_t opp = clamp8(s.who == PlayerId::Player1 ? score_p2 : score_p1);
+        const int8_t victory = clamp8(victory_score);
+        const uint32_t gid = game_id;
+        const int32_t turn = s.turn, decision = s.decision_index;
+        const uint16_t nnz = static_cast<uint16_t>(std::min<size_t>(s.features.size(), 65535));
+        put(&label, 1); put(&persp, 1); put(&own, 1); put(&opp, 1); put(&victory, 1);
+        put(&gid, 4); put(&turn, 4); put(&decision, 4); put(&nnz, 2);
+        for (size_t j = 0; j < nnz; ++j) { put(&s.features[j].first, 2); put(&s.features[j].second, 4); }
     }
 }
 

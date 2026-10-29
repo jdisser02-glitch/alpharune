@@ -1,5 +1,6 @@
 #include "game_runner.h"
 #include "agents/random_agent.h"
+#include "agents/recording_agent.h"
 #include "io/decision_log.h"
 #include "ml/feature_extractor.h"
 #include "ml/value_net.h"
@@ -126,6 +127,14 @@ GameResult GameRunner::run() {
     auto agent1 = makeAgent(0, config_.agent1_spec);
     auto agent2 = makeAgent(1, config_.agent2_spec);
 
+    // Every decision's chosen legal index in engine order, for agents that
+    // rebuild in-flight decisions by replay (AgentInterface::setDecisionHistory).
+    std::vector<int32_t> choice_history;
+    choice_history.reserve(512);
+    agent1->setDecisionHistory(&choice_history);
+    agent2->setDecisionHistory(&choice_history);
+    RecordingAgent seat1(*agent1, choice_history), seat2(*agent2, choice_history);
+
     // Game review record (JSON) for the first json_replay_games games.
     std::unique_ptr<DecisionLog> review;
     std::vector<std::string> review_lines;
@@ -138,12 +147,12 @@ GameResult GameRunner::run() {
         });
     }
 
-    // Self-play value records: reservoir-sample decisions over the game.
-    std::vector<std::pair<PlayerId, std::vector<float>>> value_samples;
-    std::vector<int> value_turns;
+    // Self-play value records: every non-trivial decision of both players
+    // (or a reservoir sample of `value_samples_per_game` of them).
+    std::vector<ml::ValueSample> value_samples;
     std::mt19937_64 value_rng(game_seed * 7919 + 17);
     int value_seen = 0;
-    const bool want_values = !config_.value_data_path.empty() && config_.value_samples_per_game > 0;
+    const bool want_values = !config_.value_data_path.empty();
 
     // Decision callback feeds the HTML replay writer when --render is on.
     engine.on_decision = [&](const GameState& state,
@@ -152,23 +161,23 @@ GameResult GameRunner::run() {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
         }
-        if (want_values && actions.size() > 1 && chosen.player != PlayerId::None) {
+        if (want_values && actions.size() > 1 && chosen.player != PlayerId::None &&
+            !state.cost_cursor.has_value()) {
             ++value_seen;
             const int k = config_.value_samples_per_game;
             int slot = static_cast<int>(value_samples.size());
-            if (slot >= k) {
+            if (k > 0 && slot >= k) {
                 slot = static_cast<int>(value_rng() % static_cast<uint64_t>(value_seen));
                 if (slot >= k) slot = -1;
             }
             if (slot >= 0) {
-                auto feats = ml::extractStateFeatures(state, chosen.player, card_db_);
-                if (slot == static_cast<int>(value_samples.size())) {
-                    value_samples.emplace_back(chosen.player, std::move(feats));
-                    value_turns.push_back(state.turn.turn_number);
-                } else {
-                    value_samples[slot] = {chosen.player, std::move(feats)};
-                    value_turns[slot] = state.turn.turn_number;
-                }
+                ml::ValueSample sample;
+                sample.who = chosen.player;
+                sample.turn = state.turn.turn_number;
+                sample.decision_index = state.decision_index;
+                sample.features = ml::sparsify(ml::extractStateFeatures(state, chosen.player, card_db_));
+                if (slot == static_cast<int>(value_samples.size())) value_samples.push_back(std::move(sample));
+                else value_samples[static_cast<size_t>(slot)] = std::move(sample);
             }
         }
         if (review) {
@@ -178,11 +187,17 @@ GameResult GameRunner::run() {
         }
     };
 
-    auto result = engine.runGame(deck1_, deck2_, *agent1, *agent2, game_seed);
+    auto result = engine.runGame(deck1_, deck2_, seat1, seat2, game_seed);
 
-    if (want_values && result.winner != PlayerId::None)
-        ml::appendValueRecords(config_.value_data_path, ml::kStateFeatureDim,
-                               value_samples, value_turns, result.winner);
+    if (want_values && result.winner != PlayerId::None) {
+        // Game id: the seed and index identify the game within a batch and
+        // let the trainer hold out whole games.
+        const uint32_t game_id = static_cast<uint32_t>((game_seed * 0x9E3779B1ull) ^
+                                                       static_cast<uint64_t>(config_.game_index) * 0x85EBCA77ull);
+        ml::appendValueRecords(config_.value_data_path, ml::kStateFeatureDim, value_samples,
+                               result.winner, result.final_scores[0], result.final_scores[1],
+                               engine.state().mode.victory_score, game_id);
+    }
 
     if (!config_.json_replay_dir.empty()) {
         nlohmann::json header = {

@@ -10,6 +10,7 @@
 #include "core/game_state.h"
 #include "core/intent.h"
 
+#include <cstdint>
 #include <utility>
 #include <vector>
 
@@ -29,6 +30,14 @@ public:
     /// was given, as (index into legal_actions, share of the search). Empty
     /// for agents that do not search. Used for game review.
     virtual std::vector<std::pair<int, double>> lastSearch() const { return {}; }
+
+    /// The game driver may hand the agent the running record of every
+    /// decision so far (both players): the index chosen in each decision's
+    /// legal list, in order. A search agent replays it from the start of the
+    /// game to rebuild decisions it cannot resume from a snapshot (chain
+    /// priority, showdowns, combat). The vector outlives the agent's use of
+    /// it and only grows. Default: ignored.
+    virtual void setDecisionHistory(const std::vector<int32_t>* /*history*/) {}
 };
 
 } // namespace riftbound

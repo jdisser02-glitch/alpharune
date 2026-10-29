@@ -23,27 +23,13 @@
 /// Wiring: see `src/main_play.cpp`'s `buildAgent("mcts:sims=N", ...)`.
 
 #include "agent_interface.h"
+#include "search_options.h"
 
 #include <cstdint>
 #include <memory>
 #include <string>
 
 namespace riftbound {
-
-/// Search settings shared by the MCTS agents (parsed from the agent spec,
-/// e.g. "ismcts:sims=200,eval=board,c=1.4").
-struct SearchOptions {
-    /// Leaf evaluation: "score" (score difference only) or "board" (score,
-    /// Might at battlefields, battlefields held, cards and runes).
-    std::string eval = "score";
-    /// Exploration constant; <= 0 keeps the agent's default.
-    double uct_c = 0.0;
-    /// ISMCTS: sample hidden information per simulation (honest search).
-    /// false = search the real state (sees the opponent's hand and deck order).
-    bool determinize = true;
-    /// ISMCTS final move: "max" (most visited) or "sample" (visit-proportional).
-    std::string final_policy = "max";
-};
 
 class MctsAgent : public AgentInterface {
 public:

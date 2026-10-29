@@ -3,6 +3,7 @@
 
 #include "action_vocab.h"
 
+#include "engine/determinize.h"
 #include "ml/cfr_util.h"
 #include "ml/feature_extractor.h"
 
@@ -94,23 +95,8 @@ void RiftboundState::ensureLive() const {
     // full memcpy refactor (no replay anywhere) requires extracting the
     // entry-side-effects from EVERY phase function + ChainManager
     // processFEPR, which is multi-day work; queued in CLAUDE.md.
-    bool snapshot_is_clean_boundary = !lazy_state_.game_over &&
-        lazy_state_.turn.phase != ::riftbound::TurnPhase::Setup &&
-        lazy_state_.turn.phase != ::riftbound::TurnPhase::Mulligan &&
-        lazy_state_.turn.oc_state == ::riftbound::OpenClosedState::Open &&
-        lazy_state_.turn.ns_state == ::riftbound::NeutralShowdownState::Neutral &&
-        !lazy_state_.chain.exists() &&
-        !lazy_state_.cost_cursor.has_value();
-    if (snapshot_is_clean_boundary) {
-        // Also reject if any BF is mid-combat/showdown.
-        for (const auto& bf : lazy_state_.battlefields) {
-            if (bf.combat_in_progress || bf.showdown_in_progress ||
-                bf.combat_staged || bf.showdown_staged) {
-                snapshot_is_clean_boundary = false;
-                break;
-            }
-        }
-    }
+    // The same predicate the engine's own searcher uses (engine/determinize.h).
+    const bool snapshot_is_clean_boundary = ::riftbound::search::isResumableSnapshot(lazy_state_);
     bool snapshot_is_resumable = snapshot_is_clean_boundary;
 
     // Move state off the lazy fields before flipping. Snapshot still
@@ -368,31 +354,15 @@ std::unique_ptr<::open_spiel::State> RiftboundState::Clone() const {
 const ::riftbound::CardDB& RiftboundState::cardDb() const { return rb_game_.cardDb(); }
 
 void RiftboundState::applyIdentityOverrides(::riftbound::GameState& gs) const {
-    const auto& db = rb_game_.cardDb();
-    for (const auto& [oid, def_id] : identity_overrides_) {
-        if (!gs.objectExists(oid) || def_id == ::riftbound::kInvalidId) continue;
-        auto& obj = gs.getObject(oid);
-        const auto& def = db.get(def_id);
-        obj.card_def_id   = def_id;
-        obj.name          = def.name;
-        obj.card_type     = def.card_type;
-        obj.super_type    = def.super_type;
-        obj.tags          = def.tags;
-        obj.domains       = def.domains;
-        obj.base_might    = def.might;
-        obj.current_might = def.might;
-        obj.keywords      = def.keywords;
-        obj.assault_value = def.assault_value;
-        obj.shield_value  = def.shield_value;
-        obj.deflect_value = def.deflect_value;
-        obj.might_bonus   = def.might_bonus;
-    }
+    ::riftbound::search::applyIdentityOverrides(gs, rb_game_.cardDb(), identity_overrides_);
 }
 
 std::unique_ptr<::open_spiel::State> RiftboundState::ResampleFromInfostate(
     int player_id, std::function<double()> rng) const {
     using ::riftbound::GameObjectId;
     using ::riftbound::CardDefId;
+    // The sampling itself lives in engine/determinize.cpp, shared with the
+    // engine's own searcher (agents/ismcts_search).
     auto base = Clone();
     auto* out = static_cast<RiftboundState*>(base.get());
     if (out->IsTerminal() || !out->is_lazy_) return base;
@@ -400,81 +370,8 @@ std::unique_ptr<::open_spiel::State> RiftboundState::ResampleFromInfostate(
     const auto& db = rb_game_.cardDb();
     const auto observer = player_id == 0 ? ::riftbound::PlayerId::Player1
                                          : ::riftbound::PlayerId::Player2;
-    const auto opp = ::riftbound::opponent(observer);
 
-    auto pick = [&](size_t n) {
-        size_t k = static_cast<size_t>(rng() * static_cast<double>(n));
-        return k >= n ? n - 1 : k;
-    };
-    auto shuffle = [&](std::vector<CardDefId>& v) {
-        for (size_t i = v.size(); i > 1; --i) std::swap(v[i - 1], v[pick(i)]);
-    };
-    // Objects the chain refers to (an ability whose source went back to hand,
-    // a target) are known to the observer: never re-deal them.
-    std::set<GameObjectId> pinned;
-    auto pinItem = [&](const ::riftbound::ChainItem& it) {
-        pinned.insert(it.source);
-        pinned.insert(it.targets.begin(), it.targets.end());
-        pinned.insert(it.chosen_objects.begin(), it.chosen_objects.end());
-    };
-    for (const auto& it : gs.chain.items) pinItem(it);
-    if (gs.chain.resuming.has_value()) pinItem(*gs.chain.resuming);
-    auto free = [&](GameObjectId oid) {
-        return gs.objectExists(oid) && !pinned.count(oid) &&
-               gs.getObject(oid).card_def_id != ::riftbound::kInvalidId;
-    };
-    std::map<GameObjectId, CardDefId> assign;
-    auto deal = [&](const std::vector<GameObjectId>& slots) {
-        std::vector<GameObjectId> live;
-        std::vector<CardDefId> ids;
-        for (auto oid : slots) {
-            if (!free(oid)) continue;
-            live.push_back(oid);
-            ids.push_back(gs.getObject(oid).card_def_id);
-        }
-        shuffle(ids);
-        for (size_t i = 0; i < live.size(); ++i) assign[live[i]] = ids[i];
-    };
-
-    // The opponent's hidden cards: hand + Main Deck + facedown share a pool.
-    {
-        const auto& ps = gs.player(opp);
-        std::vector<GameObjectId> facedown;
-        for (const auto& bf : gs.battlefields)
-            for (auto oid : bf.facedown)
-                if (free(oid) && gs.getObject(oid).controller == opp)
-                    facedown.push_back(oid);
-        std::vector<GameObjectId> slots;
-        for (auto oid : ps.hand) if (free(oid)) slots.push_back(oid);
-        for (auto oid : ps.main_deck) if (free(oid)) slots.push_back(oid);
-        std::vector<CardDefId> pool;
-        for (auto oid : slots) pool.push_back(gs.getObject(oid).card_def_id);
-        for (auto oid : facedown) pool.push_back(gs.getObject(oid).card_def_id);
-        shuffle(pool);
-        // Facedown slots first, each from a card that could be hidden.
-        for (auto oid : facedown) {
-            for (size_t i = 0; i < pool.size(); ++i) {
-                if (db.get(pool[i]).keywords.has(::riftbound::Keyword::Hidden)) {
-                    assign[oid] = pool[i];
-                    pool.erase(pool.begin() + static_cast<long>(i));
-                    break;
-                }
-            }
-            if (!assign.count(oid)) {   // no hideable card left: keep it
-                auto own = gs.getObject(oid).card_def_id;
-                auto it = std::find(pool.begin(), pool.end(), own);
-                if (it != pool.end()) pool.erase(it);
-                assign[oid] = own;
-            }
-        }
-        size_t k = 0;
-        for (auto oid : slots)
-            if (k < pool.size()) assign[oid] = pool[k++];
-    }
-    // Deck orders the observer does not know: its own Main Deck, both Rune Decks.
-    deal(gs.player(observer).main_deck);
-    deal(gs.player(observer).rune_deck);
-    deal(gs.player(opp).rune_deck);
+    const auto assign = ::riftbound::search::sampleHiddenIdentities(gs, observer, db, rng);
 
     // Compose with an earlier determinization of the same state, if any.
     std::map<GameObjectId, CardDefId> merged(out->identity_overrides_.begin(),
