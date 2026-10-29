@@ -1,6 +1,9 @@
 {
+ "actors_reattributed": 0,
+ "actors_settled": 0,
+ "actors_uncertain": 1,
  "agreement": {
-  "agree": 5,
+  "agree": 2,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -8,69 +11,54 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
-    "n": 4,
-    "rate": 0.25
-   },
-   "hide": {
     "agree": 0,
-    "n": 1,
+    "n": 4,
     "rate": 0.0
    },
    "move": {
+    "agree": 1,
+    "n": 6,
+    "rate": 0.16666666666666666
+   },
+   "play": {
     "agree": 0,
     "n": 6,
     "rate": 0.0
-   },
-   "mulligan": {
-    "agree": 1,
-    "n": 1,
-    "rate": 1.0
-   },
-   "pass_focus": {
-    "agree": 1,
-    "n": 1,
-    "rate": 1.0
-   },
-   "play": {
-    "agree": 1,
-    "n": 9,
-    "rate": 0.1111111111111111
    }
   },
   "clean_boundary": {
    "agree": 1,
-   "n": 17,
-   "rate": 0.058823529411764705
+   "n": 16,
+   "rate": 0.0625
   },
   "in_flight": {
-   "agree": 4,
-   "n": 6
+   "agree": 1,
+   "n": 1
   },
-  "n": 23,
-  "rate": 0.21739130434782608
+  "n": 17,
+  "rate": 0.11764705882352941
  },
- "bot": "ismcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn",
+ "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=2",
  "bot_calls": 23,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 6,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 164,
- "decisions_compared": 23,
- "decisions_human_known": 43,
- "decisions_trivial": 4,
+ "decisions": 197,
+ "decisions_compared": 17,
+ "decisions_human_known": 54,
+ "decisions_trivial": 8,
  "desync_causes": {
   "hidden_card_placed: no hide option at 'Veiled Temple'": 1,
   "moved: engine asks P1 but the log's next action is by P2 (moved)": 2,
   "moved: engine asks P2 but the log's next action is by P1 (moved)": 1,
-  "moved: no such unit on board (not played / already gone)": 5,
+  "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit can move but not to 'Baron Pit'": 1,
-  "moved: unit on board but no move option": 1,
   "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 6,
-  "played: card in hand but not playable now (cost/timing)": 3,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 3
+  "played: card in hand but not playable now (cost/timing)": 2,
+  "played: card playable but not to 'Baron Pit'": 1,
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
@@ -102,13 +90,17 @@
    "turn": 5
   },
   {
-   "decision": 75,
+   "decision": 78,
    "event_index": 266,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Veiled Temple.",
    "options": [
     "End turn",
-    "Move Astral Heron to base"
+    "Move Astral Heron to base",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Veiled Temple",
+    "Play Tideturner to base",
+    "Play Tideturner to Veiled Temple"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -116,21 +108,7 @@
    "turn": 5
   },
   {
-   "decision": 75,
-   "event_index": 272,
-   "event_kind": "hidden_card_placed",
-   "event_text": "Last put a hidden card to Veiled Temple.",
-   "options": [
-    "End turn",
-    "Move Astral Heron to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no hide option at 'Veiled Temple'",
-   "turn": 5
-  },
-  {
-   "decision": 89,
+   "decision": 92,
    "event_index": 296,
    "event_kind": "played",
    "event_text": "Last played Baron Nashor from hand to Baron Pit.",
@@ -139,168 +117,63 @@
     "Move Reckless Innovator to base",
     "Move Riven, Broken Blade to base",
     "Move Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade to base",
+    "Move Reckless Innovator, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade, Astral Heron to base",
     "Play Astral Heron to base",
     "Play Astral Heron to Veiled Temple",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
     "Play Tideturner to base",
     "Play Tideturner to Veiled Temple",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Veiled Temple",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
     "Play Star-Crossed",
-    "Use Gold",
-    "Hide Bedeviling Stranger",
-    "Hide Bedeviling Stranger",
-    "Hide Tideturner",
-    "Hide Bedeviling Stranger"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
+   "reason": "card playable but not to 'Baron Pit'",
    "turn": 7
   },
   {
-   "decision": 89,
-   "event_index": 298,
-   "event_kind": "moved",
-   "event_text": "Last moved Baron Nashor to Veiled Temple.",
-   "options": [
-    "End turn",
-    "Move Reckless Innovator to base",
-    "Move Riven, Broken Blade to base",
-    "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Tideturner to base",
-    "Play Tideturner to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold",
-    "Hide Bedeviling Stranger",
-    "Hide Bedeviling Stranger",
-    "Hide Tideturner",
-    "Hide Bedeviling Stranger"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 7
-  },
-  {
-   "decision": 89,
+   "decision": 106,
    "event_index": 300,
    "event_kind": "moved",
    "event_text": "Last moved Baron Nashor to Baron Pit.",
    "options": [
     "End turn",
     "Move Reckless Innovator to base",
+    "Move Reckless Innovator to Baron Pit",
     "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
+    "Move Astral Heron to Baron Pit",
+    "Move Baron Nashor to base",
+    "Move Reckless Innovator, Riven, Broken Blade to base",
+    "Move Reckless Innovator, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade, Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade to Baron Pit",
+    "Move Reckless Innovator, Astral Heron to Baron Pit",
+    "Move Riven, Broken Blade, Astral Heron to Baron Pit",
+    "Move Reckless Innovator, Riven, Broken Blade, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
     "Play Tideturner to base",
     "Play Tideturner to Veiled Temple",
+    "Play Tideturner to Baron Pit",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
+    "Play Bedeviling Stranger to Baron Pit",
     "Use Gold",
-    "Hide Bedeviling Stranger",
     "Hide Bedeviling Stranger",
     "Hide Tideturner",
     "Hide Bedeviling Stranger"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 7
-  },
-  {
-   "decision": 89,
-   "event_index": 302,
-   "event_kind": "passed_focus",
-   "event_text": "Last passed focus at Baron Pit.",
-   "options": [
-    "End turn",
-    "Move Reckless Innovator to base",
-    "Move Riven, Broken Blade to base",
-    "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Tideturner to base",
-    "Play Tideturner to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold",
-    "Hide Bedeviling Stranger",
-    "Hide Bedeviling Stranger",
-    "Hide Tideturner",
-    "Hide Bedeviling Stranger"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 7
-  },
-  {
-   "decision": 94,
-   "event_index": 304,
-   "event_kind": "showdown",
-   "event_text": "c ended showdown responses at Baron Pit.",
-   "options": [
-    "End turn",
-    "Move Reckless Innovator to base",
-    "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 7
-  },
-  {
-   "decision": 94,
-   "event_index": 307,
-   "event_kind": "moved",
-   "event_text": "Last moved Reckless Innovator to Baron Pit.",
-   "options": [
-    "End turn",
-    "Move Reckless Innovator to base",
-    "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -308,49 +181,40 @@
    "turn": 7
   },
   {
-   "decision": 94,
-   "event_index": 312,
-   "event_kind": "moved",
-   "event_text": "Last moved Riven, Broken Blade to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Reckless Innovator to base",
-    "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit on board but no move option",
-   "turn": 7
-  },
-  {
-   "decision": 94,
-   "event_index": 314,
+   "decision": 106,
+   "event_index": 302,
    "event_kind": "passed_focus",
-   "event_text": "Last passed focus at Rakelstake.",
+   "event_text": "Last passed focus at Baron Pit.",
    "options": [
     "End turn",
     "Move Reckless Innovator to base",
+    "Move Reckless Innovator to Baron Pit",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
+    "Move Astral Heron to Baron Pit",
+    "Move Baron Nashor to base",
+    "Move Reckless Innovator, Riven, Broken Blade to base",
+    "Move Reckless Innovator, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade, Astral Heron to base",
+    "Move Reckless Innovator, Riven, Broken Blade to Baron Pit",
+    "Move Reckless Innovator, Astral Heron to Baron Pit",
+    "Move Riven, Broken Blade, Astral Heron to Baron Pit",
+    "Move Reckless Innovator, Riven, Broken Blade, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
+    "Play Tideturner to base",
+    "Play Tideturner to Veiled Temple",
+    "Play Tideturner to Baron Pit",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
+    "Play Bedeviling Stranger to Baron Pit",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -358,24 +222,72 @@
    "turn": 7
   },
   {
-   "decision": 94,
+   "decision": 124,
+   "event_index": 314,
+   "event_kind": "passed_focus",
+   "event_text": "Last passed focus at Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
+    "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
+    "Move Baron Nashor to base",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
+    "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
+    "Play Tideturner to Baron Pit",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
+    "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 7
+  },
+  {
+   "decision": 125,
    "event_index": 315,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Rakelstake.",
    "options": [
     "End turn",
-    "Move Reckless Innovator to base",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
+    "Move Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
+    "Play Tideturner to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
+    "Play Bedeviling Stranger to Baron Pit",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -383,32 +295,43 @@
    "turn": 7
   },
   {
-   "decision": 94,
-   "event_index": 319,
-   "event_kind": "moved",
-   "event_text": "Last moved Baron Nashor to base.",
+   "decision": 125,
+   "event_index": 321,
+   "event_kind": "hidden_card_placed",
+   "event_text": "Last put a hidden card to Veiled Temple.",
    "options": [
     "End turn",
-    "Move Reckless Innovator to base",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
-    "Play Astral Heron to base",
-    "Play Astral Heron to Veiled Temple",
+    "Move Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Bedeviling Stranger to Baron Pit",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
+    "Play Tideturner to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Star-Crossed",
-    "Use Gold"
+    "Play Bedeviling Stranger to Baron Pit",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
+   "reason": "no hide option at 'Veiled Temple'",
    "turn": 7
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 340,
    "event_kind": "moved",
    "event_text": "Last moved Tideturner to Rakelstake.",
@@ -416,10 +339,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -429,7 +357,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 341,
    "event_kind": "moved",
    "event_text": "Last moved Riven, Broken Blade to Veiled Temple.",
@@ -437,10 +365,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -450,7 +383,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 342,
    "event_kind": "played",
    "event_text": "Played Rebuke from hand.",
@@ -458,10 +391,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -471,7 +409,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 344,
    "event_kind": "played",
    "event_text": "Played Not So Fast from hand.",
@@ -479,10 +417,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -492,7 +435,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 347,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Veiled Temple.",
@@ -500,10 +443,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -513,7 +461,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 351,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Rakelstake.",
@@ -521,10 +469,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -534,7 +487,7 @@
    "turn": 8
   },
   {
-   "decision": 136,
+   "decision": 170,
    "event_index": 352,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Rakelstake.",
@@ -542,10 +495,15 @@
     "End turn",
     "Move Orianna, Exquisite to Rakelstake",
     "Move Orianna, Exquisite to Veiled Temple",
-    "Move Scuttle Crab to base",
+    "Move Orianna, Exquisite to Baron Pit",
     "Move Scuttle Crab to Rakelstake",
     "Move Scuttle Crab to Veiled Temple",
+    "Move Scuttle Crab to Baron Pit",
+    "Move Orianna, Exquisite, Scuttle Crab to Rakelstake",
+    "Move Orianna, Exquisite, Scuttle Crab to Veiled Temple",
+    "Move Orianna, Exquisite, Scuttle Crab to Baron Pit",
     "Play Gold to base",
+    "Play Desert's Call",
     "Use Gold",
     "Use Gold"
    ],
@@ -555,49 +513,36 @@
    "turn": 8
   },
   {
-   "decision": 164,
-   "event_index": 374,
-   "event_kind": "moved",
-   "event_text": "Last moved Baron Nashor to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Riven, Broken Blade to Rakelstake",
-    "Move Riven, Broken Blade to Veiled Temple",
-    "Move Astral Heron to base",
-    "Move Astral Heron to base",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Zhonya's Hourglass to base",
-    "Use Gold"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 9
-  },
-  {
-   "decision": 164,
+   "decision": 196,
    "event_index": 375,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Rakelstake.",
    "options": [
     "End turn",
-    "Move Riven, Broken Blade to Rakelstake",
-    "Move Riven, Broken Blade to Veiled Temple",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
     "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
     "Play Zhonya's Hourglass to base",
-    "Use Gold"
+    "Use Gold",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -605,24 +550,36 @@
    "turn": 9
   },
   {
-   "decision": 164,
+   "decision": 196,
    "event_index": 381,
    "event_kind": "moved",
    "event_text": "c moved Ravenbloom Student to base.",
    "options": [
     "End turn",
-    "Move Riven, Broken Blade to Rakelstake",
-    "Move Riven, Broken Blade to Veiled Temple",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
     "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
     "Play Zhonya's Hourglass to base",
-    "Use Gold"
+    "Use Gold",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -630,24 +587,36 @@
    "turn": 9
   },
   {
-   "decision": 164,
+   "decision": 196,
    "event_index": 384,
    "event_kind": "moved",
    "event_text": "Last moved Bedeviling Stranger to Baron Pit.",
    "options": [
     "End turn",
-    "Move Riven, Broken Blade to Rakelstake",
-    "Move Riven, Broken Blade to Veiled Temple",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
     "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
     "Play Zhonya's Hourglass to base",
-    "Use Gold"
+    "Use Gold",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -655,24 +624,36 @@
    "turn": 9
   },
   {
-   "decision": 164,
+   "decision": 196,
    "event_index": 385,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Baron Pit.",
    "options": [
     "End turn",
-    "Move Riven, Broken Blade to Rakelstake",
-    "Move Riven, Broken Blade to Veiled Temple",
+    "Move Riven, Broken Blade to base",
+    "Move Riven, Broken Blade to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
     "Move Astral Heron to base",
+    "Move Astral Heron to Baron Pit",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to Baron Pit",
     "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Tideturner to Veiled Temple",
     "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Veiled Temple",
-    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Rakelstake",
     "Play Bedeviling Stranger to Veiled Temple",
     "Play Zhonya's Hourglass to base",
-    "Use Gold"
+    "Use Gold",
+    "Use Gold",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner",
+    "Hide Bedeviling Stranger",
+    "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -680,38 +661,38 @@
    "turn": 9
   }
  ],
- "desyncs": 25,
+ "desyncs": 19,
  "disagreements": [
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 2,
+    "text": "Play Ravenbloom Student to base"
    },
    "clean_boundary": true,
    "decision": 8,
    "event_text": "c played Scuttle Crab from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.3210702341137124,
+    "share": 0.4033333333333333,
     "text": "Play Scuttle Crab to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.3712374581939799,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.41,
+     "text": "Play Ravenbloom Student to base"
     },
     {
      "index": 1,
-     "share": 0.3210702341137124,
+     "share": 0.4033333333333333,
      "text": "Play Scuttle Crab to base"
     },
     {
-     "index": 2,
-     "share": 0.3076923076923077,
-     "text": "Play Ravenbloom Student to base"
+     "index": 0,
+     "share": 0.18666666666666668,
+     "text": "End turn"
     }
    ],
    "turn": 0
@@ -726,7 +707,7 @@
    "event_text": "c played Ravenbloom Student from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.1705685618729097,
+    "share": 0.023333333333333334,
     "text": "Play Ravenbloom Student to base"
    },
    "kind": "play",
@@ -734,18 +715,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.2040133779264214,
+     "share": 0.88,
      "text": "Move Scuttle Crab to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.18729096989966554,
+     "share": 0.03,
      "text": "Move Scuttle Crab to Veiled Temple"
     },
     {
-     "index": 3,
-     "share": 0.1705685618729097,
-     "text": "Play Ravenbloom Student to base"
+     "index": 4,
+     "share": 0.02666666666666667,
+     "text": "Play Scuttle Crab to base"
     }
    ],
    "turn": 2
@@ -760,7 +741,7 @@
    "event_text": "c played Scuttle Crab from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.18394648829431437,
+    "share": 0.15333333333333332,
     "text": "Play Scuttle Crab to base"
    },
    "kind": "play",
@@ -768,86 +749,86 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.23745819397993312,
+     "share": 0.25666666666666665,
      "text": "Move Scuttle Crab to Rakelstake"
     },
     {
-     "index": 2,
-     "share": 0.2140468227424749,
-     "text": "Move Scuttle Crab to Veiled Temple"
+     "index": 5,
+     "share": 0.18,
+     "text": "Play Resource Extractor to Veiled Temple"
     },
     {
-     "index": 0,
-     "share": 0.19063545150501673,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.15333333333333332,
+     "text": "Play Scuttle Crab to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Ravenbloom Student to Veiled Temple"
+    "index": 1,
+    "text": "Move Scuttle Crab to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 40,
-   "event_text": "c moved Ravenbloom Student to Rakelstake.",
+   "decision": 30,
+   "event_text": "c ended their turn.",
    "human": {
-    "index": 1,
-    "share": 0.14715719063545152,
-    "text": "Move Ravenbloom Student to Rakelstake"
+    "index": 0,
+    "share": 0.31333333333333335,
+    "text": "End turn"
    },
-   "kind": "move",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.1505016722408027,
-     "text": "Move Ravenbloom Student to Veiled Temple"
-    },
-    {
-     "index": 10,
-     "share": 0.14715719063545152,
-     "text": "Play Orianna, Exquisite to base"
-    },
-    {
      "index": 1,
-     "share": 0.14715719063545152,
-     "text": "Move Ravenbloom Student to Rakelstake"
+     "share": 0.37666666666666665,
+     "text": "Move Scuttle Crab to Rakelstake"
+    },
+    {
+     "index": 0,
+     "share": 0.31333333333333335,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.31,
+     "text": "Move Scuttle Crab to Veiled Temple"
     }
    ],
-   "turn": 4
+   "turn": 2
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Scuttle Crab to Veiled Temple"
+    "index": 8,
+    "text": "Play Blue Sentinel to Rakelstake"
    },
    "clean_boundary": true,
    "decision": 43,
    "event_text": "c moved Orianna, Exquisite to Rakelstake.",
    "human": {
-    "index": 12,
-    "share": 0.0,
+    "index": 14,
+    "share": 0.05333333333333334,
     "text": "Play Orianna, Exquisite to Rakelstake"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.7933333333333333,
+     "text": "Play Blue Sentinel to Rakelstake"
+    },
+    {
      "index": 2,
-     "share": 0.1705685618729097,
+     "share": 0.08,
      "text": "Move Scuttle Crab to Veiled Temple"
     },
     {
-     "index": 11,
-     "share": 0.16387959866220736,
-     "text": "Play Orianna, Exquisite to base"
-    },
-    {
-     "index": 7,
-     "share": 0.14715719063545152,
-     "text": "Play Ravenbloom Student to base"
+     "index": 14,
+     "share": 0.05333333333333334,
+     "text": "Play Orianna, Exquisite to Rakelstake"
     }
    ],
    "turn": 4
@@ -861,8 +842,8 @@
    "decision": 50,
    "event_text": "c played Resource Extractor from hand to Rakelstake.",
    "human": {
-    "index": 9,
-    "share": 0.17725752508361203,
+    "index": 11,
+    "share": 0.08333333333333333,
     "text": "Play Resource Extractor to Rakelstake"
    },
    "kind": "play",
@@ -870,18 +851,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.19063545150501673,
+     "share": 0.3,
      "text": "Move Scuttle Crab to Veiled Temple"
     },
     {
-     "index": 9,
-     "share": 0.17725752508361203,
-     "text": "Play Resource Extractor to Rakelstake"
+     "index": 1,
+     "share": 0.13666666666666666,
+     "text": "Move Scuttle Crab to Rakelstake"
     },
     {
-     "index": 0,
-     "share": 0.17391304347826086,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.10333333333333333,
+     "text": "Play Ravenbloom Student to base"
     }
    ],
    "turn": 4
@@ -896,7 +877,7 @@
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.2140468227424749,
+    "share": 0.15333333333333332,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -904,17 +885,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.22742474916387959,
+     "share": 0.4033333333333333,
      "text": "Move Scuttle Crab to Veiled Temple"
     },
     {
-     "index": 7,
-     "share": 0.2140468227424749,
-     "text": "Play Discipline"
+     "index": 1,
+     "share": 0.16,
+     "text": "Move Scuttle Crab to Rakelstake"
     },
     {
      "index": 0,
-     "share": 0.2140468227424749,
+     "share": 0.15333333333333332,
      "text": "End turn"
     }
    ],
@@ -922,45 +903,45 @@
   },
   {
    "bot": {
-    "index": 11,
-    "text": "Play Discipline"
+    "index": 4,
+    "text": "Move Scuttle Crab to Veiled Temple"
    },
    "clean_boundary": true,
-   "decision": 81,
+   "decision": 84,
    "event_text": "c moved Scuttle Crab to Rakelstake.",
    "human": {
     "index": 3,
-    "share": 0.06354515050167224,
+    "share": 0.05,
     "text": "Move Scuttle Crab to Rakelstake"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 11,
-     "share": 0.16722408026755853,
-     "text": "Play Discipline"
+     "index": 4,
+     "share": 0.52,
+     "text": "Move Scuttle Crab to Veiled Temple"
     },
     {
-     "index": 12,
-     "share": 0.14381270903010032,
-     "text": "Play Desert's Call"
-    },
-    {
-     "index": 13,
-     "share": 0.13377926421404682,
+     "index": 16,
+     "share": 0.13,
      "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Discipline"
+    "index": 12,
+    "text": "Use Gold"
    },
    "clean_boundary": true,
-   "decision": 82,
+   "decision": 85,
    "event_text": "c moved Ravenbloom Student to base.",
    "human": {
     "index": 2,
@@ -971,53 +952,53 @@
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.17391304347826086,
-     "text": "Play Discipline"
-    },
-    {
-     "index": 11,
-     "share": 0.14381270903010032,
+     "index": 12,
+     "share": 0.25333333333333335,
      "text": "Use Gold"
     },
     {
+     "index": 0,
+     "share": 0.13666666666666666,
+     "text": "End turn"
+    },
+    {
      "index": 10,
-     "share": 0.13377926421404682,
-     "text": "Play Desert's Call"
+     "share": 0.13333333333333333,
+     "text": "Play Discipline"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Discipline"
+    "index": 10,
+    "text": "Use Gold"
    },
    "clean_boundary": true,
-   "decision": 83,
+   "decision": 86,
    "event_text": "c moved Orianna, Exquisite to base.",
    "human": {
     "index": 1,
-    "share": 0.030100334448160536,
+    "share": 0.02,
     "text": "Move Orianna, Exquisite to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.1806020066889632,
-     "text": "Play Discipline"
-    },
-    {
-     "index": 9,
-     "share": 0.1505016722408027,
-     "text": "Play Desert's Call"
-    },
-    {
      "index": 10,
-     "share": 0.12709030100334448,
+     "share": 0.30333333333333334,
      "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.15333333333333332,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.09666666666666666,
+     "text": "Move Scuttle Crab to Veiled Temple"
     }
    ],
    "turn": 6
@@ -1028,11 +1009,11 @@
     "text": "Use Gold"
    },
    "clean_boundary": true,
-   "decision": 84,
+   "decision": 87,
    "event_text": "c played Ravenbloom Student from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.11705685618729098,
+    "share": 0.08666666666666667,
     "text": "Play Ravenbloom Student to base"
    },
    "kind": "play",
@@ -1040,123 +1021,55 @@
    "top3": [
     {
      "index": 9,
-     "share": 0.1605351170568562,
+     "share": 0.14666666666666667,
      "text": "Use Gold"
     },
     {
-     "index": 7,
-     "share": 0.14046822742474915,
-     "text": "Play Discipline"
+     "index": 0,
+     "share": 0.13666666666666666,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.13043478260869565,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.10333333333333333,
+     "text": "Play Discipline"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Discipline"
+    "index": 7,
+    "text": "Use Gold"
    },
    "clean_boundary": true,
-   "decision": 87,
+   "decision": 90,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.14381270903010032,
+    "share": 0.14666666666666667,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.15719063545150502,
-     "text": "Play Discipline"
-    },
-    {
      "index": 7,
-     "share": 0.15384615384615385,
+     "share": 0.15333333333333332,
      "text": "Use Gold"
     },
     {
-     "index": 6,
-     "share": 0.14381270903010032,
-     "text": "Play Desert's Call"
+     "index": 0,
+     "share": 0.14666666666666667,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Scuttle Crab to Veiled Temple"
     }
    ],
    "turn": 6
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 101,
-   "event_text": "Played Discipline from hand.",
-   "human": {
-    "index": 9,
-    "share": 0.18729096989966557,
-    "text": "Play Discipline"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.2073578595317726,
-     "text": "Pass"
-    },
-    {
-     "index": 11,
-     "share": 0.2073578595317726,
-     "text": "Use Gold"
-    },
-    {
-     "index": 1,
-     "share": 0.20066889632107027,
-     "text": "Play Eclipse targeting Reckless Innovator"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 10,
-    "text": "Use Gold"
-   },
-   "clean_boundary": false,
-   "decision": 105,
-   "event_text": "Played Consult the Past from hand.",
-   "human": {
-    "index": 9,
-    "share": 0.25752508361204013,
-    "text": "Play Consult the Past"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 10,
-     "share": 0.2608695652173913,
-     "text": "Use Gold"
-    },
-    {
-     "index": 9,
-     "share": 0.25752508361204013,
-     "text": "Play Consult the Past"
-    },
-    {
-     "index": 0,
-     "share": 0.24414715719063546,
-     "text": "Pass"
-    }
-   ],
-   "turn": 8
   },
   {
    "bot": {
@@ -1164,10 +1077,10 @@
     "text": "Move Orianna, Exquisite to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 130,
+   "decision": 161,
    "event_text": "c moved Ravenbloom Student to Veiled Temple.",
    "human": {
-    "index": 4,
+    "index": 5,
     "share": 0.0,
     "text": "Move Ravenbloom Student to Veiled Temple"
    },
@@ -1176,18 +1089,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.451505016722408,
+     "share": 0.6966666666666667,
      "text": "Move Orianna, Exquisite to Rakelstake"
     },
     {
-     "index": 7,
-     "share": 0.11371237458193979,
-     "text": "Move Scuttle Crab to base"
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Orianna, Exquisite to Veiled Temple"
     },
     {
-     "index": 10,
-     "share": 0.08695652173913043,
-     "text": "Play Gold to base"
+     "index": 3,
+     "share": 0.13,
+     "text": "Move Orianna, Exquisite to Baron Pit"
     }
    ],
    "turn": 8
@@ -1198,10 +1111,10 @@
     "text": "Move Orianna, Exquisite to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 135,
+   "decision": 166,
    "event_text": "c moved Ravenbloom Student to Rakelstake.",
    "human": {
-    "index": 3,
+    "index": 4,
     "share": 0.0,
     "text": "Move Ravenbloom Student to Rakelstake"
    },
@@ -1210,52 +1123,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.431438127090301,
+     "share": 0.5966666666666667,
      "text": "Move Orianna, Exquisite to Rakelstake"
     },
     {
-     "index": 5,
-     "share": 0.11705685618729098,
-     "text": "Move Scuttle Crab to base"
-    },
-    {
-     "index": 10,
-     "share": 0.09364548494983277,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Orianna, Exquisite to Rakelstake"
-   },
-   "clean_boundary": true,
-   "decision": 136,
-   "event_text": "c put a hidden card to Rakelstake.",
-   "human": {
-    "index": 10,
-    "share": 0.10033444816053512,
-    "text": "Hide Back Off"
-   },
-   "kind": "hide",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.3076923076923077,
-     "text": "Move Orianna, Exquisite to Rakelstake"
+     "index": 2,
+     "share": 0.15666666666666668,
+     "text": "Move Orianna, Exquisite to Veiled Temple"
     },
     {
      "index": 3,
-     "share": 0.14046822742474915,
-     "text": "Move Scuttle Crab to base"
-    },
-    {
-     "index": 8,
-     "share": 0.10702341137123746,
-     "text": "Use Gold"
+     "share": 0.14333333333333334,
+     "text": "Move Orianna, Exquisite to Baron Pit"
     }
    ],
    "turn": 8
@@ -1266,11 +1145,11 @@
     "text": "Move Orianna, Exquisite to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 137,
+   "decision": 171,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.07357859531772576,
+    "share": 0.04666666666666667,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1278,25 +1157,25 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.42474916387959866,
+     "share": 0.43,
      "text": "Move Orianna, Exquisite to Rakelstake"
     },
     {
-     "index": 3,
-     "share": 0.23076923076923078,
-     "text": "Move Scuttle Crab to base"
+     "index": 2,
+     "share": 0.16333333333333333,
+     "text": "Move Orianna, Exquisite to Veiled Temple"
     },
     {
-     "index": 6,
-     "share": 0.12040133779264214,
-     "text": "Play Gold to base"
+     "index": 3,
+     "share": 0.14,
+     "text": "Move Orianna, Exquisite to Baron Pit"
     }
    ],
    "turn": 8
   }
  ],
  "first_player": "c",
- "forced_decisions": 55,
+ "forced_decisions": 66,
  "game": 2,
  "hand_fixes": {
   "created": 1,
@@ -1370,7 +1249,7 @@
     "for": "Last played Reckless Innovator from hand to Veiled Temple.",
     "how": "pulled",
     "player": 2,
-    "turn": 7,
+    "turn": 8,
     "zone": "hand"
    },
    {
@@ -1589,27 +1468,28 @@
   "P2": "The Exile"
  },
  "log_events": 166,
- "log_events_consumed": 163,
- "out_of_order_matches": 6,
+ "log_events_consumed": 166,
+ "out_of_order_matches": 8,
  "players": [
   "c",
   "Last"
  ],
- "readiness_fixes": 1,
+ "readiness_fixes": 2,
  "result": {
   "engine_scores": [
-   3,
-   3
+   2,
+   7
   ],
   "engine_winner": 2,
   "log_scores": [
    3,
    7
   ],
-  "reason": "desync cap (log score 3-7)",
-  "turns": 9
+  "reason": "log ended (log score 3-7)",
+  "turns": 10
  },
- "rewinds_applied": 1,
+ "rewinds_applied": 2,
+ "rewinds_ignored": 0,
  "score_mismatch_examples": [
   {
    "engine_score": 1,
@@ -1619,20 +1499,20 @@
    "turn": 6
   },
   {
-   "engine_score": 2,
+   "engine_score": 7,
    "event_index": 359,
    "log_score": 6,
    "text": "Last scored 2 at turn start. Score: 4 → 6.",
-   "turn": 8
+   "turn": 9
   }
  ],
  "score_mismatches": 2,
  "seed": 1,
- "silent_passes": 66,
+ "silent_passes": 82,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_orianna_vs_riven_rl2_c2b98467a4ce278650f188f857720863.json",
- "stop_reason": "desync cap",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 39.375769163,
-  "seconds": 39.395510553
+  "bot_seconds": 3.054448228999999,
+  "seconds": 3.084917871
  }
 }
