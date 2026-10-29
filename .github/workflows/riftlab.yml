@@ -79,11 +79,24 @@ jobs:
             fi
           done
 
+      - name: Keep results as a workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: riftlab-results-${{ github.run_id }}
+          path: |
+            lab/results/*.json
+            lab/.run.log
+          if-no-files-found: ignore
+
       - name: Push results
+        if: always()
         run: |
           git config user.name "riftlab-bot"
           git config user.email "riftlab-bot@users.noreply.github.com"
-          git add -A lab
+          # Only the run's own outputs: generated files such as lab/index.json
+          # are rebuilt by build.py and would conflict with the session's commits.
+          git add -A lab/results lab/requests lab/replays lab/variants
           git commit -m "riftlab: results for ${{ github.sha }}" || exit 0
           for i in 1 2 3 4; do
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
