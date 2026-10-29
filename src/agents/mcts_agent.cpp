@@ -296,6 +296,7 @@ struct MctsAgent::Impl {
         // inside the cloned RiftboundState — MUST equal the live
         // engine's runGame seed or the replayed action_history lands
         // in a different state.
+        installSpielErrorHandler();
         game = ::open_spiel::LoadGame(buildGameStr(d1, d2, reg, engine_seed));
         if (!game) {
             throw std::runtime_error(
@@ -349,6 +350,20 @@ MctsAgent::MctsAgent(std::string deck1_path,
                                    engine_seed, mcts_seed, sims, opts)) {}
 
 MctsAgent::~MctsAgent() = default;
+
+/// OpenSpiel's SPIEL_CHECK_* failures call SpielFatalError, whose default
+/// handler exits the process. Route them to an exception instead so a search
+/// that fails on one decision (see IsMctsAgent::selectAction) does not kill a
+/// batch of games.
+void installSpielErrorHandler() {
+    static const bool once = [] {
+        ::open_spiel::SetErrorHandler([](const std::string& msg) {
+            throw std::runtime_error("OpenSpiel: " + msg);
+        });
+        return true;
+    }();
+    (void)once;
+}
 
 /// Pick the player who actually has to act at this state. The engine's
 /// `turn_player` reports the player whose TURN it is, but on chain
@@ -481,6 +496,7 @@ struct IsMctsAgent::Impl {
          uint64_t eng_seed, uint64_t mcts_seed, int sim_count, const SearchOptions& opts)
         : sims(sim_count), engine_seed(eng_seed) {
         const uint64_t engine_seed = eng_seed;  // alias for the body below
+        installSpielErrorHandler();
         game = ::open_spiel::LoadGame(buildGameStr(d1, d2, reg, engine_seed));
         if (!game) {
             throw std::runtime_error(
