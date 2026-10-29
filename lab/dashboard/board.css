@@ -27,6 +27,12 @@
 .rb-turn { font: 600 13px/1 var(--rb-display); letter-spacing: .08em; text-transform: uppercase; color: var(--rb-gold); display: flex; align-items: center; gap: 10px; }
 .rb-turn .rb-ph { color: var(--rb-ink); letter-spacing: .04em; text-transform: none; font-size: 14px; }
 .rb-turn .rb-ph::before { content: "·"; color: var(--rb-gold-dim); margin-right: 10px; }
+.rb-banner { font: 600 11px/1 var(--rb-display); letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--rb-gold-dim); color: var(--rb-gold); background: rgba(214, 178, 94, .08); white-space: nowrap; }
+.rb-banner.me { color: #1a1406; background: var(--rb-gold); border-color: var(--rb-gold); box-shadow: 0 0 14px rgba(214, 178, 94, .45); }
+.rb-banner.bot { color: var(--rb-ink-dim); border-color: rgba(255, 255, 255, .25); background: var(--rb-glass-2); }
+.rb-banner.bot::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: -1px; background: var(--rb-p2); animation: rb-pulse 1s ease-in-out infinite; }
+.rb-banner.over { color: #fff; border-color: var(--rb-buff); background: rgba(103, 215, 138, .18); }
+@keyframes rb-pulse { 0%, 100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.1); } }
 .rb-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: auto; min-width: 0; }
 .rb-chain .rb-lbl { font: 600 11px/1 var(--rb-display); letter-spacing: .1em; text-transform: uppercase; color: var(--rb-ink-dim); }
 .rb-chain .rb-ci { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 4px; border-radius: 6px; background: var(--rb-glass-2); border: 1px solid var(--rb-chrome); font-size: 12px; white-space: nowrap; }
@@ -191,6 +197,9 @@
 .rb-legal button { background: var(--rb-glass-2); border: 1px solid var(--rb-chrome); color: var(--rb-parch); border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 13px; }
 .rb-legal button:hover, .rb-legal button:focus-visible { border-color: var(--rb-gold); box-shadow: 0 0 10px rgba(214, 178, 94, .35); outline: none; }
 .rb-legal button.hot { border-color: var(--rb-gold); }
+.rb-legal button:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.rb-legal.off .rb-lbl { color: var(--rb-ink-dim); }
+.rb-legal .rb-key { font: 600 10px/1 var(--rb-mono); color: var(--rb-gold); border: 1px solid var(--rb-gold-dim); border-radius: 3px; padding: 1px 4px; margin-right: 7px; vertical-align: 1px; }
 
 /* ── zoom preview ────────────────────────────────────────────────────────── */
 .rb-zoom { position: fixed; z-index: 1000; width: 260px; pointer-events: none; opacity: 0; transform: translateY(6px) scale(.98); transition: opacity .12s ease, transform .12s ease; }

@@ -20,7 +20,12 @@ DIST = LAB / "dashboard" / "dist"
 sys.path.insert(0, str(LAB))
 import riftlab  # noqa: E402
 
-PAGE_FILES = ["index.html", "board.js", "board.css"]   # the page and the board renderer, copied as is
+PAGE_FILES = ["index.html", "board.js", "board.css", "engine.worker.js"]   # page, board renderer, engine worker: copied as is
+# The WebAssembly engine for the Play tab (built with -DRIFTBOUND_WASM into build-wasm/) and the value net the
+# in-browser bot evaluates with. Copied into dist/engine/ when present; the page hides the Play tab otherwise.
+ENGINE_FILES = {"engine/riftbound.js": ROOT / "build-wasm" / "riftbound.js",
+                "engine/riftbound.wasm": ROOT / "build-wasm" / "riftbound.wasm"}
+DEFAULT_NET = LAB / "learn" / "nets" / "net_000.rbvn"
 SESSION = {"session_id": "session_01F68srW6k6CBYFTm9oVwNVu",
            "environment_id": "env_01TgKU1MBDD1jDjD7f3iW6Gm",
            "repo": "jdisser02-glitch/alpharune", "branch": "claude/zen-goodall-hb2ssu"}
@@ -61,9 +66,27 @@ def main(argv):
     ladder_path = LAB / "learn" / "ladder.json"
     ladder = json.loads(ladder_path.read_text()) if ladder_path.exists() else {"iterations": []}
 
+    # Deck texts: the Play tab hands them to the in-browser engine (rb_new_game takes the deck files' text).
+    for d in index["decks"]:
+        p = ROOT / d["path"]
+        d["text"] = p.read_text() if p.exists() else ""
+
+    engine = {}
+    net_rel = ladder.get("current_net")
+    net_path = ROOT / net_rel if net_rel and (ROOT / net_rel).exists() else DEFAULT_NET
+    if all(p.exists() for p in ENGINE_FILES.values()):
+        (DIST / "engine").mkdir(exist_ok=True)
+        for rel, src in {**ENGINE_FILES, **({"engine/value_net.rbvn": net_path} if net_path.exists() else {})}.items():
+            shutil.copy(src, DIST / rel)
+            print(f"  {rel:<24} {src.stat().st_size / 1e6:.2f} MB  (from {src.relative_to(ROOT)})")
+        engine = {"js": "engine/riftbound.js", "wasm": "engine/riftbound.wasm",
+                  "net": "engine/value_net.rbvn" if net_path.exists() else "", "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else ""}
+    else:
+        print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
+
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
-            "ladder": ladder, "replays": replays,
+            "ladder": ladder, "replays": replays, "engine": engine,
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),

@@ -13,6 +13,8 @@
           imageParams  true: ask the CDN for small webp renditions (default true)
           showText   battlefield rules text under its name (default true)
           animate    false disables the FLIP transition of units between frames (default true)
+          banner / bannerKind   short status text in the top bar ("Bot is thinking…"), kind "me" | "bot" | "over"
+          legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
 (function () {
   "use strict";
@@ -75,7 +77,7 @@
     const c = card(ref), name = nameOf(ref);
     const facedown = ref && typeof ref === "object" && ref.facedown;
     if (facedown) return `<div class="rb-back" role="img" aria-label="face-down card"></div>`;
-    const legal = L && (L.cards.get(name.toLowerCase()) || (c && L.cards.get(String(c.id))) || (ref && ref.card != null && L.cards.get(String(ref.card))));
+    const legal = L && (L.cards.get(name.toLowerCase()) || (c && L.cards.get(String(c.id))) || (ref && ref.card != null && L.cards.get(String(ref.card))) || (ref && typeof ref === "object" && ref.id != null && L.cards.get(String(ref.id))));
     const k = zoomKey({ card: c, name, state: extraState || (typeOf(c) ? typeOf(c) + " in hand" : "in hand") });
     const cost = costOf(c);
     return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}">${img(c, name, 200) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}</div>`;
@@ -103,6 +105,12 @@
       <div class="rb-name">${u.facedown ? "face down" : esc(name)}</div></div>`;
   }
   function runeStrip(pl, info) {
+    if (Array.isArray(pl.runes) && pl.runes.length) {          // live engine state: one entry per rune, with its card
+      const runes = [...pl.runes].sort((a, b) => (a.exhausted ? 1 : 0) - (b.exhausted ? 1 : 0));
+      const ready = runes.filter(r => !r.exhausted).length, shown = runes.slice(0, 14);
+      const dom = r => { const c = card(r); return (c && c.domains && c.domains[0]) || String(r.name || "").toLowerCase().replace(/ rune$/, ""); };
+      return `<div class="rb-runes"><span class="rb-zlabel">Runes</span><div class="rb-strip" role="img" aria-label="${ready} runes ready, ${runes.length - ready} exhausted">${shown.map(r => `<i class="rb-rune ${r.exhausted ? "ex" : ""}" style="--d:${DOMAINS[dom(r)] || "#8f7a3f"}" title="${esc(r.name || "rune")}${r.exhausted ? " (exhausted)" : ""}"></i>`).join("")}${runes.length > 14 ? `<span class="rb-rn">+${runes.length - 14}</span>` : ""}</div><div class="rb-rn">${ready} ready · ${runes.length - ready} exhausted${pl.power_pool ? ` · ${pl.power_pool} power` : ""}</div></div>`;
+    }
     const ready = pl.runes_ready || 0, ex = pl.runes_exhausted || 0, total = ready + ex;
     const split = (info && info.runes) || {}; const doms = Object.entries(split).filter(([d, n]) => DOMAINS[d] && n > 0).sort((a, b) => b[1] - a[1]);
     const seq = []; const sum = doms.reduce((a, [, n]) => a + n, 0) || 1;
@@ -114,11 +122,13 @@
   }
   function championStatus(board, i, info) {
     const p = i + 1; let unit = null, where = "";
-    const champName = (info && info.champion || "").toLowerCase();
-    const isCh = u => { const c = card(u); return (c && (c.super === "champion" || c.super_type === "champion")) || (champName && nameOf(u).toLowerCase() === champName); };
+    const pl = board.players[i] || {};
+    // the deck's champion: named by the live state (players[].champion) or the caller (players[i].champion); else any champion unit
+    const champName = ((pl.champion && pl.champion.name) || (info && info.champion) || "").toLowerCase();
+    const isCh = u => { if (champName) return nameOf(u).toLowerCase() === champName; const c = card(u); return !!(c && (c.super === "champion" || c.super_type === "champion")); };
     for (const u of board.players[i].base_units || []) if (isCh(u)) { unit = u; where = "in base"; break; }
     if (!unit) for (const bf of board.battlefields) for (const u of bf["p" + p] || []) if (isCh(u)) { unit = u; where = "at " + bf.name; break; }
-    const name = unit ? nameOf(unit) : (info && info.champion) || "";
+    const name = unit ? nameOf(unit) : (pl.champion && pl.champion.name) || (info && info.champion) || "";
     if (!name) return "";
     return `<div class="rb-champ"><span class="rb-zlabel">Champion</span><span class="rb-cn">${esc(name)}</span><span class="rb-cs ${unit ? "on" : ""}">${unit ? where : "not in play"}</span></div>`;
   }
@@ -126,7 +136,8 @@
     const pl = board.players[i], p = i + 1, info = (S.opts.players || [])[i] || {};
     const target = S.opts.target || 8, mine = bottom;
     const showHand = mine || (S.opts.hands || "both") === "both";
-    const hand = Array.isArray(pl.hand) ? pl.hand : [];
+    const names = Array.isArray(pl.hand) ? pl.hand : [];
+    const hand = Array.isArray(pl.hand_cards) && pl.hand_cards.length === names.length && names.every(h => h != null) ? pl.hand_cards : names;
     const handCount = pl.hand_count ?? hand.length;
     const hidden = !showHand || hand.some(h => h == null);
     const handHtml = hidden || !hand.length
@@ -170,12 +181,14 @@
   function topBar(board) {
     const chain = board.chain || [];
     const items = chain.map((ci, i) => `<span class="rb-ci p${ci.player} ${i === chain.length - 1 ? "top" : ""}"><i></i>${esc(ci.source || ci.name || "?")}</span>`);
-    return `<div class="rb-top"><div class="rb-turn"><span>Turn ${board.turn ?? "–"}</span><span class="rb-ph">${esc(phaseName(board.phase))}${board.turn_player ? ` · P${board.turn_player}'s turn` : ""}</span></div>
+    const banner = S.opts.banner ? `<span class="rb-banner ${esc(S.opts.bannerKind || "")}">${esc(S.opts.banner)}</span>` : "";
+    return `<div class="rb-top"><div class="rb-turn"><span>Turn ${board.turn ?? "–"}</span><span class="rb-ph">${esc(phaseName(board.phase))}${board.turn_player ? ` · P${board.turn_player}'s turn` : ""}</span></div>${banner}
       <div class="rb-chain"><span class="rb-lbl">Chain</span>${items.length ? items.join(`<span class="rb-arrow">›</span>`) : `<span class="rb-empty">empty</span>`}</div></div>`;
   }
   function legalBar(frame) {
     if (!Array.isArray(frame.legal) || !frame.legal.length) return "";
-    return `<div class="rb-legal"><span class="rb-lbl">Your options</span>${frame.legal.map(e => `<button type="button" data-pick="${e.index}" class="${e.card || e.battlefield ? "hot" : ""}">${esc(e.text || "option " + e.index)}</button>`).join("")}</div>`;
+    const lbl = S.opts.legalLabel || "Your options";
+    return `<div class="rb-legal ${S.opts.legalDisabled ? "off" : ""}"><span class="rb-lbl">${esc(lbl)}</span>${frame.legal.map((e, i) => `<button type="button" data-pick="${e.index}" class="${e.card || e.battlefield ? "hot" : ""}" ${S.opts.legalDisabled ? "disabled" : ""}>${i < 9 ? `<kbd class="rb-key">${i + 1}</kbd>` : ""}${esc(e.text || "option " + e.index)}</button>`).join("")}</div>`;
   }
 
   // ── transitions (FLIP on object ids) ───────────────────────────────────────

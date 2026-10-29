@@ -84,6 +84,11 @@ main.wide { max-width: 1520px; }
 .replay .decision { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 66px); max-height: calc(100vh - 90px); overflow: auto; }
 @media (max-width: 1100px) { .replay { grid-template-columns: minmax(0, 1fr); } .replay .decision { position: static; max-height: none; } }
 .decision .opt { grid-template-columns: minmax(0, 1fr) 72px 40px auto; }
+/* Play tab */
+.prog { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; margin-bottom: 6px; } .prog i { display: block; height: 100%; background: var(--chaos); transition: width .2s ease; }
+.result { text-align: center; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--sunk); }
+.result b { display: block; font: 700 30px/1.1 var(--display); letter-spacing: .02em; margin-bottom: 4px; }
+.chip input[type=checkbox] { margin: 0; }
 .frames { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .frames input[type=range] { flex: 1 1 160px; }
 .kbd { font: 600 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--sunk); }
@@ -109,6 +114,7 @@ svg text { fill: var(--muted); font: 11px var(--mono); }
     <a href="#tests" data-tab="tests">Tests</a>
     <a href="#decks" data-tab="decks">Decks</a>
     <a href="#replays" data-tab="replays">Replays</a>
+    <a href="#play" data-tab="play">Play</a>
     <a href="#bot" data-tab="bot">Bot</a>
     <a href="#launch" data-tab="launch">Launch</a>
   </nav>
@@ -119,6 +125,7 @@ svg text { fill: var(--muted); font: 11px var(--mono); }
   <section id="v-tests" class="stack"></section>
   <section id="v-decks" class="stack" hidden></section>
   <section id="v-replays" class="stack" hidden></section>
+  <section id="v-play" class="stack" hidden></section>
   <section id="v-bot" class="stack" hidden></section>
   <section id="v-launch" class="stack" hidden></section>
 </main>
@@ -557,13 +564,200 @@ async function renderHistory() {
   } catch (e) { h.innerHTML = ""; }
 }
 
+// ── Play view ───────────────────────────────────────────────────────────────
+// A full game against the bot in the browser. The WebAssembly engine runs in engine.worker.js (rb_bot_move blocks,
+// so never on the page thread); the table is RiftBoard with the human's seat at the bottom and the bot's hand face down.
+const PLAY_DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", autopay: true };
+const play = { stage: "setup", cfg: { ...PLAY_DEFAULTS, ...(store("rl.play") || {}) }, worker: null, pending: new Map(), nextId: 1, ready: null, info: null,
+               progress: {}, st: null, seat: 1, seed: 0, busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function engineCall(cmd, args) {
+  if (!play.worker) {
+    play.worker = new Worker("engine.worker.js");
+    play.worker.onmessage = e => {
+      const m = e.data;
+      if (m.type === "progress") { play.progress[m.what] = m; renderPlayProgress(); return; }
+      const p = play.pending.get(m.id); if (!p) return; play.pending.delete(m.id);
+      m.ok ? p.resolve(m.result) : p.reject(new Error(m.error));
+    };
+    play.worker.onerror = e => { play.error = "Engine worker failed: " + (e.message || "unknown error"); play.ready = null; play.stage = "setup"; viewPlay(); };
+  }
+  return new Promise((resolve, reject) => { const id = play.nextId++; play.pending.set(id, { resolve, reject }); play.worker.postMessage({ id, cmd, ...(args || {}) }); });
+}
+function engineReady() {
+  if (!play.ready) {
+    const base = new URL(D.engine.js, location.href).href.replace(/riftbound\.js$/, "");
+    play.ready = engineCall("init", { base, net: D.engine.net ? new URL(D.engine.net, location.href).href : "" })
+      .then(i => { play.info = i; return i; }).catch(e => { play.ready = null; throw e; });
+  }
+  return play.ready;
+}
+// Tie legal actions to cards / battlefields on the table from their text (the engine gives text + type only).
+function legalHints(legal) {
+  return (legal || []).map(l => {
+    const e = { index: l.index, text: l.text, type: l.type }; let m;
+    if (/^(PlayCard|PlayReaction|HideCard)$/.test(l.type) && (m = l.text.match(/^(?:Play|Hide) (.+?)(?: to (.+?))?(?: targeting .+)?$/))) { e.card = m[1]; if (m[2] && m[2] !== "base") e.battlefield = m[2]; }
+    else if (l.type === "StandardMove" && (m = l.text.match(/^Move (.+?) to (.+)$/))) { e.card = m[1]; if (m[2] !== "base") e.battlefield = m[2]; }
+    else if (l.type === "ActivateAbility" && (m = l.text.match(/^Use (.+?)(?: targeting .+)?$/))) e.card = m[1];
+    return e;
+  });
+}
+const playDecks = () => D.decks.filter(d => !(d.errors || []).length && d.text);
+function playDeckOptions(sel) {
+  const ok = new Set(playDecks().map(d => d.path));
+  return Object.entries(groupDecks()).map(([k, ds]) => { ds = ds.filter(d => ok.has(d.path)); return ds.length ? `<optgroup label="${esc(k)}">${ds.map(d => `<option value="${esc(d.path)}" ${d.path === sel ? "selected" : ""}>${esc(deckLabel(d.path))}</option>`).join("")}</optgroup>` : ""; }).join("");
+}
+function playPlayers() {
+  const info = (path, label) => { const d = deckByPath(path); return { label, deck: deckLabel(path), runes: d ? d.stats.rune_split : {}, champion: d ? Object.keys(d.list.champion || {})[0] : "" }; };
+  const me = info(play.cfg.me, "you"), bot = info(play.cfg.bot, "bot");
+  return play.seat === 1 ? [me, bot] : [bot, me];
+}
+function viewPlay() {
+  const el = $("#v-play");
+  if (!D.engine || !D.engine.js) { el.innerHTML = `<div class="empty">The in-browser engine is not part of this build (build-wasm/riftbound.wasm was missing when the page was assembled).</div>`; return; }
+  if (play.stage === "setup" || play.stage === "loading") return renderPlaySetup(el);
+  el.innerHTML = `<div class="replay"><div id="playBoard"></div><div class="panel stack decision" id="playPanel"></div></div>`;
+  RiftBoard.mount($("#playBoard"), { cards: D.cards, viewer: play.seat, hands: "viewer", onPick: pickOption, players: playPlayers() });
+  renderPlay();
+}
+function renderPlaySetup(el) {
+  const c = play.cfg, loading = play.stage === "loading";
+  if (!playDecks().some(d => d.path === c.me)) c.me = PLAY_DEFAULTS.me;
+  if (!playDecks().some(d => d.path === c.bot)) c.bot = PLAY_DEFAULTS.bot;
+  el.innerHTML = `<div class="grid2">
+    <div class="panel stack"><h2>Play against the bot</h2>
+      <p class="small muted">The whole engine runs in your browser (WebAssembly, ${(7.1).toFixed(1)} MB on first visit). The bot is the lab's one-ply value-net player: it looks at every legal move, redeals what it cannot see a few times, and keeps the move with the best estimated win chance. It never sees your hand.</p>
+      <div class="toolbar"><label class="f" style="flex:1 1 260px">Your deck<select id="pme">${playDeckOptions(c.me)}</select></label></div>
+      <div class="toolbar"><label class="f" style="flex:1 1 260px">The bot's deck<select id="pbot">${playDeckOptions(c.bot)}</select></label></div>
+      <div class="toolbar">
+        <label class="f">Your seat<select id="pseat"><option value="random" ${c.seat === "random" ? "selected" : ""}>Random</option><option value="1" ${c.seat === "1" ? "selected" : ""}>Player 1 (on the play)</option><option value="2" ${c.seat === "2" ? "selected" : ""}>Player 2 (on the draw)</option></select></label>
+        <label class="f">Seed<input type="text" id="pseed" value="${esc(c.seed)}" placeholder="random" inputmode="numeric" style="width:120px"></label>
+        <label class="f" style="justify-content:end"><span class="chip"><input type="checkbox" id="pauto" ${c.autopay ? "checked" : ""}> auto-pay rune costs</span></label>
+      </div>
+      <div class="toolbar"><button class="primary" id="pstart" ${loading ? "disabled" : ""}>${loading ? "Loading the engine…" : "Start"}</button>${play.info ? `<span class="small muted">engine ${esc(play.info.version)} · ${play.info.cards} cards · ${play.info.net ? "value net loaded" : "no value net (heuristic bot)"}</span>` : ""}</div>
+      <div id="pprog"></div>
+      ${play.error ? `<div class="notice">${esc(play.error)}</div>` : ""}
+      ${play.result ? `<div class="notice ok">Last game: ${play.result.winner === play.seat ? "you won" : play.result.winner ? "the bot won" : "draw"} ${play.result.scores.join("–")} in ${play.result.turns} turns.</div>` : ""}
+    </div>
+    <div class="panel stack"><h2>How to play</h2>
+      <p class="small">Your playable cards and reachable battlefields light up in gold; the full list of legal actions is under the table (some are not tied to a card: End turn, Pass, mulligan choices). Click an option or press its number, <span class="kbd">Enter</span> takes the first one, <span class="kbd">Esc</span> closes a card preview. Hover a card to read it.</p>
+      <p class="small">With auto-pay on, the engine's rune-by-rune payment steps are answered for you (first option each time); turn it off to choose which runes to exhaust. Steps where passing is your only option are passed automatically.</p>
+      <p class="small muted">The deck texts come from this lab's deck files; both must be valid in the engine (invalid lists are not offered). A game is about 10–15 turns; the bot answers in a few hundred milliseconds at most.</p>
+    </div></div>`;
+  $("#pme").onchange = e => { c.me = e.target.value; store("rl.play", c); };
+  $("#pbot").onchange = e => { c.bot = e.target.value; store("rl.play", c); };
+  $("#pseat").onchange = e => { c.seat = e.target.value; store("rl.play", c); };
+  $("#pseed").onchange = e => { c.seed = e.target.value.trim(); store("rl.play", c); };
+  $("#pauto").onchange = e => { c.autopay = e.target.checked; store("rl.play", c); };
+  $("#pstart").onclick = startGame;
+  renderPlayProgress();
+}
+function renderPlayProgress() {
+  const el = $("#pprog"); if (!el || play.stage !== "loading") { if (el) el.innerHTML = ""; return; }
+  const row = (what, label) => { const p = play.progress[what]; if (!p) return `<div class="small muted">${label}: waiting…</div>`;
+    const pct = p.total ? p.loaded / p.total : 1, mb = x => (x / 1e6).toFixed(1);
+    return `<div class="small">${label}: ${mb(p.loaded)}${p.total ? " / " + mb(p.total) : ""} MB</div><div class="prog"><i style="width:${(100 * pct).toFixed(0)}%"></i></div>`; };
+  el.innerHTML = `<div class="stack" style="gap:6px">${row("wasm", "Engine")}${D.engine.net ? row("net", "Value net") : ""}${play.info ? `<div class="small muted">Starting the game…</div>` : ""}</div>`;
+}
+async function startGame() {
+  const c = play.cfg; store("rl.play", c);
+  play.stage = "loading"; play.error = null; play.progress = {}; viewPlay();
+  try {
+    await engineReady();
+    play.seat = c.seat === "random" ? 1 + Math.floor(Math.random() * 2) : +c.seat;
+    play.seed = /^\d+$/.test(c.seed) ? (+c.seed >>> 0) : Math.floor(Math.random() * 2 ** 31);
+    play.autopay = !!c.autopay;
+    const me = deckByPath(c.me), bot = deckByPath(c.bot);
+    const st = await engineCall("newGame", { deck1: play.seat === 1 ? me.text : bot.text, deck2: play.seat === 1 ? bot.text : me.text, humanSeat: play.seat, seed: play.seed, bot: "greedy" });
+    Object.assign(play, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null });
+    viewPlay(); advance();
+  } catch (e) { play.error = e.message; play.stage = "setup"; viewPlay(); }
+}
+function noteLog(st) { if (!st || st.n === play.loggedN) return; play.loggedN = st.n; for (const l of st.log || []) play.log.push(l); if (play.log.length > 400) play.log.splice(0, play.log.length - 400); }
+// The game loop: render, then either wait for the human, auto-pay a cost step, or let the bot move (with a pause so each move is seen).
+async function advance() {
+  if (play.stage !== "playing" || play.busy) return;
+  const st = play.st; noteLog(st);
+  if (st.game_over) {
+    play.busy = true; renderPlay();
+    try { play.result = await engineCall("result"); play.st = await engineCall("state", { perspective: 0 }); } catch (e) { play.error = e.message; }
+    play.busy = false; play.stage = "over"; renderPlay(); return;
+  }
+  if (st.decision_is_human) {
+    // no real choice: a cost step with auto-pay on, or a lone Pass (priority / focus) — answer it after a short beat
+    const lonePass = st.legal.length === 1 && /^Pass/.test(st.legal[0].type || "");
+    if ((st.paying_cost && play.autopay && st.legal.length) || lonePass) {
+      play.busy = true; renderPlay(); await sleep(lonePass ? 220 : 100);
+      try { play.st = await engineCall("apply", { index: st.legal[0].index }); play.myMoves++; } catch (e) { play.error = e.message; }
+      play.busy = false; return advance();
+    }
+    renderPlay(); return;
+  }
+  play.busy = true; play.thinking = true; renderPlay();
+  try {
+    const mv = await engineCall("botMove");
+    play.lastBot = mv; play.botMoves.push(mv.ms); play.st = mv.state; play.thinking = false; renderPlay();
+    await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? 450 : 160);
+  } catch (e) { play.error = e.message; play.thinking = false; play.busy = false; renderPlay(); return; }
+  play.busy = false; advance();
+}
+async function pickOption(index) {
+  if (play.stage !== "playing" || play.busy || !play.st.decision_is_human || !play.st.legal.some(l => l.index === index)) return;
+  play.busy = true; renderPlay();
+  try { play.st = await engineCall("apply", { index }); play.myMoves++; play.error = null; } catch (e) { play.error = e.message; }
+  play.busy = false; advance();
+}
+async function endPlay(again) {
+  try { await engineCall("end"); } catch (e) {}
+  play.stage = "setup"; play.st = null; play.busy = false; play.thinking = false;
+  if (again) startGame(); else viewPlay();
+}
+function renderPlay() {
+  const st = play.st, host = $("#playBoard"), panel = $("#playPanel"); if (!st || !host || !panel) return;
+  const over = play.stage === "over", human = !over && st.decision_is_human && !play.busy;
+  const legal = !over && st.decision_is_human ? legalHints(st.legal) : [];
+  const banner = over ? "Game over" : play.thinking ? "Bot is thinking…" : play.busy ? (st.paying_cost ? "Paying…" : st.decision_is_human ? "Passing…" : "…") : human ? (st.paying_cost ? "Pay the cost" : "Your move") : "";
+  RiftBoard.render({ board: st.board, legal }, { viewer: play.seat, hands: over ? "both" : "viewer", banner, bannerKind: over ? "over" : human ? "me" : "bot",
+                                                 legalDisabled: !human, legalLabel: st.paying_cost ? "Pay with" : "Your options", players: playPlayers() });
+  panel.dataset.turn = over ? "over" : human ? "human" : "bot";
+  const lb = play.lastBot, sh = lb && lb.search, opts = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score);
+  const max = Math.max(1e-9, ...opts.map(o => o.score));
+  const ms = play.botMoves, avg = ms.length ? ms.reduce((a, b) => a + b, 0) / ms.length : 0, mx = ms.length ? Math.max(...ms) : 0;
+  const r = play.result, won = r && r.winner === play.seat;
+  panel.innerHTML = `
+    <h2>${over ? "Game over" : human ? "Your move" : play.thinking ? "Bot is thinking" : "Please wait"} <span class="pill ${over ? (won ? "ok" : "bad") : human ? "ok" : "bot"}">${over ? (won ? "you won" : r && r.winner ? "bot won" : "draw") : "P" + st.decision_player + (st.decision_is_human ? " · you" : " · bot")}</span></h2>
+    <div class="row small"><span class="chip">turn ${st.board.turn}</span><span class="chip">${esc(String(st.board.phase).replace(/([a-z])([A-Z])/g, "$1 $2"))}</span><span class="chip">you are P${play.seat}</span><span class="chip mono">seed ${play.seed}</span></div>
+    ${play.error ? `<div class="notice">${esc(play.error)}</div>` : ""}
+    ${over && r ? `<div class="result"><b>${esc(won ? "Victory" : r.winner ? "Defeat" : "Draw")}</b><div class="small">${r.scores.join(" – ")} · ${r.turns} turns · ${r.decisions} decisions</div><div class="small muted">${esc(r.reason || "")}</div>
+      <div class="toolbar" style="justify-content:center;margin-top:10px"><button class="primary" id="pagain">Play again</button><button id="pnew">New game</button></div></div>` : ""}
+    ${!over && st.paying_cost && human ? `<p class="small muted">The engine pays costs rune by rune: pick which rune to exhaust (or turn auto-pay on).</p>` : ""}
+    ${lb ? `<div class="stack"><h3>Bot's last move</h3><p><b>${esc(lb.text || "option " + lb.index)}</b> <span class="small muted">${lb.ms.toFixed(0)} ms${sh && sh.worlds ? " · " + sh.worlds + " redeals" : ""}${lb.options > 1 ? " · " + lb.options + " options" : ""}</span></p>
+      ${opts.length > 1 ? `<div class="list">${opts.slice(0, 8).map(o => `<div class="opt ${o.index === lb.index ? "chosen" : ""}"><span class="small">${esc(o.text || "option " + o.index)}</span><span class="bar"><i style="width:${(100 * o.score / max).toFixed(0)}%"></i></span><span class="mono small">${(100 * o.score).toFixed(0)}%</span><span></span></div>`).join("")}</div><p class="small muted">Estimated win chance of each move; cards the bot kept in hand are not named.</p>` : ""}</div>` : (!over ? `<p class="small muted">${play.seat === 1 ? "You start. " : "The bot starts. "}Your moves light up on the table.</p>` : "")}
+    <div class="row small"><span class="chip">your moves ${play.myMoves}</span><span class="chip">bot moves ${ms.length}</span>${ms.length ? `<span class="chip mono" id="pstats">bot avg ${avg.toFixed(0)} ms · max ${mx.toFixed(0)} ms</span>` : ""}</div>
+    ${!over ? `<div class="toolbar"><label class="chip"><input type="checkbox" id="pauto2" ${play.autopay ? "checked" : ""}> auto-pay rune costs</label><button id="pconcede">Concede</button></div>` : ""}
+    ${play.log.length ? `<details><summary class="small muted">Engine log (${play.log.length} lines)</summary><div class="log">${play.log.slice(-60).map(esc).join("\n")}</div></details>` : ""}
+    ${!over ? `<p class="small muted">Keys: <span class="kbd">1</span>–<span class="kbd">9</span> pick an option, <span class="kbd">Enter</span> the first one.</p>` : ""}`;
+  const a2 = $("#pauto2"); if (a2) a2.onchange = e => { play.autopay = e.target.checked; play.cfg.autopay = play.autopay; store("rl.play", play.cfg); if (play.autopay) advance(); };
+  const cc = $("#pconcede"); if (cc) cc.onclick = () => { if (confirm("Concede this game?")) endPlay(false); };
+  const pa = $("#pagain"); if (pa) pa.onclick = () => endPlay(true);
+  const pn = $("#pnew"); if (pn) pn.onclick = () => endPlay(false);
+}
+document.addEventListener("keydown", e => {
+  if ($("#v-play").hidden || play.stage !== "playing" || play.busy || !play.st || !play.st.decision_is_human || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  const L = play.st.legal; let k = -1;
+  if (/^[1-9]$/.test(e.key)) k = +e.key - 1; else if (e.key === "Enter") k = 0;
+  if (k >= 0 && L[k]) { e.preventDefault(); pickOption(L[k].index); }
+});
+
 // ── Router and boot ─────────────────────────────────────────────────────────
-const VIEWS = { tests: viewTests, decks: viewDecks, replays: viewReplays, bot: viewBot, launch: viewLaunch };
+const VIEWS = { tests: viewTests, decks: viewDecks, replays: viewReplays, play: viewPlay, bot: viewBot, launch: viewLaunch };
 function route() {
   const tab = (location.hash || "#tests").slice(1); const t = VIEWS[tab] ? tab : "tests";
   document.querySelectorAll("nav.tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.tab === t ? "page" : "false"));
   Object.keys(VIEWS).forEach(k => $("#v-" + k).hidden = k !== t);
-  $("main").classList.toggle("wide", t === "replays");
+  $("main").classList.toggle("wide", t === "replays" || t === "play");
   if (D) VIEWS[t]();
 }
 window.addEventListener("hashchange", route);
