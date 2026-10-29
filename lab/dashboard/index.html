@@ -3,6 +3,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="board.css">
 <style>
 [hidden]{display:none !important}
 select,input,textarea{max-width:100%;min-width:0}
@@ -77,18 +78,15 @@ label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; colo
 .cardrow:hover { background: var(--sunk); }
 .cost { font: 600 12px var(--mono); text-align: center; border-radius: 4px; padding: 1px 0; background: var(--sunk); }
 .dom { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: 1px; }
-.board { display: flex; flex-direction: column; gap: 10px; }
-.side { border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: var(--sunk); }
-.side.p1 { border-left: 3px solid var(--calm); } .side.p2 { border-left: 3px solid var(--chaos); }
-.side header { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; font-size: 13px; }
-.side header b { font: 600 15px var(--display); }
-.bfs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-.bf { border: 1px dashed var(--line); border-radius: 8px; padding: 8px; background: var(--panel); min-width: 0; }
-.bf h4 { margin: 0 0 6px; font: 600 13px var(--display); display: flex; justify-content: space-between; gap: 6px; }
-.unit { display: inline-flex; gap: 4px; align-items: center; border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; margin: 2px; font-size: 12.5px; background: var(--panel); }
-.unit.ex { opacity: .6; border-style: dashed; }
-.unit .m { font: 600 11px var(--mono); }
-.unit.p1 { box-shadow: inset 3px 0 0 var(--calm); } .unit.p2 { box-shadow: inset 3px 0 0 var(--chaos); }
+/* Replays: the table (RiftBoard, board.css) on the left, the decision panel on the right; stacked under 1100px. */
+main.wide { max-width: 1520px; }
+.replay { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 16px; align-items: start; }
+.replay .decision { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 66px); max-height: calc(100vh - 90px); overflow: auto; }
+@media (max-width: 1100px) { .replay { grid-template-columns: minmax(0, 1fr); } .replay .decision { position: static; max-height: none; } }
+.decision .opt { grid-template-columns: minmax(0, 1fr) 72px 40px auto; }
+.frames { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.frames input[type=range] { flex: 1 1 160px; }
+.kbd { font: 600 11px var(--mono); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--sunk); }
 .opt { display: grid; grid-template-columns: minmax(0, 1fr) 110px 46px auto; gap: 8px; align-items: center; padding: 4px 6px; border-radius: 5px; font-size: 14px; }
 .opt.chosen { background: var(--chaos-soft); font-weight: 600; }
 .opt .bar { height: 8px; background: var(--sunk); border-radius: 4px; overflow: hidden; }
@@ -98,6 +96,7 @@ label.f { display: flex; flex-direction: column; gap: 4px; font-size: 13px; colo
 .notice { border-left: 3px solid var(--warn); padding: 8px 12px; background: var(--sunk); border-radius: 0 6px 6px 0; font-size: 14px; }
 .notice.ok { border-color: var(--win); }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.toolbar label.f { min-width: 0; } .toolbar label.f select { width: 100%; }
 .empty { padding: 26px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; }
 svg text { fill: var(--muted); font: 11px var(--mono); }
 .delta-add { color: var(--win); } .delta-rem { color: var(--loss); }
@@ -124,6 +123,7 @@ svg text { fill: var(--muted); font: 11px var(--mono); }
   <section id="v-launch" class="stack" hidden></section>
 </main>
 
+<script src="board.js"></script>
 <script>
 "use strict";
 const $ = (s, el = document) => el.querySelector(s);
@@ -335,6 +335,8 @@ function renderBuilder() {
 }
 
 // ── Replays view ────────────────────────────────────────────────────────────
+// The table is drawn by RiftBoard (board.js / board.css); this view keeps the game picker, the frame
+// navigation and the decision panel (search shares, "me" votes, annotations).
 async function loadReplay(file) {
   state.replay = file; state.frame = 0; state.rep = null; viewReplays();
   try { const r = await fetch(file); state.rep = await r.json(); } catch (e) { state.rep = { error: String(e) }; }
@@ -342,70 +344,86 @@ async function loadReplay(file) {
   const fr = (state.rep.frames || []); const k = fr.findIndex(f => f.options && f.options.length > 1); state.frame = Math.max(0, k);
   viewReplays();
 }
-function boardHtml(b) {
-  const units = (arr, p) => (arr || []).map(u => `<span class="unit p${p} ${u.exhausted ? "ex" : ""}" title="${esc(u.name)}">${esc(u.name)}${u.might != null ? ` <span class="m">${u.might}</span>` : ""}${u.buffs ? " +" + u.buffs : ""}${u.stunned ? " ⊘" : ""}${u.gear ? ` <span class="small muted">[${u.gear.map(esc).join(", ")}]</span>` : ""}${u.facedown ? " (facedown)" : ""}</span>`).join("") || `<span class="small muted">—</span>`;
-  const side = (p, i) => { const pl = b.players[i]; return `<div class="side p${p}"><header><b>Player ${p}</b><span>${pl.score} pts</span><span>${pl.runes_ready} runes ready / ${pl.runes_exhausted} exhausted</span><span>deck ${pl.deck}</span>${pl.legend ? `<span>legend ${esc(pl.legend.name)}${pl.legend.exhausted ? " (exhausted)" : ""}</span>` : ""}</header>
-    <div class="small"><b>Hand</b> (${pl.hand.length}): ${pl.hand.map(esc).join(", ") || "—"}</div>
-    <div class="small"><b>Base</b>: ${units(pl.base_units, p)} ${(pl.base_gear || []).map(g => `<span class="unit">${esc(g.name)}</span>`).join("")}</div></div>`; };
-  return `<div class="board">${side(2, 1)}
-    <div class="bfs">${b.battlefields.map(bf => `<div class="bf"><h4><span>${esc(bf.name)}</span><span class="small ${bf.controller ? "" : "muted"}">${bf.controller ? "held by P" + bf.controller : "open"}${bf.combat ? " · combat" : ""}</span></h4><div>${units(bf.p2, 2)}</div><div>${units(bf.p1, 1)}</div></div>`).join("")}</div>
-    ${side(1, 0)}
-    ${b.chain && b.chain.length ? `<div class="small"><b>Chain:</b> ${b.chain.map(c => esc(c.source) + " (P" + c.player + ")").join(" → ")}</div>` : ""}</div>`;
+function playerInfo(rep, p) {
+  const path = p === 1 ? rep.deck1 : rep.deck2, d = deckByPath(path), agent = p === 1 ? rep.agent1 : rep.agent2;
+  return { label: /random/.test(agent || "") ? "random" : "bot", deck: deckLabel(path),
+           runes: d ? d.stats.rune_split : {}, champion: d ? Object.keys(d.list.champion || {})[0] : "" };
 }
 function viewReplays() {
   const el = $("#v-replays");
   const reps = D.replays.filter(r => !state.repFilter || r.test_id === state.repFilter);
   if (!D.replays.length) { el.innerHTML = `<div class="empty">No replays recorded yet.</div>`; return; }
   const rep = state.rep, frames = rep && rep.frames || [];
-  const f = frames[state.frame];
-  const key = state.replay + "|" + (f ? f.n : "");
-  const ann = annotations.get(key);
-  const bot = f && (f.player === 1 ? rep.agent1 : rep.agent2);
-  const shares = new Map((f && f.search || []).map(([i, s]) => [i, s]));
+  const ready = rep && !rep.error && frames.length;
+  state.viewer ??= 1; state.hands ??= "both";
   el.innerHTML = `
     <div class="panel"><div class="toolbar">
-      <label class="f" style="flex:1">Game<select id="rsel"><option value="">— choose —</option>${reps.map(r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${esc(r.agent1)} (P1) vs ${esc(r.agent2)} (P2) — ${r.winner ? "won by P" + r.winner : "draw"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} turns — ${esc(r.test_id)}</option>`).join("")}</select></label>
+      <label class="f" style="flex:1 1 280px">Game<select id="rsel"><option value="">— choose —</option>${reps.map(r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${esc(r.agent1)} (P1) vs ${esc(r.agent2)} (P2) — ${r.winner ? "won by P" + r.winner : "draw"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} turns — ${esc(r.test_id)}</option>`).join("")}</select></label>
       ${state.repFilter ? `<button id="rclear">All tests</button>` : ""}
+      ${ready ? `<label class="f">Seat at the bottom<select id="rview"><option value="1" ${state.viewer === 1 ? "selected" : ""}>Player 1</option><option value="2" ${state.viewer === 2 ? "selected" : ""}>Player 2</option></select></label>
+      <label class="f">Hands<select id="rhands"><option value="both" ${state.hands === "both" ? "selected" : ""}>show both hands</option><option value="viewer" ${state.hands === "viewer" ? "selected" : ""}>viewer only</option></select></label>` : ""}
     </div></div>
-    ${!state.replay ? `<div class="empty">Pick a game to step through it move by move.</div>` : !rep ? `<div class="empty">Loading…</div>` : rep.error ? `<div class="notice">${esc(rep.error)}</div>` : `
-    <div class="panel"><div class="toolbar">
+    ${!state.replay ? `<div class="empty">Pick a game to step through it move by move.</div>` : !rep ? `<div class="empty">Loading…</div>` : rep.error ? `<div class="notice">${esc(rep.error)}</div>` : !frames.length ? `<div class="empty">This record has no frames.</div>` : `
+    <div class="panel"><div class="frames">
       <button id="fprev" aria-label="previous decision">◀</button>
-      <input type="range" id="fr" min="0" max="${frames.length - 1}" value="${state.frame}" style="flex:1" aria-label="decision">
+      <input type="range" id="fr" min="0" max="${frames.length - 1}" value="${state.frame}" aria-label="decision">
       <button id="fnext" aria-label="next decision">▶</button>
       <button id="fchoice">Next real bot decision ▶▶</button>
-      <span class="mono small">${state.frame + 1}/${frames.length} · turn ${f.board.turn} · ${esc(f.board.phase)}</span></div>
-      <p class="small muted" style="margin-top:6px">${esc(rep.deck1)} (P1) vs ${esc(rep.deck2)} (P2). Both hands are shown here for review; the bot could not see the opponent's hand.</p></div>
-    <div class="grid2">
-      <div class="panel">${boardHtml(f.board)}</div>
-      <div class="panel stack"><h2>Player ${f.player} decision <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
-        <p class="small muted">${shares.size ? "Each bar shows the share of its search the bot spent on that option: a clear leader is a confident choice, even bars mean it was undecided." : "This player does not search (random) or had only one option."}</p>
-        <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`).join("")}</div>
-        ${f.chosen < 0 ? `<p class="small">Played: ${esc(f.chosen_text || "")}</p>` : ""}
-        <div class="stack"><h3>Your take on this move</h3>
-          ${db ? `<textarea id="acomment" placeholder="What you would have done and why">${esc(ann ? ann.comment || "" : "")}</textarea>
-            <div class="toolbar"><button class="primary" id="asave">Save</button>${ann ? `<span class="small muted">saved${ann.would_play != null ? " — you would have played: " + esc(f.options[ann.would_play] || "") : ""}</span>` : ""}</div>`
-          : `<p class="small muted">Annotations are saved when the page is opened on claude.ai with your account.</p>`}
-        </div>
-        ${f.log && f.log.length ? `<details><summary class="small muted">What happened before this decision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : ""}
-      </div></div>`}`;
+      <span class="mono small" id="fpos"></span></div>
+      <p class="small muted" style="margin-top:6px">${esc(deckLabel(rep.deck1))} (P1) vs ${esc(deckLabel(rep.deck2))} (P2)${rep.reason ? " — " + esc(rep.reason) : ""}. <span class="kbd">←</span> <span class="kbd">→</span> step through the decisions; hover or tap a card to read it. ${state.hands === "both" ? "Both hands are shown for review; the bot could not see the opponent's hand." : "The opponent's hand is face down, as the bot saw it."}</p></div>
+    <div class="replay"><div id="boardHost"></div><div class="panel stack decision" id="decision"></div></div>`}`;
   const r = $("#rsel"); if (r) r.onchange = e => e.target.value && loadReplay(e.target.value);
   const rc = $("#rclear"); if (rc) rc.onclick = () => { state.repFilter = null; viewReplays(); };
-  if (!f) return;
-  const go = k => { state.frame = Math.max(0, Math.min(frames.length - 1, k)); viewReplays(); };
+  if (!ready) return;
+  $("#rview").onchange = e => { state.viewer = +e.target.value; renderFrame(); };
+  $("#rhands").onchange = e => { state.hands = e.target.value; viewReplays(); };
+  const go = k => { state.frame = Math.max(0, Math.min(frames.length - 1, k)); renderFrame(); };
   $("#fprev").onclick = () => go(state.frame - 1); $("#fnext").onclick = () => go(state.frame + 1);
   $("#fr").oninput = e => go(+e.target.value);
   $("#fchoice").onclick = () => { for (let k = state.frame + 1; k < frames.length; k++) if (frames[k].search && frames[k].search.length > 1) return go(k); };
-  el.querySelectorAll("button[data-would]").forEach(b => b.onclick = () => saveAnnotation(f, +b.dataset.would));
+  RiftBoard.mount($("#boardHost"), { cards: D.cards, players: [playerInfo(rep, 1), playerInfo(rep, 2)] });
+  renderFrame();
+}
+function renderFrame() {
+  const rep = state.rep, frames = rep && rep.frames || [], f = frames[state.frame];
+  const host = $("#boardHost"), dec = $("#decision"); if (!f || !host || !dec) return;
+  const slider = $("#fr"); if (slider && +slider.value !== state.frame) slider.value = state.frame;
+  $("#fpos").textContent = `${state.frame + 1}/${frames.length} · turn ${f.board.turn} · ${f.board.phase.replace(/([a-z])([A-Z])/g, "$1 $2")}`;
+  RiftBoard.render(f, { viewer: state.viewer, hands: state.hands });
+  const key = state.replay + "|" + f.n, ann = annotations.get(key);
+  const bot = f.player === 1 ? rep.agent1 : rep.agent2;
+  const shares = new Map((f.search || []).map(([i, s]) => [i, s]));
+  dec.innerHTML = `<h2>Player ${f.player} decision <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
+    <p class="small muted">${shares.size ? "Each bar shows the share of its search the bot spent on that option: a clear leader is a confident choice, even bars mean it was undecided." : "This player does not search (random) or had only one option."}</p>
+    <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`).join("")}</div>
+    ${f.chosen < 0 ? `<p class="small">Played: ${esc(f.chosen_text || "")}</p>` : ""}
+    <div class="stack"><h3>Your take on this move</h3>
+      ${db ? `<textarea id="acomment" placeholder="What you would have done and why">${esc(ann ? ann.comment || "" : "")}</textarea>
+        <div class="toolbar"><button class="primary" id="asave">Save</button>${ann ? `<span class="small muted">saved${ann.would_play != null ? " — you would have played: " + esc(f.options[ann.would_play] || "") : ""}</span>` : ""}</div>`
+      : `<p class="small muted">Annotations are saved when the page is opened on claude.ai with your account.</p>`}
+    </div>
+    ${f.log && f.log.length ? `<details><summary class="small muted">What happened before this decision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : ""}`;
+  dec.querySelectorAll("button[data-would]").forEach(b => b.onclick = () => saveAnnotation(f, +b.dataset.would));
   const as = $("#asave"); if (as) as.onclick = () => saveAnnotation(f, ann ? ann.would_play : null);
 }
+// ← / → step through the frames when the Replays tab is open and no field has the focus.
+document.addEventListener("keydown", e => {
+  if ($("#v-replays").hidden || !state.rep || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  const n = (state.rep.frames || []).length; if (!n) return;
+  if (e.key === "ArrowRight") { state.frame = Math.min(n - 1, state.frame + 1); renderFrame(); e.preventDefault(); }
+  else if (e.key === "ArrowLeft") { state.frame = Math.max(0, state.frame - 1); renderFrame(); e.preventDefault(); }
+  else if (e.key === "Home") { state.frame = 0; renderFrame(); e.preventDefault(); }
+  else if (e.key === "End") { state.frame = n - 1; renderFrame(); e.preventDefault(); }
+});
 async function saveAnnotation(f, would) {
   if (!db) return;
   const comment = ($("#acomment") || {}).value || "";
   const id = (state.replay + "_" + f.n).replace(/[^A-Za-z0-9_-]+/g, "_").slice(-140);
   const doc = { replay: state.replay, frame: f.n, turn: f.board.turn, player: f.player, options: f.options, bot_choice: f.chosen,
                 would_play: would, comment, author: meId || "", at: new Date().toISOString() };
-  try { await db.collection("annotations").doc(id).set(doc); annotations.set(state.replay + "|" + f.n, doc); viewReplays(); }
-  catch (e) { alert && 0; const n = document.createElement("div"); n.className = "notice"; n.textContent = "Annotation not saved: " + (e.message || e.code); $("#v-replays").prepend(n); }
+  try { await db.collection("annotations").doc(id).set(doc); annotations.set(state.replay + "|" + f.n, doc); renderFrame(); }
+  catch (e) { const n = document.createElement("div"); n.className = "notice"; n.textContent = "Annotation not saved: " + (e.message || e.code); $("#v-replays").prepend(n); }
 }
 
 // ── Bot view ────────────────────────────────────────────────────────────────
@@ -545,6 +563,7 @@ function route() {
   const tab = (location.hash || "#tests").slice(1); const t = VIEWS[tab] ? tab : "tests";
   document.querySelectorAll("nav.tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.tab === t ? "page" : "false"));
   Object.keys(VIEWS).forEach(k => $("#v-" + k).hidden = k !== t);
+  $("main").classList.toggle("wide", t === "replays");
   if (D) VIEWS[t]();
 }
 window.addEventListener("hashchange", route);

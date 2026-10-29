@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble the lab dashboard's data files into lab/dashboard/dist/.
 
-dist/index.html     the page (copied from lab/dashboard/index.html)
+dist/index.html     the page (copied from lab/dashboard/, with board.js + board.css)
 dist/data.json      tests (full results), decks with stats, variants, learning ladder
 dist/replays/*.json game records referenced by data.json (the most recent ones)
 
@@ -20,6 +20,7 @@ DIST = LAB / "dashboard" / "dist"
 sys.path.insert(0, str(LAB))
 import riftlab  # noqa: E402
 
+PAGE_FILES = ["index.html", "board.js", "board.css"]   # the page and the board renderer, copied as is
 SESSION = {"session_id": "session_01F68srW6k6CBYFTm9oVwNVu",
            "environment_id": "env_01TgKU1MBDD1jDjD7f3iW6Gm",
            "repo": "jdisser02-glitch/alpharune", "branch": "claude/zen-goodall-hb2ssu"}
@@ -63,12 +64,16 @@ def main(argv):
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
             "ladder": ladder, "replays": replays,
-            "cards": [{"name": c["name"], "type": c["card_type"], "domains": c["domains"],
+            "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),
-                       "set": c.get("set")} for c in reg.cards]}
+                       "set": c.get("set"), "image_url": c.get("image_url") or "",
+                       # rules text only for battlefields: the board renderer prints it on the panel
+                       **({"text": c.get("ability_text") or ""} if c["card_type"] == "battlefield" else {})}
+                      for c in reg.cards]}
     (DIST / "data.json").write_text(json.dumps(data, separators=(",", ":")))
-    shutil.copy(LAB / "dashboard" / "index.html", DIST / "index.html")
+    for name in PAGE_FILES:
+        shutil.copy(LAB / "dashboard" / name, DIST / name)
     size = sum(p.stat().st_size for p in DIST.rglob("*") if p.is_file())
     print(f"dist: {len(tests)} tests, {len(index['decks'])} decks, {len(replays)} replays, "
           f"{len(ladder.get('iterations', []))} learning iterations, {size / 1e6:.1f} MB")
