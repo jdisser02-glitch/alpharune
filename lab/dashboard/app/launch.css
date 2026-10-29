@@ -1,0 +1,79 @@
+/* Riven Lab — Launch screen (app/launch.js). Prefix .v-launch; tokens and components come from app.css. */
+.v-launch { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); gap: var(--sp-4); align-items: start; margin-top: var(--sp-5); }
+.v-launch-side { position: sticky; top: calc(var(--header-h) + 12px); }
+@media (max-width: 960px) { .v-launch { grid-template-columns: 1fr; } .v-launch-side { position: static; } }
+
+/* steps */
+.v-launch-step { display: flex; flex-direction: column; gap: var(--sp-3); }
+.v-launch-step > h2 + *, .v-launch-step > .panel-head + * { margin-top: 0; }
+.v-launch-stephead { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.v-launch-stephead h2 { margin: 0; }
+.v-launch-stephead .n { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 700 13px/1 var(--display); color: #1a1406; background: linear-gradient(180deg, var(--gold-2), var(--gold)); }
+.v-launch-stephead .actions { margin-left: auto; display: flex; gap: 8px; }
+.v-launch-stephead .segmented { margin-left: auto; }
+.v-launch-fields label.f span.xs { font: 12px/1.3 var(--text); letter-spacing: 0; text-transform: none; }
+.v-launch-step h3 { margin-top: var(--sp-1); }
+.v-launch-step h3 .muted { text-transform: none; letter-spacing: 0; font-weight: 500; }
+
+/* lists under test */
+.v-launch-rows { display: flex; flex-direction: column; gap: 6px; }
+.v-launch-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 10px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-1); }
+.v-launch-rowtxt { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.v-launch-rowtxt b { color: var(--parch); font-family: var(--display); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.v-launch-rowtxt .sub { font-size: 12.5px; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; }
+.v-launch-changes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.v-launch-delta { display: inline-flex; align-items: center; gap: 4px; padding-right: 6px; border-radius: 999px; background: var(--s1); border: 1px solid var(--line); }
+.v-launch-delta b { font: 600 12px var(--mono); }
+.v-launch-delta.add b { color: var(--win); } .v-launch-delta.rem b { color: var(--loss); }
+.v-launch-delta .card-chip.plain { padding-right: 4px; }
+
+/* search: card pickers */
+.v-launch-pool { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-launch-pick { padding: 2px 8px 2px 2px; border-radius: 999px; background: var(--s2); gap: 4px; }
+.v-launch-pick .card-chip { padding: 0; border: 0; background: transparent; }
+.v-launch-pick[aria-pressed="true"] { border-color: var(--gold); background: var(--gold-soft); color: var(--parch); }
+.v-launch-pick .x { font-size: 15px; line-height: 1; color: var(--ink-dim); padding: 0 4px; }
+
+/* the gauntlet */
+.v-launch-gauntlet { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 10px; }
+.v-launch-opp { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 4px 12px; padding: 10px 12px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-2); transition: border-color .15s ease, opacity .15s ease; }
+.v-launch-opp:hover { border-color: var(--gold-dim); }
+.v-launch-opp.off { opacity: .55; }
+.v-launch-opp .portrait { grid-row: 1 / span 2; align-self: start; }
+.v-launch-opptxt { min-width: 0; display: flex; flex-direction: column; }
+.v-launch-opptxt b { color: var(--parch); font-family: var(--display); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-launch-opptxt .sub { font-size: 12px; color: var(--ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-launch-x { grid-column: 3; grid-row: 1; width: 26px; height: 26px; font-size: 16px; }
+.v-launch-w { grid-column: 2 / span 2; display: flex; flex-direction: column; gap: 2px; }
+.v-launch-w input[type=range] { width: 100%; margin: 0; }
+.v-launch-w b { color: var(--parch); }
+
+/* games and estimate */
+.v-launch-games { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); align-items: end; }
+.v-launch-games label.f input[type=number] { width: 120px; }
+.v-launch-games label.f input[type=text] { width: 180px; }
+.v-launch-est { padding: 10px 14px; border-radius: var(--r-1); background: var(--s2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+.v-launch-estline { font-size: 15px; color: var(--ink-2); }
+.v-launch-est b { color: var(--parch); }
+.v-launch-est .notice { margin-top: 4px; }
+
+/* presets */
+.v-launch-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .v-launch-presets { grid-template-columns: 1fr; } }
+.v-launch-preset { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; padding: 12px 14px; border-radius: var(--r-2); background: var(--s2); white-space: normal; height: 100%; }
+.v-launch-preset .t { font: 600 15px/1.2 var(--display); color: var(--parch); }
+.v-launch-preset .d { font-size: 13px; color: var(--ink-dim); line-height: 1.4; }
+.v-launch-preset .mono { color: var(--ink-faint); overflow-wrap: anywhere; }
+.v-launch-preset[aria-checked="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold), var(--sh-1); background: var(--gold-soft); }
+.v-launch-preset[aria-checked="true"] .t::before { content: "●"; color: var(--gold); margin-right: 6px; font-size: 10px; vertical-align: 2px; }
+
+/* the send panel */
+.v-launch-sum { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-1); }
+.v-launch-sum .versus { gap: 10px; }
+.v-launch-json .log { max-height: 340px; font-size: 12px; white-space: pre; }
+.v-launch-json summary { cursor: pointer; }
+.v-launch-hist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.v-launch-hist li { padding: 8px 10px; background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-1); display: flex; flex-direction: column; gap: 3px; }
+.v-launch-histtop { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.v-launch-histtop b { color: var(--parch); font-family: var(--display); }
+.v-launch-histtop a:hover { text-decoration: none; }

@@ -1,0 +1,74 @@
+/* Riven Lab — Cards screen (app/cards.js). Prefix .v-cards; tokens and components come from app.css. */
+.v-cards { --dw: 440px; }
+.v-cards-filters { margin-top: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); }
+.v-cards-filterrow { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); align-items: center; }
+.v-cards-types { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.v-cards-types::-webkit-scrollbar { display: none; }
+.v-cards-types > button { white-space: nowrap; }
+.v-cards-doms { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-cards-doms button { text-transform: capitalize; }
+.v-cards-doms button[aria-pressed="true"], .v-cards-range button[aria-pressed="true"] { border-color: var(--gold); background: var(--gold-soft); color: var(--parch); }
+.v-cards-range { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.v-cards-range button { min-width: 34px; padding-inline: 6px; font-family: var(--mono); }
+.v-cards-rlabel { font: 600 11.5px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); margin-right: 6px; }
+.v-cards-active { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.v-cards-active:empty { display: none; }
+.v-cards-chip { padding: 3px 8px 3px 10px; font-size: 13px; cursor: pointer; }
+.v-cards-chip:hover { border-color: var(--gold-dim); background: var(--s3); }
+.v-cards-chip .x { color: var(--ink-dim); font-size: 14px; line-height: 1; }
+
+/* results */
+.v-cards-results { margin-top: var(--sp-4); }
+.v-cards-count { margin-bottom: 10px; }
+.v-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--tw, 132px), 1fr)); gap: 12px 10px; }
+@media (max-width: 480px) { .v-cards-grid { --tw: 104px; gap: 10px 8px; } }
+.v-cards-tile { display: flex; flex-direction: column; align-items: stretch; gap: 5px; padding: 0; border: 0; background: transparent; border-radius: 8px; text-align: left; cursor: pointer; min-width: 0; transition: transform .15s ease; }
+.v-cards-tile:hover, .v-cards-tile:focus-visible { background: transparent; border-color: transparent; transform: translateY(-3px); }
+.v-cards-tile:focus-visible { outline: none; box-shadow: var(--focus); }
+.v-cards-tile .card-img { width: 100%; --w: 100%; border-radius: 7px; transition: box-shadow .15s ease; }
+.v-cards-tile:hover .card-img { box-shadow: 0 0 0 1px var(--gold-dim), var(--sh-2); }
+.v-cards-tile.sel .card-img { box-shadow: 0 0 0 2px var(--gold), 0 0 16px rgba(214, 178, 94, .35); }
+.v-cards-tile .card-img.land { aspect-ratio: 744 / 1039; background: var(--s0); }
+.v-cards-tile .card-img.land img { object-fit: contain; }
+.v-cards-cap { display: flex; flex-direction: column; gap: 1px; min-width: 0; padding: 0 2px; }
+.v-cards-cap .n { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-cards-cap .m { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; color: var(--ink-faint); }
+.v-cards-cap .m .mono { font-size: 11px; }
+.v-cards-more { justify-content: center; margin-top: var(--sp-4); }
+
+/* drawer */
+.v-cards-dback { display: none; position: fixed; inset: 0; z-index: 60; background: rgba(4, 6, 12, .55); }
+.v-cards-drawer { position: fixed; z-index: 61; top: calc(var(--header-h) + 12px); bottom: 12px; right: max(12px, calc((100vw - var(--wrap)) / 2 + 16px)); width: min(var(--dw), calc(100vw - 24px));
+  overflow: auto; background: var(--s1); border: 1px solid var(--chrome); border-radius: var(--r-3); box-shadow: var(--sh-3); padding: var(--sp-3) var(--sp-4) var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-3); outline: none; }
+@media (min-width: 1000px) { body.v-cards-open .v-cards > .page-head, body.v-cards-open .v-cards-filters, body.v-cards-open .v-cards-results { margin-right: calc(var(--dw, 440px) + var(--sp-4)); } }
+@media (max-width: 999px) {
+  .v-cards-dback { display: block; }
+  .v-cards-drawer { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 88vh; border-radius: var(--r-3) var(--r-3) 0 0; border-bottom: 0; padding-bottom: max(var(--sp-5), env(safe-area-inset-bottom, 0px)); }
+}
+.v-cards-dhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.v-cards-dbody { display: flex; flex-direction: column; gap: var(--sp-4); }
+.v-cards-dart { display: flex; justify-content: center; }
+.v-cards-dart .card-img { --w: min(280px, 100%); box-shadow: 0 0 0 1px var(--gold-dim), var(--sh-2); border-radius: 12px; }
+.v-cards-dart .card-img.land { --w: 100%; }
+.v-cards-dinfo h2 { font-size: 22px; }
+.v-cards-dinfo h3 { margin-top: var(--sp-2); }
+.v-cards-dinfo h3 .muted { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.v-cards-facts { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 14px; }
+.v-cards-facts > div { display: contents; }
+.v-cards-facts dt { font: 600 11px/1.6 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.v-cards-facts dd { margin: 0; color: var(--ink-2); }
+.v-cards-dom { display: inline-flex; align-items: center; text-transform: capitalize; margin-right: 8px; }
+.v-cards-tag { cursor: pointer; padding: 2px 8px; font-size: 12.5px; }
+.v-cards-tag:hover { border-color: var(--gold-dim); background: var(--s3); }
+.v-cards-text { font-size: 14.5px; color: var(--ink-2); background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-1); padding: 8px 10px; }
+.v-cards-dgroup { display: flex; flex-direction: column; gap: 4px; }
+.v-cards-decks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.v-cards-decks a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 4px 6px; border-radius: var(--r-1); color: var(--ink); }
+.v-cards-decks a:hover { background: var(--s2); text-decoration: none; }
+.v-cards-decks a:hover .n { color: var(--gold-2); }
+.v-cards-decks .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.v-cards-decks .k { color: var(--parch); }
+@media (max-width: 760px) {
+  .v-cards-filters { margin-top: var(--sp-4); }
+  .v-cards-dart .card-img { --w: min(200px, 100%); }
+}
