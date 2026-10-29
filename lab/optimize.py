@@ -138,18 +138,27 @@ def main(argv: list[str]) -> int:
         alive.sort(key=rate, reverse=True)
         log.append({"round": r + 1, "games_per_opponent": g,
                     "standings": [{"label": c["label"], "rate": round(rate(c), 4)} for c in alive]})
+        write_result(test_id, spec, started, agent, opp_agent, rounds, threads, seed, log, cands,
+                     opponents, rate, reg)
         if r + 1 < len(rounds):
             k = max(2, int(round(len(alive) * keep)))
             base = next(c for c in alive if c["label"] == "base (control)")
             alive = alive[:k] if base in alive[:k] else alive[: k - 1] + [base]   # the control stays
 
+    write_result(test_id, spec, started, agent, opp_agent, rounds, threads, seed, log, cands, opponents, rate, reg)
+    return 0
+
+
+def write_result(test_id, spec, started, agent, opp_agent, rounds, threads, seed, log, cands, opponents, rate, reg):
+    """Write lab/results/<id>.json from the games played so far (called after
+    every round, so a crash or a cancelled job keeps the finished rounds)."""
     result = {"id": test_id, "name": spec["name"], "kind": "optimize",
               "description": spec.get("description", f"List search around {spec['base']} (successive halving)."),
               "started_utc": started.isoformat(timespec="seconds"),
               "finished_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
               "engine_commit": riftlab.git_commit(), "agent": agent, "opp_agent": opp_agent,
               "games_per_matchup": rounds[-1], "threads": threads, "seed": seed, "spec": spec,
-              "optimize": {"rounds": log}, "decks": []}
+              "optimize": {"rounds": log, "complete": len(log) == len(rounds)}, "decks": []}
     for c in sorted(cands, key=rate, reverse=True):
         d = riftlab.parse_deck(ROOT / c["path"])
         drec = {"label": c["label"], "path": c["path"], "hash": riftlab.deck_hash(ROOT / c["path"]),
@@ -167,8 +176,7 @@ def main(argv: list[str]) -> int:
     out = LAB / "results" / f"{test_id}.json"
     out.write_text(json.dumps(result, indent=1))
     riftlab.write_index(reg)
-    print(out.relative_to(ROOT))
-    return 0
+    print(out.relative_to(ROOT), flush=True)
 
 
 if __name__ == "__main__":

@@ -470,6 +470,10 @@ struct IsMctsAgent::Impl {
     std::mt19937_64 pick_rng;
     std::shared_ptr<const ::open_spiel::Game> game;
     std::unique_ptr<::open_spiel::algorithms::ISMCTSBot> bot;
+    // Fallback searcher on the real state (no determinization), used when the
+    // sampled worlds yield no legal root action (see selectAction).
+    std::unique_ptr<::open_spiel::algorithms::ISMCTSBot> bot_pi;
+    int fallbacks = 0;
     int sims;
     uint64_t engine_seed;
 
@@ -499,6 +503,20 @@ struct IsMctsAgent::Impl {
             // Sampled worlds give the opponent different hands, so the
             // actions available at an opponent node differ between samples.
             /*allow_inconsistent_action_sets=*/opts.determinize);
+        auto clone_resampler =
+                [](const ::open_spiel::State& st,
+                   ::open_spiel::Player /*pl*/,
+                   std::function<double()> /*rng*/)
+                    -> std::unique_ptr<::open_spiel::State> {
+                    return st.Clone();
+                };
+        bot_pi = std::make_unique<::open_spiel::algorithms::ISMCTSBot>(
+            static_cast<int>(mcts_seed ^ 0x5A5A5A5A), evaluator,
+            opts.uct_c > 0 ? opts.uct_c : 2.0, sims,
+            ::open_spiel::algorithms::kUnlimitedNumWorldSamples,
+            ::open_spiel::algorithms::ISMCTSFinalPolicyType::kNormalizedVisitCount,
+            true, false);
+        bot_pi->SetResampler(clone_resampler);
         if (!opts.determinize) {
             // Search the real state (perfect information).
             bot->SetResampler(
@@ -549,7 +567,28 @@ Intent IsMctsAgent::selectAction(const GameState& state,
     // offers matching runes. Take the first.
     if (state.cost_cursor.has_value()) return legal_actions[0];
     if (!os_state || os_state->IsTerminal()) return legal_actions[0];
-    ::open_spiel::ActionsAndProbs policy = impl_->bot->GetPolicy(*os_state);
+    ::open_spiel::ActionsAndProbs policy;
+    try {
+        policy = impl_->bot->GetPolicy(*os_state);
+    } catch (const std::exception& e) {
+        // Every sampled world offered different root actions than the real
+        // state (a choice over cards the resample re-dealt, for instance), so
+        // the determinized search has no visit on a legal action. Search the
+        // real state instead of aborting the game.
+        ++impl_->fallbacks;
+        static const bool dbg = std::getenv("RIFTBOUND_MCTS_DEBUG") != nullptr;
+        if (dbg) {
+            std::cerr << "[ISMCTS] determinized search failed at decision "
+                      << state.decision_index << ": " << e.what() << "\n  options:";
+            for (const auto& in : legal_actions) std::cerr << " | " << in.describe();
+            std::cerr << "\n";
+        }
+        try {
+            policy = impl_->bot_pi->GetPolicy(*os_state);
+        } catch (const std::exception&) {
+            return legal_actions[0];
+        }
+    }
     if (policy.empty()) return legal_actions[0];
     impl_->last_search = sharesByLegalIndex(policy, legal_actions, state);
     ::open_spiel::Action chosen_action = policy.front().first;
