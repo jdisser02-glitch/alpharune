@@ -55,6 +55,11 @@ p { margin: 0; max-width: 72ch; }
 .kpi span { font-size: 12.5px; color: var(--muted); }
 .pill { display: inline-block; font: 600 11px var(--mono); padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
 .pill.plumb { color: var(--plumb); } .pill.bot { color: var(--chaos); } .pill.ok { color: var(--win); } .pill.bad { color: var(--loss); } .pill.warn { color: var(--warn); }
+/* human-game comparison */
+.cmpstrip { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: var(--sunk); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.cmpstrip b { font-family: var(--display); }
+.opt.botpick { outline: 2px dashed var(--warn); outline-offset: -2px; }
+details.panel > summary { cursor: pointer; }
 .tablewrap { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
 th { text-align: left; font: 600 12px var(--display); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -212,8 +217,10 @@ function viewTests() {
         <td class="mono">${t.games_per_matchup}/matchup</td>
         <td>${t.decks.map(d => `<div><span class="small">${esc(d.label)}</span>${wr(d.weighted_win_rate, null)}</div>`).join("")}</td></tr>`).join("")}
       </tbody></table></div></div>
+    ${humanGamesPanel()}
     <div id="testDetail"></div>`;
   el.querySelectorAll("tr.click").forEach(tr => tr.onclick = () => { state.test = +tr.dataset.i; store("rl.test", state.test); viewTests(); });
+  el.querySelectorAll("a[data-human]").forEach(a => a.onclick = () => { state.repFilter = null; loadReplay(a.dataset.human); });
   if (state.test != null && tests[state.test]) renderTestDetail(tests[state.test]);
 }
 
@@ -343,15 +350,36 @@ function renderBuilder() {
 
 // ── Replays view ────────────────────────────────────────────────────────────
 // The table is drawn by RiftBoard (board.js / board.css); this view keeps the game picker, the frame
-// navigation and the decision panel (search shares, "me" votes, annotations).
+// navigation and the decision panel (search shares, "me" votes, annotations). Human games (lab/human_replays,
+// replayed through the engine with the bot asked at every decision of the captured player) add the comparison:
+// the human's move vs the bot's choice, agreement so far, disagreements and desyncs.
+const humanGameOf = file => (D.human_review && D.human_review.games || []).find(g => g.replay === file) || null;
+function legendShort(name) {
+  const c = cardIndex().get(String(name || "").toLowerCase());
+  return c && c.type === "legend" && (c.tags || [])[0] || name || "?";
+}
+function humanLabel(r) {
+  const g = humanGameOf(r.file) || r;
+  const leg = g.legends || {}; const [a, b] = g.players || ["P1", "P2"];
+  return `${a} (${legendShort(leg.P1)}) vs ${b} (${legendShort(leg.P2)}) — RiftLite, ${g.date || ""}${g.game > 1 ? ` game ${g.game}` : ""} — bot agrees ${g.agreement_pct != null ? g.agreement_pct.toFixed(0) + "%" : "—"}`;
+}
+const isCompared = f => f && f.human_known && f.agree != null;
+const desyncSet = g => new Set(((g && g.summary && g.summary.desync_list) || []).map(d => d.decision));
 async function loadReplay(file) {
   state.replay = file; state.frame = 0; state.rep = null; viewReplays();
   try { const r = await fetch(file); state.rep = await r.json(); } catch (e) { state.rep = { error: String(e) }; }
-  // jump to the first decision of player 1 that offered a choice
-  const fr = (state.rep.frames || []); const k = fr.findIndex(f => f.options && f.options.length > 1); state.frame = Math.max(0, k);
+  const fr = (state.rep.frames || []);
+  if (state.rep.guided) { state.viewer = state.rep.capture_seat || 1; const k = fr.findIndex(isCompared); state.frame = Math.max(0, k); }
+  else { const k = fr.findIndex(f => f.options && f.options.length > 1); state.frame = Math.max(0, k); }   // first decision with a choice
   viewReplays();
 }
 function playerInfo(rep, p) {
+  const hg = rep.guided && humanGameOf(state.replay);
+  if (hg) {
+    const dk = (hg.summary && hg.summary.decks || {})["P" + p] || {}; const runes = {};
+    for (const [n, k] of Object.entries(dk.list && dk.list.runes || {})) runes[n.toLowerCase().replace(/ rune$/, "")] = k;
+    return { label: (hg.players || [])[p - 1] || "P" + p, deck: `${legendShort(dk.legend || (hg.legends || {})["P" + p])} (inferred list)`, runes, champion: dk.champion || "" };
+  }
   const path = p === 1 ? rep.deck1 : rep.deck2, d = deckByPath(path), agent = p === 1 ? rep.agent1 : rep.agent2;
   return { label: /random/.test(agent || "") ? "random" : "bot", deck: deckLabel(path),
            runes: d ? d.stats.rune_split : {}, champion: d ? Object.keys(d.list.champion || {})[0] : "" };
@@ -363,11 +391,14 @@ function viewReplays() {
   const rep = state.rep, frames = rep && rep.frames || [];
   const ready = rep && !rep.error && frames.length;
   state.viewer ??= 1; state.hands ??= "both";
+  const hg = ready && rep.guided ? humanGameOf(state.replay) : null;
+  const opt = r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${r.human ? esc(humanLabel(r)) : `${esc(r.agent1)} (P1) vs ${esc(r.agent2)} (P2) — ${r.winner ? "won by P" + r.winner : "draw"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} turns — ${esc(r.test_id)}`}</option>`;
+  const humans = reps.filter(r => r.human), bots = reps.filter(r => !r.human);
   el.innerHTML = `
     <div class="panel"><div class="toolbar">
-      <label class="f" style="flex:1 1 280px">Game<select id="rsel"><option value="">— choose —</option>${reps.map(r => `<option value="${esc(r.file)}" ${r.file === state.replay ? "selected" : ""}>${esc(r.agent1)} (P1) vs ${esc(r.agent2)} (P2) — ${r.winner ? "won by P" + r.winner : "draw"} ${r.scores ? r.scores.join("-") : ""}, ${r.turns} turns — ${esc(r.test_id)}</option>`).join("")}</select></label>
+      <label class="f" style="flex:1 1 280px">Game<select id="rsel"><option value="">— choose —</option>${humans.length ? `<optgroup label="Human games (RiftLite, replayed through the engine)">${humans.map(opt).join("")}</optgroup>` : ""}${bots.length ? `<optgroup label="Bot games (lab tests)">${bots.map(opt).join("")}</optgroup>` : ""}</select></label>
       ${state.repFilter ? `<button id="rclear">All tests</button>` : ""}
-      ${ready ? `<label class="f">Seat at the bottom<select id="rview"><option value="1" ${state.viewer === 1 ? "selected" : ""}>Player 1</option><option value="2" ${state.viewer === 2 ? "selected" : ""}>Player 2</option></select></label>
+      ${ready ? `<label class="f">Seat at the bottom<select id="rview"><option value="1" ${state.viewer === 1 ? "selected" : ""}>Player 1${hg ? " · " + esc(hg.players[0]) : ""}</option><option value="2" ${state.viewer === 2 ? "selected" : ""}>Player 2${hg ? " · " + esc(hg.players[1]) : ""}</option></select></label>
       <label class="f">Hands<select id="rhands"><option value="both" ${state.hands === "both" ? "selected" : ""}>show both hands</option><option value="viewer" ${state.hands === "viewer" ? "selected" : ""}>viewer only</option></select></label>` : ""}
     </div></div>
     ${!state.replay ? `<div class="empty">Pick a game to step through it move by move.</div>` : !rep ? `<div class="empty">Loading…</div>` : rep.error ? `<div class="notice">${esc(rep.error)}</div>` : !frames.length ? `<div class="empty">This record has no frames.</div>` : `
@@ -375,41 +406,89 @@ function viewReplays() {
       <button id="fprev" aria-label="previous decision">◀</button>
       <input type="range" id="fr" min="0" max="${frames.length - 1}" value="${state.frame}" aria-label="decision">
       <button id="fnext" aria-label="next decision">▶</button>
-      <button id="fchoice">Next real bot decision ▶▶</button>
+      ${hg ? `<button id="fcmp">Next compared ▶▶</button><button id="fdis">Next disagreement</button><button id="fdes">Next desync</button>` : `<button id="fchoice">Next real bot decision ▶▶</button>`}
       <span class="mono small" id="fpos"></span></div>
-      <p class="small muted" style="margin-top:6px">${esc(deckLabel(rep.deck1))} (P1) vs ${esc(deckLabel(rep.deck2))} (P2)${rep.reason ? " — " + esc(rep.reason) : ""}. <span class="kbd">←</span> <span class="kbd">→</span> step through the decisions; hover or tap a card to read it. ${state.hands === "both" ? "Both hands are shown for review; the bot could not see the opponent's hand." : "The opponent's hand is face down, as the bot saw it."}</p></div>
-    <div class="replay"><div id="boardHost"></div><div class="panel stack decision" id="decision"></div></div>`}`;
+      ${hg ? `<div class="cmpstrip" id="cmpstrip"></div>
+      <p class="small muted" style="margin-top:6px"><b>${esc(hg.players[0])}</b> (P1, ${esc(legendShort(hg.legends.P1))}) vs <b>${esc(hg.players[1])}</b> (P2, ${esc(legendShort(hg.legends.P2))}), captured by ${esc(hg.capture_player)} on RiftLite${hg.source_url ? ` — <a href="${esc(hg.source_url)}" target="_blank" rel="noopener">source replay</a>` : ""}. The engine replays the log and asks the bot (${esc(hg.bot)}) at each of ${esc(hg.capture_player)}'s decisions. <span class="kbd">←</span> <span class="kbd">→</span> step; hover a card to read it.</p>`
+      : `<p class="small muted" style="margin-top:6px">${esc(deckLabel(rep.deck1))} (P1) vs ${esc(deckLabel(rep.deck2))} (P2)${rep.reason ? " — " + esc(rep.reason) : ""}. <span class="kbd">←</span> <span class="kbd">→</span> step through the decisions; hover or tap a card to read it. ${state.hands === "both" ? "Both hands are shown for review; the bot could not see the opponent's hand." : "The opponent's hand is face down, as the bot saw it."}</p>`}</div>
+    <div class="replay"><div id="boardHost"></div><div class="panel stack decision" id="decision"></div></div>
+    ${hg ? aboutComparison(hg) : ""}`}`;
   const r = $("#rsel"); if (r) r.onchange = e => e.target.value && loadReplay(e.target.value);
   const rc = $("#rclear"); if (rc) rc.onclick = () => { state.repFilter = null; viewReplays(); };
   if (!ready) return;
   $("#rview").onchange = e => { state.viewer = +e.target.value; renderFrame(); };
   $("#rhands").onchange = e => { state.hands = e.target.value; viewReplays(); };
   const go = k => { state.frame = Math.max(0, Math.min(frames.length - 1, k)); renderFrame(); };
+  const next = pred => { for (let k = state.frame + 1; k < frames.length; k++) if (pred(frames[k])) return go(k); };
   $("#fprev").onclick = () => go(state.frame - 1); $("#fnext").onclick = () => go(state.frame + 1);
   $("#fr").oninput = e => go(+e.target.value);
-  $("#fchoice").onclick = () => { for (let k = state.frame + 1; k < frames.length; k++) if (frames[k].search && frames[k].search.length > 1) return go(k); };
+  if (hg) {
+    const ds = desyncSet(hg);
+    $("#fcmp").onclick = () => next(isCompared);
+    $("#fdis").onclick = () => next(f => isCompared(f) && !f.agree);
+    $("#fdes").onclick = () => next(f => ds.has(f.n));
+  } else $("#fchoice").onclick = () => next(f => f.search && f.search.length > 1);
   RiftBoard.mount($("#boardHost"), { cards: D.cards, players: [playerInfo(rep, 1), playerInfo(rep, 2)] });
   renderFrame();
+}
+function aboutComparison(hg) {
+  const s = hg.summary || {}, ag = s.agreement || {}, res = s.result || {}, dk = s.decks || {};
+  const deckCol = seat => { const d = dk[seat] || {}; return `<div class="stack" style="gap:6px"><h3>P${seat.slice(1)} · ${esc(d.player || "")} — ${esc(d.legend || "")}</h3>
+      <p class="small muted">${d.legal ? "legal list" : "not a legal list"}${d.filler_cards ? `, ${d.filler_cards} filler cards from ${esc(String(d.filler).split("/").pop())}` : ""}${(d.dropped || []).length ? `, dropped ${d.dropped.map(x => esc(x.card)).join(", ")}` : ""}${(d.unknown_cards || []).length ? `, unknown: ${d.unknown_cards.map(esc).join(", ")}` : ""}</p>
+      ${d.list ? cardList(d.list) : ""}<p class="small">Battlefields: ${(d.battlefields || []).map(esc).join(" · ") || "—"}</p></div>`; };
+  const kinds = Object.entries(ag.by_kind || {}).sort((a, b) => b[1].n - a[1].n);
+  return `<details class="panel"><summary><b>About this comparison</b> <span class="small muted">— source, inferred decks, desyncs, limits</span></summary><div class="stack" style="margin-top:12px">
+    <div class="row small"><span class="chip">${ag.n || 0} decisions compared, ${ag.agree || 0} agree (${pct(ag.rate)})</span><span class="chip">clean boundary: ${ag.clean_boundary ? `${ag.clean_boundary.agree}/${ag.clean_boundary.n} (${pct(ag.clean_boundary.rate)})` : "—"}</span><span class="chip">${hg.desyncs} desyncs</span><span class="chip">stopped: ${esc(hg.stop_reason || "")}</span><span class="chip">engine score ${(res.engine_scores || []).join("–")} · log score ${(res.log_scores || []).join("–")}</span>${hg.source_url ? `<a class="chip" href="${esc(hg.source_url)}" target="_blank" rel="noopener">RiftLite replay ↗</a>` : ""}</div>
+    ${kinds.length ? `<div class="row small">${kinds.map(([k, v]) => `<span class="chip">${esc(k.replace(/_/g, " "))}: ${v.agree}/${v.n}</span>`).join("")}</div>` : ""}
+    <p class="small">What this shows: the engine re-creates the game from the RiftLite log and, at each decision of the captured player, asks the bot what it would do; "agrees" means the bot's first choice is the move the human made. Limits: hands are hidden in the log (cards are added to the hand when they are played, and the opponent's hand is a guess), both decks are inferred from the cards seen and filled up from a lab list, and the engine can drift from the log (a <b>desync</b>): after one it re-synchronises when it can and stops at the cap. "Clean boundary" counts only the decisions taken right after the log and the engine agreed on the state.</p>
+    <div class="grid2">${deckCol("P1")}${deckCol("P2")}</div>
+    ${(s.desync_list || []).length ? `<div class="stack" style="gap:4px"><h3>Desyncs (first ${Math.min(5, s.desync_list.length)} of ${hg.desyncs})</h3>${s.desync_list.slice(0, 5).map(d => `<div class="small"><span class="mono">turn ${d.turn} · ${esc(d.phase)} · decision ${d.decision}</span> — ${esc(d.event_text)} <span class="muted">→ ${esc(d.reason)}</span></div>`).join("")}</div>` : ""}
+  </div></details>`;
 }
 function renderFrame() {
   const rep = state.rep, frames = rep && rep.frames || [], f = frames[state.frame];
   const host = $("#boardHost"), dec = $("#decision"); if (!f || !host || !dec) return;
   const slider = $("#fr"); if (slider && +slider.value !== state.frame) slider.value = state.frame;
   $("#fpos").textContent = `${state.frame + 1}/${frames.length} · turn ${f.board.turn} · ${f.board.phase.replace(/([a-z])([A-Z])/g, "$1 $2")}`;
-  RiftBoard.render(f, { viewer: state.viewer, hands: state.hands });
+  const hg = rep.guided ? humanGameOf(state.replay) : null;
+  RiftBoard.render(f, { viewer: state.viewer, hands: state.hands, banner: hg && isCompared(f) ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: hg && isCompared(f) ? (f.agree ? "over" : "warn") : "" });
   const key = state.replay + "|" + f.n, ann = annotations.get(key);
-  const bot = f.player === 1 ? rep.agent1 : rep.agent2;
   const shares = new Map((f.search || []).map(([i, s]) => [i, s]));
-  dec.innerHTML = `<h2>Player ${f.player} decision <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
-    <p class="small muted">${shares.size ? "Each bar shows the share of its search the bot spent on that option: a clear leader is a confident choice, even bars mean it was undecided." : "This player does not search (random) or had only one option."}</p>
-    <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`).join("")}</div>
-    ${f.chosen < 0 ? `<p class="small">Played: ${esc(f.chosen_text || "")}</p>` : ""}
-    <div class="stack"><h3>Your take on this move</h3>
+  const annot = `<div class="stack"><h3>Your take on this move</h3>
       ${db ? `<textarea id="acomment" placeholder="What you would have done and why">${esc(ann ? ann.comment || "" : "")}</textarea>
         <div class="toolbar"><button class="primary" id="asave">Save</button>${ann ? `<span class="small muted">saved${ann.would_play != null ? " — you would have played: " + esc(f.options[ann.would_play] || "") : ""}</span>` : ""}</div>`
       : `<p class="small muted">Annotations are saved when the page is opened on claude.ai with your account.</p>`}
-    </div>
-    ${f.log && f.log.length ? `<details><summary class="small muted">What happened before this decision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : ""}`;
+    </div>`;
+  const logs = f.log && f.log.length ? `<details><summary class="small muted">What happened before this decision</summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : "";
+  if (hg) {
+    // comparison so far: compared decisions up to this frame and the agreement among them
+    let k = 0, agree = 0, total = 0, agreeTotal = 0;
+    frames.forEach((x, i) => { if (!isCompared(x)) return; total++; if (x.agree) agreeTotal++; if (i <= state.frame) { k++; if (x.agree) agree++; } });
+    const strip = $("#cmpstrip"); if (strip) strip.innerHTML = `<span><b>decision ${isCompared(f) ? k : k + "+"}/${total}</b> compared</span><span>bot agrees <b>${k ? (100 * agree / k).toFixed(0) + "%" : "—"}</b> so far</span><span class="muted">${agreeTotal}/${total} over the game (${hg.agreement_pct}%)${hg.agreement_clean_pct != null ? ` · clean boundary ${hg.agreement_clean_pct}%` : ""}</span><span class="muted">${hg.desyncs} desyncs</span>`;
+    const who = (hg.players || [])["P1P2".indexOf("P" + f.player) / 2] || "P" + f.player;
+    const isCapture = f.player === hg.capture_seat;
+    const title = isCompared(f) ? `<h2>${esc(who)}'s move <span class="pill ${f.agree ? "ok" : "warn"}">${f.agree ? "✓ bot agrees" : "bot disagrees"}</span></h2>`
+      : f.forced ? `<h2>Engine-forced choice <span class="pill plumb">${esc(f.note || "forced")}</span></h2>`
+      : f.human_known ? `<h2>${esc(who)}'s move <span class="pill plumb">not compared</span></h2>` : `<h2>Player ${f.player} <span class="pill plumb">${esc(f.note || "move not in the log")}</span></h2>`;
+    const ds = (hg.summary && hg.summary.desync_list || []).find(d => d.decision === f.n);
+    dec.innerHTML = `${title}
+      ${f.event_text ? `<p class="small"><span class="muted">log:</span> ${esc(f.event_text)}</p>` : ""}
+      ${ds ? `<div class="notice">Desync here: ${esc(ds.event_text)} — ${esc(ds.reason)}</div>` : ""}
+      ${f.forced ? `<p class="small muted">The engine needed an answer the log does not record (${esc(f.note || "cost payment or similar")}); the first option was taken. Not compared.</p>` : ""}
+      ${!f.human_known && !f.forced ? `<p class="small muted">${esc(f.note || "The log has no move for this decision")}; the engine took the first option. Not compared.</p>` : ""}
+      ${f.human_known && !isCompared(f) ? `<p class="small muted">${f.options.length < 2 ? "Only one option: nothing to compare." : isCapture ? "The bot was not asked here." : "Opponent's move (the bot is only asked for " + esc(hg.capture_player) + ")."}</p>` : ""}
+      ${isCompared(f) ? `<p class="small muted">${f.clean_boundary ? "Clean boundary: log and engine agreed on the state before this move." : "In flight: the engine state may differ slightly from the real game here."} Bars are the share of the bot's search per option.</p>` : ""}
+      <div class="list">${f.options.map((o, i) => { const played = f.human_known && i === f.human_choice, bot = f.bot_choice === i;
+        return `<div class="opt ${played ? "chosen" : ""} ${bot && !played ? "botpick" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}${played ? ` <span class="pill ok">played</span>` : ""}${bot ? ` <span class="pill ${f.agree ? "ok" : "warn"}">bot</span>` : ""}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`; }).join("")}</div>
+      ${annot}${logs}`;
+  } else {
+    const bot = f.player === 1 ? rep.agent1 : rep.agent2;
+    dec.innerHTML = `<h2>Player ${f.player} decision <span class="pill ${/random/.test(bot) ? "plumb" : "bot"}">${esc(bot)}</span></h2>
+      <p class="small muted">${shares.size ? "Each bar shows the share of its search the bot spent on that option: a clear leader is a confident choice, even bars mean it was undecided." : "This player does not search (random) or had only one option."}</p>
+      <div class="list">${f.options.map((o, i) => `<div class="opt ${i === f.chosen ? "chosen" : ""} ${ann && ann.would_play === i ? "mine" : ""}"><span>${esc(o)}</span><span class="bar"><i style="width:${(100 * (shares.get(i) || 0)).toFixed(0)}%"></i></span><span class="mono small">${shares.has(i) ? (100 * shares.get(i)).toFixed(0) + "%" : ""}</span><span><button data-would="${i}" class="small" title="I would have played this">me</button></span></div>`).join("")}</div>
+      ${f.chosen < 0 ? `<p class="small">Played: ${esc(f.chosen_text || "")}</p>` : ""}
+      ${annot}${logs}`;
+  }
   dec.querySelectorAll("button[data-would]").forEach(b => b.onclick = () => saveAnnotation(f, +b.dataset.would));
   const as = $("#asave"); if (as) as.onclick = () => saveAnnotation(f, ann ? ann.would_play : null);
 }
@@ -431,6 +510,16 @@ async function saveAnnotation(f, would) {
                 would_play: would, comment, author: meId || "", at: new Date().toISOString() };
   try { await db.collection("annotations").doc(id).set(doc); annotations.set(state.replay + "|" + f.n, doc); renderFrame(); }
   catch (e) { const n = document.createElement("div"); n.className = "notice"; n.textContent = "Annotation not saved: " + (e.message || e.code); $("#v-replays").prepend(n); }
+}
+// Human games table (Tests tab): one row per replayed RiftLite game, link opens it in Replays.
+function humanGamesPanel() {
+  const hr = D.human_review, games = hr && hr.games || [];
+  if (!games.length) return "";
+  return `<div class="panel"><h2>Human games: does the bot play like a person?</h2>
+    <p class="small muted">Each row is a real RiftLite game replayed through the engine; at every decision of the captured player the bot (${esc(hr.agent)}) was asked what it would do. <b>Agreement</b> is the share of those decisions where the bot's first choice is the move the human made; <b>clean</b> counts only decisions where the engine's state was verified against the log just before. With 5–20 legal moves a random player agrees around 10–20%: an agreement near that level means the bot has no opinion, not that it disagrees. Desyncs are points where the engine could not follow the log (hidden cards, unimplemented effects); the replay stops after a few.</p>
+    <div class="tablewrap"><table><thead><tr><th>Game</th><th>Players (captured first)</th><th>Legends</th><th>Compared</th><th>Bot agrees</th><th>Clean</th><th>Desyncs</th><th>Stopped</th><th></th></tr></thead><tbody>
+    ${games.map(g => { const r = D.replays.find(x => x.file === g.replay); return `<tr><td class="mono">${esc(g.date)}${g.game > 1 ? ` g${g.game}` : ""}</td><td><b>${esc(g.capture_player)}</b> vs ${esc((g.players || []).find(p => p !== g.capture_player) || "")}</td><td class="small">${esc(legendShort(g.legends.P1))} vs ${esc(legendShort(g.legends.P2))}</td><td class="mono">${g.decisions_compared}/${g.decisions}</td><td>${wr(g.agreement_pct != null ? g.agreement_pct / 100 : null, null)}</td><td class="mono">${g.agreement_clean_pct != null ? g.agreement_clean_pct.toFixed(0) + "% (" + g.compared_clean + ")" : "—"}</td><td class="mono">${g.desyncs}</td><td class="small">${esc(g.stop_reason || "")}</td><td>${r ? `<a href="#replays" data-human="${esc(g.replay)}" class="small">open</a>` : ""}</td></tr>`; }).join("")}
+    </tbody></table></div></div>`;
 }
 
 // ── Bot view ────────────────────────────────────────────────────────────────

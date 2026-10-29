@@ -63,6 +63,58 @@ def main(argv):
                         "scores": g.get("scores"), "turns": g.get("turns"), "decisions": g.get("decisions"),
                         "frames": len(g.get("frames", []))})
 
+    # Human games replayed through the engine (lab/tools/human_review.py): same frame format plus the comparison
+    # fields; copied as replays/human__<stem>_gN.json and summarised in data.human_review for the Replays/Tests tabs.
+    human = {"generated": "", "agent": "", "games": []}
+    hidx = LAB / "human_replays" / "index.json"
+    if hidx.exists():
+        hi = json.loads(hidx.read_text())
+        human["generated"], human["agent"] = hi.get("generated", ""), hi.get("agent", "")
+        for g in hi.get("games", []):
+            src = ROOT / g.get("path", "")
+            if not src.exists():
+                continue
+            stem = src.parent.name                                   # <file stem>_g<N>
+            name = f"human__{stem}.json"
+            shutil.copy(src, DIST / "replays" / name)
+            rec = json.loads(src.read_text())
+            summ = json.loads((ROOT / g["summary"]).read_text()) if g.get("summary") and (ROOT / g["summary"]).exists() else {}
+            raw = LAB / "human_games" / g["file"]
+            source_url = ""
+            if raw.exists():
+                try:
+                    source_url = json.loads(raw.read_text()).get("source_url", "")
+                except Exception:  # noqa: BLE001
+                    source_url = ""
+            decks = {}
+            for seat in ("P1", "P2"):
+                dp = src.parent / f"deck_{seat.lower()}.txt"
+                inf = (summ.get("inferred_decks") or {}).get(seat, {})
+                lst = riftlab.parse_deck(dp) if dp.exists() else {}
+                decks[seat] = {"player": inf.get("player"), "legend": inf.get("legend"), "champion": inf.get("champion"),
+                               "battlefields": inf.get("battlefields", []), "battlefield_brought": inf.get("battlefield_brought"),
+                               "filler": (inf.get("filler") or {}).get("source", ""), "filler_cards": inf.get("filler_cards", 0),
+                               "dropped": inf.get("dropped", []), "unknown_cards": sorted(set(inf.get("unknown_cards", []))),
+                               "legal": inf.get("legal"), "list": {k: dict(lst.get(k, {})) for k in ("champion", "maindeck", "battlefields", "runes")}}
+            entry = {k: g.get(k) for k in ("file", "game", "players", "capture_player", "legends", "bot", "decisions", "decisions_compared",
+                                           "agreement_pct", "agreement_clean_pct", "compared_clean", "desyncs", "top_desync_causes",
+                                           "silent_passes", "hand_fixes", "stop_reason", "engine_scores", "log_scores", "seconds")}
+            entry.update({"replay": f"replays/{name}", "stem": stem, "date": g["file"][:10], "source_url": source_url,
+                          "capture_seat": rec.get("capture_seat"), "first_player": summ.get("first_player"),
+                          "summary": {"agreement": summ.get("agreement", {}), "disagreements": summ.get("disagreements", []),
+                                      "desync_list": summ.get("desync_list", [])[:12], "desync_causes": summ.get("desync_causes", {}),
+                                      "result": summ.get("result", {}), "forced_decisions": summ.get("forced_decisions"),
+                                      "decisions_human_known": summ.get("decisions_human_known"), "readiness_fixes": summ.get("readiness_fixes"),
+                                      "hand_fixes": (summ.get("hand_fixes") or {}).get("created"), "decks": decks}})
+            human["games"].append(entry)
+            replays.append({"file": f"replays/{name}", "human": True, "test_id": "human", "matchup": f"{g['players'][0]}__vs__{g['players'][1]}",
+                            "seat": f"seat{rec.get('capture_seat', '')}", "game": g.get("game"), "deck1": rec.get("deck1"), "deck2": rec.get("deck2"),
+                            "agent1": rec.get("agent1"), "agent2": rec.get("agent2"), "winner": rec.get("winner"), "scores": rec.get("scores"),
+                            "turns": rec.get("turns"), "decisions": rec.get("decisions"), "frames": len(rec.get("frames", [])),
+                            "players": g.get("players"), "legends": g.get("legends"), "capture_seat": rec.get("capture_seat"), "date": g["file"][:10],
+                            "agreement_pct": g.get("agreement_pct"), "decisions_compared": g.get("decisions_compared"), "stem": stem})
+        print(f"  human games: {len(human['games'])} replayed games from {hidx.relative_to(ROOT)}")
+
     ladder_path = LAB / "learn" / "ladder.json"
     ladder = json.loads(ladder_path.read_text()) if ladder_path.exists() else {"iterations": []}
 
@@ -94,7 +146,7 @@ def main(argv):
 
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
-            "ladder": ladder, "replays": replays, "engine": engine,
+            "ladder": ladder, "replays": replays, "engine": engine, "human_review": human,
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),
