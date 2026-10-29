@@ -88,6 +88,23 @@ const gameDate = meta => meta.human ? meta.date : (testById(meta.test_id) || {})
 /** The library URL for the current filter: ?test=<id>, or ?test=human for the real games alone. */
 const qs = () => st.filter.test ? `?test=${encodeURIComponent(st.filter.test)}` : st.filter.kind === "human" ? "?test=human" : "";
 const optionHtml = text => chipText(text, { cls: "sm" });
+/** Who passed focus before frame i in the current showdown, oldest first (CR 347–348: a card played or a move resets the count;
+    the frame whose log opened the showdown is where the count starts). */
+function passesBefore(frames, i) {
+  const out = [];
+  for (let k = i - 1, n = 0; k >= 0 && n < 24; k--, n++) {
+    const f = frames[k], text = (f.options || [])[f.chosen] || f.chosen_text || "";
+    if (/^Pass focus$/.test(text)) out.unshift(f.player);
+    else if (text && !/^(Pass$|Choose\b|Keep hand|Mulligan\b)/.test(text)) break;
+    if ((f.log || []).some(l => /(SHOWDOWN|COMBAT): BF#/.test(l))) break;
+  }
+  return out;
+}
+/** The latest engine line naming a showdown or combat, looking back from frame i (each frame logs only what preceded it). */
+function showdownLog(frames, i) {
+  for (let k = i, n = 0; k >= 0 && n < 40; k--, n++) { const l = (frames[k].log || []).filter(x => /(SHOWDOWN|COMBAT): BF#/.test(x)); if (l.length) return l.slice(-1); }
+  return [];
+}
 /** The move a frame ended with, as RiftBoard focus entries (cards + battlefield named by the option). */
 function frameFocus(f) {
   const i = f.human_known && f.human_choice != null && f.human_choice >= 0 ? f.human_choice : f.chosen;
@@ -303,7 +320,7 @@ function renderFrame() {
   const b = f.board || {};
   $("#t-pos", host).innerHTML = `<b>${st.frame + 1}</b><span class="muted">/${n}</span> · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}`;
   const compared = hg && isCompared(f);
-  RiftBoard.render({ ...f, focus: frameFocus(f) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "" });
+  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "" });
   // the current move, one line under the transport
   const who = hg ? ((hg.players || [])[f.player - 1] || "P" + f.player) : (s ? (f.player === s.featured.seat ? s.featured : s.opp).player : "P" + f.player);
   const playedIdx = hg && f.human_known && f.human_choice >= 0 ? f.human_choice : f.chosen;

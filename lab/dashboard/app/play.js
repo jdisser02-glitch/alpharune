@@ -17,11 +17,26 @@ const LEVELS = {
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
 };
 const SEATS = { "1": "Player 1, on the play", "2": "Player 2, on the draw", random: "Random" };
-const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100 }, LOG_MAX = 400;
+const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100, focus: 1100 }, LOG_MAX = 400;
+/* One sentence per phase of the turn (CR 315–317), shown under the turn bar when the phase explainer is on. */
+const PHASE_HELP = {
+  Setup: "Setup: each player brings a battlefield and the coin toss decides who goes first.",
+  Mulligan: "Mulligan: set aside up to two cards; they are replaced from the deck, then shuffled back.",
+  AwakenPhase: "Awaken: everything the turn player controls readies — runes, units, legend.",
+  BeginningStep: "Beginning: start-of-turn abilities trigger, before scoring.",
+  ScoringStep: "Scoring: the turn player holds every battlefield they control and gains 1 point for each.",
+  ChannelPhase: "Channel: two runes come from the rune deck, ready to pay for cards.",
+  DrawPhase: "Draw: the turn player draws one card; rune pools empty as the main phase starts.",
+  MainPhase: "Main phase: play cards and move units; the turn ends with End turn.",
+  EndingStep: "Ending: end-of-turn abilities trigger.",
+  ExpirationStep: "Expiration: “this turn” effects expire, units heal, rune pools empty; the next turn begins.",
+  GameOver: "Game over.",
+};
 
 /* Module state: survives navigation. `host` is the container while the screen is mounted, null otherwise. */
 const G = {
-  host: null, root: null, boardEl: null, ui: { group: {}, logOpen: false, sheet: true },
+  host: null, root: null, boardEl: null, ui: { group: {}, logOpen: false, sheet: true, phaseHelp: store("rl.play.phaseHelp") !== "off" },
+  passes: [], sitKey: "",          // focus passes in the current showdown (who passed, in order) and the battlefield they belong to
   cfg: { ...DEFAULTS, ...(store("rl.play") || {}) },
   worker: null, pending: new Map(), nextId: 1, ready: null, info: null, progress: {},
   stage: "setup", st: null, seat: 1, seed: 0, autopay: true, level: "quick",
@@ -96,6 +111,15 @@ function legalHints(legal) {
 /** Option text with every card it names shown as an art chip. The chips sit inside option buttons, so they take no focus stop
     of their own (hover still previews the card). */
 const chipText = (text, cls = "") => libChipText(text, { cls, preview: false });
+/** Remember who passed focus in the showdown (CR 347–348: it closes when both pass in sequence; a card played resets the count). */
+function notePass(text, type, player) {
+  if (type === "PassFocus" || /^Pass focus$/.test(text || "")) { if (G.passes[G.passes.length - 1] !== player) G.passes.push(player); }
+  else if (!/^(PassPriority|MakeChoice|MulliganDecision)$/.test(type || "") && !/^(Pass$|Choose\b)/.test(text || "")) G.passes = [];
+}
+/** The engine lines that name the current showdown or combat ("SHOWDOWN: BF#1 (non-combat)", "COMBAT: BF#0 attacker=P1 …"). */
+const showdownLog = () => { for (let i = G.log.length - 1, n = 0; i >= 0 && n < 160; i--, n++) if (/(SHOWDOWN|COMBAT): BF#/.test(G.log[i])) return [G.log[i]]; return []; };
+/** The frame the table draws: the board plus what tells the renderer where the action is. */
+function frameOf(st, legal) { return { board: st.board, legal, log: showdownLog(), decision_player: st.decision_player, passes: G.passes }; }
 
 // ── game flow ───────────────────────────────────────────────────────────────
 function noteLog(st) {
@@ -136,8 +160,9 @@ async function advance() {
     // no real choice: a cost step with auto-pay on, or a lone Pass (priority / focus) — answered after a short beat
     const lonePass = st.legal.length === 1 && /^Pass/.test(st.legal[0].type || "");
     if ((st.paying_cost && G.autopay && st.legal.length) || lonePass) {
-      G.busy = true; paint(); await sleep(lonePass ? AUTO_PAUSE.pass : AUTO_PAUSE.pay);
-      try { G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
+      // a lone "Pass focus" in a showdown or combat is held a beat longer, so the combat panel can be read
+      G.busy = true; paint(); await sleep(lonePass ? (st.legal[0].type === "PassFocus" ? AUTO_PAUSE.focus : AUTO_PAUSE.pass) : AUTO_PAUSE.pay);
+      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
       G.busy = false; return advance();
     }
     paint(); return;
@@ -145,15 +170,18 @@ async function advance() {
   G.busy = true; G.thinking = true; G.thinkStart = performance.now(); paint();
   try {
     const mv = await call("botMove");
+    notePass(mv.text, mv.type, mv.player || 3 - G.seat);
     G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer(); paint();
-    await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : BOT_PAUSE.forced);
+    const inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
+    await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : inShowdown ? AUTO_PAUSE.focus : BOT_PAUSE.forced);
   } catch (e) { G.error = e.message; G.thinking = false; G.busy = false; stopTimer(); paint(); return; }
   G.busy = false; advance();
 }
 async function pick(index) {
   if (G.stage !== "playing" || G.busy || !G.st.decision_is_human || !G.st.legal.some(l => l.index === index)) return;
   G.busy = true; paint();
-  try { G.st = await call("apply", { index }); G.myMoves++; G.error = null; } catch (e) { G.error = e.message; }
+  const chosen = G.st.legal.find(l => l.index === index) || {};
+  try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null; } catch (e) { G.error = e.message; }
   G.busy = false; advance();
 }
 async function endGame(again) {
@@ -224,7 +252,8 @@ function drawSetup() {
       <summary><h3 style="margin:0">How to play</h3></summary>
       <div class="vp-how">
         <div><h4>Your options</h4><p>Cards you can play and battlefields you can reach light up in gold on the table. The full list sits under the table; some options are not tied to a card (End turn, Pass, mulligan choices). Click an option or press its number; <span class="kbd">Enter</span> takes the first one.</p></div>
-        <div><h4>Reading the table</h4><p>Hover a card to read it, tap on a phone. Your hand is at the bottom, the bot's is face down. The chain in the top bar lists spells and abilities waiting to resolve, last in first out.</p></div>
+        <div><h4>Reading the table</h4><p>Hover a card to read it, tap on a phone. Your hand is at the bottom, the bot's is face down. Each battlefield shows who holds it (a point at the start of each of the holder's turns) and the might of the units on both sides. A pulsing ring marks where the decision is; an arrow marks a unit that can move. A line under the turn bar explains the phase; turn it off in the side panel.</p></div>
+        <div><h4>Combats</h4><p>Move a unit onto a battlefield the bot holds and a showdown opens: the panel grows, names attackers and defenders with their might, and says who wins on raw might. Both players pass focus or play Action and Reaction cards; the chain under the panel shows what waits to resolve and who passed. Then each side assigns damage equal to its total might; Tank units take it first.</p></div>
         <div><h4>The bot</h4><p>Its last move is explained in the side panel with the win chance it gave each option; cards it kept in hand are not named. A game is about 10 to 15 turns.</p></div>
       </div>
     </details>`;
@@ -315,7 +344,10 @@ function drawGame() {
     else if (t.id === "vp-new") endGame(false);
     else if (t.id === "vp-log-sum") setTimeout(() => { G.ui.logOpen = t.parentNode.open; }, 0);
   });
-  G.root.addEventListener("change", e => { if (e.target.id === "vp-autopay2") { G.autopay = e.target.checked; G.cfg.autopay = G.autopay; store("rl.play", G.cfg); if (G.autopay) advance(); } });
+  G.root.addEventListener("change", e => {
+    if (e.target.id === "vp-autopay2") { G.autopay = e.target.checked; G.cfg.autopay = G.autopay; store("rl.play", G.cfg); if (G.autopay) advance(); }
+    else if (e.target.id === "vp-phasehelp") { G.ui.phaseHelp = e.target.checked; store("rl.play.phaseHelp", G.ui.phaseHelp ? "on" : "off"); paint(); }
+  });
   paint();
 }
 async function concede() {
@@ -329,32 +361,48 @@ function paint() {
   const over = G.stage === "over", human = !over && st.decision_is_human && !G.busy;
   const legal = !over && st.decision_is_human ? legalHints(st.legal) : [];
   const banner = over ? "Game over" : G.thinking ? "Bot is thinking…" : G.busy ? (st.paying_cost ? "Paying…" : st.decision_is_human ? "Passing…" : "…") : human ? (st.paying_cost ? "Pay the cost" : "Your move") : "";
-  if (G.boardEl && document.contains(G.boardEl)) RiftBoard.render({ board: st.board, legal }, { viewer: G.seat, hands: over ? "both" : "viewer", banner, bannerKind: over ? "over" : human ? "me" : "bot", legalDisabled: !human, legalLabel: st.paying_cost ? "Pay with" : "Your options", players: players() });
+  const frame = frameOf(st, legal), sit = RiftBoard.situation(frame);
+  const key = sit && sit.index >= 0 && sit.mode ? `${sit.index}:${sit.mode === "contested" ? "showdown" : sit.mode}` : "";   // a showdown that became a combat keeps its passes
+  if (key.split(":")[0] !== G.sitKey.split(":")[0] || !key) { G.passes = []; frame.passes = G.passes; } G.sitKey = key;
+  if (G.boardEl && document.contains(G.boardEl)) RiftBoard.render(frame, { viewer: G.seat, hands: over ? "both" : "viewer", banner, bannerKind: over ? "over" : human ? "me" : "bot", legalDisabled: !human, legalLabel: st.paying_cost ? "Pay with" : "Your options", players: players() });
   game.dataset.turn = over ? "over" : human ? "human" : G.thinking ? "bot" : "wait";
   game.classList.toggle("sheet-closed", !G.ui.sheet);
-  $("#vp-bar", game).innerHTML = barHtml(st, over, human);
+  $("#vp-bar", game).innerHTML = barHtml(st, over, human, sit);
   $("#vp-result", game).innerHTML = over ? resultHtml() : "";
-  const opts = $("#vp-opts", game); opts.hidden = over; if (!over) opts.innerHTML = optionsHtml(st, legal, human);
+  const opts = $("#vp-opts", game); opts.hidden = over; if (!over) opts.innerHTML = optionsHtml(st, legal, human, sit);
   $("#vp-aside", game).innerHTML = asideHtml(st, over);
   hidePreview();                                   // a hovered chip may have gone with the repaint
   if (G.thinking) tickTimer();
 }
 const phaseName = p => String(p || "").replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
-function barHtml(st, over, human) {
+/** The sentence under the turn bar: what this phase is, and what the showdown or combat at hand means. */
+function phaseLine(st, sit) {
+  const b = st.board, me = G.seat;
+  if (sit && sit.index >= 0 && sit.mode === "combat") return `Combat at ${sit.name}: when both players pass focus, each side assigns damage equal to its total might, and the side left standing holds the battlefield.`;
+  if (sit && sit.index >= 0 && sit.mode) return `Showdown at ${sit.name}: only Action and Reaction cards can be played; when both players pass focus it closes and control is settled.`;
+  if (st.paying_cost) return "Paying a cost: the engine exhausts runes for energy, then recycles exhausted runes for power, one at a time.";
+  const line = PHASE_HELP[b.phase] || `${phaseName(b.phase)}.`;
+  return b.phase === "MainPhase" && b.turn_player ? line.replace("Main phase:", b.turn_player === me ? "Your main phase:" : "The bot's main phase:") : line;
+}
+function barHtml(st, over, human, sit) {
   const me = G.seat, opp = 3 - me, b = st.board, sc = st.scores || [b.players[0].score, b.players[1].score];
   const faceMe = deckFace(G.cfg.me), faceBot = deckFace(G.cfg.bot);
   const who = over ? `<span class="who over">Game over</span>`
     : human ? `<span class="who me">${st.paying_cost ? "Pay the cost" : "Your move"}</span>`
     : G.thinking ? `<span class="who bot">Bot is thinking <span class="mono" id="vp-think">${((performance.now() - G.thinkStart) / 1000).toFixed(1)} s</span></span>`
     : `<span class="who wait">${st.paying_cost ? "Paying" : "One moment"}</span>`;
-  return `<span class="turn"><b>Turn ${b.turn ?? "–"}</b><span>${esc(phaseName(b.phase))}${b.turn_player ? ` · ${b.turn_player === me ? "your" : "the bot's"} turn` : ""}</span></span>${who}
-    <span class="seats">${faceMe ? portrait(faceMe, { size: "sm" }) : ""}<span class="lbl"><b>You</b> P${me}</span><span class="sc p${me}">${sc[me - 1] ?? 0}</span><span class="dash">–</span><span class="sc p${opp}">${sc[opp - 1] ?? 0}</span><span class="lbl">P${opp} <b>Bot</b></span>${faceBot ? portrait(faceBot, { size: "sm" }) : ""}</span>`;
+  const sitPill = sit && sit.index >= 0 && sit.mode ? `<span class="who sit ${sit.mode}">${sit.mode === "combat" ? "Combat" : sit.mode === "showdown" ? "Showdown" : "Contested"} at ${esc(sit.name)}</span>` : "";
+  const chain = b.chain || [], chainLine = chain.length ? `<span class="chainline"><span class="lbl">Chain</span>${chain.map((ci, i) => `<span class="ci p${ci.player} ${i === chain.length - 1 ? "top" : ""}">${chipText(ci.source || "?", "sm")}${i === chain.length - 1 ? `<em>${ci.resolving ? "resolving" : "resolves next"}</em>` : ""}</span>`).join(`<span class="arr">›</span>`)}</span>` : "";
+  return `<span class="turn"><b>Turn ${b.turn ?? "–"}</b><span>${esc(phaseName(b.phase))}${b.turn_player ? ` · ${b.turn_player === me ? "your" : "the bot's"} turn` : ""}</span></span>${who}${sitPill}
+    <span class="seats">${faceMe ? portrait(faceMe, { size: "sm" }) : ""}<span class="lbl"><b>You</b> P${me}</span><span class="sc p${me}">${sc[me - 1] ?? 0}</span><span class="dash">–</span><span class="sc p${opp}">${sc[opp - 1] ?? 0}</span><span class="lbl">P${opp} <b>Bot</b></span>${faceBot ? portrait(faceBot, { size: "sm" }) : ""}</span>
+    ${G.ui.phaseHelp && !over ? `<span class="phase ${sit && sit.index >= 0 && sit.mode ? sit.mode : ""}">${esc(phaseLine(st, sit))}</span>` : ""}${chainLine}`;
 }
-function optionsHtml(st, legal, human) {
+function optionsHtml(st, legal, human, sit) {
   const title = human && st.paying_cost ? "Pay with" : "Your options";
   const autoPay = st.decision_is_human && st.paying_cost && G.autopay;
   const state = human ? (st.paying_cost ? "pick the rune to exhaust" : plural(legal.length, "option")) : G.thinking ? "the bot is choosing" : autoPay ? "paying the cost for you" : st.paying_cost ? "the bot is paying" : G.busy ? "one moment" : "waiting for the engine";
-  const list = legal.length && !autoPay ? `<div class="po-list">${legal.map((e, i) => `<button type="button" class="po-opt ${e.card || e.battlefield ? "hot" : ""}" data-pick="${e.index}" ${human ? "" : "disabled"}>${i < 9 ? `<kbd class="kbd">${i + 1}</kbd>` : `<kbd class="kbd blank">·</kbd>`}<span class="po-text">${chipText(e.text || "option " + e.index)}</span></button>`).join("")}</div>`
+  const mark = e => sit && sit.index >= 0 && sit.mode && RiftBoard.concerns(e, sit) ? `<span class="po-mark ${sit.mode}" title="this option concerns the ${sit.mode === "combat" ? "combat" : "showdown"} at ${esc(sit.name)}">this ${sit.mode === "combat" ? "combat" : "showdown"}</span>` : "";
+  const list = legal.length && !autoPay ? `<div class="po-list">${legal.map((e, i) => `<button type="button" class="po-opt ${e.card || e.battlefield ? "hot" : ""}" data-pick="${e.index}" ${human ? "" : "disabled"}>${i < 9 ? `<kbd class="kbd">${i + 1}</kbd>` : `<kbd class="kbd blank">·</kbd>`}<span class="po-text">${chipText(e.text || "option " + e.index)}</span>${mark(e)}</button>`).join("")}</div>`
     : `<div class="po-none">${G.thinking ? "The bot is thinking. Your options appear here when it is your move." : autoPay ? "Rune costs are paid for you; turn that off in the side panel to pick the runes yourself." : "Nothing to choose right now."}</div>`;
   return `<header class="po-head"><h3>${title}</h3><span class="state">${esc(state)}</span><span class="keys"><span class="kbd">1</span>–<span class="kbd">9</span> pick · <span class="kbd">Enter</span> first</span><button type="button" class="btn-sm po-toggle" id="vp-sheet" aria-expanded="${G.ui.sheet}">${G.ui.sheet ? "Hide" : "Show"}</button></header>${list}
     ${human && st.paying_cost ? `<p class="hint" style="margin-top:8px">The engine pays costs rune by rune. Turn automatic payment on in the side panel to skip these steps.</p>` : ""}`;
@@ -371,6 +419,7 @@ function asideHtml(st, over) {
       <div class="counters">${chip(`your moves <b>${G.myMoves}</b>`)}${chip(`bot moves <b>${ms.length}</b>`)}${ms.length ? chip(`bot avg <b>${avg.toFixed(0)} ms</b> · max <b>${mx.toFixed(0)} ms</b>`, "mono") : ""}${chip(`you are <b>P${G.seat}</b>`)}${chip(`bot <b>${esc(LEVELS[G.level].label.toLowerCase())}</b>`)}${chip(`seed ${G.seed}`, "mono")}</div>
       ${G.error ? `<div style="margin-top:10px">${notice(esc(G.error), "error")}</div>` : ""}
       ${over ? "" : `<div class="vp-actions"><label class="switch" style="margin:0"><input type="checkbox" id="vp-autopay2" ${G.autopay ? "checked" : ""}><span>Pay rune costs automatically</span></label></div>
+      <div class="vp-actions"><label class="switch" style="margin:0"><input type="checkbox" id="vp-phasehelp" ${G.ui.phaseHelp ? "checked" : ""}><span>Explain the turn and phase under the bar</span></label></div>
       <div class="vp-actions"><button type="button" class="btn-danger" id="vp-concede">Concede</button><span class="hint">Keys: <span class="kbd">1</span>–<span class="kbd">9</span> pick an option, <span class="kbd">Enter</span> the first one, <span class="kbd">Esc</span> closes a card.</span></div>`}
     </section>
     ${G.log.length ? `<details class="panel" ${G.ui.logOpen ? "open" : ""}><summary id="vp-log-sum"><h3 style="margin:0">Engine log</h3><span class="n">${num(G.log.length)} lines</span></summary><div class="log">${G.log.slice(-80).map(esc).join("\n")}</div></details>` : ""}`;

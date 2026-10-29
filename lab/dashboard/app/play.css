@@ -4,8 +4,8 @@
 
 .v-play { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
 /* a game in progress: tighter page gutters so the table and the hand fit the viewport on a laptop (see board.css --rb-hand-w) */
-body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-3); }
-.v-play .vp-game .vp-main { gap: 10px; }
+body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-2); }
+.v-play .vp-game .vp-main { gap: 8px; }
 .v-play .vp-game .vp-bar { padding: 6px 14px; }
 .v-play .panel > h3:first-child { margin-bottom: 10px; }
 .v-play .hint { font-size: 13px; color: var(--ink-dim); }
@@ -80,8 +80,26 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-3); }
 .v-play .vp-bar .seats .sc { font: 600 20px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
 .v-play .vp-bar .seats .dash { color: var(--gold-dim); }
 .v-play .vp-bar .seats .p1 { color: var(--p1); } .v-play .vp-bar .seats .p2 { color: var(--p2); }
+/* the phase explainer: one sentence on its own line under the bar's facts; gold-edged in a showdown, red in a combat */
+.v-play .vp-bar .phase { flex: 1 1 100%; font-size: 12.5px; line-height: 1.3; color: var(--ink-2); padding-top: 4px; border-top: 1px solid var(--line); }
+.v-play .vp-bar .phase::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-dim); margin: 0 8px 1px 0; vertical-align: middle; }
+.v-play .vp-bar .phase.showdown::before, .v-play .vp-bar .phase.contested::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.v-play .vp-bar .phase.combat { color: var(--parch); }
+.v-play .vp-bar .phase.combat::before { background: var(--loss); box-shadow: 0 0 8px var(--loss); }
 .v-play .vp-board { overflow-x: auto; min-width: 0; border-radius: var(--r-2); }
 .v-play .vp-board .rb-legal { display: none; }          /* the options list below replaces the table's own bar */
+.v-play .vp-board .rb-top { display: none; }            /* the turn bar above the table carries the turn, phase, situation and chain */
+.v-play .vp-bar .who.sit { color: var(--gold-2); border-color: var(--gold-dim); background: var(--gold-soft); }
+.v-play .vp-bar .who.sit.combat { color: #ffd4d0; border-color: var(--loss); background: rgba(239, 93, 85, .14); }
+.v-play .vp-bar .who.sit.combat::before { content: "⚔"; }
+.v-play .vp-bar .chainline { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12.5px; padding-top: 4px; }
+.v-play .vp-bar .chainline .lbl { font: 600 10.5px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); margin-right: 2px; }
+.v-play .vp-bar .chainline .ci { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px 2px 4px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--s2); }
+.v-play .vp-bar .chainline .ci::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--p1); }
+.v-play .vp-bar .chainline .ci.p2::before { background: var(--p2); }
+.v-play .vp-bar .chainline .ci.top { border-color: var(--gold); box-shadow: 0 0 10px rgba(214, 178, 94, .25); }
+.v-play .vp-bar .chainline .ci em { font: 600 9px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.v-play .vp-bar .chainline .arr { color: var(--gold-dim); }
 @keyframes vp-pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 
 /* ── options list ───────────────────────────────────────────────────────── */
@@ -100,6 +118,10 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-3); }
 .v-play .po-opt .po-text { min-width: 0; display: inline; overflow-wrap: anywhere; }
 .v-play .po-opt .card-chip, .v-play .share .card-chip, .v-play .lb-move .card-chip { vertical-align: middle; max-width: 100%; }
 .v-play .po-opt .card-chip { font-size: 13px; padding-right: 7px; cursor: inherit; }
+/* "this combat": the option concerns the battlefield where the showdown or combat is */
+.v-play .po-opt .po-mark { margin-left: auto; flex: 0 0 auto; font: 700 9.5px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 7px; border-radius: 999px; color: var(--gold-2); border: 1px solid var(--gold-dim); background: var(--gold-soft); white-space: nowrap; }
+.v-play .po-opt .po-mark.combat { color: #ffd4d0; border-color: var(--loss); background: rgba(239, 93, 85, .12); }
+.v-play .po-opt .po-mark.combat::before { content: "⚔ "; }
 .v-play .po-none { padding: 12px 0 2px; font-size: 13.5px; color: var(--ink-dim); }
 .v-play .vp-game[data-turn="bot"] .vp-opts h3, .v-play .vp-game[data-turn="wait"] .vp-opts h3 { color: var(--ink-faint); }
 
