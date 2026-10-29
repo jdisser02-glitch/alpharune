@@ -178,6 +178,9 @@ public:
     /// is still reproducible by re-running with --seed <value>.
     uint64_t engineSeed() const { return engine_seed_; }
 
+    /// The card table this game was loaded with.
+    const ::riftbound::CardDB& cardDb() const;
+
     /// Determinization for information-set search (ISMCTS). Returns a clone in
     /// which everything `player_id` cannot see is re-dealt at random from the
     /// cards that could be there: the opponent's hand, Main Deck and facedown

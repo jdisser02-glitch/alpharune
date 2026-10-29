@@ -7,6 +7,7 @@
 
 #include "openspiel/action_vocab.h"
 #include "openspiel/riftbound_state.h"
+#include "ml/value_net.h"
 
 #include "open_spiel/spiel.h"
 #include "open_spiel/algorithms/mcts.h"
@@ -43,7 +44,10 @@ namespace {
 //   • Tertiary: hand size advantage (very small weight).
 class RiftboundHeuristicEvaluator : public ::open_spiel::algorithms::Evaluator {
 public:
-    explicit RiftboundHeuristicEvaluator(std::string mode = "score") : mode_(std::move(mode)) {}
+    explicit RiftboundHeuristicEvaluator(std::string mode = "score") : mode_(std::move(mode)) {
+        // "net:<file>": a learned value network (ml::ValueNet).
+        if (mode_.rfind("net:", 0) == 0) net_ = ml::ValueNet::shared(mode_.substr(4));
+    }
 
     std::vector<double> Evaluate(const ::open_spiel::State& state) override {
         // Terminal: use the canonical Returns directly so MCTS sees
@@ -68,6 +72,11 @@ public:
         // to disentangle them via tree expansion. With more sims this
         // could be reintroduced as a tunable; today, keep it minimal.
         double val = static_cast<double>(p1.score - p2.score) / victory;
+        if (net_) {
+            // The network answers from P1's masked view: P(P1 wins) -> [-1, 1].
+            val = 2.0 * net_->winProbability(s, PlayerId::Player1, rb->cardDb()) - 1.0;
+            return {val, -val};
+        }
         if (mode_ == "board") val = boardValue(s, val);
         if (val >  1.0) val =  1.0;
         if (val < -1.0) val = -1.0;
@@ -203,6 +212,7 @@ public:
 
 private:
     std::string mode_;
+    std::shared_ptr<const ml::ValueNet> net_;
 };
 
 } // namespace

@@ -1,6 +1,8 @@
 #include "game_runner.h"
 #include "agents/random_agent.h"
 #include "io/decision_log.h"
+#include "ml/feature_extractor.h"
+#include "ml/value_net.h"
 #include "io/replay_writer.h"
 #include "io/state_renderer.h"
 
@@ -136,12 +138,38 @@ GameResult GameRunner::run() {
         });
     }
 
+    // Self-play value records: reservoir-sample decisions over the game.
+    std::vector<std::pair<PlayerId, std::vector<float>>> value_samples;
+    std::vector<int> value_turns;
+    std::mt19937_64 value_rng(game_seed * 7919 + 17);
+    int value_seen = 0;
+    const bool want_values = !config_.value_data_path.empty() && config_.value_samples_per_game > 0;
+
     // Decision callback feeds the HTML replay writer when --render is on.
     engine.on_decision = [&](const GameState& state,
                               const std::vector<Intent>& actions,
                               const Intent& chosen) {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
+        }
+        if (want_values && actions.size() > 1 && chosen.player != PlayerId::None) {
+            ++value_seen;
+            const int k = config_.value_samples_per_game;
+            int slot = static_cast<int>(value_samples.size());
+            if (slot >= k) {
+                slot = static_cast<int>(value_rng() % static_cast<uint64_t>(value_seen));
+                if (slot >= k) slot = -1;
+            }
+            if (slot >= 0) {
+                auto feats = ml::extractStateFeatures(state, chosen.player, card_db_);
+                if (slot == static_cast<int>(value_samples.size())) {
+                    value_samples.emplace_back(chosen.player, std::move(feats));
+                    value_turns.push_back(state.turn.turn_number);
+                } else {
+                    value_samples[slot] = {chosen.player, std::move(feats)};
+                    value_turns[slot] = state.turn.turn_number;
+                }
+            }
         }
         if (review) {
             const AgentInterface& who = chosen.player == PlayerId::Player2 ? *agent2 : *agent1;
@@ -151,6 +179,10 @@ GameResult GameRunner::run() {
     };
 
     auto result = engine.runGame(deck1_, deck2_, *agent1, *agent2, game_seed);
+
+    if (want_values && result.winner != PlayerId::None)
+        ml::appendValueRecords(config_.value_data_path, ml::kStateFeatureDim,
+                               value_samples, value_turns, result.winner);
 
     if (!config_.json_replay_dir.empty()) {
         nlohmann::json header = {

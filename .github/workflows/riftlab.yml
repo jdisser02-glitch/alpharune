@@ -78,7 +78,7 @@ jobs:
         run: |
           git config user.name "riftlab-bot"
           git config user.email "riftlab-bot@users.noreply.github.com"
-          git add lab/results lab/variants lab/requests
+          git add -A lab
           git commit -m "riftlab: results for ${{ github.sha }}" || exit 0
           for i in 1 2 3 4; do
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0

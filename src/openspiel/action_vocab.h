@@ -38,9 +38,10 @@
 namespace riftbound::openspiel {
 
 /// Card def ids are 1-indexed in the registry. Registered ids run 1..955
-/// (through Vendetta); 956..1100 is reserved for Radiance. Must equal
+/// (through Vendetta); 961..1200 hold Radiance (raised from 1100 when
+/// the full Radiance set needed more than the 140 reserved slots). Must equal
 /// ml::kCardVocabSize (static_assert in riftbound_state.cpp).
-constexpr int kNumCardDefIds = 1100;
+constexpr int kNumCardDefIds = 1200;
 
 /// Reserved slot count for integer-coded MakeChoice answers
 /// (Intent::chosen_value). Used by card.cpp helpers — confirmOptional

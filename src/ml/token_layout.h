@@ -32,9 +32,9 @@ namespace riftbound::ml {
 
 inline constexpr int kLayoutVersion = 1;
 
-/// Size of the card embedding table: index 0 is "none / unknown", 1..1100 are
+/// Size of the card embedding table: index 0 is "none / unknown", 1..1200 are
 /// card ids (must equal feature_extractor.h's kCardVocabSize + 1).
-inline constexpr int kCardEmbeddingRows = 1101;
+inline constexpr int kCardEmbeddingRows = 1201;
 
 inline constexpr int kMaxBattlefieldTokens = 6;
 inline constexpr int kMaxEntityTokens = 192;

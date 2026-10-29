@@ -19,7 +19,7 @@
 
 namespace riftbound::ml {
 
-/// State-feature layout (kStateFeatureDim = 6188 dims total):
+/// State-feature layout (kStateFeatureDim = 6688 dims total):
 ///   0..353       : base features (unchanged historical layout — see source).
 ///   354..361     : chain item targets (4 slots × 2 target def_ids).
 ///   362..365     : cost-modifier types (2 players × {next_spell_only, next_unit_only}).
@@ -27,7 +27,7 @@ namespace riftbound::ml {
 ///   374..469     : per-unit extended features (4 BFs × 2 sides × top-3 ×
 ///                  {combat_designation, attachment_def_id, might_delta,
 ///                   temp_might_bonus}).
-///   Z = kZoneVectorOffset (470), V = kCardVocabSize (1100); card_def_id i → pos i-1.
+///   Z = kZoneVectorOffset (470), V = kCardVocabSize (1200); card_def_id i → pos i-1.
 ///   Z      .. Z+V-1   : self main_deck multi-hot counts.
 ///   Z+V    .. Z+2V-1  : self trash multi-hot counts.
 ///   Z+2V   .. Z+3V-1  : self banishment multi-hot counts.
@@ -62,14 +62,13 @@ inline constexpr int kPerUnitExtFieldsT2  = 8;   // T2/3 per-unit: assault, shie
                                                  // buff_count, temp_buff_count, tank, backline, ganking
 // Card-def id space for the multi-hot zones. Registered ids run 1..955
 // (Origins/Proving Grounds/Spiritforged/Unleashed 1..787, Vendetta 788..960);
-// 961..1100 is reserved for Radiance so its release doesn't shift the layout
-// (and invalidate checkpoints) a second time. Radiance cards registered so far:
-// 961..969.
-inline constexpr int kCardVocabSize       = 1100;
+// 961..1200 hold Radiance. (The 961..1100 reservation was too small for the
+// whole set; raising it changed the layout once more.)
+inline constexpr int kCardVocabSize       = 1200;
 inline constexpr int kZoneVectorOffset    = 470;  // first multi-hot zone starts here
 inline constexpr int kNumZoneVectors      = 5;    // self deck/trash/banish, opp trash/banish
 // 470 base+extended dims, 5 zone multi-hots, 2 play-lockout flags, 192 Tier-2/3
-// per-unit dims, 24 extended globals.  = 6188 with kCardVocabSize = 1100.
+// per-unit dims, 24 extended globals.  = 6688 with kCardVocabSize = 1200.
 inline constexpr int kStateFeatureDim     =
     kZoneVectorOffset + kNumZoneVectors * kCardVocabSize + 2 + 192 + 24;
 

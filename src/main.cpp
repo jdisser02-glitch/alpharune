@@ -352,6 +352,10 @@ int main(int argc, char* argv[]) {
          "game_<n>.json with every decision for the first --review-games).")
         ("review-games", po::value<int>()->default_value(2),
          "How many games of the batch get a full decision record.")
+        ("value-data", po::value<std::string>()->default_value(""),
+         "Batch mode: append self-play value-training records to this file.")
+        ("value-samples", po::value<int>()->default_value(12),
+         "Decisions sampled per game for --value-data.")
     ;
 
     po::variables_map vm;
@@ -575,6 +579,8 @@ int main(int argc, char* argv[]) {
         cfg.deck2_label   = deck2_path;
         cfg.json_replay_dir   = vm["review-dir"].as<std::string>();
         cfg.json_replay_games = vm["review-games"].as<int>();
+        cfg.value_data_path   = vm["value-data"].as<std::string>();
+        cfg.value_samples_per_game = vm["value-samples"].as<int>();
         cfg.agent_factory = std::move(factory);
 
         AggregateResults results;

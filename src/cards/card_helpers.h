@@ -551,4 +551,57 @@ inline void moveTo(CardContext& ctx, GameObjectId u, int dest) {
     else ctx.executor.moveToBattlefield(u, static_cast<BattlefieldId>(dest - 1));
 }
 
+// ── Radiance keywords ──
+/// [Disarm X] (CR 831): "When I attack, give an enemy unit here -X [M] this
+/// turn." A card with printed Disarm fires on WhenIAttack and calls this from
+/// its onTrigger (choices at finalization: pick before the marker, apply
+/// after). Returns the enemy units that can be chosen at `attacker`'s
+/// battlefield; the card passes the pick to applyDisarm.
+inline std::vector<GameObjectId> disarmTargets(const CardContext& ctx, GameObjectId attacker) {
+    std::vector<GameObjectId> out;
+    if (!ctx.state.objectExists(attacker)) return out;
+    const auto here = ctx.state.getObject(attacker).battlefieldId();
+    if (!here.has_value()) return out;
+    const PlayerId me = ctx.state.getObject(attacker).controller;
+    for (const auto& [id, obj] : ctx.state.objects) {
+        if (!obj.isUnit() || obj.controller == me || obj.battlefieldId() != here) continue;
+        if (obj.untargetable_by_enemy) continue;
+        out.push_back(id);
+    }
+    return out;
+}
+inline void applyDisarm(CardContext& ctx, GameObjectId target, int value) {
+    if (value <= 0 || target == kInvalidId || !ctx.state.objectExists(target)) return;
+    ctx.executor.giveTemporaryMight(target, -value);
+    ctx.events.logTrace("DISARM " + std::to_string(value) + ": " + ctx.state.getObject(target).name);
+}
+
+/// [Show Off] (CR 832): "As you play this, you may reveal [object] from your
+/// hand and/or pick it from among friendly game objects." Showing off costs
+/// only information, which the engine does not model, so cards treat it as
+/// done whenever a qualifying object exists. `pred` tests a candidate;
+/// `except` is the card being played.
+template <typename Pred>
+bool canShowOff(const CardContext& ctx, GameObjectId except, Pred&& pred) {
+    for (auto cid : ctx.state.player(ctx.controller).hand)
+        if (cid != except && ctx.state.objectExists(cid) && pred(ctx.state.getObject(cid))) return true;
+    for (const auto& [id, obj] : ctx.state.objects)
+        if (id != except && obj.controller == ctx.controller && obj.location.has_value() && pred(obj))
+            return true;
+    return false;
+}
+/// The best object to show off by a numeric measure (e.g. Power cost, Might):
+/// returns the highest `score(obj)` among qualifying hand cards and friendly
+/// objects, or -1 if none.
+template <typename Pred, typename Score>
+int bestShowOff(const CardContext& ctx, GameObjectId except, Pred&& pred, Score&& score) {
+    int best = -1;
+    auto consider = [&](const GameObject& o) { if (pred(o)) best = std::max(best, score(o)); };
+    for (auto cid : ctx.state.player(ctx.controller).hand)
+        if (cid != except && ctx.state.objectExists(cid)) consider(ctx.state.getObject(cid));
+    for (const auto& [id, obj] : ctx.state.objects)
+        if (id != except && obj.controller == ctx.controller && obj.location.has_value()) consider(obj);
+    return best;
+}
+
 } // namespace riftbound

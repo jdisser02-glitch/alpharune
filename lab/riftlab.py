@@ -414,6 +414,68 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
     return path
 
 
+# ─── Index for the dashboard ─────────────────────────────────────────────────
+
+def write_index(reg: Registry) -> Path:
+    """lab/index.json: every test result (summary), every deck the lab knows
+    (with its stats), every variant spec. lab/cards.json: the card table."""
+    tests = []
+    for f in sorted((LAB / "results").glob("*.json"), reverse=True):
+        try:
+            r = json.loads(f.read_text())
+        except json.JSONDecodeError:
+            continue
+        tests.append({
+            "id": r["id"], "file": str(f.relative_to(ROOT)), "name": r["name"],
+            "description": r.get("description", ""), "started_utc": r.get("started_utc"),
+            "finished_utc": r.get("finished_utc"), "engine_commit": r.get("engine_commit"),
+            "agent": r.get("agent"), "opp_agent": r.get("opp_agent"),
+            "games_per_matchup": r.get("games_per_matchup"),
+            "decks": [{"label": d["label"], "path": d["path"],
+                       "weighted_win_rate": d.get("weighted_win_rate"),
+                       "games": sum(m["games"] for m in d.get("matchups", [])),
+                       "errors": d.get("errors", [])} for d in r["decks"]],
+            "opponents": sorted({m["opponent"] for d in r["decks"] for m in d.get("matchups", [])}),
+        })
+    decks = []
+    paths = sorted((ROOT / "decks").glob("*.txt")) + sorted((LAB / "decks").rglob("*.txt")) \
+        + sorted((LAB / "variants").glob("*.txt"))
+    for p in paths:
+        try:
+            d = parse_deck(p)
+        except ValueError as e:
+            decks.append({"path": str(p.relative_to(ROOT)), "errors": [str(e)]})
+            continue
+        legend = next(iter(d["legend"]), "")
+        st = stats(d, reg)
+        decks.append({"path": str(p.relative_to(ROOT)), "legend": legend,
+                      "champion": next(iter(d["champion"]), ""),
+                      "comments": d.get("comments", [])[:6],
+                      "errors": validate(d, reg),
+                      "stats": {k: st[k] for k in ("cards", "avg_energy", "curve", "types",
+                                                    "rune_split", "two_drops")},
+                      "list": {s: d[s] for s in SECTIONS if d[s]}})
+    variants = []
+    for f in sorted((LAB / "specs").rglob("*.json")):
+        try:
+            spec = json.loads(f.read_text())
+        except json.JSONDecodeError:
+            continue
+        if "base" in spec:
+            variants.append({"spec": str(f.relative_to(ROOT)), **spec})
+    index = {"generated_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),
+             "engine_commit": git_commit(), "tests": tests, "decks": decks, "variants": variants}
+    out = LAB / "index.json"
+    out.write_text(json.dumps(index, indent=0))
+    cards = [{"name": c["name"], "type": c["card_type"], "super": c.get("super_type"),
+              "domains": c["domains"], "energy": c.get("energy_cost") or 0,
+              "power": c.get("power_cost") or 0, "might": c.get("might") or 0,
+              "tags": c.get("tags", []), "set": c.get("set"), "code": c.get("public_code"),
+              "text": c.get("ability_text", "")} for c in reg.cards]
+    (LAB / "cards.json").write_text(json.dumps(cards, separators=(",", ":")))
+    return out
+
+
 # ─── CLI ─────────────────────────────────────────────────────────────────────
 
 def main(argv: list[str]) -> int:
@@ -422,6 +484,7 @@ def main(argv: list[str]) -> int:
     v = sub.add_parser("variant"); v.add_argument("spec")
     s = sub.add_parser("stats"); s.add_argument("decks", nargs="+")
     c = sub.add_parser("validate"); c.add_argument("decks", nargs="+")
+    sub.add_parser("index")
     r = sub.add_parser("run"); r.add_argument("spec")
     r.add_argument("--out", default=str(LAB / "results"))
     r.add_argument("--games", type=int); r.add_argument("--threads", type=int)
@@ -451,6 +514,9 @@ def main(argv: list[str]) -> int:
             if getattr(args, k) is not None:
                 spec[k] = getattr(args, k)
         print(run_test(spec, reg, Path(args.out)).relative_to(ROOT))
+        write_index(reg)
+    elif args.cmd == "index":
+        print(write_index(reg).relative_to(ROOT))
     return 0
 
 

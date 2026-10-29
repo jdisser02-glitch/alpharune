@@ -365,6 +365,8 @@ std::unique_ptr<::open_spiel::State> RiftboundState::Clone() const {
     return out;
 }
 
+const ::riftbound::CardDB& RiftboundState::cardDb() const { return rb_game_.cardDb(); }
+
 void RiftboundState::applyIdentityOverrides(::riftbound::GameState& gs) const {
     const auto& db = rb_game_.cardDb();
     for (const auto& [oid, def_id] : identity_overrides_) {

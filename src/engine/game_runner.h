@@ -41,6 +41,12 @@ struct GameConfig {
     std::string json_replay_dir;
     int json_replay_games = 0;
 
+    /// Self-play training data: when set, `value_samples_per_game` decisions
+    /// per game (uniformly sampled) append the acting player's masked state
+    /// features and the game's outcome to this file (ml::appendValueRecords).
+    std::string value_data_path;
+    int value_samples_per_game = 12;
+
     /// Optional agent factory — when set, replaces GameRunner's built-in
     /// "random-only" factory. The seat index is 0 for P1 and 1 for P2.
     /// `game_seed` is the engine RNG seed for THIS game; the factory

@@ -380,7 +380,7 @@ TEST(ActionVocab, CollapsingPlayVariantsAliasIntentionally) {
 }
 
 TEST(ActionVocab, VocabSizeIsReasonable) {
-    // ≈ 12 card-keyed buckets × kNumCardDefIds (1100) + small singletons.
+    // ≈ 12 card-keyed buckets × kNumCardDefIds (1200) + small singletons.
     // Sanity: not insanely small (< 1000) and not insanely large (> 100k).
     EXPECT_GT(kVocabSize, 1000);
     EXPECT_LT(kVocabSize, 100000);

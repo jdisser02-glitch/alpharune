@@ -91,7 +91,7 @@ private:
         d.collector_number = 3;
         d.artist = R"RB(Six More Vodka)RB";
         d.card_type = CardType::Unit;
-        d.domains = {Domain::Body};
+        d.domains = {Domain::Fury};  // cards/json says Body; RAD-003 sits in the Fury block and Fury/Mind Kai'Sa lists play it
         d.energy_cost = 3;
         d.might = 3;
         d.rarity = Rarity::Common;
