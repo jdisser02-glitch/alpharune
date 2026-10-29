@@ -31,6 +31,7 @@ public:
         m.energy_reduction = 2;
         m.min_cost = 1;
         m.this_turn_only = false;
+        m.from_aura = true;
         m.affects_friendly_only = true;
         // NOTE: no tag filter on CostModifier — this reduces ALL friendly plays
         // by [2], a superset of the printed "Dragons" scope.

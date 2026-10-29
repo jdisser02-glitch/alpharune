@@ -556,5 +556,16 @@ TEST_F(RivenRadianceTest, Deploy_ConcertPosterGoesOnlyToABattlefieldAndDiesWhenT
     EXPECT_FALSE(s().getObject(poster).location.has_value()) << "killed when the opponent holds here";
 }
 
+// ─── Engine: continuous cost modifiers ──────────────────────────────────────
+
+TEST_F(RivenRadianceTest, AuraCostModifierIsPublishedOncePerPass) {
+    makeEngine();
+    boardObject(P1, 84, 0);   // Eager Apprentice at a battlefield: friendly plays cost [1] less
+    for (int i = 0; i < 5; ++i) engine_->testHook_cleanup();
+    int n = 0;
+    for (const auto& m : s().player(P1).cost_modifiers) n += m.from_aura ? 1 : 0;
+    EXPECT_EQ(n, 1) << "re-published, not accumulated, on each cleanup";
+}
+
 }  // namespace
 }  // namespace riftbound::test

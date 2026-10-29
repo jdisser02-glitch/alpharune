@@ -174,6 +174,9 @@ struct PlayerState {
         bool gear_only = false;             // applies only to gear plays (Ornn's Forge)
         bool first_gear_per_turn = false;   // applies only to the FIRST gear played this
                                             // turn (consult gears_played_this_turn == 0)
+        // Published by a card's applyPassiveAura: dropped at the start of every
+        // aura pass and re-published while the card's condition holds.
+        bool from_aura = false;
     };
     std::vector<CostModifier> cost_modifiers;
 

@@ -32,6 +32,7 @@ public:
         m.energy_reduction = 1;
         m.min_cost = 1;
         m.this_turn_only = false;
+        m.from_aura = true;
         m.affects_friendly_only = true;
         // NOTE: no spell-only filter exists on CostModifier; this reduces all
         // friendly plays by [1], a superset of the printed "spells" scope.

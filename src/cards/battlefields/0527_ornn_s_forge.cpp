@@ -32,6 +32,7 @@ public:
             m.affects_non_token_only = true;
             m.affects_friendly_only = true;
             m.this_turn_only = false;
+            m.from_aura = true;
             state.player(who).cost_modifiers.push_back(m);
             return;
         }

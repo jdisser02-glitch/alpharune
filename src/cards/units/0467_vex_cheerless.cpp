@@ -20,6 +20,7 @@ public:
         friendly_mod.energy_reduction = 1;
         friendly_mod.min_cost = 1;            // "to a minimum of [1]"
         friendly_mod.this_turn_only = false;
+        friendly_mod.from_aura = true;
         friendly_mod.combat_active_only = true;
         friendly_mod.affects_friendly_only = true;
         state.player(controller).cost_modifiers.push_back(friendly_mod);
@@ -27,6 +28,7 @@ public:
         PlayerState::CostModifier enemy_mod;
         enemy_mod.energy_increase = 1;
         enemy_mod.this_turn_only = false;
+        enemy_mod.from_aura = true;
         enemy_mod.combat_active_only = true;
         enemy_mod.affects_enemy_only = true;
         state.player(controller).cost_modifiers.push_back(enemy_mod);

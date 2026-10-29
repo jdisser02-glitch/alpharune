@@ -4511,6 +4511,13 @@ void GameEngine::recalculateAuras() {
     // Facedown capacity: 1 per battlefield (CR 811), raised again below by
     // the cards that grant more (Bandle Tree, Bushwhack Trap).
     for (auto& bf : state_.battlefields) bf.facedown_max_occupancy = 1;
+    // Cost modifiers a continuous effect publishes are re-published below.
+    for (auto pid : {PlayerId::Player1, PlayerId::Player2}) {
+        auto& mods = state_.player(pid).cost_modifiers;
+        mods.erase(std::remove_if(mods.begin(), mods.end(),
+                                  [](const PlayerState::CostModifier& m) { return m.from_aura; }),
+                   mods.end());
+    }
 
     // Step 1: Clear all aura effects from all objects
     for (auto& [id, obj] : state_.objects) {
