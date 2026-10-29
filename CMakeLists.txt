@@ -59,6 +59,62 @@ configure_file(
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/generated)
 
+# ─── WebAssembly build ────────────────────────────────────────────────────────
+# RIFTBOUND_WASM=ON (configure through emcmake) builds only the engine core,
+# the card groups and the `riftbound_wasm` module (src/wasm/): no OpenSpiel,
+# no Boost binaries (the step machine uses Emscripten's Asyncify fibers
+# instead of Boost.Context), no tests, no CLI.
+#
+#   emcmake cmake -B build-wasm -DRIFTBOUND_WASM=ON -DCMAKE_BUILD_TYPE=Release
+#   cmake --build build-wasm --target riftbound_wasm
+#   → build-wasm/riftbound.js + build-wasm/riftbound.wasm
+#
+# Header-only dependencies (Boost.Signals2, nlohmann/json) are taken from the
+# host's headers through a private include dir holding only `boost/` and
+# `nlohmann/` symlinks, so no glibc header leaks into the wasm sysroot.
+option(RIFTBOUND_WASM "Build the WebAssembly module (needs emcmake)" OFF)
+if(RIFTBOUND_WASM AND NOT EMSCRIPTEN)
+    message(FATAL_ERROR "RIFTBOUND_WASM=ON needs the Emscripten toolchain: "
+                        "configure with `emcmake cmake ...`.")
+endif()
+
+if(RIFTBOUND_WASM)
+    set(RIFTBOUND_BUILD_OPENSPIEL OFF CACHE INTERNAL "" FORCE)
+    set(RIFTBOUND_WASM_BOOST_DIR "/usr/include/boost" CACHE PATH
+        "Boost header tree (the boost/ directory) for the wasm build")
+    set(RIFTBOUND_WASM_JSON_DIR "" CACHE PATH
+        "nlohmann/json header tree (the nlohmann/ directory) for the wasm build")
+    if(NOT RIFTBOUND_WASM_JSON_DIR)
+        foreach(_cand
+                /usr/include/nlohmann
+                ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/json-src/include/nlohmann
+                ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/open_spiel-src/open_spiel/json/include/nlohmann)
+            if(EXISTS ${_cand}/json.hpp)
+                set(RIFTBOUND_WASM_JSON_DIR ${_cand})
+                break()
+            endif()
+        endforeach()
+    endif()
+    if(NOT EXISTS ${RIFTBOUND_WASM_BOOST_DIR}/signals2.hpp)
+        message(FATAL_ERROR "Boost headers not found at ${RIFTBOUND_WASM_BOOST_DIR} "
+                            "(set -DRIFTBOUND_WASM_BOOST_DIR)")
+    endif()
+    if(NOT EXISTS ${RIFTBOUND_WASM_JSON_DIR}/json.hpp)
+        message(FATAL_ERROR "nlohmann/json headers not found "
+                            "(set -DRIFTBOUND_WASM_JSON_DIR to the nlohmann/ directory)")
+    endif()
+    set(_wasm_inc ${CMAKE_CURRENT_BINARY_DIR}/inc)
+    file(MAKE_DIRECTORY ${_wasm_inc})
+    file(CREATE_LINK ${RIFTBOUND_WASM_BOOST_DIR} ${_wasm_inc}/boost SYMBOLIC)
+    file(CREATE_LINK ${RIFTBOUND_WASM_JSON_DIR} ${_wasm_inc}/nlohmann SYMBOLIC)
+
+    add_library(riftbound_wasm_deps INTERFACE)
+    target_include_directories(riftbound_wasm_deps SYSTEM INTERFACE ${_wasm_inc})
+    # The engine throws (deck errors, invalid intents) and the step driver
+    # catches, so JS-based exception support is on for every TU.
+    target_compile_options(riftbound_wasm_deps INTERFACE -fexceptions)
+    target_link_options(riftbound_wasm_deps INTERFACE -fexceptions)
+else()
 # OpenSpiel is mandatory — the riftbound_openspiel binary's MCTS / ISMCTS /
 # random agents are the engine's first-class AI baselines and the integration
 # surface that lets external tools plug their own agents into Riftbound games.
@@ -244,6 +300,10 @@ set(RIFTBOUND_CORE_LIBS
     Threads::Threads
     nlohmann_json::nlohmann_json
 )
+endif()  # NOT RIFTBOUND_WASM
+if(RIFTBOUND_WASM)
+    set(RIFTBOUND_CORE_LIBS riftbound_wasm_deps)
+endif()
 
 # ─── Precompiled header ───────────────────────────────────────────────────────
 # Every card is its own source file and each one parses the same engine
@@ -257,6 +317,9 @@ set(RIFTBOUND_CORE_LIBS
 #   -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
 # ) or it will not cache compilations that use the PCH.
 option(RIFTBOUND_USE_PCH "Precompile the common engine headers (src/pch.h)" ON)
+if(RIFTBOUND_WASM)
+    set(RIFTBOUND_USE_PCH OFF)   # not worth the Emscripten PCH quirks
+endif()
 set(RIFTBOUND_PCH_CCACHE_FLAG "")
 if(RIFTBOUND_USE_PCH AND CMAKE_CXX_COMPILER_LAUNCHER MATCHES "ccache"
         AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -320,6 +383,12 @@ endforeach()
 
 # ─── Core library ─────────────────────────────────────────────────────────────
 
+# Boost.Asio's thread pool has no place in the single-threaded wasm module.
+set(RIFTBOUND_CORE_NATIVE_SRCS src/engine/batch_runner.cpp)
+if(RIFTBOUND_WASM)
+    set(RIFTBOUND_CORE_NATIVE_SRCS "")
+endif()
+
 add_library(riftbound_core
     src/core/types.cpp
     src/core/intent.cpp
@@ -340,7 +409,7 @@ add_library(riftbound_core
     src/cards/cards_init.cpp
     ${RIFTBOUND_CARD_OBJECTS}
     src/engine/game_runner.cpp
-    src/engine/batch_runner.cpp
+    ${RIFTBOUND_CORE_NATIVE_SRCS}
     src/engine/step_driver.cpp
     src/ml/feature_extractor.cpp
     src/ml/value_net.cpp
@@ -352,6 +421,39 @@ target_include_directories(riftbound_core PUBLIC src)
 riftbound_use_pch(riftbound_core)
 target_link_libraries(riftbound_core PUBLIC ${RIFTBOUND_CORE_LIBS})
 
+# ─── WebAssembly module ──────────────────────────────────────────────────────
+if(RIFTBOUND_WASM)
+    add_executable(riftbound_wasm
+        src/wasm/rb_api.cpp
+        src/wasm/greedy_bot.cpp
+    )
+    target_link_libraries(riftbound_wasm PRIVATE riftbound_core)
+    set_target_properties(riftbound_wasm PROPERTIES
+        OUTPUT_NAME riftbound
+        SUFFIX ".js")
+    set(RIFTBOUND_WASM_EXPORTS
+        _rb_version _rb_last_error _rb_card_count _rb_new_game _rb_end_game
+        _rb_is_terminal _rb_decision_player _rb_legal_count _rb_state_json
+        _rb_apply _rb_bot_move _rb_bot_last_search_json _rb_result_json
+        _rb_load_value_net _malloc _free)
+    list(JOIN RIFTBOUND_WASM_EXPORTS "," _wasm_exports)
+    target_link_options(riftbound_wasm PRIVATE
+        # The engine's step machine runs in an Asyncify fiber (step_driver.cpp).
+        -sASYNCIFY=1
+        -sASYNCIFY_STACK_SIZE=65536
+        -sALLOW_MEMORY_GROWTH=1
+        -sINITIAL_MEMORY=67108864
+        -sTOTAL_STACK=2097152
+        -sMODULARIZE=1
+        -sEXPORT_NAME=createRiftbound
+        -sENVIRONMENT=web,worker,node
+        -sDISABLE_EXCEPTION_CATCHING=0
+        "-sEXPORTED_FUNCTIONS=${_wasm_exports}"
+        "-sEXPORTED_RUNTIME_METHODS=cwrap,ccall,UTF8ToString,stringToUTF8,lengthBytesUTF8,HEAPU8"
+    )
+endif()
+
+if(NOT RIFTBOUND_WASM)
 # ─── Engine library ──────────────────────────────────────────────────────────
 # (will grow as we add engine, rules, agents, io modules)
 
@@ -443,3 +545,4 @@ endif()
 
 include(GoogleTest)
 gtest_discover_tests(riftbound_tests)
+endif()  # NOT RIFTBOUND_WASM

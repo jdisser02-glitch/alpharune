@@ -246,7 +246,11 @@ DeckSubmission DeckValidator::loadFromDeckList(const std::string& path,
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open deck list: " + path);
     }
+    return parseDeckList(file, path, db);
+}
 
+DeckSubmission DeckValidator::parseDeckList(std::istream& file, const std::string& path,
+                                            const CardDB& db) {
     auto trim = [](std::string s) {
         size_t a = s.find_first_not_of(" \t\r\n");
         size_t b = s.find_last_not_of(" \t\r\n");

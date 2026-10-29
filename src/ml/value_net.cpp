@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <istream>
+#include <streambuf>
 #include <map>
 #include <mutex>
 #include <stdexcept>
@@ -13,15 +15,33 @@ namespace riftbound::ml {
 
 namespace {
 template <typename T>
-void readInto(std::ifstream& f, T* out, size_t n, const std::string& path) {
+void readInto(std::istream& f, T* out, size_t n, const std::string& path) {
     f.read(reinterpret_cast<char*>(out), static_cast<std::streamsize>(n * sizeof(T)));
     if (!f) throw std::runtime_error("value net: truncated file " + path);
 }
+
+/// Read-only streambuf over a caller-owned byte range.
+struct MemoryBuf : std::streambuf {
+    MemoryBuf(const unsigned char* data, size_t len) {
+        char* p = const_cast<char*>(reinterpret_cast<const char*>(data));
+        setg(p, p, p + len);
+    }
+};
 }  // namespace
 
 ValueNet::ValueNet(const std::string& path) {
     std::ifstream f(path, std::ios::binary);
     if (!f) throw std::runtime_error("value net: cannot open " + path);
+    load(f, path);
+}
+
+ValueNet::ValueNet(const unsigned char* data, size_t len, const std::string& label) {
+    MemoryBuf buf(data, len);
+    std::istream f(&buf);
+    load(f, label);
+}
+
+void ValueNet::load(std::istream& f, const std::string& path) {
     char magic[4];
     readInto(f, magic, 4, path);
     if (std::memcmp(magic, "RBVN", 4) != 0) throw std::runtime_error("value net: bad magic in " + path);
@@ -30,6 +50,8 @@ ValueNet::ValueNet(const std::string& path) {
     if (hdr[0] != 1) throw std::runtime_error("value net: unsupported version in " + path);
     in_dim_ = hdr[1];
     hidden_ = hdr[2];
+    if (in_dim_ <= 0 || hidden_ <= 0 || in_dim_ > (1 << 20) || hidden_ > (1 << 16))
+        throw std::runtime_error("value net: bad dimensions in " + path);
     mean_.resize(in_dim_);
     inv_std_.resize(in_dim_);
     w1_.resize(static_cast<size_t>(hidden_) * in_dim_);

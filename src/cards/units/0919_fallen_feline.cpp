@@ -28,8 +28,9 @@ public:
         std::vector<std::pair<std::string, CardDefId>> by_name;
         for (const auto& [id, def] : db.all()) {
             if (def.card_type != CardType::Spell || def.name.empty()) continue;
+            const std::string& spell_name = def.name;   // not the binding: clang < 16 cannot capture one
             auto it = std::find_if(by_name.begin(), by_name.end(),
-                                   [&](const auto& e) { return e.first == def.name; });
+                                   [&spell_name](const auto& e) { return e.first == spell_name; });
             if (it == by_name.end()) by_name.push_back({def.name, id});
             else if (id < it->second) it->second = id;      // reprints share a name
         }

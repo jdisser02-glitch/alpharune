@@ -14,6 +14,8 @@
 #include "core/card_db.h"
 #include "core/game_state.h"
 
+#include <cstddef>
+#include <iosfwd>
 #include <memory>
 #include <string>
 #include <vector>
@@ -24,6 +26,8 @@ class ValueNet {
 public:
     /// Loads a network file; throws std::runtime_error on a bad file.
     explicit ValueNet(const std::string& path);
+    /// Same format from a memory buffer (`label` names it in errors).
+    ValueNet(const unsigned char* data, size_t len, const std::string& label = "<memory>");
 
     /// Win probability for `perspective` from its own (masked) view.
     double winProbability(const GameState& state, PlayerId perspective, const CardDB& db) const;
@@ -36,6 +40,8 @@ public:
     static std::shared_ptr<const ValueNet> shared(const std::string& path);
 
 private:
+    void load(std::istream& in, const std::string& label);
+
     int in_dim_ = 0, hidden_ = 0;
     std::vector<float> mean_, inv_std_, w1_, b1_, w2_;
     float b2_ = 0;

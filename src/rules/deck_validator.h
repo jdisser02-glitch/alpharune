@@ -17,6 +17,7 @@
 #include "core/card_db.h"
 #include "core/types.h"
 
+#include <iosfwd>
 #include <set>
 #include <string>
 #include <vector>
@@ -76,6 +77,12 @@ public:
     /// std::runtime_error on any parse failure — unreadable file, malformed
     /// line, unknown card name, or unknown/missing section.
     static DeckSubmission loadFromDeckList(const std::string& path, const CardDB& db);
+
+    /// Same parser over an already-open stream (deck text held in memory,
+    /// e.g. by the WebAssembly front end). `label` names the source in
+    /// error messages the way `path` does above.
+    static DeckSubmission parseDeckList(std::istream& in, const std::string& label,
+                                        const CardDB& db);
 
 private:
     const CardDB& db_;

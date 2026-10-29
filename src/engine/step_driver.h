@@ -24,9 +24,15 @@
 
 #include "agents/agent_interface.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/fiber.h>
+#include <memory>
+#else
 #include <boost/context/fiber.hpp>
+#endif
 
 #include <atomic>
+#include <functional>
 #include <optional>
 #include <vector>
 
@@ -34,7 +40,7 @@ namespace riftbound {
 
 class StepDriver : public AgentInterface {
 public:
-    StepDriver() = default;
+    StepDriver();   // out of line: the Emscripten backend's fiber type is private to the .cpp
     ~StepDriver();
 
     // Move-only — fibers can't be copied.
@@ -76,6 +82,27 @@ public:
     bool isDone() const { return done_.load(std::memory_order_acquire); }
 
 private:
+#ifdef __EMSCRIPTEN__
+    // WebAssembly backend: Emscripten's Asyncify-based fibers
+    // (<emscripten/fiber.h>, needs -sASYNCIFY). The engine fiber owns a
+    // C stack plus an Asyncify stack (where the unwound wasm frames are
+    // parked across a swap); the caller's context gets its own Asyncify
+    // stack. An Emscripten fiber entry function must never return, so
+    // the entry swaps back to the caller once the game is over and the
+    // fiber is simply dropped (its stacks freed) with the driver.
+    struct EmFiber;
+    std::unique_ptr<EmFiber> em_;
+    std::function<void()> game_fn_;
+    bool started_ = false;
+    // Set by the destructor of a driver whose game is still running: the
+    // next selectAction resume throws instead of returning a choice, so
+    // the engine stack unwinds (destructors run) instead of the game being
+    // played out to the end with option 0. Clones are torn down this way.
+    bool abandoned_ = false;
+    static void emFiberEntry(void* self);
+    void swapToEngine();
+    void swapToCaller();
+#else
     // The engine fiber runs runGame(). engine_fiber_ holds the
     // suspended engine context when control is in the caller's flow.
     // yield_target_ holds the caller's suspended context when control
@@ -84,6 +111,7 @@ private:
     // is consume-and-return.
     boost::context::fiber engine_fiber_;
     boost::context::fiber yield_target_;
+#endif
 
     // Pause-point snapshot (set by selectAction before yielding).
     std::vector<Intent> paused_legal_;
