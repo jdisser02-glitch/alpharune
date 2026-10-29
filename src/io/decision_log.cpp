@@ -198,6 +198,11 @@ void DecisionLog::record(const GameState& state, const std::vector<Intent>& opti
     frames_.push_back(std::move(f));
 }
 
+void DecisionLog::annotateLast(const nlohmann::json& extra) {
+    if (frames_.empty() || !extra.is_object()) return;
+    for (auto it = extra.begin(); it != extra.end(); ++it) frames_.back()[it.key()] = it.value();
+}
+
 void DecisionLog::finish(const nlohmann::json& header, const std::string& path) const {
     nlohmann::json out = header;
     out["frames"] = frames_;

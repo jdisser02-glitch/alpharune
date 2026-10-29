@@ -33,6 +33,12 @@ public:
                 std::vector<std::string> log_lines);
     void finish(const nlohmann::json& header, const std::string& path) const;
 
+    /// Merge extra fields into the frame recorded last (the guided replay of
+    /// a human game adds the human's and the bot's choice). No-op before the
+    /// first record.
+    void annotateLast(const nlohmann::json& extra);
+    size_t size() const { return frames_.size(); }
+
 private:
     nlohmann::json frames_ = nlohmann::json::array();
 };

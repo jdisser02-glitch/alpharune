@@ -421,6 +421,16 @@ target_include_directories(riftbound_core PUBLIC src)
 riftbound_use_pch(riftbound_core)
 target_link_libraries(riftbound_core PUBLIC ${RIFTBOUND_CORE_LIBS})
 
+# ─── Guided replay of human games (research tooling) ─────────────────────────
+# Log parsing, deck inference and the log-following driver, kept out of the
+# engine library. No OpenSpiel dependency, so the tests can link it; the
+# riftbound_guided binary below adds the MCTS/ISMCTS bots.
+if(NOT RIFTBOUND_WASM)
+add_library(riftbound_guided_lib STATIC src/tools/guided_replay.cpp)
+target_include_directories(riftbound_guided_lib PUBLIC src)
+target_link_libraries(riftbound_guided_lib PUBLIC riftbound_core)
+endif()
+
 # ─── WebAssembly module ──────────────────────────────────────────────────────
 if(RIFTBOUND_WASM)
     add_executable(riftbound_wasm
@@ -501,6 +511,30 @@ target_link_libraries(riftbound PRIVATE
 # open_spiel/ subdir on the include path.
 target_include_directories(riftbound PRIVATE ${open_spiel_SOURCE_DIR})
 
+# ─── riftbound_guided: human-game replay + bot comparison ───────────────────
+# Same OpenSpiel wiring as the riftbound binary (the game registration TUs
+# must be compiled into the executable), plus the guided-replay library.
+add_executable(riftbound_guided
+    src/tools/guided_replay_main.cpp
+    src/agents/mcts_agent.cpp
+    src/openspiel/riftbound_game.cpp
+    src/openspiel/riftbound_state.cpp
+    $<TARGET_OBJECTS:algorithms>
+    $<TARGET_OBJECTS:game_transforms>
+    $<TARGET_OBJECTS:utils>
+)
+target_link_libraries(riftbound_guided PRIVATE
+    riftbound_guided_lib
+    riftbound_core
+    open_spiel_core
+    Boost::program_options
+    Boost::system
+    Boost::filesystem
+    absl::algorithm absl::flags absl::flags_parse absl::flat_hash_map
+    absl::optional absl::random_random absl::str_format absl::strings absl::time
+)
+target_include_directories(riftbound_guided PRIVATE ${open_spiel_SOURCE_DIR})
+
 # Config parsing (src/config/) moved to riftbound-trainer along with the
 # training driver — engine has no current consumers. A future engine
 # binary (riftbound_play web UI) that wants config-file input will
@@ -526,6 +560,7 @@ target_include_directories(riftbound_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(riftbound_tests PRIVATE
     riftbound_core
+    riftbound_guided_lib
     GTest::gtest_main
 )
 
