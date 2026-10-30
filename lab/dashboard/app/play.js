@@ -453,6 +453,7 @@ async function saveGame() {
   const id = `${G.rec.started.slice(0, 19).replace(/[-:T]/g, "")}_${G.seed}`;
   const doc = { ...G.rec, id, finished: new Date().toISOString(), result: G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
     engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "" };
+  window.__lastGameRecord = doc;                  // reachable from the console (copy(__lastGameRecord)) when there is no database
   if (!db) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); return; }
   try { await db.collection("games").doc(id).set(doc); G.saved = { ok: true, id }; }
   catch (e) { G.saved = { ok: false, why: e.message || e.code || "the database refused the write" }; }

@@ -514,6 +514,11 @@ target_link_libraries(riftbound PRIVATE
 # open_spiel/ subdir on the include path.
 target_include_directories(riftbound PRIVATE ${open_spiel_SOURCE_DIR})
 
+# ─── riftbound_review: review of a game saved by the dashboard's Play tab ────
+add_executable(riftbound_review src/tools/review_game_main.cpp)
+target_link_libraries(riftbound_review PRIVATE riftbound_core Boost::program_options)
+target_include_directories(riftbound_review PRIVATE src)
+
 # ─── riftbound_guided: human-game replay + bot comparison ───────────────────
 # Same OpenSpiel wiring as the riftbound binary (the game registration TUs
 # must be compiled into the executable), plus the guided-replay library.
