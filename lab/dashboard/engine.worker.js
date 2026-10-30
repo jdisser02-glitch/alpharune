@@ -87,11 +87,15 @@ const CMDS = {
     if (who === humanSeat) throw new Error("it is the human's decision");
     const legal = (parse(api.stateJson(who)).legal || []);     // stays in the worker
     const t0 = performance.now();
-    const index = api.botMove();
+    const rc = api.botMove();
     const ms = performance.now() - t0;
-    if (index < 0) throw new Error(api.lastError() || "rb_bot_move failed");
-    const opt = legal.find(l => l.index === index);
+    if (rc < 0 || api.lastError()) throw new Error(api.lastError() || "rb_bot_move failed");
     let search = null; try { search = parse(api.searchJson()); } catch (e) {}
+    // The engine's fibers run on Asyncify, which drops the return value of a call that switches fibers, and applying the
+    // move always does: rb_bot_move comes back as 0 whatever the bot played. The engine records the option it applied in
+    // its search record (written after the move), so the index is read from there.
+    const index = search && Number.isInteger(search.chosen) && search.player === who ? search.chosen : rc;
+    const opt = legal.find(l => l.index === index);
     // name the options the search scored, except cards the bot kept in hand (hidden information)
     if (search && Array.isArray(search.options)) for (const o of search.options) {
       const l = legal.find(x => x.index === o.index);
