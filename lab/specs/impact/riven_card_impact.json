@@ -1,0 +1,16 @@
+{
+  "name": "riven-card-impact",
+  "description": "Improvement-when-drawn of every card of the Sacramento Riven list against the current-meta jury. Run once the engine and bot gates pass; ~1000 games per jury for useful intervals.",
+  "deck": "decks/riven_sacramento.txt",
+  "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+  "opponents": [
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt", "label": "Riven mirror (Nam Dang)"},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt", "label": "Kai'Sa (IcrazyFool)"},
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", "label": "Kennen (Dylan Sumner)"},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt", "label": "Kennen (zombro)"},
+    {"deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt", "label": "Kennen (Simple)"}
+  ],
+  "games": 200,
+  "threads": 4,
+  "seed": 7
+}
