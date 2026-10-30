@@ -1,0 +1,18 @@
+{
+  "name": "riven-multistart-ga-1",
+  "description": "Genetic search seeded with every Riven list of the current meta (Sacramento, RRO 25, Radiance release) so crossover can mix them; pool = all cards those lists play plus a few named ones; jury weighted toward the mirror and Kai'Sa while the engine's Kennen is under review.",
+  "base": "decks/riven_sacramento.txt",
+  "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+  "opponents": [
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt", "label": "Riven mirror (Nam Dang)", "weight": 3},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt", "label": "Kai'Sa (IcrazyFool)", "weight": 2},
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", "label": "Kennen (Dylan Sumner)", "weight": 1},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt", "label": "Kennen (zombro)", "weight": 1},
+    {"deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt", "label": "Kennen (Simple)", "weight": 1}
+  ],
+  "seeds": ["lab/decks/meta/*/*riven*.txt"],
+  "pool": {"from_decks": ["lab/decks/meta/*/*riven*.txt"], "extra": ["Baron Nashor", "Ki Burst", "Meditation"], "exclude": []},
+  "population": 16, "generations": 8, "elite": 5, "games": 8,
+  "swaps": [1, 2], "crossover": 0.6, "max_copies": 3,
+  "threads": 4, "seed": 23
+}

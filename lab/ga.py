@@ -23,6 +23,7 @@ spec = {
   "opp_agent": "...",                      # default: agent
   "opponents": [{"deck": "...", "label": "...", "weight": 2}, ...],
   "pool": {"from_decks": ["lab/decks/meta/*/*riven*.txt"], "extra": [], "exclude": []},
+  "seeds": ["lab/decks/meta/*/*riven*.txt"],     # other lists that start in the population (optional)
   "population": 16, "generations": 8, "elite": 4,
   "games": 6,                              # per list per opponent per generation (half per seat)
   "swaps": [1, 2], "crossover": 0.6, "max_copies": 3,
@@ -228,6 +229,19 @@ class GA:
             print(f"resuming {self.test_id} at generation {start + 1}", flush=True)
         else:
             population = [self.register(dict(self.base["maindeck"]), 0)]
+            # "seeds": other lists whose main decks start in the population (the base's legend, champion,
+            # battlefields and runes are kept); a seed that is not legal in that frame is skipped.
+            for pat in self.spec.get("seeds", []):
+                for f in sorted(glob.glob(str(ROOT / pat))):
+                    try:
+                        m = dict(riftlab.parse_deck(Path(f))["maindeck"])
+                    except Exception as e:  # noqa: BLE001
+                        print(f"seed skipped {f}: {e}", file=sys.stderr); continue
+                    if sum(m.values()) != sum(self.base["maindeck"].values()) or not self.legal(m):
+                        print(f"seed skipped {Path(f).name}: not legal in the base's frame", file=sys.stderr); continue
+                    k = self.register(m, 0)
+                    if k not in population and len(population) < P:
+                        population.append(k); self.archive[k]["label"] = f"{Path(f).stem}: " + self.archive[k]["label"]
             while len(population) < P:
                 m = self.mutate(self.base["maindeck"])
                 k = self.register(m, 0)
