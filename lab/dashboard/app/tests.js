@@ -117,6 +117,11 @@ function summary(t) {
     const r = t.optimize.rounds, first = r[0], last = r[r.length - 1];
     parts.push(`${num(first.standings.length)} candidate lists started; each round played the survivors against the gauntlet with more games (${r.map(x => num(x.games_per_opponent)).join(", then ")} per opponent) and kept the top half, down to ${num(last.standings.length)} finalists after ${plural(r.length, "round")}${t.optimize.complete === false ? ", not yet complete" : ""}.`);
   }
+  if (t.kind === "ga" || t.ga) {
+    const g = t.ga || {}, gens = (g.generations || []).length, pop = (t.spec && t.spec.population) || (g.population || []).length || 16;
+    parts.push(`How it works: a <b>generation</b> is a group of ${num(pop)} versions of the list that all play the same opponents with the same card deals. The best ones survive unchanged; the others are replaced by children, made by mixing two good versions and swapping one or two cards. ${plural(gens, "generation")} ran. A version that survives keeps adding games, so its win rate is measured better and better.`);
+    parts.push(`How to read a row: each version is described by its difference with the unchanged list, <b>−1</b> means one copy of that card was removed, <b>+1</b> one copy added; "base (control)" is the unchanged list itself. The win rate counts all the games that version played, against the whole jury.`);
+  }
   parts.push(`${num(games)} games in all${t.games_per_matchup ? `, ${num(t.games_per_matchup)} per matchup` : ""}, half on the play and half on the draw; ${sidesText(t)}.`);
   if (opps.length > 1) {
     const w = opps.reduce((a, o) => a + (o.weight || 0), 0), top = [...opps].sort((a, b) => b.weight - a.weight)[0];

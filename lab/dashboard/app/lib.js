@@ -253,6 +253,12 @@ export function testConclusion(t) {
   }
   const base = ranked.find(d => /base|control/i.test(d.label)) || ranked[ranked.length - 1];
   const bp = pooled(base), sep = overlaps(tp.ci, bp.ci) ? "their intervals overlap, so the gap is not yet established" : "the intervals do not overlap";
+  if (t.kind === "ga" || t.ga) {
+    const gens = (t.ga && t.ga.generations || []).length, bestGames = tp.games;
+    const verdict = base === top ? "No change beat the unchanged list." : overlaps(tp.ci, bp.ci)
+      ? `Over ${num(bestGames)} games that lead is inside the margin of error: not proven yet.` : `The gap holds up: the intervals do not overlap.`;
+    return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games). The unchanged list wins ${pct0(base.weighted_win_rate)} of its games; the best version so far wins ${pct0(top.weighted_win_rate)} (${interval(tp.ci)}). ${verdict}`;
+  }
   return `Best of ${n} lists: ${top.label} at ${pct0(top.weighted_win_rate)}${base !== top ? `, ${/base|control/i.test(base.label) ? "the base list" : base.label} at ${pct0(base.weighted_win_rate)}; ${sep}` : ""}.`;
 }
 /** Legends on each side of a test: {mine:[card], theirs:[card]} (deduplicated). */
