@@ -1,5 +1,6 @@
 #include "mcts_agent.h"
 
+#include "agents/ismcts_search.h"  // isQuietDecision / settleChoice (settle=N)
 #include "core/game_state.h"
 #include "core/intent.h"
 #include "core/game_object.h"
@@ -58,7 +59,11 @@ namespace {
 //   • Tertiary: hand size advantage (very small weight).
 class RiftboundHeuristicEvaluator : public ::open_spiel::algorithms::Evaluator {
 public:
-    explicit RiftboundHeuristicEvaluator(std::string mode = "score") : mode_(std::move(mode)) {
+    /// `settle` > 0: a leaf that is not a quiet decision (search::isQuietDecision)
+    /// is played on from a copy with search::settleChoice for at most that many
+    /// decisions before it is scored (SearchOptions::settle).
+    explicit RiftboundHeuristicEvaluator(std::string mode = "score", int settle = 0)
+        : mode_(std::move(mode)), settle_(settle) {
         // "net:<file>": a learned value network (ml::ValueNet).
         if (mode_.rfind("net:", 0) == 0) net_ = ml::ValueNet::shared(mode_.substr(4));
     }
@@ -71,6 +76,27 @@ public:
         }
         const auto* rb = dynamic_cast<const openspiel::RiftboundState*>(&state);
         if (!rb) return {0.0, 0.0};
+        if (settle_ > 0 && !search::isQuietDecision(rb->engineState())) {
+            // In the middle of a chain, showdown or combat: play on from a copy
+            // (passes, else first options) and score the quiet position.
+            auto copy = state.Clone();
+            auto* rc = static_cast<openspiel::RiftboundState*>(copy.get());
+            for (int n = 0; n < settle_ && !copy->IsTerminal() &&
+                            !search::isQuietDecision(rc->engineState()); ++n) {
+                const auto legal = rc->legalIntents();
+                if (legal.empty()) break;
+                const Intent& pick = legal[static_cast<size_t>(search::settleChoice(legal))];
+                copy->ApplyAction(openspiel::encodeAction(pick, rc->engineState()));
+            }
+            if (copy->IsTerminal()) return copy->Returns();
+            return score(*rc);
+        }
+        return score(*rb);
+    }
+
+    /// Value of a (settled) position for both players.
+    std::vector<double> score(const openspiel::RiftboundState& rb_state) const {
+        const auto* rb = &rb_state;
         const auto& s = rb->engineState();
 
         const auto& p1 = s.player(PlayerId::Player1);
@@ -226,6 +252,7 @@ public:
 
 private:
     std::string mode_;
+    int settle_ = 0;
     std::shared_ptr<const ml::ValueNet> net_;
 };
 
@@ -330,7 +357,7 @@ struct MctsAgent::Impl {
         // a deterministic, slightly-correlated signal beats a noisy
         // strong one.
         (void)mcts_seed;  // unused for heuristic; bot keeps its own seed below
-        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval);
+        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval, opts.settle);
         bot = std::make_unique<::open_spiel::algorithms::MCTSBot>(
             *game, evaluator,
             /*uct_c=*/opts.uct_c > 0 ? opts.uct_c : 1.4,
@@ -503,7 +530,7 @@ struct IsMctsAgent::Impl {
                 "IsMctsAgent: LoadGame('riftbound') returned null — "
                 "check deck/registry paths and OpenSpiel registration.");
         }
-        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval);
+        auto evaluator = std::make_shared<RiftboundHeuristicEvaluator>(opts.eval, opts.settle);
         bot = std::make_unique<::open_spiel::algorithms::ISMCTSBot>(
             /*seed=*/static_cast<int>(mcts_seed ^ 0x3C3C3C3C),
             evaluator,

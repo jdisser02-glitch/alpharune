@@ -1,0 +1,17 @@
+{
+  "name": "settle-ab",
+  "description": "A/B of leaf settling in the search: pmcts with settle=60 (a leaf in the middle of a chain, showdown or combat is played on with passes / first options until a quiet main-phase decision before the value net sees it) against the same bot without it. Each deck is played by the settle bot against both decks played by the plain bot (Riven and Kennen mirrors, Riven vs Kennen both ways), seats swapped, 500 games per pairing (2000 in all), so deck strength cancels: the A/B result is the average of the two rows' weighted win rates. Local pilot (240 games, sims=50, worlds=8, net_034): settle won 57.5%, about 7% more time per move.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_034.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_034.rbpn,worlds=8",
+  "games": 500,
+  "review_games": 0,
+  "seed": 9100,
+  "decks": [
+    {"deck": "decks/riven_sacramento.txt", "label": "Riven (settle=60)"},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt", "label": "Kennen (settle=60)"}
+  ],
+  "opponents": [
+    {"deck": "decks/riven_sacramento.txt", "label": "Riven (no settle)", "weight": 1},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt", "label": "Kennen (no settle)", "weight": 1}
+  ]
+}

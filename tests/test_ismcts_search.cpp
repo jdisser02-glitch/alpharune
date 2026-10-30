@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <iostream>
 #include <map>
 #include <optional>
 #include <random>
@@ -364,6 +365,294 @@ TEST_F(IsMctsSearchTest, PuctAgentPlaysAWholeGame) {
     // acting player's-view check.
     EXPECT_GT(inflight, 0);
     EXPECT_EQ(rejected, 0);
+}
+
+// ─── Settling leaves (SearchOptions::settle) ────────────────────────────────
+
+TEST(SearchOptionsTest, SpecParserReadsSettle) {
+    SearchOptions opts;
+    EXPECT_EQ(opts.settle, 0);   // off unless asked for
+    int sims = 0;
+    parseSearchSpecOptions("sims=50,eval=policy:lab/learn/nets/net_034.rbpn,worlds=8,settle=60", opts, &sims);
+    EXPECT_EQ(sims, 50);
+    EXPECT_EQ(opts.settle, 60);
+    EXPECT_EQ(opts.worlds, 8);
+    EXPECT_EQ(opts.eval, "policy:lab/learn/nets/net_034.rbpn");
+
+    // Order does not matter, unknown keys and bare words are skipped, and
+    // settle=0 turns it back off.
+    SearchOptions o2;
+    parseSearchSpecOptions("settle=12,bogus=3,det=0,root=gumbel,gumbel_m=4,noeq", o2);
+    EXPECT_EQ(o2.settle, 12);
+    EXPECT_FALSE(o2.determinize);
+    EXPECT_EQ(o2.root, "gumbel");
+    EXPECT_EQ(o2.gumbel_m, 4);
+    EXPECT_TRUE(applySearchOption(o2, "settle", "0"));
+    EXPECT_EQ(o2.settle, 0);
+    EXPECT_FALSE(applySearchOption(o2, "sims", "10"));
+}
+
+TEST(SearchOptionsTest, SettlePolicyPassesElseTakesTheFirstOption) {
+    Intent play;
+    play.type = IntentType::PlayCard;
+    Intent pass_focus;
+    pass_focus.type = IntentType::PassFocus;
+    Intent pass_priority;
+    pass_priority.type = IntentType::PassPriority;
+    Intent choice;
+    choice.type = IntentType::MakeChoice;
+    EXPECT_EQ(search::settleChoice({play, pass_focus}), 1);
+    EXPECT_EQ(search::settleChoice({play, play, pass_priority}), 2);
+    EXPECT_EQ(search::settleChoice({choice, play}), 0);
+}
+
+TEST_F(IsMctsSearchTest, QuietDecisionsAreMainPhaseActionsWithNothingInFlight) {
+    // Random games: every decision's site is stamped for that decision, a
+    // quiet main-phase decision is a clean boundary (no chain, showdown or
+    // combat), every in-flight site is not quiet, and the settle policy takes
+    // a resumable in-flight decision to a quiet one in a few steps.
+    int quiet = 0, loud = 0, settled = 0, max_steps = 0, total_steps = 0, mainphase_loud = 0;
+    std::map<int, int> loud_by_kind;
+    for (uint64_t seed : {3u, 4u, 5u}) {
+        EventBus bus;
+        GameEngine engine(*db_, bus, *registry_);
+        std::mt19937_64 rng(seed * 131 + 1);
+        StepResult sr = engine.beginGame(*deck_, *deck_, seed);
+        for (int n = 0; n < 700 && sr.kind == StepKind::NeedDecision; ++n) {
+            const GameState& s = engine.state();
+            const auto kind = s.decision_site.kind;
+            ASSERT_EQ(s.decision_site.decision_index, s.decision_index)
+                << "decision " << s.decision_index << " has a stale site (kind " << static_cast<int>(kind) << ")";
+            const bool q = search::isQuietDecision(s);
+            if (q) {
+                ++quiet;
+                if (kind == DecisionSiteKind::MainPhase) EXPECT_TRUE(search::isCleanMainPhaseSnapshot(s));
+            } else {
+                ++loud;
+                ++loud_by_kind[static_cast<int>(kind)];
+                if (kind == DecisionSiteKind::MainPhase) ++mainphase_loud;
+                EXPECT_NE(kind, DecisionSiteKind::None);
+                EXPECT_NE(kind, DecisionSiteKind::Mulligan);
+            }
+            if (kind == DecisionSiteKind::ChainPriority || kind == DecisionSiteKind::ChainChoice ||
+                kind == DecisionSiteKind::ShowdownFocus || kind == DecisionSiteKind::CombatDamage ||
+                kind == DecisionSiteKind::Other)
+                EXPECT_FALSE(q);
+            if (!q && search::isResumableSnapshot(s)) {
+                EventBus bus2;
+                GameEngine copy(*db_, bus2, *registry_);
+                StepResult t = copy.resumeFromSnapshot(GameState(s), seed + 1000);
+                int steps = 0;
+                while (t.kind == StepKind::NeedDecision && !search::isQuietDecision(copy.state()) && steps < 300) {
+                    t = copy.applyChoice(search::settleChoice(t.legal));
+                    ++steps;
+                }
+                EXPECT_TRUE(t.kind != StepKind::NeedDecision || search::isQuietDecision(copy.state()))
+                    << "settling decision " << s.decision_index << " did not turn quiet in 300 steps";
+                ++settled;
+                max_steps = std::max(max_steps, steps);
+                total_steps += steps;
+            }
+            int idx = static_cast<int>(rng() % sr.legal.size());
+            if (sr.legal[static_cast<size_t>(idx)].type == IntentType::Concede) idx = passiveIndex(sr.legal);
+            sr = engine.applyChoice(idx);
+        }
+    }
+    EXPECT_GT(quiet, 0);
+    EXPECT_GT(loud, 0);
+    EXPECT_GT(settled, 0);
+    std::string kinds;
+    for (const auto& [k, c] : loud_by_kind) kinds += " kind" + std::to_string(k) + "=" + std::to_string(c);
+    std::cout << "[settle] quiet " << quiet << ", not quiet " << loud << " (" << kinds
+              << "; main-phase sites with a chain open " << mainphase_loud << "), settled " << settled
+              << " in-flight snapshots in " << (settled ? total_steps / static_cast<double>(settled) : 0.0)
+              << " steps on average, at most " << max_steps << "\n";
+}
+
+TEST_F(IsMctsSearchTest, SettleSeesThatASuicideAttackLosesTheUnits) {
+    // The acting player's only ready units are two 1-Might units at base; every
+    // battlefield is held by the opponent with two 10-Might units. Moving in
+    // starts a combat whose damage assignments are real decisions, so without
+    // settling the first evaluation of a move lands mid-combat with the units
+    // still alive and the move looks free. The leaf evaluation counts units on
+    // the board (and score), so with settling the attack shows its cost and
+    // End turn (the opponent then scores its holds) is preferred.
+    auto onBoard = [](const GameState& s, GameObjectId id) {
+        if (!s.objectExists(id)) return false;
+        const auto& o = s.getObject(id);
+        return o.location.has_value() && (o.zone == ZoneType::Base || o.zone == ZoneType::BattlefieldZone);
+    };
+    // The acting player's units on the board and the score difference: a unit
+    // is worth more than the two points the opponent's holds bring it. (The
+    // opponent's units are left out so that what it deploys on its own turn
+    // after End turn does not blur the comparison.)
+    auto material = [onBoard](const GameState& s, PlayerId me) {
+        int units = 0;
+        for (const auto& [id, o] : s.objects)
+            if (o.isUnit() && o.controller == me && onBoard(s, id)) units += 1;
+        const int score = s.player(me).score - s.player(opponent(me)).score;
+        return 0.08 * score + 0.25 * units;
+    };
+
+    GameState pos;
+    std::vector<Intent> legal;
+    PlayerId me = PlayerId::None;
+    std::vector<int> suicide;
+    int end_turn = -1;
+    uint64_t pos_seed = 0;
+    for (uint64_t seed = 61; seed < 120 && pos_seed == 0; ++seed) {
+        EventBus bus;
+        GameEngine engine(*db_, bus, *registry_);
+        if (!playUntil(engine, seed, [](const GameState& s, const std::vector<Intent>&) {
+                return s.turn.turn_number >= 3 && s.decision_site.kind == DecisionSiteKind::MainPhase &&
+                       search::isQuietDecision(s) && search::isResumableSnapshot(s);
+            }))
+            continue;
+        me = search::decidingPlayerOf(engine.state(), engine.currentStep().legal);
+        const PlayerId opp = opponent(me);
+        GameState copy = engine.state();
+        // Nobody has anything to play: hands go to the decks.
+        for (PlayerId p : {me, opp}) {
+            auto& ps = copy.player(p);
+            for (auto oid : ps.hand) {
+                copy.getObject(oid).zone = ZoneType::MainDeck;
+                copy.getObject(oid).location.reset();
+                ps.main_deck.push_back(oid);
+            }
+            ps.hand.clear();
+        }
+        auto takeUnits = [&](PlayerId p, size_t n) {
+            std::vector<GameObjectId> out;
+            auto& deck = copy.player(p).main_deck;
+            for (auto it = deck.begin(); it != deck.end() && out.size() < n;) {
+                if (db_->get(copy.getObject(*it).card_def_id).card_type == CardType::Unit) {
+                    out.push_back(*it);
+                    it = deck.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+            return out;
+        };
+        const auto movers = takeUnits(me, 2);
+        const auto guards = takeUnits(opp, 2 * copy.battlefields.size());
+        if (movers.size() < 2 || guards.size() < 2 * copy.battlefields.size()) continue;
+        // Ending the turn must not hand the opponent the game through its holds.
+        if (copy.player(opp).score + static_cast<int>(copy.battlefields.size()) >= copy.mode.victory_score) continue;
+        // Everything the acting player has on the board is exhausted and off
+        // the battlefields; the two movers are ready at base with 1 Might.
+        for (auto& [id, o] : copy.objects) {
+            if (o.controller != me) continue;
+            if (o.zone == ZoneType::BattlefieldZone && o.isUnit()) {
+                o.zone = ZoneType::Base;
+                o.location = BaseLocation{me};
+            }
+            if (o.zone == ZoneType::Base || o.zone == ZoneType::BattlefieldZone || o.zone == ZoneType::LegendZone)
+                o.is_exhausted = true;
+        }
+        auto place = [&](GameObjectId id, std::optional<BattlefieldId> bf, int might) {
+            auto& o = copy.getObject(id);
+            if (bf) {
+                o.zone = ZoneType::BattlefieldZone;
+                o.location = BattlefieldLocation{*bf};
+            } else {
+                o.zone = ZoneType::Base;
+                o.location = BaseLocation{o.owner};
+            }
+            o.controller = o.owner;
+            o.is_exhausted = false;
+            o.damage_marked = 0;
+            o.base_might = might;
+            o.current_might = might;
+        };
+        for (auto id : movers) place(id, std::nullopt, 1);
+        for (size_t b = 0; b < copy.battlefields.size(); ++b) {
+            auto& bf = copy.battlefields[b];
+            place(guards[2 * b], bf.id, 10);
+            place(guards[2 * b + 1], bf.id, 10);
+            bf.controller = opp;
+            bf.is_contested = false;
+            bf.contested_by = PlayerId::None;
+        }
+        if (!search::isResumableSnapshot(copy)) continue;
+        EventBus bus2;
+        GameEngine probe(*db_, bus2, *registry_);
+        StepResult sr = probe.resumeFromSnapshot(GameState(copy), seed);
+        if (sr.kind != StepKind::NeedDecision) continue;
+        legal = sr.legal;
+        suicide.clear();
+        end_turn = -1;
+        for (size_t i = 0; i < legal.size(); ++i) {
+            if (legal[i].type == IntentType::EndTurn) end_turn = static_cast<int>(i);
+            if (legal[i].type == IntentType::StandardMove && legal[i].move_destination.has_value() &&
+                std::holds_alternative<BattlefieldLocation>(*legal[i].move_destination))
+                suicide.push_back(static_cast<int>(i));
+        }
+        if (end_turn < 0 || suicide.empty()) continue;
+        // Every move into a battlefield loses the units that move, and the
+        // combat asks at least one real decision before it is over.
+        bool fits = true;
+        for (int i : suicide) {
+            EventBus bus3;
+            GameEngine sim(*db_, bus3, *registry_);
+            StepResult t = sim.resumeFromSnapshot(GameState(copy), seed);
+            t = sim.applyChoice(i);
+            int multi = 0, steps = 0;
+            while (t.kind == StepKind::NeedDecision && !search::isQuietDecision(sim.state()) && steps < 100) {
+                if (t.legal.size() > 1) ++multi;
+                t = sim.applyChoice(search::settleChoice(t.legal));
+                ++steps;
+            }
+            bool lost = t.kind == StepKind::NeedDecision && search::isQuietDecision(sim.state());
+            for (auto u : legal[static_cast<size_t>(i)].units_to_move) lost = lost && !onBoard(sim.state(), u);
+            if (!lost || multi == 0) { fits = false; break; }
+        }
+        if (!fits) continue;
+        pos = std::move(copy);
+        pos_seed = seed;
+    }
+    ASSERT_NE(pos_seed, 0u) << "no suitable position found";
+
+    // Measured from the position searched, so nothing saturates.
+    const double base = material(pos, me);
+    auto run = [&](int settle) {
+        SearchOptions opts;
+        opts.worlds = 4;
+        opts.uct_c = 0.5;
+        opts.settle = settle;
+        search::IsMctsSearch s(*db_, *registry_, *deck_, *deck_, pos_seed, 80, opts);
+        s.setEvaluator([&](const GameState& st, PlayerId p) { return material(st, p) - base; });
+        return s.search(pos, legal, me, 2026);
+    };
+    const auto off = run(0);
+    const auto on = run(60);
+    auto share = [&](const search::SearchResult& r) {
+        int total = 0, moves = 0;
+        for (size_t i = 0; i < r.visits.size(); ++i) total += r.visits[i];
+        for (int i : suicide) moves += r.visits[static_cast<size_t>(i)];
+        return total > 0 ? moves / static_cast<double>(total) : 0.0;
+    };
+    std::string table;
+    for (size_t i = 0; i < legal.size(); ++i) {
+        const GameObjectId src = legal[i].ability_source != kInvalidId ? legal[i].ability_source : legal[i].card;
+        table += "\n  [" + std::to_string(i) + "] " + legal[i].describe() +
+                 (src != kInvalidId && pos.objectExists(src) ? " (" + pos.getObject(src).name + ")" : std::string()) +
+                 "  off " + std::to_string(off.visits[i]) + "  on " + std::to_string(on.visits[i]);
+    }
+    EXPECT_EQ(off.failed, 0) << table;
+    EXPECT_EQ(on.failed, 0) << table;
+    EXPECT_EQ(off.settled, 0);
+    EXPECT_GT(on.settled, 0);
+    EXPECT_EQ(on.settle_capped, 0);
+    // Settling moves the visits away from the attacks...
+    EXPECT_LT(share(on), share(off)) << table;
+    // ... End turn now beats every attack, and no attack is chosen.
+    for (int i : suicide)
+        EXPECT_GT(on.visits[static_cast<size_t>(end_turn)], on.visits[static_cast<size_t>(i)]) << table;
+    EXPECT_EQ(std::count(suicide.begin(), suicide.end(), on.chosen), 0) << table;
+    std::cout << "[settle] suicide attacks: " << 100.0 * share(off) << "% of visits without settling, "
+              << 100.0 * share(on) << "% with (" << on.settled << " leaves settled, "
+              << on.settle_steps / std::max(1.0, static_cast<double>(on.settled)) << " steps each)" << table << "\n";
 }
 
 }  // namespace

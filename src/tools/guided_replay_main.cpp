@@ -38,7 +38,7 @@ struct GuidedAgentSpec {
 };
 
 /// Same grammar as the riftbound CLI: kind[:key=value,...] with
-/// sims=, eval=, c=, det=, final=, threads=, worlds=, prior=.
+/// sims= and the search options of agents/search_options.h.
 GuidedAgentSpec parseGuidedAgentSpec(const std::string& s) {
     GuidedAgentSpec out;
     out.raw = s;
@@ -46,30 +46,7 @@ GuidedAgentSpec parseGuidedAgentSpec(const std::string& s) {
     out.kind = colon == std::string::npos ? s : s.substr(0, colon);
     if (out.kind != "random" && out.kind != "mcts" && out.kind != "ismcts" && out.kind != "pmcts" && out.kind != "none")
         throw std::runtime_error("Unknown agent kind '" + out.kind + "' (random, mcts, ismcts, pmcts, none)");
-    if (colon != std::string::npos) {
-        const std::string rest = s.substr(colon + 1);
-        size_t i = 0;
-        while (i < rest.size()) {
-            auto eq = rest.find('=', i);
-            auto comma = rest.find(',', i);
-            if (comma == std::string::npos) comma = rest.size();
-            if (eq != std::string::npos && eq < comma) {
-                const std::string key = rest.substr(i, eq - i), val = rest.substr(eq + 1, comma - eq - 1);
-                if (key == "sims") out.sims = std::stoi(val);
-                else if (key == "eval") out.search.eval = val;
-                else if (key == "c") out.search.uct_c = std::stod(val);
-                else if (key == "det") out.search.determinize = val != "0";
-                else if (key == "final") out.search.final_policy = val;
-                else if (key == "threads") out.search.threads = std::stoi(val);
-                else if (key == "worlds") out.search.worlds = std::stoi(val);
-                else if (key == "prior") out.search.prior = val;
-                else if (key == "prior_temp") out.search.prior_temp = std::stod(val);
-                else if (key == "root") out.search.root = val;
-                else if (key == "gumbel_m") out.search.gumbel_m = std::stoi(val);
-            }
-            i = comma + 1;
-        }
-    }
+    if (colon != std::string::npos) parseSearchSpecOptions(s.substr(colon + 1), out.search, &out.sims);
     if ((out.kind == "mcts" || out.kind == "ismcts" || out.kind == "pmcts") && out.sims <= 0)
         throw std::runtime_error("Agent '" + out.kind + "' requires sims=N");
     return out;

@@ -36,6 +36,7 @@
 #include <boost/program_options.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <ctime>
@@ -166,7 +167,7 @@ struct AgentSpec {
     std::string raw;       // original spec string
     std::string kind;      // "random", "human", "mcts", "ismcts"
     int sims = 0;          // populated for mcts/ismcts
-    SearchOptions search;  // eval=, c=, det=, final= (mcts/ismcts)
+    SearchOptions search;  // eval=, c=, det=, final=, settle=, ... (mcts/ismcts/pmcts)
 };
 
 AgentSpec parseAgentSpec(const std::string& s) {
@@ -181,30 +182,8 @@ AgentSpec parseAgentSpec(const std::string& s) {
             "random, human, mcts, ismcts, pmcts.");
     }
     if (colon != std::string::npos) {
-        auto rest = s.substr(colon + 1);
-        // key=value pairs separated by commas; only "sims=N" recognised.
-        size_t i = 0;
-        while (i < rest.size()) {
-            auto eq    = rest.find('=', i);
-            auto comma = rest.find(',', i);
-            if (comma == std::string::npos) comma = rest.size();
-            if (eq != std::string::npos && eq < comma) {
-                auto key = rest.substr(i, eq - i);
-                auto val = rest.substr(eq + 1, comma - eq - 1);
-                if (key == "sims") out.sims = std::stoi(val);
-                else if (key == "eval") out.search.eval = val;
-                else if (key == "c") out.search.uct_c = std::stod(val);
-                else if (key == "det") out.search.determinize = val != "0";
-                else if (key == "final") out.search.final_policy = val;
-                else if (key == "threads") out.search.threads = std::stoi(val);
-                else if (key == "worlds") out.search.worlds = std::stoi(val);
-                else if (key == "prior") out.search.prior = val;
-                else if (key == "prior_temp") out.search.prior_temp = std::stod(val);
-                else if (key == "root") out.search.root = val;
-                else if (key == "gumbel_m") out.search.gumbel_m = std::stoi(val);
-            }
-            i = comma + 1;
-        }
+        // key=value pairs separated by commas (agents/search_options.h).
+        parseSearchSpecOptions(s.substr(colon + 1), out.search, &out.sims);
         if ((out.kind == "mcts" || out.kind == "ismcts" || out.kind == "pmcts") && out.sims <= 0) {
             throw std::runtime_error(
                 "Agent '" + out.kind + "' requires sims=N (e.g. " + out.kind + ":sims=50).");
@@ -212,6 +191,36 @@ AgentSpec parseAgentSpec(const std::string& s) {
     }
     return out;
 }
+
+/// Batch mode: thinking time per seat, over the decisions with more than one
+/// option (an A/B of two search settings reports both sides' cost per move).
+struct SeatClock {
+    std::atomic<long long> decisions{0};
+    std::atomic<long long> micros{0};
+};
+
+/// Forwards to the seat's agent and adds its thinking time to a SeatClock.
+class TimedAgent : public AgentInterface {
+public:
+    TimedAgent(std::unique_ptr<AgentInterface> inner, SeatClock& clock)
+        : inner_(std::move(inner)), clock_(clock) {}
+    Intent selectAction(const GameState& state, const std::vector<Intent>& legal) override {
+        if (legal.size() < 2) return inner_->selectAction(state, legal);
+        const auto t0 = std::chrono::steady_clock::now();
+        Intent chosen = inner_->selectAction(state, legal);
+        clock_.micros += std::chrono::duration_cast<std::chrono::microseconds>(
+                             std::chrono::steady_clock::now() - t0).count();
+        clock_.decisions += 1;
+        return chosen;
+    }
+    std::vector<std::pair<int, double>> lastSearch() const override { return inner_->lastSearch(); }
+    int lastSearchSims() const override { return inner_->lastSearchSims(); }
+    void setDecisionHistory(const std::vector<int32_t>* history) override { inner_->setDecisionHistory(history); }
+
+private:
+    std::unique_ptr<AgentInterface> inner_;
+    SeatClock& clock_;
+};
 
 /// `game_seed` MUST be the engine's runGame seed — MctsAgent and IsMctsAgent
 /// forward it into the internal OpenSpiel state so the replayed
@@ -303,8 +312,13 @@ int main(int argc, char* argv[]) {
         "                      c=X               exploration constant\n"
         "                      det=0             search the real state (cheats)\n"
         "                      final=max|sample  final move choice (default max)\n"
-        "                    mcts accepts eval= and c= and always sees the real\n"
-        "                    state (perfect information). Caveat:\n"
+        "                      settle=N          before evaluating a leaf in the\n"
+        "                                        middle of a chain, showdown or\n"
+        "                                        combat, play on with passes /\n"
+        "                                        first options for at most N\n"
+        "                                        decisions (default 0 = off)\n"
+        "                    mcts accepts eval=, c= and settle= and always sees\n"
+        "                    the real state (perfect information). Caveat:\n"
         "                    StateEditor god-mode edits do not participate\n"
         "                    in MCTS planning; the bot sees the state\n"
         "                    implied by action_history alone.\n"
@@ -317,7 +331,8 @@ int main(int argc, char* argv[]) {
         "                    prior), prior=auto|uniform|heuristic|net,\n"
         "                    prior_temp=T, root=puct|gumbel (Gumbel sequential\n"
         "                    halving at the root, gumbel_m=M candidates), worlds=W,\n"
-        "                    threads=T, c=X, final=max|sample.\n"
+        "                    threads=T, c=X, final=max|sample, settle=N (as for\n"
+        "                    ismcts).\n"
         "\n"
         "Common invocations:\n"
         "  ./riftbound --deck1 D1.txt --deck2 D2.txt\n"
@@ -587,8 +602,9 @@ int main(int argc, char* argv[]) {
         auto factory_spec1 = spec1;
         auto factory_spec2 = spec2;
         const EngineRefs refs{card_db, card_registry, deck1, deck2};
+        auto clocks = std::make_shared<std::array<SeatClock, 2>>();
         auto factory =
-            [factory_spec1, factory_spec2, refs,
+            [factory_spec1, factory_spec2, refs, clocks,
              d1 = deck1_path, d2 = deck2_path, r = registry_path]
             (int seat, uint64_t game_seed) -> std::unique_ptr<AgentInterface> {
                 const AgentSpec& s = (seat == 0) ? factory_spec1 : factory_spec2;
@@ -596,7 +612,8 @@ int main(int argc, char* argv[]) {
                     throw std::runtime_error("batch mode cannot use human seats");
                 }
                 uint64_t derived = game_seed * 2 + static_cast<uint64_t>(seat);
-                return buildAgent(s, game_seed, derived, d1, d2, r, nullptr, refs);
+                return std::make_unique<TimedAgent>(buildAgent(s, game_seed, derived, d1, d2, r, nullptr, refs),
+                                                    (*clocks)[seat == 0 ? 0 : 1]);
             };
 
         GameConfig cfg;
@@ -633,6 +650,10 @@ int main(int argc, char* argv[]) {
                       << ((st.seconds - st.seconds_replayed) > 0 ? (st.simulations - st.simulations_replayed) / (st.seconds - st.seconds_replayed) : 0.0)
                       << " sims/s); replayed decisions: " << st.simulations_replayed << " sims in " << st.seconds_replayed
                       << " s (" << (st.seconds_replayed > 0 ? st.simulations_replayed / st.seconds_replayed : 0.0) << " sims/s)\n";
+            if (st.settled > 0)
+                std::cout << "       settle: " << st.settled << " leaves played on ("
+                          << std::setprecision(2) << static_cast<double>(st.settle_steps) / st.settled
+                          << " decisions each on average), " << st.settle_capped << " stopped by the step cap\n";
         }
         std::cout << "\nResults (" << num_games << " games):\n"
                   << "  P1 wins: " << results.p1_wins.load() << "\n"
@@ -644,6 +665,14 @@ int main(int argc, char* argv[]) {
                       << "  Avg decisions: "
                       << (results.total_decisions.load() / num_games) << "\n"
                       << "  Threads: " << num_threads << "\n";
+        }
+        // Thinking time per move, over the decisions with two or more options.
+        for (int k = 0; k < 2; ++k) {
+            const auto& c = (*clocks)[static_cast<size_t>(k)];
+            const long long n = c.decisions.load();
+            std::cout << "  Agent" << (k + 1) << " move time: "
+                      << std::fixed << std::setprecision(1) << (n > 0 ? c.micros.load() / 1000.0 / n : 0.0)
+                      << " ms avg over " << n << " decisions (" << (k == 0 ? spec1.raw : spec2.raw) << ")\n";
         }
         return 0;
     }

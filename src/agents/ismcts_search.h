@@ -25,7 +25,9 @@
 ///   • Leaf evaluation by ml::ValueNet (`eval=net:<file>`), the value head of
 ///     a two-head ml::PolicyNet (`eval=policy:<file>`, whose policy head is
 ///     then the PUCT prior), or the score / board heuristics, always from the
-///     acting player's masked view.
+///     acting player's masked view. With `settle=N` a leaf in the middle of a
+///     chain, showdown or combat is first played on by a default policy
+///     (passes, else first options) until it is quiet (isQuietDecision).
 ///   • Root parallelism: `threads` searchers with their own worlds and trees
 ///     (Chaslot et al. 2008); root visits are summed. Visit shares are exported
 ///     through AgentInterface::lastSearch for review and policy targets.
@@ -70,7 +72,23 @@ struct SearchResult {
     bool resumed = true;                          ///< false: the root was rebuilt by replaying the game
     bool resumed_inflight = false;                ///< the root is an in-flight decision resumed in place (not a clean main-phase boundary)
     int replay_rejected = 0;                      ///< rebuilt or resumed worlds that did not match the real decision (options, acting player's view)
+    int settled = 0;                              ///< leaves played on before evaluation (SearchOptions::settle)
+    int settle_steps = 0;                         ///< decisions the settle policy took over those leaves
+    int settle_capped = 0;                        ///< settled leaves still not quiet when the step cap ran out
 };
+
+/// A decision the search may evaluate as it stands: the turn player's
+/// main-phase action (GameState::decision_site.kind == MainPhase) with nothing
+/// on the chain, no cost being paid and no showdown or combat staged or under
+/// way; also a mulligan, and a state whose site was never recorded (None).
+/// Chain priority, a resolving card's choice, showdown focus, combat damage
+/// and decisions inside a card effect or cost payment are not quiet.
+bool isQuietDecision(const GameState& state);
+
+/// The settle policy's pick among `legal`: pass priority or pass focus when
+/// offered, otherwise the first option (combat damage assignment, cost
+/// payment, a card's choice).
+int settleChoice(const std::vector<Intent>& legal);
 
 class IsMctsSearch {
 public:
@@ -98,6 +116,10 @@ public:
     /// Use an already loaded value net as the leaf evaluation (the browser
     /// engine has no file to name in SearchOptions::eval).
     void setValueNet(std::shared_ptr<const ml::ValueNet> net) { net_ = std::move(net); }
+    /// Replace the leaf evaluation of a non-terminal state by `fn` (value
+    /// for the player given, in [-1, 1]); an empty function restores
+    /// SearchOptions::eval. For custom heuristics and tests.
+    void setEvaluator(std::function<double(const GameState&, PlayerId)> fn) { eval_fn_ = std::move(fn); }
 
     /// Run the search for `perspective`, who must decide among `legal` at
     /// `state`. `seed` drives world sampling and tie-breaks: the same inputs
@@ -130,6 +152,7 @@ private:
     int sims_;
     SearchOptions opts_;
     PriorFn prior_;
+    std::function<double(const GameState&, PlayerId)> eval_fn_;
     std::shared_ptr<const ml::ValueNet> net_;
     std::shared_ptr<const ml::PolicyNet> pnet_;
 };
@@ -149,6 +172,9 @@ struct GlobalSearchStats {
     double seconds = 0.0;         ///< wall time inside the search
     double seconds_replayed = 0.0;///< part of `seconds` spent on decisions rebuilt by replay
     long long simulations_replayed = 0;  ///< simulations run on rebuilt decisions
+    long long settled = 0;        ///< leaves played on before evaluation (settle=N)
+    long long settle_steps = 0;   ///< decisions the settle policy took
+    long long settle_capped = 0;  ///< settled leaves that hit the step cap before turning quiet
 };
 GlobalSearchStats globalSearchStats();
 

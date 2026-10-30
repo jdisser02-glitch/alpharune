@@ -6,7 +6,9 @@
 ///   rb_new_game(d1, d2, seat, seed, bot) decks in the .txt deck-list format;
 ///                                     seat 1/2 = the human's seat, 0 = bot
 ///                                     vs bot; bot = "greedy[:det=3,budget=
-///                                     1500,steps=40]" or "random". 0 = ok.
+///                                     1500,steps=40]", "random" or
+///                                     "search[:sims=N,worlds=W,settle=S]"
+///                                     (search::PuctAgent). 0 = ok.
 ///   rb_state_json(perspective)        board (decision_log boardJson frame +
 ///                                     zones), `legal` = {index,text} options,
 ///                                     `decision_player`; perspective 1/2
@@ -239,15 +241,24 @@ wasm::GreedyBot& botFor(Session& ses, PlayerId p) {
     return *slot;
 }
 
-/// "search:sims=50,worlds=6" -> (50, 6); defaults 50 and 6.
-std::pair<int, int> parseSearchSpec(const std::string& spec) {
-    int sims = 50, worlds = 6;
-    auto grab = [&](const char* key, int& out) {
+struct SearchSpec {
+    int sims = 50;
+    int worlds = 6;
+    int settle = 0;   // SearchOptions::settle (0 = off)
+};
+
+/// "search:sims=50,worlds=6,settle=60" -> {50, 6, 60}; defaults 50, 6 and 0.
+SearchSpec parseSearchSpec(const std::string& spec) {
+    SearchSpec out;
+    auto grab = [&](const char* key, int& v_out) {
         const auto k = spec.find(key); if (k == std::string::npos) return;
-        const int v = std::atoi(spec.c_str() + k + std::strlen(key)); if (v > 0) out = v;
+        const int v = std::atoi(spec.c_str() + k + std::strlen(key)); if (v > 0) v_out = v;
     };
-    grab("sims=", sims); grab("worlds=", worlds);
-    return {std::min(sims, 400), std::min(worlds, 16)};
+    grab("sims=", out.sims); grab("worlds=", out.worlds); grab("settle=", out.settle);
+    out.sims = std::min(out.sims, 400);
+    out.worlds = std::min(out.worlds, 16);
+    out.settle = std::min(out.settle, 500);
+    return out;
 }
 
 }  // namespace
@@ -306,20 +317,21 @@ RB_EXPORT int rb_new_game(const char* deck1_txt, const char* deck2_txt, int huma
         });
         const std::string spec = bot_spec ? bot_spec : "greedy";
         if (spec.rfind("search", 0) == 0) {
-            const auto [sims, worlds] = parseSearchSpec(spec);
+            const SearchSpec ss = parseSearchSpec(spec);
             SearchOptions opts;
             opts.eval = "score";            // replaced by the loaded net below
-            opts.worlds = worlds;
+            opts.worlds = ss.worlds;
             opts.threads = 1;
             opts.prior = "heuristic";
+            opts.settle = ss.settle;
             for (int k = 0; k < 2; ++k) {
                 ses->search[k] = std::make_unique<search::PuctAgent>(
                     c.db, c.registry, ses->deck1, ses->deck2, ses->seed,
-                    ses->seed * 7919u + 17u + static_cast<uint64_t>(k), sims, opts);
+                    ses->seed * 7919u + 17u + static_cast<uint64_t>(k), ss.sims, opts);
                 if (g_net) ses->search[k]->searcher().setValueNet(g_net);
                 ses->search[k]->setDecisionHistory(&ses->history);
             }
-            ses->search_worlds = worlds;
+            ses->search_worlds = ss.worlds;
         } else {
             const auto cfg = wasm::GreedyBotConfig::parse(spec);
             for (int k = 0; k < 2; ++k) {

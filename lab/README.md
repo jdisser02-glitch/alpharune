@@ -67,7 +67,13 @@ Agents: `random` (only checks that games run), `mcts:sims=N` (sees hidden
 information — for reference only), `ismcts:sims=N` (honest: samples the
 hidden cards each simulation). Options after `sims=N`: `eval=score|board`,
 `c=X`, `final=max|sample`, `det=0` (disable sampling), `eval=net:FILE`
-(a value network from `lab/learn/nets/`).
+(a value network from `lab/learn/nets/`), `settle=N` (a leaf in the middle
+of a chain, showdown or combat is played on with passes / first options for
+at most N decisions before it is evaluated; off by default). `pmcts:sims=N`
+(the engine's own search, used by the learning loop) takes the same options
+plus `eval=policy:FILE`, `worlds=W`, `threads=T`, `prior=`, `root=`.
+`lab/specs/settle_ab.json` is an A/B of two agents (`agent` against
+`opp_agent`) on two decks played by both.
 
 ## List search
 

@@ -112,7 +112,36 @@ struct RootStat {
 namespace {
 std::atomic<long long> g_decisions{0}, g_sims{0}, g_failed{0}, g_replayed{0}, g_rejected{0}, g_inflight{0};
 std::atomic<long long> g_micros{0}, g_micros_replayed{0}, g_sims_replayed{0};
+std::atomic<long long> g_settled{0}, g_settle_steps{0}, g_settle_capped{0};
 }  // namespace
+
+bool isQuietDecision(const GameState& gs) {
+    if (gs.game_over) return true;
+    switch (gs.decision_site.kind) {
+        case DecisionSiteKind::None:       // never recorded: a state built by hand
+        case DecisionSiteKind::Mulligan:
+            return true;
+        case DecisionSiteKind::MainPhase:
+            break;
+        default:                           // chain, card choice, showdown, combat, inside an effect
+            return false;
+    }
+    // The main-phase loop asks with a chain still open when a trigger is left
+    // over after a combat (answered in Closed state); that is not quiet yet.
+    if (gs.chain.exists() || gs.chain.resuming.has_value() || gs.cost_cursor.has_value()) return false;
+    if (gs.turn.ns_state != NeutralShowdownState::Neutral) return false;
+    for (const auto& bf : gs.battlefields)
+        if (bf.combat_in_progress || bf.showdown_in_progress || bf.combat_staged || bf.showdown_staged)
+            return false;
+    return true;
+}
+
+int settleChoice(const std::vector<Intent>& legal) {
+    for (size_t i = 0; i < legal.size(); ++i)
+        if (legal[i].type == IntentType::PassPriority || legal[i].type == IntentType::PassFocus)
+            return static_cast<int>(i);
+    return 0;
+}
 
 GlobalSearchStats globalSearchStats() {
     GlobalSearchStats st;
@@ -125,6 +154,9 @@ GlobalSearchStats globalSearchStats() {
     st.seconds = g_micros.load() / 1e6;
     st.seconds_replayed = g_micros_replayed.load() / 1e6;
     st.simulations_replayed = g_sims_replayed.load();
+    st.settled = g_settled.load();
+    st.settle_steps = g_settle_steps.load();
+    st.settle_capped = g_settle_capped.load();
     return st;
 }
 
@@ -164,6 +196,7 @@ double IsMctsSearch::evaluate(const GameState& s, PlayerId me) const {
         if (s.winner == PlayerId::None) return 0.0;
         return s.winner == me ? 1.0 : -1.0;
     }
+    if (eval_fn_) return std::clamp(eval_fn_(s, me), -1.0, 1.0);
     if (net_) return 2.0 * net_->winProbability(s, me, db_) - 1.0;
     if (pnet_) return 2.0 * pnet_->winProbability(s, me, db_) - 1.0;
     const double victory = std::max(1, s.mode.victory_score);
@@ -338,6 +371,9 @@ public:
     int completed() const { return completed_; }
     int failed() const { return failed_; }
     int rejected() const { return rejected_; }
+    int settled() const { return settled_; }
+    int settleSteps() const { return settle_steps_; }
+    int settleCapped() const { return settle_capped_; }
     int worlds() const { return static_cast<int>(worlds_.size()); }
     bool resumable() const { return resumable_; }
     int gumbelWinner() const { return gumbel_winner_; }   ///< move key, -1 without Gumbel
@@ -474,11 +510,11 @@ private:
             }
             if (!node->expanded) {
                 node->expanded = true;
-                value = search_.evaluate(gs, root_player_);
+                value = leafValue(*engine, step);
                 break;
             }
             if (depth >= kMaxDepth) {
-                value = search_.evaluate(gs, root_player_);
+                value = leafValue(*engine, step);
                 break;
             }
             const PlayerId actor = decidingPlayerOf(gs, step.legal);
@@ -497,6 +533,36 @@ private:
             if (e->child) { e->child->visits++; e->child->sum += value; }
         }
         ++completed_;
+    }
+
+    /// Root-perspective value of the leaf a simulation stopped at (`step` is
+    /// the engine's pending decision). With SearchOptions::settle a leaf that
+    /// is not quiet — in the middle of a chain, showdown, combat or a card's
+    /// resolution — is first played on with the settle policy, so a move that
+    /// starts a combat is valued after the combat; when the step cap runs out
+    /// the leaf is evaluated where it stopped.
+    double leafValue(GameEngine& engine, StepResult& step) {
+        const int cap = search_.options().settle;
+        if (cap > 0 && step.kind == StepKind::NeedDecision && !isQuietDecision(engine.state())) {
+            ++settled_;
+            int n = 0;
+            while (step.kind == StepKind::NeedDecision && !step.legal.empty() &&
+                   !isQuietDecision(engine.state())) {
+                if (n >= cap) {
+                    ++settle_capped_;
+                    static const bool dbg = std::getenv("RIFTBOUND_PMCTS_DEBUG") != nullptr;
+                    if (dbg) std::fprintf(stderr, "[pmcts] decision %d: settle cap %d reached at decision %d (site kind %d, %zu options)\n",
+                                          state_.decision_index, cap, engine.state().decision_index,
+                                          static_cast<int>(engine.state().decision_site.kind), step.legal.size());
+                    break;
+                }
+                step = engine.applyChoice(settleChoice(step.legal));
+                ++n;
+            }
+            settle_steps_ += n;
+        }
+        if (step.kind != StepKind::NeedDecision) return terminalValue(engine.stepResult(), root_player_);
+        return search_.evaluate(engine.state(), root_player_);
     }
 
     /// The index in this world's `legal` of the root option `root_idx` (same
@@ -604,6 +670,9 @@ private:
     int completed_ = 0;
     int failed_ = 0;
     int rejected_ = 0;
+    int settled_ = 0;
+    int settle_steps_ = 0;
+    int settle_capped_ = 0;
     int dbg_once_ = 0;
 };
 
@@ -651,6 +720,9 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
         out.simulations += w->completed();
         out.failed += w->failed();
         out.replay_rejected += w->rejected();
+        out.settled += w->settled();
+        out.settle_steps += w->settleSteps();
+        out.settle_capped += w->settleCapped();
         out.worlds += w->worlds();
         out.resumed = w->resumable();
         out.resumed_inflight = w->inflight();
@@ -724,6 +796,9 @@ Intent PuctAgent::selectAction(const GameState& state, const std::vector<Intent>
     g_replayed.fetch_add(last_.resumed ? 0 : 1);
     g_inflight.fetch_add(last_.resumed_inflight ? 1 : 0);
     g_rejected.fetch_add(last_.replay_rejected);
+    g_settled.fetch_add(last_.settled);
+    g_settle_steps.fetch_add(last_.settle_steps);
+    g_settle_capped.fetch_add(last_.settle_capped);
     g_micros.fetch_add(static_cast<long long>(secs * 1e6));
     if (!last_.resumed) {
         g_micros_replayed.fetch_add(static_cast<long long>(secs * 1e6));
