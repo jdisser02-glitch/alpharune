@@ -44,16 +44,16 @@ public:
             for (auto id : friendly_units()) {
                 auto& u = ctx.state.getObject(id);
                 if (u.buff_count <= 0) continue;
-                // Spend one buff: -1 [M], then ready.
+                // Spend one buff (its +1 [M] goes with it), then ready.
                 u.buff_count -= 1;
-                u.temp_might_bonus -= 1;
                 u.recomputeMight();
                 ctx.executor.readyObject(id);
                 ctx.events.logTrace("OVERT OPERATION: spent buff to ready " + u.name);
             }
         }
 
-        // "Then buff all friendly units." (Engine buff = +1 [M].)
+        // "Then buff all friendly units. (Each one that doesn't have a buff
+        // gets a +1 [M] buff.)" -- buffUnit places none on a buffed unit.
         for (auto id : friendly_units()) {
             ctx.executor.buffUnit(id);
         }

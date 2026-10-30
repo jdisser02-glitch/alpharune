@@ -517,3 +517,102 @@ TEST_F(GuidedReplayTest, AUnitLoggedAtBaseAndMovedAtOnceWasPlayedThere) {
     auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
     EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
 }
+
+TEST_F(GuidedReplayTest, AnExhaustedUnitMovedAgainIsALogArtefact) {
+    // Bob's Crab made its standard move to Emperor's Dais (exhausting it, CR
+    // 144.2) and conquered; "Bob moved Scuttle Crab to base" later that turn,
+    // with nothing in the log readying it, is a move the log itself makes
+    // impossible: the desync is recorded as a log artefact.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    events.insert(events.begin() + 18, ev(1, "Bob moved Scuttle Crab to base.", "Bob", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "base"}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    ASSERT_EQ(s["desyncs"].get<int>(), 1) << s["desync_list"].dump(1);
+    const auto& d = s["desync_list"][0];
+    EXPECT_EQ(d["reason"].get<std::string>(), "unit is exhausted (no move option)");
+    EXPECT_TRUE(d.value("log_artefact", false)) << d.dump(1);
+    EXPECT_NE(d.value("log_artefact_rule", std::string()).find("Bob moved Scuttle Crab to Emperor's Dais"),
+              std::string::npos) << d.dump(1);
+    EXPECT_EQ(s["log_artefacts"].get<int>(), 1);
+    EXPECT_EQ(s["desyncs_engine"].get<int>(), 0);
+}
+
+TEST_F(GuidedReplayTest, AReadiedUnitMovingAgainIsNotAnArtefact) {
+    // The same second move after "Bob readied Scuttle Crab": whatever the
+    // engine thinks, the log shows nothing impossible.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    events.insert(events.begin() + 18, ev(1, "Bob moved Scuttle Crab to base.", "Bob", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "base"}}));
+    events.insert(events.begin() + 18, ev(1, "Bob readied Scuttle Crab.", "Bob", "readied", {{"card", "Scuttle Crab"}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    EXPECT_EQ(s["log_artefacts"].get<int>(), 0) << s["desync_list"].dump(1);
+    EXPECT_EQ(s["desyncs_engine"].get<int>(), s["desyncs"].get<int>());
+}
+
+TEST_F(GuidedReplayTest, APaymentBelowTheCardsCostIsALogArtefact) {
+    // On her first turn Alice "pays 2E" for Blitzcrank, Impassive, which costs
+    // [5][A]: the payment the log shows cannot pay for the card.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Alice paid 2E — Exhaust 2.", "Alice", "paid"),
+        ev(1, "Alice played Blitzcrank, Impassive from hand to base.", "Alice", "played",
+           {{"card", "Blitzcrank, Impassive"}, {"from", "hand"}, {"to", "base"}}),
+    });
+    events.insert(events.begin() + 6, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    ASSERT_GE(s["desyncs"].get<int>(), 1) << s.dump(1);
+    const auto& d = s["desync_list"][0];
+    EXPECT_EQ(d["event_text"].get<std::string>(), "Alice played Blitzcrank, Impassive from hand to base.");
+    EXPECT_TRUE(d.value("log_artefact", false)) << d.dump(1);
+    EXPECT_NE(d.value("log_artefact_rule", std::string()).find("paid below cost"), std::string::npos);
+}
+
+TEST_F(GuidedReplayTest, OneBattlefieldNameConqueredTwiceInATurnIsTwoBattlefields) {
+    // A mirror match where both players brought Emperor's Dais: Bob conquers
+    // "Emperor's Dais" twice in one turn, which one battlefield cannot give
+    // (CR 472: once per battlefield per turn). Both decks bring it.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob moved Scuttle Crab to Emperor's Dais.", "Bob", "moved",
+           {{"card", "Scuttle Crab"}, {"to", "Emperor's Dais"}, {"battlefield", "Emperor's Dais"}}),
+        ev(1, "Bob passed focus at Emperor's Dais.", "Bob", "passed_focus", {{"battlefield", "Emperor's Dais"}}),
+        ev(1, "Alice ended showdown responses at Emperor's Dais.", "Alice", "showdown", {{"battlefield", "Emperor's Dais"}}),
+        ev(1, "Bob conquered Emperor's Dais and scored 1.", "Bob", "conquered", {{"battlefield", "Emperor's Dais"}, {"amount", 1}}),
+    });
+    events.insert(events.begin() + 18, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    EXPECT_EQ(d1.preferred_battlefield, "Emperor's Dais");
+    EXPECT_EQ(d2.preferred_battlefield, "Emperor's Dais");
+    EXPECT_EQ(d2.notes.value("battlefield_mirrored", std::string()), "Emperor's Dais");
+    // Without the second conquest nothing says the other player brought it.
+    auto plain = guided::humanGameFromJson(syntheticGame(), 1, "synthetic.json");
+    EXPECT_EQ(guided::inferDeck(plain, "Bob", db, candidates).preferred_battlefield, "");
+}

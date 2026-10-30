@@ -191,6 +191,11 @@ public:
     /// the gear dies (TriggerManager::onLeftBoard). Default: dying only.
     virtual bool deathAbilityOnLeavingBoard() const { return false; }
 
+    /// "I can have any number of buffs." (Lee Sin, Ascetic): this unit may be
+    /// buffed while it already has a buff (CR 427.1.b.2). Every other unit
+    /// gets no second buff (CR 427.1.b.1, 702.3). Default: one buff at most.
+    virtual bool canHaveAnyNumberOfBuffs() const { return false; }
+
     /// Play-legality gate independent of cost/targets ("I can't be played on
     /// your first, second, or third turns" — Ol' Poro). Default: playable.
     virtual bool canBePlayed(const GameState& /*state*/, PlayerId /*player*/) const { return true; }

@@ -90,6 +90,11 @@ def build_index(agent: str, runs: list) -> dict:
             "agreement_clean_pct": round(100 * agreement.get("clean_boundary", {}).get("rate", 0.0), 1),
             "compared_clean": agreement.get("clean_boundary", {}).get("n"),
             "desyncs": s.get("desyncs"),
+            # desyncs the log itself shows impossible (guided_replay's
+            # classifier), and the rest: the engine-side count a fidelity
+            # gate should use
+            "log_artefacts": s.get("log_artefacts", 0),
+            "desyncs_engine": s.get("desyncs_engine", s.get("desyncs")),
             "top_desync_causes": [{"cause": c, "n": n} for c, n in causes],
             "silent_passes": s.get("silent_passes"),
             "hand_fixes": s.get("hand_fixes", {}).get("pulled_from_deck", 0) + s.get("hand_fixes", {}).get("created", 0),
@@ -136,11 +141,11 @@ def main(argv=None):
     index = build_index(a.agent, runs)
     (OUT / "index.json").write_text(json.dumps(index, indent=1) + "\n")
 
-    print(f"\n{'game':58} {'cmp':>4} {'agree':>6} {'clean':>6} {'desync':>6} {'stop'}")
+    print(f"\n{'game':58} {'cmp':>4} {'agree':>6} {'clean':>6} {'desync':>6} {'engine':>6} {'stop'}")
     for e in index["games"]:
         name = f"{pathlib.Path(e['file']).stem[:48]} g{e['game']}"
         print(f"{name:58} {e['decisions_compared'] or 0:4d} {e['agreement_pct']:5.1f}% {e['agreement_clean_pct']:5.1f}% "
-              f"{e['desyncs'] or 0:6d} {e['stop_reason']}")
+              f"{e['desyncs'] or 0:6d} {e['desyncs_engine'] or 0:6d} {e['stop_reason']}")
     print(f"\nindex: {OUT / 'index.json'}")
 
 

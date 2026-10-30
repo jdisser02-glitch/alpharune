@@ -1821,6 +1821,14 @@ void GameEngine::executePlayCard(const Intent& intent) {
                      ", " + toString(card.card_type) + ", cost=" +
                      std::to_string(trace_cost) + "E)");
 
+    // Where the card is played from. A Chosen Champion played from the
+    // Champion Zone is played "from anywhere other than your hand" (Kennen,
+    // Heart of the Tempest empowers; Void Drone's discount) whatever source
+    // the intent was generated with.
+    const Intent::PlaySource play_source =
+        (card.zone == ZoneType::ChampionZone && intent.play_source == Intent::PlaySource::Hand)
+            ? Intent::PlaySource::ChampionZone : intent.play_source;
+
     // Remove from current zone (hand or champion zone) (CR 354: step 1)
     if (card.zone == ZoneType::Hand) {
         auto it = std::find(ps.hand.begin(), ps.hand.end(), intent.card);
@@ -1873,7 +1881,7 @@ void GameEngine::executePlayCard(const Intent& intent) {
         prepay_discount += playLocationDiscount(intent.player, intent.card, intent.play_location);
     ps.transient_play_discount += prepay_discount;
 
-    ps.current_play_source = intent.play_source;
+    ps.current_play_source = play_source;
     if (intent.use_alt_play_cost) {
         // Alternative play cost (Jhin, Meticulous Killer: "play me for [B]"):
         // pay the card's alternativePlayCost instead of the printed cost.
@@ -1937,7 +1945,7 @@ void GameEngine::executePlayCard(const Intent& intent) {
     events_.emit(CardPlayedEvent{intent.card, intent.player,
         card.card_type, ps.cards_played_this_turn, energy_spent});
 
-    if (intent.play_source != Intent::PlaySource::Hand)
+    if (play_source != Intent::PlaySource::Hand)
         events_.emit(ObjectStateChangedEvent{intent.card, "played_not_from_hand"});
 
     // "The first unit or gear [a player] plays here [each turn]": record the
@@ -2128,6 +2136,15 @@ void GameEngine::executePlaySpell(const Intent& intent) {
             accept.type = IntentType::MakeChoice;
             accept.player = intent.player;
             accept.chosen_value = 1;
+            // Descriptive labels (Intent equality and the action vocab key on
+            // chosen_value): the card and what all tranches so far add up to,
+            // in the additional-cost wording a replay or log reader matches.
+            const std::string prompt = "additional cost for " + card.name + ": pay " +
+                std::to_string(repeat_cost.energy * (repeats + 1)) + " energy + " +
+                std::to_string(repeat_cost.power * (repeats + 1)) + " power? (Repeat " +
+                std::to_string(repeats + 1) + ")";
+            decline.choice_label = "No — " + prompt;
+            accept.choice_label = "Yes — " + prompt;
             std::vector<Intent> opts = {decline, accept};
 
             state_.decision_index++;
@@ -2904,13 +2921,15 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
 
     // Standard Move: exhaust ready units to move them
     auto all_units = state_.allUnitsControlledBy(player);
-    // (origin, destination) -> the ready units that may make that move, for
-    // the simultaneous moves of CR 144.3 below.
+    // destination -> the ready units that may move there, for the
+    // simultaneous moves of CR 144.3 below (the origins need not be the same,
+    // CR 144.3.b: units from the base and from another battlefield, or from
+    // two battlefields to the base).
     std::vector<std::pair<std::pair<LocationId, LocationId>, std::vector<GameObjectId>>> move_groups;
-    auto noteMove = [&](GameObjectId unit_id, const LocationId& from, const LocationId& to) {
+    auto noteMove = [&](GameObjectId unit_id, const LocationId& /*from*/, const LocationId& to) {
         for (auto& g : move_groups)
-            if (g.first.first == from && g.first.second == to) { g.second.push_back(unit_id); return; }
-        move_groups.push_back({{from, to}, {unit_id}});
+            if (g.first.second == to) { g.second.push_back(unit_id); return; }
+        move_groups.push_back({{to, to}, {unit_id}});
     };
     for (auto unit_id : all_units) {
         auto& unit = state_.getObject(unit_id);
@@ -2967,15 +2986,17 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
     // CR 144.3: several units' standard moves may be performed at once as
     // one action (same destination; the costs are paid simultaneously), so
     // two units can attack together before the showdown opens. Every
-    // subset of two or more units sharing an origin and a destination is
-    // one action while the group is small; larger groups offer only the
-    // whole group. These come after the single moves: the action vocab
-    // keys a move by its destination alone, so the first intent per
-    // destination (a single move) keeps its slot.
+    // subset of two or more units sharing a destination is one action while
+    // the group is small (ModeOfPlay::move_group_subset_limit units); larger
+    // groups offer only the whole group. These come after the single moves:
+    // the action vocab keys a move by its destination alone, so the first
+    // intent per destination (a single move) keeps its slot.
+    const size_t subset_limit = static_cast<size_t>(
+        std::clamp(state_.mode.move_group_subset_limit, 2, 10));
     for (const auto& [od, units] : move_groups) {
         if (units.size() < 2) continue;
         const auto& dest = od.second;
-        if (units.size() <= 4) {
+        if (units.size() <= subset_limit) {
             const unsigned n = static_cast<unsigned>(units.size());
             for (unsigned mask = 1; mask < (1u << n); ++mask) {
                 if (__builtin_popcount(mask) < 2) continue;
@@ -3189,6 +3210,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
                               actions);
         generateTrashReplayActions(player, /*action_ok=*/true, /*reaction_ok=*/true,
                                     actions);
+        generateFacedownPlays(player, actions);
     }
 
     // Activate abilities on gear/legends/units ([E]: abilities)
@@ -3315,6 +3337,7 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
                               actions);
         generateTrashReplayActions(player, /*action_ok=*/true, /*reaction_ok=*/true,
                                     actions);
+        generateFacedownPlays(player, actions);
     }
 
     // Ambush: play units with [Ambush] during showdowns
@@ -3424,6 +3447,69 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
     return actions;
 }
 
+// Plays from face down (CR 811.1.b, 811.6): a card hidden on an earlier turn
+// has [Reaction] and may be played, ignoring its base cost, any time a card
+// with [Reaction] may be played -- in a closed state, in a showdown, and in
+// its controller's open main phase.
+void GameEngine::generateFacedownPlays(PlayerId player, std::vector<Intent>& actions) const {
+    // CR 811.1.d.2 — hidden spell targets must come from the SAME BF where
+    // the card was hidden. Phase 6q+ fix: enumerate targets per-BF and emit
+    // one intent per (hidden card × valid target).
+    for (auto& bf : state_.battlefields) {
+        for (auto card_id : bf.facedown) {
+            if (!state_.objectExists(card_id)) continue;
+            auto& card = state_.getObject(card_id);
+            if (card.controller != player) continue;
+            // Must be hidden on a previous turn to gain Reaction
+            if (card.hidden_on_turn >= state_.turn.turn_number) continue;
+
+            // For spells with target requirements: filter legal targets
+            // to objects at the hidden-at BF only (CR 811.1.d.2).
+            if (card.card_def_id != kInvalidId && card.isSpell()) {
+                Card* card_obj = card_registry_.get(card.card_def_id);
+                if (card_obj) {
+                    auto req = card_obj->getTargetRequirements();
+                    if (req.count > 0) {
+                        auto all_targets = card_obj->enumerateLegalTargets(
+                            state_, player);
+                        std::vector<GameObjectId> bf_targets;
+                        for (auto t : all_targets) {
+                            if (!state_.objectExists(t)) continue;
+                            const auto& tgt = state_.getObject(t);
+                            auto tgt_bf = tgt.battlefieldId();
+                            if (tgt_bf && *tgt_bf == bf.id) {
+                                bf_targets.push_back(t);
+                            }
+                        }
+                        // If no BF-restricted targets exist, CR 811.1.d:
+                        // "A card cannot be played from Hidden if it is a
+                        // spell with no valid targets under these
+                        // restrictions." Skip this hidden play entirely.
+                        if (bf_targets.empty()) continue;
+                        for (auto t : bf_targets) {
+                            Intent play;
+                            play.type = IntentType::PlayReaction;
+                            play.player = player;
+                            play.card = card_id;
+                            play.targets = {t};
+                            actions.push_back(play);
+                        }
+                        continue;
+                    }
+                }
+            }
+
+            // No-target hidden play (or permanent — its location is set
+            // to the hidden-at BF by executePlayFromHidden).
+            Intent play;
+            play.type = IntentType::PlayReaction;
+            play.player = player;
+            play.card = card_id;
+            actions.push_back(play);
+        }
+    }
+}
+
 std::vector<Intent> GameEngine::generateClosedStateActions(
     PlayerId player) const {
     std::vector<Intent> actions;
@@ -3509,63 +3595,8 @@ std::vector<Intent> GameEngine::generateClosedStateActions(
         }
     }
 
-    // Can play hidden cards (they gain Reaction on next turn after hiding)
-    // CR 811.1.d.2 — hidden spell targets must come from the SAME BF where
-    // the card was hidden. Phase 6q+ fix: enumerate targets per-BF and emit
-    // one intent per (hidden card × valid target).
-    for (auto& bf : state_.battlefields) {
-        for (auto card_id : bf.facedown) {
-            if (!state_.objectExists(card_id)) continue;
-            auto& card = state_.getObject(card_id);
-            if (card.controller != player) continue;
-            // Must be hidden on a previous turn to gain Reaction
-            if (card.hidden_on_turn >= state_.turn.turn_number) continue;
-
-            // For spells with target requirements: filter legal targets
-            // to objects at the hidden-at BF only (CR 811.1.d.2).
-            if (card.card_def_id != kInvalidId && card.isSpell()) {
-                Card* card_obj = card_registry_.get(card.card_def_id);
-                if (card_obj) {
-                    auto req = card_obj->getTargetRequirements();
-                    if (req.count > 0) {
-                        auto all_targets = card_obj->enumerateLegalTargets(
-                            state_, player);
-                        std::vector<GameObjectId> bf_targets;
-                        for (auto t : all_targets) {
-                            if (!state_.objectExists(t)) continue;
-                            const auto& tgt = state_.getObject(t);
-                            auto tgt_bf = tgt.battlefieldId();
-                            if (tgt_bf && *tgt_bf == bf.id) {
-                                bf_targets.push_back(t);
-                            }
-                        }
-                        // If no BF-restricted targets exist, CR 811.1.d:
-                        // "A card cannot be played from Hidden if it is a
-                        // spell with no valid targets under these
-                        // restrictions." Skip this hidden play entirely.
-                        if (bf_targets.empty()) continue;
-                        for (auto t : bf_targets) {
-                            Intent play;
-                            play.type = IntentType::PlayReaction;
-                            play.player = player;
-                            play.card = card_id;
-                            play.targets = {t};
-                            actions.push_back(play);
-                        }
-                        continue;
-                    }
-                }
-            }
-
-            // No-target hidden play (or permanent — its location is set
-            // to the hidden-at BF by executePlayFromHidden).
-            Intent play;
-            play.type = IntentType::PlayReaction;
-            play.player = player;
-            play.card = card_id;
-            actions.push_back(play);
-        }
-    }
+    // Cards hidden on an earlier turn (CR 811.6: they have [Reaction]).
+    if (!locked_out) generateFacedownPlays(player, actions);
 
     // CR 376 / 398-406 — activated abilities with [Reaction] timing
     // (e.g. Shadow [752]: "[Action] [1][A], [E]: stun attacker") can be
@@ -4320,7 +4351,13 @@ void GameEngine::runCombat(BattlefieldId bf_id, bool showdown_already_closed, bo
         }
     }
 
-    // Recompute might (assault/shield apply based on designation)
+    // Recompute might (assault/shield apply based on designation). The
+    // continuous effects are recalculated too: an [Assault N] / [Shield N]
+    // granted by Equipment or another card (Pride of Nazumah, a Serrated
+    // Dirk) carries its Might only while the unit is an attacker / defender,
+    // which it has just become; without this the damage step would read the
+    // Might of the aura pass before the designations.
+    recalculateAuras();
     for (auto& [id, obj] : state_.objects) {
         if (obj.isUnit() && obj.combat_designation != CombatDesignation::None) {
             obj.recomputeMight();
@@ -4981,6 +5018,54 @@ void GameEngine::recalculateAuras() {
         bf.empower_cost_reduction[0] = bf.empower_cost_reduction[1] = 0;  // Risen Altar
     }
 
+    // Step 1a2: Equipment-granted keywords and stats. First, so that the
+    // passive auras below see them ("I have [Assault] equal to my [Shield]",
+    // Pride of Nazumah, counts a Nazuman Ntofo's [Shield 2]).
+    for (auto& [id, obj] : state_.objects) {
+        if (!obj.isUnit() || !obj.location.has_value()) continue;
+        for (auto gear_id : obj.attachments) {
+            if (!state_.objectExists(gear_id)) continue;
+            Card* gear_card = card_registry_.get(state_.getObject(gear_id).card_def_id);
+            if (!gear_card) continue;
+
+            // Assault/Shield from effect_text: one [Assault N] / [Shield N]
+            // instance, with its Might while the unit is an attacker /
+            // defender (CR: "+N [M] while I'm an attacker / a defender").
+            const int ea = gear_card->equippedAssault();
+            const int es = gear_card->equippedShield();
+            // Keywords from effect_text (the valued Assault/Shield above are
+            // that keyword's one instance, not a second plain one).
+            auto ekw = gear_card->equippedKeywords();
+            if (ekw.bits != 0) {
+                for (int k = 0; k < static_cast<int>(Keyword::Count); ++k) {
+                    const auto kw = static_cast<Keyword>(k);
+                    if (!ekw.has(kw)) continue;
+                    if ((kw == Keyword::Assault && ea > 0) || (kw == Keyword::Shield && es > 0)) continue;
+                    GameObject::AuraEffect ae;
+                    ae.source = gear_id;
+                    ae.keyword = kw;
+                    obj.aura_effects.push_back(ae);
+                }
+            }
+            if (ea > 0) {
+                GameObject::AuraEffect ae;
+                ae.source = gear_id;
+                ae.keyword = Keyword::Assault;
+                ae.keyword_value = ea;
+                if (obj.combat_designation == CombatDesignation::Attacker) ae.might_bonus = ea;
+                obj.aura_effects.push_back(ae);
+            }
+            if (es > 0) {
+                GameObject::AuraEffect ae;
+                ae.source = gear_id;
+                ae.keyword = Keyword::Shield;
+                ae.keyword_value = es;
+                if (obj.combat_designation == CombatDesignation::Defender) ae.might_bonus = es;
+                obj.aura_effects.push_back(ae);
+            }
+        }
+    }
+
     // Step 1b: Refresh per-object targeting-protection flags from each
     // card's canBeChosenByEnemy() override. Cards on board need their
     // flag set; off-board cards stay default-false. Cheap O(n) pass over
@@ -5320,46 +5405,6 @@ void GameEngine::recalculateAuras() {
 
         // (Fiora, Victorious's "While I'm [Mighty], I have [Deflect], [Ganking],
         // and [Shield]" is her own Card::applyPassiveAura.)
-    }
-
-    // Step 3c: Equipment-granted keywords and stats
-    for (auto& [id, obj] : state_.objects) {
-        if (!obj.isUnit() || !obj.location.has_value()) continue;
-        for (auto gear_id : obj.attachments) {
-            if (!state_.objectExists(gear_id)) continue;
-            Card* gear_card = card_registry_.get(state_.getObject(gear_id).card_def_id);
-            if (!gear_card) continue;
-
-            // Keywords from effect_text
-            auto ekw = gear_card->equippedKeywords();
-            if (ekw.bits != 0) {
-                for (int k = 0; k < static_cast<int>(Keyword::Count); ++k) {
-                    if (ekw.has(static_cast<Keyword>(k))) {
-                        GameObject::AuraEffect ae;
-                        ae.source = gear_id;
-                        ae.keyword = static_cast<Keyword>(k);
-                        obj.aura_effects.push_back(ae);
-                    }
-                }
-            }
-            // Assault/Shield/Deflect from effect_text
-            int ea = gear_card->equippedAssault();
-            if (ea > 0) {
-                GameObject::AuraEffect ae;
-                ae.source = gear_id;
-                ae.keyword = Keyword::Assault;
-                ae.keyword_value = ea;
-                obj.aura_effects.push_back(ae);
-            }
-            int es = gear_card->equippedShield();
-            if (es > 0) {
-                GameObject::AuraEffect ae;
-                ae.source = gear_id;
-                ae.keyword = Keyword::Shield;
-                ae.keyword_value = es;
-                obj.aura_effects.push_back(ae);
-            }
-        }
     }
 
     // Step 4: Rebuild cached aura values on all objects
@@ -6130,24 +6175,14 @@ int GameEngine::playLocationDiscount(PlayerId player, GameObjectId card_obj,
     return 0;
 }
 
-bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power,
-                           int energy_discount) const {
-    // Play-legality gates that sit in front of every play generator.
-    if (state_.objectExists(card_obj)) {
-        const auto& gate_obj = state_.getObject(card_obj);
-        if (gate_obj.card_def_id != kInvalidId) {
-            if (const Card* gate_card = card_registry_.get(gate_obj.card_def_id))
-                if (!gate_card->canBePlayed(state_, player)) return false;
-        }
-        // Fallen Feline: "opponents can't play spells with that name."
-        if (gate_obj.isSpell()) {
-            for (const auto& locked : state_.player(player).locked_spell_names)
-                if (locked == gate_obj.name) return false;
-        }
-    }
+GameEngine::PlayCost GameEngine::playCost(PlayerId player, GameObjectId card_obj,
+                                          int energy_discount) const {
+    PlayCost out;
+    if (!state_.objectExists(card_obj)) return out;
     auto& card = state_.getObject(card_obj);
-    if (card.card_def_id == kInvalidId) return false;  // tokens have no cost
+    if (card.card_def_id == kInvalidId) return out;  // tokens have no cost
     const auto& def = card_db_.get(card.card_def_id);
+    out.valid = true;
 
     int energy_needed = def.energy_cost;
     int power_needed = def.power_cost;
@@ -6216,6 +6251,33 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
     if (ps_const.transient_ignore_energy) energy_needed = 0;
     power_needed = std::max(0, power_needed + powerCostDelta(state_, player, card, card_registry_.get(card.card_def_id)));
     if (state_.player(player).transient_ignore_power) power_needed = 0;
+    out.energy = energy_needed;
+    out.power = power_needed;
+    out.extra_any_power = extraAnyPowerCost(state_, player, card);
+    return out;
+}
+
+bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any_power,
+                           int energy_discount) const {
+    // Play-legality gates that sit in front of every play generator.
+    if (state_.objectExists(card_obj)) {
+        const auto& gate_obj = state_.getObject(card_obj);
+        if (gate_obj.card_def_id != kInvalidId) {
+            if (const Card* gate_card = card_registry_.get(gate_obj.card_def_id))
+                if (!gate_card->canBePlayed(state_, player)) return false;
+        }
+        // Fallen Feline: "opponents can't play spells with that name."
+        if (gate_obj.isSpell()) {
+            for (const auto& locked : state_.player(player).locked_spell_names)
+                if (locked == gate_obj.name) return false;
+        }
+    }
+    auto& card = state_.getObject(card_obj);
+    if (card.card_def_id == kInvalidId) return false;  // tokens have no cost
+    const auto& def = card_db_.get(card.card_def_id);
+    const PlayCost cost = playCost(player, card_obj, energy_discount);
+    const int energy_needed = cost.energy;
+    const int power_needed = cost.power;
 
     // Count available runes in base, partitioned by ready/exhausted
     // and matching/non-matching-domain. The CR cost-payment ordering

@@ -23,8 +23,8 @@ public:
     // the granting player); the grant is a continuous effect, so it is applied
     // in every aura pass by this legend: the unit gets [Assault X] where X is
     // its current [Shield] (printed, "this turn" and aura-granted instances).
-    // APPROXIMATION: Shield granted by attached Equipment is folded in by the
-    // engine after the legends' aura pass, so it is not counted.
+    // Shield granted by attached Equipment counts: the engine folds it in
+    // before the legends' aura pass.
     static constexpr const char* kTurnKey = "__pride_assault_eq_shield_turn";
     static constexpr const char* kByKey = "__pride_assault_eq_shield_by";
 

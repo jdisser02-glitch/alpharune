@@ -20,6 +20,8 @@ public:
     TriggerType triggerType() const override { return TriggerType::Activated; }
     bool hasActivatedAbility() const override { return true; }
     ActivationCost getActivationCost() const override { return {.exhaust = true}; }
+    // "I can have any number of buffs." (CR 427.1.b.2)
+    bool canHaveAnyNumberOfBuffs() const override { return true; }
 private:
     const CardDef def_ = [] {
         CardDef d;

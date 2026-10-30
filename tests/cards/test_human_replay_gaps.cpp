@@ -421,6 +421,10 @@ TEST_F(HumanReplayGaps, Showdown_BecomesCombatWhenEnemyUnitsArriveDuringIt) {
     bf.is_contested = true;
     bf.contested_by = P1;
     bf.showdown_staged = true;
+    // Otterpus draws instead of scoring in a player's first two turns; this
+    // is a later turn.
+    s().player(P1).turns_taken = 5;
+    s().player(P2).turns_taken = 5;
 
     // One main-phase advance: the staged showdown runs (P1 passes, P2
     // passes), the enemy that arrived makes it a combat, damage is dealt

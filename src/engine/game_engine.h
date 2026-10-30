@@ -167,6 +167,17 @@ public:
     /// Generate all legal actions for the player who must currently act.
     std::vector<Intent> generateLegalActions() const;
 
+    /// What playing `card` costs `player` right now, after the cost modifiers,
+    /// the card's own reductions and the discount of the play location
+    /// `where` (Hunters' Circle): Energy, Power of its domains, and "[A] more"
+    /// extras. Additional costs (Accelerate, Repeat, a battlefield's
+    /// pay-to-play-here cost) are not included. `valid` is false for a token.
+    struct PlayCost { bool valid = false; int energy = 0; int power = 0; int extra_any_power = 0; };
+    PlayCost currentPlayCost(PlayerId player, GameObjectId card,
+                             const std::optional<LocationId>& where = std::nullopt) const {
+        return playCost(player, card, playLocationDiscount(player, card, where));
+    }
+
     /// True if `player` may NOT yet score `bf` because of a turn gate
     /// (Forgotten Monument): their turns_taken < bf.min_turn_to_score.
     /// Public so the renderer/UI and tests can query the same rule the
@@ -549,6 +560,7 @@ private:
     std::vector<Intent> generateMainPhaseActions(PlayerId player) const;
     std::vector<Intent> generateMulliganActions(PlayerId player) const;
     std::vector<Intent> generateShowdownActions(PlayerId player) const;
+    void generateFacedownPlays(PlayerId player, std::vector<Intent>& actions) const;
     std::vector<Intent> generateClosedStateActions(PlayerId player) const;
     std::vector<Intent> generateCombatDamageActions(PlayerId player) const;
     void generateSpellActions(PlayerId player, bool action_ok, bool reaction_ok,
@@ -635,6 +647,7 @@ private:
     bool canGainWinningPointViaConquer(PlayerId player) const;
 
     // ── Cost payment ──
+    PlayCost playCost(PlayerId player, GameObjectId card_obj, int energy_discount = 0) const;
     /// Check if a player can afford a card's cost with available runes.
     /// `extra_any_power`: [A] owed on top of everything else (a battlefield's
     /// pay-to-play-here cost).

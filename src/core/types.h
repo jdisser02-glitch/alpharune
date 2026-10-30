@@ -282,6 +282,12 @@ struct ModeOfPlay {
     int battlefields_per_player = 1;
     bool second_player_extra_channel = true;
     MatchFormat format = MatchFormat::BestOf3;
+    /// CR 144.3 group moves: while at most this many ready units can move to
+    /// a destination, every subset of two or more of them is offered; a larger
+    /// group is offered whole only (keeps the bots' branching small). The
+    /// guided replay of human games raises it so any group a player moved is
+    /// an option.
+    int move_group_subset_limit = 4;
 };
 
 // ─── String conversions (for logging/rendering) ─────────────────────────────

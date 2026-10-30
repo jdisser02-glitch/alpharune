@@ -675,6 +675,18 @@ void EffectExecutor::buffUnit(GameObjectId target) {
     // has a buff" gates count.
     if (!state_.objectExists(target)) return;
     auto& obj = state_.getObject(target);
+    // A unit has one buff at most (CR 427.1.b.1, 702.3): buffing a unit
+    // that already has one places nothing and is not a buff ("when you buff
+    // me" does not trigger, CR 427.1.c), unless the unit may have any number
+    // (CR 427.1.b.2: Lee Sin, Ascetic).
+    if (obj.buff_count > 0) {
+        const Card* c = card_registry_ && obj.card_def_id != kInvalidId
+            ? card_registry_->get(obj.card_def_id) : nullptr;
+        if (!(c && c->canHaveAnyNumberOfBuffs())) {
+            events_.logTrace("EFFECT: [Buff] " + obj.name + " already has a buff (CR 702.3)");
+            return;
+        }
+    }
     obj.buff_count += 1;
     obj.recomputeMight();
     events_.logTrace("EFFECT: [Buff] " + obj.name + " (+1 permanent) -> " +
