@@ -143,6 +143,10 @@ def main(argv):
     engine = {}
     net_rel = ladder.get("current_net")
     net_path = ROOT / net_rel if net_rel and (ROOT / net_rel).exists() else DEFAULT_NET
+    # The browser engine evaluates with the value head only (RBVN); the loop
+    # writes one next to every two-head policy net (.rbpn).
+    if net_path.suffix == ".rbpn" and net_path.with_suffix(".rbvn").exists():
+        net_path = net_path.with_suffix(".rbvn")
     if all(p.exists() for p in ENGINE_FILES.values()):
         (DIST / "engine").mkdir(exist_ok=True)
         for rel, src in ENGINE_FILES.items():
