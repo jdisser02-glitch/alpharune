@@ -1,0 +1,17 @@
+{
+  "name": "riven-meta-ga-1",
+  "description": "Genetic search around the Sacramento Riven list against a small current-meta jury (three Kennen, the Riven mirror, Kai'Sa), the lab's search bot as the judge, common random numbers per generation.",
+  "base": "decks/riven_sacramento.txt",
+  "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_022.rbpn,worlds=6",
+  "opponents": [
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", "label": "Kennen (Dylan Sumner)", "weight": 2},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt", "label": "Kennen (zombro)", "weight": 1.5},
+    {"deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt", "label": "Kennen (Simple)", "weight": 1.5},
+    {"deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt", "label": "Riven mirror (Nam Dang)", "weight": 2},
+    {"deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt", "label": "Kai'Sa (IcrazyFool)", "weight": 1}
+  ],
+  "pool": {"from_decks": ["lab/decks/meta/*/*riven*.txt"], "extra": ["Baron Nashor", "Ki Burst", "Meditation"], "exclude": []},
+  "population": 16, "generations": 8, "elite": 4, "games": 6,
+  "swaps": [1, 2], "crossover": 0.6, "max_copies": 3,
+  "threads": 4, "seed": 11
+}
