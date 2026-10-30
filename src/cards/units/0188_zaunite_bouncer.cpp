@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,9 +15,26 @@ namespace {
 class ZauniteBouncer : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play me, return another unit at a battlefield to its owner's
+    //  hand." A unit's play carries no targets into its trigger, so the unit
+    // is chosen here (at finalization, CR 383.3) through pickTarget.
+    std::vector<GameObjectId> candidates(const CardContext& ctx) const {
+        auto out = chooseableUnits(ctx.state, ctx.controller,
+                                   [](const GameObject& o) { return o.isAtBattlefield(); });
+        out.erase(std::remove(out.begin(), out.end(), ctx.source), out.end());
+        return out;
+    }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.bounceToHand(targets[0]);
+        if (!ctx.state.objectExists(ctx.source)) return;
+        GameObjectId tgt = !targets.empty() ? targets[0]
+            : pickTarget(ctx, "Zaunite Bouncer: return a unit at a battlefield", candidates(ctx));
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (tgt == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;                           // waiting for the agent
+        if (tgt == kInvalidId || tgt == ctx.source || !ctx.state.objectExists(tgt)) return;
+        ctx.executor.bounceToHand(tgt);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
     TargetRequirements getTargetRequirements() const override {

@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,10 +15,23 @@ namespace {
 class DangerousDuo : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "[Legion] — When you play me, give a unit +2 [M] this turn." Legion:
+    // only if another card was played this turn (this play counts as one).
+    // The unit is chosen here (at finalization, CR 383.3): a unit's play
+    // carries no targets into its trigger.
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
         if (ctx.state.player(ctx.controller).cards_played_this_turn < 2) return;
-        if (!targets.empty())
-            ctx.executor.giveTemporaryMight(targets[0], 2);
+        GameObjectId tgt = !targets.empty() ? targets[0]
+            : pickTarget(ctx, "Dangerous Duo: give a unit +2 [M]",
+                         chooseableUnits(ctx.state, ctx.controller,
+                                         [](const GameObject&) { return true; }));
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (tgt == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;                           // waiting for the agent
+        if (tgt == kInvalidId || !ctx.state.objectExists(tgt)) return;
+        ctx.executor.giveTemporaryMight(tgt, 2);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
     TargetRequirements getTargetRequirements() const override {

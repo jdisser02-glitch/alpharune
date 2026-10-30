@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,9 +15,22 @@ namespace {
 class HarnessedDragon : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play me, kill an enemy unit." The unit is chosen here (at
+    // finalization, CR 383.3): a unit's play carries no targets into its
+    // trigger.
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.killObject(targets[0]);
+        GameObjectId tgt = !targets.empty() ? targets[0]
+            : pickTarget(ctx, "Harnessed Dragon: kill an enemy unit",
+                         chooseableUnits(ctx.state, ctx.controller, [&](const GameObject& o) {
+                             return o.controller != ctx.controller;
+                         }));
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (tgt == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;                           // waiting for the agent
+        if (tgt == kInvalidId || !ctx.state.objectExists(tgt)) return;
+        ctx.executor.killObject(tgt);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
     TargetRequirements getTargetRequirements() const override {
