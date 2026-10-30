@@ -20,6 +20,7 @@
           showText   battlefield rules text under its name (default true)
           animate    false disables the FLIP transition of units between frames (default true)
           banner / bannerKind   short status text in the top bar ("Bot is thinking…"), kind "me" | "bot" | "over"
+      nav / navPos          {prevTurn, prev, next, nextTurn} callbacks: step buttons in the top bar; navPos = "12/80" shown between them
           legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
 (function () {
@@ -326,9 +327,11 @@
     const units = [...(pl.base_units || []).map(u => unitEl(u, p, L, "in base", false, "")), ...(pl.base_gear || []).map(g => unitEl(g, p, L, "in base", true, ""))];
     const pips = Array.from({ length: target }, (_, k) => `<i class="${k < (pl.score || 0) ? "on" : ""}"></i>`).join("");
     const active = board.turn_player === p;
+    // The player who decides at this frame gets a white frame on their panel and legend, so the eye finds who is playing.
+    const acting = !!S.frame && (S.frame.decision_player || S.frame.player) === p;
     const ring = sit && sit.zone && (sit.player ? sit.player === p : mine) ? sit.zone : "";   // the zone the decision concerns
-    return `<section class="rb-rail ${bottom ? "rb-me" : "rb-opp"} ${hidden || !hand.length ? "rb-hand-hidden" : ""}" aria-label="Player ${p}">
-      <div class="rb-side p${p}">${active ? `<span class="rb-active">turn</span>` : ""}<span class="rb-who"><b>P${p}</b> ${esc(info.label || (bottom ? "viewer" : "opponent"))}</span><div class="rb-sc">${pl.score || 0}<small>/${target}</small></div><div class="rb-pips" aria-hidden="true">${pips}</div>${pl.energy_pool ? `<span class="rb-energy">energy <b>${pl.energy_pool}</b></span>` : ""}${info.deck ? `<span class="rb-deck" title="${esc(info.deck)}">${esc(info.deck)}</span>` : ""}</div>
+    return `<section class="rb-rail ${bottom ? "rb-me" : "rb-opp"} ${hidden || !hand.length ? "rb-hand-hidden" : ""} ${acting ? "rb-acting" : ""}" aria-label="Player ${p}${acting ? ", to act" : ""}">
+      <div class="rb-side p${p}">${active ? `<span class="rb-active">turn</span>` : ""}${acting ? `<span class="rb-now">to act</span>` : ""}<span class="rb-who"><b>P${p}</b> ${esc(info.label || (bottom ? "viewer" : "opponent"))}</span><div class="rb-sc">${pl.score || 0}<small>/${target}</small></div><div class="rb-pips" aria-hidden="true">${pips}</div>${pl.energy_pool ? `<span class="rb-energy">energy <b>${pl.energy_pool}</b></span>` : ""}${info.deck ? `<span class="rb-deck" title="${esc(info.deck)}">${esc(info.deck)}</span>` : ""}</div>
       <div class="rb-hand ${ring === "hand" ? "rb-ring" : ""}"><span class="rb-hcount">Hand · <b>${handCount}</b>${nLegal ? `<span class="rb-hplay">· ${nLegal} playable</span>` : ""}</span>${handHtml}</div>
       <div class="rb-zone">
         <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info)}</div>
@@ -387,7 +390,12 @@
     const items = chain.map((ci, i) => `<span class="rb-ci p${ci.player} ${i === chain.length - 1 ? "last" : ""}"><i></i>${esc(ci.source || ci.name || "?")}</span>`);
     const banner = S.opts.banner ? `<span class="rb-banner ${esc(S.opts.bannerKind || "")}">${esc(S.opts.banner)}</span>` : "";
     const where = sit && sit.index >= 0 && sit.mode ? `<span class="rb-sit ${esc(sit.mode)}">${sit.mode === "combat" ? "Combat" : sit.mode === "showdown" ? "Showdown" : "Contested"} at ${esc(sit.name)}</span>` : "";
-    return `<div class="rb-top"><div class="rb-turn"><span>Turn ${board.turn ?? "–"}</span><span class="rb-ph">${esc(phaseName(board.phase))}${board.turn_player ? ` · P${board.turn_player}'s turn` : ""}</span></div>${where}${banner}
+    // Replay navigation next to the turn counter, so the game can be stepped from the top of the table (small screens).
+    const nav = S.opts.nav ? `<div class="rb-nav" role="group" aria-label="step through the game">
+        <button type="button" data-nav="prevTurn" title="Previous turn (Shift+←)" aria-label="previous turn">«</button><button type="button" data-nav="prev" title="Previous decision (←)" aria-label="previous decision">‹</button>
+        <span class="rb-navpos">${S.opts.navPos ? esc(S.opts.navPos) : ""}</span>
+        <button type="button" data-nav="next" title="Next decision (→)" aria-label="next decision">›</button><button type="button" data-nav="nextTurn" title="Next turn (Shift+→)" aria-label="next turn">»</button></div>` : "";
+    return `<div class="rb-top"><div class="rb-turn"><span>Turn ${board.turn ?? "–"}</span><span class="rb-ph">${esc(phaseName(board.phase))}${board.turn_player ? ` · P${board.turn_player}'s turn` : ""}</span></div>${nav}${where}${banner}
       <div class="rb-chain"><span class="rb-lbl">Chain</span>${items.length ? items.join(`<span class="rb-arrow">›</span>`) : `<span class="rb-empty">empty</span>`}</div></div>`;
   }
   function legalBar(frame) {
@@ -498,6 +506,7 @@
     S.el.innerHTML = topBar(board, sit) + rail(board, opp, L.any ? L : null, false, sit)
       + `<section class="rb-field ${sit && sit.index >= 0 ? "rb-has-hot" : ""}" aria-label="battlefields">${bfs.map((bf, i) => battlefield(bf, i, L.any ? L : null, viewer, sit, board)).join("")}</section>`
       + rail(board, me, L.any ? L : null, true, sit) + legalBar(frame);
+    if (S.opts.nav) S.el.querySelectorAll("[data-nav]").forEach(b => { b.onclick = () => { const fn = S.opts.nav[b.dataset.nav]; if (fn) fn(); }; });
     animate(prev);
   }
   function destroy() {

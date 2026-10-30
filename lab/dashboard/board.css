@@ -44,6 +44,10 @@ img.rb-pic { object-fit: cover; }
 .rb-banner.agree { color: #d8ffe6; border-color: var(--rb-buff); background: rgba(103, 215, 138, .18); }
 @keyframes rb-pulse { 0%, 100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.1); } }
 .rb-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-left: auto; min-width: 0; }
+.rb-nav { display: inline-flex; align-items: center; gap: 2px; }
+.rb-nav button { font: 700 15px/1 var(--rb-display); width: 30px; height: 26px; border-radius: 6px; border: 1px solid var(--rb-chrome); background: var(--rb-glass-2); color: var(--rb-ink); cursor: pointer; padding: 0; }
+.rb-nav button:hover { border-color: var(--rb-gold); color: var(--rb-gold); }
+.rb-nav .rb-navpos { font: 600 11px/1 var(--rb-display); color: var(--rb-ink-dim); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
 .rb-chain .rb-lbl { font: 600 11px/1 var(--rb-display); letter-spacing: .1em; text-transform: uppercase; color: var(--rb-ink-dim); }
 .rb-chain .rb-ci { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px 3px 4px; border-radius: 6px; background: var(--rb-glass-2); border: 1px solid var(--rb-chrome); font-size: 12px; white-space: nowrap; }
 .rb-chain .rb-ci i { width: 8px; height: 8px; border-radius: 50%; background: var(--rb-p1); }
@@ -70,6 +74,13 @@ img.rb-pic { object-fit: cover; }
 .rb-side .rb-active { position: absolute; left: 50%; transform: translateX(-50%); font: 600 9px/1 var(--rb-display); letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px; border-radius: 999px; background: var(--rb-gold); color: #1a1406; white-space: nowrap; }
 .rb-opp .rb-side .rb-active { bottom: -8px; }
 .rb-me .rb-side .rb-active { top: -8px; }
+/* The player to act: white frame on the panel and the legend, a "to act" chip. */
+.rb-rail.rb-acting .rb-side { border-color: rgba(255, 255, 255, .92); box-shadow: 0 0 0 1px rgba(255, 255, 255, .55), 0 0 22px rgba(255, 255, 255, .18); background: rgba(255, 255, 255, .06); }
+.rb-rail.rb-acting .rb-side .rb-who { color: #fff; }
+.rb-rail.rb-acting .rb-legendbox .rb-card { outline: 2px solid rgba(255, 255, 255, .9); outline-offset: 1px; box-shadow: 0 0 16px rgba(255, 255, 255, .35); }
+.rb-side .rb-now { position: absolute; left: 50%; transform: translateX(-50%); font: 700 9px/1 var(--rb-display); letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px; border-radius: 999px; background: #fff; color: #0a0e1a; white-space: nowrap; }
+.rb-opp .rb-side .rb-now { top: -8px; } .rb-me .rb-side .rb-now { bottom: -8px; }
+.rb-opp .rb-side .rb-active + .rb-now { top: auto; bottom: -8px; } .rb-me .rb-side .rb-active + .rb-now { bottom: auto; top: -8px; }
 .rb-side .rb-deck { font-size: 11px; color: var(--rb-ink-dim); margin-top: 2px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rb-side .rb-energy { font: 600 10px/1 var(--rb-display); letter-spacing: .08em; color: var(--rb-ink-dim); text-transform: uppercase; }
 .rb-side .rb-energy b { color: var(--rb-ink); font-size: 12px; }

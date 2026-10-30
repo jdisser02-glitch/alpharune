@@ -320,7 +320,7 @@ function renderFrame() {
   const b = f.board || {};
   $("#t-pos", host).innerHTML = `<b>${st.frame + 1}</b><span class="muted">/${n}</span> · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}`;
   const compared = hg && isCompared(f);
-  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "" });
+  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "", nav: navHandlers(frames), navPos: `${st.frame + 1}/${n}` });
   // the current move, one line under the transport
   const who = hg ? ((hg.players || [])[f.player - 1] || "P" + f.player) : (s ? (f.player === s.featured.seat ? s.featured : s.opp).player : "P" + f.player);
   const playedIdx = hg && f.human_known && f.human_choice >= 0 ? f.human_choice : f.chosen;
@@ -341,7 +341,8 @@ function renderFrame() {
       <span class="o-marks">${played ? badge("played", hg ? "win" : "gold") : ""}${bot ? badge("bot", f.agree ? "win" : "disagree") : ""}${mine ? badge("me", "p1") : ""}</span>
       <button class="btn-sm o-me" data-would="${i}" title="I would have played this" aria-pressed="${!!mine}">me</button></li>`;
   }).join("");
-  dec.innerHTML = `${head}<ol class="v-replays-opts">${rows || `<li class="muted small">No options recorded.</li>`}</ol>${!hg && f.chosen < 0 && f.chosen_text ? `<p class="small">Played: ${optionHtml(f.chosen_text)}</p>` : ""}`;
+  const why = hg && compared ? whyHtml(f, who) : "";
+  dec.innerHTML = `${head}<ol class="v-replays-opts">${rows || `<li class="muted small">No options recorded.</li>`}</ol>${why}${!hg && f.chosen < 0 && f.chosen_text ? `<p class="small">Played: ${optionHtml(f.chosen_text)}</p>` : ""}`;
   $$("button[data-would]", dec).forEach(bt => bt.onclick = () => saveAnnotation(f, +bt.dataset.would));
   // your take + what happened before
   $("#take", host).innerHTML = `<h3>Your take on this move</h3>${st.db
@@ -350,6 +351,57 @@ function renderFrame() {
   const as = $("#a-save", host); if (as) as.onclick = () => saveAnnotation(f, ann ? ann.would_play : null);
   $("#before", host).innerHTML = f.log && f.log.length ? `<details class="panel"><summary><h3>What happened before this decision</h3></summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : "";
   const play = $("#t-play", host); if (play) { play.innerHTML = st.playing ? ICON.pause : ICON.play; play.setAttribute("aria-pressed", st.playing); play.setAttribute("aria-label", st.playing ? "pause" : "play"); }
+}
+/** The bot's reason at a compared move, reconstructed from where its search went: how sure it was, where the human's move
+    ranked, and what kind of trade the two moves make (develop vs end the turn, pressure vs develop, spend vs hold a card…). */
+function whyHtml(f, who) {
+  const opts = f.options || [], shares = new Map((f.search || []).map(([i, x]) => [i, x]));
+  const bi = f.bot_choice, hi = f.human_choice, sb = shares.get(bi) || 0, sh = shares.get(hi) || 0;
+  const ranked = [...shares.entries()].sort((a, b) => b[1] - a[1]);
+  const second = ranked.find(([i]) => i !== bi), gap = sb - (second ? second[1] : 0);
+  const conf = gap >= .5 ? "a confident choice" : gap >= .2 ? "a clear preference" : gap >= .08 ? "a slight preference" : "a close call";
+  const P = t => (window.RiftBoard ? RiftBoard.parseOption(t) : { kind: "other", text: t });
+  const ord = n => n === 1 ? "1st" : n === 2 ? "2nd" : n === 3 ? "3rd" : n + "th";
+  const foot = `<span class="xs muted">Reconstructed from the search: the bot does not reason in words.</span>`;
+  if (f.agree) {
+    return `<div class="d-why agree"><b>Why the bot agrees</b> It spent ${pct(sb, 0)} of its search on this move, ${conf}${second ? `; its next thought was ${optionHtml(opts[second[0]])} at ${pct(second[1], 0)}` : ""}.${foot}</div>`;
+  }
+  const B = P(opts[bi]), H = P(opts[hi]), rank = ranked.findIndex(([i]) => i === hi) + 1;
+  const k = B.kind + "/" + H.kind;
+  const reasons = {
+    "play/end": "It still sees a card worth playing this turn where the human ended it: more board now against keeping cards and runes.",
+    "end/play": "It would stop here and keep the card: the play buys less than holding it (runes for a reaction, a better turn later).",
+    "move/play": "It wants pressure on a battlefield now, where the human developed the base first.",
+    "play/move": "It would develop first and move later; the human chose tempo on the battlefield.",
+    "move/end": "It would still attack this turn: the battlefield is worth more to it than a safe end of turn.",
+    "end/move": "It would not make this attack: the units are worth more at home than the battlefield they would contest.",
+    "move/move": `Same idea, a different attack${B.battlefield ? `: ${esc(B.units ? B.units.join(", ") : B.card || "")} to ${esc(B.battlefield)}` : ""}, which it rates safer or worth more points.`,
+    "play/play": `Same kind of move, another card: it rates ${esc(B.card || "its pick")} above ${esc(H.card || "the human's")} here (what it costs, what it does now, what it keeps for later).`,
+    "focus/play": "It would pass focus and let the showdown resolve rather than spend a card in it.",
+    "play/focus": "It would spend a card in this showdown where the human passed: the fight is worth it to the bot.",
+    "priority/play": "It would let the chain resolve rather than answer it.",
+    "play/priority": "It would answer the chain here where the human let it resolve.",
+    "hide/play": "It would hide the card (a future rune or trick) rather than play it now.",
+    "play/hide": "It would play the card now rather than hide it.",
+    "use/play": "It would use an ability before playing a card.", "play/use": "It would play a card before using the ability.",
+    "mulligan/mulligan": "A different mulligan: the bot keeps or sets aside other cards from what it learned about the curve.",
+    "damage/damage": "A different damage split: it prefers to make sure of one kill rather than spread the damage.",
+    "choose/choose": "A different pick for the effect: it values another target or mode here.",
+  };
+  const reason = reasons[k] || "A different read of the position; the shares above say how strongly.";
+  const looked = sh < .03 ? " The bot barely looked at it." : rank === 2 ? " It was the bot's second thought." : "";
+  return `<div class="d-why disagree"><b>Why the bot disagrees</b> It would have played ${optionHtml(opts[bi])} (${pct(sb, 0)} of its search, ${conf}); ${esc(who)}'s move ranked ${ord(rank || opts.length)} of ${opts.length} at ${pct(sh, 0)}.${looked} ${reason}${f.clean_boundary ? "" : " The engine's state may differ a little from the real game here, so weigh this lightly."}${foot}</div>`;
+}
+/** Step buttons for the board's top bar: one decision or one turn at a time. */
+function navHandlers(frames) {
+  const n = frames.length, turnOf = i => ((frames[i] || {}).board || {}).turn ?? 0;
+  const go = k => { st.frame = Math.max(0, Math.min(n - 1, k)); renderFrame(); };
+  const turnStart = i => { let k = i, t = turnOf(i); while (k > 0 && turnOf(k - 1) === t) k--; return k; };
+  return {
+    prev: () => go(st.frame - 1), next: () => go(st.frame + 1),
+    prevTurn: () => { const k = turnStart(st.frame); go(k < st.frame ? k : turnStart(Math.max(0, k - 1))); },
+    nextTurn: () => { const t = turnOf(st.frame); for (let k = st.frame + 1; k < n; k++) if (turnOf(k) !== t) return go(k); go(n - 1); },
+  };
 }
 function humanHead(f, hg, who) {
   const b = f.board || {}, compared = isCompared(f), isCapture = f.player === hg.capture_seat;
@@ -445,6 +497,7 @@ function onKey(e) {
   const tag = e.target.tagName; if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
   const n = (st.rep.frames || []).length; if (!n) return;
   const go = k => { st.frame = Math.max(0, Math.min(n - 1, k)); renderFrame(); e.preventDefault(); };
+  if (e.shiftKey && (e.key === "ArrowLeft" || e.key === "ArrowRight")) { const nv = navHandlers(st.rep.frames); (e.key === "ArrowLeft" ? nv.prevTurn : nv.nextTurn)(); e.preventDefault(); return; }
   if (e.key === "ArrowRight") go(st.frame + 1); else if (e.key === "ArrowLeft") go(st.frame - 1);
   else if (e.key === "Home") go(0); else if (e.key === "End") go(n - 1);
   else if (e.key === " " && tag !== "BUTTON") { toggleAutoplay(); e.preventDefault(); }
