@@ -3,8 +3,13 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 9,
+  "agree": 17,
   "by_kind": {
+   "ability": {
+    "agree": 0,
+    "n": 5,
+    "rate": 0.0
+   },
    "battlefield": {
     "agree": 1,
     "n": 1,
@@ -16,76 +21,61 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 3,
+    "agree": 4,
     "n": 6,
-    "rate": 0.5
+    "rate": 0.6666666666666666
    },
    "move": {
-    "agree": 0,
-    "n": 8,
-    "rate": 0.0
+    "agree": 1,
+    "n": 10,
+    "rate": 0.1
    },
    "pass_focus": {
-    "agree": 3,
-    "n": 4,
-    "rate": 0.75
+    "agree": 9,
+    "n": 10,
+    "rate": 0.9
    },
    "play": {
     "agree": 1,
-    "n": 11,
-    "rate": 0.09090909090909091
+    "n": 13,
+    "rate": 0.07692307692307693
    }
   },
   "clean_boundary": {
-   "agree": 4,
-   "n": 25,
-   "rate": 0.16
+   "agree": 6,
+   "n": 33,
+   "rate": 0.18181818181818182
   },
   "in_flight": {
-   "agree": 5,
-   "n": 6
+   "agree": 11,
+   "n": 13
   },
-  "n": 31,
-  "rate": 0.2903225806451613
+  "n": 46,
+  "rate": 0.3695652173913043
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 35,
+ "bot_calls": 50,
  "bot_errors": 0,
  "bot_fallbacks": 4,
  "capture_player": "ComboMAN",
  "compare_both": false,
- "decisions": 185,
- "decisions_compared": 31,
- "decisions_human_known": 73,
- "decisions_trivial": 11,
+ "decisions": 218,
+ "decisions_compared": 46,
+ "decisions_human_known": 89,
+ "decisions_trivial": 5,
  "desync_causes": {
-  "moved: engine asks P2 but the log's next action is by P1 (moved)": 1,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 1,
-  "played: card in hand but not playable now (cost/timing)": 3,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 2
+  "passed_focus: no Pass focus option (no showdown in the engine)": 1
  },
  "desync_list": [
   {
-   "decision": 84,
-   "event_index": 57,
-   "event_kind": "moved",
-   "event_text": "ComboMAN moved Kai'Sa, Survivor to Rakelstake.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (moved)",
-   "turn": 5
-  },
-  {
-   "decision": 84,
+   "decision": 83,
    "event_index": 58,
    "event_kind": "passed_focus",
    "event_text": "ComboMAN passed focus at Rakelstake.",
    "options": [
-    "End turn"
+    "End turn",
+    "Play Charm"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -93,7 +83,7 @@
    "turn": 5
   },
   {
-   "decision": 90,
+   "decision": 89,
    "event_index": 84,
    "event_kind": "passed_focus",
    "event_text": "ComboMAN passed focus at Rakelstake.",
@@ -118,186 +108,40 @@
    "player": 1,
    "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 6
-  },
-  {
-   "decision": 178,
-   "event_index": 152,
-   "event_kind": "played",
-   "event_text": "Played Hextech Ray from hand.",
-   "options": [
-    "End turn",
-    "Move Plundering Poro to Rakelstake",
-    "Move Plundering Poro to Rockfall Path",
-    "Move Kai'Sa, Survivor to Rakelstake",
-    "Move Kai'Sa, Survivor to Rockfall Path",
-    "Move Thousand-Tailed Watcher to Rakelstake",
-    "Move Thousand-Tailed Watcher to Rockfall Path",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rakelstake",
-    "Move Plundering Poro, Thousand-Tailed Watcher to Rakelstake",
-    "Move Kai'Sa, Survivor, Thousand-Tailed Watcher to Rakelstake",
-    "Move Plundering Poro, Kai'Sa, Survivor, Thousand-Tailed Watcher to Rakelstake",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rockfall Path",
-    "Move Plundering Poro, Thousand-Tailed Watcher to Rockfall Path",
-    "Move Kai'Sa, Survivor, Thousand-Tailed Watcher to Rockfall Path",
-    "Move Plundering Poro, Kai'Sa, Survivor, Thousand-Tailed Watcher to Rockfall Path",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 10
-  },
-  {
-   "decision": 183,
-   "event_index": 154,
-   "event_kind": "played",
-   "event_text": "Played Defy from hand.",
-   "options": [
-    "End turn",
-    "Move Plundering Poro to Rakelstake",
-    "Move Plundering Poro to Rockfall Path",
-    "Move Kai'Sa, Survivor to Rakelstake",
-    "Move Kai'Sa, Survivor to Rockfall Path",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rakelstake",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rockfall Path",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (played)",
-   "turn": 10
-  },
-  {
-   "decision": 183,
-   "event_index": 162,
-   "event_kind": "played",
-   "event_text": "Played Switcheroo from hand.",
-   "options": [
-    "End turn",
-    "Move Plundering Poro to Rakelstake",
-    "Move Plundering Poro to Rockfall Path",
-    "Move Kai'Sa, Survivor to Rakelstake",
-    "Move Kai'Sa, Survivor to Rockfall Path",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rakelstake",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rockfall Path",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (played)",
-   "turn": 10
-  },
-  {
-   "decision": 183,
-   "event_index": 166,
-   "event_kind": "played",
-   "event_text": "ComboMAN played Noxus Hopeful from hand to base.",
-   "options": [
-    "End turn",
-    "Move Plundering Poro to Rakelstake",
-    "Move Plundering Poro to Rockfall Path",
-    "Move Kai'Sa, Survivor to Rakelstake",
-    "Move Kai'Sa, Survivor to Rockfall Path",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rakelstake",
-    "Move Plundering Poro, Kai'Sa, Survivor to Rockfall Path",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 10
-  },
-  {
-   "decision": 184,
-   "event_index": 171,
-   "event_kind": "played",
-   "event_text": "3rd time playing riven played Steel Paws from hand to base.",
-   "options": [
-    "End turn",
-    "Play Switcheroo",
-    "Play Existential Dread",
-    "Play Discipline"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 11
   }
  ],
- "desyncs": 8,
+ "desyncs": 2,
  "disagreements": [
   {
    "bot": {
     "index": 6,
-    "text": "Play Kai'Sa, Survivor to base"
-   },
-   "clean_boundary": true,
-   "decision": 15,
-   "event_text": "ComboMAN moved Plundering Poro to Rakelstake.",
-   "human": {
-    "index": 1,
-    "share": 0.38,
-    "text": "Move Plundering Poro to Rakelstake"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.46,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 1,
-     "share": 0.38,
-     "text": "Move Plundering Poro to Rakelstake"
-    },
-    {
-     "index": 2,
-     "share": 0.08,
-     "text": "Move Plundering Poro to Rockfall Path"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Lecturing Yordle to Rakelstake"
+    "text": "Play Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
    "decision": 21,
    "event_text": "ComboMAN moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 7,
-    "share": 0.21,
+    "share": 0.23,
     "text": "Play Kai'Sa, Survivor to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.38,
-     "text": "Play Lecturing Yordle to Rakelstake"
+     "index": 6,
+     "share": 0.29,
+     "text": "Play Plundering Poro to Rakelstake"
     },
     {
      "index": 7,
-     "share": 0.21,
+     "share": 0.23,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 6,
-     "share": 0.14,
-     "text": "Play Plundering Poro to Rakelstake"
+     "index": 2,
+     "share": 0.16,
+     "text": "Play Lecturing Yordle to Rakelstake"
     }
    ],
    "turn": 2
@@ -312,7 +156,7 @@
    "event_text": "ComboMAN moved Kai'Sa, Survivor to Rockfall Path.",
    "human": {
     "index": 3,
-    "share": 0.03,
+    "share": 0.09,
     "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "kind": "move",
@@ -320,18 +164,18 @@
    "top3": [
     {
      "index": 5,
-     "share": 0.54,
+     "share": 0.23,
      "text": "Play Lecturing Yordle to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.28,
+     "share": 0.21,
      "text": "Move Kai'Sa, Survivor to Rakelstake"
     },
     {
-     "index": 3,
-     "share": 0.03,
-     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+     "index": 9,
+     "share": 0.16,
+     "text": "Play Plundering Poro to Rakelstake"
     }
    ],
    "turn": 4
@@ -346,7 +190,7 @@
    "event_text": "ComboMAN moved Plundering Poro to base.",
    "human": {
     "index": 1,
-    "share": 0.01,
+    "share": 0.02,
     "text": "Move Plundering Poro to base"
    },
    "kind": "move",
@@ -354,18 +198,18 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.75,
+     "share": 0.38,
      "text": "Play Lecturing Yordle to Rakelstake"
     },
     {
      "index": 7,
-     "share": 0.05,
+     "share": 0.2,
      "text": "Play Plundering Poro to Rakelstake"
     },
     {
-     "index": 9,
-     "share": 0.05,
-     "text": "Play Brynhir Thundersong to Rakelstake"
+     "index": 8,
+     "share": 0.09,
+     "text": "Play Brynhir Thundersong to base"
     }
    ],
    "turn": 4
@@ -380,7 +224,7 @@
    "event_text": "ComboMAN played Lecturing Yordle from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.19,
+    "share": 0.16,
     "text": "Play Lecturing Yordle to base"
    },
    "kind": "play",
@@ -388,18 +232,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.23,
+     "share": 0.25,
      "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 1,
-     "share": 0.19,
-     "text": "Play Lecturing Yordle to base"
+     "index": 3,
+     "share": 0.18,
+     "text": "Play Plundering Poro to base"
     },
     {
-     "index": 3,
-     "share": 0.17,
-     "text": "Play Plundering Poro to base"
+     "index": 1,
+     "share": 0.16,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 4
@@ -414,7 +258,7 @@
    "event_text": "ComboMAN played Plundering Poro from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.16,
+    "share": 0.23,
     "text": "Play Plundering Poro to base"
    },
    "kind": "play",
@@ -422,29 +266,29 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.28,
+     "share": 0.25,
      "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.18,
-     "text": "Use Daughter of the Void"
+     "index": 2,
+     "share": 0.23,
+     "text": "Play Plundering Poro to base"
     },
     {
-     "index": 2,
-     "share": 0.16,
-     "text": "Play Plundering Poro to base"
+     "index": 6,
+     "share": 0.17,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Plundering Poro to Rakelstake"
+    "index": 2,
+    "text": "Move Plundering Poro to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 86,
+   "decision": 85,
    "event_text": "ComboMAN moved Plundering Poro to Rakelstake.",
    "human": {
     "index": 10,
@@ -455,19 +299,19 @@
    "player": 1,
    "top3": [
     {
+     "index": 2,
+     "share": 0.25,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
      "index": 1,
-     "share": 0.54,
+     "share": 0.2,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 34,
      "share": 0.16,
      "text": "Play Bilgewater Tracker to base"
-    },
-    {
-     "index": 2,
-     "share": 0.08,
-     "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
    "turn": 6
@@ -478,11 +322,11 @@
     "text": "Play Falling Star"
    },
    "clean_boundary": false,
-   "decision": 87,
+   "decision": 86,
    "event_text": "ComboMAN passed focus at Rakelstake.",
    "human": {
     "index": 0,
-    "share": 0.1,
+    "share": 0.27,
     "text": "Pass focus"
    },
    "kind": "pass_focus",
@@ -490,18 +334,18 @@
    "top3": [
     {
      "index": 5,
-     "share": 0.52,
+     "share": 0.36,
      "text": "Play Falling Star"
     },
     {
-     "index": 1,
-     "share": 0.38,
-     "text": "Play Hextech Ray targeting Tideturner"
+     "index": 0,
+     "share": 0.27,
+     "text": "Pass focus"
     },
     {
-     "index": 0,
-     "share": 0.1,
-     "text": "Pass focus"
+     "index": 1,
+     "share": 0.25,
+     "text": "Play Hextech Ray targeting Tideturner"
     }
    ],
    "turn": 6
@@ -512,29 +356,29 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 91,
-   "event_text": "Played Falling Star from hand.",
+   "decision": 90,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
    "human": {
-    "index": 12,
-    "share": 0.02,
-    "text": "Play Falling Star"
+    "index": 14,
+    "share": 0.01,
+    "text": "Use Daughter of the Void"
    },
-   "kind": "play",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.61,
+     "share": 0.51,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.1,
+     "share": 0.15,
      "text": "Move Plundering Poro to Rockfall Path"
     },
     {
      "index": 8,
-     "share": 0.09,
+     "share": 0.15,
      "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
@@ -546,7 +390,75 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 100,
+   "decision": 91,
+   "event_text": "ComboMAN exhausted Gold. (named by the payment)",
+   "human": {
+    "index": 13,
+    "share": 0.01,
+    "text": "Use Gold"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.43,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 8,
+     "share": 0.13,
+     "text": "Play Thousand-Tailed Watcher to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 92,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 12,
+    "share": 0.02,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.46,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 2,
+     "share": 0.22,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 8,
+     "share": 0.12,
+     "text": "Play Thousand-Tailed Watcher to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 99,
    "event_text": "ComboMAN played Plundering Poro from hand to base.",
    "human": {
     "index": 8,
@@ -558,12 +470,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.68,
+     "share": 0.69,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.12,
+     "share": 0.18,
      "text": "Move Plundering Poro to Rockfall Path"
     },
     {
@@ -580,11 +492,11 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 103,
+   "decision": 102,
    "event_text": "ComboMAN played Watchful Sentry from hand to base.",
    "human": {
     "index": 7,
-    "share": 0.04,
+    "share": 0.03,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -597,12 +509,12 @@
     },
     {
      "index": 2,
-     "share": 0.15,
+     "share": 0.26,
      "text": "Move Plundering Poro to Rockfall Path"
     },
     {
      "index": 0,
-     "share": 0.09,
+     "share": 0.04,
      "text": "End turn"
     }
    ],
@@ -614,11 +526,11 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 106,
+   "decision": 105,
    "event_text": "ComboMAN ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.15,
+    "share": 0.06,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -626,18 +538,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.54,
+     "share": 0.69,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
-     "index": 0,
-     "share": 0.15,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Plundering Poro to Rockfall Path"
     },
     {
-     "index": 2,
-     "share": 0.15,
-     "text": "Move Plundering Poro to Rockfall Path"
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
     }
    ],
    "turn": 6
@@ -648,11 +560,11 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 117,
+   "decision": 116,
    "event_text": "ComboMAN moved Plundering Poro to Rockfall Path.",
    "human": {
     "index": 2,
-    "share": 0.13,
+    "share": 0.18,
     "text": "Move Plundering Poro to Rockfall Path"
    },
    "kind": "move",
@@ -660,18 +572,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.64,
+     "share": 0.41,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
-     "index": 2,
-     "share": 0.13,
-     "text": "Move Plundering Poro to Rockfall Path"
+     "index": 31,
+     "share": 0.22,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 31,
-     "share": 0.09,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 2,
+     "share": 0.18,
+     "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
    "turn": 8
@@ -682,7 +594,7 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 123,
+   "decision": 122,
    "event_text": "ComboMAN moved Watchful Sentry to Rakelstake.",
    "human": {
     "index": 5,
@@ -694,18 +606,52 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.73,
+     "share": 0.5,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 15,
-     "share": 0.07,
+     "share": 0.17,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 2,
-     "share": 0.05,
+     "share": 0.1,
      "text": "Move Plundering Poro to Rockfall Path"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "clean_boundary": true,
+   "decision": 125,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 16,
+    "share": 0.02,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 7,
+     "share": 0.19,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 0,
+     "share": 0.13,
+     "text": "End turn"
     }
    ],
    "turn": 8
@@ -720,7 +666,7 @@
    "event_text": "Played Progress Day from hand.",
    "human": {
     "index": 15,
-    "share": 0.02,
+    "share": 0.1,
     "text": "Play Progress Day"
    },
    "kind": "play",
@@ -728,51 +674,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.54,
-     "text": "Move Plundering Poro to Rakelstake"
-    },
-    {
-     "index": 0,
      "share": 0.21,
-     "text": "End turn"
+     "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 7,
-     "share": 0.05,
+     "share": 0.2,
      "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Plundering Poro to Rakelstake"
-   },
-   "clean_boundary": true,
-   "decision": 136,
-   "event_text": "ComboMAN played Noxus Hopeful from hand to Rakelstake.",
-   "human": {
-    "index": 8,
-    "share": 0.02,
-    "text": "Play Noxus Hopeful to Rakelstake"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.34,
-     "text": "Move Plundering Poro to Rakelstake"
-    },
-    {
-     "index": 0,
-     "share": 0.3,
-     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.1,
+     "share": 0.13,
      "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
@@ -780,15 +692,49 @@
   },
   {
    "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 135,
+   "event_text": "ComboMAN played Noxus Hopeful from hand to Rakelstake.",
+   "human": {
+    "index": 8,
+    "share": 0.01,
+    "text": "Play Noxus Hopeful to Rakelstake"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.45,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.15,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 7,
+     "share": 0.12,
+     "text": "Play Noxus Hopeful to base"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
     "index": 1,
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 142,
+   "decision": 141,
    "event_text": "ComboMAN ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.22,
+    "share": 0.32,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -796,17 +742,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.6,
+     "share": 0.37,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 0,
-     "share": 0.22,
+     "share": 0.32,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.12,
+     "share": 0.25,
      "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
@@ -818,11 +764,11 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 157,
+   "decision": 156,
    "event_text": "ComboMAN moved Plundering Poro to base.",
    "human": {
     "index": 1,
-    "share": 0.01,
+    "share": 0.05,
     "text": "Move Plundering Poro to base"
    },
    "kind": "move",
@@ -830,86 +776,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.77,
+     "share": 0.25,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 3,
-     "share": 0.06,
+     "share": 0.18,
      "text": "Move Plundering Poro to Rockfall Path"
     },
     {
      "index": 8,
-     "share": 0.05,
+     "share": 0.16,
      "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Plundering Poro to Rakelstake"
-   },
-   "clean_boundary": true,
-   "decision": 158,
-   "event_text": "ComboMAN played Thousand-Tailed Watcher from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.06,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5,
-     "text": "Move Plundering Poro to Rakelstake"
-    },
-    {
-     "index": 2,
-     "share": 0.25,
-     "text": "Move Plundering Poro to Rockfall Path"
-    },
-    {
-     "index": 8,
-     "share": 0.09,
-     "text": "Play Lecturing Yordle to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 170,
-   "event_text": "Played Hextech Ray from hand.",
-   "human": {
-    "index": 15,
-    "share": 0.01,
-    "text": "Play Hextech Ray targeting Blitzcrank, Impassive"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.69,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.14,
-     "text": "Move Plundering Poro to Rakelstake"
-    },
-    {
-     "index": 2,
-     "share": 0.11,
-     "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
    "turn": 10
@@ -920,30 +798,98 @@
     "text": "Move Plundering Poro to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 179,
-   "event_text": "ComboMAN moved Thousand-Tailed Watcher to Rakelstake.",
+   "decision": 157,
+   "event_text": "ComboMAN exhausted Gold. (named by the payment)",
    "human": {
-    "index": 5,
-    "share": 0.0,
-    "text": "Move Thousand-Tailed Watcher to Rakelstake"
+    "index": 19,
+    "share": 0.01,
+    "text": "Use Gold"
    },
-   "kind": "move",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
      "index": 2,
-     "share": 0.34,
+     "share": 0.25,
      "text": "Move Plundering Poro to Rockfall Path"
     },
     {
      "index": 1,
-     "share": 0.31,
+     "share": 0.22,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
+     "index": 7,
+     "share": 0.17,
+     "text": "Play Thousand-Tailed Watcher to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Plundering Poro to Rockfall Path"
+   },
+   "clean_boundary": true,
+   "decision": 158,
+   "event_text": "ComboMAN played Thousand-Tailed Watcher from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.16,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.25,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 1,
+     "share": 0.21,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 7,
+     "share": 0.16,
+     "text": "Play Thousand-Tailed Watcher to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 167,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 6,
+    "share": 0.26,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
      "index": 0,
-     "share": 0.3,
-     "text": "End turn"
+     "share": 0.49,
+     "text": "Pass"
+    },
+    {
+     "index": 6,
+     "share": 0.26,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.25,
+     "text": "Play Stupefy targeting Blitzcrank, Impassive"
     }
    ],
    "turn": 10
@@ -954,38 +900,208 @@
     "text": "Move Plundering Poro to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 184,
-   "event_text": "ComboMAN ended their turn.",
+   "decision": 170,
+   "event_text": "Played Hextech Ray from hand.",
    "human": {
-    "index": 0,
-    "share": 0.25,
-    "text": "End turn"
+    "index": 19,
+    "share": 0.01,
+    "text": "Play Hextech Ray targeting Blitzcrank, Impassive"
    },
-   "kind": "end_turn",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.48,
+     "share": 0.39,
      "text": "Move Plundering Poro to Rakelstake"
     },
     {
      "index": 0,
-     "share": 0.25,
+     "share": 0.3,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.18,
+     "share": 0.15,
      "text": "Move Plundering Poro to Rockfall Path"
     }
    ],
    "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 178,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 24,
+    "share": 0.03,
+    "text": "Play Hextech Ray targeting Blitzcrank, Impassive"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.3,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 18,
+     "share": 0.17,
+     "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Plundering Poro to Rockfall Path"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 186,
+   "event_text": "ComboMAN moved Thousand-Tailed Watcher to Rakelstake.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Move Thousand-Tailed Watcher to Rakelstake"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.29,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 2,
+     "share": 0.25,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Plundering Poro to Rockfall Path"
+   },
+   "clean_boundary": true,
+   "decision": 200,
+   "event_text": "ComboMAN played Noxus Hopeful from hand to base.",
+   "human": {
+    "index": 8,
+    "share": 0.17,
+    "text": "Play Noxus Hopeful to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 1,
+     "share": 0.21,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 8,
+     "share": 0.17,
+     "text": "Play Noxus Hopeful to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 212,
+   "event_text": "ComboMAN moved Plundering Poro to Rockfall Path.",
+   "human": {
+    "index": 2,
+    "share": 0.14,
+    "text": "Move Plundering Poro to Rockfall Path"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.59,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 31,
+     "share": 0.06,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Plundering Poro to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 218,
+   "event_text": "ComboMAN moved Noxus Hopeful to Rakelstake.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Move Noxus Hopeful to Rakelstake"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.8,
+     "text": "Move Plundering Poro to Rakelstake"
+    },
+    {
+     "index": 2,
+     "share": 0.06,
+     "text": "Move Plundering Poro to Rockfall Path"
+    },
+    {
+     "index": 15,
+     "share": 0.03,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 12
   }
  ],
  "exported_records": 0,
  "first_player": "ComboMAN",
- "forced_decisions": 80,
+ "forced_decisions": 86,
  "game": 1,
  "hand_fixes": {
   "created": 0,
@@ -1099,7 +1215,7 @@
     "for": "3rd time playing riven played Steel Paws from hand to base.",
     "how": "pulled",
     "player": 2,
-    "turn": 11,
+    "turn": 10,
     "zone": "hand"
    }
   ],
@@ -1119,7 +1235,7 @@
     "same_legend": true,
     "source": "/home/user/alpharune/lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt"
    },
-   "filler_cards": 29,
+   "filler_cards": 28,
    "legal": true,
    "legend": "Daughter of the Void",
    "player": "ComboMAN",
@@ -1130,6 +1246,12 @@
      "copies": 1,
      "hand_multiplicity": 0,
      "plays_from_hand": 1
+    },
+    {
+     "card": "Gold",
+     "copies": 1,
+     "hand_multiplicity": 0,
+     "plays_from_hand": 0
     },
     {
      "card": "Hextech Ray",
@@ -1255,9 +1377,9 @@
   "P1": "Daughter of the Void",
   "P2": "Gloomist"
  },
- "log_events": 179,
- "log_events_consumed": 173,
- "out_of_order_matches": 6,
+ "log_events": 184,
+ "log_events_consumed": 184,
+ "out_of_order_matches": 4,
  "players": [
   "ComboMAN",
   "3rd time playing riven"
@@ -1265,35 +1387,28 @@
  "readiness_fixes": 0,
  "result": {
   "engine_scores": [
-   8,
-   3
+   7,
+   4
   ],
   "engine_winner": 1,
   "log_scores": [
    7,
    4
   ],
-  "reason": "P1 reached 8 points",
+  "reason": "log ended (log score 7-4)",
   "turns": 12
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
- "score_mismatch_examples": [
-  {
-   "engine_score": 3,
-   "event_index": 169,
-   "log_score": 4,
-   "text": "3rd time playing riven scored 1 at turn start. Score: 3 → 4.",
-   "turn": 11
-  }
- ],
- "score_mismatches": 1,
+ "rune_swaps": 0,
+ "score_mismatch_examples": [],
+ "score_mismatches": 0,
  "seed": 1,
- "silent_passes": 41,
+ "silent_passes": 54,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_kai_sa_vs_vex_rl2_7d1dc502f83e64c8bd1a644624c1d0a3.json",
- "stop_reason": "engine game over",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.133262178,
-  "seconds": 1.152638817
+  "bot_seconds": 1.6812549970000006,
+  "seconds": 1.707184328
  }
 }

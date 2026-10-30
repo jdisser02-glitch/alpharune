@@ -3,11 +3,11 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 4,
+  "agree": 5,
   "by_kind": {
    "ability": {
     "agree": 0,
-    "n": 4,
+    "n": 5,
     "rate": 0.0
    },
    "battlefield": {
@@ -16,105 +16,59 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 0,
-    "n": 6,
-    "rate": 0.0
+    "agree": 2,
+    "n": 7,
+    "rate": 0.2857142857142857
    },
    "pass_focus": {
-    "agree": 2,
-    "n": 2,
+    "agree": 1,
+    "n": 1,
     "rate": 1.0
    },
    "play": {
     "agree": 1,
-    "n": 11,
-    "rate": 0.09090909090909091
+    "n": 14,
+    "rate": 0.07142857142857142
    }
   },
   "clean_boundary": {
-   "agree": 1,
-   "n": 16,
-   "rate": 0.0625
+   "agree": 3,
+   "n": 21,
+   "rate": 0.14285714285714285
   },
   "in_flight": {
-   "agree": 3,
-   "n": 8
+   "agree": 2,
+   "n": 7
   },
-  "n": 24,
-  "rate": 0.16666666666666666
+  "n": 28,
+  "rate": 0.17857142857142858
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 27,
+ "bot_calls": 35,
  "bot_errors": 0,
- "bot_fallbacks": 3,
+ "bot_fallbacks": 7,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 209,
- "decisions_compared": 24,
- "decisions_human_known": 64,
- "decisions_trivial": 4,
+ "decisions": 264,
+ "decisions_compared": 28,
+ "decisions_human_known": 83,
+ "decisions_trivial": 0,
  "desync_causes": {
-  "ended_turn: engine asks P1 but the log's next action is by P2 (ended_turn)": 1,
-  "moved: no such unit on board (not played / already gone)": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 1,
-  "played: card in hand but not playable now (cost/timing)": 3,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 3,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 4,
   "played: engine asks P2 but the log's next action is by P1 (played)": 1,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 4
  },
  "desync_list": [
   {
-   "decision": 45,
-   "event_index": 183,
-   "event_kind": "moved",
-   "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
-   "options": [
-    "End turn",
-    "Play Lecturing Yordle to base",
-    "Play Noxus Hopeful to base",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Stupefy targeting Watchful Sentry",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 5
-  },
-  {
-   "decision": 63,
-   "event_index": 203,
-   "event_kind": "played",
-   "event_text": "Emp4 played The Empyrean from hand to base.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Play Thousand-Tailed Watcher to base",
-    "Play Lecturing Yordle to base",
-    "Play Noxus Hopeful to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Stupefy targeting Bilgewater Tracker",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Bilgewater Tracker",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 7
-  },
-  {
-   "decision": 91,
+   "decision": 106,
    "event_index": 229,
    "event_kind": "played",
    "event_text": "Emp4 played The Empyrean from trash to base.",
    "options": [
     "End turn",
-    "Use Daughter of the Void",
+    "Move Watchful Sentry to base",
+    "Play Temporal Breach",
+    "Play Temporal Breach",
     "Hide Temporal Breach",
     "Hide Temporal Breach"
    ],
@@ -124,13 +78,33 @@
    "turn": 8
   },
   {
-   "decision": 91,
+   "decision": 106,
+   "event_index": 240,
+   "event_kind": "passed_focus",
+   "event_text": "lll passed focus at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Watchful Sentry to base",
+    "Play Temporal Breach",
+    "Play Temporal Breach",
+    "Hide Temporal Breach",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 8
+  },
+  {
+   "decision": 106,
    "event_index": 241,
    "event_kind": "showdown",
    "event_text": "Emp4 ended showdown responses at Rockfall Path.",
    "options": [
     "End turn",
-    "Use Daughter of the Void",
+    "Move Watchful Sentry to base",
+    "Play Temporal Breach",
+    "Play Temporal Breach",
     "Hide Temporal Breach",
     "Hide Temporal Breach"
    ],
@@ -140,15 +114,17 @@
    "turn": 8
   },
   {
-   "decision": 116,
-   "event_index": 268,
-   "event_kind": "played",
-   "event_text": "Played Time Warp from hand.",
+   "decision": 127,
+   "event_index": 264,
+   "event_kind": "passed_focus",
+   "event_text": "lll passed focus at Rockfall Path.",
    "options": [
     "End turn",
+    "Move Watchful Sentry to base",
     "Play Brynhir Thundersong to base",
     "Play Thousand-Tailed Watcher to base",
     "Play Temporal Breach",
+    "Play Time Warp",
     "Play Temporal Breach",
     "Use Daughter of the Void",
     "Hide Temporal Breach",
@@ -156,187 +132,116 @@
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
+   "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 10
   },
   {
-   "decision": 117,
-   "event_index": 274,
-   "event_kind": "played",
-   "event_text": "lll played Brynhir Thundersong from hand to base.",
+   "decision": 144,
+   "event_index": 265,
+   "event_kind": "showdown",
+   "event_text": "Emp4 ended showdown responses at Rockfall Path.",
    "options": [
     "End turn",
-    "Move Brynhir Thundersong to Rockfall Path",
-    "Move Brynhir Thundersong to Void Gate",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Move Brynhir Thundersong, Watchful Sentry to Rockfall Path",
-    "Move Brynhir Thundersong, Watchful Sentry to Void Gate",
-    "Play Noxus Hopeful to base",
-    "Play Lecturing Yordle to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Singularity targeting Brynhir Thundersong, Watchful Sentry",
-    "Play Singularity targeting Watchful Sentry, Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Lost to the Sands",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Stupefy targeting Brynhir Thundersong",
-    "Play Stupefy targeting Watchful Sentry",
-    "Use Daughter of the Void"
+    "Move Watchful Sentry to base",
+    "Hide Temporal Breach",
+    "Hide Temporal Breach"
    ],
    "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (played)",
-   "turn": 11
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 10
   },
   {
-   "decision": 117,
-   "event_index": 276,
-   "event_kind": "played",
-   "event_text": "Played Temporal Breach from hand.",
-   "options": [
-    "End turn",
-    "Move Brynhir Thundersong to Rockfall Path",
-    "Move Brynhir Thundersong to Void Gate",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Move Brynhir Thundersong, Watchful Sentry to Rockfall Path",
-    "Move Brynhir Thundersong, Watchful Sentry to Void Gate",
-    "Play Noxus Hopeful to base",
-    "Play Lecturing Yordle to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Singularity targeting Brynhir Thundersong, Watchful Sentry",
-    "Play Singularity targeting Watchful Sentry, Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Lost to the Sands",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Stupefy targeting Brynhir Thundersong",
-    "Play Stupefy targeting Watchful Sentry",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (played)",
-   "turn": 11
-  },
-  {
-   "decision": 132,
-   "event_index": 279,
-   "event_kind": "ended_turn",
-   "event_text": "lll ended their turn.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Play Lecturing Yordle to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Stupefy targeting Watchful Sentry"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (ended_turn)",
-   "turn": 11
-  },
-  {
-   "decision": 132,
-   "event_index": 303,
-   "event_kind": "played",
-   "event_text": "Played Lost to the Sands from hand.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Play Lecturing Yordle to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Stupefy targeting Watchful Sentry"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 11
-  },
-  {
-   "decision": 132,
-   "event_index": 306,
-   "event_kind": "played",
-   "event_text": "Played Stupefy from hand.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to Rockfall Path",
-    "Move Watchful Sentry to Void Gate",
-    "Play Lecturing Yordle to base",
-    "Play Kai'Sa, Survivor to base",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Stupefy targeting Watchful Sentry"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (played)",
-   "turn": 11
-  },
-  {
-   "decision": 195,
-   "event_index": 357,
+   "decision": 249,
+   "event_index": 353,
    "event_kind": "passed_focus",
    "event_text": "lll passed focus at Rockfall Path.",
    "options": [
     "End turn",
+    "Move Watchful Sentry to base",
+    "Move The Empyrean to Rockfall Path",
+    "Move The Empyrean to Void Gate",
+    "Move Plundering Poro to Rockfall Path",
+    "Move Plundering Poro to Void Gate",
+    "Move The Empyrean, Plundering Poro to Rockfall Path",
+    "Move The Empyrean, Plundering Poro to Void Gate",
     "Play Noxus Hopeful to base",
     "Play Bilgewater Tracker to base",
-    "Play Stupefy targeting Thousand-Tailed Watcher",
-    "Play Stupefy targeting Plundering Poro",
-    "Play Stupefy targeting Brynhir Thundersong",
-    "Play Stupefy targeting Watchful Sentry",
-    "Play Falling Star",
     "Play Temporal Breach",
-    "Play Bellows Breath targeting Thousand-Tailed Watcher",
-    "Play Bellows Breath targeting Plundering Poro",
-    "Play Bellows Breath targeting Brynhir Thundersong",
-    "Play Bellows Breath targeting Watchful Sentry",
-    "Play Smoke Screen targeting Thousand-Tailed Watcher",
-    "Play Smoke Screen targeting Plundering Poro",
-    "Play Smoke Screen targeting Brynhir Thundersong",
+    "Play Falling Star",
     "Play Smoke Screen targeting Watchful Sentry",
+    "Play Smoke Screen targeting Thousand-Tailed Watcher",
+    "Play Smoke Screen targeting The Empyrean",
+    "Play Smoke Screen targeting Plundering Poro",
+    "Play Smoke Screen targeting Kai'Sa, Survivor",
+    "Play Smoke Screen targeting Brynhir Thundersong",
+    "Play Bellows Breath targeting Watchful Sentry",
+    "Play Bellows Breath targeting Thousand-Tailed Watcher",
+    "Play Bellows Breath targeting The Empyrean",
+    "Play Bellows Breath targeting Plundering Poro",
+    "Play Bellows Breath targeting Kai'Sa, Survivor",
+    "Play Bellows Breath targeting Brynhir Thundersong",
     "Use Daughter of the Void",
     "Hide Temporal Breach"
    ],
    "phase": "MainPhase",
    "player": 2,
    "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 14
+   "turn": 15
   },
   {
-   "decision": 208,
-   "event_index": 358,
+   "decision": 263,
+   "event_index": 354,
    "event_kind": "showdown",
    "event_text": "Emp4 ended showdown responses at Rockfall Path.",
    "options": [
     "End turn",
-    "Use Daughter of the Void",
+    "Move Watchful Sentry to base",
+    "Move The Empyrean to Rockfall Path",
+    "Move The Empyrean to Void Gate",
     "Hide Temporal Breach"
    ],
    "phase": "MainPhase",
    "player": 2,
    "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 14
+   "turn": 15
+  },
+  {
+   "decision": 263,
+   "event_index": 357,
+   "event_kind": "passed_focus",
+   "event_text": "lll passed focus at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Watchful Sentry to base",
+    "Move The Empyrean to Rockfall Path",
+    "Move The Empyrean to Void Gate",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 15
+  },
+  {
+   "decision": 263,
+   "event_index": 358,
+   "event_kind": "showdown",
+   "event_text": "Emp4 ended showdown responses at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Watchful Sentry to base",
+    "Move The Empyrean to Rockfall Path",
+    "Move The Empyrean to Void Gate",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 15
   }
  ],
- "desyncs": 12,
+ "desyncs": 9,
  "disagreements": [
   {
    "bot": {
@@ -348,7 +253,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.22,
+    "share": 0.21,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -361,12 +266,12 @@
     },
     {
      "index": 1,
-     "share": 0.26,
+     "share": 0.27,
      "text": "Play Watchful Sentry to base"
     },
     {
      "index": 0,
-     "share": 0.22,
+     "share": 0.21,
      "text": "End turn"
     }
    ],
@@ -379,10 +284,44 @@
    },
    "clean_boundary": false,
    "decision": 12,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 4,
+    "share": 0.03,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.87,
+     "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.06,
+     "text": "Play Stupefy targeting Plundering Poro"
+    },
+    {
+     "index": 2,
+     "share": 0.04,
+     "text": "Play Hextech Ray targeting Plundering Poro"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 13,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 2,
-    "share": 0.05,
+    "share": 0.06,
     "text": "Play Hextech Ray targeting Plundering Poro"
    },
    "kind": "play",
@@ -390,17 +329,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.88,
+     "share": 0.84,
      "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.07,
+     "share": 0.1,
      "text": "Play Stupefy targeting Plundering Poro"
     },
     {
      "index": 2,
-     "share": 0.05,
+     "share": 0.06,
      "text": "Play Hextech Ray targeting Plundering Poro"
     }
    ],
@@ -416,7 +355,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 7,
-    "share": 0.04,
+    "share": 0.05,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -424,12 +363,46 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.45,
+     "share": 0.4,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 1,
-     "share": 0.13,
+     "share": 0.14,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "clean_boundary": true,
+   "decision": 26,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 5,
+    "share": 0.01,
+    "text": "Play Smoke Screen targeting Kai'Sa, Survivor"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.46,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 1,
+     "share": 0.15,
      "text": "Play Watchful Sentry to base"
     },
     {
@@ -443,33 +416,33 @@
   {
    "bot": {
     "index": 0,
-    "text": "Pass"
+    "text": "End turn"
    },
-   "clean_boundary": false,
-   "decision": 26,
-   "event_text": "Played Smoke Screen from hand.",
+   "clean_boundary": true,
+   "decision": 31,
+   "event_text": "Played Bellows Breath from hand.",
    "human": {
-    "index": 2,
-    "share": 0.09,
-    "text": "Play Smoke Screen targeting Kai'Sa, Survivor"
+    "index": 4,
+    "share": 0.25,
+    "text": "Play Bellows Breath targeting Kai'Sa, Survivor"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.57,
-     "text": "Pass"
+     "share": 0.27,
+     "text": "End turn"
+    },
+    {
+     "index": 4,
+     "share": 0.25,
+     "text": "Play Bellows Breath targeting Kai'Sa, Survivor"
     },
     {
      "index": 1,
-     "share": 0.34,
-     "text": "Play Stupefy targeting Kai'Sa, Survivor"
-    },
-    {
-     "index": 2,
-     "share": 0.09,
-     "text": "Play Smoke Screen targeting Kai'Sa, Survivor"
+     "share": 0.2,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 3
@@ -480,11 +453,11 @@
     "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
-   "decision": 43,
+   "decision": 42,
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.1,
+    "share": 0.11,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -492,18 +465,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.58,
+     "share": 0.54,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 1,
-     "share": 0.1,
+     "share": 0.11,
      "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 2,
-     "share": 0.09,
-     "text": "Play Lecturing Yordle to base"
+     "index": 5,
+     "share": 0.11,
+     "text": "Play Stupefy targeting Watchful Sentry"
     }
    ],
    "turn": 5
@@ -511,135 +484,135 @@
   {
    "bot": {
     "index": 3,
-    "text": "Play Stupefy targeting Watchful Sentry"
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
-   "decision": 46,
-   "event_text": "Emp4 ended their turn.",
+   "decision": 72,
+   "event_text": "Emp4 played The Empyrean from hand to base.",
    "human": {
-    "index": 0,
-    "share": 0.11,
-    "text": "End turn"
+    "index": 5,
+    "share": 0.12,
+    "text": "Play The Empyrean to base"
    },
-   "kind": "end_turn",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 3,
-     "share": 0.35,
-     "text": "Play Stupefy targeting Watchful Sentry"
-    },
-    {
-     "index": 5,
-     "share": 0.22,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 2,
-     "share": 0.18,
-     "text": "Play Noxus Hopeful to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Kai'Sa, Survivor to base"
-   },
-   "clean_boundary": true,
-   "decision": 64,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.02,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.44,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 3,
-     "share": 0.17,
+     "share": 0.51,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 2,
-     "share": 0.16,
-     "text": "Move Watchful Sentry to Void Gate"
+     "index": 5,
+     "share": 0.12,
+     "text": "Play The Empyrean to base"
+    },
+    {
+     "index": 1,
+     "share": 0.11,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 93,
+   "decision": 84,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.19,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.39,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    },
+    {
+     "index": 2,
+     "share": 0.32,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Brynhir Thundersong to base"
+   },
+   "clean_boundary": true,
+   "decision": 108,
    "event_text": "Played Stupefy from hand.",
    "human": {
-    "index": 8,
-    "share": 0.033707865168539325,
+    "index": 7,
+    "share": 0.03,
     "text": "Play Stupefy targeting Watchful Sentry"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.23595505617977527,
-     "text": "Play Kai'Sa, Survivor to base"
+     "index": 6,
+     "share": 0.28,
+     "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 2,
-     "share": 0.2247191011235955,
-     "text": "Move Watchful Sentry to Void Gate"
+     "index": 15,
+     "share": 0.23,
+     "text": "Play Singularity"
     },
     {
-     "index": 4,
-     "share": 0.1348314606741573,
-     "text": "Play The Empyrean to base"
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 11,
+    "text": "Play Singularity"
    },
    "clean_boundary": true,
-   "decision": 97,
+   "decision": 112,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 6,
-    "share": 0.04,
+    "share": 0.11,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.35,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
-     "text": "Move Watchful Sentry to Void Gate"
-    },
-    {
      "index": 11,
-     "share": 0.1,
-     "text": "Play Singularity targeting Watchful Sentry, Watchful Sentry"
+     "share": 0.37,
+     "text": "Play Singularity"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    },
+    {
+     "index": 6,
+     "share": 0.11,
+     "text": "Play Brynhir Thundersong to base"
     }
    ],
    "turn": 9
@@ -650,11 +623,11 @@
     "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 104,
+   "decision": 119,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 9,
-    "share": 0.25,
+    "index": 11,
+    "share": 0.18,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -662,18 +635,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.67,
+     "share": 0.58,
      "text": "Pass"
     },
     {
-     "index": 9,
-     "share": 0.25,
+     "index": 11,
+     "share": 0.18,
      "text": "Use Daughter of the Void"
     },
     {
-     "index": 1,
-     "share": 0.08,
-     "text": "Play Smoke Screen targeting Watchful Sentry"
+     "index": 6,
+     "share": 0.17,
+     "text": "Play Stupefy targeting Watchful Sentry"
     }
    ],
    "turn": 9
@@ -681,14 +654,14 @@
   {
    "bot": {
     "index": 2,
-    "text": "Move Watchful Sentry to Void Gate"
+    "text": "Move Kai'Sa, Survivor to Void Gate"
    },
    "clean_boundary": true,
-   "decision": 109,
+   "decision": 122,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
-    "index": 8,
-    "share": 0.21,
+    "index": 12,
+    "share": 0.0,
     "text": "Play Hextech Ray targeting Bilgewater Tracker"
    },
    "kind": "play",
@@ -696,51 +669,51 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.51,
-     "text": "Move Watchful Sentry to Void Gate"
+     "share": 0.23,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     },
     {
-     "index": 8,
+     "index": 0,
      "share": 0.21,
-     "text": "Play Hextech Ray targeting Bilgewater Tracker"
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.16,
-     "text": "Move Watchful Sentry to Rockfall Path"
+     "share": 0.17,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Watchful Sentry to Void Gate"
+    "index": 12,
+    "text": "Play Hextech Ray targeting Watchful Sentry"
    },
    "clean_boundary": true,
-   "decision": 113,
+   "decision": 126,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.11,
+    "share": 0.13,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.54,
-     "text": "Move Watchful Sentry to Void Gate"
+     "index": 12,
+     "share": 0.47,
+     "text": "Play Hextech Ray targeting Watchful Sentry"
     },
     {
-     "index": 1,
-     "share": 0.35,
-     "text": "Move Watchful Sentry to Rockfall Path"
+     "index": 3,
+     "share": 0.18,
+     "text": "Play Noxus Hopeful to base"
     },
     {
      "index": 0,
-     "share": 0.11,
+     "share": 0.13,
      "text": "End turn"
     }
    ],
@@ -748,83 +721,117 @@
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 23,
+    "text": "Play Lost to the Sands"
    },
    "clean_boundary": true,
-   "decision": 118,
+   "decision": 165,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 22,
-    "share": 0.01,
+    "index": 24,
+    "share": 0.02,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.41,
-     "text": "Play Kai'Sa, Survivor to base"
+     "index": 23,
+     "share": 0.53,
+     "text": "Play Lost to the Sands"
     },
     {
-     "index": 1,
-     "share": 0.17,
-     "text": "Move Brynhir Thundersong to Rockfall Path"
+     "index": 0,
+     "share": 0.11,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.13,
-     "text": "Move Brynhir Thundersong to Void Gate"
+     "share": 0.1,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     }
    ],
-   "turn": 11
+   "turn": 12
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Brynhir Thundersong to Rockfall Path"
+    "index": 23,
+    "text": "Play Lost to the Sands"
    },
    "clean_boundary": true,
-   "decision": 121,
+   "decision": 166,
    "event_text": "Played Singularity from hand.",
    "human": {
-    "index": 13,
-    "share": 0.1,
-    "text": "Play Singularity targeting Brynhir Thundersong, Watchful Sentry"
+    "index": 15,
+    "share": 0.06,
+    "text": "Play Singularity"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.3,
-     "text": "Move Brynhir Thundersong to Rockfall Path"
-    },
-    {
-     "index": 9,
-     "share": 0.29,
-     "text": "Play Kai'Sa, Survivor to base"
+     "index": 23,
+     "share": 0.6,
+     "text": "Play Lost to the Sands"
     },
     {
      "index": 2,
-     "share": 0.13,
-     "text": "Move Brynhir Thundersong to Void Gate"
+     "share": 0.09,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.06,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
-   "turn": 11
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Brynhir Thundersong to base"
+   },
+   "clean_boundary": true,
+   "decision": 179,
+   "event_text": "Played Lost to the Sands from hand.",
+   "human": {
+    "index": 14,
+    "share": 0.09,
+    "text": "Play Lost to the Sands"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.22,
+     "text": "Play Brynhir Thundersong to base"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    }
+   ],
+   "turn": 12
   },
   {
    "bot": {
     "index": 1,
-    "text": "Move Watchful Sentry to Rockfall Path"
+    "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 133,
+   "decision": 194,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.1,
+    "share": 0.15,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -832,135 +839,135 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.26,
-     "text": "Move Watchful Sentry to Rockfall Path"
+     "share": 0.22,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
      "index": 2,
-     "share": 0.24,
-     "text": "Move Watchful Sentry to Void Gate"
+     "share": 0.21,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     },
     {
-     "index": 4,
+     "index": 0,
      "share": 0.15,
-     "text": "Play Kai'Sa, Survivor to base"
+     "text": "End turn"
     }
    ],
-   "turn": 11
+   "turn": 12
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Watchful Sentry to Rockfall Path"
+    "index": 6,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
-   "decision": 153,
+   "decision": 212,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
-    "index": 4,
-    "share": 0.23,
+    "index": 5,
+    "share": 0.17,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.23,
-     "text": "Move Watchful Sentry to Rockfall Path"
+     "index": 6,
+     "share": 0.3,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 4,
-     "share": 0.23,
+     "index": 5,
+     "share": 0.17,
      "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 2,
-     "share": 0.21,
-     "text": "Move Watchful Sentry to Void Gate"
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
-   "turn": 13
+   "turn": 14
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Stupefy targeting The Empyrean"
+    "index": 6,
+    "text": "Play Stupefy targeting Watchful Sentry"
    },
    "clean_boundary": false,
-   "decision": 160,
+   "decision": 219,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 13,
-    "share": 0.25,
+    "index": 11,
+    "share": 0.21,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.34,
-     "text": "Play Stupefy targeting The Empyrean"
+     "index": 6,
+     "share": 0.38,
+     "text": "Play Stupefy targeting Watchful Sentry"
     },
     {
      "index": 0,
-     "share": 0.33,
+     "share": 0.32,
      "text": "Pass"
     },
     {
-     "index": 13,
-     "share": 0.25,
+     "index": 11,
+     "share": 0.21,
      "text": "Use Daughter of the Void"
     }
    ],
-   "turn": 13
+   "turn": 14
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
+    "index": 6,
+    "text": "Play Stupefy targeting Watchful Sentry"
    },
    "clean_boundary": false,
-   "decision": 161,
+   "decision": 220,
    "event_text": "Played Smoke Screen from hand.",
    "human": {
     "index": 1,
-    "share": 0.14,
-    "text": "Play Smoke Screen targeting The Empyrean"
+    "share": 0.1,
+    "text": "Play Smoke Screen targeting Watchful Sentry"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 6,
+     "share": 0.47,
+     "text": "Play Stupefy targeting Watchful Sentry"
+    },
+    {
      "index": 0,
-     "share": 0.52,
+     "share": 0.43,
      "text": "Pass"
     },
     {
-     "index": 9,
-     "share": 0.34,
-     "text": "Play Stupefy targeting The Empyrean"
-    },
-    {
      "index": 1,
-     "share": 0.14,
-     "text": "Play Smoke Screen targeting The Empyrean"
+     "share": 0.1,
+     "text": "Play Smoke Screen targeting Watchful Sentry"
     }
    ],
-   "turn": 13
+   "turn": 14
   },
   {
    "bot": {
     "index": 1,
-    "text": "Move Watchful Sentry to Rockfall Path"
+    "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 171,
+   "decision": 227,
    "event_text": "Played Falling Star from hand.",
    "human": {
-    "index": 12,
-    "share": 0.05,
+    "index": 10,
+    "share": 0.11,
     "text": "Play Falling Star"
    },
    "kind": "play",
@@ -968,33 +975,33 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.28,
-     "text": "Move Watchful Sentry to Rockfall Path"
+     "share": 0.25,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    },
+    {
+     "index": 0,
+     "share": 0.23,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.26,
-     "text": "Move Watchful Sentry to Void Gate"
-    },
-    {
-     "index": 3,
-     "share": 0.17,
-     "text": "Play Kai'Sa, Survivor to base"
+     "share": 0.18,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     }
    ],
-   "turn": 13
+   "turn": 14
   },
   {
    "bot": {
     "index": 1,
-    "text": "Move Watchful Sentry to Rockfall Path"
+    "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 179,
+   "decision": 236,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.22,
+    "share": 0.17,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1002,26 +1009,26 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.41,
-     "text": "Move Watchful Sentry to Rockfall Path"
-    },
-    {
-     "index": 2,
-     "share": 0.32,
-     "text": "Move Watchful Sentry to Void Gate"
+     "share": 0.49,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
      "index": 0,
-     "share": 0.22,
+     "share": 0.17,
      "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     }
    ],
-   "turn": 13
+   "turn": 14
   }
  ],
  "exported_records": 0,
  "first_player": "lll",
- "forced_decisions": 94,
+ "forced_decisions": 134,
  "game": 2,
  "hand_fixes": {
   "created": 1,
@@ -1103,7 +1110,7 @@
     "for": "",
     "how": "pulled",
     "player": 1,
-    "turn": 8,
+    "turn": 7,
     "zone": "hand"
    },
    {
@@ -1139,22 +1146,6 @@
     "zone": "hand"
    },
    {
-    "card": "Brynhir Thundersong",
-    "for": "Emp4 played Brynhir Thundersong from hand to base.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 9,
-    "zone": "hand"
-   },
-   {
-    "card": "Hextech Ray",
-    "for": "Played Hextech Ray from hand.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 9,
-    "zone": "hand"
-   },
-   {
     "card": "Lost to the Sands",
     "for": "Played Lost to the Sands from hand.",
     "how": "pulled",
@@ -1183,7 +1174,7 @@
     "for": "Emp4 played Brynhir Thundersong from hand to base.",
     "how": "pulled",
     "player": 1,
-    "turn": 11,
+    "turn": 12,
     "zone": "hand"
    },
    {
@@ -1199,7 +1190,7 @@
     "for": "Played Bellows Breath from hand.",
     "how": "pulled",
     "player": 2,
-    "turn": 12,
+    "turn": 13,
     "zone": "hand"
    },
    {
@@ -1207,7 +1198,7 @@
     "for": "Played Falling Star from hand.",
     "how": "pulled",
     "player": 1,
-    "turn": 13,
+    "turn": 14,
     "zone": "hand"
    },
    {
@@ -1215,11 +1206,11 @@
     "for": "lll played Bilgewater Tracker from hand to base.",
     "how": "pulled",
     "player": 2,
-    "turn": 14,
+    "turn": 15,
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 23
+  "pulled_from_deck": 21
  },
  "inferred_decks": {
   "P1": {
@@ -1401,18 +1392,18 @@
   "P1": "Daughter of the Void",
   "P2": "Daughter of the Void"
  },
- "log_events": 245,
- "log_events_consumed": 245,
- "out_of_order_matches": 9,
+ "log_events": 250,
+ "log_events_consumed": 250,
+ "out_of_order_matches": 10,
  "players": [
   "Emp4",
   "lll"
  ],
- "readiness_fixes": 1,
+ "readiness_fixes": 0,
  "result": {
   "engine_scores": [
    0,
-   4
+   6
   ],
   "engine_winner": 2,
   "log_scores": [
@@ -1420,40 +1411,41 @@
    6
   ],
   "reason": "log ended (log score 0-6)",
-  "turns": 15
+  "turns": 16
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
+ "rune_swaps": 5,
  "score_mismatch_examples": [
   {
-   "engine_score": 2,
+   "engine_score": 3,
    "event_index": 262,
    "log_score": 4,
    "text": "lll scored 1 at turn start. Score: 3 → 4.",
    "turn": 10
   },
   {
-   "engine_score": 3,
+   "engine_score": 4,
    "event_index": 272,
    "log_score": 7,
    "text": "lll scored 2 at turn start. Score: 5 → 7.",
    "turn": 11
   },
   {
-   "engine_score": 3,
+   "engine_score": 5,
    "event_index": 337,
    "log_score": 4,
    "text": "lll set score to 4. (-3)",
-   "turn": 13
+   "turn": 14
   }
  ],
  "score_mismatches": 3,
  "seed": 2,
- "silent_passes": 53,
+ "silent_passes": 59,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_kai_sa_rl2_066ad24169cee3ce9250c51c31700859.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.8362650440000002,
-  "seconds": 0.853139117
+  "bot_seconds": 1.1999750200000001,
+  "seconds": 1.226511568
  }
 }

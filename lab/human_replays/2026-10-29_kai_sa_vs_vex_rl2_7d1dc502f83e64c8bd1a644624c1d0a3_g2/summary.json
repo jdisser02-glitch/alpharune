@@ -3,68 +3,70 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 14,
+  "agree": 9,
   "by_kind": {
+   "ability": {
+    "agree": 0,
+    "n": 7,
+    "rate": 0.0
+   },
    "battlefield": {
     "agree": 1,
     "n": 1,
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 5,
-    "n": 7,
-    "rate": 0.7142857142857143
+    "agree": 1,
+    "n": 5,
+    "rate": 0.2
    },
    "move": {
     "agree": 1,
-    "n": 7,
-    "rate": 0.14285714285714285
+    "n": 6,
+    "rate": 0.16666666666666666
    },
    "pass_focus": {
-    "agree": 3,
-    "n": 3,
+    "agree": 2,
+    "n": 2,
     "rate": 1.0
    },
    "play": {
     "agree": 4,
-    "n": 13,
-    "rate": 0.3076923076923077
+    "n": 16,
+    "rate": 0.25
    }
   },
   "clean_boundary": {
-   "agree": 10,
-   "n": 27,
-   "rate": 0.37037037037037035
+   "agree": 6,
+   "n": 29,
+   "rate": 0.20689655172413793
   },
   "in_flight": {
-   "agree": 4,
-   "n": 4
+   "agree": 3,
+   "n": 8
   },
-  "n": 31,
-  "rate": 0.45161290322580644
+  "n": 37,
+  "rate": 0.24324324324324326
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 33,
+ "bot_calls": 41,
  "bot_errors": 0,
- "bot_fallbacks": 2,
+ "bot_fallbacks": 4,
  "capture_player": "ComboMAN",
  "compare_both": false,
- "decisions": 231,
- "decisions_compared": 31,
- "decisions_human_known": 73,
- "decisions_trivial": 7,
+ "decisions": 253,
+ "decisions_compared": 37,
+ "decisions_human_known": 84,
+ "decisions_trivial": 12,
  "desync_causes": {
   "hidden_card_placed: no hide option at 'Baron Pit'": 1,
-  "moved: engine asks P1 but the log's next action is by P2 (moved)": 1,
-  "moved: no such unit on board (not played / already gone)": 3,
+  "moved: no such unit on board (not played / already gone)": 4,
+  "moved: unit can move but not to 'Startipped Peak'": 1,
   "moved: unit is exhausted (no move option)": 3,
-  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 2,
-  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 3,
-  "played: card in hand but not playable now (cost/timing)": 3,
+  "played: card in hand but not playable now (cost/timing)": 1,
   "played: card playable but not to 'Baron Pit'": 3,
-  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
@@ -74,9 +76,15 @@
    "event_text": "ComboMAN moved Plundering Poro to base.",
    "options": [
     "End turn",
+    "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Startipped Peak",
     "Play Stupefy targeting Plundering Poro",
     "Play Stupefy targeting Plundering Poro",
     "Play Stupefy targeting Vex, Apathetic",
+    "Play Falling Star",
+    "Play Smoke Screen targeting Plundering Poro",
+    "Play Smoke Screen targeting Plundering Poro",
+    "Play Smoke Screen targeting Vex, Apathetic",
     "Use Daughter of the Void"
    ],
    "phase": "MainPhase",
@@ -85,42 +93,14 @@
    "turn": 3
   },
   {
-   "decision": 45,
-   "event_index": 222,
-   "event_kind": "played",
-   "event_text": "Played Smoke Screen from hand.",
-   "options": [
-    "End turn",
-    "Play Combat Experience",
-    "Play Combat Experience"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 4
-  },
-  {
-   "decision": 45,
-   "event_index": 224,
-   "event_kind": "passed_focus",
-   "event_text": "ComboMAN passed focus at Startipped Peak.",
-   "options": [
-    "End turn",
-    "Play Combat Experience",
-    "Play Combat Experience"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
-   "turn": 4
-  },
-  {
-   "decision": 45,
+   "decision": 50,
    "event_index": 225,
    "event_kind": "moved",
    "event_text": "3rd time playing riven moved Vex, Apathetic to base.",
    "options": [
     "End turn",
+    "Play Steel Paws to base",
+    "Play Steel Paws to Startipped Peak",
     "Play Combat Experience",
     "Play Combat Experience"
    ],
@@ -130,7 +110,7 @@
    "turn": 4
   },
   {
-   "decision": 46,
+   "decision": 53,
    "event_index": 233,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Plundering Poro to base.",
@@ -138,11 +118,9 @@
     "End turn",
     "Play Watchful Sentry to base",
     "Play Kai'Sa, Survivor to base",
-    "Play Stupefy targeting Steel Paws",
-    "Play Stupefy targeting Vex, Apathetic",
-    "Play Falling Star",
     "Play Smoke Screen targeting Steel Paws",
     "Play Smoke Screen targeting Vex, Apathetic",
+    "Play Hextech Ray targeting Vex, Apathetic",
     "Use Gold",
     "Use Daughter of the Void"
    ],
@@ -152,7 +130,69 @@
    "turn": 5
   },
   {
-   "decision": 132,
+   "decision": 68,
+   "event_index": 238,
+   "event_kind": "moved",
+   "event_text": "3rd time playing riven moved Vex, Apathetic to Startipped Peak.",
+   "options": [
+    "End turn",
+    "Move Steel Paws to Startipped Peak",
+    "Move Steel Paws to Void Gate",
+    "Move Vex, Apathetic to base",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Startipped Peak",
+    "Play Mutated Mouser to base",
+    "Play Mutated Mouser to Startipped Peak",
+    "Play Combat Experience",
+    "Play Combat Experience",
+    "Use Steel Paws"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "unit can move but not to 'Startipped Peak'",
+   "turn": 6
+  },
+  {
+   "decision": 68,
+   "event_index": 239,
+   "event_kind": "passed_focus",
+   "event_text": "3rd time playing riven passed focus at Startipped Peak.",
+   "options": [
+    "End turn",
+    "Move Steel Paws to Startipped Peak",
+    "Move Steel Paws to Void Gate",
+    "Move Vex, Apathetic to base",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Startipped Peak",
+    "Play Mutated Mouser to base",
+    "Play Mutated Mouser to Startipped Peak",
+    "Play Combat Experience",
+    "Play Combat Experience",
+    "Use Steel Paws"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 6
+  },
+  {
+   "decision": 86,
+   "event_index": 240,
+   "event_kind": "showdown",
+   "event_text": "ComboMAN ended showdown responses at Startipped Peak.",
+   "options": [
+    "End turn",
+    "Move Steel Paws to Startipped Peak",
+    "Move Steel Paws to Void Gate",
+    "Move Vex, Apathetic to base"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 6
+  },
+  {
+   "decision": 142,
    "event_index": 298,
    "event_kind": "played",
    "event_text": "3rd time playing riven played Baron Nashor from hand to Baron Pit.",
@@ -187,6 +227,8 @@
     "Play Trevor Snoozebottom to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
@@ -200,7 +242,7 @@
    "turn": 10
   },
   {
-   "decision": 132,
+   "decision": 142,
    "event_index": 299,
    "event_kind": "passed_focus",
    "event_text": "3rd time playing riven passed focus at Baron Pit.",
@@ -235,6 +277,8 @@
     "Play Trevor Snoozebottom to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
@@ -248,7 +292,7 @@
    "turn": 10
   },
   {
-   "decision": 132,
+   "decision": 142,
    "event_index": 300,
    "event_kind": "showdown",
    "event_text": "ComboMAN ended showdown responses at Baron Pit.",
@@ -283,6 +327,8 @@
     "Play Trevor Snoozebottom to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
@@ -296,41 +342,30 @@
    "turn": 10
   },
   {
-   "decision": 147,
-   "event_index": 314,
+   "decision": 167,
+   "event_index": 321,
    "event_kind": "played",
-   "event_text": "Played Progress Day from hand.",
+   "event_text": "ComboMAN played Bilgewater Tracker from hand to base.",
    "options": [
     "End turn",
     "Move Watchful Sentry to Startipped Peak",
     "Move Watchful Sentry to Void Gate",
-    "Play Noxus Hopeful to base",
-    "Play Noxus Hopeful to Void Gate",
     "Play Watchful Sentry to base",
     "Play Watchful Sentry to Void Gate",
-    "Play Bilgewater Tracker to base",
-    "Play Bilgewater Tracker to Void Gate",
+    "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Void Gate",
     "Play Gold to base",
     "Play Hextech Ray targeting Steel Paws",
     "Play Hextech Ray targeting Steel Paws",
     "Play Hextech Ray targeting Kai'Sa, Survivor",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Play Smoke Screen targeting Steel Paws",
-    "Play Smoke Screen targeting Steel Paws",
-    "Play Smoke Screen targeting Lecturing Yordle",
-    "Play Smoke Screen targeting Kai'Sa, Survivor",
-    "Play Smoke Screen targeting Watchful Sentry",
-    "Play Smoke Screen targeting Vex, Apathetic",
-    "Play Smoke Screen targeting Astral Heron",
     "Play Hextech Ray targeting Steel Paws",
     "Play Hextech Ray targeting Steel Paws",
     "Play Hextech Ray targeting Kai'Sa, Survivor",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Play Falling Star",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Play Falling Star"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -338,7 +373,7 @@
    "turn": 11
   },
   {
-   "decision": 163,
+   "decision": 174,
    "event_index": 331,
    "event_kind": "hidden_card_placed",
    "event_text": "3rd time playing riven put a hidden card to Baron Pit.",
@@ -377,12 +412,12 @@
     "Play Allay, Eager Admirer to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
-    "Play Back Off",
-    "Use Steel Paws",
-    "Use Steel Paws"
+    "Play Back Off"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -390,7 +425,7 @@
    "turn": 12
   },
   {
-   "decision": 163,
+   "decision": 174,
    "event_index": 334,
    "event_kind": "played",
    "event_text": "3rd time playing riven played Astral Heron from hand to Baron Pit.",
@@ -429,12 +464,12 @@
     "Play Allay, Eager Admirer to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
-    "Play Back Off",
-    "Use Steel Paws",
-    "Use Steel Paws"
+    "Play Back Off"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -442,7 +477,7 @@
    "turn": 12
   },
   {
-   "decision": 163,
+   "decision": 174,
    "event_index": 336,
    "event_kind": "played",
    "event_text": "3rd time playing riven played The Good Stuff from hand to Baron Pit.",
@@ -481,12 +516,12 @@
     "Play Allay, Eager Admirer to Startipped Peak",
     "Play The Good Stuff to Startipped Peak",
     "Play The Good Stuff to Void Gate",
+    "Play The Good Stuff to Startipped Peak",
+    "Play The Good Stuff to Void Gate",
     "Play Zhonya's Hourglass to base",
     "Play Blast Cone to base",
     "Play Soul Sword to base",
-    "Play Back Off",
-    "Use Steel Paws",
-    "Use Steel Paws"
+    "Play Back Off"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -494,101 +529,29 @@
    "turn": 12
   },
   {
-   "decision": 204,
-   "event_index": 361,
+   "decision": 223,
+   "event_index": 383,
    "event_kind": "moved",
-   "event_text": "3rd time playing riven moved Steel Paws to base.",
+   "event_text": "ComboMAN moved Bilgewater Tracker to Startipped Peak.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Move Lecturing Yordle to Startipped Peak",
+    "Move Lecturing Yordle to Void Gate"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (moved)",
+   "reason": "no such unit on board (not played / already gone)",
    "turn": 13
   },
   {
-   "decision": 204,
-   "event_index": 370,
-   "event_kind": "played",
-   "event_text": "Played Falling Star from hand.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 13
-  },
-  {
-   "decision": 204,
-   "event_index": 374,
-   "event_kind": "passed_focus",
-   "event_text": "ComboMAN passed focus at Startipped Peak.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 13
-  },
-  {
-   "decision": 204,
-   "event_index": 375,
-   "event_kind": "passed_focus",
-   "event_text": "3rd time playing riven passed focus at Startipped Peak.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
-   "turn": 13
-  },
-  {
-   "decision": 204,
-   "event_index": 381,
-   "event_kind": "played",
-   "event_text": "Played Hextech Ray from hand.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 13
-  },
-  {
-   "decision": 204,
+   "decision": 223,
    "event_index": 386,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Plundering Poro to Startipped Peak.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Move Lecturing Yordle to Startipped Peak",
+    "Move Lecturing Yordle to Void Gate"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -596,16 +559,14 @@
    "turn": 13
   },
   {
-   "decision": 204,
+   "decision": 223,
    "event_index": 387,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Plundering Poro to Startipped Peak.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Move Lecturing Yordle to Startipped Peak",
+    "Move Lecturing Yordle to Void Gate"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -613,16 +574,14 @@
    "turn": 13
   },
   {
-   "decision": 204,
+   "decision": 223,
    "event_index": 388,
    "event_kind": "passed_focus",
    "event_text": "ComboMAN passed focus at Startipped Peak.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Move Lecturing Yordle to Startipped Peak",
+    "Move Lecturing Yordle to Void Gate"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -630,24 +589,7 @@
    "turn": 13
   },
   {
-   "decision": 204,
-   "event_index": 391,
-   "event_kind": "passed_focus",
-   "event_text": "3rd time playing riven passed focus at Startipped Peak.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Gold to base",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
-   "turn": 13
-  },
-  {
-   "decision": 231,
+   "decision": 253,
    "event_index": 404,
    "event_kind": "moved",
    "event_text": "3rd time playing riven moved Tideturner to Baron Pit.",
@@ -696,41 +638,133 @@
    "turn": 14
   }
  ],
- "desyncs": 22,
+ "desyncs": 18,
  "disagreements": [
   {
    "bot": {
-    "index": 5,
+    "index": 3,
     "text": "Play Decree of Rage"
    },
    "clean_boundary": true,
-   "decision": 8,
-   "event_text": "ComboMAN played Plundering Poro from hand to base.",
+   "decision": 11,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
    "human": {
-    "index": 2,
-    "share": 0.38,
-    "text": "Play Plundering Poro to base"
+    "index": 4,
+    "share": 0.07,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.85,
+     "text": "Play Decree of Rage"
+    },
+    {
+     "index": 4,
+     "share": 0.07,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.05,
+     "text": "End turn"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 35,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.16,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.67,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.13,
+     "text": "Play Watchful Sentry to base"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 41,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 8,
+    "share": 0.0,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.96,
+     "text": "Pass focus"
+    },
+    {
+     "index": 4,
+     "share": 0.04,
+     "text": "Play Falling Star"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 42,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Play Smoke Screen targeting Plundering Poro"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.38,
-     "text": "Play Plundering Poro to base"
+     "index": 0,
+     "share": 0.95,
+     "text": "Pass focus"
     },
     {
-     "index": 5,
-     "share": 0.38,
-     "text": "Play Decree of Rage"
-    },
-    {
-     "index": 1,
-     "share": 0.12,
-     "text": "Play Watchful Sentry to base"
+     "index": 4,
+     "share": 0.05,
+     "text": "Play Falling Star"
     }
    ],
-   "turn": 1
+   "turn": 4
   },
   {
    "bot": {
@@ -738,19 +772,19 @@
     "text": "Move Kai'Sa, Survivor to Startipped Peak"
    },
    "clean_boundary": true,
-   "decision": 78,
-   "event_text": "Played Smoke Screen from hand.",
+   "decision": 88,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
    "human": {
-    "index": 11,
+    "index": 14,
     "share": 0.0,
-    "text": "Play Smoke Screen targeting Steel Paws"
+    "text": "Use Daughter of the Void"
    },
-   "kind": "play",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.55,
+     "share": 0.63,
      "text": "Move Kai'Sa, Survivor to Startipped Peak"
     },
     {
@@ -759,43 +793,9 @@
      "text": "Move Kai'Sa, Survivor to Void Gate"
     },
     {
-     "index": 10,
-     "share": 0.08,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 84,
-   "event_text": "Played Hextech Ray from hand.",
-   "human": {
-    "index": 11,
-    "share": 0.0,
-    "text": "Play Hextech Ray targeting Astral Heron"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.56,
-     "text": "Move Kai'Sa, Survivor to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.33,
-     "text": "Move Kai'Sa, Survivor to Void Gate"
-    },
-    {
-     "index": 9,
-     "share": 0.08,
-     "text": "Play Falling Star"
+     "index": 4,
+     "share": 0.05,
+     "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
    "turn": 7
@@ -807,10 +807,107 @@
    },
    "clean_boundary": true,
    "decision": 89,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 7,
+    "share": 0.0,
+    "text": "Play Smoke Screen targeting Steel Paws"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.64,
+     "text": "Move Kai'Sa, Survivor to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 4,
+     "share": 0.04,
+     "text": "Play Thousand-Tailed Watcher to base"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 92,
+   "event_text": "ComboMAN exhausted Gold. (named by the payment)",
+   "human": {
+    "index": 1,
+    "share": 0.04,
+    "text": "Use Gold"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.96,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.04,
+     "text": "Use Gold"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 95,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 6,
+    "share": 0.0,
+    "text": "Play Hextech Ray targeting Astral Heron"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.64,
+     "text": "Move Kai'Sa, Survivor to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.33,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 0,
+     "share": 0.01,
+     "text": "End turn"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 99,
    "event_text": "ComboMAN moved Kai'Sa, Survivor to Void Gate.",
    "human": {
     "index": 2,
-    "share": 0.35,
+    "share": 0.31,
     "text": "Move Kai'Sa, Survivor to Void Gate"
    },
    "kind": "move",
@@ -818,12 +915,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.62,
+     "share": 0.66,
      "text": "Move Kai'Sa, Survivor to Startipped Peak"
     },
     {
      "index": 2,
-     "share": 0.35,
+     "share": 0.31,
      "text": "Move Kai'Sa, Survivor to Void Gate"
     },
     {
@@ -840,11 +937,11 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 95,
+   "decision": 105,
    "event_text": "ComboMAN played Watchful Sentry from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.23,
+    "share": 0.24,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -852,17 +949,51 @@
    "top3": [
     {
      "index": 0,
+     "share": 0.38,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.26,
+     "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Play Watchful Sentry to base"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Lecturing Yordle to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 110,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.28,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.32,
+     "text": "Play Lecturing Yordle to Void Gate"
+    },
+    {
+     "index": 0,
      "share": 0.28,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.23,
-     "text": "Play Watchful Sentry to base"
-    },
-    {
-     "index": 3,
-     "share": 0.23,
+     "share": 0.19,
      "text": "Play Noxus Hopeful to base"
     }
    ],
@@ -874,7 +1005,41 @@
     "text": "Move Watchful Sentry to Startipped Peak"
    },
    "clean_boundary": true,
-   "decision": 115,
+   "decision": 125,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 15,
+    "share": 0.0,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.55,
+     "text": "Move Watchful Sentry to Startipped Peak"
+    },
+    {
+     "index": 3,
+     "share": 0.27,
+     "text": "Move Watchful Sentry to Void Gate"
+    },
+    {
+     "index": 8,
+     "share": 0.08,
+     "text": "Play Progress Day"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Watchful Sentry to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 126,
    "event_text": "Played Progress Day from hand.",
    "human": {
     "index": 8,
@@ -891,7 +1056,7 @@
     },
     {
      "index": 3,
-     "share": 0.25,
+     "share": 0.26,
      "text": "Move Watchful Sentry to Void Gate"
     },
     {
@@ -908,7 +1073,7 @@
     "text": "Move Watchful Sentry to Startipped Peak"
    },
    "clean_boundary": true,
-   "decision": 125,
+   "decision": 135,
    "event_text": "ComboMAN moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 1,
@@ -920,18 +1085,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.6,
+     "share": 0.54,
      "text": "Move Watchful Sentry to Startipped Peak"
     },
     {
      "index": 3,
-     "share": 0.35,
+     "share": 0.26,
      "text": "Move Watchful Sentry to Void Gate"
     },
     {
-     "index": 0,
-     "share": 0.04,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.05,
+     "text": "Play Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 9
@@ -942,113 +1107,11 @@
     "text": "Move Watchful Sentry to Startipped Peak"
    },
    "clean_boundary": true,
-   "decision": 126,
+   "decision": 136,
    "event_text": "ComboMAN ended their turn.",
    "human": {
     "index": 0,
     "share": 0.03,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.61,
-     "text": "Move Watchful Sentry to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.35,
-     "text": "Move Watchful Sentry to Void Gate"
-    },
-    {
-     "index": 0,
-     "share": 0.03,
-     "text": "End turn"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 134,
-   "event_text": "ComboMAN moved Kai'Sa, Survivor to Void Gate.",
-   "human": {
-    "index": 2,
-    "share": 0.24,
-    "text": "Move Kai'Sa, Survivor to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.46,
-     "text": "Move Kai'Sa, Survivor to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.24,
-     "text": "Move Kai'Sa, Survivor to Void Gate"
-    },
-    {
-     "index": 17,
-     "share": 0.1,
-     "text": "Play Progress Day"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Watchful Sentry to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 140,
-   "event_text": "ComboMAN played Lecturing Yordle from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.05,
-    "text": "Play Lecturing Yordle to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.4,
-     "text": "Move Watchful Sentry to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
-     "text": "Move Watchful Sentry to Void Gate"
-    },
-    {
-     "index": 21,
-     "share": 0.11,
-     "text": "Play Progress Day"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Watchful Sentry to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 157,
-   "event_text": "ComboMAN ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.07,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1065,23 +1128,188 @@
      "text": "Move Watchful Sentry to Void Gate"
     },
     {
-     "index": 0,
-     "share": 0.07,
-     "text": "End turn"
+     "index": 4,
+     "share": 0.05,
+     "text": "Play Lecturing Yordle to base"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 144,
+   "event_text": "ComboMAN moved Kai'Sa, Survivor to Void Gate.",
+   "human": {
+    "index": 2,
+    "share": 0.26,
+    "text": "Move Kai'Sa, Survivor to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.48,
+     "text": "Move Kai'Sa, Survivor to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.26,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 17,
+     "share": 0.09,
+     "text": "Play Progress Day"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 22,
+    "index": 1,
+    "text": "Move Watchful Sentry to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 150,
+   "event_text": "ComboMAN played Lecturing Yordle from hand to base.",
+   "human": {
+    "index": 5,
+    "share": 0.03,
+    "text": "Play Lecturing Yordle to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.38,
+     "text": "Move Watchful Sentry to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Watchful Sentry to Void Gate"
+    },
+    {
+     "index": 19,
+     "share": 0.09,
+     "text": "Play Progress Day"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 155,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 1,
+    "share": 0.04,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.96,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.04,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 9,
     "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
-   "decision": 165,
+   "decision": 159,
+   "event_text": "Played Progress Day from hand.",
+   "human": {
+    "index": 19,
+    "share": 0.06,
+    "text": "Play Progress Day"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.49,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Move Watchful Sentry to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.11,
+     "text": "Move Watchful Sentry to Void Gate"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Watchful Sentry to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 168,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.07,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.47,
+     "text": "Move Watchful Sentry to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.22,
+     "text": "Move Watchful Sentry to Void Gate"
+    },
+    {
+     "index": 18,
+     "share": 0.19,
+     "text": "Play Falling Star"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 14,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "clean_boundary": true,
+   "decision": 176,
    "event_text": "ComboMAN played Brynhir Thundersong from hand to base.",
    "human": {
-    "index": 16,
+    "index": 8,
     "share": 0.02,
     "text": "Play Brynhir Thundersong to base"
    },
@@ -1089,13 +1317,13 @@
    "player": 1,
    "top3": [
     {
-     "index": 22,
-     "share": 0.47,
+     "index": 14,
+     "share": 0.51,
      "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 1,
-     "share": 0.22,
+     "share": 0.29,
      "text": "Move Lecturing Yordle to Startipped Peak"
     },
     {
@@ -1108,14 +1336,43 @@
   },
   {
    "bot": {
-    "index": 18,
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 184,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 1,
+    "share": 0.02,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.98,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.02,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 8,
     "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
-   "decision": 176,
+   "decision": 188,
    "event_text": "Played Temporal Breach from hand.",
    "human": {
-    "index": 41,
+    "index": 33,
     "share": 0.0,
     "text": "Play Temporal Breach"
    },
@@ -1123,53 +1380,87 @@
    "player": 1,
    "top3": [
     {
-     "index": 18,
+     "index": 8,
      "share": 0.53,
      "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 1,
-     "share": 0.17,
+     "share": 0.23,
      "text": "Move Lecturing Yordle to Startipped Peak"
     },
     {
-     "index": 40,
+     "index": 2,
      "share": 0.1,
-     "text": "Play Falling Star"
+     "text": "Move Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Lecturing Yordle to Startipped Peak"
+    "index": 8,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
-   "decision": 185,
+   "decision": 196,
    "event_text": "Played Decree of Rage from hand.",
    "human": {
-    "index": 27,
-    "share": 0.22,
+    "index": 29,
+    "share": 0.05,
     "text": "Play Decree of Rage"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.57,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
      "index": 1,
-     "share": 0.42,
+     "share": 0.21,
      "text": "Move Lecturing Yordle to Startipped Peak"
     },
     {
      "index": 2,
-     "share": 0.26,
+     "share": 0.1,
      "text": "Move Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "clean_boundary": true,
+   "decision": 202,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 26,
+    "share": 0.03,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.66,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 27,
-     "share": 0.22,
-     "text": "Play Decree of Rage"
+     "index": 1,
+     "share": 0.23,
+     "text": "Move Lecturing Yordle to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.07,
+     "text": "Move Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 13
@@ -1180,12 +1471,70 @@
     "text": "Move Lecturing Yordle to Startipped Peak"
    },
    "clean_boundary": true,
-   "decision": 191,
+   "decision": 211,
    "event_text": "ComboMAN moved Watchful Sentry to Startipped Peak.",
    "human": {
-    "index": 6,
+    "index": 4,
     "share": 0.0,
     "text": "Move Watchful Sentry to Startipped Peak"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.75,
+     "text": "Move Lecturing Yordle to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.25,
+     "text": "Move Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Lecturing Yordle to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 219,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 4,
+    "share": 0.0,
+    "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.69,
+     "text": "Move Lecturing Yordle to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.31,
+     "text": "Move Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Lecturing Yordle to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 224,
+   "event_text": "ComboMAN moved Lecturing Yordle to Void Gate.",
+   "human": {
+    "index": 2,
+    "share": 0.31,
+    "text": "Move Lecturing Yordle to Void Gate"
    },
    "kind": "move",
    "player": 1,
@@ -1197,70 +1546,7 @@
     },
     {
      "index": 2,
-     "share": 0.3,
-     "text": "Move Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 0,
-     "share": 0.01,
-     "text": "End turn"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Lecturing Yordle to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 199,
-   "event_text": "ComboMAN moved Bilgewater Tracker to Startipped Peak.",
-   "human": {
-    "index": 4,
-    "share": 0.0,
-    "text": "Move Bilgewater Tracker to Startipped Peak"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.63,
-     "text": "Move Lecturing Yordle to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.37,
-     "text": "Move Lecturing Yordle to Void Gate"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Lecturing Yordle to Startipped Peak"
-   },
-   "clean_boundary": true,
-   "decision": 204,
-   "event_text": "ComboMAN moved Lecturing Yordle to Void Gate.",
-   "human": {
-    "index": 2,
-    "share": 0.36,
-    "text": "Move Lecturing Yordle to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.64,
-     "text": "Move Lecturing Yordle to Startipped Peak"
-    },
-    {
-     "index": 2,
-     "share": 0.36,
+     "share": 0.31,
      "text": "Move Lecturing Yordle to Void Gate"
     }
    ],
@@ -1269,10 +1555,10 @@
  ],
  "exported_records": 0,
  "first_player": "3rd time playing riven",
- "forced_decisions": 88,
+ "forced_decisions": 95,
  "game": 2,
  "hand_fixes": {
-  "created": 4,
+  "created": 5,
   "list": [
    {
     "card": "Plundering Poro",
@@ -1339,10 +1625,10 @@
     "zone": "hand"
    },
    {
-    "card": "The Good Stuff",
-    "for": "3rd time playing riven played The Good Stuff from hand to Startipped Peak.",
-    "how": "created",
-    "player": 2,
+    "card": "Smoke Screen",
+    "for": "Played Smoke Screen from hand.",
+    "how": "pulled",
+    "player": 1,
     "turn": 4,
     "zone": "hand"
    },
@@ -1351,7 +1637,15 @@
     "for": "Played Hextech Ray from hand.",
     "how": "pulled",
     "player": 1,
-    "turn": 5,
+    "turn": 4,
+    "zone": "hand"
+   },
+   {
+    "card": "The Good Stuff",
+    "for": "3rd time playing riven played The Good Stuff from hand to Startipped Peak.",
+    "how": "created",
+    "player": 2,
+    "turn": 4,
     "zone": "hand"
    },
    {
@@ -1374,6 +1668,14 @@
     "card": "Steel Paws",
     "for": "3rd time playing riven played Steel Paws from hand to Startipped Peak.",
     "how": "pulled",
+    "player": 2,
+    "turn": 6,
+    "zone": "hand"
+   },
+   {
+    "card": "The Good Stuff",
+    "for": "3rd time playing riven moved The Good Stuff from hand to trash.",
+    "how": "created",
     "player": 2,
     "turn": 6,
     "zone": "hand"
@@ -1431,7 +1733,7 @@
     "for": "Played Temporal Breach from hand.",
     "how": "pulled",
     "player": 1,
-    "turn": 11,
+    "turn": 12,
     "zone": "hand"
    },
    {
@@ -1451,7 +1753,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 18
+  "pulled_from_deck": 19
  },
  "inferred_decks": {
   "P1": {
@@ -1621,8 +1923,8 @@
   "P1": "Daughter of the Void",
   "P2": "Gloomist"
  },
- "log_events": 225,
- "log_events_consumed": 225,
+ "log_events": 232,
+ "log_events_consumed": 232,
  "out_of_order_matches": 4,
  "players": [
   "ComboMAN",
@@ -1632,7 +1934,7 @@
  "result": {
   "engine_scores": [
    5,
-   6
+   7
   ],
   "engine_winner": 2,
   "log_scores": [
@@ -1643,7 +1945,8 @@
   "turns": 14
  },
  "rewinds_applied": 0,
- "rewinds_ignored": 0,
+ "rewinds_ignored": 1,
+ "rune_swaps": 2,
  "score_mismatch_examples": [
   {
    "engine_score": 1,
@@ -1654,6 +1957,13 @@
   },
   {
    "engine_score": 3,
+   "event_index": 274,
+   "log_score": 2,
+   "text": "3rd time playing riven scored 1 at turn start. Score: 1 → 2.",
+   "turn": 8
+  },
+  {
+   "engine_score": 3,
    "event_index": 282,
    "log_score": 4,
    "text": "ComboMAN scored 1 at turn start. Score: 3 → 4.",
@@ -1661,6 +1971,13 @@
   },
   {
    "engine_score": 4,
+   "event_index": 296,
+   "log_score": 3,
+   "text": "3rd time playing riven scored 1 at turn start. Score: 2 → 3.",
+   "turn": 10
+  },
+  {
+   "engine_score": 5,
    "event_index": 330,
    "log_score": 6,
    "text": "3rd time playing riven scored 2 at turn start. Score: 4 → 6.",
@@ -1674,20 +1991,20 @@
    "turn": 13
   },
   {
-   "engine_score": 5,
+   "engine_score": 6,
    "event_index": 398,
    "log_score": 7,
    "text": "3rd time playing riven scored 1 at turn start. Score: 6 → 7.",
    "turn": 14
   }
  ],
- "score_mismatches": 5,
+ "score_mismatches": 7,
  "seed": 2,
- "silent_passes": 83,
+ "silent_passes": 88,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_kai_sa_vs_vex_rl2_7d1dc502f83e64c8bd1a644624c1d0a3.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.478798882,
-  "seconds": 1.509994835
+  "bot_seconds": 1.5274553449999997,
+  "seconds": 1.555432427
  }
 }

@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 24,
+  "agree": 19,
   "by_kind": {
    "ability": {
-    "agree": 4,
-    "n": 5,
-    "rate": 0.8
+    "agree": 3,
+    "n": 4,
+    "rate": 0.75
    },
    "battlefield": {
     "agree": 1,
@@ -16,87 +16,58 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 6,
-    "n": 6,
+    "agree": 7,
+    "n": 7,
     "rate": 1.0
    },
    "move": {
-    "agree": 3,
-    "n": 4,
-    "rate": 0.75
+    "agree": 0,
+    "n": 2,
+    "rate": 0.0
    },
    "pass_focus": {
-    "agree": 4,
-    "n": 4,
+    "agree": 3,
+    "n": 3,
     "rate": 1.0
    },
    "play": {
-    "agree": 6,
-    "n": 10,
-    "rate": 0.6
+    "agree": 5,
+    "n": 12,
+    "rate": 0.4166666666666667
    }
   },
   "clean_boundary": {
-   "agree": 16,
+   "agree": 13,
    "n": 22,
-   "rate": 0.7272727272727273
+   "rate": 0.5909090909090909
   },
   "in_flight": {
-   "agree": 8,
-   "n": 8
+   "agree": 6,
+   "n": 7
   },
-  "n": 30,
-  "rate": 0.8
+  "n": 29,
+  "rate": 0.6551724137931034
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 32,
+ "bot_calls": 36,
  "bot_errors": 0,
- "bot_fallbacks": 2,
+ "bot_fallbacks": 7,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 215,
- "decisions_compared": 30,
+ "decisions": 219,
+ "decisions_compared": 29,
  "decisions_human_known": 69,
- "decisions_trivial": 11,
+ "decisions_trivial": 8,
  "desync_causes": {
-  "moved: no such unit on board (not played / already gone)": 1,
+  "moved: no such unit on board (not played / already gone)": 4,
   "moved: unit can move but not to 'Void Gate'": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 3,
-  "played: card in hand but not playable now (cost/timing)": 2,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 4,
+  "played: card in hand but not playable now (cost/timing)": 1,
   "played: engine asks P1 but the log's next action is by P2 (played)": 1,
-  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
-  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 3
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
-  {
-   "decision": 86,
-   "event_index": 435,
-   "event_kind": "played",
-   "event_text": "Played Stupefy from hand.",
-   "options": [
-    "End turn",
-    "Move Kayle, Justified to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 8
-  },
-  {
-   "decision": 86,
-   "event_index": 438,
-   "event_kind": "showdown",
-   "event_text": "Emp4 ended showdown responses at Void Gate.",
-   "options": [
-    "End turn",
-    "Move Kayle, Justified to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 8
-  },
   {
    "decision": 86,
    "event_index": 441,
@@ -140,49 +111,89 @@
    "turn": 8
   },
   {
-   "decision": 99,
-   "event_index": 460,
-   "event_kind": "played",
-   "event_text": "Played Temporal Breach from hand.",
+   "decision": 105,
+   "event_index": 471,
+   "event_kind": "moved",
+   "event_text": "Emp4 moved Mech to Void Gate.",
    "options": [
     "End turn",
-    "Move Mech to Sunken Temple",
-    "Move Mech to Void Gate",
-    "Move Mech to Sunken Temple",
-    "Move Mech to Void Gate",
-    "Move Kai'Sa, Survivor to base",
-    "Move Mech, Mech to Sunken Temple",
-    "Move Mech, Mech to Void Gate",
-    "Play Stupefy targeting Mech",
-    "Play Stupefy targeting Mech",
+    "Move Ferrous Forerunner to base",
     "Play Stupefy targeting Kinkou Initiate",
     "Play Stupefy targeting Kayle, Justified",
-    "Play Stupefy targeting Kai'Sa, Survivor",
     "Play Stupefy targeting Brynhir Thundersong",
-    "Hide Temporal Breach"
+    "Play Stupefy targeting Ferrous Forerunner"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
+   "reason": "no such unit on board (not played / already gone)",
    "turn": 9
   },
   {
-   "decision": 100,
+   "decision": 105,
    "event_index": 472,
    "event_kind": "passed_focus",
    "event_text": "Emp4 passed focus at Void Gate.",
    "options": [
     "End turn",
-    "Move Mech to Sunken Temple",
-    "Move Mech to Void Gate",
-    "Move Kai'Sa, Survivor to base",
-    "Play Stupefy targeting Mech",
-    "Play Stupefy targeting Mech",
+    "Move Ferrous Forerunner to base",
     "Play Stupefy targeting Kinkou Initiate",
     "Play Stupefy targeting Kayle, Justified",
-    "Play Stupefy targeting Kai'Sa, Survivor",
     "Play Stupefy targeting Brynhir Thundersong",
-    "Hide Temporal Breach"
+    "Play Stupefy targeting Ferrous Forerunner"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 9
+  },
+  {
+   "decision": 105,
+   "event_index": 473,
+   "event_kind": "showdown",
+   "event_text": "Billie ended showdown responses at Void Gate.",
+   "options": [
+    "End turn",
+    "Move Ferrous Forerunner to base",
+    "Play Stupefy targeting Kinkou Initiate",
+    "Play Stupefy targeting Kayle, Justified",
+    "Play Stupefy targeting Brynhir Thundersong",
+    "Play Stupefy targeting Ferrous Forerunner"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 9
+  },
+  {
+   "decision": 105,
+   "event_index": 475,
+   "event_kind": "moved",
+   "event_text": "Emp4 moved Mech to Sunken Temple.",
+   "options": [
+    "End turn",
+    "Move Ferrous Forerunner to base",
+    "Play Stupefy targeting Kinkou Initiate",
+    "Play Stupefy targeting Kayle, Justified",
+    "Play Stupefy targeting Brynhir Thundersong",
+    "Play Stupefy targeting Ferrous Forerunner"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 9
+  },
+  {
+   "decision": 105,
+   "event_index": 476,
+   "event_kind": "passed_focus",
+   "event_text": "Emp4 passed focus at Sunken Temple.",
+   "options": [
+    "End turn",
+    "Move Ferrous Forerunner to base",
+    "Play Stupefy targeting Kinkou Initiate",
+    "Play Stupefy targeting Kayle, Justified",
+    "Play Stupefy targeting Brynhir Thundersong",
+    "Play Stupefy targeting Ferrous Forerunner"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -196,12 +207,11 @@
    "event_text": "Billie ended showdown responses at Sunken Temple.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Play Stupefy targeting Mech",
+    "Move Ferrous Forerunner to base",
     "Play Stupefy targeting Kinkou Initiate",
-    "Play Stupefy targeting Kai'Sa, Survivor",
+    "Play Stupefy targeting Kayle, Justified",
     "Play Stupefy targeting Brynhir Thundersong",
-    "Hide Temporal Breach"
+    "Play Stupefy targeting Ferrous Forerunner"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -217,8 +227,11 @@
     "End turn",
     "Move Kinkou Initiate to Sunken Temple",
     "Move Kinkou Initiate to Void Gate",
+    "Move Kayle, Justified to base",
     "Play Pit Rookie to base",
-    "Play Unsung Hero to base"
+    "Play Pit Rookie to Sunken Temple",
+    "Play Unsung Hero to base",
+    "Play Unsung Hero to Sunken Temple"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -226,32 +239,31 @@
    "turn": 10
   },
   {
-   "decision": 137,
+   "decision": 143,
    "event_index": 506,
    "event_kind": "played",
    "event_text": "Billie played Elder Dragon from hand to base.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
     "Move Brynhir Thundersong to Sunken Temple",
     "Move Brynhir Thundersong to Void Gate",
+    "Move Ferrous Forerunner to base",
     "Play Noxus Hopeful to base",
     "Play Noxus Hopeful to Void Gate",
-    "Play Smoke Screen targeting Rift Herald",
+    "Play Smoke Screen targeting Pit Rookie",
     "Play Smoke Screen targeting Kinkou Initiate",
-    "Play Smoke Screen targeting Kai'Sa, Survivor",
     "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Smoke Screen targeting Rift Herald",
+    "Play Smoke Screen targeting Ferrous Forerunner",
+    "Play Smoke Screen targeting Pit Rookie",
     "Play Smoke Screen targeting Kinkou Initiate",
-    "Play Smoke Screen targeting Kai'Sa, Survivor",
     "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Temporal Breach",
-    "Play Smoke Screen targeting Rift Herald",
+    "Play Smoke Screen targeting Ferrous Forerunner",
+    "Play Smoke Screen targeting Pit Rookie",
     "Play Smoke Screen targeting Kinkou Initiate",
-    "Play Smoke Screen targeting Kai'Sa, Survivor",
     "Play Smoke Screen targeting Brynhir Thundersong",
-    "Play Hextech Ray targeting Kai'Sa, Survivor",
-    "Hide Temporal Breach"
+    "Play Smoke Screen targeting Ferrous Forerunner",
+    "Play Hextech Ray targeting Ferrous Forerunner",
+    "Play Hextech Ray targeting Ferrous Forerunner"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -259,18 +271,18 @@
    "turn": 11
   },
   {
-   "decision": 138,
+   "decision": 144,
    "event_index": 513,
    "event_kind": "moved",
    "event_text": "Billie moved Elder Dragon to Sunken Temple.",
    "options": [
     "End turn",
-    "Move Rift Herald to Sunken Temple",
-    "Move Rift Herald to Void Gate",
+    "Move Pit Rookie to Sunken Temple",
+    "Move Pit Rookie to Void Gate",
     "Move Kinkou Initiate to Sunken Temple",
     "Move Kinkou Initiate to Void Gate",
-    "Move Rift Herald, Kinkou Initiate to Sunken Temple",
-    "Move Rift Herald, Kinkou Initiate to Void Gate",
+    "Move Pit Rookie, Kinkou Initiate to Sunken Temple",
+    "Move Pit Rookie, Kinkou Initiate to Void Gate",
     "Play Pit Rookie to base",
     "Play Unsung Hero to base",
     "Play Shepherd's Heirloom to base",
@@ -282,18 +294,18 @@
    "turn": 12
   },
   {
-   "decision": 138,
+   "decision": 144,
    "event_index": 514,
    "event_kind": "passed_focus",
    "event_text": "Billie passed focus at Sunken Temple.",
    "options": [
     "End turn",
-    "Move Rift Herald to Sunken Temple",
-    "Move Rift Herald to Void Gate",
+    "Move Pit Rookie to Sunken Temple",
+    "Move Pit Rookie to Void Gate",
     "Move Kinkou Initiate to Sunken Temple",
     "Move Kinkou Initiate to Void Gate",
-    "Move Rift Herald, Kinkou Initiate to Sunken Temple",
-    "Move Rift Herald, Kinkou Initiate to Void Gate",
+    "Move Pit Rookie, Kinkou Initiate to Sunken Temple",
+    "Move Pit Rookie, Kinkou Initiate to Void Gate",
     "Play Pit Rookie to base",
     "Play Unsung Hero to base",
     "Play Shepherd's Heirloom to base",
@@ -305,24 +317,43 @@
    "turn": 12
   },
   {
-   "decision": 157,
+   "decision": 166,
    "event_index": 527,
    "event_kind": "showdown",
    "event_text": "Emp4 ended showdown responses at Void Gate.",
    "options": [
     "End turn",
-    "Move Rift Herald to Sunken Temple",
-    "Move Rift Herald to Void Gate",
+    "Play Unsung Hero to base",
     "Play Sabotage",
-    "Play Grim Resolve"
+    "Play Grim Resolve",
+    "Equip Shepherd's Heirloom to Pit Rookie"
    ],
    "phase": "MainPhase",
    "player": 2,
    "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
    "turn": 12
+  },
+  {
+   "decision": 218,
+   "event_index": 578,
+   "event_kind": "moved",
+   "event_text": "Billie moved Kinkou Initiate to base.",
+   "options": [
+    "End turn",
+    "Move Pit Rookie to Sunken Temple",
+    "Move Pit Rookie to Void Gate",
+    "Play Unsung Hero to base",
+    "Play Sabotage",
+    "Equip Shepherd's Heirloom to Rift Herald",
+    "Equip Shepherd's Heirloom to Pit Rookie"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 14
   }
  ],
- "desyncs": 13,
+ "desyncs": 15,
  "disagreements": [
   {
    "bot": {
@@ -342,7 +373,7 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.45,
+     "share": 0.44,
      "text": "Play Falling Star"
     },
     {
@@ -352,7 +383,7 @@
     },
     {
      "index": 0,
-     "share": 0.2,
+     "share": 0.21,
      "text": "End turn"
     }
    ],
@@ -360,34 +391,102 @@
   },
   {
    "bot": {
-    "index": 8,
+    "index": 4,
     "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
-   "decision": 88,
-   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
+   "decision": 42,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to Void Gate.",
    "human": {
-    "index": 14,
-    "share": 0.16,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 2,
+    "share": 0.27,
+    "text": "Move Kai'Sa, Survivor to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.44,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 2,
+     "share": 0.27,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 79,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 11,
+    "share": 0.38,
+    "text": "Play Stupefy targeting Rengar, Trophy Hunter"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.78,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 0,
+     "share": 0.53,
+     "text": "Pass focus"
     },
     {
-     "index": 14,
-     "share": 0.16,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 11,
+     "share": 0.38,
+     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
     },
+    {
+     "index": 16,
+     "share": 0.09,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 98,
+   "event_text": "Played Temporal Breach from hand.",
+   "human": {
+    "index": 14,
+    "share": 0.06,
+    "text": "Play Temporal Breach"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
     {
      "index": 0,
-     "share": 0.03,
+     "share": 0.69,
      "text": "End turn"
+    },
+    {
+     "index": 19,
+     "share": 0.08,
+     "text": "Play Stupefy targeting Kinkou Initiate"
+    },
+    {
+     "index": 5,
+     "share": 0.06,
+     "text": "Play Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 9
@@ -395,67 +494,67 @@
   {
    "bot": {
     "index": 1,
-    "text": "Move Mech to Sunken Temple"
-   },
-   "clean_boundary": true,
-   "decision": 100,
-   "event_text": "Emp4 moved Mech to Void Gate.",
-   "human": {
-    "index": 2,
-    "share": 0.05,
-    "text": "Move Mech to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.88,
-     "text": "Move Mech to Sunken Temple"
-    },
-    {
-     "index": 0,
-     "share": 0.05,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.05,
-     "text": "Move Mech to Void Gate"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 28,
-    "text": "Play Singularity targeting Mech, Rift Herald"
+    "text": "Move Brynhir Thundersong to Sunken Temple"
    },
    "clean_boundary": true,
    "decision": 121,
    "event_text": "Played Stupefy from hand.",
    "human": {
-    "index": 22,
-    "share": 0.01,
-    "text": "Play Stupefy targeting Mech"
+    "index": 21,
+    "share": 0.04,
+    "text": "Play Stupefy targeting Rift Herald"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 28,
-     "share": 0.89,
-     "text": "Play Singularity targeting Mech, Rift Herald"
+     "index": 1,
+     "share": 0.45,
+     "text": "Move Brynhir Thundersong to Sunken Temple"
+    },
+    {
+     "index": 26,
+     "share": 0.22,
+     "text": "Play Singularity"
     },
     {
      "index": 0,
-     "share": 0.04,
+     "share": 0.13,
      "text": "End turn"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Brynhir Thundersong to Sunken Temple"
+   },
+   "clean_boundary": true,
+   "decision": 126,
+   "event_text": "Played Singularity from hand.",
+   "human": {
+    "index": 21,
+    "share": 0.1,
+    "text": "Play Singularity"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.76,
+     "text": "Move Brynhir Thundersong to Sunken Temple"
     },
     {
-     "index": 39,
-     "share": 0.02,
-     "text": "Use Daughter of the Void"
+     "index": 21,
+     "share": 0.1,
+     "text": "Play Singularity"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
     }
    ],
    "turn": 11
@@ -466,30 +565,30 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 173,
-   "event_text": "Played Perfect Execution from hand.",
+   "decision": 169,
+   "event_text": "Played Smoke Screen from hand.",
    "human": {
     "index": 17,
-    "share": 0.21,
-    "text": "Play Perfect Execution"
+    "share": 0.04,
+    "text": "Play Smoke Screen targeting Mech"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.28,
+     "share": 0.49,
      "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.22,
-     "text": "Move Brynhir Thundersong to Sunken Temple"
+     "index": 2,
+     "share": 0.18,
+     "text": "Move Mech to Void Gate"
     },
     {
-     "index": 17,
-     "share": 0.21,
-     "text": "Play Perfect Execution"
+     "index": 1,
+     "share": 0.15,
+     "text": "Move Mech to Sunken Temple"
     }
    ],
    "turn": 13
@@ -500,11 +599,79 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 195,
+   "decision": 177,
+   "event_text": "Played Perfect Execution from hand.",
+   "human": {
+    "index": 21,
+    "share": 0.22,
+    "text": "Play Perfect Execution"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 21,
+     "share": 0.22,
+     "text": "Play Perfect Execution"
+    },
+    {
+     "index": 1,
+     "share": 0.21,
+     "text": "Move Mech to Sunken Temple"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Mech to Sunken Temple"
+   },
+   "clean_boundary": true,
+   "decision": 185,
+   "event_text": "Emp4 moved Noxus Hopeful to Sunken Temple.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Move Noxus Hopeful to Sunken Temple"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.48,
+     "text": "Move Mech to Sunken Temple"
+    },
+    {
+     "index": 37,
+     "share": 0.23,
+     "text": "Play Perfect Execution"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 200,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
-    "index": 17,
-    "share": 0.0,
+    "index": 22,
+    "share": 0.01,
     "text": "Play Hextech Ray targeting Noxus Hopeful"
    },
    "kind": "play",
@@ -512,18 +679,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.64,
+     "share": 0.55,
      "text": "End turn"
     },
     {
-     "index": 20,
-     "share": 0.28,
+     "index": 24,
+     "share": 0.23,
      "text": "Play Perfect Execution"
     },
     {
-     "index": 21,
-     "share": 0.04,
-     "text": "Hide Temporal Breach"
+     "index": 15,
+     "share": 0.19,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 13
@@ -531,7 +698,7 @@
  ],
  "exported_records": 0,
  "first_player": "Billie",
- "forced_decisions": 94,
+ "forced_decisions": 101,
  "game": 3,
  "hand_fixes": {
   "created": 0,
@@ -613,6 +780,14 @@
     "for": "Played Temporal Breach from hand.",
     "how": "pulled",
     "player": 1,
+    "turn": 8,
+    "zone": "hand"
+   },
+   {
+    "card": "Stupefy",
+    "for": "Played Stupefy from hand.",
+    "how": "pulled",
+    "player": 1,
     "turn": 9,
     "zone": "hand"
    },
@@ -665,7 +840,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 16
+  "pulled_from_deck": 17
  },
  "inferred_decks": {
   "P1": {
@@ -843,7 +1018,7 @@
  },
  "log_events": 225,
  "log_events_consumed": 225,
- "out_of_order_matches": 8,
+ "out_of_order_matches": 6,
  "players": [
   "Emp4",
   "Billie"
@@ -852,7 +1027,7 @@
  "result": {
   "engine_scores": [
    5,
-   4
+   3
   ],
   "engine_winner": 2,
   "log_scores": [
@@ -864,6 +1039,7 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
+ "rune_swaps": 3,
  "score_mismatch_examples": [
   {
    "engine_score": 3,
@@ -873,7 +1049,7 @@
    "turn": 11
   },
   {
-   "engine_score": 4,
+   "engine_score": 3,
    "event_index": 575,
    "log_score": 6,
    "text": "Billie scored 1 at turn start. Score: 5 → 6.",
@@ -886,7 +1062,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_fiora_rl2_d54e11a8ed76636ec837e3671fa4de37.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.9127965840000005,
-  "seconds": 1.942890737
+  "bot_seconds": 1.5755102620000003,
+  "seconds": 1.605439599
  }
 }

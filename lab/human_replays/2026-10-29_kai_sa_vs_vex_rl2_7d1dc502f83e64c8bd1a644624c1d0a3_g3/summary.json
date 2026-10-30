@@ -1,19 +1,24 @@
 {
- "actors_reattributed": 1,
+ "actors_reattributed": 3,
  "actors_settled": 0,
- "actors_uncertain": 2,
+ "actors_uncertain": 0,
  "agreement": {
-  "agree": 21,
+  "agree": 20,
   "by_kind": {
+   "ability": {
+    "agree": 0,
+    "n": 4,
+    "rate": 0.0
+   },
    "battlefield": {
     "agree": 1,
     "n": 1,
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 6,
-    "n": 6,
-    "rate": 1.0
+    "agree": 4,
+    "n": 5,
+    "rate": 0.8
    },
    "hide": {
     "agree": 1,
@@ -21,75 +26,70 @@
     "rate": 1.0
    },
    "move": {
-    "agree": 3,
-    "n": 5,
-    "rate": 0.6
+    "agree": 2,
+    "n": 4,
+    "rate": 0.5
    },
    "pass_focus": {
-    "agree": 2,
-    "n": 2,
+    "agree": 5,
+    "n": 5,
     "rate": 1.0
    },
    "play": {
-    "agree": 8,
-    "n": 12,
-    "rate": 0.6666666666666666
+    "agree": 7,
+    "n": 11,
+    "rate": 0.6363636363636364
    }
   },
   "clean_boundary": {
-   "agree": 17,
-   "n": 23,
-   "rate": 0.7391304347826086
+   "agree": 14,
+   "n": 25,
+   "rate": 0.56
   },
   "in_flight": {
-   "agree": 4,
-   "n": 4
+   "agree": 6,
+   "n": 6
   },
-  "n": 27,
-  "rate": 0.7777777777777778
+  "n": 31,
+  "rate": 0.6451612903225806
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 31,
+ "bot_calls": 37,
  "bot_errors": 0,
- "bot_fallbacks": 4,
+ "bot_fallbacks": 6,
  "capture_player": "ComboMAN",
  "compare_both": false,
- "decisions": 201,
- "decisions_compared": 27,
- "decisions_human_known": 63,
- "decisions_trivial": 5,
+ "decisions": 205,
+ "decisions_compared": 31,
+ "decisions_human_known": 71,
+ "decisions_trivial": 6,
  "desync_causes": {
   "hidden_card_placed: no hide option at 'Baron Pit'": 1,
   "moved: no such unit on board (not played / already gone)": 5,
-  "moved: unit can move but not to 'base'": 1,
-  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 2,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 3,
-  "played: card in hand but not playable now (cost/timing)": 4,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 2,
+  "moved: unit is exhausted (no move option)": 1,
+  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 1,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 2,
+  "played: card in hand but not playable now (cost/timing)": 2,
+  "played: card playable but not to 'Baron Pit'": 1,
+  "played: engine asks P1 but the log's next action is by P2 (played)": 3,
   "played: play from 'Bandle Scouts' Academy' not offered": 1,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
-   "decision": 70,
+   "decision": 69,
    "event_index": 463,
    "event_kind": "played",
    "event_text": "3rd time playing riven played The Good Stuff from hand to Frozen Fortress.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Vex, Apathetic to Bandle Scouts' Academy",
     "Move Vex, Apathetic to Frozen Fortress",
-    "Move Steel Paws, Vex, Apathetic to Bandle Scouts' Academy",
-    "Move Steel Paws, Vex, Apathetic to Frozen Fortress",
     "Play Bedeviling Stranger to base",
-    "Play Sneaky Deckhand to base",
-    "Play Sneaky Deckhand to Frozen Fortress",
     "Play Boots of Swiftness to base",
     "Play Back Off",
-    "Play Charm",
-    "Use Steel Paws"
+    "Play Rebuke",
+    "Play Charm"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -97,73 +97,25 @@
    "turn": 5
   },
   {
-   "decision": 124,
-   "event_index": 508,
-   "event_kind": "passed_focus",
-   "event_text": "ComboMAN passed focus at Bandle Scouts' Academy.",
-   "options": [
-    "End turn",
-    "Play Thousand-Tailed Watcher to base",
-    "Play Thousand-Tailed Watcher to Bandle Scouts' Academy",
-    "Play Thousand-Tailed Watcher to base",
-    "Play Thousand-Tailed Watcher to Bandle Scouts' Academy",
-    "Play Temporal Breach",
-    "Play Hextech Ray targeting Plundering Poro",
-    "Play Hextech Ray targeting Kai'Sa, Survivor",
-    "Play Hextech Ray targeting Vex, Apathetic",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void",
-    "Hide Temporal Breach"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 8
-  },
-  {
-   "decision": 145,
-   "event_index": 513,
-   "event_kind": "passed_focus",
-   "event_text": "3rd time playing riven passed focus at Bandle Scouts' Academy.",
-   "options": [
-    "End turn",
-    "Play Hextech Ray targeting Plundering Poro",
-    "Play Hextech Ray targeting Kai'Sa, Survivor",
-    "Play Hextech Ray targeting Thousand-Tailed Watcher",
-    "Play Hextech Ray targeting Vex, Apathetic",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
-   "turn": 8
-  },
-  {
-   "decision": 165,
+   "decision": 166,
    "event_index": 539,
    "event_kind": "moved",
    "event_text": "3rd time playing riven moved Steel Paws to base.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Vex, Apathetic to base",
     "Move Vex, Apathetic to Bandle Scouts' Academy",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
     "Play Gold to base",
+    "Play Rebuke",
     "Play Charm"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "unit can move but not to 'base'",
+   "reason": "unit is exhausted (no move option)",
    "turn": 9
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 549,
    "event_kind": "played",
    "event_text": "3rd time playing riven played Zhonya's Hourglass from trash to base.",
@@ -173,9 +125,7 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -183,7 +133,7 @@
    "turn": 10
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 550,
    "event_kind": "played",
    "event_text": "3rd time playing riven played Steel Paws from trash to base.",
@@ -193,9 +143,7 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -203,7 +151,7 @@
    "turn": 10
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 555,
    "event_kind": "played",
    "event_text": "Played Not So Fast from hand.",
@@ -213,17 +161,15 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
+   "reason": "engine asks P1 but the log's next action is by P2 (played)",
    "turn": 10
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 559,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Kai'Sa, Survivor to base.",
@@ -233,9 +179,7 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -243,7 +187,7 @@
    "turn": 10
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 563,
    "event_kind": "played",
    "event_text": "Played Temporal Breach from Bandle Scouts' Academy.",
@@ -253,9 +197,7 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -263,7 +205,7 @@
    "turn": 10
   },
   {
-   "decision": 191,
+   "decision": 194,
    "event_index": 567,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Plundering Poro to base.",
@@ -273,9 +215,7 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Vex, Apathetic",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -283,51 +223,43 @@
    "turn": 10
   },
   {
-   "decision": 197,
+   "decision": 200,
    "event_index": 574,
    "event_kind": "played",
    "event_text": "3rd time playing riven played Baron Nashor from hand to Baron Pit.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Vex, Apathetic to base",
     "Move Vex, Apathetic to Bandle Scouts' Academy",
     "Move Astral Heron to base",
     "Move Vex, Apathetic, Astral Heron to base",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
-    "Play Mutated Mouser to base",
-    "Play Mutated Mouser to Frozen Fortress",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Frozen Fortress",
     "Play Gold to base",
     "Play Charm",
-    "Use Steel Paws"
+    "Play Discipline"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
+   "reason": "card playable but not to 'Baron Pit'",
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 200,
    "event_index": 575,
    "event_kind": "passed_focus",
    "event_text": "3rd time playing riven passed focus at Baron Pit.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Vex, Apathetic to base",
     "Move Vex, Apathetic to Bandle Scouts' Academy",
     "Move Astral Heron to base",
     "Move Vex, Apathetic, Astral Heron to base",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
-    "Play Mutated Mouser to base",
-    "Play Mutated Mouser to Frozen Fortress",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Frozen Fortress",
     "Play Gold to base",
     "Play Charm",
-    "Use Steel Paws"
+    "Play Discipline"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -335,22 +267,18 @@
    "turn": 11
   },
   {
-   "decision": 198,
+   "decision": 201,
    "event_index": 576,
    "event_kind": "showdown",
    "event_text": "ComboMAN ended showdown responses at Baron Pit.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Astral Heron to base",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
-    "Play Mutated Mouser to base",
-    "Play Mutated Mouser to Frozen Fortress",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Frozen Fortress",
     "Play Gold to base",
     "Play Charm",
-    "Use Steel Paws"
+    "Play Discipline"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -358,22 +286,18 @@
    "turn": 11
   },
   {
-   "decision": 198,
+   "decision": 201,
    "event_index": 578,
    "event_kind": "hidden_card_placed",
    "event_text": "3rd time playing riven put a hidden card to Baron Pit.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Astral Heron to base",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
-    "Play Mutated Mouser to base",
-    "Play Mutated Mouser to Frozen Fortress",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Frozen Fortress",
     "Play Gold to base",
     "Play Charm",
-    "Use Steel Paws"
+    "Play Discipline"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -381,22 +305,18 @@
    "turn": 11
   },
   {
-   "decision": 198,
+   "decision": 201,
    "event_index": 581,
    "event_kind": "moved",
    "event_text": "3rd time playing riven moved Tornado Warrior to base.",
    "options": [
     "End turn",
-    "Move Steel Paws to Bandle Scouts' Academy",
-    "Move Steel Paws to Frozen Fortress",
     "Move Astral Heron to base",
-    "Play Overzealous Fan to base",
-    "Play Overzealous Fan to Frozen Fortress",
-    "Play Mutated Mouser to base",
-    "Play Mutated Mouser to Frozen Fortress",
+    "Play Baron Nashor to base",
+    "Play Baron Nashor to Frozen Fortress",
     "Play Gold to base",
     "Play Charm",
-    "Use Steel Paws"
+    "Play Discipline"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -404,7 +324,7 @@
    "turn": 11
   },
   {
-   "decision": 201,
+   "decision": 204,
    "event_index": 585,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Kai'Sa, Survivor to Frozen Fortress.",
@@ -418,7 +338,6 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Astral Heron",
     "Use Gold",
-    "Use Gold",
     "Use Daughter of the Void"
    ],
    "phase": "MainPhase",
@@ -427,7 +346,7 @@
    "turn": 12
   },
   {
-   "decision": 201,
+   "decision": 204,
    "event_index": 586,
    "event_kind": "moved",
    "event_text": "ComboMAN moved Plundering Poro to Frozen Fortress.",
@@ -441,7 +360,6 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Astral Heron",
     "Use Gold",
-    "Use Gold",
     "Use Daughter of the Void"
    ],
    "phase": "MainPhase",
@@ -450,7 +368,7 @@
    "turn": 12
   },
   {
-   "decision": 201,
+   "decision": 204,
    "event_index": 587,
    "event_kind": "passed_focus",
    "event_text": "ComboMAN passed focus at Frozen Fortress.",
@@ -464,7 +382,6 @@
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Astral Heron",
     "Use Gold",
-    "Use Gold",
     "Use Daughter of the Void"
    ],
    "phase": "MainPhase",
@@ -473,7 +390,7 @@
    "turn": 12
   },
   {
-   "decision": 201,
+   "decision": 205,
    "event_index": 588,
    "event_kind": "passed_focus",
    "event_text": "3rd time playing riven passed focus at Frozen Fortress.",
@@ -486,9 +403,7 @@
     "Play Lecturing Yordle to Bandle Scouts' Academy",
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -496,7 +411,7 @@
    "turn": 12
   },
   {
-   "decision": 201,
+   "decision": 205,
    "event_index": 593,
    "event_kind": "played",
    "event_text": "Played Time Warp from hand.",
@@ -509,9 +424,7 @@
     "Play Lecturing Yordle to Bandle Scouts' Academy",
     "Play Hextech Ray targeting Thousand-Tailed Watcher",
     "Play Hextech Ray targeting Astral Heron",
-    "Use Gold",
-    "Use Gold",
-    "Use Daughter of the Void"
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -519,72 +432,106 @@
    "turn": 12
   }
  ],
- "desyncs": 20,
+ "desyncs": 18,
  "disagreements": [
   {
    "bot": {
-    "index": 3,
-    "text": "Play Plundering Poro to base"
+    "index": 5,
+    "text": "Play Decree of Rage"
    },
    "clean_boundary": true,
-   "decision": 29,
+   "decision": 27,
    "event_text": "ComboMAN played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.26,
+    "share": 0.05,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.31,
-     "text": "Play Plundering Poro to base"
-    },
-    {
-     "index": 4,
-     "share": 0.28,
+     "index": 5,
+     "share": 0.67,
      "text": "Play Decree of Rage"
     },
     {
-     "index": 1,
-     "share": 0.26,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 4,
+     "share": 0.16,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 3,
+     "share": 0.08,
+     "text": "Play Plundering Poro to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 4,
+    "text": "Play Plundering Poro to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 51,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 8,
+    "share": 0.0,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.36,
+     "text": "Play Plundering Poro to Bandle Scouts' Academy"
+    },
+    {
+     "index": 5,
+     "share": 0.27,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 3,
+     "share": 0.14,
+     "text": "Play Plundering Poro to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Plundering Poro to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
    "decision": 52,
    "event_text": "Played Decree of Rage from hand.",
    "human": {
     "index": 7,
-    "share": 0.16,
+    "share": 0.14,
     "text": "Play Decree of Rage"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.32,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
      "index": 4,
-     "share": 0.22,
+     "share": 0.36,
      "text": "Play Plundering Poro to Bandle Scouts' Academy"
     },
     {
-     "index": 7,
-     "share": 0.16,
-     "text": "Play Decree of Rage"
+     "index": 5,
+     "share": 0.26,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 3,
+     "share": 0.14,
+     "text": "Play Plundering Poro to base"
     }
    ],
    "turn": 4
@@ -595,11 +542,11 @@
     "text": "Play Plundering Poro to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
-   "decision": 63,
+   "decision": 62,
    "event_text": "ComboMAN played Plundering Poro from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.17,
+    "share": 0.1,
     "text": "Play Plundering Poro to base"
    },
    "kind": "play",
@@ -607,17 +554,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.79,
+     "share": 0.89,
      "text": "Play Plundering Poro to Bandle Scouts' Academy"
     },
     {
      "index": 1,
-     "share": 0.17,
+     "share": 0.1,
      "text": "Play Plundering Poro to base"
     },
     {
      "index": 0,
-     "share": 0.04,
+     "share": 0.01,
      "text": "End turn"
     }
    ],
@@ -629,11 +576,11 @@
     "text": "Move Plundering Poro to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
-   "decision": 85,
+   "decision": 84,
    "event_text": "ComboMAN moved Plundering Poro to Frozen Fortress.",
    "human": {
     "index": 2,
-    "share": 0.25,
+    "share": 0.29,
     "text": "Move Plundering Poro to Frozen Fortress"
    },
    "kind": "move",
@@ -641,18 +588,47 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.53,
+     "share": 0.56,
      "text": "Move Plundering Poro to Bandle Scouts' Academy"
     },
     {
      "index": 2,
-     "share": 0.25,
+     "share": 0.29,
      "text": "Move Plundering Poro to Frozen Fortress"
     },
     {
      "index": 5,
-     "share": 0.11,
+     "share": 0.08,
      "text": "Play Kai'Sa, Survivor to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Hide Temporal Breach"
+   },
+   "clean_boundary": true,
+   "decision": 103,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.45,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.55,
+     "text": "Hide Temporal Breach"
+    },
+    {
+     "index": 0,
+     "share": 0.45,
+     "text": "End turn"
     }
    ],
    "turn": 6
@@ -663,29 +639,29 @@
     "text": "Move Plundering Poro to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
-   "decision": 118,
+   "decision": 117,
    "event_text": "ComboMAN moved Kai'Sa, Survivor to Bandle Scouts' Academy.",
    "human": {
-    "index": 3,
+    "index": 5,
     "share": 0.0,
-    "text": "Move Kai'Sa, Survivor to Bandle Scouts' Academy"
+    "text": "Move Plundering Poro, Kai'Sa, Survivor to Bandle Scouts' Academy"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.64,
+     "share": 0.63,
      "text": "Move Plundering Poro to Bandle Scouts' Academy"
     },
     {
      "index": 2,
-     "share": 0.3,
+     "share": 0.34,
      "text": "Move Plundering Poro to Frozen Fortress"
     },
     {
      "index": 7,
-     "share": 0.05,
+     "share": 0.03,
      "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
@@ -693,15 +669,73 @@
   },
   {
    "bot": {
+    "index": 13,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 181,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 21,
+    "share": 0.0,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 13,
+     "share": 0.97,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.03,
+     "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 13,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 182,
+   "event_text": "ComboMAN exhausted Gold. (named by the payment)",
+   "human": {
+    "index": 19,
+    "share": 0.0,
+    "text": "Use Gold"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 13,
+     "share": 0.97,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.03,
+     "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
     "index": 0,
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 187,
+   "decision": 190,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 4,
-    "share": 0.07,
+    "share": 0.04,
     "text": "Play Hextech Ray targeting Plundering Poro"
    },
    "kind": "play",
@@ -709,21 +743,55 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.87,
+     "share": 0.94,
      "text": "End turn"
     },
     {
      "index": 4,
-     "share": 0.07,
+     "share": 0.04,
      "text": "Play Hextech Ray targeting Plundering Poro"
     },
     {
      "index": 1,
-     "share": 0.04,
+     "share": 0.02,
      "text": "Move Plundering Poro to base"
     }
    ],
    "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Bilgewater Tracker to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 205,
+   "event_text": "ComboMAN exhausted Kai'Sa, Daughter of the Void. (named by the payment)",
+   "human": {
+    "index": 9,
+    "share": 0.0,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.45,
+     "text": "Move Bilgewater Tracker to Bandle Scouts' Academy"
+    },
+    {
+     "index": 2,
+     "share": 0.43,
+     "text": "Move Bilgewater Tracker to Frozen Fortress"
+    },
+    {
+     "index": 4,
+     "share": 0.12,
+     "text": "Play Lecturing Yordle to base"
+    }
+   ],
+   "turn": 12
   }
  ],
  "exported_records": 0,
@@ -731,19 +799,19 @@
  "forced_decisions": 69,
  "game": 3,
  "hand_fixes": {
-  "created": 3,
+  "created": 1,
   "list": [
    {
-    "card": "Gust",
-    "for": "Played Gust from hand.",
-    "how": "created",
-    "player": 1,
+    "card": "Steel Paws",
+    "for": "3rd time playing riven played Steel Paws from hand to base.",
+    "how": "pulled",
+    "player": 2,
     "turn": 0,
     "zone": "hand"
    },
    {
-    "card": "Steel Paws",
-    "for": "3rd time playing riven played Steel Paws from hand to base.",
+    "card": "Gust",
+    "for": "Played Gust from hand.",
     "how": "pulled",
     "player": 2,
     "turn": 0,
@@ -762,7 +830,7 @@
     "for": "3rd time playing riven played The Good Stuff from hand to Frozen Fortress.",
     "how": "created",
     "player": 2,
-    "turn": 1,
+    "turn": 2,
     "zone": "hand"
    },
    {
@@ -822,18 +890,18 @@
     "zone": "hand"
    },
    {
-    "card": "Bilgewater Tracker",
-    "for": "ComboMAN played Bilgewater Tracker from hand to base.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 8,
-    "zone": "hand"
-   },
-   {
     "card": "Steel Paws",
     "for": "3rd time playing riven played Steel Paws from hand to Frozen Fortress.",
     "how": "pulled",
     "player": 2,
+    "turn": 8,
+    "zone": "hand"
+   },
+   {
+    "card": "Bilgewater Tracker",
+    "for": "ComboMAN played Bilgewater Tracker from hand to base.",
+    "how": "pulled",
+    "player": 1,
     "turn": 8,
     "zone": "hand"
    },
@@ -846,14 +914,6 @@
     "zone": "hand"
    },
    {
-    "card": "Not So Fast",
-    "for": "Played Not So Fast from hand.",
-    "how": "created",
-    "player": 1,
-    "turn": 10,
-    "zone": "hand"
-   },
-   {
     "card": "Baron Nashor",
     "for": "3rd time playing riven played Baron Nashor from hand to Baron Pit.",
     "how": "pulled",
@@ -862,7 +922,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 13
+  "pulled_from_deck": 14
  },
  "inferred_decks": {
   "P1": {
@@ -873,16 +933,6 @@
     "Void Gate"
    ],
    "champion": "Kai'Sa, Survivor",
-   "dropped": [
-    {
-     "card": "Gust",
-     "reason": "outside the legend's domains"
-    },
-    {
-     "card": "Not So Fast",
-     "reason": "outside the legend's domains"
-    }
-   ],
    "filler": {
     "overlap": 10,
     "same_legend": true,
@@ -965,11 +1015,11 @@
     }
    ],
    "filler": {
-    "overlap": 1,
+    "overlap": 3,
     "same_legend": true,
     "source": "/home/user/alpharune/decks/vex_test_deck.txt"
    },
-   "filler_cards": 26,
+   "filler_cards": 24,
    "legal": true,
    "legend": "Gloomist",
    "player": "3rd time playing riven",
@@ -1018,6 +1068,18 @@
      "plays_from_hand": 0
     },
     {
+     "card": "Gust",
+     "copies": 1,
+     "hand_multiplicity": 0,
+     "plays_from_hand": 1
+    },
+    {
+     "card": "Not So Fast",
+     "copies": 1,
+     "hand_multiplicity": 0,
+     "plays_from_hand": 1
+    },
+    {
      "card": "Steel Paws",
      "copies": 3,
      "hand_multiplicity": 0,
@@ -1048,9 +1110,9 @@
   "P1": "Daughter of the Void",
   "P2": "Gloomist"
  },
- "log_events": 192,
- "log_events_consumed": 192,
- "out_of_order_matches": 6,
+ "log_events": 197,
+ "log_events_consumed": 197,
+ "out_of_order_matches": 7,
  "players": [
   "ComboMAN",
   "3rd time playing riven"
@@ -1058,10 +1120,10 @@
  "readiness_fixes": 0,
  "result": {
   "engine_scores": [
-   6,
+   5,
    5
   ],
-  "engine_winner": 1,
+  "engine_winner": 0,
   "log_scores": [
    6,
    6
@@ -1071,14 +1133,30 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 1,
- "score_mismatch_examples": [],
- "score_mismatches": 0,
+ "rune_swaps": 1,
+ "score_mismatch_examples": [
+  {
+   "engine_score": 3,
+   "event_index": 542,
+   "log_score": 4,
+   "text": "ComboMAN scored 1 at turn start. Score: 3 → 4.",
+   "turn": 10
+  },
+  {
+   "engine_score": 4,
+   "event_index": 584,
+   "log_score": 5,
+   "text": "ComboMAN scored 1 at turn start. Score: 4 → 5.",
+   "turn": 12
+  }
+ ],
+ "score_mismatches": 2,
  "seed": 1,
- "silent_passes": 76,
+ "silent_passes": 75,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_kai_sa_vs_vex_rl2_7d1dc502f83e64c8bd1a644624c1d0a3.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.1796533209999998,
-  "seconds": 1.204383782
+  "bot_seconds": 1.09991707,
+  "seconds": 1.120114501
  }
 }

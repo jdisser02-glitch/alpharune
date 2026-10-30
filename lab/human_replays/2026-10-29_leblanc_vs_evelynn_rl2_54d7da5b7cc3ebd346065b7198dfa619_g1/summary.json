@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 11,
+  "agree": 17,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,95 +11,70 @@
     "rate": 1.0
    },
    "choice": {
+    "agree": 4,
+    "n": 4,
+    "rate": 1.0
+   },
+   "end_turn": {
     "agree": 3,
     "n": 4,
     "rate": 0.75
    },
-   "end_turn": {
-    "agree": 2,
-    "n": 3,
-    "rate": 0.6666666666666666
-   },
    "move": {
     "agree": 1,
-    "n": 4,
-    "rate": 0.25
+    "n": 6,
+    "rate": 0.16666666666666666
    },
    "pass_focus": {
-    "agree": 1,
-    "n": 1,
+    "agree": 5,
+    "n": 5,
     "rate": 1.0
    },
    "play": {
     "agree": 3,
-    "n": 4,
-    "rate": 0.75
+    "n": 6,
+    "rate": 0.5
    }
   },
   "clean_boundary": {
-   "agree": 6,
-   "n": 10,
-   "rate": 0.6
+   "agree": 7,
+   "n": 14,
+   "rate": 0.5
   },
   "in_flight": {
-   "agree": 5,
-   "n": 7
+   "agree": 10,
+   "n": 12
   },
-  "n": 17,
-  "rate": 0.6470588235294118
+  "n": 26,
+  "rate": 0.6538461538461539
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 19,
+ "bot_calls": 31,
  "bot_errors": 0,
- "bot_fallbacks": 2,
+ "bot_fallbacks": 5,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 99,
- "decisions_compared": 17,
- "decisions_human_known": 36,
- "decisions_trivial": 5,
+ "decisions": 178,
+ "decisions_compared": 26,
+ "decisions_human_known": 59,
+ "decisions_trivial": 8,
  "desync_causes": {
   "hidden_card_placed: no hide option at 'Rakelstake'": 1,
-  "moved: engine asks P1 but the log's next action is by P2 (moved)": 1,
-  "moved: engine asks P2 but the log's next action is by P1 (moved)": 2,
-  "moved: no such unit on board (not played / already gone)": 7,
-  "moved: unit can move but not to 'base'": 1,
-  "moved: unit is exhausted (no move option)": 1,
-  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 2,
+  "hidden_card_placed: no hide option at 'Star Spring'": 1,
+  "moved: no such unit on board (not played / already gone)": 5,
+  "moved: unit can move but not to 'Rakelstake'": 1,
+  "moved: unit can move but not to 'base'": 2,
+  "moved: unit is exhausted (no move option)": 2,
+  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 1,
+  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 3,
-  "played: card in hand but not playable now (cost/timing)": 3,
-  "played: card playable but not to 'Rakelstake'": 1,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 1,
+  "played: card in hand but not playable now (cost/timing)": 2,
+  "played: engine asks P1 but the log's next action is by P2 (played)": 2,
   "played: engine asks P2 but the log's next action is by P1 (played)": 1,
-  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
-  {
-   "decision": 13,
-   "event_index": 16,
-   "event_kind": "moved",
-   "event_text": "Hob moved Evelynn, Entrancing to champion area.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 1
-  },
-  {
-   "decision": 13,
-   "event_index": 20,
-   "event_kind": "played",
-   "event_text": "Hob played Pyke, Returned from hand to base.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 1
-  },
   {
    "decision": 31,
    "event_index": 35,
@@ -118,91 +93,28 @@
    "turn": 2
   },
   {
-   "decision": 41,
-   "event_index": 45,
-   "event_kind": "moved",
-   "event_text": "Hob moved Pyke, Returned to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Fizz, Trickster to base",
-    "Play Pyke, Returned to base",
-    "Play Tornado Warrior to base",
-    "Play Gemhand Hunter to base",
-    "Play Tail-Cloaked Matriarch to base",
-    "Play Tideturner to base",
-    "Play Spirit Wheel to base",
-    "Play Star-Crossed"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 3
-  },
-  {
-   "decision": 41,
-   "event_index": 46,
-   "event_kind": "passed_focus",
-   "event_text": "Hob passed focus at Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Fizz, Trickster to base",
-    "Play Pyke, Returned to base",
-    "Play Tornado Warrior to base",
-    "Play Gemhand Hunter to base",
-    "Play Tail-Cloaked Matriarch to base",
-    "Play Tideturner to base",
-    "Play Spirit Wheel to base",
-    "Play Star-Crossed"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 3
-  },
-  {
-   "decision": 41,
-   "event_index": 47,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Fizz, Trickster to base",
-    "Play Pyke, Returned to base",
-    "Play Tornado Warrior to base",
-    "Play Gemhand Hunter to base",
-    "Play Tail-Cloaked Matriarch to base",
-    "Play Tideturner to base",
-    "Play Spirit Wheel to base",
-    "Play Star-Crossed"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
-   "turn": 3
-  },
-  {
-   "decision": 41,
+   "decision": 51,
    "event_index": 52,
    "event_kind": "moved",
    "event_text": "Hob moved a hidden card to Rakelstake.",
    "options": [
     "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
     "Play Fizz, Trickster to base",
-    "Play Pyke, Returned to base",
+    "Play Fizz, Trickster to Rakelstake",
     "Play Tornado Warrior to base",
+    "Play Tornado Warrior to Rakelstake",
     "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Rakelstake",
     "Play Tail-Cloaked Matriarch to base",
+    "Play Tail-Cloaked Matriarch to Rakelstake",
     "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Rakelstake",
     "Play Spirit Wheel to base",
-    "Play Star-Crossed"
+    "Play Star-Crossed",
+    "Hide Tornado Warrior",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -210,101 +122,14 @@
    "turn": 3
   },
   {
-   "decision": 41,
-   "event_index": 54,
-   "event_kind": "played",
-   "event_text": "Hob played Tornado Warrior from hand to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Fizz, Trickster to base",
-    "Play Pyke, Returned to base",
-    "Play Tornado Warrior to base",
-    "Play Gemhand Hunter to base",
-    "Play Tail-Cloaked Matriarch to base",
-    "Play Tideturner to base",
-    "Play Spirit Wheel to base",
-    "Play Star-Crossed"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card playable but not to 'Rakelstake'",
-   "turn": 3
-  },
-  {
-   "decision": 50,
-   "event_index": 64,
-   "event_kind": "moved",
-   "event_text": "c moved Lillia, Fae Fawn to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to base",
-    "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 4
-  },
-  {
-   "decision": 50,
-   "event_index": 65,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to base",
-    "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 4
-  },
-  {
-   "decision": 50,
-   "event_index": 68,
-   "event_kind": "played",
-   "event_text": "Played Smoke and Mirrors from hand.",
-   "options": [
-    "End turn",
-    "Move Watchful Sentry to base",
-    "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 4
-  },
-  {
-   "decision": 50,
+   "decision": 88,
    "event_index": 69,
    "event_kind": "moved",
    "event_text": "c moved Lillia, Fae Fawn to base.",
    "options": [
     "End turn",
-    "Move Watchful Sentry to base",
-    "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Dredge Up",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Hide Smoke and Mirrors"
    ],
    "phase": "MainPhase",
@@ -313,44 +138,38 @@
    "turn": 4
   },
   {
-   "decision": 50,
+   "decision": 88,
    "event_index": 70,
    "event_kind": "moved",
    "event_text": "c moved Sprite to Rakelstake.",
    "options": [
     "End turn",
-    "Move Watchful Sentry to base",
-    "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Dredge Up",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Hide Smoke and Mirrors"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "no such unit on board (not played / already gone)",
+   "reason": "unit is exhausted (no move option)",
    "turn": 4
   },
   {
-   "decision": 60,
+   "decision": 97,
    "event_index": 92,
    "event_kind": "moved",
    "event_text": "c moved Lillia, Fae Fawn to Rakelstake.",
    "options": [
     "End turn",
-    "Move Watchful Sentry to base",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Play Glasc Mixologist to base",
-    "Play Glasc Mixologist to Star Spring",
+    "Play Thousand-Tailed Watcher to base",
     "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
     "Play Cull the Weak",
     "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
+    "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -358,24 +177,22 @@
    "turn": 6
   },
   {
-   "decision": 60,
+   "decision": 97,
    "event_index": 93,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Rakelstake.",
    "options": [
     "End turn",
-    "Move Watchful Sentry to base",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Play Glasc Mixologist to base",
-    "Play Glasc Mixologist to Star Spring",
+    "Play Thousand-Tailed Watcher to base",
     "Play LeBlanc, Everywhere at Once to base",
-    "Play LeBlanc, Everywhere at Once to Star Spring",
-    "Play Dredge Up",
     "Play Cull the Weak",
     "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
+    "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -383,18 +200,19 @@
    "turn": 6
   },
   {
-   "decision": 68,
+   "decision": 104,
    "event_index": 96,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Rakelstake.",
    "options": [
     "End turn",
-    "Play Dredge Up",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Play Cull the Weak",
     "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting LeBlanc, Everywhere at Once",
     "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -403,18 +221,19 @@
    "turn": 6
   },
   {
-   "decision": 68,
+   "decision": 104,
    "event_index": 98,
    "event_kind": "hidden_card_placed",
    "event_text": "c put a hidden card to Rakelstake.",
    "options": [
     "End turn",
-    "Play Dredge Up",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
     "Play Cull the Weak",
     "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting LeBlanc, Everywhere at Once",
     "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -423,25 +242,58 @@
    "turn": 6
   },
   {
-   "decision": 89,
+   "decision": 104,
+   "event_index": 109,
+   "event_kind": "moved",
+   "event_text": "c moved Watchful Sentry to base.",
+   "options": [
+    "End turn",
+    "Move Watchful Sentry to Star Spring",
+    "Move Watchful Sentry to Rakelstake",
+    "Play Cull the Weak",
+    "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting LeBlanc, Everywhere at Once",
+    "Play Mirror Image targeting Watchful Sentry",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "unit can move but not to 'base'",
+   "turn": 6
+  },
+  {
+   "decision": 125,
    "event_index": 116,
    "event_kind": "played",
    "event_text": "Played Smoke and Mirrors from Rakelstake.",
    "options": [
     "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
+    "Move Pyke, Returned to base",
     "Play Gemhand Hunter to base",
     "Play Gemhand Hunter to Star Spring",
+    "Play Gemhand Hunter to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
     "Play Star-Crossed",
     "Play Punch First",
-    "Use Tail-Cloaked Matriarch"
+    "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
+    "Play Void Assault targeting Pyke, Returned, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Pyke, Returned, Watchful Sentry",
+    "Play Void Assault targeting Gutter Guardian, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Gutter Guardian, Watchful Sentry",
+    "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Tail-Cloaked Matriarch",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -449,77 +301,37 @@
    "turn": 7
   },
   {
-   "decision": 89,
-   "event_index": 117,
-   "event_kind": "moved",
-   "event_text": "c moved Lillia, Fae Fawn to base.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
-    "Play Star-Crossed",
-    "Play Punch First",
-    "Use Tail-Cloaked Matriarch"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (moved)",
-   "turn": 7
-  },
-  {
-   "decision": 89,
-   "event_index": 118,
-   "event_kind": "moved",
-   "event_text": "c moved Sprite to Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
-    "Play Star-Crossed",
-    "Play Punch First",
-    "Use Tail-Cloaked Matriarch"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (moved)",
-   "turn": 7
-  },
-  {
-   "decision": 89,
+   "decision": 125,
    "event_index": 127,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Star Spring.",
    "options": [
     "End turn",
-    "Move Evelynn, Entrancing to Star Spring",
-    "Move Evelynn, Entrancing to Rakelstake",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
+    "Move Pyke, Returned to base",
     "Play Gemhand Hunter to base",
     "Play Gemhand Hunter to Star Spring",
+    "Play Gemhand Hunter to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Star Spring",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Star Spring",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
     "Play Star-Crossed",
     "Play Punch First",
-    "Use Tail-Cloaked Matriarch"
+    "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
+    "Play Void Assault targeting Pyke, Returned, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Pyke, Returned, Watchful Sentry",
+    "Play Void Assault targeting Gutter Guardian, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Gutter Guardian, Watchful Sentry",
+    "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Tail-Cloaked Matriarch",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -527,23 +339,28 @@
    "turn": 7
   },
   {
-   "decision": 90,
+   "decision": 126,
    "event_index": 143,
    "event_kind": "played",
    "event_text": "Played Bellows Breath from hand.",
    "options": [
     "End turn",
+    "Move LeBlanc, Everywhere at Once to Star Spring",
+    "Move LeBlanc, Everywhere at Once to Rakelstake",
     "Move Watchful Sentry to Star Spring",
     "Move Watchful Sentry to Rakelstake",
+    "Move LeBlanc, Everywhere at Once, Watchful Sentry to Star Spring",
+    "Move LeBlanc, Everywhere at Once, Watchful Sentry to Rakelstake",
     "Play Glasc Mixologist to base",
     "Play Thousand-Tailed Watcher to base",
     "Play Honest Broker to base",
     "Play Cull the Weak",
     "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Gutter Guardian",
     "Play Mirror Image targeting Fizz, Trickster",
+    "Play Mirror Image targeting LeBlanc, Everywhere at Once",
     "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -552,31 +369,29 @@
    "turn": 8
   },
   {
-   "decision": 99,
+   "decision": 148,
    "event_index": 145,
    "event_kind": "played",
    "event_text": "Hob played Pyke, Returned from trash to base.",
    "options": [
     "End turn",
     "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
     "Play Lillia, Fae Fawn to base",
-    "Play Lillia, Fae Fawn to Rakelstake",
+    "Play Ruined Rex to base",
     "Play Cull the Weak",
-    "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Gutter Guardian",
     "Play Mirror Image targeting Fizz, Trickster",
-    "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
-    "Play Bellows Breath targeting Tail-Cloaked Matriarch",
+    "Play Bellows Breath targeting Pyke, Returned",
     "Play Bellows Breath targeting Gutter Guardian",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Watchful Sentry",
-    "Play Bellows Breath targeting Evelynn, Entrancing",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
     "Play Salvage targeting Frigid Jewel",
     "Play Imperial Decree",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
+    "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -584,106 +399,391 @@
    "turn": 8
   },
   {
-   "decision": 99,
-   "event_index": 146,
-   "event_kind": "moved",
-   "event_text": "Hob moved Tail-Cloaked Matriarch to base.",
+   "decision": 148,
+   "event_index": 154,
+   "event_kind": "played",
+   "event_text": "Played Hold 'Em from hand.",
    "options": [
     "End turn",
     "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
     "Play Lillia, Fae Fawn to base",
-    "Play Lillia, Fae Fawn to Rakelstake",
+    "Play Ruined Rex to base",
     "Play Cull the Weak",
-    "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Gutter Guardian",
     "Play Mirror Image targeting Fizz, Trickster",
-    "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
-    "Play Bellows Breath targeting Tail-Cloaked Matriarch",
+    "Play Bellows Breath targeting Pyke, Returned",
     "Play Bellows Breath targeting Gutter Guardian",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Watchful Sentry",
-    "Play Bellows Breath targeting Evelynn, Entrancing",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
     "Play Salvage targeting Frigid Jewel",
     "Play Imperial Decree",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
+    "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (moved)",
+   "reason": "engine asks P1 but the log's next action is by P2 (played)",
    "turn": 8
   },
   {
-   "decision": 99,
-   "event_index": 151,
-   "event_kind": "moved",
-   "event_text": "c moved LeBlanc, Everywhere at Once to Star Spring.",
+   "decision": 148,
+   "event_index": 157,
+   "event_kind": "passed_focus",
+   "event_text": "Hob passed focus at Star Spring.",
    "options": [
     "End turn",
     "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
     "Play Lillia, Fae Fawn to base",
-    "Play Lillia, Fae Fawn to Rakelstake",
+    "Play Ruined Rex to base",
     "Play Cull the Weak",
-    "Play Mirror Image targeting Tail-Cloaked Matriarch",
+    "Play Mirror Image targeting Pyke, Returned",
     "Play Mirror Image targeting Gutter Guardian",
     "Play Mirror Image targeting Fizz, Trickster",
-    "Play Mirror Image targeting Watchful Sentry",
-    "Play Mirror Image targeting Evelynn, Entrancing",
-    "Play Bellows Breath targeting Tail-Cloaked Matriarch",
+    "Play Bellows Breath targeting Pyke, Returned",
     "Play Bellows Breath targeting Gutter Guardian",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Watchful Sentry",
-    "Play Bellows Breath targeting Evelynn, Entrancing",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
     "Play Salvage targeting Frigid Jewel",
     "Play Imperial Decree",
-    "Play Dredge Up",
-    "Hide Smoke and Mirrors"
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
+   "turn": 8
+  },
+  {
+   "decision": 148,
+   "event_index": 163,
+   "event_kind": "showdown",
+   "event_text": "Hob ended showdown responses at Rakelstake.",
+   "options": [
+    "End turn",
+    "Play Honest Broker to base",
+    "Play Lillia, Fae Fawn to base",
+    "Play Ruined Rex to base",
+    "Play Cull the Weak",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting Gutter Guardian",
+    "Play Mirror Image targeting Fizz, Trickster",
+    "Play Bellows Breath targeting Pyke, Returned",
+    "Play Bellows Breath targeting Gutter Guardian",
+    "Play Bellows Breath targeting Fizz, Trickster",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Frigid Jewel",
+    "Play Imperial Decree",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 8
+  },
+  {
+   "decision": 149,
+   "event_index": 170,
+   "event_kind": "moved",
+   "event_text": "Hob moved Tail-Cloaked Matriarch to Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Gutter Guardian to base",
+    "Move Fizz, Trickster to Star Spring",
+    "Move Fizz, Trickster to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Star Spring",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
+    "Play Star-Crossed",
+    "Play Punch First",
+    "Play Hold 'Em",
+    "Play Switcheroo",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Tideturner",
+    "Hide Switcheroo"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 9
+  },
+  {
+   "decision": 149,
+   "event_index": 171,
+   "event_kind": "moved",
+   "event_text": "Hob moved Pyke, Returned to Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Gutter Guardian to base",
+    "Move Fizz, Trickster to Star Spring",
+    "Move Fizz, Trickster to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Star Spring",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
+    "Play Star-Crossed",
+    "Play Punch First",
+    "Play Hold 'Em",
+    "Play Switcheroo",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Tideturner",
+    "Hide Switcheroo"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "unit can move but not to 'Rakelstake'",
+   "turn": 9
+  },
+  {
+   "decision": 149,
+   "event_index": 172,
+   "event_kind": "passed_focus",
+   "event_text": "Hob passed focus at Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Gutter Guardian to base",
+    "Move Fizz, Trickster to Star Spring",
+    "Move Fizz, Trickster to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Star Spring",
+    "Play Tideturner to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
+    "Play Star-Crossed",
+    "Play Punch First",
+    "Play Hold 'Em",
+    "Play Switcheroo",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Tideturner",
+    "Hide Switcheroo"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 9
+  },
+  {
+   "decision": 150,
+   "event_index": 177,
+   "event_kind": "showdown",
+   "event_text": "c ended showdown responses at Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Gutter Guardian to base",
+    "Move Fizz, Trickster to Star Spring",
+    "Move Fizz, Trickster to Rakelstake",
+    "Play Pyke, Returned to base",
+    "Play Pyke, Returned to Star Spring",
+    "Play Pyke, Returned to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
+    "Play Star-Crossed",
+    "Play Punch First",
+    "Play Hold 'Em",
+    "Play Switcheroo",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 9
+  },
+  {
+   "decision": 150,
+   "event_index": 180,
+   "event_kind": "hidden_card_placed",
+   "event_text": "Hob put a hidden card to Star Spring.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Gutter Guardian to base",
+    "Move Fizz, Trickster to Star Spring",
+    "Move Fizz, Trickster to Rakelstake",
+    "Play Pyke, Returned to base",
+    "Play Pyke, Returned to Star Spring",
+    "Play Pyke, Returned to Rakelstake",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to Rakelstake",
+    "Play Star-Crossed",
+    "Play Punch First",
+    "Play Hold 'Em",
+    "Play Switcheroo",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no hide option at 'Star Spring'",
+   "turn": 9
+  },
+  {
+   "decision": 178,
+   "event_index": 200,
+   "event_kind": "moved",
+   "event_text": "c moved Thousand-Tailed Watcher to Star Spring.",
+   "options": [
+    "End turn",
+    "Play Honest Broker to base",
+    "Play Ruined Rex to base",
+    "Play Honest Broker to base",
+    "Play Mirror Image targeting Sprite",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting Fizz, Trickster",
+    "Play Bellows Breath targeting Sprite",
+    "Play Bellows Breath targeting Pyke, Returned",
+    "Play Bellows Breath targeting Fizz, Trickster",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Frigid Jewel",
+    "Play Imperial Decree",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Pyke, Returned",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
    "reason": "no such unit on board (not played / already gone)",
-   "turn": 8
+   "turn": 10
+  },
+  {
+   "decision": 178,
+   "event_index": 201,
+   "event_kind": "passed_focus",
+   "event_text": "c passed focus at Star Spring.",
+   "options": [
+    "End turn",
+    "Play Honest Broker to base",
+    "Play Ruined Rex to base",
+    "Play Honest Broker to base",
+    "Play Mirror Image targeting Sprite",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting Fizz, Trickster",
+    "Play Bellows Breath targeting Sprite",
+    "Play Bellows Breath targeting Pyke, Returned",
+    "Play Bellows Breath targeting Fizz, Trickster",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Frigid Jewel",
+    "Play Imperial Decree",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Pyke, Returned",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 10
+  },
+  {
+   "decision": 178,
+   "event_index": 209,
+   "event_kind": "played",
+   "event_text": "Played Smoke and Mirrors from hand.",
+   "options": [
+    "End turn",
+    "Play Honest Broker to base",
+    "Play Ruined Rex to base",
+    "Play Honest Broker to base",
+    "Play Mirror Image targeting Sprite",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting Fizz, Trickster",
+    "Play Bellows Breath targeting Sprite",
+    "Play Bellows Breath targeting Pyke, Returned",
+    "Play Bellows Breath targeting Fizz, Trickster",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Frigid Jewel",
+    "Play Imperial Decree",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Pyke, Returned",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 10
+  },
+  {
+   "decision": 178,
+   "event_index": 210,
+   "event_kind": "moved",
+   "event_text": "c moved Sprite to Star Spring.",
+   "options": [
+    "End turn",
+    "Play Honest Broker to base",
+    "Play Ruined Rex to base",
+    "Play Honest Broker to base",
+    "Play Mirror Image targeting Sprite",
+    "Play Mirror Image targeting Pyke, Returned",
+    "Play Mirror Image targeting Fizz, Trickster",
+    "Play Bellows Breath targeting Sprite",
+    "Play Bellows Breath targeting Pyke, Returned",
+    "Play Bellows Breath targeting Fizz, Trickster",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Gold",
+    "Play Salvage targeting Frigid Jewel",
+    "Play Imperial Decree",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Pyke, Returned",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "unit is exhausted (no move option)",
+   "turn": 10
   }
  ],
  "desyncs": 25,
  "disagreements": [
-  {
-   "bot": {
-    "index": 0,
-    "text": "Choose Lillia, Fae Fawn"
-   },
-   "clean_boundary": false,
-   "decision": 22,
-   "event_text": "",
-   "human": {
-    "index": 2,
-    "share": 0.33,
-    "text": "Choose Dredge Up"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.35,
-     "text": "Choose Lillia, Fae Fawn"
-    },
-    {
-     "index": 2,
-     "share": 0.33,
-     "text": "Choose Dredge Up"
-    },
-    {
-     "index": 1,
-     "share": 0.18,
-     "text": "Choose Frigid Jewel"
-    }
-   ],
-   "turn": 2
-  },
   {
    "bot": {
     "index": 1,
@@ -694,7 +794,7 @@
    "event_text": "c moved Watchful Sentry to Rakelstake.",
    "human": {
     "index": 2,
-    "share": 0.3,
+    "share": 0.32,
     "text": "Move Watchful Sentry to Rakelstake"
    },
    "kind": "move",
@@ -702,12 +802,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.35,
+     "share": 0.34,
      "text": "Move Watchful Sentry to Star Spring"
     },
     {
      "index": 2,
-     "share": 0.3,
+     "share": 0.32,
      "text": "Move Watchful Sentry to Rakelstake"
     },
     {
@@ -728,7 +828,7 @@
    "event_text": "c moved Lillia, Fae Fawn to base.",
    "human": {
     "index": 1,
-    "share": 0.09,
+    "share": 0.11,
     "text": "Move Lillia, Fae Fawn to base"
    },
    "kind": "move",
@@ -736,17 +836,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.84,
+     "share": 0.81,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.09,
+     "share": 0.11,
      "text": "Move Lillia, Fae Fawn to base"
     },
     {
      "index": 4,
-     "share": 0.07,
+     "share": 0.08,
      "text": "Hide Smoke and Mirrors"
     }
    ],
@@ -754,67 +854,101 @@
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play LeBlanc, Everywhere at Once to Star Spring"
+    "index": 4,
+    "text": "Play Dredge Up"
    },
    "clean_boundary": true,
-   "decision": 51,
-   "event_text": "c ended their turn.",
+   "decision": 70,
+   "event_text": "c moved Lillia, Fae Fawn to Rakelstake.",
    "human": {
-    "index": 0,
-    "share": 0.17,
-    "text": "End turn"
+    "index": 2,
+    "share": 0.23,
+    "text": "Move Lillia, Fae Fawn to Rakelstake"
    },
-   "kind": "end_turn",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.38,
-     "text": "Play LeBlanc, Everywhere at Once to Star Spring"
-    },
-    {
      "index": 4,
-     "share": 0.22,
+     "share": 0.3,
      "text": "Play Dredge Up"
     },
     {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.23,
+     "text": "Move Lillia, Fae Fawn to Rakelstake"
+    },
+    {
+     "index": 1,
+     "share": 0.22,
+     "text": "Move Lillia, Fae Fawn to Star Spring"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play LeBlanc, Everywhere at Once to Star Spring"
+    "index": 2,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 80,
+   "event_text": "Played Smoke and Mirrors from hand.",
+   "human": {
+    "index": 3,
+    "share": 0.21,
+    "text": "Play Smoke and Mirrors"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.37,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.21,
+     "text": "Play Smoke and Mirrors"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": false,
-   "decision": 61,
+   "decision": 98,
    "event_text": "c moved LeBlanc, Everywhere at Once to base.",
    "human": {
-    "index": 4,
-    "share": 0.12,
+    "index": 5,
+    "share": 0.17,
     "text": "Play LeBlanc, Everywhere at Once to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.32,
-     "text": "Play LeBlanc, Everywhere at Once to Star Spring"
+     "index": 4,
+     "share": 0.51,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 6,
-     "share": 0.16,
-     "text": "Play Dredge Up"
+     "index": 5,
+     "share": 0.17,
+     "text": "Play LeBlanc, Everywhere at Once to base"
     },
     {
      "index": 0,
-     "share": 0.13,
+     "share": 0.11,
      "text": "End turn"
     }
    ],
@@ -822,45 +956,147 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 14,
+    "text": "Play Salvage targeting Gold"
    },
    "clean_boundary": true,
-   "decision": 68,
-   "event_text": "c moved Watchful Sentry to base.",
+   "decision": 137,
+   "event_text": "c moved Watchful Sentry to Rakelstake.",
    "human": {
-    "index": 1,
-    "share": 0.03,
-    "text": "Move Watchful Sentry to base"
+    "index": 2,
+    "share": 0.06,
+    "text": "Move Watchful Sentry to Rakelstake"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 14,
+     "share": 0.57,
+     "text": "Play Salvage targeting Gold"
+    },
+    {
      "index": 0,
-     "share": 0.4,
+     "share": 0.21,
      "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.34,
-     "text": "Play Dredge Up"
-    },
-    {
-     "index": 4,
-     "share": 0.12,
-     "text": "Play Mirror Image targeting Tail-Cloaked Matriarch"
+     "index": 1,
+     "share": 0.1,
+     "text": "Move Watchful Sentry to Star Spring"
     }
    ],
-   "turn": 6
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Salvage targeting Gold"
+   },
+   "clean_boundary": true,
+   "decision": 149,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.29,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 11,
+     "share": 0.63,
+     "text": "Play Salvage targeting Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 8,
+     "share": 0.06,
+     "text": "Play Bellows Breath targeting Pyke, Returned"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 12,
+    "text": "Play Salvage targeting Gold"
+   },
+   "clean_boundary": false,
+   "decision": 152,
+   "event_text": "c played Lillia, Fae Fawn from hand to base.",
+   "human": {
+    "index": 2,
+    "share": 0.04,
+    "text": "Play Lillia, Fae Fawn to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 12,
+     "share": 0.67,
+     "text": "Play Salvage targeting Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.18,
+     "text": "End turn"
+    },
+    {
+     "index": 9,
+     "share": 0.11,
+     "text": "Play Bellows Breath targeting Pyke, Returned"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 14,
+    "text": "Play Salvage targeting Gold"
+   },
+   "clean_boundary": true,
+   "decision": 159,
+   "event_text": "c moved Lillia, Fae Fawn to Star Spring.",
+   "human": {
+    "index": 1,
+    "share": 0.1,
+    "text": "Move Lillia, Fae Fawn to Star Spring"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 14,
+     "share": 0.74,
+     "text": "Play Salvage targeting Gold"
+    },
+    {
+     "index": 1,
+     "share": 0.1,
+     "text": "Move Lillia, Fae Fawn to Star Spring"
+    },
+    {
+     "index": 10,
+     "share": 0.09,
+     "text": "Play Bellows Breath targeting Lillia, Fae Fawn"
+    }
+   ],
+   "turn": 10
   }
  ],
  "exported_records": 0,
  "first_player": "c",
- "forced_decisions": 33,
+ "forced_decisions": 61,
  "game": 1,
  "hand_fixes": {
-  "created": 3,
+  "created": 5,
   "list": [
    {
     "card": "Watchful Sentry",
@@ -923,7 +1159,7 @@
     "for": "Hob moved Star-Crossed from hand to trash.",
     "how": "pulled",
     "player": 2,
-    "turn": 2,
+    "turn": 1,
     "zone": "hand"
    },
    {
@@ -931,7 +1167,7 @@
     "for": "Hob played Tail-Cloaked Matriarch from hand to base.",
     "how": "pulled",
     "player": 2,
-    "turn": 2,
+    "turn": 1,
     "zone": "hand"
    },
    {
@@ -951,6 +1187,14 @@
     "zone": "hand"
    },
    {
+    "card": "Smoke and Mirrors",
+    "for": "c put a hidden card to Rakelstake.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 4,
+    "zone": "hand"
+   },
+   {
     "card": "Gutter Guardian",
     "for": "Hob played Gutter Guardian from hand to Star Spring.",
     "how": "pulled",
@@ -959,10 +1203,10 @@
     "zone": "hand"
    },
    {
-    "card": "Thousand-Tailed Watcher",
-    "for": "c played Thousand-Tailed Watcher from hand to base.",
-    "how": "pulled",
-    "player": 1,
+    "card": "Tornado Warrior",
+    "for": "Hob put a hidden card to Star Spring.",
+    "how": "created",
+    "player": 2,
     "turn": 7,
     "zone": "hand"
    },
@@ -1021,9 +1265,25 @@
     "player": 1,
     "turn": 8,
     "zone": "hand"
+   },
+   {
+    "card": "Pyke, Returned",
+    "for": "Hob put a hidden card to Rakelstake.",
+    "how": "created",
+    "player": 2,
+    "turn": 9,
+    "zone": "hand"
+   },
+   {
+    "card": "Stupefy",
+    "for": "Played Stupefy from hand.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 10,
+    "zone": "hand"
    }
   ],
-  "pulled_from_deck": 17
+  "pulled_from_deck": 18
  },
  "inferred_decks": {
   "P1": {
@@ -1201,18 +1461,18 @@
   "P1": "Deceiver",
   "P2": "Agony's Embrace"
  },
- "log_events": 230,
- "log_events_consumed": 153,
- "out_of_order_matches": 7,
+ "log_events": 225,
+ "log_events_consumed": 206,
+ "out_of_order_matches": 11,
  "players": [
   "c",
   "Hob"
  ],
- "readiness_fixes": 2,
+ "readiness_fixes": 1,
  "result": {
   "engine_scores": [
-   5,
-   1
+   3,
+   6
   ],
   "engine_winner": 1,
   "log_scores": [
@@ -1220,10 +1480,11 @@
    4
   ],
   "reason": "desync cap (log score 8-4)",
-  "turns": 8
+  "turns": 10
  },
  "rewinds_applied": 1,
- "rewinds_ignored": 0,
+ "rewinds_ignored": 2,
+ "rune_swaps": 2,
  "score_mismatch_examples": [
   {
    "engine_score": 2,
@@ -1231,15 +1492,29 @@
    "log_score": 3,
    "text": "c scored 1 at turn start. Score: 2 → 3.",
    "turn": 4
+  },
+  {
+   "engine_score": 3,
+   "event_index": 91,
+   "log_score": 4,
+   "text": "c scored 1 at turn start. Score: 3 → 4.",
+   "turn": 6
+  },
+  {
+   "engine_score": 6,
+   "event_index": 166,
+   "log_score": 3,
+   "text": "Hob scored 1 at turn start. Score: 2 → 3.",
+   "turn": 9
   }
  ],
- "score_mismatches": 1,
+ "score_mismatches": 3,
  "seed": 1,
- "silent_passes": 34,
+ "silent_passes": 68,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_54d7da5b7cc3ebd346065b7198dfa619.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 0.897097714,
-  "seconds": 0.910339523
+  "bot_seconds": 1.8505309950000004,
+  "seconds": 1.878589811
  }
 }
