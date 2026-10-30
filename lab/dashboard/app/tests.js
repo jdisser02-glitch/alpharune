@@ -215,7 +215,10 @@ function roundsPanel(t) {
 function gatesHtml() {
   const hg = ((data().human_review || {}).games || []).filter(g => g.decisions);
   if (!hg.length) return "";
-  const des = hg.map(g => g.desyncs || 0).sort((a, b) => a - b), med = des[Math.floor(des.length / 2)];
+  // engine-side desyncs: the ones the replay tool cannot prove are log artefacts (an exhausted unit moving with nothing
+  // readying it, a card paid below its cost); older summaries without the classifier count every desync
+  const des = hg.map(g => g.desyncs_engine ?? g.desyncs ?? 0).sort((a, b) => a - b), med = des.length % 2 ? des[(des.length - 1) / 2] : (des[des.length / 2 - 1] + des[des.length / 2]) / 2;
+  const artefacts = hg.reduce((a, g) => a + (g.log_artefacts || 0), 0);
   const followed = hg.filter(g => /log ended|engine game over/.test(g.stop_reason || "")).length;
   const cn = hg.reduce((a, g) => a + (g.compared_clean || 0), 0), ca = hg.reduce((a, g) => a + (g.compared_clean || 0) * (g.agreement_clean_pct || 0) / 100, 0);
   const engineOk = med <= 3 && followed / hg.length >= 0.9, botOk = cn > 0 && ca / cn >= 0.4;
@@ -223,7 +226,7 @@ function gatesHtml() {
   return `<section class="panel t-gates ${engineOk && botOk ? "pass" : "fail"}"><div class="panel-head"><h2>Can these numbers be trusted yet?</h2><a class="more" href="#/replays?test=human">Real games →</a></div>
     <p class="small">Every win rate below comes from the bot playing both sides inside the engine. It only measures the real game once two gates pass, checked against ${hg.length} real RiftLite games replayed through the engine.</p>
     <div class="gates">
-      ${row(engineOk, "Engine follows real games", `${med} desyncs per game (median), ${followed} of ${hg.length} games followed to the end of their log`, "≤ 3 and ≥ 90%")}
+      ${row(engineOk, "Engine follows real games", `${med} engine desyncs per game (median)${artefacts ? `, ${artefacts} more proven to be log artefacts` : ""}, ${followed} of ${hg.length} games followed to the end of their log`, "≤ 3 and ≥ 90%")}
       ${row(botOk, "Bot agrees with human players", `${cn ? (100 * ca / cn).toFixed(0) : "—"}% of ${num(cn)} clean decisions`, "≥ 40%")}
     </div>
     ${engineOk && botOk ? `<p class="small">Both gates pass: deck results can be read as measurements, within their intervals.</p>` : `<p class="small"><b>Not validated yet.</b> Read the results below as a comparison between lists under the same conditions, not as the lists' true win rates. The engine's divergences from real games are being worked through by volume (showdowns the engine does not open, units it does not have, cards it will not let play when a human did).</p>`}

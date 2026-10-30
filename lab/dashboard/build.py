@@ -114,7 +114,7 @@ def main(argv):
                                "dropped": inf.get("dropped", []), "unknown_cards": sorted(set(inf.get("unknown_cards", []))),
                                "legal": inf.get("legal"), "list": {k: dict(lst.get(k, {})) for k in ("champion", "maindeck", "battlefields", "runes")}}
             entry = {k: g.get(k) for k in ("file", "game", "players", "capture_player", "legends", "bot", "decisions", "decisions_compared",
-                                           "agreement_pct", "agreement_clean_pct", "compared_clean", "desyncs", "top_desync_causes",
+                                           "agreement_pct", "agreement_clean_pct", "compared_clean", "desyncs", "desyncs_engine", "log_artefacts", "top_desync_causes",
                                            "silent_passes", "hand_fixes", "stop_reason", "engine_scores", "log_scores", "seconds")}
             entry.update({"replay": f"replays/{name}", "stem": stem, "date": g["file"][:10], "source_url": source_url,
                           "capture_seat": rec.get("capture_seat"), "first_player": summ.get("first_player"),
