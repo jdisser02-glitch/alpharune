@@ -36,6 +36,10 @@ public:
                 const Intent& chosen, const std::vector<std::pair<int, double>>& search,
                 std::vector<std::string> log_lines);
     void finish(const nlohmann::json& header, const std::string& path) const;
+    /// A last frame after the final decision: the end state (the points of
+    /// the last scoring step, the winner) with the log since that decision,
+    /// so a replay can be stepped to the end of the game.
+    void finishGame(const GameState& state, std::vector<std::string> log_lines);
 
     /// Merge extra fields into the frame recorded last (the guided replay of
     /// a human game adds the human's and the bot's choice). No-op before the

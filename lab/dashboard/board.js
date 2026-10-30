@@ -457,6 +457,7 @@
     [/^MULLIGAN: P(\d) set aside (.+?) \(id=\d+\)/, (m) => ({ icon: "▤", kind: "draw", cards: [m[2]], text: `P${m[1]} sets aside ${m[2]}` })],
     [/^MAY_DECLINED: (.+)/, (m) => ({ icon: "–", kind: "choice", cards: [], text: `declines: ${m[1]}` })],
     [/^(?:ADDITIONAL_TURN|PHASE): (.+)/, (m) => ({ icon: "⟶", kind: "phase", cards: [], text: m[1] })],
+    [/^GAME_OVER: (.+)/, (m) => ({ icon: "■", kind: "score", cards: [], text: `game over: ${m[1]}` })],
   ];
   const bfName = (f, i) => { const b = f && f.board && f.board.battlefields && f.board.battlefields[i]; return b ? b.name : `battlefield ${i + 1}`; };
   const seatOf = f => f && f.player ? `P${f.player}` : "";

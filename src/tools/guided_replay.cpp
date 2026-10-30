@@ -1800,6 +1800,7 @@ GuidedResult Driver::run() {
 
     if (!opts_.out_dir.empty()) {
         std::filesystem::create_directories(opts_.out_dir);
+        if (fs.game_over) review.finishGame(fs, std::move(review_lines));
         review.finish(out.header, opts_.out_dir + "/game_1.json");
         std::ofstream(opts_.out_dir + "/summary.json") << out.summary.dump(1) << "\n";
     }

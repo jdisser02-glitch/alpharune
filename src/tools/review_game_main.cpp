@@ -244,6 +244,7 @@ int main(int argc, char** argv) {
                    {"scores", {fin.players[0].score, fin.players[1].score}}, {"seed", seed}, {"source", "play"},
                    {"source_game", doc.value("id", "")}, {"turns", fin.turn.turn_number}, {"uuid", ""}, {"winner", winner},
                    {"play_level", doc.value("level", "")}, {"play_bot_spec", doc.value("bot_spec", "")}};
+    if (fin.game_over) log.finishGame(fin, std::move(lines));
     log.finish(header, (out / "game_1.json").string());
 
     json bk = json::object();

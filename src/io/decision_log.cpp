@@ -214,6 +214,21 @@ void DecisionLog::annotateLast(const nlohmann::json& extra) {
     for (auto it = extra.begin(); it != extra.end(); ++it) frames_.back()[it.key()] = it.value();
 }
 
+void DecisionLog::finishGame(const GameState& state, std::vector<std::string> log_lines) {
+    nlohmann::json f;
+    f["n"] = state.decision_index + 1;
+    f["player"] = state.winner == PlayerId::Player1 ? 1 : state.winner == PlayerId::Player2 ? 2 : 0;
+    f["board"] = boardJson(state);
+    f["options"] = nlohmann::json::array();
+    f["chosen"] = -1;
+    f["terminal"] = true;
+    f["kind"] = "game_over";
+    f["human_known"] = false;
+    log_lines.push_back("GAME_OVER: " + state.game_over_reason);
+    f["log"] = log_lines;
+    frames_.push_back(std::move(f));
+}
+
 void DecisionLog::finish(const nlohmann::json& header, const std::string& path) const {
     nlohmann::json out = header;
     out["frames"] = frames_;

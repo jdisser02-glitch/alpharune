@@ -184,6 +184,7 @@ async function openGame(file) {
   try {
     const r = await fetch(file); if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const rep = await r.json(); if (my !== loadToken) return; st.rep = rep;
+    addGameOverFrame(rep);
   } catch (e) { if (my !== loadToken) return; st.error = `Could not load this game (${e.message || e}). It may have been dropped from the published set: rebuild the dashboard.`; renderViewer(); return; }
   const frames = st.rep.frames || [], meta = metaOf(file);
   st.viewer = featuredSeat(meta) || (st.rep.capture_seat || 1);
@@ -333,7 +334,7 @@ function renderFrame() {
   // decision panel
   const key = st.file + "|" + f.n, ann = st.annotations.get(key), shares = new Map((f.search || []).map(([i, x]) => [i, x]));
   const agent = f.player === 1 ? rep.agent1 : rep.agent2;
-  const head = hg ? humanHead(f, hg, who) : `<div class="d-head"><div class="eyebrow">Decision ${f.n} · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}</div><h2>${esc(who)}'s move ${botBadge(agent)}</h2>
+  const head = f.terminal ? gameOverHead(f, rep) : hg ? humanHead(f, hg, who) : `<div class="d-head"><div class="eyebrow">Decision ${f.n} · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}</div><h2>${esc(who)}'s move ${botBadge(agent)}</h2>
       <p class="small muted">${shares.size ? "Bars: the share of the bot's search per option." : /random/.test(agent || "") ? "A random player: no search, the option was drawn at random." : f.options.length < 2 ? "Only one option: nothing to choose." : "No search recorded for this decision."}</p></div>`;
   const rows = (f.options || []).map((o, i) => {
     const played = hg ? (f.human_known && i === f.human_choice) : i === f.chosen, bot = hg && f.bot_choice === i, mine = ann && ann.would_play === i;
@@ -397,6 +398,19 @@ function whyHtml(f, who) {
   return `<div class="d-why disagree"><b>Why the bot disagrees</b> It would have played ${optionHtml(opts[bi])} (${pct(sb, 0)} of its search, ${conf}); ${esc(who)}'s move ranked ${ord(rank || opts.length)} of ${opts.length} at ${pct(sh, 0)}.${looked} ${reason}${f.clean_boundary ? "" : " The engine's state may differ a little from the real game here, so weigh this lightly."}${foot}</div>`;
 }
 /** Step buttons for the board's top bar: one decision or one turn at a time. */
+/** Older replays stop at the last decision: the points scored after it (the final scoring step) only show in the
+    header. Add a "game over" frame carrying the final scores so the end of the match can be stepped to and read. */
+function addGameOverFrame(rep) {
+  const fr = rep && rep.frames; if (!Array.isArray(fr) || !fr.length) return;
+  const last = fr[fr.length - 1]; if (last.terminal || !last.board || !Array.isArray(rep.scores)) return;
+  const before = (last.board.players || []).map(p => p.score || 0);
+  if (before.join() === rep.scores.join() && !rep.reason) return;
+  const board = JSON.parse(JSON.stringify(last.board)); board.phase = "GameOver";
+  const log = [];
+  (board.players || []).forEach((p, i) => { const d = (rep.scores[i] || 0) - (before[i] || 0); p.score = rep.scores[i] || 0; if (d > 0) log.push(`SCORE: P${i + 1} +${d} via Scoring -> ${p.score}`); });
+  log.push(`GAME_OVER: ${rep.reason || (rep.winner ? `P${rep.winner} wins` : "draw")}`);
+  fr.push({ n: (last.n || fr.length) + 1, player: rep.winner || last.player, board, options: [], chosen: -1, log, terminal: true, kind: "game_over", human_known: false });
+}
 function navHandlers(frames) {
   const n = frames.length, turnOf = i => ((frames[i] || {}).board || {}).turn ?? 0;
   const go = k => { st.frame = Math.max(0, Math.min(n - 1, k)); renderFrame(); };
@@ -406,6 +420,15 @@ function navHandlers(frames) {
     prevTurn: () => { const k = turnStart(st.frame); go(k < st.frame ? k : turnStart(Math.max(0, k - 1))); },
     nextTurn: () => { const t = turnOf(st.frame); for (let k = st.frame + 1; k < n; k++) if (turnOf(k) !== t) return go(k); go(n - 1); },
   };
+}
+function gameOverHead(f, rep) {
+  const sc = (rep.scores || []).join("–"), b = f.board || {}, hg = humanGameOf(st.file);
+  const logSc = hg && Array.isArray(hg.log_scores) ? hg.log_scores : null, engSc = hg && Array.isArray(hg.engine_scores) ? hg.engine_scores : rep.scores;
+  const lost = !!(logSc && engSc && logSc.join() !== engSc.join());
+  return `<div class="d-head"><div class="eyebrow">End of the ${lost ? "replay" : "game"} · turn ${b.turn ?? "–"}</div><h2>${lost ? "Replay stopped" : "Game over"} ${badge(rep.winner ? `P${rep.winner} wins` : "draw", rep.winner ? "win" : "neutral")}</h2>
+    ${lost ? `<p class="small">${notice(`<b>The engine lost the thread of the real game here</b> (${esc(String(hg.desyncs ?? "several"))} desyncs, ${esc(hg.stop_reason || "stopped")}). Its own count ends at <b class="mono">${esc(engSc.join("–"))}</b>; the real game, from the RiftLite log, ended <b class="mono">${esc(logSc.join("–"))}</b>. The points between the two were scored in the real game after this point, mostly Hold points at the start of turns, which the engine could not follow.`, "")}</p>`
+          : `<p class="small">${esc(rep.reason || "")}. Final score <b class="mono">${esc(sc)}</b>.</p>`}
+    <p class="small muted">The points of the last scoring step come after the last decision, so older replays show them only here: Hold gives a point per battlefield you still control at the start of your turn, Conquer a point per battlefield taken this turn, and some cards and legends score on their own. A player can therefore jump two or three points in one turn.</p></div>`;
 }
 function humanHead(f, hg, who) {
   const b = f.board || {}, compared = isCompared(f), isCapture = f.player === hg.capture_seat;
