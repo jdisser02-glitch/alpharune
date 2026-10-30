@@ -3,9 +3,7 @@
    #/tests/<id>   conclusion first, facts, opponents and their weights, per tested deck the matchup table + card grid,
                   the optimizer's round-by-round standings when the test ran rounds, commands and raw spec for the curious.
    Everything is derived from data.json through lib.js; screen-specific styles are in tests.css (injected once). */
-import { data, esc, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice,
-         portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, pooled, cssOnce, botSpec, botBadge,
-         isPlumbing, testsByDate, testById, bestList, testConclusion, testFaces, deckFace, deckByPath, deckHero, legendShort } from "./lib.js";
+import { data, esc, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice, portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, pooled, cssOnce, botSpec, botBadge, isPlumbing, testsByDate, testById, bestList, testConclusion, testFaces, deckFace, deckByPath, deckHero, legendShort, toast } from "./lib.js";
 
 const CSS = new URL("./tests.css", import.meta.url).href;
 
@@ -19,6 +17,13 @@ function sidesText(t) {
 const testGames = t => (t.decks || []).reduce((a, d) => a + pooled(d).games, 0);
 const ranked = t => (t.decks || []).filter(d => d.weighted_win_rate != null).sort((a, b) => b.weighted_win_rate - a.weighted_win_rate);
 const isOptimize = t => !!(t.optimize && (t.optimize.rounds || []).length);
+/** The deck of this test that the Home page calls "best list so far" (highest lower bound across every real test). */
+function isBestSoFar(d, t) { const b = bestList(); return !!(b && b.test && b.test.id === t.id && b.deck && b.deck.path === d.path && b.deck.label === d.label); }
+async function copyList(path, btn) {
+  const dk = deckByPath(path); if (!dk || !dk.text) return;
+  try { await navigator.clipboard.writeText(dk.text); toast("List copied: paste it into a deck builder or a text file.", "ok"); if (btn) { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy list"; }, 1800); } }
+  catch (e) { toast("Could not copy: open the list and select its text.", ""); }
+}
 const isControl = label => /\b(control|base)\b/i.test(label || "");
 /** A tested list's label; the ladder tests label their side with the raw agent spec, which reads better as the bot's name. */
 const labelOf = d => /^(ismcts|mcts|random|greedy)/i.test(d.label || "") ? botSpec(d.label).label : (d.label || "");
@@ -156,9 +161,9 @@ function deckSection(d, t, i, open) {
   const seats = (d.matchups || []).reduce((a, m) => { if (m.as_p1 && m.as_p2) { a.p1g += m.as_p1.games; a.p1w += m.as_p1.wins; a.p2g += m.as_p2.games; a.p2w += m.as_p2.wins; } return a; }, { p1g: 0, p1w: 0, p2g: 0, p2w: 0 });
   const head = `<summary class="t-deck-head">
       ${portrait(face, { size: "lg" })}
-      <div class="t-deck-title"><h2>${esc(labelOf(d))}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}</h2>
+      <div class="t-deck-title"><h2>${esc(labelOf(d))}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}${isBestSoFar(d, t) ? ` ${badge("best list so far", "gold")}` : ""}</h2>
         <div class="t-deck-sub">${dk ? `<a href="#/decks/${encodeURIComponent(dk.path)}">${esc(deckHero(dk))}${dk.path.startsWith("lab/variants/") ? ` · ${esc(dk.path.split("/").pop().replace(/\.txt$/, ""))}` : ""} · open the list</a>` : `<span class="mono muted">${esc(d.path || "")}</span>`}${changeChips(d.changes)}</div></div>
-      <div class="t-deck-rate">${d.weighted_win_rate != null ? `${rateBar(d.weighted_win_rate, p.ci, 150)}<span class="t-deck-num">${pct0(d.weighted_win_rate)}</span><span class="xs muted">${interval(p.ci)} · ${plural(p.games, "game")}${t.decks.some(x => (x.matchups || []).length > 1) ? " · weighted" : ""}</span>` : `<span class="muted">no result</span>`}</div>
+      <div class="t-deck-rate">${dk && dk.text ? `<button type="button" class="btn-sm t-copy" data-copy="${esc(dk.path)}" title="Copy the list as text (legend, champion, main deck, battlefields, runes)">Copy list</button>` : ""}${d.weighted_win_rate != null ? `${rateBar(d.weighted_win_rate, p.ci, 150)}<span class="t-deck-num">${pct0(d.weighted_win_rate)}</span><span class="xs muted">${interval(p.ci)} · ${plural(p.games, "game")}${t.decks.some(x => (x.matchups || []).length > 1) ? " · weighted" : ""}</span>` : `<span class="muted">no result</span>`}</div>
     </summary>`;
   return `<details class="panel t-deck" ${open ? "open" : ""} id="deck-${i}">${head}
     <div class="stack" style="margin-top:var(--sp-4)">
@@ -230,6 +235,7 @@ function renderDetail(container, id) {
         <div class="row tight small muted"><span>bot: <span class="mono">${esc(t.agent)}</span></span>${t.opp_agent && t.opp_agent !== t.agent ? `<span>opponent bot: <span class="mono">${esc(t.opp_agent)}</span></span>` : ""}<span>test id <span class="mono">${esc(t.id)}</span></span></div>
       </div></details>
   </div>`;
+  container.querySelectorAll("button[data-copy]").forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); copyList(b.dataset.copy, b); }; });
   enhance(container);
 }
 
