@@ -323,7 +323,7 @@ function renderFrame() {
   const b = f.board || {};
   $("#t-pos", host).innerHTML = `<b>${st.frame + 1}</b><span class="muted">/${n}</span> · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}`;
   const compared = hg && isCompared(f);
-  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "", nav: navHandlers(frames), navPos: `${st.frame + 1}/${n}`, story: st.explain && window.RiftBoard ? RiftBoard.story(f) : false, slow: st.explain });
+  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame), events: f.log }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "", nav: navHandlers(frames), navPos: `${st.frame + 1}/${n}`, story: st.explain && window.RiftBoard ? RiftBoard.story(f) : false, slow: st.explain });
   // the current move, one line under the transport
   const who = hg ? ((hg.players || [])[f.player - 1] || "P" + f.player) : (s ? (f.player === s.featured.seat ? s.featured : s.opp).player : "P" + f.player);
   const playedIdx = hg && f.human_known && f.human_choice >= 0 ? f.human_choice : f.chosen;

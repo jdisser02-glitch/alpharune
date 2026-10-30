@@ -192,6 +192,10 @@ img.rb-pic { object-fit: cover; }
 .rb-unit .rb-gearline { position: absolute; right: 3px; top: 3px; display: flex; gap: 2px; z-index: 2; }
 .rb-unit .rb-gearline i { width: 12px; height: 12px; border-radius: 50%; background: #1b1a24; border: 1px solid var(--rb-gold); display: block; position: relative; }
 .rb-unit .rb-gearline i::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; border: 1.5px solid var(--rb-gold); }
+/* attached gear: a small art chip hooked to the unit's corner */
+.rb-unit .rb-geq { display: block; width: 22px; aspect-ratio: 744 / 1039; border-radius: 3px; overflow: hidden; border: 1.5px solid var(--rb-gold); box-shadow: 0 2px 6px rgba(0, 0, 0, .7); background: #1b1a24; cursor: zoom-in; transform: rotate(-8deg); }
+.rb-unit .rb-geq .rb-pic { width: 100%; height: 100%; }
+.rb-unit .rb-geq:hover { transform: rotate(-8deg) scale(1.6); z-index: 3; }
 .rb-unit.ex .rb-art { filter: saturate(.3) brightness(.62); }
 .rb-unit.ex { transform: rotate(7deg); }
 .rb-unit.ex .rb-art::after { content: "EXHAUSTED"; position: absolute; left: 0; right: 0; bottom: 0; font: 700 7px/1 var(--rb-display); letter-spacing: .14em; text-align: center; padding: 3px 0; background: rgba(0, 0, 0, .7); color: var(--rb-ink-dim); }
@@ -435,3 +439,12 @@ img.rb-pic { object-fit: cover; }
 @keyframes rb-sl-in { from { background: rgba(214, 178, 94, .25); } to { background: transparent; } }
 .rb-sc { color: var(--rb-ink); font-weight: 600; border-bottom: 1px dotted var(--rb-gold-dim); cursor: zoom-in; }
 @media (max-width: 720px) { .rb-story { position: static; max-width: none; margin: 6px 10px; } }
+
+/* arrows for moves and the played card on stage */
+.rb-arrows { position: absolute; left: 0; top: 0; z-index: 8; pointer-events: none; overflow: visible; }
+.rb-arrows line { stroke: var(--rb-gold); stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(214, 178, 94, .8)); }
+.rb-stage { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 9; display: flex; gap: 18px; pointer-events: none; }
+.rb-stage-card { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.rb-stage-pic { width: min(190px, 22vw); aspect-ratio: 744 / 1039; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 2px var(--rb-gold), 0 0 40px rgba(214, 178, 94, .55), 0 24px 50px rgba(0, 0, 0, .8); background: #1b1a24; }
+.rb-stage-pic .rb-pic { width: 100%; height: 100%; }
+.rb-stage-cap { font: 600 12px/1.3 var(--rb-display); color: #fff; background: rgba(10, 14, 26, .9); border: 1px solid var(--rb-chrome); padding: 5px 10px; border-radius: 999px; max-width: 260px; text-align: center; text-shadow: 0 1px 3px #000; }

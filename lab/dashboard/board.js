@@ -22,6 +22,7 @@
           banner / bannerKind   short status text in the top bar ("Bot is thinking…"), kind "me" | "bot" | "over"
       nav / navPos          {prevTurn, prev, next, nextTurn} callbacks: step buttons in the top bar; navPos = "12/80" shown between them
       story / slow          story: true (tell frame.log over the table) or an array from RiftBoard.story(frame); slow: longer animations
+      stage                 false hides the played card shown large at the centre of the table after a play
           legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
 (function () {
@@ -274,7 +275,7 @@
     if (u.buffs) tags.push(`<span class="rb-tag buff">+${u.buffs}</span>`);
     if (u.stunned) tags.push(`<span class="rb-tag stun">STUN</span>`);
     const chips = kws.map(x => `<span class="rb-tag kw ${x.combat ? "cb " + x.key : ""} ${x.combat && role ? "on" : ""}" title="${esc(x.label + (x.value > 1 ? " " + x.value : "") + (x.note ? ": " + x.note : ""))}">${esc(x.combat ? x.label : String(x.label).slice(0, 10))}${x.combat && x.value > 1 ? ` ${x.value}` : ""}</span>`);
-    const gear = (u.gear || []).map(g => `<i title="${esc(g)}"></i>`).join("");
+    const gear = (u.gear || []).map(g => { const gc = card(g); const gk = zoomKey({ card: gc, name: g, kind: "gear", state: `equipped to ${name}` }); return `<span class="rb-geq" data-z="${gk}" tabindex="0" role="img" aria-label="${esc(g)}, equipped" title="${esc(g)}">${pic(gc, g, 120) || `<i></i>`}</span>`; }).join("");
     const aria = `${name}${!isGear && u.might != null ? ", " + u.might + " might" : ""}${states.length ? ", " + states.join(", ") : ""}`;
     return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${role || ""} ${legal ? "rb-legal-hl" : ""} ${canMove ? "rb-can-move" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}" data-name="${esc(String(name).toLowerCase())}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
       <div class="rb-art">${pic(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
@@ -410,22 +411,59 @@
   }
 
   // ── transitions (FLIP on object ids) ───────────────────────────────────────
-  function snapshot() { const m = new Map(); S.el.querySelectorAll("[data-oid]").forEach(e => m.set(e.dataset.oid, { r: e.getBoundingClientRect(), ex: e.classList.contains("ex") })); return m; }
+  /** The zone an element sits in (a battlefield, a base, a hand), to tell a real move from a layout shift. */
+  function zoneOf(e) {
+    const bf = e.closest(".rb-bf"); if (bf) return "bf:" + (bf.dataset.bf || bf.dataset.bfi);
+    const rail = e.closest(".rb-rail"); const side = rail ? (rail.classList.contains("rb-me") ? "me" : "opp") : "?";
+    return (e.closest(".rb-hand") ? "hand:" : e.closest(".rb-base") ? "base:" : "zone:") + side;
+  }
+  function snapshot() { const m = new Map(); S.el.querySelectorAll("[data-oid]").forEach(e => m.set(e.dataset.oid, { r: e.getBoundingClientRect(), ex: e.classList.contains("ex"), z: zoneOf(e) })); return m; }
   /** Moves between two frames: a card that changed place flies there, a new one fades in, a unit that got exhausted
       taps (rotates into place) and one that readied untaps. Slow mode (opts.slow) stretches every duration. */
   function animate(prev) {
     if (!prev.size || !("animate" in Element.prototype) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const k = S.opts.slow ? 2.6 : 1;
+    const k = S.opts.slow ? 2.6 : 1, arrows = [];
     S.el.querySelectorAll("[data-oid]").forEach(e => {
       const a = prev.get(e.dataset.oid);
       if (!a) { e.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1 }], { duration: 260 * k, easing: "ease-out" }); return; }
       const b = e.getBoundingClientRect(); const dx = a.r.left - b.left, dy = a.r.top - b.top;
       const moved = Math.abs(dx) + Math.abs(dy) > 3 && Math.abs(dx) + Math.abs(dy) < 2000;
       const ex = e.classList.contains("ex");
-      if (moved) e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 380 * k, easing: "cubic-bezier(.2,.8,.2,1)" });
+      if (moved) { e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 380 * k, easing: "cubic-bezier(.2,.8,.2,1)" }); if (e.classList.contains("rb-unit") && a.z && a.z !== zoneOf(e)) arrows.push([a.r, b]); }
       else if (ex && !a.ex) e.animate([{ transform: "rotate(-12deg)", filter: "brightness(1.6)" }, { transform: "rotate(14deg)", offset: .6 }, { transform: "rotate(7deg)" }], { duration: 520 * k, easing: "ease-out" });
       else if (!ex && a.ex) e.animate([{ transform: "rotate(7deg)" }, { transform: "rotate(-3deg)", offset: .7 }, { transform: "none" }], { duration: 420 * k, easing: "ease-out" });
     });
+    drawArrows(arrows, k);
+  }
+  /** Arrows from where a card was to where it went (moves, attacks), drawn over the table for a moment. */
+  function drawArrows(arrows, k) {
+    const old = S.el.querySelector(".rb-arrows"); if (old) old.remove();
+    if (!arrows.length) return;
+    const R = S.el.getBoundingClientRect();
+    const seg = arrows.map(([a, b]) => {
+      const x1 = a.left + a.width / 2 - R.left, y1 = a.top + a.height / 2 - R.top, x2 = b.left + b.width / 2 - R.left, y2 = b.top + b.height / 2 - R.top;
+      const len = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / len, uy = (y2 - y1) / len, cut = Math.min(28, len / 3);
+      return `<line x1="${(x1 + ux * cut).toFixed(1)}" y1="${(y1 + uy * cut).toFixed(1)}" x2="${(x2 - ux * cut).toFixed(1)}" y2="${(y2 - uy * cut).toFixed(1)}" marker-end="url(#rb-ah)"/>`;
+    }).join("");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", "rb-arrows"); svg.setAttribute("width", R.width); svg.setAttribute("height", R.height); svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = `<defs><marker id="rb-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--rb-gold)"/></marker></defs>${seg}`;
+    S.el.append(svg);
+    svg.animate([{ opacity: 1 }, { opacity: 1, offset: .7 }, { opacity: 0 }], { duration: 1500 * k, easing: "ease-in" }).onfinish = () => svg.remove();
+  }
+  /** The card just played or cast, shown large at the centre of the table for a moment (longer in slow mode). */
+  function showStage(frame) {
+    if (S.stageTimer) { clearTimeout(S.stageTimer); S.stageTimer = 0; }
+    const old = S.el.querySelector(".rb-stage"); if (old) old.remove();
+    if (S.opts.stage === false || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const plays = story(frame).filter(l => l.kind === "play" && l.cards && l.cards[0]);
+    if (!plays.length) return;
+    const k = S.opts.slow ? 2.6 : 1;
+    const el = document.createElement("div"); el.className = "rb-stage"; el.setAttribute("aria-hidden", "true");
+    el.innerHTML = plays.slice(-2).map(l => { const n = l.cards[0], c = card(n); return `<div class="rb-stage-card"><div class="rb-stage-pic">${pic(c, n, 480) || fallback(c, n, null, "card")}</div><div class="rb-stage-cap">${esc(l.text)}</div></div>`; }).join("");
+    S.el.append(el);
+    el.animate([{ opacity: 0, transform: "translate(-50%, -50%) scale(.8)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }], { duration: 260 * k, easing: "ease-out" });
+    S.stageTimer = setTimeout(() => { el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 * k }).onfinish = () => el.remove(); }, 1300 * k);
   }
 
   // ── the story of a frame: the engine's log since the previous decision, told as sentences ──────────────────────
@@ -463,7 +501,7 @@
   const seatOf = f => f && f.player ? `P${f.player}` : "";
   function story(frame) {
     const out = [];
-    for (const raw of (frame && frame.log) || []) {
+    for (const raw of (frame && (frame.events || frame.log)) || []) {   // events: the full log when `log` was narrowed (replays pass the showdown lines as log)
       const line = String(raw).replace(/^\[D:[\d.]+\]\s*/, "").trim();
       if (/^(CHOSE|INTENT|DECISION)\b/.test(line)) continue;
       let hit = null;
@@ -665,6 +703,7 @@
       + rail(board, me, L.any ? L : null, true, sit) + legalBar(frame);
     if (S.opts.nav) S.el.querySelectorAll("[data-nav]").forEach(b => { b.onclick = () => { const fn = S.opts.nav[b.dataset.nav]; if (fn) fn(); }; });
     animate(prev);
+    if (prev.size) showStage(frame);
   }
   function destroy() {
     for (const [t, ty, fn, o] of S.handlers) t.removeEventListener(ty, fn, o);
