@@ -350,9 +350,11 @@ function drawGame() {
         <div id="vp-result"></div>
         <div class="vp-boardwrap"><div class="vp-board" id="vp-board"></div></div>
         <div class="vp-feed" id="vp-feed" aria-live="polite" aria-label="what happened since your last move"></div>
-        <section class="panel vp-opts" id="vp-opts" aria-label="your options"></section>
       </div>
-      <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
+      <div class="vp-side" id="vp-side">
+        <section class="panel vp-opts" id="vp-opts" aria-label="your options"></section>
+        <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
+      </div>
     </div>`;
   G.boardEl = $("#vp-board", G.root);
   RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), onBlocked: name => toast(whyNotPlayable(name), ""), players: players() });
@@ -403,6 +405,11 @@ function paint() {
   $("#vp-bar", game).innerHTML = barHtml(st, over, human, sit);
   $("#vp-result", game).innerHTML = over ? resultHtml() : "";
   const opts = $("#vp-opts", game); opts.hidden = over; if (!over) opts.innerHTML = optionsHtml(st, legal, human, sit);
+  // The options sit at the top of the pinned side column, beside the table; when a new decision of yours comes up,
+  // bring them back into view if the column was scrolled down to read the bot's moves.
+  const side = $("#vp-side", game);
+  if (side && human && !G.ui.wasHuman) side.scrollTop = 0;
+  G.ui.wasHuman = human;
   $("#vp-aside", game).innerHTML = asideHtml(st, over);
   const feed = $("#vp-feed", game); if (feed) feed.innerHTML = playedHtml();
   hidePreview();                                   // a hovered chip may have gone with the repaint

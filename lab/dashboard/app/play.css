@@ -62,7 +62,13 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-2); }
 /* ── game layout ────────────────────────────────────────────────────────── */
 .v-play .vp-game { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-4); align-items: start; }
 .v-play .vp-main { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
-.v-play .vp-aside { position: sticky; top: calc(var(--header-h) + 12px); display: flex; flex-direction: column; gap: var(--sp-3); max-height: calc(100vh - var(--header-h) - 24px); overflow: auto; min-width: 0; scrollbar-width: thin; }
+/* The right column is pinned beside the table: your options on top, the bot's moves and the game panel under them, so
+   choosing an option never scrolls the opponent's side of the table out of view. */
+.v-play .vp-side { position: sticky; top: calc(var(--header-h) + 12px); display: flex; flex-direction: column; gap: var(--sp-3); max-height: calc(100vh - var(--header-h) - 24px); overflow: auto; overscroll-behavior: contain; min-width: 0; scrollbar-width: thin; }
+.v-play .vp-aside { display: flex; flex-direction: column; gap: var(--sp-3); min-width: 0; }
+.v-play .vp-side .vp-opts { flex: 0 0 auto; }
+.v-play .vp-side .po-list { grid-template-columns: minmax(0, 1fr); }
+.v-play .vp-side .vp-opts .po-head .keys { display: none; }   /* the game panel below lists the keys */
 .v-play .vp-bar { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding: 8px 14px; background: var(--s1); border: 1px solid var(--chrome); border-radius: var(--r-2); font-size: 13.5px; box-shadow: var(--sh-1); }
 .v-play .vp-bar .turn { display: inline-flex; align-items: baseline; gap: 8px; }
 .v-play .vp-bar .turn b { font: 600 15px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
@@ -164,7 +170,7 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-2); }
 /* ── narrow screens ─────────────────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .v-play .vp-game { grid-template-columns: minmax(0, 1fr); }
-  .v-play .vp-aside { position: static; max-height: none; overflow: visible; }
+  .v-play .vp-side { position: static; max-height: none; overflow: visible; }
 }
 @media (max-width: 760px) {
   .v-play .vp-matchup { grid-template-columns: minmax(0, 1fr); gap: var(--sp-3); }
