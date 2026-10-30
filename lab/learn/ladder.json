@@ -888,6 +888,66 @@
    "elo": 719.5,
    "elo_current": 716.9,
    "minutes": 16.7
+  },
+  {
+   "iteration": 18,
+   "started_utc": "2026-10-30T06:15:35+00:00",
+   "player": "pmcts:sims=30,eval=policy:lab/learn/nets/net_016.rbpn,worlds=8",
+   "self_play_games": 200,
+   "sims": 30,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 3.2,
+   "records": 156407,
+   "games_in_buffer": 1200,
+   "val_loss": 0.7208333611488342,
+   "val_acc": 0.7301776915036583,
+   "val_margin_mse": 0.1662936986017818,
+   "baseline_val_loss": 0.7011887167686787,
+   "policy": {
+    "search_target_rows": 151482,
+    "policy_val_rows": 13264,
+    "policy_top1": 0.736354041013269,
+    "policy_top3": 0.955518697225573,
+    "policy_ce": 1.1035085280307324,
+    "policy_entropy": 1.0946670830181258,
+    "target_entropy": 1.0489766848272453,
+    "human_records": 3674,
+    "human_val_rows": 1819,
+    "human_top1": 0.38537658053875756,
+    "human_top3": 0.7091808686091259,
+    "human_clean_rows": 1281,
+    "human_clean_top1": 0.27634660421545665,
+    "human_clean_top3": 0.6120218579234973
+   },
+   "vs_current": {
+    "opponent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_016.rbpn,worlds=8",
+    "games": 80,
+    "wins": 33,
+    "rate": 0.4125,
+    "ci95": [
+     0.3111,
+     0.522
+    ],
+    "llr": -4.471,
+    "sprt": "worse"
+   },
+   "vs_random": {
+    "games": 100,
+    "wins": 99,
+    "rate": 0.99
+   },
+   "vs_reference": {
+    "opponent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_006.rbpn,worlds=8",
+    "games": 100,
+    "wins": 71,
+    "rate": 0.71
+   },
+   "net": "lab/learn/nets/net_018.rbpn",
+   "accepted": false,
+   "elo": 676.8,
+   "elo_current": 723.1,
+   "minutes": 15.5
   }
  ],
  "current_net": "lab/learn/nets/net_016.rbpn",
@@ -1620,23 +1680,60 @@
    "games": 100,
    "wins_a": 73,
    "wins_b": 27
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/net_018.rbpn",
+   "b": "net:lab/learn/nets/net_016.rbpn",
+   "games": 40,
+   "wins_a": 18,
+   "wins_b": 22
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/net_018.rbpn",
+   "b": "net:lab/learn/nets/net_016.rbpn",
+   "games": 40,
+   "wins_a": 15,
+   "wins_b": 25
+  },
+  {
+   "iteration": 18,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/net_018.rbpn",
+   "b": "random",
+   "games": 100,
+   "wins_a": 99,
+   "wins_b": 1
+  },
+  {
+   "iteration": 18,
+   "label": "vs_reference",
+   "a": "net:lab/learn/nets/net_018.rbpn",
+   "b": "net:lab/learn/nets/net_006.rbpn",
+   "games": 100,
+   "wins_a": 71,
+   "wins_b": 29
   }
  ],
  "reference_net": "lab/learn/nets/net_006.rbpn",
  "elo": {
-  "net:lab/learn/nets/net_004.rbvn": 525.5,
-  "net:lab/learn/nets/net_006.rbpn": 529.5,
-  "net:lab/learn/nets/net_007.rbpn": 462.7,
-  "net:lab/learn/nets/net_008.rbpn": 568.6,
-  "net:lab/learn/nets/net_009.rbpn": 578.9,
-  "net:lab/learn/nets/net_010.rbpn": 602.0,
-  "net:lab/learn/nets/net_011.rbpn": 632.1,
-  "net:lab/learn/nets/net_012.rbpn": 683.6,
-  "net:lab/learn/nets/net_013.rbpn": 630.7,
-  "net:lab/learn/nets/net_014.rbpn": 710.8,
-  "net:lab/learn/nets/net_015.rbpn": 713.1,
-  "net:lab/learn/nets/net_016.rbpn": 716.9,
-  "net:lab/learn/nets/net_017.rbpn": 719.5,
+  "net:lab/learn/nets/net_004.rbvn": 527.6,
+  "net:lab/learn/nets/net_006.rbpn": 531.7,
+  "net:lab/learn/nets/net_007.rbpn": 464.6,
+  "net:lab/learn/nets/net_008.rbpn": 570.7,
+  "net:lab/learn/nets/net_009.rbpn": 581.0,
+  "net:lab/learn/nets/net_010.rbpn": 604.1,
+  "net:lab/learn/nets/net_011.rbpn": 634.3,
+  "net:lab/learn/nets/net_012.rbpn": 686.4,
+  "net:lab/learn/nets/net_013.rbpn": 633.0,
+  "net:lab/learn/nets/net_014.rbpn": 715.1,
+  "net:lab/learn/nets/net_015.rbpn": 716.7,
+  "net:lab/learn/nets/net_016.rbpn": 723.1,
+  "net:lab/learn/nets/net_017.rbpn": 724.7,
+  "net:lab/learn/nets/net_018.rbpn": 676.8,
   "random": 0.0
  }
 }
