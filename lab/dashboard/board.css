@@ -407,3 +407,18 @@ img.rb-pic { object-fit: cover; }
   .rb-backs .rb-back:not(:first-child) { margin-left: -28px; }
 }
 @media (prefers-reduced-motion: reduce) { .rb *, .rb-zoom { transition: none !important; animation: none !important; } }
+
+/* Drag and drop: a playable card is grabbed and dropped on a battlefield, the base or a unit. */
+.rb-me .rb-hand .rb-card.rb-legal-hl, .rb-unit.rb-legal-hl { cursor: grab; touch-action: none; }
+.rb.rb-dragging, .rb.rb-dragging * { cursor: grabbing !important; }
+.rb-drag-src { opacity: .45; }
+.rb-ghost { position: fixed; z-index: 1200; width: 84px; pointer-events: none; transform: translate(-50%, -55%) rotate(4deg); filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .7)); opacity: .95; border-radius: 6px; overflow: hidden; }
+.rb-ghost img, .rb-ghost .rb-pic { width: 100%; display: block; }
+.rb-drop { outline: 2px dashed rgba(255, 255, 255, .75); outline-offset: 2px; box-shadow: 0 0 0 4px rgba(255, 255, 255, .08) inset; transition: outline-color .12s, box-shadow .12s; }
+.rb-drop-over { outline: 3px solid var(--rb-gold) !important; box-shadow: 0 0 0 6px rgba(214, 178, 94, .18) inset, 0 0 26px rgba(214, 178, 94, .55) !important; }
+.rb-aim-src { outline: 3px solid #fff !important; outline-offset: 2px; }
+.rb-aimhint { position: sticky; bottom: 0; z-index: 7; margin: 6px 14px; padding: 7px 12px; border-radius: 8px; background: rgba(255, 255, 255, .94); color: #0a0e1a; font: 600 12px/1.3 var(--rb-display); text-align: center; letter-spacing: .02em; }
+/* The chosen champion shown as a card while it waits in its zone. */
+.rb-champ.zone { display: grid; grid-template-columns: auto; justify-items: center; gap: 3px; }
+.rb-champ.zone .rb-card.champ { width: 58px; }
+.rb-me .rb-champ.zone .rb-card.champ.rb-legal-hl { transform: translateY(-4px); }

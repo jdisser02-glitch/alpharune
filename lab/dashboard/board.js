@@ -125,9 +125,9 @@
       bring | focus | priority | damage | mulligan | end | choose | other. The destination "base" gives no battlefield. */
   function parseOption(text, type) {
     const t = String(text || ""), e = { text: t, type: type || "", kind: "other" }; let m;
-    if ((m = /^(Play|Hide) (.+?)(?: (?:to|at) (.+?))?(?: targeting .+)?(?: \(alternative cost\))?$/.exec(t))) { e.kind = m[1] === "Hide" ? "hide" : "play"; e.card = m[2]; if (m[3] && m[3] !== "base") e.battlefield = m[3]; }
+    if ((m = /^(Play|Hide) (.+?)(?: (?:to|at) (.+?))?(?: targeting (.+?))?(?: \(alternative cost\))?$/.exec(t))) { e.kind = m[1] === "Hide" ? "hide" : "play"; e.card = m[2]; if (m[3] && m[3] !== "base") e.battlefield = m[3]; if (m[4]) e.target = m[4]; if (/\(alternative cost\)$/.test(t)) e.alt = true; }
     else if ((m = /^Move (.+?) to (.+)$/.exec(t))) { e.kind = "move"; e.card = m[1]; e.units = splitNames(m[1]); if (m[2] !== "base") e.battlefield = m[2]; }
-    else if ((m = /^(?:Use|Equip) (.+?)(?: ability \d+)?(?: (?:on|to) .+)?$/.exec(t))) { e.kind = "use"; e.card = m[1]; }
+    else if ((m = /^(?:Use|Equip) (.+?)(?: ability \d+)?(?: (?:on|to) (.+))?$/.exec(t))) { e.kind = "use"; e.card = m[1]; if (m[2]) e.target = m[2]; }
     else if ((m = /^Bring battlefield (.+)$/.exec(t))) { e.kind = "bring"; e.card = m[1]; }
     else if (/^Pass focus$/.test(t) || type === "PassFocus") e.kind = "focus";
     else if (/^Pass$/.test(t) || type === "PassPriority") e.kind = "priority";
@@ -248,7 +248,7 @@
     const k = zoomKey({ card: c, name, state: extraState || (typeOf(c) ? typeOf(c) + " in hand" : "in hand") });
     const cost = /^(unit|spell|gear)$/.test(typeOf(c)) ? costOf(c) : null, pw = c && (c.power ?? c.power_cost);
     const badge = cost != null && cls !== "legend" ? `<span class="rb-cost" aria-hidden="true">${cost}${pw ? `<i>${"•".repeat(Math.min(pw, 3))}</i>` : ""}</span>` : "";
-    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, ref) ? "rb-focus-hl" : ""}" data-z="${k}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}${legal ? ", playable" : ""}">${pic(c, name, 240) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}${badge}</div>`;
+    return `<div class="rb-card ${cls || ""} ${legal ? "rb-legal-hl" : ""} ${inFocus(L, name, c, ref) ? "rb-focus-hl" : ""}" data-z="${k}" data-name="${esc(String(name).toLowerCase())}"${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(name)}${cost != null ? ", cost " + cost : ""}${legal ? ", playable" : ""}">${pic(c, name, 240) || fallback(c, name, c && (typeOf(c) === "unit") ? c.might : null)}${badge}</div>`;
   }
   /** A unit or gear thumb. role: "attacker" | "defender" | "" (its side in the combat at this battlefield). */
   function unitEl(u, p, L, where, isGear, role) {
@@ -275,7 +275,7 @@
     const chips = kws.map(x => `<span class="rb-tag kw ${x.combat ? "cb " + x.key : ""} ${x.combat && role ? "on" : ""}" title="${esc(x.label + (x.value > 1 ? " " + x.value : "") + (x.note ? ": " + x.note : ""))}">${esc(x.combat ? x.label : String(x.label).slice(0, 10))}${x.combat && x.value > 1 ? ` ${x.value}` : ""}</span>`);
     const gear = (u.gear || []).map(g => `<i title="${esc(g)}"></i>`).join("");
     const aria = `${name}${!isGear && u.might != null ? ", " + u.might + " might" : ""}${states.length ? ", " + states.join(", ") : ""}`;
-    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${role || ""} ${legal ? "rb-legal-hl" : ""} ${canMove ? "rb-can-move" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
+    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${role || ""} ${legal ? "rb-legal-hl" : ""} ${canMove ? "rb-can-move" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}" data-name="${esc(String(name).toLowerCase())}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
       <div class="rb-art">${pic(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
       ${tags.length ? `<div class="rb-tags">${tags.join("")}</div>` : ""}${gear ? `<div class="rb-gearline">${gear}</div>` : ""}
       ${canMove ? `<span class="rb-mv" aria-hidden="true" title="can move now"></span>` : ""}
@@ -299,7 +299,7 @@
     for (let i = 0; i < shown; i++) pips.push(`<i class="rb-rune ${i >= ready ? "ex" : ""}" style="--d:${DOMAINS[dom(i)] || "#8f7a3f"}" title="${i >= ready ? "exhausted" : "ready"} rune"></i>`);
     return `<div class="rb-runes"><span class="rb-zlabel">Runes</span><div class="rb-strip" role="img" aria-label="${ready} runes ready, ${ex} exhausted">${pips.join("")}${total > shown ? `<span class="rb-rn">+${total - shown}</span>` : ""}</div><div class="rb-rn">${ready} ready · ${ex} exhausted</div></div>`;
   }
-  function championStatus(board, i, info) {
+  function championStatus(board, i, info, L) {
     const p = i + 1; let unit = null, where = "";
     const pl = board.players[i] || {};
     // the deck's champion: named by the live state (players[].champion) or the caller (players[i].champion); else any champion unit
@@ -309,7 +309,11 @@
     if (!unit) for (const bf of board.battlefields) for (const u of bf["p" + p] || []) if (isCh(u)) { unit = u; where = "at " + bf.name; break; }
     const name = unit ? nameOf(unit) : (pl.champion && pl.champion.name) || (info && info.champion) || "";
     if (!name) return "";
-    return `<div class="rb-champ"><span class="rb-zlabel">Champion</span><span class="rb-cn">${esc(name)}</span><span class="rb-cs ${unit ? "on" : ""}">${unit ? where : "not in play"}</span></div>`;
+    // Not in play: the chosen champion sits in its own zone (CR 056.1) and is played from there like a card from hand,
+    // so it is shown as a card, with the gold ring, the click and the drag of a playable card.
+    const inZone = !unit && !(pl.champion && pl.champion.zone && !/champion/i.test(pl.champion.zone));
+    const cardHtml = inZone ? cardEl(name, p, "champ", L, "chosen champion, in the Champion zone") : "";
+    return `<div class="rb-champ ${inZone ? "zone" : ""}"><span class="rb-zlabel">Champion</span>${cardHtml}<span class="rb-cn">${esc(name)}</span><span class="rb-cs ${unit ? "on" : ""}">${unit ? where : inZone ? "in the Champion zone" : "not in play"}</span></div>`;
   }
   function rail(board, i, L, bottom, sit) {
     const pl = board.players[i], p = i + 1, info = (S.opts.players || [])[i] || {};
@@ -334,7 +338,7 @@
       <div class="rb-side p${p}">${active ? `<span class="rb-active">turn</span>` : ""}${acting ? `<span class="rb-now">to act</span>` : ""}<span class="rb-who"><b>P${p}</b> ${esc(info.label || (bottom ? "viewer" : "opponent"))}</span><div class="rb-sc">${pl.score || 0}<small>/${target}</small></div><div class="rb-pips" aria-hidden="true">${pips}</div>${pl.energy_pool ? `<span class="rb-energy">energy <b>${pl.energy_pool}</b></span>` : ""}${info.deck ? `<span class="rb-deck" title="${esc(info.deck)}">${esc(info.deck)}</span>` : ""}</div>
       <div class="rb-hand ${ring === "hand" ? "rb-ring" : ""}"><span class="rb-hcount">Hand · <b>${handCount}</b>${nLegal ? `<span class="rb-hplay">· ${nLegal} playable</span>` : ""}</span>${handHtml}</div>
       <div class="rb-zone">
-        <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info)}</div>
+        <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info, mine ? L : focusOnly(L))}</div>
         <div class="rb-base ${ring === "base" ? "rb-ring" : ""}"><span class="rb-zlabel">Base</span><div class="rb-units">${units.join("") || `<span class="rb-none">no units in base</span>`}</div></div>
         ${runeStrip(pl, info)}
         <div class="rb-piles"><div class="rb-pile deck" title="cards left in the main deck"><b>${pl.deck ?? "?"}</b><span>deck</span></div><div class="rb-pile" title="cards in the trash"><b>${pl.trash ?? 0}</b><span>trash</span></div>${pl.banish != null ? `<div class="rb-pile" title="banished cards"><b>${pl.banish}</b><span>banish</span></div>` : ""}</div>
@@ -372,7 +376,7 @@
     const duel = hot && (hot.verdict || hot.note) ? `<div class="rb-duel ${esc(mode)} ${esc(hot.outcome)}">
         <div class="rb-duelrow"><span class="rb-dside atk p${hot.attacker}"><small>Attackers · ${esc(seat(hot.attacker))}</small><b>${hot.atk.might}</b></span><span class="rb-dvs" aria-hidden="true">⚔</span><span class="rb-dside def p${hot.defender}"><b>${hot.def.might}</b><small>Defenders · ${esc(seat(hot.defender))}</small></span></div>
         <div class="rb-verdict">${hot.verdict ? `${esc(hot.verdict)} <i>Abilities and responses on the chain can change it.</i>` : esc(hot.note)}</div></div>` : "";
-    return `<article class="rb-bf ${held} ${esc(mode)} ${hot ? "rb-hot" : ""} ${legal ? "rb-legal-bf" : ""} ${focus ? "rb-focus-bf" : ""} ${sp || art ? "" : "noart"}"${pickAttr(legal)} aria-label="${esc(bf.name)}, ${esc(status.toLowerCase())}">
+    return `<article class="rb-bf ${held} ${esc(mode)} ${hot ? "rb-hot" : ""} ${legal ? "rb-legal-bf" : ""} ${focus ? "rb-focus-bf" : ""} ${sp || art ? "" : "noart"}" data-bf="${esc(String(bf.name).toLowerCase())}" data-bfi="${idx}"${pickAttr(legal)} aria-label="${esc(bf.name)}, ${esc(status.toLowerCase())}">
       ${sp ? `<div class="rb-bfart sprite" style="${sp.style}"></div>` : art ? `<img class="rb-bfart" src="${esc(art)}" alt="" loading="lazy" decoding="async">` : `<div class="rb-bfart"></div>`}
       <header class="rb-bfhead"><span class="rb-bfidx">${idx + 1}</span><span class="rb-bfname" data-z="${k}" tabindex="0" role="button" aria-label="${esc(bf.name)}, show card">${esc(bf.name)}</span>
         <span class="rb-ribbon ${esc(ribbon)}" title="${esc(HOLD_HINT)}">${esc(status)}</span><span class="rb-bfhint" role="tooltip">${esc(HOLD_HINT)}</span></header>
@@ -453,8 +457,101 @@
 
   // ── events (delegated) ─────────────────────────────────────────────────────
   function on(target, type, fn, o) { target.addEventListener(type, fn, o); S.handlers.push([target, type, fn, o]); }
+
+  // ── Drag and drop ──────────────────────────────────────────────────────────
+  // A playable card (gold ring) can be dragged to where it goes: a battlefield, your base, or a unit (gear, a targeted
+  // spell). The drop picks the legal option that names that destination; the options list below stays as it is.
+  // Pointer events, so it works with a mouse and with touch (the legal cards set touch-action: none).
+  const D = { down: null, active: false, ghost: null, entries: [], over: null };
+  const norm = v => String(v == null ? "" : v).toLowerCase();
+  function entriesFor(name) {
+    if (!S.frame || !Array.isArray(S.frame.legal) || S.opts.legalDisabled) return [];
+    const n = norm(name);
+    return optionsOf(S.frame).filter(e => norm(e.card) === n || norm(typeof e.card === "object" && e.card ? e.card.name : "") === n || (e.units || []).some(u => norm(u) === n));
+  }
+  function dropTargets(entries) {
+    const out = [];
+    for (const e of entries) {
+      if (e.target) { for (const u of S.el.querySelectorAll(`.rb-unit[data-name="${CSS.escape(norm(e.target))}"]`)) out.push([u, e]); }
+      else if (e.battlefield != null) { const bf = S.el.querySelector(`.rb-bf[data-bf="${CSS.escape(norm(typeof e.battlefield === "object" ? e.battlefield.name : e.battlefield))}"]`) || S.el.querySelector(`.rb-bf[data-bfi="${typeof e.battlefield === "object" ? e.battlefield.index : ""}"]`); if (bf) out.push([bf, e]); }
+      else if (e.kind === "play" || e.kind === "move" || e.kind === "hide") { const base = S.el.querySelector(".rb-me .rb-base"); if (base) out.push([base, e]); }
+    }
+    return out;
+  }
+  function dragStart(e) {
+    const src = D.down.el; D.active = true; S.el.classList.add("rb-dragging"); hideZoom();
+    const g = src.cloneNode(true); g.className = "rb-ghost"; g.removeAttribute("data-pick"); g.removeAttribute("tabindex"); document.body.append(g); D.ghost = g;
+    for (const [t] of D.targets) t.classList.add("rb-drop");
+    src.classList.add("rb-drag-src");
+    dragMove(e);
+  }
+  function dragMove(e) {
+    if (!D.ghost) return;
+    D.ghost.style.left = e.clientX + "px"; D.ghost.style.top = e.clientY + "px";
+    const under = document.elementFromPoint(e.clientX, e.clientY), hit = under && under.closest(".rb-drop");
+    if (hit !== D.over) { if (D.over) D.over.classList.remove("rb-drop-over"); D.over = hit || null; if (D.over) D.over.classList.add("rb-drop-over"); }
+  }
+  function dragEnd(e, cancel) {
+    const over = D.over, targets = D.targets || [];
+    if (D.ghost) D.ghost.remove();
+    for (const [t] of targets) t.classList.remove("rb-drop", "rb-drop-over");
+    if (D.down && D.down.el) D.down.el.classList.remove("rb-drag-src");
+    S.el.classList.remove("rb-dragging");
+    const was = D.active; D.down = null; D.active = false; D.ghost = null; D.over = null; D.targets = [];
+    if (!was || cancel || !over) return;
+    const hits = targets.filter(([t]) => t === over).map(([, en]) => en), pick = hits.find(x => !x.alt) || hits[0];
+    if (pick && typeof S.opts.onPick === "function") S.opts.onPick(pick.index, pick);
+  }
+  // Aim mode: a tap or click on a card with several destinations (gear, a targeted spell, an Ambush unit) lights the
+  // destinations up; the next click on one of them picks that option, anywhere else cancels.
+  function aimStart(el, targets) {
+    aimEnd();
+    D.aim = { el, targets }; el.classList.add("rb-aim-src"); S.el.classList.add("rb-aiming");
+    for (const [t] of targets) t.classList.add("rb-drop");
+    const hint = document.createElement("div"); hint.className = "rb-aimhint"; hint.textContent = "Choose where: click a lit battlefield, your base or a unit. Esc cancels."; S.el.append(hint);
+  }
+  function aimEnd() {
+    if (!D.aim) return;
+    for (const [t] of D.aim.targets) t.classList.remove("rb-drop", "rb-drop-over");
+    D.aim.el.classList.remove("rb-aim-src"); S.el.classList.remove("rb-aiming");
+    const h = S.el.querySelector(".rb-aimhint"); if (h) h.remove();
+    D.aim = null;
+  }
+  function bindDrag(root) {
+    on(root, "click", e => {
+      if (D.swallow) return;
+      if (D.aim) {   // second click: a lit destination picks, anything else cancels
+        const t = e.target.closest(".rb-drop"), aim = D.aim; aimEnd();
+        if (t && root.contains(t)) { const hits = aim.targets.filter(([x]) => x === t).map(([, en]) => en), pick = hits.find(x => !x.alt) || hits[0]; if (pick && typeof S.opts.onPick === "function") S.opts.onPick(pick.index, pick); }
+        e.stopPropagation(); e.preventDefault(); return;
+      }
+      const el = e.target.closest(".rb-legal-hl[data-name]"); if (!el || !root.contains(el) || S.opts.legalDisabled) return;
+      const entries = entriesFor(el.dataset.name); if (entries.length < 2) return;   // one option: the plain click picks it
+      const targets = dropTargets(entries); if (targets.length < 2) return;
+      aimStart(el, targets); e.stopPropagation(); e.preventDefault();
+    }, true);
+    on(document, "keydown", e => { if (e.key === "Escape") aimEnd(); });
+    on(root, "pointerdown", e => {
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      const el = e.target.closest(".rb-legal-hl[data-name]"); if (!el || !root.contains(el)) return;
+      aimEnd();
+      const entries = entriesFor(el.dataset.name); const targets = dropTargets(entries); if (!targets.length) return;
+      D.down = { el, x: e.clientX, y: e.clientY, id: e.pointerId }; D.targets = targets; D.active = false;
+    });
+    on(root, "pointermove", e => {
+      if (!D.down || e.pointerId !== D.down.id) return;
+      if (!D.active) { if (Math.hypot(e.clientX - D.down.x, e.clientY - D.down.y) < 7) return; try { root.setPointerCapture(e.pointerId); } catch (_) { /* fine */ } dragStart(e); }
+      else dragMove(e);
+      e.preventDefault();
+    });
+    on(root, "pointerup", e => { if (!D.down || e.pointerId !== D.down.id) return; const was = D.active; dragEnd(e, false); if (was) { D.swallow = true; setTimeout(() => { D.swallow = false; }, 0); } });
+    on(root, "pointercancel", e => { if (D.down) dragEnd(e, true); });
+    on(root, "click", e => { if (D.swallow) { e.stopPropagation(); e.preventDefault(); } }, true);   // the click that ends a drag is not a tap
+    on(document, "keydown", e => { if (e.key === "Escape" && D.down) dragEnd(e, true); });
+  }
   function bind() {
     const root = S.el;
+    bindDrag(root);
     on(root, "pointerdown", e => { S.touch = e.pointerType === "touch"; });
     on(root, "mouseover", e => { if (S.touch) return; const t = e.target.closest("[data-z]"); if (t && root.contains(t)) showZoom(+t.dataset.z, false, e.clientX, e.clientY); });
     on(root, "mousemove", e => { if (S.touch || !S.zoom || !S.zoom.classList.contains("on") || S.zoom.classList.contains("modal")) return; if (S.raf) return; S.raf = requestAnimationFrame(() => { S.raf = 0; placeZoom(e.clientX, e.clientY); }); });
@@ -493,7 +590,7 @@
   function render(frame, opts) {
     if (!S.el) throw new Error("RiftBoard.render before mount");
     if (opts) { const had = S.opts.cards; Object.assign(S.opts, opts); if (opts.cards && opts.cards !== had) indexCards(opts.cards); }
-    S.frame = frame; S.z = []; hideZoom();
+    S.frame = frame; S.z = []; hideZoom(); if (D.aim) aimEnd();
     const board = frame && frame.board; if (!board) { S.el.innerHTML = `<div class="rb-top"><span class="rb-turn">No game state</span></div>`; return; }
     const viewer = S.opts.viewer === 2 ? 2 : 1, me = viewer - 1, opp = 1 - me;
     const L = legalIndex(frame), sit = situation(frame);

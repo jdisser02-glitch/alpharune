@@ -42,6 +42,7 @@ const G = {
   stage: "setup", st: null, seat: 1, seed: 0, autopay: true, level: "quick",
   busy: false, thinking: false, thinkStart: 0, timer: 0, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1,
   tally: null, result: null, lastHint: "", error: null,
+  feed: [],                        // what happened since your last real decision: the bot's moves, your automatic passes, points scored
 };
 let keysBound = false;
 
@@ -126,8 +127,9 @@ function noteLog(st) {
   if (!st || st.n === G.loggedN) return; G.loggedN = st.n;
   for (const l of st.log || []) {
     G.log.push(l);
-    const m = /SCORE: P([12]) \+(\d+) via (Conquer|Hold|effect)/.exec(l);   // what the points came from, for the result hint
+    const m = /SCORE: P([12]) \+(\d+) via (Conquer|Hold|effect)(?:\s+(?:at|on)\s+(.+?))?\s*$/.exec(l);   // what the points came from, for the result hint
     if (m && G.tally) G.tally[+m[1]][m[3].toLowerCase()] += +m[2];
+    if (m) G.feed.push({ kind: "score", who: +m[1], text: `+${m[2]} point${+m[2] > 1 ? "s" : ""} via ${m[3]}${m[4] ? ` at ${m[4]}` : ""}`, t: Date.now() });
   }
   if (G.log.length > LOG_MAX) G.log.splice(0, G.log.length - LOG_MAX);
 }
@@ -162,7 +164,7 @@ async function advance() {
     if ((st.paying_cost && G.autopay && st.legal.length) || lonePass) {
       // a lone "Pass focus" in a showdown or combat is held a beat longer, so the combat panel can be read
       G.busy = true; paint(); await sleep(lonePass ? (st.legal[0].type === "PassFocus" ? AUTO_PAUSE.focus : AUTO_PAUSE.pass) : AUTO_PAUSE.pay);
-      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
+      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); if (lonePass) G.feed.push({ kind: "me", text: st.legal[0].text, t: Date.now() }); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
       G.busy = false; return advance();
     }
     paint(); return;
@@ -171,7 +173,9 @@ async function advance() {
   try {
     const mv = await call("botMove");
     notePass(mv.text, mv.type, mv.player || 3 - G.seat);
-    G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer(); paint();
+    G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer();
+    G.feed.push({ kind: "bot", text: mv.text || "option " + mv.index, type: mv.type, t: Date.now() });
+    paint();
     const inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
     await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : inShowdown ? AUTO_PAUSE.focus : BOT_PAUSE.forced);
   } catch (e) { G.error = e.message; G.thinking = false; G.busy = false; stopTimer(); paint(); return; }
@@ -181,6 +185,7 @@ async function pick(index) {
   if (G.stage !== "playing" || G.busy || !G.st.decision_is_human || !G.st.legal.some(l => l.index === index)) return;
   G.busy = true; paint();
   const chosen = G.st.legal.find(l => l.index === index) || {};
+  if (!G.st.paying_cost) G.feed = [];        // a real decision of yours: the feed restarts from here
   try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null; } catch (e) { G.error = e.message; }
   G.busy = false; advance();
 }
@@ -327,7 +332,7 @@ function drawGame() {
       <div class="vp-main">
         <div class="vp-bar" id="vp-bar" role="status" aria-live="polite"></div>
         <div id="vp-result"></div>
-        <div class="vp-board" id="vp-board"></div>
+        <div class="vp-boardwrap"><div class="vp-board" id="vp-board"></div><div class="vp-feed" id="vp-feed" aria-live="polite" aria-label="what happened since your last move"></div></div>
         <section class="panel vp-opts" id="vp-opts" aria-label="your options"></section>
       </div>
       <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
@@ -362,6 +367,9 @@ function paint() {
   const legal = !over && st.decision_is_human ? legalHints(st.legal) : [];
   const banner = over ? "Game over" : G.thinking ? "Bot is thinking…" : G.busy ? (st.paying_cost ? "Paying…" : st.decision_is_human ? "Passing…" : "…") : human ? (st.paying_cost ? "Pay the cost" : "Your move") : "";
   const frame = frameOf(st, legal), sit = RiftBoard.situation(frame);
+  // Ring the card the bot just played or moved, so its move can be found on the table.
+  const lastBotEntry = [...G.feed].reverse().find(e => e.kind === "bot");
+  if (lastBotEntry && !over) { const e = RiftBoard.parseOption(lastBotEntry.text); if (e.card || e.battlefield) frame.focus = [{ card: e.card, battlefield: e.battlefield }]; }
   const key = sit && sit.index >= 0 && sit.mode ? `${sit.index}:${sit.mode === "contested" ? "showdown" : sit.mode}` : "";   // a showdown that became a combat keeps its passes
   if (key.split(":")[0] !== G.sitKey.split(":")[0] || !key) { G.passes = []; frame.passes = G.passes; } G.sitKey = key;
   if (G.boardEl && document.contains(G.boardEl)) RiftBoard.render(frame, { viewer: G.seat, hands: over ? "both" : "viewer", banner, bannerKind: over ? "over" : human ? "me" : "bot", legalDisabled: !human, legalLabel: st.paying_cost ? "Pay with" : "Your options", players: players() });
@@ -371,6 +379,7 @@ function paint() {
   $("#vp-result", game).innerHTML = over ? resultHtml() : "";
   const opts = $("#vp-opts", game); opts.hidden = over; if (!over) opts.innerHTML = optionsHtml(st, legal, human, sit);
   $("#vp-aside", game).innerHTML = asideHtml(st, over);
+  const feed = $("#vp-feed", game); if (feed) feed.innerHTML = feedHtml(over);
   hidePreview();                                   // a hovered chip may have gone with the repaint
   if (G.thinking) tickTimer();
 }
@@ -406,6 +415,18 @@ function optionsHtml(st, legal, human, sit) {
     : `<div class="po-none">${G.thinking ? "The bot is thinking. Your options appear here when it is your move." : autoPay ? "Rune costs are paid for you; turn that off in the side panel to pick the runes yourself." : "Nothing to choose right now."}</div>`;
   return `<header class="po-head"><h3>${title}</h3><span class="state">${esc(state)}</span><span class="keys"><span class="kbd">1</span>–<span class="kbd">9</span> pick · <span class="kbd">Enter</span> first</span><button type="button" class="btn-sm po-toggle" id="vp-sheet" aria-expanded="${G.ui.sheet}">${G.ui.sheet ? "Hide" : "Show"}</button></header>${list}
     ${human && st.paying_cost ? `<p class="hint" style="margin-top:8px">The engine pays costs rune by rune. Turn automatic payment on in the side panel to skip these steps.</p>` : ""}`;
+}
+/** The feed over the table: everything since your last real decision, newest at the bottom. The bot's plays, your automatic
+    passes and the points scored, so a combat that ran by itself can be read back move by move. */
+function feedHtml(over) {
+  const items = G.feed.slice(-7); if (!items.length || over) return "";
+  const now = Date.now(), bot = 3 - G.seat;
+  return `<div class="fd-head">Since your last move</div>${items.map(e => {
+    const fresh = now - e.t < 2500 ? "new" : "";
+    if (e.kind === "score") return `<div class="fi score ${fresh}"><span class="badge ${e.who === G.seat ? "p" + G.seat : "p" + bot}">${e.who === G.seat ? "You" : "Bot"}</span><span class="fi-t">${esc(e.text)}</span></div>`;
+    if (e.kind === "me") return `<div class="fi me ${fresh}"><span class="badge p${G.seat}">You</span><span class="fi-t">${chipText(e.text, "sm")}</span></div>`;
+    return `<div class="fi bot ${fresh}"><span class="badge p${bot}">Bot</span><span class="fi-t">${chipText(e.text, "sm")}</span></div>`;
+  }).join("")}`;
 }
 function asideHtml(st, over) {
   const lb = G.lastBot, sh = lb && lb.search, shares = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score), max = Math.max(1e-9, ...shares.map(o => o.score));
