@@ -1,8 +1,9 @@
 # Runs simulation requests for the Riven test lab.
 #
 # To launch a test, commit a test spec (same format as lab/specs/*.json, see
-# lab/README.md) or a list-search spec (lab/specs/optimize/*.json, detected by
-# its "rounds" key) to lab/requests/ on this branch. This workflow builds the
+# lab/README.md), a list-search spec (lab/specs/optimize/*.json, detected by
+# its "rounds" key) or a genetic list search (lab/specs/ga/*.json, detected by
+# its "population" key) to lab/requests/ on this branch. This workflow builds the
 # engine, runs every request added by the push, writes the results to
 # lab/results/, moves the request to lab/requests/done/ and pushes both.
 name: riftlab
@@ -69,7 +70,9 @@ jobs:
           mkdir -p lab/requests/done
           for r in $requests; do
             [ -f "$r" ] || continue
-            if grep -q '"rounds"' "$r"; then
+            if grep -q '"population"' "$r"; then
+              python3 lab/ga.py "$r" | tee -a lab/.run.log           # genetic list search spec
+            elif grep -q '"rounds"' "$r"; then
               python3 lab/optimize.py "$r" | tee -a lab/.run.log     # list search spec
             else
               python3 lab/riftlab.py run "$r" --threads 4 | tee -a lab/.run.log
