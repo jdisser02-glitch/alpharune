@@ -46,6 +46,7 @@ const G = {
   tally: null, result: null, lastHint: "", error: null,
   feed: [],                        // what happened since your last real decision: the bot's moves, your automatic passes, points scored
   rec: null, saved: null,          // the game record (every decision, for review) and where it was saved
+  played: [], savedAt: 0,          // the cards played this game (the line under the table); decisions already saved
 };
 let keysBound = false;
 
@@ -148,7 +149,7 @@ async function start() {
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
     G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [] };
-    G.saved = null;
+    G.saved = null; G.played = []; G.savedAt = 0; G.botStory = [];
     Object.assign(G, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null,
                        tally: { 1: { conquer: 0, hold: 0, effect: 0 }, 2: { conquer: 0, hold: 0, effect: 0 } } });
     G.ui.sheet = true; draw(); advance();
@@ -182,6 +183,10 @@ async function advance() {
     notePass(mv.text, mv.type, mv.player || 3 - G.seat);
     G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer();
     G.feed.push({ kind: "bot", text: mv.text || "option " + mv.index, type: mv.type, t: Date.now() });
+    // what the move did, told from the engine's log: the spell cast, the units moved, what resolved, what died
+    try { G.lastBotStory = window.RiftBoard ? RiftBoard.story({ log: (mv.state && mv.state.log) || [], board: mv.state && mv.state.board, player: mv.player }) : []; } catch (e) { G.lastBotStory = []; }
+    if (G.lastBotStory.length) G.botStory = [...(G.botStory || []), ...G.lastBotStory.map(l => ({ ...l, t: Date.now() }))].slice(-40);
+    notePlays(G.lastBotStory, 3 - G.seat, mv.state);
     if (G.rec) G.rec.decisions.push({ n: st.n, player: 3 - G.seat, turn: (st.board || {}).turn, phase: (st.board || {}).phase, who: "bot", chosen: mv.index, text: mv.text || "", options: (mv.search && mv.search.options || []).map(o => [o.index, +(+o.score).toFixed(4)]), ms: Math.round(mv.ms || 0) });
     paint();
     const inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
@@ -193,9 +198,11 @@ async function pick(index) {
   if (G.stage !== "playing" || G.busy || !G.st.decision_is_human || !G.st.legal.some(l => l.index === index)) return;
   G.busy = true; paint();
   const chosen = G.st.legal.find(l => l.index === index) || {};
-  if (!G.st.paying_cost) G.feed = [];        // a real decision of yours: the feed restarts from here
+  if (!G.st.paying_cost) { G.feed = []; G.botStory = []; }        // a real decision of yours: the feed and the story restart from here
   record(G.st, index, G.st.paying_cost ? "pay" : "me");
-  try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null; } catch (e) { G.error = e.message; }
+  try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null;
+    try { notePlays(window.RiftBoard ? RiftBoard.story({ log: G.st.log || [], board: G.st.board, player: G.seat }) : [], G.seat, G.st); } catch (e) { /* the line is a convenience */ } } catch (e) { G.error = e.message; }
+  if (G.rec && G.rec.decisions.length - (G.savedAt || 0) >= 8) saveGame(true);    // keep the record safe as the game goes
   G.busy = false; advance();
 }
 async function endGame(again) {
@@ -341,7 +348,8 @@ function drawGame() {
       <div class="vp-main">
         <div class="vp-bar" id="vp-bar" role="status" aria-live="polite"></div>
         <div id="vp-result"></div>
-        <div class="vp-boardwrap"><div class="vp-board" id="vp-board"></div><div class="vp-feed" id="vp-feed" aria-live="polite" aria-label="what happened since your last move"></div></div>
+        <div class="vp-boardwrap"><div class="vp-board" id="vp-board"></div></div>
+        <div class="vp-feed" id="vp-feed" aria-live="polite" aria-label="what happened since your last move"></div>
         <section class="panel vp-opts" id="vp-opts" aria-label="your options"></section>
       </div>
       <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
@@ -366,7 +374,15 @@ function drawGame() {
 }
 async function concede() {
   const v = await modal({ title: "Concede this game?", body: `<p>The game ends and counts as a loss for you. The table is cleared and you are back at the setup.</p>`, actions: [{ label: "Keep playing", value: null }, { label: "Concede", value: true, primary: true }] });
-  if (v) { await endGame(false); toast("Game conceded.", ""); }
+  if (v) {
+    // a conceded game is saved too: the bot wins, the scores are those on the table
+    if (G.rec && G.st && G.st.board) {
+      const sc = (G.st.board.players || []).map(p => p.score || 0);
+      G.result = { winner: 3 - G.seat, scores: sc, turns: G.st.board.turn, decisions: G.rec.decisions.length, reason: "you conceded" };
+      await saveGame(false);
+    }
+    await endGame(false); toast(G.saved && G.saved.ok ? `Game conceded and saved for review (${G.saved.id}).` : "Game conceded.", "");
+  }
 }
 /** Repaint the bar, options and side panel from the current state; render the table. */
 function paint() {
@@ -388,7 +404,7 @@ function paint() {
   $("#vp-result", game).innerHTML = over ? resultHtml() : "";
   const opts = $("#vp-opts", game); opts.hidden = over; if (!over) opts.innerHTML = optionsHtml(st, legal, human, sit);
   $("#vp-aside", game).innerHTML = asideHtml(st, over);
-  const feed = $("#vp-feed", game); if (feed) feed.innerHTML = feedHtml(over);
+  const feed = $("#vp-feed", game); if (feed) feed.innerHTML = playedHtml();
   hidePreview();                                   // a hovered chip may have gone with the repaint
   if (G.thinking) tickTimer();
 }
@@ -427,15 +443,42 @@ function optionsHtml(st, legal, human, sit) {
 }
 /** The feed over the table: everything since your last real decision, newest at the bottom. The bot's plays, your automatic
     passes and the points scored, so a combat that ran by itself can be read back move by move. */
-function feedHtml(over) {
-  const items = G.feed.slice(-7); if (!items.length || over) return "";
-  const now = Date.now(), bot = 3 - G.seat;
-  return `<div class="fd-head">Since your last move</div>${items.map(e => {
-    const fresh = now - e.t < 2500 ? "new" : "";
-    if (e.kind === "score") return `<div class="fi score ${fresh}"><span class="badge ${e.who === G.seat ? "p" + G.seat : "p" + bot}">${e.who === G.seat ? "You" : "Bot"}</span><span class="fi-t">${esc(e.text)}</span></div>`;
-    if (e.kind === "me") return `<div class="fi me ${fresh}"><span class="badge p${G.seat}">You</span><span class="fi-t">${chipText(e.text, "sm")}</span></div>`;
-    return `<div class="fi bot ${fresh}"><span class="badge p${bot}">Bot</span><span class="fi-t">${chipText(e.text, "sm")}</span></div>`;
+/** The line of cards played this game: who played what, and on which unit when the engine names a target. */
+function notePlays(tale, who, st) {
+  if (!Array.isArray(tale)) return;
+  const turn = ((st || {}).board || {}).turn;
+  for (const l of tale) {
+    if (l.kind === "play" && l.cards && l.cards[0]) G.played.push({ who, card: l.cards[0], turn, t: Date.now() });
+    else if (l.kind === "hide") G.played.push({ who, card: null, hidden: true, turn, t: Date.now() });
+    else if (l.kind === "target" && l.cards && l.cards.length >= 2) {
+      for (let i = G.played.length - 1; i >= 0 && i >= G.played.length - 4; i--) if (G.played[i].card === l.cards[0] && !G.played[i].target) { G.played[i].target = l.cards[1]; break; }
+    }
+  }
+  if (G.played.length > 60) G.played.splice(0, G.played.length - 60);
+}
+function playedHtml() {
+  const items = G.played.slice(-10); if (!items.length) return "";
+  const now = Date.now(); let lastTurn = null;
+  return `<span class="fd-head">Cards played</span>${items.map(e => {
+    const sep = e.turn != null && e.turn !== lastTurn && lastTurn !== null ? `<span class="pl-turn">T${e.turn}</span>` : ""; lastTurn = e.turn;
+    const whoB = `<span class="badge p${e.who}">${e.who === G.seat ? "You" : "Bot"}</span>`;
+    const what = e.hidden ? `<span class="muted">a hidden card</span>` : chipText(e.card, "sm");
+    return `${sep}<span class="fi play ${now - e.t < 2500 ? "new" : ""}">${whoB}${what}${e.target ? `<span class="pl-arrow">→</span>${chipText(e.target, "sm")}` : ""}</span>`;
   }).join("")}`;
+}
+function feedHtml(over) {
+  // A one-line strip under the table (it used to float over the board and hide the opponent's runes and energy):
+  // the moves since your last decision, passes counted instead of listed.
+  if (over || !G.feed.length) return "";
+  const bot = 3 - G.seat, isPass = e => /^(Pass|Pass focus|End turn)$/.test(e.text || "");
+  const shown = G.feed.filter(e => e.kind === "score" || !isPass(e)).slice(-6), passes = G.feed.filter(e => e.kind !== "score" && isPass(e)).length;
+  const now = Date.now();
+  const item = e => {
+    const fresh = now - e.t < 2500 ? "new" : "";
+    if (e.kind === "score") return `<span class="fi score ${fresh}"><span class="badge p${e.who}">${e.who === G.seat ? "You" : "Bot"}</span>${esc(e.text)}</span>`;
+    return `<span class="fi ${e.kind} ${fresh}"><span class="badge p${e.kind === "me" ? G.seat : bot}">${e.kind === "me" ? "You" : "Bot"}</span>${chipText(e.text, "sm")}</span>`;
+  };
+  return `<span class="fd-head">Since your last move</span>${shown.map(item).join("")}${passes ? `<span class="fi pass">${passes} pass${passes > 1 ? "es" : ""}</span>` : ""}`;
 }
 /** One decision of yours into the game record: the options you had and what you chose ("me": a real choice, "auto": a lone
     pass taken for you, "pay": which rune paid a cost). */
@@ -447,17 +490,21 @@ function record(st, index, who) {
 }
 /** Save the finished game to the lab's database (when the page runs on claude.ai), so it can be replayed with the strong
     bot and annotated like the human games. */
-async function saveGame() {
-  if (!G.rec || !G.result) return;
+async function saveGame(partial = false) {
+  if (!G.rec || (!partial && !G.result)) return;
+  if (G.saving) { G.saveAgain = G.saveAgain || !partial; return; }
+  G.saving = true; G.savedAt = G.rec.decisions.length;
   const { db, meId } = await runtime();
   const id = `${G.rec.started.slice(0, 19).replace(/[-:T]/g, "")}_${G.seed}`;
-  const doc = { ...G.rec, id, finished: new Date().toISOString(), result: G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
+  const doc = { ...G.rec, id, finished: partial ? null : new Date().toISOString(), in_progress: partial, result: partial ? null : G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
     engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "" };
   window.__lastGameRecord = doc;                  // reachable from the console (copy(__lastGameRecord)) when there is no database
-  if (!db) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); return; }
-  try { await db.collection("games").doc(id).set(doc); G.saved = { ok: true, id }; }
-  catch (e) { G.saved = { ok: false, why: e.message || e.code || "the database refused the write" }; }
-  paintSaved();
+  if (!db) { G.saving = false; if (!partial) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); } return; }
+  try { await db.collection("games").doc(id).set(doc); if (!partial) G.saved = { ok: true, id }; }
+  catch (e) { if (!partial) G.saved = { ok: false, why: e.message || e.code || "the database refused the write" }; }
+  G.saving = false;
+  if (G.saveAgain) { G.saveAgain = false; return saveGame(false); }
+  if (!partial) paintSaved();
 }
 function paintSaved() { const el = G.host && $("#vp-saved", G.host); if (el) el.innerHTML = savedHtml(); }
 function savedHtml() {
@@ -472,7 +519,9 @@ function asideHtml(st, over) {
       <div class="lb-meta">${lb.ms.toFixed(0)} ms${sh && sh.worlds ? ` · ${plural(sh.worlds, "redeal")}` : ""}${lb.options > 1 ? ` · chose among ${lb.options}` : " · the only option"}</div>
       ${shares.length > 1 ? `<div class="shares">${shares.slice(0, 8).map(o => `<div class="share ${o.index === lb.index ? "chosen" : ""}"><span class="txt">${chipText(o.text || "option " + o.index, "sm")}</span><span class="bar"><i style="width:${(100 * o.score / max).toFixed(0)}%"></i></span><span class="pc">${(100 * o.score).toFixed(0)}%</span></div>`).join("")}</div><p class="hint" style="margin-top:8px">Estimated win chance of each move; cards the bot kept in hand are not named.</p>` : ""}`
     : `<p class="hint">${over ? "The bot did not move." : G.seat === 1 ? "You start. The bot's moves are explained here." : "The bot starts. Its moves are explained here."}</p>`;
-  return `<section class="panel"><h3>Bot's last move</h3>${last}</section>
+  const tale = (G.botStory || []).filter(l => l.kind !== "rune" && l.kind !== "cost");
+  const taleHtml = tale.length ? `<div class="vp-tale"><div class="vp-tale-h">What the bot did since your last move</div><ol>${tale.slice(-14).map(l => `<li class="${esc(l.kind)}"><i>${l.icon}</i><span>${chipText(l.text, "sm")}</span></li>`).join("")}</ol></div>` : "";
+  return `<section class="panel"><h3>Bot's last move</h3>${last}${taleHtml}</section>
     <section class="panel"><h3>This game</h3>
       <div class="counters">${chip(`your moves <b>${G.myMoves}</b>`)}${chip(`bot moves <b>${ms.length}</b>`)}${ms.length ? chip(`bot avg <b>${avg.toFixed(0)} ms</b> · max <b>${mx.toFixed(0)} ms</b>`, "mono") : ""}${chip(`you are <b>P${G.seat}</b>`)}${chip(`bot <b>${esc(LEVELS[G.level].label.toLowerCase())}</b>`)}${chip(`seed ${G.seed}`, "mono")}</div>
       ${G.error ? `<div style="margin-top:10px">${notice(esc(G.error), "error")}</div>` : ""}
