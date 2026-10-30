@@ -126,6 +126,60 @@ protected:
 // integration smoke runs producing the expected `INTENT: PlayReaction`
 // trace lines (vs the pre-fix silent no-op).
 
+// ───────────────────────────────────────────────────────────────────────────
+// CR 700 — a showdown offers an [Action] ability only when its cost can be
+// paid. The showdown generator used to check only [E]: Ekko, Revolutionary
+// ("[Action][>] Discard 1, [1][R]: Banish me, then play me to your base")
+// was offered, and "paid", with an empty hand and no runes, and a bot
+// re-played it from its base until the game's time ran out.
+// ───────────────────────────────────────────────────────────────────────────
+
+TEST_F(CombatShowdownDispatchTest, ShowdownActions_AbilityNeedsItsCostPaid) {
+    makeEngineAndSeedBattlefields();
+    auto& s = *eng_state();
+    constexpr CardDefId kEkkoRevolutionary = 1000;   // rad-021-167
+    auto ekko = addUnitAtBF(s, P1, 4, 0, kEkkoRevolutionary);
+    s.getObject(ekko).is_exhausted = false;
+    addUnitAtBF(s, P2, 2, 0);
+
+    auto activations = [&] {
+        int n = 0;
+        for (const auto& i : engine_->testHook_generateShowdownActions(P1))
+            if (i.type == IntentType::ActivateActionAbility && i.ability_source == ekko) ++n;
+        return n;
+    };
+    // Empty hand, no runes: the discard and [1][R] cannot be paid.
+    EXPECT_EQ(activations(), 0);
+
+    // A card to discard but still no runes.
+    auto card = s.createObject();
+    {
+        auto& o = s.getObject(card);
+        o.owner = o.controller = P1;
+        o.card_type = CardType::Spell;
+        o.zone = ZoneType::Hand;
+        s.player(P1).hand.push_back(card);
+    }
+    EXPECT_EQ(activations(), 0);
+
+    // Two ready Fury runes pay [1][R]: now the ability is legal.
+    for (int k = 0; k < 2; ++k) {
+        auto r = s.createObject();
+        auto& o = s.getObject(r);
+        o.owner = o.controller = P1;
+        o.card_type = CardType::Rune;
+        o.name = "Fury Rune";
+        o.domains = {Domain::Fury};
+        o.zone = ZoneType::Base;
+        o.location = BaseLocation{P1};
+    }
+    EXPECT_EQ(activations(), 1);
+
+    // Exhausted: [E] cannot be paid either.
+    s.getObject(ekko).is_exhausted = true;
+    EXPECT_EQ(activations(), 0);
+}
+
 TEST_F(CombatShowdownDispatchTest, ResolveShowdown_PassFocus_OneSided_PassesToOpponent) {
     // Sanity test — PassFocus was already handled pre-fix. Verifies we
     // didn't break it during the switch refactor.

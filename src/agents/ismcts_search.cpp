@@ -27,6 +27,7 @@ namespace riftbound::search {
 namespace {
 
 constexpr int kMaxDepth = 200;   // decisions below the root before a forced evaluation
+constexpr int kMaxForcedSteps = 4000;   // single-option steps per simulation before a forced evaluation
 
 /// Root-perspective terminal value.
 double terminalValue(const GameResult& r, PlayerId root) {
@@ -451,6 +452,7 @@ private:
         std::vector<Edge*> path;
         double value = 0.0;
         int depth = 0;
+        int forced = 0;
         StepResult step = engine->currentStep();
         while (true) {
             if (step.kind != StepKind::NeedDecision) {
@@ -461,6 +463,12 @@ private:
             // Nothing to choose, or which rune pays a cost (every option leaves
             // the same resources except the rune's domain): take the first.
             if (step.legal.size() <= 1 || gs.cost_cursor.has_value()) {
+                // Bounded: a game that only ever offers one option (an
+                // engine loop) must not spin the search forever.
+                if (++forced >= kMaxForcedSteps) {
+                    value = search_.evaluate(gs, root_player_);
+                    break;
+                }
                 step = engine->applyChoice(0);
                 continue;
             }

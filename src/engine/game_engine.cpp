@@ -3307,11 +3307,13 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
 
         Card* card = card_registry_.get(obj.card_def_id);
         if (!card) continue;
+        // Same gates as the main-phase generator (generateActivateAbilityActions).
+        if (!card->canActivateAbility(state_, player)) continue;
         auto abilities = card->activatedAbilities();
         for (size_t ai = 0; ai < abilities.size(); ++ai) {
             const auto& ab = abilities[ai];
             if (!ab.is_action) continue;
-            if (ab.cost.exhaust && obj.is_exhausted) continue;
+            if (!canPayActivationCost(player, id, obj, *card, (int)ai, ab)) continue;
 
             auto legal_targets = card->enumerateLegalTargets(
                 state_, player, static_cast<int>(ai), id);
@@ -3516,18 +3518,7 @@ std::vector<Intent> GameEngine::generateClosedStateActions(
             for (size_t ai = 0; ai < abilities.size(); ++ai) {
                 const auto& ab = abilities[ai];
                 if (!ab.is_reaction) continue;
-                if (!card_obj->canActivateAbilityAt(state_, player, id, (int)ai)) continue;
-                if (ab.cost.exhaust && obj.is_exhausted) continue;
-                int net_energy = std::max(0, ab.cost.energy -
-                    activationEnergyReduction(*card_obj, player, id, (int)ai));
-                if (net_energy > 0 && availableEnergy(player, obj.isUnit()) < net_energy) continue;
-                if (ab.cost.power > 0 &&
-                    !canPayActivationResources(player, net_energy, ab.cost, obj.isUnit())) continue;
-                if (ab.cost.discard && ab.cost.discard_count > 0 &&
-                    static_cast<int>(state_.player(player).hand.size()) <
-                        ab.cost.discard_count) continue;
-                if (ab.cost.xp_cost > 0 &&
-                    state_.player(player).xp < ab.cost.xp_cost) continue;
+                if (!canPayActivationCost(player, id, obj, *card_obj, (int)ai, ab)) continue;
 
                 auto legal_targets = card_obj->enumerateLegalTargets(
                     state_, player, static_cast<int>(ai), id);
@@ -3811,6 +3802,38 @@ void GameEngine::generateTrashReplayActions(PlayerId player, bool action_ok,
     }
 }
 
+bool GameEngine::canPayActivationCost(PlayerId player, GameObjectId id, const GameObject& obj,
+                                      const Card& card, int ability_index,
+                                      const ActivatedAbility& ab) const {
+    // One gate for every generator that offers an activated ability (main
+    // phase, showdown, closed state): an ability whose cost cannot be paid
+    // is not a legal action (CR 700). Before this was shared, the showdown
+    // generator checked only [E], so a "Discard 1, [1][R]: banish me, then
+    // play me" ability (Ekko, Revolutionary) was offered, and paid, with an
+    // empty hand and no runes, and a bot looped it forever.
+    const auto& act_cost = ab.cost;
+    // Per-ability gate ([Empower]: only if not Empowered; "Disempower
+    // this" costs need an Empowered status).
+    if (!card.canActivateAbilityAt(state_, player, id, ability_index)) return false;
+    if (act_cost.exhaust && obj.is_exhausted) return false;
+    const int net_energy = std::max(0, act_cost.energy -
+        activationEnergyReduction(card, player, id, ability_index));
+    if (net_energy > 0 && availableEnergy(player, obj.isUnit()) < net_energy) return false;
+    if (act_cost.power > 0 &&
+        !canPayActivationResources(player, net_energy, act_cost, obj.isUnit())) return false;
+    if (act_cost.discard && act_cost.discard_count > 0) {
+        int matching = 0;
+        for (auto hid : state_.player(player).hand) {
+            if (act_cost.discard_type_filter == 0 ||
+                static_cast<int>(state_.getObject(hid).card_type) + 1 ==
+                    act_cost.discard_type_filter) ++matching;
+        }
+        if (matching < act_cost.discard_count) return false;
+    }
+    if (act_cost.xp_cost > 0 && state_.player(player).xp < act_cost.xp_cost) return false;
+    return true;
+}
+
 void GameEngine::generateActivateAbilityActions(PlayerId player,
                                                   std::vector<Intent>& actions) const {
     // Phase 6r — multi-ability per Card. Loop over each ability descriptor
@@ -3833,30 +3856,7 @@ void GameEngine::generateActivateAbilityActions(PlayerId player,
 
         for (size_t ai = 0; ai < abilities.size(); ++ai) {
             const auto& ab = abilities[ai];
-            const auto& act_cost = ab.cost;
-
-            // Per-ability gate ([Empower]: only if not Empowered; "Disempower
-            // this" costs need an Empowered status).
-            if (!card->canActivateAbilityAt(state_, player, id, (int)ai)) continue;
-
-            // Check activation cost: must be ready if exhaust required
-            if (act_cost.exhaust && obj.is_exhausted) continue;
-            int net_energy = std::max(0, act_cost.energy -
-                activationEnergyReduction(*card, player, id, (int)ai));
-            if (net_energy > 0 && availableEnergy(player, obj.isUnit()) < net_energy) continue;
-            if (act_cost.power > 0 &&
-                !canPayActivationResources(player, net_energy, act_cost, obj.isUnit())) continue;
-            if (act_cost.discard && act_cost.discard_count > 0) {
-                int matching = 0;
-                for (auto hid : state_.player(player).hand) {
-                    if (act_cost.discard_type_filter == 0 ||
-                        static_cast<int>(state_.getObject(hid).card_type) + 1 ==
-                            act_cost.discard_type_filter) ++matching;
-                }
-                if (matching < act_cost.discard_count) continue;
-            }
-            if (act_cost.xp_cost > 0 &&
-                state_.player(player).xp < act_cost.xp_cost) continue;
+            if (!canPayActivationCost(player, id, obj, *card, (int)ai, ab)) continue;
 
             // Universal legality gate (CR 700.x). For multi-ability cards
             // the per-ability target requirements live on the descriptor;

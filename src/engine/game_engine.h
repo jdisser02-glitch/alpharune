@@ -219,6 +219,9 @@ public:
     }
     void testHook_executeIntent(const Intent& i) { executeIntent(i); }
     void testHook_runChain() { runChain(); }
+    std::vector<Intent> testHook_generateShowdownActions(PlayerId p) const {
+        return generateShowdownActions(p);
+    }
     /// Reseed the engine RNG (shuffles, coin flips, random effects). Used by
     /// determinized search so a sampled world does not replay the real
     /// game's future randomness.
@@ -559,6 +562,12 @@ private:
                                      std::vector<Intent>& actions) const;
     void generateActivateAbilityActions(PlayerId player,
                                          std::vector<Intent>& actions) const;
+    /// Whether `player` can pay ability `ability_index` of `card` on `obj`
+    /// right now (per-ability gate, [E], energy, power, discard, XP). Shared
+    /// by the main-phase, showdown and closed-state generators.
+    bool canPayActivationCost(PlayerId player, GameObjectId id, const GameObject& obj,
+                              const Card& card, int ability_index,
+                              const ActivatedAbility& ab) const;
 
     // ── Queries ──
     Intent queryAgent(PlayerId player);

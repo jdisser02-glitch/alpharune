@@ -8,6 +8,8 @@
 #include "io/replay_writer.h"
 #include "io/state_renderer.h"
 
+#include <cstdio>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -63,13 +65,22 @@ GameResult GameRunner::run() {
     // Set up debug/trace logging
     std::ostringstream log_buffer; // thread-local buffer
     if (config_.debug_mode) {
-        events.on_log.connect([&log_buffer, trace = config_.trace_mode](const LogEvent& e) {
+        // RIFTBOUND_LOG_STREAM=1 also writes every line to stderr as it
+        // happens (tagged with the game index), so a game that never ends
+        // can still be read; the buffered copy is printed at the end as usual.
+        static const bool stream = std::getenv("RIFTBOUND_LOG_STREAM") != nullptr;
+        events.on_log.connect([&log_buffer, trace = config_.trace_mode,
+                               game = config_.game_index](const LogEvent& e) {
             if (e.level == LogLevel::Trace && !trace) return;
             const char* prefix = "[TRC]";
             if (e.level == LogLevel::Debug) prefix = "[DBG]";
             if (e.level == LogLevel::Info) prefix = "[INF]";
             if (e.level == LogLevel::Warning) prefix = "[WRN]";
             log_buffer << "  " << prefix << " " << e.message << "\n";
+            if (stream) {
+                std::string line = "g" + std::to_string(game) + " " + prefix + " " + e.message + "\n";
+                std::fputs(line.c_str(), stderr);
+            }
         });
     }
 
