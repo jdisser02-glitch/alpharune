@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 14,
+  "agree": 12,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 3,
+    "agree": 2,
     "n": 5,
-    "rate": 0.6
+    "rate": 0.4
    },
    "move": {
-    "agree": 1,
+    "agree": 2,
     "n": 6,
-    "rate": 0.16666666666666666
+    "rate": 0.3333333333333333
    },
    "pass_focus": {
     "agree": 5,
@@ -31,37 +31,39 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 4,
+    "agree": 2,
     "n": 10,
-    "rate": 0.4
+    "rate": 0.2
    }
   },
   "clean_boundary": {
-   "agree": 8,
-   "n": 21,
-   "rate": 0.38095238095238093
+   "agree": 6,
+   "n": 22,
+   "rate": 0.2727272727272727
   },
   "in_flight": {
    "agree": 6,
-   "n": 8
+   "n": 7
   },
   "n": 29,
-  "rate": 0.4827586206896552
+  "rate": 0.41379310344827586
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
  "bot_calls": 33,
  "bot_errors": 0,
  "bot_fallbacks": 4,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 180,
+ "decisions": 167,
  "decisions_compared": 29,
- "decisions_human_known": 58,
+ "decisions_human_known": 55,
  "decisions_trivial": 2,
  "deck_tops": 0,
  "desync_causes": {
   "moved: no such unit on board (not played / already gone)": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 1
+  "passed_focus: no Pass focus option (no showdown in the engine)": 1,
+  "played: engine asks P1 but the log's next action is by P2 (played)": 1,
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1
  },
  "desync_list": [
   {
@@ -103,40 +105,101 @@
    "player": 1,
    "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 10
+  },
+  {
+   "decision": 167,
+   "event_index": 124,
+   "event_kind": "showdown",
+   "event_text": "ponti ended showdown responses at Rockfall Path.",
+   "options": [
+    "End turn"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 10
+  },
+  {
+   "decision": 167,
+   "event_index": 129,
+   "event_kind": "played",
+   "event_text": "ponti played Rengar, Trophy Hunter from hand to Sigil of the Storm.",
+   "options": [
+    "End turn"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (played)",
+   "turn": 10
   }
  ],
- "desyncs": 2,
+ "desyncs": 4,
+ "desyncs_engine": 4,
  "disagreements": [
   {
    "bot": {
-    "index": 4,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 2,
+    "text": "Move Forecaster to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 15,
    "event_text": "Emp4 moved Forecaster to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.15,
+    "share": 0.11,
     "text": "Move Forecaster to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
+     "index": 2,
      "share": 0.55,
+     "text": "Move Forecaster to Sigil of the Storm"
+    },
+    {
+     "index": 4,
+     "share": 0.17,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 6,
+     "share": 0.13,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 18,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
+   "human": {
+    "index": 2,
+    "share": 0.08,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.83,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.08,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 1,
-     "share": 0.15,
-     "text": "Move Forecaster to Rockfall Path"
-    },
-    {
-     "index": 2,
-     "share": 0.14,
-     "text": "Move Forecaster to Sigil of the Storm"
+     "share": 0.04,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 2
@@ -151,7 +214,7 @@
    "event_text": "Emp4 played Lecturing Yordle from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.18,
+    "share": 0.04,
     "text": "Play Lecturing Yordle to base"
    },
    "kind": "play",
@@ -159,51 +222,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.22,
+     "share": 0.63,
      "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
     },
     {
-     "index": 1,
-     "share": 0.19,
-     "text": "Move Kai'Sa, Survivor to Rockfall Path"
-    },
-    {
-     "index": 4,
-     "share": 0.18,
-     "text": "Play Lecturing Yordle to base"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 38,
-   "event_text": "Emp4 moved Kai'Sa, Survivor to Sigil of the Storm.",
-   "human": {
-    "index": 2,
-    "share": 0.23,
-    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.28,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+     "index": 7,
+     "share": 0.17,
+     "text": "Play Hextech Ray targeting Forecaster"
     },
     {
      "index": 1,
-     "share": 0.19,
+     "share": 0.06,
      "text": "Move Kai'Sa, Survivor to Rockfall Path"
     }
    ],
@@ -211,33 +240,33 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 9,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 46,
    "event_text": "Emp4 moved Forecaster to base.",
    "human": {
     "index": 1,
-    "share": 0.14,
+    "share": 0.11,
     "text": "Move Forecaster to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.45,
-     "text": "End turn"
+     "index": 9,
+     "share": 0.3,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 1,
-     "share": 0.14,
-     "text": "Move Forecaster to base"
+     "index": 3,
+     "share": 0.22,
+     "text": "Play Watchful Sentry to Sigil of the Storm"
     },
     {
      "index": 2,
-     "share": 0.13,
+     "share": 0.21,
      "text": "Play Watchful Sentry to base"
     }
    ],
@@ -245,102 +274,136 @@
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 8,
+    "text": "Use Daughter of the Void"
+   },
+   "clean_boundary": true,
+   "decision": 47,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.1,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.47,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Play Watchful Sentry to Sigil of the Storm"
+    },
+    {
+     "index": 1,
+     "share": 0.15,
+     "text": "Play Watchful Sentry to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 21,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 58,
    "event_text": "Emp4 moved Lecturing Yordle to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.09,
+    "share": 0.05,
     "text": "Move Lecturing Yordle to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 21,
+     "share": 0.34,
+     "text": "Use Daughter of the Void"
+    },
+    {
      "index": 10,
-     "share": 0.33,
+     "share": 0.21,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 12,
-     "share": 0.18,
+     "share": 0.2,
      "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 2,
-     "share": 0.11,
-     "text": "Move Lecturing Yordle to Sigil of the Storm"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 9,
+    "text": "Play Brynhir Thundersong to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 61,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 18,
-    "share": 0.03,
+    "share": 0.04,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 9,
+     "share": 0.42,
+     "text": "Play Brynhir Thundersong to Sigil of the Storm"
+    },
+    {
      "index": 6,
-     "share": 0.29,
+     "share": 0.12,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 8,
-     "share": 0.17,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 0,
-     "share": 0.14,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.12,
+     "text": "Play Thousand-Tailed Watcher to Sigil of the Storm"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 9,
+    "text": "Play Brynhir Thundersong to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 62,
    "event_text": "Played Falling Star from hand.",
    "human": {
     "index": 10,
-    "share": 0.03,
+    "share": 0.02,
     "text": "Play Falling Star"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 6,
+     "index": 9,
      "share": 0.3,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "text": "Play Brynhir Thundersong to Sigil of the Storm"
     },
     {
      "index": 8,
-     "share": 0.17,
+     "share": 0.16,
      "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 0,
-     "share": 0.14,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.11,
+     "text": "Move Forecaster to Sigil of the Storm"
     }
    ],
    "turn": 6
@@ -384,7 +447,7 @@
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.08,
+    "share": 0.17,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -392,51 +455,51 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.5,
+     "share": 0.26,
      "text": "Move Forecaster to Sigil of the Storm"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Forecaster to Rockfall Path"
+     "index": 5,
+     "share": 0.2,
+     "text": "Play Watchful Sentry to Sigil of the Storm"
     },
     {
-     "index": 0,
-     "share": 0.09,
-     "text": "End turn"
+     "index": 4,
+     "share": 0.17,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Forecaster to Sigil of the Storm"
+    "index": 6,
+    "text": "Hide Temporal Breach"
    },
    "clean_boundary": true,
    "decision": 78,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 1,
-    "share": 0.08,
+    "share": 0.06,
     "text": "Move Kai'Sa, Survivor to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 6,
+     "share": 0.3,
+     "text": "Hide Temporal Breach"
+    },
+    {
      "index": 3,
-     "share": 0.52,
+     "share": 0.25,
      "text": "Move Forecaster to Sigil of the Storm"
     },
     {
-     "index": 2,
-     "share": 0.24,
-     "text": "Move Forecaster to Rockfall Path"
-    },
-    {
      "index": 0,
-     "share": 0.11,
+     "share": 0.17,
      "text": "End turn"
     }
    ],
@@ -452,7 +515,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.11,
+    "share": 0.13,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -460,17 +523,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.58,
+     "share": 0.35,
      "text": "Move Forecaster to Sigil of the Storm"
     },
     {
-     "index": 1,
-     "share": 0.26,
-     "text": "Move Forecaster to Rockfall Path"
+     "index": 4,
+     "share": 0.31,
+     "text": "Hide Temporal Breach"
     },
     {
      "index": 0,
-     "share": 0.11,
+     "share": 0.13,
      "text": "End turn"
     }
    ],
@@ -482,11 +545,45 @@
     "text": "Move Forecaster to Sigil of the Storm"
    },
    "clean_boundary": true,
+   "decision": 103,
+   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.23,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.42,
+     "text": "Move Forecaster to Sigil of the Storm"
+    },
+    {
+     "index": 7,
+     "share": 0.23,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Forecaster to Rockfall Path"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Forecaster to Sigil of the Storm"
+   },
+   "clean_boundary": true,
    "decision": 114,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.05,
+    "share": 0.07,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -494,18 +591,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.61,
+     "share": 0.47,
      "text": "Move Forecaster to Sigil of the Storm"
     },
     {
      "index": 1,
-     "share": 0.33,
+     "share": 0.31,
      "text": "Move Forecaster to Rockfall Path"
     },
     {
-     "index": 0,
-     "share": 0.05,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.15,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 8
@@ -520,7 +617,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 15,
-    "share": 0.0,
+    "share": 0.01,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -528,18 +625,18 @@
    "top3": [
     {
      "index": 8,
-     "share": 0.6,
+     "share": 0.78,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Forecaster to Sigil of the Storm"
+     "index": 1,
+     "share": 0.07,
+     "text": "Move Forecaster to Rockfall Path"
     },
     {
-     "index": 1,
-     "share": 0.12,
-     "text": "Move Forecaster to Rockfall Path"
+     "index": 2,
+     "share": 0.07,
+     "text": "Move Forecaster to Sigil of the Storm"
     }
    ],
    "turn": 10
@@ -554,7 +651,7 @@
    "event_text": "Played Temporal Breach from hand.",
    "human": {
     "index": 10,
-    "share": 0.01,
+    "share": 0.06,
     "text": "Play Temporal Breach"
    },
    "kind": "play",
@@ -562,12 +659,12 @@
    "top3": [
     {
      "index": 8,
-     "share": 0.6,
+     "share": 0.55,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 2,
-     "share": 0.22,
+     "share": 0.15,
      "text": "Move Forecaster to Sigil of the Storm"
     },
     {
@@ -580,29 +677,34 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
+    "index": 6,
+    "text": "Play Lost to the Sands"
    },
-   "clean_boundary": false,
-   "decision": 165,
+   "clean_boundary": true,
+   "decision": 152,
    "event_text": "Played Smoke Screen from hand.",
    "human": {
-    "index": 1,
-    "share": 0.03,
-    "text": "Play Smoke Screen targeting Rengar, Trophy Hunter"
+    "index": 3,
+    "share": 0.07,
+    "text": "Play Smoke Screen targeting Herald of Scales"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.97,
-     "text": "Pass"
+     "index": 6,
+     "share": 0.32,
+     "text": "Play Lost to the Sands"
     },
     {
      "index": 1,
-     "share": 0.03,
-     "text": "Play Smoke Screen targeting Rengar, Trophy Hunter"
+     "share": 0.21,
+     "text": "Play Plundering Poro to base"
+    },
+    {
+     "index": 2,
+     "share": 0.21,
+     "text": "Play Plundering Poro to Sigil of the Storm"
     }
    ],
    "turn": 10
@@ -611,7 +713,7 @@
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 83,
+ "forced_decisions": 76,
  "game": 1,
  "hand_fixes": {
   "created": 0,
@@ -847,9 +949,10 @@
   "P1": "Daughter of the Void",
   "P2": "Relentless Storm"
  },
+ "log_artefacts": 0,
  "log_events": 143,
  "log_events_consumed": 143,
- "out_of_order_matches": 2,
+ "out_of_order_matches": 5,
  "players": [
   "Emp4",
   "ponti"
@@ -858,7 +961,7 @@
  "result": {
   "engine_scores": [
    6,
-   2
+   1
   ],
   "engine_winner": 1,
   "log_scores": [
@@ -870,7 +973,7 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
- "rune_swaps": 8,
+ "rune_swaps": 9,
  "score_mismatch_examples": [
   {
    "engine_score": 5,
@@ -882,12 +985,12 @@
  ],
  "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 46,
+ "silent_passes": 42,
  "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_volibear_rl2_f4f074cab45a8e7ed6404cb8480fd288.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.3473641630000002,
-  "seconds": 1.366296892
+  "bot_seconds": 1.4444256850000001,
+  "seconds": 1.463424517
  }
 }

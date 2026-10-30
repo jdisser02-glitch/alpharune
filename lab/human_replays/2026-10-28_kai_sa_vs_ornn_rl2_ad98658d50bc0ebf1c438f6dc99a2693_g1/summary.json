@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 9,
+  "agree": 15,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 2,
     "n": 5,
-    "rate": 0.0
+    "rate": 0.4
    },
    "battlefield": {
     "agree": 1,
@@ -16,58 +16,59 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 2,
     "n": 3,
-    "rate": 0.3333333333333333
+    "rate": 0.6666666666666666
    },
    "move": {
-    "agree": 2,
+    "agree": 1,
     "n": 6,
-    "rate": 0.3333333333333333
+    "rate": 0.16666666666666666
    },
    "pass_focus": {
     "agree": 3,
-    "n": 4,
-    "rate": 0.75
+    "n": 3,
+    "rate": 1.0
    },
    "play": {
-    "agree": 2,
+    "agree": 6,
     "n": 12,
-    "rate": 0.16666666666666666
+    "rate": 0.5
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 9,
    "n": 23,
-   "rate": 0.21739130434782608
+   "rate": 0.391304347826087
   },
   "in_flight": {
-   "agree": 4,
-   "n": 8
+   "agree": 6,
+   "n": 7
   },
-  "n": 31,
-  "rate": 0.2903225806451613
+  "n": 30,
+  "rate": 0.5
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
  "bot_calls": 37,
  "bot_errors": 0,
- "bot_fallbacks": 6,
+ "bot_fallbacks": 7,
  "capture_player": "Emp4",
  "compare_both": false,
  "decisions": 192,
- "decisions_compared": 31,
- "decisions_human_known": 85,
+ "decisions_compared": 30,
+ "decisions_human_known": 86,
  "decisions_trivial": 11,
  "deck_tops": 0,
  "desync_causes": {
   "equipped: no equip option for 'Cloth Armor' onto 'Ornn, Blacksmith'": 1,
   "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit on board but no move option": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 2,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 1,
   "played: card in hand but not playable now (cost/timing)": 1,
   "played: card in trash but not replayable now": 1,
   "played: engine asks P1 but the log's next action is by P2 (played)": 1,
-  "played: engine asks P2 but the log's next action is by P1 (played)": 1
+  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
@@ -103,38 +104,19 @@
    "turn": 4
   },
   {
-   "decision": 61,
-   "event_index": 76,
-   "event_kind": "passed_focus",
-   "event_text": "El Contador passed focus at Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Play Pit Crew to base",
-    "Play Guardian Angel to base",
-    "Play Sprite Fountain to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 4
-  },
-  {
    "decision": 160,
    "event_index": 181,
    "event_kind": "equipped",
    "event_text": "El Contador equipped Cloth Armor to Ornn, Blacksmith.",
    "options": [
     "End turn",
-    "Move Aspiring Engineer to Ornn's Forge",
-    "Move Aspiring Engineer to Rockfall Path",
     "Play Cloth Armor to base",
     "Play Charm",
     "Use Seal of Focus",
     "Use Seal of Focus",
     "Use Fire Below the Mountain",
     "Equip Brutalizer to Pit Crew",
-    "Equip Brutalizer to Ornn, Blacksmith",
-    "Equip Brutalizer to Aspiring Engineer"
+    "Equip Brutalizer to Ornn, Blacksmith"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -148,16 +130,13 @@
    "event_text": "El Contador moved Pit Crew to Rockfall Path.",
    "options": [
     "End turn",
-    "Move Aspiring Engineer to Ornn's Forge",
-    "Move Aspiring Engineer to Rockfall Path",
     "Play Cloth Armor to base",
     "Play Charm",
     "Use Seal of Focus",
     "Use Seal of Focus",
     "Use Fire Below the Mountain",
     "Equip Brutalizer to Pit Crew",
-    "Equip Brutalizer to Ornn, Blacksmith",
-    "Equip Brutalizer to Aspiring Engineer"
+    "Equip Brutalizer to Ornn, Blacksmith"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -171,20 +150,34 @@
    "event_text": "El Contador passed focus at Rockfall Path.",
    "options": [
     "End turn",
-    "Move Aspiring Engineer to Ornn's Forge",
-    "Move Aspiring Engineer to Rockfall Path",
     "Play Cloth Armor to base",
     "Play Charm",
     "Use Seal of Focus",
     "Use Seal of Focus",
     "Use Fire Below the Mountain",
     "Equip Brutalizer to Pit Crew",
-    "Equip Brutalizer to Ornn, Blacksmith",
-    "Equip Brutalizer to Aspiring Engineer"
+    "Equip Brutalizer to Ornn, Blacksmith"
    ],
    "phase": "MainPhase",
    "player": 2,
    "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 10
+  },
+  {
+   "decision": 173,
+   "event_index": 185,
+   "event_kind": "showdown",
+   "event_text": "Emp4 ended showdown responses at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Pit Crew to Ornn's Forge",
+    "Move Pit Crew to Rockfall Path",
+    "Play Cloth Armor to base",
+    "Use Fire Below the Mountain"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
    "turn": 10
   },
   {
@@ -196,10 +189,6 @@
     "End turn",
     "Move Pit Crew to Ornn's Forge",
     "Move Pit Crew to Rockfall Path",
-    "Move Aspiring Engineer to Ornn's Forge",
-    "Move Aspiring Engineer to Rockfall Path",
-    "Move Pit Crew, Aspiring Engineer to Ornn's Forge",
-    "Move Pit Crew, Aspiring Engineer to Rockfall Path",
     "Play Cloth Armor to base",
     "Use Fire Below the Mountain"
    ],
@@ -217,10 +206,6 @@
     "End turn",
     "Move Pit Crew to Ornn's Forge",
     "Move Pit Crew to Rockfall Path",
-    "Move Aspiring Engineer to Ornn's Forge",
-    "Move Aspiring Engineer to Rockfall Path",
-    "Move Pit Crew, Aspiring Engineer to Ornn's Forge",
-    "Move Pit Crew, Aspiring Engineer to Rockfall Path",
     "Play Cloth Armor to base",
     "Use Fire Below the Mountain"
    ],
@@ -246,10 +231,35 @@
     "Move Forecaster to Rockfall Path",
     "Move Watchful Sentry to Ornn's Forge",
     "Move Watchful Sentry to Rockfall Path",
+    "Move Noxus Hopeful, Noxus Hopeful to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Lecturing Yordle to Ornn's Forge",
+    "Move Noxus Hopeful, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Forecaster to Ornn's Forge",
+    "Move Lecturing Yordle, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Lecturing Yordle, Forecaster to Ornn's Forge",
+    "Move Noxus Hopeful, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Watchful Sentry to Ornn's Forge",
+    "Move Lecturing Yordle, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Lecturing Yordle, Watchful Sentry to Ornn's Forge",
+    "Move Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Noxus Hopeful, Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Lecturing Yordle, Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Forecaster, Watchful Sentry to Ornn's Forge",
+    "Move Noxus Hopeful, Lecturing Yordle, Forecaster, Watchful Sentry to Ornn's Forge",
     "Move Noxus Hopeful, Noxus Hopeful, Lecturing Yordle, Forecaster, Watchful Sentry to Ornn's Forge",
-    "Move Noxus Hopeful, Noxus Hopeful, Lecturing Yordle, Forecaster, Watchful Sentry to Rockfall Path",
-    "Play Hextech Ray targeting Ornn, Blacksmith",
-    "Play Hextech Ray targeting Ornn, Blacksmith"
+    "Move Noxus Hopeful, Noxus Hopeful to Rockfall Path",
+    "Move Noxus Hopeful, Lecturing Yordle to Rockfall Path",
+    "Move Noxus Hopeful, Lecturing Yordle to Rockfall Path"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -258,36 +268,37 @@
   }
  ],
  "desyncs": 9,
+ "desyncs_engine": 9,
  "disagreements": [
   {
    "bot": {
-    "index": 4,
-    "text": "Play Temporal Breach"
+    "index": 3,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 11,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 6,
-    "share": 0.19,
+    "share": 0.11,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.21,
-     "text": "Play Temporal Breach"
+     "index": 3,
+     "share": 0.75,
+     "text": "Play Falling Star"
     },
     {
      "index": 6,
-     "share": 0.19,
+     "share": 0.11,
      "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.18,
+     "share": 0.06,
      "text": "Play Watchful Sentry to base"
     }
    ],
@@ -295,33 +306,33 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Watchful Sentry to base"
+    "index": 3,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 12,
    "event_text": "Played Bellows Breath from hand.",
    "human": {
     "index": 5,
-    "share": 0.09,
+    "share": 0.03,
     "text": "Play Bellows Breath targeting Scuttle Crab"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 3,
+     "share": 0.82,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 1,
-     "share": 0.44,
+     "share": 0.05,
      "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 0,
-     "share": 0.14,
-     "text": "End turn"
-    },
-    {
      "index": 4,
-     "share": 0.12,
+     "share": 0.04,
      "text": "Play Temporal Breach"
     }
    ],
@@ -337,7 +348,7 @@
    "event_text": "Emp4 moved Noxus Hopeful to Rockfall Path.",
    "human": {
     "index": 2,
-    "share": 0.08,
+    "share": 0.04,
     "text": "Move Noxus Hopeful to Rockfall Path"
    },
    "kind": "move",
@@ -349,48 +360,82 @@
      "text": "Move Noxus Hopeful to Ornn's Forge"
     },
     {
-     "index": 4,
-     "share": 0.14,
-     "text": "Play Kai'Sa, Survivor to base"
+     "index": 7,
+     "share": 0.11,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 2,
-     "share": 0.08,
-     "text": "Move Noxus Hopeful to Rockfall Path"
+     "index": 4,
+     "share": 0.1,
+     "text": "Play Kai'Sa, Survivor to base"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
+    "index": 1,
+    "text": "Play Hextech Ray targeting Sprite"
+   },
+   "clean_boundary": true,
+   "decision": 42,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
     "index": 0,
-    "text": "Pass focus"
+    "share": 0.17,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.57,
+     "text": "Play Hextech Ray targeting Sprite"
+    },
+    {
+     "index": 3,
+     "share": 0.26,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Hextech Ray targeting Sprite"
    },
    "clean_boundary": false,
    "decision": 47,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 3,
-    "share": 0.22,
+    "share": 0.08,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.75,
+     "text": "Play Hextech Ray targeting Sprite"
+    },
+    {
      "index": 0,
-     "share": 0.67,
+     "share": 0.17,
      "text": "Pass focus"
     },
     {
      "index": 3,
-     "share": 0.22,
+     "share": 0.08,
      "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 1,
-     "share": 0.11,
-     "text": "Play Hextech Ray targeting Sprite"
     }
    ],
    "turn": 4
@@ -398,198 +443,101 @@
   {
    "bot": {
     "index": 0,
-    "text": "Pass focus"
-   },
-   "clean_boundary": false,
-   "decision": 48,
-   "event_text": "Played Hextech Ray from hand.",
-   "human": {
-    "index": 1,
-    "share": 0.15,
-    "text": "Play Hextech Ray targeting Sprite"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.85,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.15,
-     "text": "Play Hextech Ray targeting Sprite"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Kai'Sa, Survivor to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 68,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 9,
-    "share": 0.02,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.72,
-     "text": "Move Kai'Sa, Survivor to Ornn's Forge"
-    },
-    {
-     "index": 0,
-     "share": 0.08,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.08,
-     "text": "Move Kai'Sa, Survivor to Rockfall Path"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Kai'Sa, Survivor to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 69,
-   "event_text": "Played Falling Star from hand.",
-   "human": {
-    "index": 8,
-    "share": 0.01,
-    "text": "Play Falling Star"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.75,
-     "text": "Move Kai'Sa, Survivor to Ornn's Forge"
-    },
-    {
-     "index": 5,
-     "share": 0.09,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 3,
-     "share": 0.06,
-     "text": "Move Kai'Sa, Survivor to Rockfall Path"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Lecturing Yordle to Ornn's Forge"
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 83,
    "event_text": "Emp4 moved Noxus Hopeful to base.",
    "human": {
     "index": 1,
-    "share": 0.05,
+    "share": 0.11,
     "text": "Move Noxus Hopeful to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.57,
-     "text": "Play Lecturing Yordle to Ornn's Forge"
-    },
-    {
      "index": 0,
-     "share": 0.18,
+     "share": 0.24,
      "text": "End turn"
     },
     {
      "index": 4,
-     "share": 0.06,
+     "share": 0.19,
      "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Play Forecaster to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Lecturing Yordle to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 84,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.06,
+    "share": 0.22,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.79,
-     "text": "Play Lecturing Yordle to Ornn's Forge"
-    },
-    {
      "index": 0,
-     "share": 0.08,
+     "share": 0.26,
      "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.06,
+     "share": 0.22,
      "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Play Forecaster to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Lecturing Yordle to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 87,
    "event_text": "Emp4 played Lecturing Yordle from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.04,
+    "share": 0.11,
     "text": "Play Lecturing Yordle to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.76,
-     "text": "Play Lecturing Yordle to Ornn's Forge"
-    },
-    {
      "index": 0,
-     "share": 0.11,
+     "share": 0.36,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.04,
-     "text": "Play Lecturing Yordle to base"
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Forecaster to base"
+    },
+    {
+     "index": 8,
+     "share": 0.16,
+     "text": "Play Falling Star"
     }
    ],
    "turn": 5
@@ -600,165 +548,165 @@
     "text": "Move Noxus Hopeful to Ornn's Forge"
    },
    "clean_boundary": true,
-   "decision": 122,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "decision": 117,
+   "event_text": "Emp4 moved Noxus Hopeful to Rockfall Path.",
    "human": {
-    "index": 32,
-    "share": 0.07,
-    "text": "Use Daughter of the Void"
+    "index": 2,
+    "share": 0.18,
+    "text": "Move Noxus Hopeful to Rockfall Path"
    },
-   "kind": "ability",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.36,
+     "share": 0.21,
      "text": "Move Noxus Hopeful to Ornn's Forge"
     },
     {
      "index": 2,
-     "share": 0.22,
+     "share": 0.18,
      "text": "Move Noxus Hopeful to Rockfall Path"
     },
     {
-     "index": 18,
-     "share": 0.07,
-     "text": "Play Stupefy targeting Sprite"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 122,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 29,
+    "share": 0.11,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.15,
+     "text": "Move Noxus Hopeful to Ornn's Forge"
+    },
+    {
+     "index": 8,
+     "share": 0.14,
+     "text": "Play Forecaster to base"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 123,
    "event_text": "Played Falling Star from hand.",
    "human": {
-    "index": 17,
-    "share": 0.08,
+    "index": 16,
+    "share": 0.15,
     "text": "Play Falling Star"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.32,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    },
-    {
-     "index": 2,
-     "share": 0.18,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
      "index": 0,
-     "share": 0.12,
+     "share": 0.22,
      "text": "End turn"
+    },
+    {
+     "index": 8,
+     "share": 0.16,
+     "text": "Play Forecaster to base"
+    },
+    {
+     "index": 16,
+     "share": 0.15,
+     "text": "Play Falling Star"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 131,
    "event_text": "Emp4 played Forecaster from hand to base.",
    "human": {
     "index": 8,
-    "share": 0.05,
+    "share": 0.17,
     "text": "Play Forecaster to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.29,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    },
-    {
      "index": 0,
-     "share": 0.28,
+     "share": 0.25,
      "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.11,
-     "text": "Move Noxus Hopeful to Rockfall Path"
+     "index": 8,
+     "share": 0.17,
+     "text": "Play Forecaster to base"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Noxus Hopeful to Ornn's Forge"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 134,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 5,
-    "share": 0.01,
+    "share": 0.1,
     "text": "Move Kai'Sa, Survivor to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.61,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    },
-    {
      "index": 0,
-     "share": 0.17,
+     "share": 0.37,
      "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.11,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Rockfall Path"
-   },
-   "clean_boundary": true,
-   "decision": 135,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.14,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.71,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 0,
+     "index": 8,
      "share": 0.14,
-     "text": "End turn"
+     "text": "Play Watchful Sentry to base"
     },
     {
      "index": 1,
-     "share": 0.06,
+     "share": 0.13,
      "text": "Move Noxus Hopeful to Ornn's Forge"
     }
    ],
@@ -766,236 +714,71 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 149,
    "event_text": "Emp4 moved Noxus Hopeful to base.",
    "human": {
     "index": 1,
-    "share": 0.09,
+    "share": 0.11,
     "text": "Move Noxus Hopeful to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.24,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.43,
+     "share": 0.18,
      "text": "Move Noxus Hopeful to Ornn's Forge"
     },
     {
      "index": 3,
-     "share": 0.18,
+     "share": 0.15,
      "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 42,
-     "share": 0.11,
-     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 150,
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 31,
-    "share": 0.06,
+    "share": 0.13,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.67,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    },
-    {
-     "index": 2,
-     "share": 0.09,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
      "index": 0,
-     "share": 0.08,
-     "text": "End turn"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 153,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.21,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.41,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    },
-    {
-     "index": 0,
-     "share": 0.21,
-     "text": "End turn"
-    },
-    {
-     "index": 31,
-     "share": 0.14,
-     "text": "Play Brynhir Thundersong to base"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 160,
-   "event_text": "Emp4 ended showdown responses at Ornn's Forge.",
-   "human": {
-    "index": 0,
-    "share": 0.47,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.49,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.47,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.04,
-     "text": "Play Hextech Ray targeting Ornn, Blacksmith"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 14,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "clean_boundary": true,
-   "decision": 175,
-   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
-   "human": {
-    "index": 13,
-    "share": 0.22916666666666666,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 14,
-     "share": 0.46875,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 13,
-     "share": 0.22916666666666666,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 1,
-     "share": 0.09375,
-     "text": "Move Noxus Hopeful to Ornn's Forge"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 182,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 1,
-    "share": 0.4,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.6,
-     "text": "Pass"
-    },
-    {
-     "index": 1,
-     "share": 0.4,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 185,
-   "event_text": "Played Temporal Breach from hand.",
-   "human": {
-    "index": 15,
-    "share": 0.17,
-    "text": "Play Temporal Breach"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.32,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
      "share": 0.29,
-     "text": "Move Noxus Hopeful to Rockfall Path"
+     "text": "End turn"
     },
     {
      "index": 1,
      "share": 0.21,
      "text": "Move Noxus Hopeful to Ornn's Forge"
+    },
+    {
+     "index": 2,
+     "share": 0.18,
+     "text": "Move Noxus Hopeful to Rockfall Path"
     }
    ],
-   "turn": 11
+   "turn": 9
   }
  ],
  "effect_lines": 1,
@@ -1337,9 +1120,10 @@
   "P1": "Daughter of the Void",
   "P2": "Fire Below the Mountain"
  },
+ "log_artefacts": 0,
  "log_events": 223,
  "log_events_consumed": 223,
- "out_of_order_matches": 6,
+ "out_of_order_matches": 7,
  "players": [
   "Emp4",
   "El Contador"
@@ -1384,7 +1168,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_ornn_rl2_ad98658d50bc0ebf1c438f6dc99a2693.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.3837054000000004,
-  "seconds": 1.407528185
+  "bot_seconds": 1.5238041789999996,
+  "seconds": 1.546892243
  }
 }

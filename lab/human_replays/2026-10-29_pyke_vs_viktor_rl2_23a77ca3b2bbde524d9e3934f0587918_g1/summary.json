@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 5,
+  "agree": 12,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 2,
     "n": 2,
-    "rate": 0.0
+    "rate": 1.0
    },
    "battlefield": {
     "agree": 1,
@@ -16,40 +16,41 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 2,
     "n": 4,
-    "rate": 0.25
+    "rate": 0.5
    },
    "play": {
-    "agree": 3,
+    "agree": 7,
     "n": 9,
-    "rate": 0.3333333333333333
+    "rate": 0.7777777777777778
    }
   },
   "clean_boundary": {
-   "agree": 4,
+   "agree": 11,
    "n": 15,
-   "rate": 0.26666666666666666
+   "rate": 0.7333333333333333
   },
   "in_flight": {
    "agree": 1,
    "n": 1
   },
   "n": 16,
-  "rate": 0.3125
+  "rate": 0.75
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 18,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 19,
  "bot_errors": 0,
- "bot_fallbacks": 2,
+ "bot_fallbacks": 3,
  "capture_player": "Tab",
  "compare_both": false,
- "decisions": 140,
+ "decisions": 129,
  "decisions_compared": 16,
- "decisions_human_known": 47,
- "decisions_trivial": 6,
+ "decisions_human_known": 49,
+ "decisions_trivial": 7,
  "deck_tops": 9,
  "desync_causes": {
+  "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit is exhausted (no move option)": 2,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 2,
@@ -61,12 +62,13 @@
    "event_index": 36,
    "event_kind": "moved",
    "event_text": "etrnal moved Recruit to Frozen Fortress.",
+   "log_artefact": true,
+   "log_artefact_rule": "exhausted unit moved: the log exhausts Recruit at line 31 (\"etrnal moved Recruit to Forbidding Waste.\") and readies it nowhere before this move",
    "options": [
     "End turn",
     "Play Carrion Dredger to base",
     "Play Carrion Dredger to Forbidding Waste",
-    "Play Viktor, Leader to base",
-    "Play Viktor, Leader to Forbidding Waste",
+    "Play Stupefy targeting Recruit",
     "Play Stupefy targeting Recruit",
     "Play Cull the Weak",
     "Play Cull the Weak",
@@ -86,8 +88,7 @@
     "End turn",
     "Play Carrion Dredger to base",
     "Play Carrion Dredger to Forbidding Waste",
-    "Play Viktor, Leader to base",
-    "Play Viktor, Leader to Forbidding Waste",
+    "Play Stupefy targeting Recruit",
     "Play Stupefy targeting Recruit",
     "Play Cull the Weak",
     "Play Cull the Weak",
@@ -99,12 +100,19 @@
    "turn": 2
   },
   {
-   "decision": 37,
+   "decision": 31,
    "event_index": 38,
    "event_kind": "passed_focus",
    "event_text": "Tab passed focus at Frozen Fortress.",
    "options": [
-    "End turn"
+    "End turn",
+    "Play Carrion Dredger to base",
+    "Play Carrion Dredger to Forbidding Waste",
+    "Play Stupefy targeting Recruit",
+    "Play Stupefy targeting Recruit",
+    "Play Cull the Weak",
+    "Play Cull the Weak",
+    "Use Herald of the Arcane"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -112,67 +120,33 @@
    "turn": 2
   },
   {
-   "decision": 60,
-   "event_index": 58,
+   "decision": 31,
+   "event_index": 41,
    "event_kind": "moved",
-   "event_text": "etrnal moved Recruit to Frozen Fortress.",
+   "event_text": "etrnal moved Viktor, Leader to base.",
    "options": [
     "End turn",
-    "Move Viktor, Leader to Forbidding Waste",
-    "Move Viktor, Leader to Frozen Fortress",
+    "Play Carrion Dredger to base",
+    "Play Carrion Dredger to Forbidding Waste",
+    "Play Stupefy targeting Recruit",
+    "Play Stupefy targeting Recruit",
     "Play Cull the Weak",
     "Play Cull the Weak",
-    "Play Salvage targeting Concert Poster",
-    "Play Salvage targeting The List",
-    "Play Shadow's Call"
+    "Use Herald of the Arcane"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 4
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 2
   },
   {
-   "decision": 60,
-   "event_index": 59,
-   "event_kind": "passed_focus",
-   "event_text": "etrnal passed focus at Frozen Fortress.",
-   "options": [
-    "End turn",
-    "Move Viktor, Leader to Forbidding Waste",
-    "Move Viktor, Leader to Frozen Fortress",
-    "Play Cull the Weak",
-    "Play Cull the Weak",
-    "Play Salvage targeting Concert Poster",
-    "Play Salvage targeting The List",
-    "Play Shadow's Call"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 4
-  },
-  {
-   "decision": 69,
-   "event_index": 60,
-   "event_kind": "passed_focus",
-   "event_text": "Tab passed focus at Frozen Fortress.",
-   "options": [
-    "End turn",
-    "Move Viktor, Leader to Forbidding Waste",
-    "Move Viktor, Leader to Frozen Fortress"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
-   "turn": 4
-  },
-  {
-   "decision": 72,
+   "decision": 67,
    "event_index": 69,
    "event_kind": "played",
    "event_text": "Tab played The Good Stuff from hand to Frozen Fortress.",
    "options": [
     "End turn",
+    "Play Tideturner to base",
     "Play Tideturner to base",
     "Play Noxus Hopeful to base",
     "Play Overzealous Fan to base",
@@ -184,9 +158,78 @@
    "player": 1,
    "reason": "card in hand but not playable now (cost/timing)",
    "turn": 5
+  },
+  {
+   "decision": 80,
+   "event_index": 84,
+   "event_kind": "moved",
+   "event_text": "etrnal moved Recruit to Frozen Fortress.",
+   "log_artefact": true,
+   "log_artefact_rule": "exhausted unit moved: the log exhausts Recruit at line 78 (\"etrnal moved Recruit to Forbidding Waste.\") and readies it nowhere before this move",
+   "options": [
+    "End turn",
+    "Move Carrion Dredger to Forbidding Waste",
+    "Move Carrion Dredger to Frozen Fortress",
+    "Play Viktor, Leader to base",
+    "Play Viktor, Leader to Forbidding Waste",
+    "Play Shadow's Call",
+    "Play Hidden Blade",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Carrion Dredger",
+    "Use Herald of the Arcane",
+    "Hide Hidden Blade"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "unit is exhausted (no move option)",
+   "turn": 6
+  },
+  {
+   "decision": 80,
+   "event_index": 85,
+   "event_kind": "passed_focus",
+   "event_text": "etrnal passed focus at Frozen Fortress.",
+   "options": [
+    "End turn",
+    "Move Carrion Dredger to Forbidding Waste",
+    "Move Carrion Dredger to Frozen Fortress",
+    "Play Viktor, Leader to base",
+    "Play Viktor, Leader to Forbidding Waste",
+    "Play Shadow's Call",
+    "Play Hidden Blade",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Carrion Dredger",
+    "Use Herald of the Arcane",
+    "Hide Hidden Blade"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 6
+  },
+  {
+   "decision": 96,
+   "event_index": 86,
+   "event_kind": "passed_focus",
+   "event_text": "Tab passed focus at Frozen Fortress.",
+   "options": [
+    "End turn",
+    "Move Carrion Dredger to Forbidding Waste",
+    "Move Carrion Dredger to Frozen Fortress",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Recruit",
+    "Play Bellows Breath targeting Carrion Dredger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 6
   }
  ],
- "desyncs": 7,
+ "desyncs": 8,
+ "desyncs_engine": 6,
  "disagreements": [
   {
    "bot": {
@@ -210,14 +253,14 @@
      "text": "Play Detonate targeting Concert Poster"
     },
     {
-     "index": 0,
-     "share": 0.19,
-     "text": "End turn"
+     "index": 5,
+     "share": 0.17,
+     "text": "Use The List"
     },
     {
-     "index": 5,
-     "share": 0.14,
-     "text": "Use The List"
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
     }
    ],
    "turn": 1
@@ -232,7 +275,7 @@
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.15,
+    "share": 0.48,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -240,12 +283,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.85,
+     "share": 0.52,
      "text": "Play The List to base"
     },
     {
      "index": 0,
-     "share": 0.15,
+     "share": 0.48,
      "text": "End turn"
     }
    ],
@@ -253,67 +296,33 @@
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play The List to base"
-   },
-   "clean_boundary": true,
-   "decision": 41,
-   "event_text": "Tab played Bewitching Spirit from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.13,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.75,
-     "text": "Play The List to base"
-    },
-    {
-     "index": 3,
-     "share": 0.13,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 3,
+    "index": 4,
     "text": "Play Runeblade Anvil to base"
    },
    "clean_boundary": true,
-   "decision": 76,
+   "decision": 71,
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.36,
+    "share": 0.19,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.45,
+     "index": 4,
+     "share": 0.63,
      "text": "Play Runeblade Anvil to base"
     },
     {
      "index": 0,
-     "share": 0.36,
+     "share": 0.19,
      "text": "End turn"
     },
     {
-     "index": 4,
-     "share": 0.18,
+     "index": 5,
+     "share": 0.14,
      "text": "Play Pack of Wonders to base"
     }
    ],
@@ -321,238 +330,34 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 112,
-   "event_text": "Tab played Runeblade Anvil from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.24,
-    "text": "Play Runeblade Anvil to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.47,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 4,
-     "share": 0.24,
-     "text": "Play Runeblade Anvil to base"
-    },
-    {
-     "index": 0,
-     "share": 0.2,
-     "text": "End turn"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 116,
-   "event_text": "Tab played Pack of Wonders from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.12,
-    "text": "Play Pack of Wonders to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.62,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 0,
-     "share": 0.26,
-     "text": "End turn"
-    },
-    {
-     "index": 4,
-     "share": 0.12,
-     "text": "Play Pack of Wonders to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 119,
-   "event_text": "Tab exhausted Pack of Wonders.",
-   "human": {
-    "index": 6,
-    "share": 0.12,
-    "text": "Use Pack of Wonders"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.45,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 4,
-     "share": 0.27,
-     "text": "Play Runeblade Anvil to base"
-    },
-    {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
+    "index": 11,
+    "text": "Use Bloodharbor Ripper ability 2"
    },
    "clean_boundary": true,
    "decision": 125,
-   "event_text": "Played Detonate from banished.",
-   "human": {
-    "index": 13,
-    "share": 0.0,
-    "text": "Use Bloodharbor Ripper ability 2"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.45,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 4,
-     "share": 0.27,
-     "text": "Play Runeblade Anvil to base"
-    },
-    {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 133,
-   "event_text": "Tab played Runeblade Anvil from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.25,
-    "text": "Play Runeblade Anvil to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.44,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 4,
-     "share": 0.25,
-     "text": "Play Runeblade Anvil to base"
-    },
-    {
-     "index": 0,
-     "share": 0.19,
-     "text": "End turn"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 136,
    "event_text": "Tab played Runeblade Anvil from hand to base.",
    "human": {
     "index": 5,
-    "share": 0.25,
+    "share": 0.33,
     "text": "Play Runeblade Anvil to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.45,
-     "text": "Play Amateur Demolitionist to base"
+     "index": 11,
+     "share": 0.42,
+     "text": "Use Bloodharbor Ripper ability 2"
     },
     {
      "index": 5,
-     "share": 0.25,
+     "share": 0.33,
      "text": "Play Runeblade Anvil to base"
     },
     {
      "index": 0,
-     "share": 0.19,
+     "share": 0.17,
      "text": "End turn"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 140,
-   "event_text": "Tab ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.26,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.6,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 0,
-     "share": 0.26,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.11,
-     "text": "Play Treasure Trove to base"
     }
    ],
    "turn": 7
@@ -561,7 +366,7 @@
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "etrnal",
- "forced_decisions": 41,
+ "forced_decisions": 37,
  "game": 1,
  "hand_fixes": {
   "created": 10,
@@ -807,9 +612,10 @@
   "P1": "Bloodharbor Ripper",
   "P2": "Herald of the Arcane"
  },
+ "log_artefacts": 2,
  "log_events": 132,
  "log_events_consumed": 132,
- "out_of_order_matches": 3,
+ "out_of_order_matches": 4,
  "players": [
   "Tab",
   "etrnal"
@@ -830,7 +636,7 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 1,
- "rune_swaps": 4,
+ "rune_swaps": 2,
  "score_mismatch_examples": [
   {
    "engine_score": 1,
@@ -849,12 +655,12 @@
  ],
  "score_mismatches": 2,
  "seed": 2,
- "silent_passes": 58,
+ "silent_passes": 52,
  "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_viktor_rl2_23a77ca3b2bbde524d9e3934f0587918.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.0030457299999997,
-  "seconds": 1.019113543
+  "bot_seconds": 0.7014900310000001,
+  "seconds": 0.713357974
  }
 }

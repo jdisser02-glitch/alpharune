@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 14,
+  "agree": 23,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -16,19 +16,24 @@
     "rate": 1.0
    },
    "choice": {
-    "agree": 4,
+    "agree": 9,
     "n": 9,
-    "rate": 0.4444444444444444
+    "rate": 1.0
+   },
+   "combat_damage": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 1,
     "n": 5,
-    "rate": 0.4
+    "rate": 0.2
    },
    "hide": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "move": {
     "agree": 2,
@@ -36,44 +41,45 @@
     "rate": 0.5
    },
    "pass_focus": {
-    "agree": 3,
+    "agree": 2,
     "n": 3,
-    "rate": 1.0
+    "rate": 0.6666666666666666
    },
    "play": {
-    "agree": 2,
+    "agree": 6,
     "n": 8,
-    "rate": 0.25
+    "rate": 0.75
    }
   },
   "clean_boundary": {
-   "agree": 6,
+   "agree": 9,
    "n": 18,
-   "rate": 0.3333333333333333
+   "rate": 0.5
   },
   "in_flight": {
-   "agree": 8,
-   "n": 14
+   "agree": 14,
+   "n": 15
   },
-  "n": 32,
-  "rate": 0.4375
+  "n": 33,
+  "rate": 0.696969696969697
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 35,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 36,
  "bot_errors": 0,
  "bot_fallbacks": 3,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 197,
- "decisions_compared": 32,
- "decisions_human_known": 75,
- "decisions_trivial": 10,
+ "decisions": 203,
+ "decisions_compared": 33,
+ "decisions_human_known": 76,
+ "decisions_trivial": 8,
  "deck_tops": 0,
  "desync_causes": {
   "equipped: no equip option for 'Boots of Swiftness' onto 'Baron Nashor'": 1,
   "equipped: no equip option for 'Edge of Night' onto 'Baron Nashor'": 1,
+  "equipped: no equip option for 'Edge of Night' onto 'Ezreal, Prodigy'": 1,
+  "equipped: no equip option for 'Edge of Night' onto 'Kinkou Initiate'": 1,
   "hidden_card_placed: engine asks P2 but the log's next action is by P1 (hidden_card_placed)": 1,
-  "hidden_card_placed: no hide option at 'Bandle Scouts' Academy'": 1,
   "hidden_card_placed: no hide option at 'Baron Pit'": 1,
   "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit is exhausted (no move option)": 4,
@@ -83,7 +89,7 @@
   "played: card in trash but not replayable now": 1,
   "played: engine asks P2 but the log's next action is by P1 (played)": 2,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
@@ -100,48 +106,67 @@
    "turn": 3
   },
   {
-   "decision": 58,
-   "event_index": 467,
-   "event_kind": "showdown",
-   "event_text": "c ended showdown responses at Bandle Scouts' Academy.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 3
-  },
-  {
-   "decision": 96,
-   "event_index": 520,
-   "event_kind": "hidden_card_placed",
-   "event_text": "Hob put a hidden card to Bandle Scouts' Academy.",
-   "options": [
-    "End turn",
-    "Move Kinkou Initiate to base",
-    "Move Evelynn, Entrancing to Windswept Hillock",
-    "Move Evelynn, Entrancing to Bandle Scouts' Academy"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no hide option at 'Bandle Scouts' Academy'",
-   "turn": 5
-  },
-  {
    "decision": 127,
-   "event_index": 541,
-   "event_kind": "played",
-   "event_text": "Played Rampage from hand.",
+   "event_index": 534,
+   "event_kind": "equipped",
+   "event_text": "Hob equipped Edge of Night to Kinkou Initiate.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Ezreal, Prodigy to Windswept Hillock",
     "Move Ezreal, Prodigy to Bandle Scouts' Academy",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Move Ezreal, Prodigy, Evelynn, Entrancing to Windswept Hillock",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to Bandle Scouts' Academy"
+    "Move Ezreal, Prodigy, Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Play Vex, Apathetic to base",
+    "Play Vex, Apathetic to Bandle Scouts' Academy",
+    "Play Tail-Cloaked Matriarch to base",
+    "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
+    "Play K'Sante, Courageous to base",
+    "Play K'Sante, Courageous to Bandle Scouts' Academy",
+    "Play Challenge",
+    "Play Flurry of Blades",
+    "Play Rampage",
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no equip option for 'Edge of Night' onto 'Kinkou Initiate'",
+   "turn": 7
+  },
+  {
+   "decision": 134,
+   "event_index": 541,
+   "event_kind": "played",
+   "event_text": "Played Rampage from hand.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Kinkou Initiate to base",
+    "Move K'Sante, Courageous to Windswept Hillock",
+    "Move K'Sante, Courageous to Bandle Scouts' Academy",
+    "Move Ezreal, Prodigy to Windswept Hillock",
+    "Move Ezreal, Prodigy to Bandle Scouts' Academy",
+    "Move Evelynn, Entrancing to Windswept Hillock",
+    "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
+    "Move K'Sante, Courageous, Ezreal, Prodigy to Windswept Hillock",
+    "Move K'Sante, Courageous, Evelynn, Entrancing to Windswept Hillock",
+    "Move Ezreal, Prodigy, Evelynn, Entrancing to Windswept Hillock",
+    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to Windswept Hillock",
+    "Move K'Sante, Courageous, Ezreal, Prodigy to Bandle Scouts' Academy",
+    "Move K'Sante, Courageous, Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Ezreal, Prodigy, Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -149,18 +174,14 @@
    "turn": 7
   },
   {
-   "decision": 154,
+   "decision": 161,
    "event_index": 561,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Windswept Hillock.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to base",
-    "Move Hwei, Brooding Painter to Bandle Scouts' Academy",
     "Move LeBlanc, Everywhere at Once to base",
     "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to base",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
     "Use Gold",
     "Hide Smoke and Mirrors"
    ],
@@ -170,18 +191,14 @@
    "turn": 8
   },
   {
-   "decision": 154,
+   "decision": 161,
    "event_index": 562,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Windswept Hillock.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to base",
-    "Move Hwei, Brooding Painter to Bandle Scouts' Academy",
     "Move LeBlanc, Everywhere at Once to base",
     "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to base",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
     "Use Gold",
     "Hide Smoke and Mirrors"
    ],
@@ -191,18 +208,16 @@
    "turn": 8
   },
   {
-   "decision": 154,
+   "decision": 161,
    "event_index": 567,
    "event_kind": "moved",
    "event_text": "c moved Thousand-Tailed Watcher to Bandle Scouts' Academy.",
+   "log_artefact": true,
+   "log_artefact_rule": "exhausted unit moved: the log exhausts Thousand-Tailed Watcher at line 560 (\"c moved Thousand-Tailed Watcher to Windswept Hillock.\") and readies it nowhere before this move",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to base",
-    "Move Hwei, Brooding Painter to Bandle Scouts' Academy",
     "Move LeBlanc, Everywhere at Once to base",
     "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to base",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
     "Use Gold",
     "Hide Smoke and Mirrors"
    ],
@@ -212,18 +227,14 @@
    "turn": 8
   },
   {
-   "decision": 154,
+   "decision": 161,
    "event_index": 568,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Bandle Scouts' Academy.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to base",
-    "Move Hwei, Brooding Painter to Bandle Scouts' Academy",
     "Move LeBlanc, Everywhere at Once to base",
     "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to base",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
     "Use Gold",
     "Hide Smoke and Mirrors"
    ],
@@ -233,18 +244,14 @@
    "turn": 8
   },
   {
-   "decision": 154,
+   "decision": 161,
    "event_index": 570,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Bandle Scouts' Academy.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to base",
-    "Move Hwei, Brooding Painter to Bandle Scouts' Academy",
     "Move LeBlanc, Everywhere at Once to base",
     "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to base",
-    "Move Hwei, Brooding Painter, LeBlanc, Everywhere at Once to Bandle Scouts' Academy",
     "Use Gold",
     "Hide Smoke and Mirrors"
    ],
@@ -254,23 +261,31 @@
    "turn": 8
   },
   {
-   "decision": 155,
+   "decision": 162,
    "event_index": 578,
    "event_kind": "played",
    "event_text": "Hob played Baron Nashor from hand to Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
     "Play Gutter Guardian to base",
     "Play Gutter Guardian to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
     "Play Rampage",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Gutter Guardian"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -278,23 +293,31 @@
    "turn": 9
   },
   {
-   "decision": 155,
+   "decision": 162,
    "event_index": 579,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
     "Play Gutter Guardian to base",
     "Play Gutter Guardian to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
     "Play Rampage",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Gutter Guardian"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -302,23 +325,31 @@
    "turn": 9
   },
   {
-   "decision": 155,
+   "decision": 162,
    "event_index": 581,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to Baron Nashor.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
     "Play Gutter Guardian to base",
     "Play Gutter Guardian to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
     "Play Rampage",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Gutter Guardian"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -326,23 +357,31 @@
    "turn": 9
   },
   {
-   "decision": 155,
+   "decision": 162,
    "event_index": 582,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
     "Play Gutter Guardian to base",
     "Play Gutter Guardian to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
     "Play Rampage",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Gutter Guardian"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -350,23 +389,31 @@
    "turn": 9
   },
   {
-   "decision": 155,
+   "decision": 162,
    "event_index": 584,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Kinkou Initiate to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Move Pyke, Returned, Kinkou Initiate to base",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Bandle Scouts' Academy",
     "Play Gutter Guardian to base",
     "Play Gutter Guardian to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
     "Play Rampage",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Hide Gutter Guardian"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -374,21 +421,25 @@
    "turn": 9
   },
   {
-   "decision": 191,
+   "decision": 198,
    "event_index": 610,
    "event_kind": "moved",
    "event_text": "Hob moved Ezreal, Prodigy to Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
     "Play Vex, Apathetic to base",
+    "Play Vex, Apathetic to Bandle Scouts' Academy",
     "Play Boots of Swiftness to base",
-    "Play Flurry of Blades",
     "Play Hold 'Em",
-    "Equip Edge of Night to Gutter Guardian",
-    "Equip Edge of Night to Ezreal, Prodigy",
-    "Equip Edge of Night to Evelynn, Entrancing"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -396,19 +447,23 @@
    "turn": 11
   },
   {
-   "decision": 195,
+   "decision": 202,
    "event_index": 617,
    "event_kind": "equipped",
    "event_text": "Hob equipped Boots of Swiftness to Baron Nashor.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
     "Play Flurry of Blades",
-    "Equip Edge of Night to Gutter Guardian",
-    "Equip Edge of Night to Ezreal, Prodigy",
-    "Equip Edge of Night to Evelynn, Entrancing",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
     "Equip Boots of Swiftness to Gutter Guardian",
+    "Equip Boots of Swiftness to Pyke, Returned",
     "Equip Boots of Swiftness to Ezreal, Prodigy",
     "Equip Boots of Swiftness to Evelynn, Entrancing"
    ],
@@ -418,19 +473,23 @@
    "turn": 11
   },
   {
-   "decision": 195,
+   "decision": 202,
    "event_index": 618,
    "event_kind": "moved",
    "event_text": "Hob moved Baron Nashor to Windswept Hillock.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
     "Play Flurry of Blades",
-    "Equip Edge of Night to Gutter Guardian",
-    "Equip Edge of Night to Ezreal, Prodigy",
-    "Equip Edge of Night to Evelynn, Entrancing",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
     "Equip Boots of Swiftness to Gutter Guardian",
+    "Equip Boots of Swiftness to Pyke, Returned",
     "Equip Boots of Swiftness to Ezreal, Prodigy",
     "Equip Boots of Swiftness to Evelynn, Entrancing"
    ],
@@ -440,19 +499,23 @@
    "turn": 11
   },
   {
-   "decision": 195,
+   "decision": 202,
    "event_index": 619,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Windswept Hillock.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
     "Play Flurry of Blades",
-    "Equip Edge of Night to Gutter Guardian",
-    "Equip Edge of Night to Ezreal, Prodigy",
-    "Equip Edge of Night to Evelynn, Entrancing",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
     "Equip Boots of Swiftness to Gutter Guardian",
+    "Equip Boots of Swiftness to Pyke, Returned",
     "Equip Boots of Swiftness to Ezreal, Prodigy",
     "Equip Boots of Swiftness to Evelynn, Entrancing"
    ],
@@ -462,15 +525,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 621,
    "event_kind": "played",
    "event_text": "Played Deathgrip from hand.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -478,15 +547,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 627,
    "event_kind": "played",
    "event_text": "Played Salvage from hand.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -494,15 +569,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 631,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Windswept Hillock.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -510,15 +591,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 634,
    "event_kind": "played",
    "event_text": "Hob played Boots of Swiftness from trash to base.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -526,15 +613,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 635,
    "event_kind": "played",
    "event_text": "Played Hold 'Em from hand.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -542,15 +635,43 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
+   "event_index": 638,
+   "event_kind": "equipped",
+   "event_text": "Hob equipped Edge of Night to Ezreal, Prodigy.",
+   "options": [
+    "End turn",
+    "Move Pyke, Returned to base",
+    "Move Evelynn, Entrancing to Windswept Hillock",
+    "Move Evelynn, Entrancing to Bandle Scouts' Academy",
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no equip option for 'Edge of Night' onto 'Ezreal, Prodigy'",
+   "turn": 11
+  },
+  {
+   "decision": 203,
    "event_index": 641,
    "event_kind": "moved",
    "event_text": "Hob moved Ezreal, Prodigy to Windswept Hillock.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -558,15 +679,21 @@
    "turn": 11
   },
   {
-   "decision": 197,
+   "decision": 203,
    "event_index": 642,
    "event_kind": "moved",
    "event_text": "Hob moved Ezreal, Prodigy to Baron Pit.",
    "options": [
     "End turn",
+    "Move Pyke, Returned to base",
     "Move Evelynn, Entrancing to Windswept Hillock",
     "Move Evelynn, Entrancing to Bandle Scouts' Academy",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold",
+    "Use Gold"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -575,41 +702,8 @@
   }
  ],
  "desyncs": 25,
+ "desyncs_engine": 24,
  "disagreements": [
-  {
-   "bot": {
-    "index": 0,
-    "text": "Choose Smoke and Mirrors"
-   },
-   "clean_boundary": false,
-   "decision": 23,
-   "event_text": "",
-   "human": {
-    "index": 1,
-    "share": 0.2,
-    "text": "Choose Dredge Up"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.55,
-     "text": "Choose Smoke and Mirrors"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Choose Dredge Up"
-    },
-    {
-     "index": 2,
-     "share": 0.2,
-     "text": "Choose Ki Barrier"
-    }
-   ],
-   "turn": 2
-  },
   {
    "bot": {
     "index": 4,
@@ -620,7 +714,7 @@
    "event_text": "c moved Honest Broker to Bandle Scouts' Academy.",
    "human": {
     "index": 2,
-    "share": 0.14,
+    "share": 0.24,
     "text": "Move Honest Broker to Bandle Scouts' Academy"
    },
    "kind": "move",
@@ -628,84 +722,21 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.83,
+     "share": 0.56,
      "text": "Play LeBlanc, Everywhere at Once to Windswept Hillock"
     },
     {
      "index": 2,
-     "share": 0.14,
+     "share": 0.24,
      "text": "Move Honest Broker to Bandle Scouts' Academy"
     },
     {
-     "index": 6,
-     "share": 0.02,
-     "text": "Play Hidden Blade"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
-   },
-   "clean_boundary": true,
-   "decision": 31,
-   "event_text": "c moved LeBlanc, Everywhere at Once to Windswept Hillock.",
-   "human": {
-    "index": 2,
-    "share": 0.11,
-    "text": "Play LeBlanc, Everywhere at Once to Windswept Hillock"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
      "index": 3,
-     "share": 0.89,
-     "text": "Play LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
-    },
-    {
-     "index": 2,
-     "share": 0.11,
-     "text": "Play LeBlanc, Everywhere at Once to Windswept Hillock"
+     "share": 0.07,
+     "text": "Play LeBlanc, Everywhere at Once to base"
     }
    ],
    "turn": 2
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Choose Smoke and Mirrors"
-   },
-   "clean_boundary": false,
-   "decision": 63,
-   "event_text": "",
-   "human": {
-    "index": 1,
-    "share": 0.27,
-    "text": "Choose Ki Barrier"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.63,
-     "text": "Choose Smoke and Mirrors"
-    },
-    {
-     "index": 1,
-     "share": 0.27,
-     "text": "Choose Ki Barrier"
-    },
-    {
-     "index": 2,
-     "share": 0.06,
-     "text": "Choose Hidden Blade"
-    }
-   ],
-   "turn": 4
   },
   {
    "bot": {
@@ -717,7 +748,7 @@
    "event_text": "c exhausted Gold. (named by the payment)",
    "human": {
     "index": 24,
-    "share": 0.0,
+    "share": 0.14,
     "text": "Use Gold"
    },
    "kind": "ability",
@@ -725,18 +756,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.39,
+     "share": 0.26,
      "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
     },
     {
      "index": 15,
-     "share": 0.32,
+     "share": 0.25,
      "text": "Play Hidden Blade"
     },
     {
-     "index": 0,
-     "share": 0.24,
-     "text": "End turn"
+     "index": 24,
+     "share": 0.14,
+     "text": "Use Gold"
     }
    ],
    "turn": 4
@@ -751,7 +782,7 @@
    "event_text": "Played Hidden Blade from hand.",
    "human": {
     "index": 15,
-    "share": 0.31,
+    "share": 0.21,
     "text": "Play Hidden Blade"
    },
    "kind": "play",
@@ -759,21 +790,123 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.39,
+     "share": 0.28,
      "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
     },
     {
      "index": 15,
-     "share": 0.31,
+     "share": 0.21,
      "text": "Play Hidden Blade"
+    },
+    {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move LeBlanc, Everywhere at Once to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move LeBlanc, Everywhere at Once to base"
+   },
+   "clean_boundary": true,
+   "decision": 74,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.09,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.38,
+     "text": "Move LeBlanc, Everywhere at Once to base"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
+    },
+    {
+     "index": 15,
+     "share": 0.11,
+     "text": "Use Gold"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Hide Smoke and Mirrors"
+   },
+   "clean_boundary": true,
+   "decision": 122,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.24,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.26,
+     "text": "Hide Smoke and Mirrors"
     },
     {
      "index": 0,
      "share": 0.24,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Move LeBlanc, Everywhere at Once to base"
     }
    ],
-   "turn": 4
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Hwei, Brooding Painter to Windswept Hillock"
+   },
+   "clean_boundary": true,
+   "decision": 149,
+   "event_text": "c played Thousand-Tailed Watcher from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.24,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.45,
+     "text": "Play Hwei, Brooding Painter to Windswept Hillock"
+    },
+    {
+     "index": 3,
+     "share": 0.24,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 5,
+     "share": 0.17,
+     "text": "Play Hwei, Brooding Painter to base"
+    }
+   ],
+   "turn": 8
   },
   {
    "bot": {
@@ -781,11 +914,11 @@
     "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
-   "decision": 74,
+   "decision": 162,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.38,
+    "share": 0.07,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -793,377 +926,120 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.53,
+     "share": 0.58,
      "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
     },
     {
+     "index": 4,
+     "share": 0.25,
+     "text": "Hide Smoke and Mirrors"
+    },
+    {
      "index": 0,
-     "share": 0.38,
+     "share": 0.07,
      "text": "End turn"
-    },
-    {
-     "index": 14,
-     "share": 0.05,
-     "text": "Play Dredge Up"
     }
    ],
-   "turn": 4
+   "turn": 8
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 91,
-   "event_text": "Played Stupefy from hand.",
-   "human": {
-    "index": 1,
-    "share": 0.17,
-    "text": "Play Stupefy targeting LeBlanc, Everywhere at Once"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.82,
-     "text": "Pass"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Play Stupefy targeting LeBlanc, Everywhere at Once"
-    },
-    {
-     "index": 7,
-     "share": 0.01,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Choose Smoke and Mirrors"
-   },
-   "clean_boundary": false,
-   "decision": 101,
-   "event_text": "",
-   "human": {
-    "index": 1,
-    "share": 0.01,
-    "text": "Choose Watchful Sentry"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.61,
-     "text": "Choose Smoke and Mirrors"
-    },
-    {
-     "index": 2,
-     "share": 0.16,
-     "text": "Choose Hwei, Brooding Painter"
-    },
-    {
-     "index": 5,
-     "share": 0.16,
-     "text": "Choose Dredge Up"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "clean_boundary": true,
-   "decision": 103,
-   "event_text": "c played Hwei, Brooding Painter from hand to Windswept Hillock.",
-   "human": {
-    "index": 8,
-    "share": 0.02,
+    "index": 16,
     "text": "Play Hwei, Brooding Painter to Windswept Hillock"
    },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.56,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
-    },
-    {
-     "index": 0,
-     "share": 0.09,
-     "text": "End turn"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
    "clean_boundary": true,
-   "decision": 110,
-   "event_text": "Played Dredge Up from hand.",
+   "decision": 169,
+   "event_text": "c moved Thousand-Tailed Watcher to Bandle Scouts' Academy.",
    "human": {
-    "index": 7,
-    "share": 0.1,
-    "text": "Play Dredge Up"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.45,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.28,
-     "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
-    },
-    {
-     "index": 14,
-     "share": 0.12,
-     "text": "Play Cull the Weak"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
     "index": 2,
-    "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-   },
-   "clean_boundary": true,
-   "decision": 154,
-   "event_text": "c moved Thousand-Tailed Watcher to Windswept Hillock.",
-   "human": {
-    "index": 5,
-    "share": 0.42,
-    "text": "Move Thousand-Tailed Watcher to Windswept Hillock"
+    "share": 0.01,
+    "text": "Move Thousand-Tailed Watcher to Bandle Scouts' Academy"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.49,
-     "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
+     "index": 16,
+     "share": 0.76,
+     "text": "Play Hwei, Brooding Painter to Windswept Hillock"
     },
     {
-     "index": 5,
-     "share": 0.42,
-     "text": "Move Thousand-Tailed Watcher to Windswept Hillock"
+     "index": 31,
+     "share": 0.1,
+     "text": "Hide Smoke and Mirrors"
     },
     {
-     "index": 0,
-     "share": 0.09,
-     "text": "End turn"
+     "index": 30,
+     "share": 0.05,
+     "text": "Use Gold"
     }
    ],
-   "turn": 8
+   "turn": 10
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-   },
-   "clean_boundary": true,
-   "decision": 155,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.29,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.71,
-     "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-    },
-    {
-     "index": 0,
-     "share": 0.29,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Choose Smoke and Mirrors"
+    "index": 1,
+    "text": "Play Smoke and Mirrors"
    },
    "clean_boundary": false,
-   "decision": 160,
-   "event_text": "",
+   "decision": 170,
+   "event_text": "c passed focus at Bandle Scouts' Academy.",
    "human": {
-    "index": 3,
-    "share": 0.12,
-    "text": "Choose Eclipse"
+    "index": 0,
+    "share": 0.22,
+    "text": "Pass focus"
    },
-   "kind": "choice",
+   "kind": "pass_focus",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.62,
-     "text": "Choose Smoke and Mirrors"
+     "index": 1,
+     "share": 0.43,
+     "text": "Play Smoke and Mirrors"
     },
     {
-     "index": 2,
-     "share": 0.13,
-     "text": "Choose Dredge Up"
+     "index": 0,
+     "share": 0.22,
+     "text": "Pass focus"
     },
     {
      "index": 3,
-     "share": 0.12,
-     "text": "Choose Eclipse"
+     "share": 0.15,
+     "text": "Play Dredge Up"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Choose LeBlanc, Everywhere at Once"
-   },
-   "clean_boundary": false,
-   "decision": 161,
-   "event_text": "",
-   "human": {
-    "index": 2,
-    "share": 0.0,
-    "text": "Choose Thousand-Tailed Watcher"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.5,
-     "text": "Choose LeBlanc, Everywhere at Once"
-    },
-    {
-     "index": 1,
-     "share": 0.5,
-     "text": "Choose Hwei, Brooding Painter"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 17,
-    "text": "Play Hwei, Brooding Painter to Bandle Scouts' Academy"
+    "index": 18,
+    "text": "Use Gold"
    },
    "clean_boundary": true,
-   "decision": 170,
-   "event_text": "c played Hwei, Brooding Painter from hand to Windswept Hillock.",
-   "human": {
-    "index": 16,
-    "share": 0.0,
-    "text": "Play Hwei, Brooding Painter to Windswept Hillock"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 17,
-     "share": 0.65,
-     "text": "Play Hwei, Brooding Painter to Bandle Scouts' Academy"
-    },
-    {
-     "index": 2,
-     "share": 0.21,
-     "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-    },
-    {
-     "index": 0,
-     "share": 0.11,
-     "text": "End turn"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-   },
-   "clean_boundary": true,
-   "decision": 177,
-   "event_text": "c put a hidden card to Windswept Hillock.",
-   "human": {
-    "index": 30,
-    "share": 0.0,
-    "text": "Hide Smoke and Mirrors"
-   },
-   "kind": "hide",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.59,
-     "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-    },
-    {
-     "index": 0,
-     "share": 0.27,
-     "text": "End turn"
-    },
-    {
-     "index": 15,
-     "share": 0.06,
-     "text": "Play Honest Broker to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
-   },
-   "clean_boundary": true,
-   "decision": 178,
+   "decision": 185,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.3,
+    "share": 0.12903225806451613,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.7,
-     "text": "Move Hwei, Brooding Painter to Bandle Scouts' Academy"
+     "index": 18,
+     "share": 0.21505376344086022,
+     "text": "Use Gold"
     },
     {
-     "index": 0,
-     "share": 0.3,
-     "text": "End turn"
+     "index": 8,
+     "share": 0.1935483870967742,
+     "text": "Play Honest Broker to Windswept Hillock"
+    },
+    {
+     "index": 2,
+     "share": 0.15053763440860216,
+     "text": "Move LeBlanc, Everywhere at Once to Bandle Scouts' Academy"
     }
    ],
    "turn": 10
@@ -1172,7 +1048,7 @@
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "c",
- "forced_decisions": 89,
+ "forced_decisions": 85,
  "game": 3,
  "hand_fixes": {
   "created": 6,
@@ -1310,7 +1186,7 @@
     "for": "Hob played K'Sante, Courageous from hand to base.",
     "how": "pulled",
     "player": 2,
-    "turn": 6,
+    "turn": 5,
     "zone": "hand"
    },
    {
@@ -1661,6 +1537,7 @@
   "P1": "Deceiver",
   "P2": "Agony's Embrace"
  },
+ "log_artefacts": 1,
  "log_events": 222,
  "log_events_consumed": 217,
  "out_of_order_matches": 7,
@@ -1668,11 +1545,11 @@
   "c",
   "Hob"
  ],
- "readiness_fixes": 1,
+ "readiness_fixes": 0,
  "result": {
   "engine_scores": [
-   7,
-   4
+   6,
+   5
   ],
   "engine_winner": 1,
   "log_scores": [
@@ -1692,23 +1569,16 @@
    "log_score": 7,
    "text": "c scored 1 at turn start. Score: 6 → 7.",
    "turn": 10
-  },
-  {
-   "engine_score": 4,
-   "event_index": 602,
-   "log_score": 5,
-   "text": "Hob scored 1 at turn start. Score: 4 → 5.",
-   "turn": 11
   }
  ],
- "score_mismatches": 2,
+ "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 53,
- "soft_dropped": 1,
+ "silent_passes": 63,
+ "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_54d7da5b7cc3ebd346065b7198dfa619.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 1.959709479,
-  "seconds": 1.99327377
+  "bot_seconds": 1.614487942,
+  "seconds": 1.64294482
  }
 }

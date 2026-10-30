@@ -3,22 +3,27 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 18,
+  "agree": 22,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 1,
     "n": 3,
-    "rate": 0.0
+    "rate": 0.3333333333333333
    },
    "battlefield": {
     "agree": 1,
     "n": 1,
     "rate": 1.0
    },
+   "choice": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
    "end_turn": {
-    "agree": 5,
+    "agree": 6,
     "n": 6,
-    "rate": 0.8333333333333334
+    "rate": 1.0
    },
    "hide": {
     "agree": 0,
@@ -31,14 +36,14 @@
     "rate": 0.75
    },
    "pass_focus": {
-    "agree": 5,
-    "n": 5,
+    "agree": 7,
+    "n": 7,
     "rate": 1.0
    },
    "play": {
-    "agree": 4,
-    "n": 10,
-    "rate": 0.4
+    "agree": 3,
+    "n": 11,
+    "rate": 0.2727272727272727
    }
   },
   "clean_boundary": {
@@ -47,22 +52,22 @@
    "rate": 0.6
   },
   "in_flight": {
-   "agree": 6,
-   "n": 10
+   "agree": 10,
+   "n": 14
   },
-  "n": 30,
-  "rate": 0.6
+  "n": 34,
+  "rate": 0.6470588235294118
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 38,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 41,
  "bot_errors": 0,
- "bot_fallbacks": 8,
+ "bot_fallbacks": 7,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 262,
- "decisions_compared": 30,
- "decisions_human_known": 106,
- "decisions_trivial": 7,
+ "decisions": 285,
+ "decisions_compared": 34,
+ "decisions_human_known": 117,
+ "decisions_trivial": 9,
  "deck_tops": 4,
  "desync_causes": {
   "equipped: no equip option for 'Last Rites' onto 'Tail-Cloaked Matriarch'": 1,
@@ -70,48 +75,14 @@
   "hidden_card_placed: no hide option at 'Rockfall Path'": 1,
   "moved: no such unit on board (not played / already gone)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 2,
-  "played: card in hand but not playable now (cost/timing)": 4,
-  "played: card in trash but not replayable now": 2,
+  "played: card in hand but not playable now (cost/timing)": 3,
+  "played: card in trash but not replayable now": 1,
   "played: engine asks P2 but the log's next action is by P1 (played)": 1,
-  "played: play from 'Ruined Monastery' not offered": 1,
-  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
-   "decision": 128,
-   "event_index": 127,
-   "event_kind": "passed_focus",
-   "event_text": "Emp4 passed focus at Rockfall Path.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Use Gold",
-    "Hide Temporal Breach"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 6
-  },
-  {
-   "decision": 128,
-   "event_index": 128,
-   "event_kind": "showdown",
-   "event_text": "bertilQ ended showdown responses at Rockfall Path.",
-   "options": [
-    "End turn",
-    "Move Kai'Sa, Survivor to base",
-    "Use Gold",
-    "Hide Temporal Breach"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
-   "turn": 6
-  },
-  {
-   "decision": 137,
+   "decision": 146,
    "event_index": 138,
    "event_kind": "played",
    "event_text": "bertilQ played Tail-Cloaked Matriarch from hand to base.",
@@ -132,15 +103,13 @@
    "turn": 7
   },
   {
-   "decision": 145,
+   "decision": 154,
    "event_index": 153,
    "event_kind": "played",
    "event_text": "Emp4 played The Empyrean from hand to Ruined Monastery.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
     "Move Forecaster to base",
-    "Move Kai'Sa, Survivor, Forecaster to base",
     "Play Plundering Poro to base",
     "Play Plundering Poro to Ruined Monastery",
     "Play Bilgewater Tracker to base",
@@ -157,15 +126,13 @@
    "turn": 8
   },
   {
-   "decision": 146,
+   "decision": 155,
    "event_index": 163,
    "event_kind": "hidden_card_placed",
    "event_text": "Emp4 put a hidden card to Rockfall Path.",
    "options": [
     "End turn",
-    "Move Kai'Sa, Survivor to base",
     "Move Forecaster to base",
-    "Move Kai'Sa, Survivor, Forecaster to base",
     "Play Plundering Poro to base",
     "Play Plundering Poro to Ruined Monastery",
     "Play Bilgewater Tracker to base",
@@ -179,7 +146,7 @@
    "turn": 8
   },
   {
-   "decision": 180,
+   "decision": 186,
    "event_index": 190,
    "event_kind": "equipped",
    "event_text": "bertilQ equipped Last Rites to Tail-Cloaked Matriarch.",
@@ -195,7 +162,10 @@
     "Play Lightning Rush",
     "Use Heart of the Tempest",
     "Equip Last Rites to Traveling Merchant",
-    "Equip Last Rites to Traveling Merchant"
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Tornado Warrior",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -203,7 +173,7 @@
    "turn": 9
   },
   {
-   "decision": 180,
+   "decision": 186,
    "event_index": 193,
    "event_kind": "moved",
    "event_text": "bertilQ moved Tail-Cloaked Matriarch to Rockfall Path.",
@@ -219,7 +189,10 @@
     "Play Lightning Rush",
     "Use Heart of the Tempest",
     "Equip Last Rites to Traveling Merchant",
-    "Equip Last Rites to Traveling Merchant"
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Tornado Warrior",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -227,31 +200,7 @@
    "turn": 9
   },
   {
-   "decision": 180,
-   "event_index": 194,
-   "event_kind": "passed_focus",
-   "event_text": "bertilQ passed focus at Rockfall Path.",
-   "options": [
-    "End turn",
-    "Play Fizz, Trickster to base",
-    "Play Tornado Warrior to base",
-    "Play Rhasa the Sunderer to base",
-    "Play Bedeviling Stranger to base",
-    "Play Seal of Discord to base",
-    "Play Star-Crossed",
-    "Play Lightning Rush",
-    "Play Lightning Rush",
-    "Use Heart of the Tempest",
-    "Equip Last Rites to Traveling Merchant",
-    "Equip Last Rites to Traveling Merchant"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 9
-  },
-  {
-   "decision": 181,
+   "decision": 187,
    "event_index": 200,
    "event_kind": "played",
    "event_text": "bertilQ played Ezreal, Prodigy from trash to base.",
@@ -267,7 +216,10 @@
     "Use Heart of the Tempest",
     "Equip Last Rites to Traveling Merchant",
     "Equip Last Rites to Traveling Merchant",
-    "Equip Last Rites to Rhasa the Sunderer"
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Tornado Warrior",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -275,31 +227,7 @@
    "turn": 9
   },
   {
-   "decision": 197,
-   "event_index": 224,
-   "event_kind": "played",
-   "event_text": "Played Temporal Breach from Ruined Monastery.",
-   "options": [
-    "End turn",
-    "Move Lecturing Yordle to base",
-    "Move Kai'Sa, Survivor to base",
-    "Play Bilgewater Tracker to base",
-    "Play Bilgewater Tracker to Ruined Monastery",
-    "Play Bilgewater Tracker to base",
-    "Play Bilgewater Tracker to Ruined Monastery",
-    "Play Hextech Ray targeting Lecturing Yordle",
-    "Play Hextech Ray targeting Kai'Sa, Survivor",
-    "Play Singularity",
-    "Use Gold",
-    "Use Daughter of the Void"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "play from 'Ruined Monastery' not offered",
-   "turn": 10
-  },
-  {
-   "decision": 261,
+   "decision": 284,
    "event_index": 250,
    "event_kind": "hidden_card_placed",
    "event_text": "Emp4 put a hidden card to Ruined Monastery.",
@@ -307,12 +235,22 @@
     "End turn",
     "Move Fizz, Trickster to Rockfall Path",
     "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
+    "Move Ezreal, Prodigy to base",
+    "Play Gust",
     "Use Heart of the Tempest",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Fizz, Trickster",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Bedeviling Stranger",
     "Hide Bedeviling Stranger",
     "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Tornado Warrior",
     "Hide Tornado Warrior"
    ],
    "phase": "MainPhase",
@@ -321,7 +259,39 @@
    "turn": 11
   },
   {
-   "decision": 261,
+   "decision": 284,
+   "event_index": 254,
+   "event_kind": "passed_focus",
+   "event_text": "bertilQ passed focus at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Fizz, Trickster to Rockfall Path",
+    "Move Fizz, Trickster to Ruined Monastery",
+    "Move Ezreal, Prodigy to base",
+    "Play Gust",
+    "Use Heart of the Tempest",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Fizz, Trickster",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Bedeviling Stranger",
+    "Hide Bedeviling Stranger",
+    "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Tornado Warrior",
+    "Hide Tornado Warrior"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 11
+  },
+  {
+   "decision": 284,
    "event_index": 255,
    "event_kind": "showdown",
    "event_text": "Emp4 ended showdown responses at Rockfall Path.",
@@ -329,12 +299,22 @@
     "End turn",
     "Move Fizz, Trickster to Rockfall Path",
     "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
+    "Move Ezreal, Prodigy to base",
+    "Play Gust",
     "Use Heart of the Tempest",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Fizz, Trickster",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Bedeviling Stranger",
     "Hide Bedeviling Stranger",
     "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Tornado Warrior",
     "Hide Tornado Warrior"
    ],
    "phase": "MainPhase",
@@ -343,73 +323,39 @@
    "turn": 11
   },
   {
-   "decision": 261,
-   "event_index": 288,
-   "event_kind": "showdown",
-   "event_text": "Emp4 ended showdown responses at Ruined Monastery.",
+   "decision": 284,
+   "event_index": 287,
+   "event_kind": "passed_focus",
+   "event_text": "bertilQ passed focus at Ruined Monastery.",
    "options": [
     "End turn",
     "Move Fizz, Trickster to Rockfall Path",
     "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
+    "Move Ezreal, Prodigy to base",
+    "Play Gust",
     "Use Heart of the Tempest",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Fizz, Trickster",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Bedeviling Stranger",
     "Hide Bedeviling Stranger",
     "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Tornado Warrior",
     "Hide Tornado Warrior"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 11
   },
   {
-   "decision": 261,
-   "event_index": 292,
-   "event_kind": "played",
-   "event_text": "bertilQ played Fizz, Trickster from hand to base.",
-   "options": [
-    "End turn",
-    "Move Fizz, Trickster to Rockfall Path",
-    "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
-    "Use Heart of the Tempest",
-    "Hide Bedeviling Stranger",
-    "Hide Switcheroo",
-    "Hide Tornado Warrior"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 11
-  },
-  {
-   "decision": 261,
-   "event_index": 293,
-   "event_kind": "played",
-   "event_text": "Played Star-Crossed from trash.",
-   "options": [
-    "End turn",
-    "Move Fizz, Trickster to Rockfall Path",
-    "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
-    "Use Heart of the Tempest",
-    "Hide Bedeviling Stranger",
-    "Hide Switcheroo",
-    "Hide Tornado Warrior"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in trash but not replayable now",
-   "turn": 11
-  },
-  {
-   "decision": 261,
+   "decision": 284,
    "event_index": 295,
    "event_kind": "played",
    "event_text": "Played Temporal Breach from Ruined Monastery.",
@@ -417,12 +363,22 @@
     "End turn",
     "Move Fizz, Trickster to Rockfall Path",
     "Move Fizz, Trickster to Ruined Monastery",
-    "Play Bedeviling Stranger to base",
-    "Play Trifarian Captain to base",
-    "Play Switcheroo",
+    "Move Ezreal, Prodigy to base",
+    "Play Gust",
     "Use Heart of the Tempest",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Nocturne, Horrifying",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Traveling Merchant",
+    "Equip Last Rites to Rhasa the Sunderer",
+    "Equip Last Rites to Fizz, Trickster",
+    "Equip Last Rites to Ezreal, Prodigy",
+    "Hide Bedeviling Stranger",
     "Hide Bedeviling Stranger",
     "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Tornado Warrior",
     "Hide Tornado Warrior"
    ],
    "phase": "MainPhase",
@@ -431,16 +387,17 @@
    "turn": 11
   },
   {
-   "decision": 262,
+   "decision": 285,
    "event_index": 318,
    "event_kind": "played",
    "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
    "options": [
     "End turn",
     "Play Bilgewater Tracker to base",
-    "Play Bilgewater Tracker to base",
     "Play Plundering Poro to base",
     "Play Hextech Ray targeting Traveling Merchant",
+    "Play Hextech Ray targeting Traveling Merchant",
+    "Play Hextech Ray targeting Ezreal, Prodigy",
     "Play Temporal Breach",
     "Use Gold",
     "Use Daughter of the Void"
@@ -451,16 +408,17 @@
    "turn": 12
   },
   {
-   "decision": 262,
+   "decision": 285,
    "event_index": 320,
    "event_kind": "moved",
    "event_text": "Emp4 moved Thousand-Tailed Watcher to Rockfall Path.",
    "options": [
     "End turn",
     "Play Bilgewater Tracker to base",
-    "Play Bilgewater Tracker to base",
     "Play Plundering Poro to base",
     "Play Hextech Ray targeting Traveling Merchant",
+    "Play Hextech Ray targeting Traveling Merchant",
+    "Play Hextech Ray targeting Ezreal, Prodigy",
     "Play Temporal Breach",
     "Use Gold",
     "Use Daughter of the Void"
@@ -471,7 +429,8 @@
    "turn": 12
   }
  ],
- "desyncs": 18,
+ "desyncs": 13,
+ "desyncs_engine": 13,
  "disagreements": [
   {
    "bot": {
@@ -483,7 +442,7 @@
    "event_text": "Emp4 played Forecaster from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.18,
+    "share": 0.17,
     "text": "Play Forecaster to base"
    },
    "kind": "play",
@@ -491,51 +450,51 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.23,
+     "share": 0.32,
      "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 4,
-     "share": 0.19,
-     "text": "Play Falling Star"
+     "index": 1,
+     "share": 0.17,
+     "text": "Play Forecaster to base"
     },
     {
-     "index": 1,
-     "share": 0.18,
-     "text": "Play Forecaster to base"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Falling Star"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 77,
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 3,
-    "share": 0.13,
+    "share": 0.09,
     "text": "Play Stupefy targeting Trifarian Captain"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.33,
-     "text": "Play Falling Star"
-    },
-    {
      "index": 0,
-     "share": 0.29,
+     "share": 0.33,
      "text": "End turn"
     },
     {
+     "index": 2,
+     "share": 0.27,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 1,
-     "share": 0.19,
+     "share": 0.16,
      "text": "Play Watchful Sentry to base"
     }
    ],
@@ -551,7 +510,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 2,
-    "share": 0.34,
+    "share": 0.32,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -559,18 +518,52 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.55,
+     "share": 0.47,
      "text": "Pass"
     },
     {
      "index": 2,
-     "share": 0.34,
+     "share": 0.32,
      "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.11,
+     "share": 0.21,
      "text": "Use Gold"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 82,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 2,
+    "share": 0.32,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.36,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.32,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 1,
+     "share": 0.15,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 4
@@ -581,11 +574,11 @@
     "text": "Pass focus"
    },
    "clean_boundary": false,
-   "decision": 105,
+   "decision": 110,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 1,
-    "share": 0.02,
+    "share": 0.1,
     "text": "Play Hextech Ray targeting Trifarian Captain"
    },
    "kind": "play",
@@ -593,17 +586,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.97,
+     "share": 0.84,
      "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.02,
+     "share": 0.1,
      "text": "Play Hextech Ray targeting Trifarian Captain"
     },
     {
      "index": 3,
-     "share": 0.01,
+     "share": 0.06,
      "text": "Use Gold"
     }
    ],
@@ -611,34 +604,34 @@
   },
   {
    "bot": {
-    "index": 2,
+    "index": 1,
     "text": "Move Forecaster to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 113,
+   "decision": 120,
    "event_text": "Emp4 played Lecturing Yordle from hand to base.",
    "human": {
-    "index": 5,
-    "share": 0.14,
+    "index": 4,
+    "share": 0.11,
     "text": "Play Lecturing Yordle to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.32,
+     "index": 1,
+     "share": 0.42,
      "text": "Move Forecaster to Rockfall Path"
     },
     {
-     "index": 3,
-     "share": 0.19,
+     "index": 2,
+     "share": 0.16,
      "text": "Move Forecaster to Ruined Monastery"
     },
     {
      "index": 5,
-     "share": 0.14,
-     "text": "Play Lecturing Yordle to base"
+     "share": 0.12,
+     "text": "Play Falling Star"
     }
    ],
    "turn": 6
@@ -649,11 +642,11 @@
     "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 117,
+   "decision": 124,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 2,
-    "share": 0.33,
+    "share": 0.35,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -661,17 +654,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.56,
+     "share": 0.44,
      "text": "Pass"
     },
     {
      "index": 2,
-     "share": 0.33,
+     "share": 0.35,
      "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.11,
+     "share": 0.21,
      "text": "Use Gold"
     }
    ],
@@ -679,14 +672,14 @@
   },
   {
    "bot": {
-    "index": 2,
+    "index": 1,
     "text": "Move Forecaster to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 120,
+   "decision": 127,
    "event_text": "Played Falling Star from hand.",
    "human": {
-    "index": 5,
+    "index": 4,
     "share": 0.2,
     "text": "Play Falling Star"
    },
@@ -694,19 +687,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.31,
+     "index": 1,
+     "share": 0.36,
      "text": "Move Forecaster to Rockfall Path"
     },
     {
-     "index": 5,
+     "index": 4,
      "share": 0.2,
      "text": "Play Falling Star"
     },
     {
-     "index": 3,
-     "share": 0.18,
-     "text": "Move Forecaster to Ruined Monastery"
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
     }
    ],
    "turn": 6
@@ -717,11 +710,11 @@
     "text": "Move Lecturing Yordle to Rockfall Path"
    },
    "clean_boundary": true,
-   "decision": 139,
+   "decision": 148,
    "event_text": "Emp4 moved Lecturing Yordle to Ruined Monastery.",
    "human": {
     "index": 2,
-    "share": 0.2,
+    "share": 0.15,
     "text": "Move Lecturing Yordle to Ruined Monastery"
    },
    "kind": "move",
@@ -729,12 +722,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.31,
+     "share": 0.35,
      "text": "Move Lecturing Yordle to Rockfall Path"
     },
     {
      "index": 2,
-     "share": 0.2,
+     "share": 0.15,
      "text": "Move Lecturing Yordle to Ruined Monastery"
     },
     {
@@ -751,10 +744,10 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 146,
+   "decision": 155,
    "event_text": "Emp4 put a hidden card to Ruined Monastery.",
    "human": {
-    "index": 12,
+    "index": 10,
     "share": 0.0,
     "text": "Hide Temporal Breach"
    },
@@ -763,51 +756,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.23,
+     "share": 0.25,
      "text": "End turn"
-    },
-    {
-     "index": 4,
-     "share": 0.22,
-     "text": "Play Plundering Poro to base"
     },
     {
      "index": 6,
      "share": 0.17,
-     "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Plundering Poro to base"
-   },
-   "clean_boundary": true,
-   "decision": 147,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.28,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
+     "text": "Play Temporal Breach"
+    },
     {
      "index": 4,
-     "share": 0.29333333333333333,
-     "text": "Play Plundering Poro to base"
-    },
-    {
-     "index": 0,
-     "share": 0.28,
-     "text": "End turn"
-    },
-    {
-     "index": 6,
-     "share": 0.21333333333333335,
+     "share": 0.14,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -819,29 +778,29 @@
     "text": "Pass focus"
    },
    "clean_boundary": false,
-   "decision": 165,
+   "decision": 174,
    "event_text": "Played Temporal Breach from Rockfall Path.",
    "human": {
-    "index": 1,
-    "share": 0.03,
-    "text": "Play Temporal Breach"
+    "index": 5,
+    "share": 0.0,
+    "text": "Play Temporal Breach targeting Lecturing Yordle"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.94,
+     "share": 0.63,
      "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.03,
+     "share": 0.21,
      "text": "Play Temporal Breach"
     },
     {
      "index": 7,
-     "share": 0.02,
+     "share": 0.07,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -853,30 +812,30 @@
     "text": "Play Singularity"
    },
    "clean_boundary": true,
-   "decision": 198,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "decision": 204,
+   "event_text": "Played Temporal Breach from Ruined Monastery.",
    "human": {
-    "index": 11,
-    "share": 0.16,
-    "text": "Use Daughter of the Void"
+    "index": 6,
+    "share": 0.15,
+    "text": "Play Temporal Breach"
    },
-   "kind": "ability",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 9,
-     "share": 0.67,
+     "share": 0.3,
      "text": "Play Singularity"
     },
     {
-     "index": 11,
-     "share": 0.16,
-     "text": "Use Daughter of the Void"
+     "index": 6,
+     "share": 0.15,
+     "text": "Play Temporal Breach"
     },
     {
-     "index": 0,
-     "share": 0.09,
-     "text": "End turn"
+     "index": 11,
+     "share": 0.15,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 10
@@ -885,10 +844,10 @@
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 92,
+ "forced_decisions": 101,
  "game": 1,
  "hand_fixes": {
-  "created": 6,
+  "created": 7,
   "list": [
    {
     "card": "Forecaster",
@@ -1110,6 +1069,14 @@
     "card": "Tornado Warrior",
     "for": "bertilQ moved Tornado Warrior from hand to trash.",
     "how": "pulled",
+    "player": 2,
+    "turn": 11,
+    "zone": "hand"
+   },
+   {
+    "card": "Tornado Warrior",
+    "for": "bertilQ moved Tornado Warrior from hand to trash.",
+    "how": "created",
     "player": 2,
     "turn": 11,
     "zone": "hand"
@@ -1342,18 +1309,19 @@
   "P1": "Daughter of the Void",
   "P2": "Heart of the Tempest"
  },
+ "log_artefacts": 0,
  "log_events": 325,
  "log_events_consumed": 325,
- "out_of_order_matches": 14,
+ "out_of_order_matches": 16,
  "players": [
   "Emp4",
   "bertilQ"
  ],
- "readiness_fixes": 1,
+ "readiness_fixes": 0,
  "result": {
   "engine_scores": [
-   7,
-   1
+   6,
+   3
   ],
   "engine_winner": 1,
   "log_scores": [
@@ -1368,21 +1336,21 @@
  "rune_swaps": 7,
  "score_mismatch_examples": [
   {
-   "engine_score": 7,
-   "event_index": 223,
-   "log_score": 6,
-   "text": "Emp4 scored 1 at turn start. Score: 5 → 6.",
-   "turn": 10
+   "engine_score": 6,
+   "event_index": 307,
+   "log_score": 7,
+   "text": "Emp4 scored 1 at turn start. Score: 6 → 7.",
+   "turn": 12
   }
  ],
  "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 88,
+ "silent_passes": 97,
  "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_kennen_rl2_753a21fa008fa2e101750be371655979.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.238121874,
-  "seconds": 1.274901132
+  "bot_seconds": 1.354968663,
+  "seconds": 1.39037057
  }
 }

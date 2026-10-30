@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 16,
+  "agree": 13,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -16,9 +16,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 0,
     "n": 7,
-    "rate": 0.2857142857142857
+    "rate": 0.0
    },
    "move": {
     "agree": 2,
@@ -26,47 +26,45 @@
     "rate": 0.3333333333333333
    },
    "pass_focus": {
-    "agree": 9,
+    "agree": 5,
     "n": 9,
-    "rate": 1.0
+    "rate": 0.5555555555555556
    },
    "play": {
-    "agree": 2,
+    "agree": 5,
     "n": 14,
-    "rate": 0.14285714285714285
+    "rate": 0.35714285714285715
    }
   },
   "clean_boundary": {
-   "agree": 6,
+   "agree": 7,
    "n": 25,
-   "rate": 0.24
+   "rate": 0.28
   },
   "in_flight": {
-   "agree": 10,
+   "agree": 6,
    "n": 15
   },
   "n": 40,
-  "rate": 0.4
+  "rate": 0.325
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
  "bot_calls": 46,
  "bot_errors": 0,
  "bot_fallbacks": 6,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 315,
+ "decisions": 325,
  "decisions_compared": 40,
- "decisions_human_known": 86,
+ "decisions_human_known": 90,
  "decisions_trivial": 7,
  "deck_tops": 0,
  "desync_causes": {
   "hidden_card_placed: no hide option at 'Sigil of the Storm'": 1,
-  "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit can move but not to 'base'": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 1,
   "played: card in hand but not playable now (cost/timing)": 1,
   "played: engine asks P1 but the log's next action is by P2 (played)": 1,
-  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
@@ -75,6 +73,8 @@
    "event_index": 297,
    "event_kind": "played",
    "event_text": "Dantelush played Astral Heron from hand to Sigil of the Storm.",
+   "log_artefact": true,
+   "log_artefact_rule": "paid below cost: the log pays 0E/1P for Astral Heron, which costs 7E/0P here",
    "options": [
     "End turn",
     "Move Card Sharp to Sigil of the Storm",
@@ -124,36 +124,7 @@
    "turn": 8
   },
   {
-   "decision": 245,
-   "event_index": 461,
-   "event_kind": "moved",
-   "event_text": "Dantelush moved The Empyrean to Sigil of the Storm.",
-   "options": [
-    "End turn",
-    "Move Lonely Poro to Sigil of the Storm",
-    "Move Lonely Poro to Frozen Fortress",
-    "Move Card Sharp to Sigil of the Storm",
-    "Move Card Sharp to Frozen Fortress",
-    "Move Nasus, Guardian of Knowledge to base",
-    "Move Lonely Poro, Card Sharp to Sigil of the Storm",
-    "Move Lonely Poro, Card Sharp to Frozen Fortress",
-    "Play Ravenbloom Student to base",
-    "Play Ravenbloom Student to Sigil of the Storm",
-    "Play Mask of Foresight to base",
-    "Play Mask of Foresight to base",
-    "Play Discipline",
-    "Use Gold",
-    "Use Gold",
-    "Use Gold",
-    "Equip Invigorating Bloom to Nasus, Guardian of Knowledge"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 11
-  },
-  {
-   "decision": 245,
+   "decision": 252,
    "event_index": 462,
    "event_kind": "passed_focus",
    "event_text": "Dantelush passed focus at Sigil of the Storm.",
@@ -182,10 +153,10 @@
    "turn": 11
   },
   {
-   "decision": 248,
-   "event_index": 469,
+   "decision": 255,
+   "event_index": 463,
    "event_kind": "showdown",
-   "event_text": "Emp4 ended showdown responses at Frozen Fortress.",
+   "event_text": "Emp4 ended showdown responses at Sigil of the Storm.",
    "options": [
     "End turn",
     "Move Card Sharp to Sigil of the Storm",
@@ -208,7 +179,7 @@
    "turn": 11
   },
   {
-   "decision": 248,
+   "decision": 255,
    "event_index": 472,
    "event_kind": "hidden_card_placed",
    "event_text": "Dantelush put a hidden card to Sigil of the Storm.",
@@ -234,7 +205,7 @@
    "turn": 11
   },
   {
-   "decision": 303,
+   "decision": 313,
    "event_index": 501,
    "event_kind": "played",
    "event_text": "Dantelush played Lonely Poro from trash to base.",
@@ -247,39 +218,10 @@
    "player": 1,
    "reason": "engine asks P1 but the log's next action is by P2 (played)",
    "turn": 12
-  },
-  {
-   "decision": 303,
-   "event_index": 503,
-   "event_kind": "showdown",
-   "event_text": "Dantelush ended showdown responses at Frozen Fortress.",
-   "options": [
-    "End turn",
-    "Use Gold",
-    "Use Gold"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
-   "turn": 12
-  },
-  {
-   "decision": 303,
-   "event_index": 507,
-   "event_kind": "showdown",
-   "event_text": "Dantelush ended showdown responses at Sigil of the Storm.",
-   "options": [
-    "End turn",
-    "Use Gold",
-    "Use Gold"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
-   "turn": 12
   }
  ],
- "desyncs": 9,
+ "desyncs": 6,
+ "desyncs_engine": 5,
  "disagreements": [
   {
    "bot": {
@@ -291,7 +233,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.27,
+    "share": 0.22,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -304,12 +246,12 @@
     },
     {
      "index": 0,
-     "share": 0.27,
+     "share": 0.22,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.17,
+     "share": 0.22,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -317,33 +259,67 @@
   },
   {
    "bot": {
+    "index": 2,
+    "text": "Use Daughter of the Void"
+   },
+   "clean_boundary": true,
+   "decision": 26,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
     "index": 0,
-    "text": "Pass"
+    "share": 0.31,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.44,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.31,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.25,
+     "text": "Use Gold"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": false,
    "decision": 41,
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 1,
-    "share": 0.17,
+    "share": 0.2,
     "text": "Play Stupefy targeting Kai'Sa, Survivor"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.52,
-     "text": "Pass"
-    },
-    {
      "index": 5,
-     "share": 0.2,
+     "share": 0.38,
      "text": "Use Daughter of the Void"
     },
     {
+     "index": 4,
+     "share": 0.25,
+     "text": "Use Gold"
+    },
+    {
      "index": 1,
-     "share": 0.17,
+     "share": 0.2,
      "text": "Play Stupefy targeting Kai'Sa, Survivor"
     }
    ],
@@ -351,135 +327,169 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    "index": 6,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 47,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.07,
+    "share": 0.02,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 6,
+     "share": 0.59,
+     "text": "Use Daughter of the Void"
+    },
+    {
      "index": 1,
-     "share": 0.52,
+     "share": 0.17,
      "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
     },
     {
      "index": 2,
-     "share": 0.28,
+     "share": 0.15,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
-    },
-    {
-     "index": 3,
-     "share": 0.07,
-     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    "index": 2,
+    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 50,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.06,
+    "share": 0.05,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.49,
-     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
-    },
-    {
      "index": 2,
-     "share": 0.28,
+     "share": 0.71,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.08,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.11,
+     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    },
+    {
+     "index": 6,
+     "share": 0.07,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    "index": 2,
+    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 53,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.11,
+    "share": 0.05,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.54,
-     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
-    },
-    {
      "index": 2,
-     "share": 0.31,
+     "share": 0.75,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.11,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    },
+    {
+     "index": 4,
+     "share": 0.06,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Sigil of the Storm"
+    "index": 2,
+    "text": "Use Daughter of the Void"
+   },
+   "clean_boundary": false,
+   "decision": 58,
+   "event_text": "Emp4 ended showdown responses at Sigil of the Storm.",
+   "human": {
+    "index": 0,
+    "share": 0.24,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.69,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.24,
+     "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.07,
+     "text": "Use Gold"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 15,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 70,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 18,
-    "share": 0.18,
+    "share": 0.02,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.24,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
      "index": 15,
-     "share": 0.2,
+     "share": 0.86,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
+     "index": 1,
+     "share": 0.04,
+     "text": "Move Noxus Hopeful to Sigil of the Storm"
+    },
+    {
      "index": 2,
-     "share": 0.18,
+     "share": 0.02,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
@@ -487,8 +497,8 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Sigil of the Storm"
+    "index": 19,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 88,
@@ -502,53 +512,53 @@
    "player": 1,
    "top3": [
     {
+     "index": 19,
+     "share": 0.61,
+     "text": "Use Daughter of the Void"
+    },
+    {
      "index": 1,
-     "share": 0.27,
+     "share": 0.12,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
      "index": 2,
-     "share": 0.25,
+     "share": 0.06,
      "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Sigil of the Storm"
+    "index": 13,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 94,
    "event_text": "Played Temporal Breach from hand.",
    "human": {
     "index": 11,
-    "share": 0.04,
+    "share": 0.03,
     "text": "Play Temporal Breach"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 13,
+     "share": 0.62,
+     "text": "Use Daughter of the Void"
+    },
+    {
      "index": 1,
-     "share": 0.25,
+     "share": 0.14,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
      "index": 2,
-     "share": 0.18,
+     "share": 0.04,
      "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
     }
    ],
    "turn": 6
@@ -563,7 +573,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 2,
-    "share": 0.31,
+    "share": 0.35,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -571,52 +581,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.5,
+     "share": 0.39,
      "text": "Pass"
     },
     {
      "index": 2,
-     "share": 0.31,
+     "share": 0.35,
      "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.19,
+     "share": 0.26,
      "text": "Use Gold"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 104,
-   "event_text": "Emp4 moved Noxus Hopeful to Sigil of the Storm.",
-   "human": {
-    "index": 1,
-    "share": 0.29,
-    "text": "Move Noxus Hopeful to Sigil of the Storm"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.37,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.29,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
-     "index": 0,
-     "share": 0.27,
-     "text": "End turn"
     }
    ],
    "turn": 6
@@ -631,7 +607,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.32,
+    "share": 0.14,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -639,26 +615,26 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.39,
+     "share": 0.54,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.32,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.23,
+     "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
-     "index": 1,
-     "share": 0.22,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 7,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 138,
@@ -672,53 +648,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.4,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
      "index": 7,
-     "share": 0.23,
+     "share": 0.82,
      "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 1,
-     "share": 0.14,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 12,
-    "text": "Play Lecturing Yordle to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 141,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.05,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 12,
-     "share": 0.62,
-     "text": "Play Lecturing Yordle to Frozen Fortress"
-    },
-    {
-     "index": 2,
-     "share": 0.12,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
      "share": 0.08,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
+    },
+    {
+     "index": 2,
+     "share": 0.04,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 8
@@ -733,7 +675,7 @@
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.03,
+    "share": 0.01,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -741,18 +683,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.71,
+     "share": 0.53,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
-     "index": 2,
-     "share": 0.11,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 8,
+     "share": 0.3,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 0,
-     "share": 0.07,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.05,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 8
@@ -767,7 +709,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.11,
+    "share": 0.04,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -775,21 +717,55 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.68,
+     "share": 0.49,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
-     "index": 2,
-     "share": 0.16,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 4,
+     "share": 0.38,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 0,
-     "share": 0.11,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.06,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 8
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Use Daughter of the Void"
+   },
+   "clean_boundary": false,
+   "decision": 161,
+   "event_text": "Emp4 ended showdown responses at Frozen Fortress.",
+   "human": {
+    "index": 0,
+    "share": 0.23,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.48,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.29,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.23,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 9
   },
   {
    "bot": {
@@ -809,18 +785,18 @@
    "top3": [
     {
      "index": 13,
-     "share": 0.32,
+     "share": 0.62,
      "text": "Use Daughter of the Void"
     },
     {
-     "index": 0,
-     "share": 0.28,
-     "text": "Pass"
+     "index": 11,
+     "share": 0.22,
+     "text": "Use Gold"
     },
     {
-     "index": 11,
-     "share": 0.26,
-     "text": "Use Gold"
+     "index": 1,
+     "share": 0.09,
+     "text": "Play Stupefy targeting The Empyrean"
     }
    ],
    "turn": 10
@@ -835,7 +811,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 3,
-    "share": 0.38,
+    "share": 0.41,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -843,17 +819,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.41,
+     "share": 0.48,
      "text": "Use Gold"
     },
     {
      "index": 3,
-     "share": 0.38,
+     "share": 0.41,
      "text": "Use Daughter of the Void"
     },
     {
      "index": 0,
-     "share": 0.21,
+     "share": 0.11,
      "text": "Pass"
     }
    ],
@@ -869,7 +845,7 @@
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 31,
-    "share": 0.09,
+    "share": 0.08,
     "text": "Play Hextech Ray targeting The Empyrean"
    },
    "kind": "play",
@@ -877,18 +853,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.76,
+     "share": 0.71,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
-     "index": 31,
-     "share": 0.09,
-     "text": "Play Hextech Ray targeting The Empyrean"
+     "index": 2,
+     "share": 0.12,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
-     "index": 2,
-     "share": 0.06,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 31,
+     "share": 0.08,
+     "text": "Play Hextech Ray targeting The Empyrean"
     }
    ],
    "turn": 10
@@ -911,18 +887,47 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.86,
+     "share": 0.79,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
-     "index": 0,
-     "share": 0.05,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
-     "index": 2,
-     "share": 0.05,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 31,
+     "share": 0.09,
+     "text": "Use Gold"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Use Gold"
+   },
+   "clean_boundary": false,
+   "decision": 229,
+   "event_text": "Emp4 passed focus at Frozen Fortress.",
+   "human": {
+    "index": 0,
+    "share": 0.48,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.52,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.48,
+     "text": "Pass focus"
     }
    ],
    "turn": 10
@@ -933,7 +938,7 @@
     "text": "Move Noxus Hopeful to Sigil of the Storm"
    },
    "clean_boundary": true,
-   "decision": 236,
+   "decision": 242,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
@@ -945,154 +950,183 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.62,
+     "share": 0.72,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
     },
     {
      "index": 2,
-     "share": 0.31,
+     "share": 0.14,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.06,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.08,
+     "text": "Use Gold"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 252,
-   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.06,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.67,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.15,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
-     "index": 7,
-     "share": 0.06,
-     "text": "Play Brynhir Thundersong to base"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
+    "index": 1,
+    "text": "Use Gold"
    },
    "clean_boundary": false,
-   "decision": 265,
+   "decision": 272,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 3,
-    "share": 0.23,
+    "share": 0.39,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.59,
-     "text": "Pass"
+     "index": 1,
+     "share": 0.46,
+     "text": "Use Gold"
     },
     {
      "index": 3,
-     "share": 0.23,
+     "share": 0.39,
      "text": "Use Daughter of the Void"
     },
     {
-     "index": 1,
-     "share": 0.18,
-     "text": "Use Gold"
+     "index": 0,
+     "share": 0.15,
+     "text": "Pass"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 8,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
-   "decision": 271,
+   "decision": 278,
    "event_text": "Played Temporal Breach from hand.",
    "human": {
     "index": 9,
-    "share": 0.06,
+    "share": 0.05,
     "text": "Play Temporal Breach"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.36,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.24,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
      "index": 8,
-     "share": 0.15,
+     "share": 0.77,
      "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    },
+    {
+     "index": 9,
+     "share": 0.05,
+     "text": "Play Temporal Breach"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 295,
-   "event_text": "Played Falling Star from hand.",
-   "human": {
-    "index": 1,
-    "share": 0.19,
+    "index": 3,
     "text": "Play Falling Star"
    },
-   "kind": "play",
+   "clean_boundary": true,
+   "decision": 297,
+   "event_text": "Emp4 moved Thousand-Tailed Watcher to Sigil of the Storm.",
+   "human": {
+    "index": 1,
+    "share": 0.08,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
+   },
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.72,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.69,
+     "text": "Play Falling Star"
     },
     {
+     "index": 4,
+     "share": 0.11,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": false,
+   "decision": 298,
+   "event_text": "Emp4 passed focus at Sigil of the Storm.",
+   "human": {
+    "index": 0,
+    "share": 0.12,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
      "index": 1,
-     "share": 0.19,
+     "share": 0.71,
      "text": "Play Falling Star"
     },
     {
      "index": 2,
-     "share": 0.09,
+     "share": 0.17,
      "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Use Gold"
+   },
+   "clean_boundary": true,
+   "decision": 314,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.48,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.52,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.48,
+     "text": "End turn"
     }
    ],
    "turn": 12
@@ -1101,7 +1135,7 @@
  "effect_lines": 1,
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 118,
+ "forced_decisions": 119,
  "game": 2,
  "hand_fixes": {
   "created": 1,
@@ -1421,9 +1455,10 @@
   "P1": "Daughter of the Void",
   "P2": "Curator of the Sands"
  },
+ "log_artefacts": 1,
  "log_events": 284,
  "log_events_consumed": 284,
- "out_of_order_matches": 5,
+ "out_of_order_matches": 8,
  "players": [
   "Emp4",
   "Dantelush"
@@ -1431,8 +1466,8 @@
  "readiness_fixes": 1,
  "result": {
   "engine_scores": [
-   4,
-   6
+   3,
+   7
   ],
   "engine_winner": 1,
   "log_scores": [
@@ -1456,12 +1491,12 @@
  ],
  "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 124,
- "soft_dropped": 1,
+ "silent_passes": 129,
+ "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_nasus_rl2_dc882c4b34ad0972d43b57e591cd0a32.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.6020089340000006,
-  "seconds": 1.638755315
+  "bot_seconds": 1.8570344670000003,
+  "seconds": 1.895812823
  }
 }

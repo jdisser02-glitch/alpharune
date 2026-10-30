@@ -3,17 +3,22 @@
  "actors_settled": 0,
  "actors_uncertain": 2,
  "agreement": {
-  "agree": 12,
+  "agree": 19,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 3,
     "n": 9,
-    "rate": 0.0
+    "rate": 0.3333333333333333
    },
    "battlefield": {
     "agree": 1,
     "n": 1,
     "rate": 1.0
+   },
+   "choice": {
+    "agree": 1,
+    "n": 2,
+    "rate": 0.5
    },
    "end_turn": {
     "agree": 4,
@@ -31,57 +36,52 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 2,
-    "n": 13,
-    "rate": 0.15384615384615385
+    "agree": 5,
+    "n": 14,
+    "rate": 0.35714285714285715
    }
   },
   "clean_boundary": {
-   "agree": 8,
+   "agree": 11,
    "n": 29,
-   "rate": 0.27586206896551724
+   "rate": 0.3793103448275862
   },
   "in_flight": {
-   "agree": 4,
-   "n": 10
+   "agree": 8,
+   "n": 13
   },
-  "n": 39,
-  "rate": 0.3076923076923077
+  "n": 42,
+  "rate": 0.4523809523809524
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 47,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 58,
  "bot_errors": 0,
- "bot_fallbacks": 8,
+ "bot_fallbacks": 16,
  "capture_player": "Damus",
  "compare_both": false,
- "decisions": 213,
- "decisions_compared": 39,
- "decisions_human_known": 76,
- "decisions_trivial": 3,
+ "decisions": 225,
+ "decisions_compared": 42,
+ "decisions_human_known": 89,
+ "decisions_trivial": 4,
  "deck_tops": 0,
  "desync_causes": {
   "moved: no such unit on board (not played / already gone)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 2,
-  "played: card in hand but not playable now (cost/timing)": 1,
-  "played: card in trash but not replayable now": 1,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
-   "decision": 137,
+   "decision": 140,
    "event_index": 508,
    "event_kind": "moved",
    "event_text": "Frecher Affe moved Staunch Survivor to base.",
    "options": [
     "End turn",
-    "Move Mutated Mouser to Fortified Position",
-    "Move Mutated Mouser to Sigil of the Storm",
     "Move K'Sante, Courageous to Fortified Position",
     "Move K'Sante, Courageous to Sigil of the Storm",
-    "Move Mutated Mouser, K'Sante, Courageous to Fortified Position",
-    "Move Mutated Mouser, K'Sante, Courageous to Sigil of the Storm",
     "Play Ntofo Strikes",
+    "Play Elnuk Herd",
     "Use Pride of Nazumah"
    ],
    "phase": "MainPhase",
@@ -90,25 +90,20 @@
    "turn": 9
   },
   {
-   "decision": 194,
+   "decision": 192,
    "event_index": 546,
    "event_kind": "moved",
    "event_text": "Frecher Affe moved Staunch Survivor to Fortified Position.",
    "options": [
     "End turn",
-    "Move Stoic Ferryman to base",
     "Move Mutated Mouser to base",
-    "Move Mutated Mouser to Fortified Position",
-    "Move Mutated Mouser to Sigil of the Storm",
     "Move K'Sante, Courageous to Fortified Position",
     "Move K'Sante, Courageous to Sigil of the Storm",
-    "Move Stoic Ferryman, Mutated Mouser to base",
-    "Move Mutated Mouser, K'Sante, Courageous to Fortified Position",
-    "Move Mutated Mouser, K'Sante, Courageous to Sigil of the Storm",
     "Play Stellacorn Herder to base",
     "Play Stellacorn Herder to Sigil of the Storm",
     "Play First Mate to base",
-    "Play First Mate to Sigil of the Storm"
+    "Play First Mate to Sigil of the Storm",
+    "Play Elnuk Herd"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -116,25 +111,20 @@
    "turn": 11
   },
   {
-   "decision": 194,
+   "decision": 192,
    "event_index": 548,
    "event_kind": "passed_focus",
    "event_text": "Frecher Affe passed focus at Fortified Position.",
    "options": [
     "End turn",
-    "Move Stoic Ferryman to base",
     "Move Mutated Mouser to base",
-    "Move Mutated Mouser to Fortified Position",
-    "Move Mutated Mouser to Sigil of the Storm",
     "Move K'Sante, Courageous to Fortified Position",
     "Move K'Sante, Courageous to Sigil of the Storm",
-    "Move Stoic Ferryman, Mutated Mouser to base",
-    "Move Mutated Mouser, K'Sante, Courageous to Fortified Position",
-    "Move Mutated Mouser, K'Sante, Courageous to Sigil of the Storm",
     "Play Stellacorn Herder to base",
     "Play Stellacorn Herder to Sigil of the Storm",
     "Play First Mate to base",
-    "Play First Mate to Sigil of the Storm"
+    "Play First Mate to Sigil of the Storm",
+    "Play Elnuk Herd"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -142,25 +132,20 @@
    "turn": 11
   },
   {
-   "decision": 194,
+   "decision": 192,
    "event_index": 549,
    "event_kind": "showdown",
    "event_text": "Damus ended showdown responses at Fortified Position.",
    "options": [
     "End turn",
-    "Move Stoic Ferryman to base",
     "Move Mutated Mouser to base",
-    "Move Mutated Mouser to Fortified Position",
-    "Move Mutated Mouser to Sigil of the Storm",
     "Move K'Sante, Courageous to Fortified Position",
     "Move K'Sante, Courageous to Sigil of the Storm",
-    "Move Stoic Ferryman, Mutated Mouser to base",
-    "Move Mutated Mouser, K'Sante, Courageous to Fortified Position",
-    "Move Mutated Mouser, K'Sante, Courageous to Sigil of the Storm",
     "Play Stellacorn Herder to base",
     "Play Stellacorn Herder to Sigil of the Storm",
     "Play First Mate to base",
-    "Play First Mate to Sigil of the Storm"
+    "Play First Mate to Sigil of the Storm",
+    "Play Elnuk Herd"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -168,59 +153,7 @@
    "turn": 11
   },
   {
-   "decision": 204,
-   "event_index": 557,
-   "event_kind": "played",
-   "event_text": "Damus played Fizz, Trickster from hand to base.",
-   "options": [
-    "End turn",
-    "Move Amateur Demolitionist to Fortified Position",
-    "Move Amateur Demolitionist to Sigil of the Storm",
-    "Move Fizz, Trickster to Fortified Position",
-    "Move Fizz, Trickster to Sigil of the Storm",
-    "Move Treasure Hunter to base",
-    "Move Amateur Demolitionist, Fizz, Trickster to Fortified Position",
-    "Move Amateur Demolitionist, Fizz, Trickster to Sigil of the Storm",
-    "Play Noxus Hopeful to base",
-    "Play Noxus Hopeful to Fortified Position",
-    "Use Gold",
-    "Use Seal of Rage",
-    "Use Hexplosives Expert",
-    "Use Treasure Trove"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 12
-  },
-  {
-   "decision": 204,
-   "event_index": 558,
-   "event_kind": "played",
-   "event_text": "Played Falling Star from trash.",
-   "options": [
-    "End turn",
-    "Move Amateur Demolitionist to Fortified Position",
-    "Move Amateur Demolitionist to Sigil of the Storm",
-    "Move Fizz, Trickster to Fortified Position",
-    "Move Fizz, Trickster to Sigil of the Storm",
-    "Move Treasure Hunter to base",
-    "Move Amateur Demolitionist, Fizz, Trickster to Fortified Position",
-    "Move Amateur Demolitionist, Fizz, Trickster to Sigil of the Storm",
-    "Play Noxus Hopeful to base",
-    "Play Noxus Hopeful to Fortified Position",
-    "Use Gold",
-    "Use Seal of Rage",
-    "Use Hexplosives Expert",
-    "Use Treasure Trove"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in trash but not replayable now",
-   "turn": 12
-  },
-  {
-   "decision": 211,
+   "decision": 223,
    "event_index": 570,
    "event_kind": "passed_focus",
    "event_text": "Damus passed focus at Fortified Position.",
@@ -229,8 +162,7 @@
     "Move Treasure Hunter to base",
     "Play Noxus Hopeful to base",
     "Play Noxus Hopeful to Fortified Position",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Fortified Position",
+    "Play Noxus Hopeful to Sigil of the Storm",
     "Use Gold",
     "Use Hexplosives Expert",
     "Use Treasure Trove"
@@ -241,7 +173,7 @@
    "turn": 12
   },
   {
-   "decision": 211,
+   "decision": 223,
    "event_index": 571,
    "event_kind": "showdown",
    "event_text": "Frecher Affe ended showdown responses at Fortified Position.",
@@ -250,8 +182,7 @@
     "Move Treasure Hunter to base",
     "Play Noxus Hopeful to base",
     "Play Noxus Hopeful to Fortified Position",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Fortified Position",
+    "Play Noxus Hopeful to Sigil of the Storm",
     "Use Gold",
     "Use Hexplosives Expert",
     "Use Treasure Trove"
@@ -262,7 +193,8 @@
    "turn": 12
   }
  ],
- "desyncs": 8,
+ "desyncs": 6,
+ "desyncs_engine": 6,
  "disagreements": [
   {
    "bot": {
@@ -274,7 +206,7 @@
    "event_text": "Damus played Treasure Hunter from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.25,
+    "share": 0.33,
     "text": "Play Treasure Hunter to base"
    },
    "kind": "play",
@@ -282,120 +214,86 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.51,
+     "share": 0.35,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.25,
+     "share": 0.33,
      "text": "Play Treasure Hunter to base"
     },
     {
-     "index": 4,
-     "share": 0.13,
-     "text": "Use Hexplosives Expert"
+     "index": 2,
+     "share": 0.16,
+     "text": "Play Tideturner to base"
     }
    ],
    "turn": 0
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Treasure Trove to base"
+    "index": 6,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 18,
    "event_text": "Damus moved Ziggs, Explosive to Fortified Position.",
    "human": {
     "index": 4,
-    "share": 0.19,
+    "share": 0.18,
     "text": "Play Ziggs, Explosive to Fortified Position"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.21,
-     "text": "Play Treasure Trove to base"
+     "index": 6,
+     "share": 0.31,
+     "text": "Play Falling Star"
     },
     {
      "index": 4,
-     "share": 0.19,
+     "share": 0.18,
      "text": "Play Ziggs, Explosive to Fortified Position"
     },
     {
-     "index": 6,
-     "share": 0.18,
-     "text": "Play Falling Star"
+     "index": 3,
+     "share": 0.13,
+     "text": "Play Ziggs, Explosive to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Darius, Trifarian to Fortified Position"
-   },
-   "clean_boundary": true,
-   "decision": 32,
-   "event_text": "Damus exhausted Ziggs, Explosive.",
-   "human": {
-    "index": 13,
-    "share": 0.13,
-    "text": "Use Ziggs, Explosive"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.18,
-     "text": "Play Darius, Trifarian to Fortified Position"
-    },
-    {
-     "index": 10,
-     "share": 0.13,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 13,
-     "share": 0.13,
-     "text": "Use Ziggs, Explosive"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Darius, Trifarian to Fortified Position"
+    "index": 8,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 36,
    "event_text": "Damus moved Treasure Hunter to base.",
    "human": {
     "index": 1,
-    "share": 0.08,
+    "share": 0.12,
     "text": "Move Treasure Hunter to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.25,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 5,
      "share": 0.2,
      "text": "Play Darius, Trifarian to Fortified Position"
     },
     {
-     "index": 8,
-     "share": 0.16,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 0,
-     "share": 0.13,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Treasure Hunter to base"
     }
    ],
    "turn": 4
@@ -410,7 +308,7 @@
    "event_text": "Damus exhausted Gold. (named by the payment)",
    "human": {
     "index": 1,
-    "share": 0.22,
+    "share": 0.31,
     "text": "Use Gold"
    },
    "kind": "ability",
@@ -418,47 +316,13 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.78,
+     "share": 0.69,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.22,
+     "share": 0.31,
      "text": "Use Gold"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Darius, Trifarian to Fortified Position"
-   },
-   "clean_boundary": true,
-   "decision": 40,
-   "event_text": "Played Falling Star from hand.",
-   "human": {
-    "index": 7,
-    "share": 0.18,
-    "text": "Play Falling Star"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.21,
-     "text": "Play Darius, Trifarian to Fortified Position"
-    },
-    {
-     "index": 7,
-     "share": 0.18,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 0,
-     "share": 0.14,
-     "text": "End turn"
     }
    ],
    "turn": 4
@@ -473,7 +337,7 @@
    "event_text": "Damus played Treasure Trove from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.13,
+    "share": 0.12,
     "text": "Play Treasure Trove to base"
    },
    "kind": "play",
@@ -481,18 +345,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.53,
+     "share": 0.54,
      "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 3,
-     "share": 0.13,
-     "text": "Play Treasure Trove to base"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     },
     {
-     "index": 0,
+     "index": 3,
      "share": 0.12,
-     "text": "End turn"
+     "text": "Play Treasure Trove to base"
     }
    ],
    "turn": 4
@@ -515,18 +379,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.36,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 3,
      "share": 0.25,
-     "text": "Move Treasure Hunter to Sigil of the Storm"
+     "text": "Play Amateur Demolitionist to base"
     },
     {
      "index": 2,
      "share": 0.17,
      "text": "Move Treasure Hunter to Fortified Position"
+    },
+    {
+     "index": 11,
+     "share": 0.14,
+     "text": "Use Ziggs, Explosive"
     }
    ],
    "turn": 6
@@ -541,7 +405,7 @@
    "event_text": "Damus exhausted Gold. (named by the payment)",
    "human": {
     "index": 1,
-    "share": 0.1,
+    "share": 0.4,
     "text": "Use Gold"
    },
    "kind": "ability",
@@ -549,12 +413,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.9,
+     "share": 0.6,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.1,
+     "share": 0.4,
      "text": "Use Gold"
     }
    ],
@@ -562,34 +426,29 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 1,
+    "text": "Bomb to BF#1"
    },
-   "clean_boundary": true,
-   "decision": 67,
-   "event_text": "Played Falling Star from hand.",
+   "clean_boundary": false,
+   "decision": 66,
+   "event_text": "",
    "human": {
-    "index": 2,
-    "share": 0.24,
-    "text": "Play Falling Star"
+    "index": 0,
+    "share": 0.07,
+    "text": "Bomb to BF#0"
    },
-   "kind": "play",
+   "kind": "choice",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.4,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.24,
-     "text": "Play Falling Star"
-    },
-    {
      "index": 1,
-     "share": 0.21,
-     "text": "Play Treasure Trove to base"
+     "share": 0.93,
+     "text": "Bomb to BF#1"
+    },
+    {
+     "index": 0,
+     "share": 0.07,
+     "text": "Bomb to BF#0"
     }
    ],
    "turn": 6
@@ -604,7 +463,7 @@
    "event_text": "Damus played Treasure Trove from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.2,
+    "share": 0.11,
     "text": "Play Treasure Trove to base"
    },
    "kind": "play",
@@ -612,17 +471,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.46,
+     "share": 0.37,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.3,
+     "share": 0.32,
      "text": "Play Fizz, Trickster to base"
     },
     {
      "index": 3,
-     "share": 0.2,
+     "share": 0.11,
      "text": "Play Treasure Trove to base"
     }
    ],
@@ -630,8 +489,8 @@
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Amateur Demolitionist to Sigil of the Storm"
+    "index": 2,
+    "text": "Move Amateur Demolitionist to Fortified Position"
    },
    "clean_boundary": true,
    "decision": 101,
@@ -645,82 +504,53 @@
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.47,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
-    },
-    {
      "index": 2,
-     "share": 0.19,
+     "share": 0.2,
      "text": "Move Amateur Demolitionist to Fortified Position"
     },
     {
-     "index": 0,
-     "share": 0.14,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 102,
-   "event_text": "Damus exhausted Gold. (named by the payment)",
-   "human": {
-    "index": 1,
-    "share": 0.08,
-    "text": "Use Gold"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.92,
-     "text": "Pass"
+     "index": 8,
+     "share": 0.13,
+     "text": "Play Treasure Hunter to base"
     },
     {
-     "index": 1,
-     "share": 0.08,
-     "text": "Use Gold"
+     "index": 9,
+     "share": 0.12,
+     "text": "Play Treasure Hunter to Fortified Position"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Amateur Demolitionist to Sigil of the Storm"
+    "index": 7,
+    "text": "Play Treasure Hunter to Fortified Position"
    },
    "clean_boundary": true,
    "decision": 105,
    "event_text": "Damus played Fizz, Trickster from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.13,
+    "share": 0.07,
     "text": "Play Fizz, Trickster to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.45,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "index": 7,
+     "share": 0.2,
+     "text": "Play Treasure Hunter to Fortified Position"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Ziggs, Explosive to base"
     },
     {
      "index": 2,
-     "share": 0.19,
-     "text": "Move Amateur Demolitionist to Fortified Position"
-    },
-    {
-     "index": 0,
      "share": 0.14,
-     "text": "End turn"
+     "text": "Move Amateur Demolitionist to Fortified Position"
     }
    ],
    "turn": 8
@@ -735,7 +565,7 @@
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 10,
-    "share": 0.01,
+    "share": 0.03,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
@@ -743,18 +573,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.52,
+     "share": 0.4,
      "text": "Play Detonate targeting Gold"
     },
     {
-     "index": 2,
-     "share": 0.32,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.08,
-     "text": "Move Amateur Demolitionist to Fortified Position"
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Amateur Demolitionist to Sigil of the Storm"
     }
    ],
    "turn": 8
@@ -769,7 +599,7 @@
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.08,
+    "share": 0.16,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -777,18 +607,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.55,
+     "share": 0.43,
      "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 2,
-     "share": 0.3,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.08,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Amateur Demolitionist to Sigil of the Storm"
     }
    ],
    "turn": 8
@@ -796,14 +626,14 @@
   {
    "bot": {
     "index": 19,
-    "text": "Play Detonate targeting Bomb"
+    "text": "Play Detonate targeting Gold"
    },
    "clean_boundary": true,
-   "decision": 139,
+   "decision": 142,
    "event_text": "Damus exhausted Ziggs, Explosive.",
    "human": {
-    "index": 27,
-    "share": 0.0,
+    "index": 26,
+    "share": 0.11,
     "text": "Use Ziggs, Explosive"
    },
    "kind": "ability",
@@ -811,29 +641,29 @@
    "top3": [
     {
      "index": 19,
-     "share": 0.51,
-     "text": "Play Detonate targeting Bomb"
-    },
-    {
-     "index": 3,
-     "share": 0.33,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "share": 0.18,
+     "text": "Play Detonate targeting Gold"
     },
     {
      "index": 2,
-     "share": 0.07,
+     "share": 0.15,
      "text": "Move Amateur Demolitionist to Fortified Position"
+    },
+    {
+     "index": 3,
+     "share": 0.13,
+     "text": "Move Amateur Demolitionist to Sigil of the Storm"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 18,
-    "text": "Play Detonate targeting Bomb"
+    "index": 1,
+    "text": "Move Amateur Demolitionist to Fortified Position"
    },
    "clean_boundary": true,
-   "decision": 143,
+   "decision": 146,
    "event_text": "Damus moved Treasure Hunter to Fortified Position.",
    "human": {
     "index": 5,
@@ -844,52 +674,18 @@
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Amateur Demolitionist to Fortified Position"
+    },
+    {
      "index": 18,
-     "share": 0.52,
+     "share": 0.17,
      "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 2,
-     "share": 0.32,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
-    },
-    {
-     "index": 1,
-     "share": 0.07,
-     "text": "Move Amateur Demolitionist to Fortified Position"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 144,
-   "event_text": "Damus exhausted Gold. (named by the payment)",
-   "human": {
-    "index": 2,
-    "share": 0.06,
-    "text": "Use Gold"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.63,
-     "text": "Pass"
-    },
-    {
-     "index": 1,
-     "share": 0.31,
-     "text": "Play Star-Crossed"
-    },
-    {
-     "index": 2,
-     "share": 0.06,
+     "index": 24,
+     "share": 0.12,
      "text": "Use Gold"
     }
    ],
@@ -897,29 +693,34 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 145,
-   "event_text": "Played Star-Crossed from hand.",
-   "human": {
     "index": 1,
-    "share": 0.35,
     "text": "Play Star-Crossed"
    },
-   "kind": "play",
+   "clean_boundary": false,
+   "decision": 147,
+   "event_text": "Damus exhausted Gold. (named by the payment)",
+   "human": {
+    "index": 2,
+    "share": 0.1,
+    "text": "Use Gold"
+   },
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.65,
-     "text": "Pass"
+     "index": 1,
+     "share": 0.87,
+     "text": "Play Star-Crossed"
     },
     {
-     "index": 1,
-     "share": 0.35,
-     "text": "Play Star-Crossed"
+     "index": 2,
+     "share": 0.1,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.03,
+     "text": "Pass"
     }
    ],
    "turn": 10
@@ -930,7 +731,7 @@
     "text": "Play Detonate targeting Gold"
    },
    "clean_boundary": true,
-   "decision": 159,
+   "decision": 162,
    "event_text": "Played Detonate from hand.",
    "human": {
     "index": 8,
@@ -942,52 +743,52 @@
    "top3": [
     {
      "index": 7,
-     "share": 0.41,
+     "share": 0.38,
      "text": "Play Detonate targeting Gold"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "index": 1,
+     "share": 0.27,
+     "text": "Move Amateur Demolitionist to Fortified Position"
     },
     {
-     "index": 14,
-     "share": 0.23,
-     "text": "Play An Offer You Can't Refuse"
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Seal of Rage to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 172,
+   "decision": 170,
    "event_text": "Played An Offer You Can't Refuse from hand.",
    "human": {
     "index": 8,
-    "share": 0.22,
+    "share": 0.19,
     "text": "Play An Offer You Can't Refuse"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.41,
-     "text": "Play Seal of Rage to base"
-    },
-    {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
     },
     {
      "index": 8,
-     "share": 0.22,
+     "share": 0.19,
      "text": "Play An Offer You Can't Refuse"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Move Amateur Demolitionist to Sigil of the Storm"
     }
    ],
    "turn": 10
@@ -998,11 +799,45 @@
     "text": "Move Amateur Demolitionist to Sigil of the Storm"
    },
    "clean_boundary": true,
-   "decision": 182,
+   "decision": 178,
+   "event_text": "Damus played Seal of Rage from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.2,
+    "text": "Play Seal of Rage to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.27,
+     "text": "Move Amateur Demolitionist to Sigil of the Storm"
+    },
+    {
+     "index": 1,
+     "share": 0.25,
+     "text": "Move Amateur Demolitionist to Fortified Position"
+    },
+    {
+     "index": 7,
+     "share": 0.2,
+     "text": "Play Seal of Rage to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Amateur Demolitionist to Sigil of the Storm"
+   },
+   "clean_boundary": true,
+   "decision": 180,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.24,
+    "share": 0.17,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1010,55 +845,21 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.59,
+     "share": 0.27,
      "text": "Move Amateur Demolitionist to Sigil of the Storm"
-    },
-    {
-     "index": 0,
-     "share": 0.24,
-     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.09,
+     "share": 0.25,
      "text": "Move Amateur Demolitionist to Fortified Position"
+    },
+    {
+     "index": 8,
+     "share": 0.19,
+     "text": "Use Seal of Rage"
     }
    ],
    "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Amateur Demolitionist to Sigil of the Storm"
-   },
-   "clean_boundary": true,
-   "decision": 196,
-   "event_text": "Damus played Bewitching Spirit from hand to base.",
-   "human": {
-    "index": 8,
-    "share": 0.03,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.59,
-     "text": "Move Amateur Demolitionist to Sigil of the Storm"
-    },
-    {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
-    },
-    {
-     "index": 10,
-     "share": 0.08,
-     "text": "Play Fizz, Trickster to base"
-    }
-   ],
-   "turn": 12
   },
   {
    "bot": {
@@ -1066,11 +867,11 @@
     "text": "Use Seal of Rage"
    },
    "clean_boundary": false,
-   "decision": 201,
+   "decision": 199,
    "event_text": "Damus exhausted Gold. (named by the payment)",
    "human": {
     "index": 1,
-    "share": 0.01,
+    "share": 0.24,
     "text": "Use Gold"
    },
    "kind": "ability",
@@ -1078,17 +879,17 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.62,
+     "share": 0.51,
      "text": "Use Seal of Rage"
     },
     {
      "index": 0,
-     "share": 0.37,
+     "share": 0.25,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.01,
+     "share": 0.24,
      "text": "Use Gold"
     }
    ],
@@ -1100,29 +901,29 @@
     "text": "Move Amateur Demolitionist to Sigil of the Storm"
    },
    "clean_boundary": true,
-   "decision": 205,
-   "event_text": "Damus exhausted Seal of Rage.",
+   "decision": 203,
+   "event_text": "Damus played Fizz, Trickster from hand to base.",
    "human": {
-    "index": 11,
-    "share": 0.056818181818181816,
-    "text": "Use Seal of Rage"
+    "index": 8,
+    "share": 0.21,
+    "text": "Play Fizz, Trickster to base"
    },
-   "kind": "ability",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 2,
-     "share": 0.5454545454545454,
+     "share": 0.25,
      "text": "Move Amateur Demolitionist to Sigil of the Storm"
     },
     {
-     "index": 0,
-     "share": 0.3068181818181818,
-     "text": "End turn"
+     "index": 8,
+     "share": 0.21,
+     "text": "Play Fizz, Trickster to base"
     },
     {
      "index": 1,
-     "share": 0.056818181818181816,
+     "share": 0.15,
      "text": "Move Amateur Demolitionist to Fortified Position"
     }
    ],
@@ -1134,11 +935,11 @@
     "text": "Move Fizz, Trickster to Sigil of the Storm"
    },
    "clean_boundary": true,
-   "decision": 211,
+   "decision": 223,
    "event_text": "Damus moved Fizz, Trickster to Fortified Position.",
    "human": {
     "index": 1,
-    "share": 0.05,
+    "share": 0.22,
     "text": "Move Fizz, Trickster to Fortified Position"
    },
    "kind": "move",
@@ -1146,18 +947,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.44,
+     "share": 0.3,
      "text": "Move Fizz, Trickster to Sigil of the Storm"
     },
     {
      "index": 0,
-     "share": 0.32,
+     "share": 0.28,
      "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.18,
-     "text": "Play Fizz, Trickster to base"
+     "index": 1,
+     "share": 0.22,
+     "text": "Move Fizz, Trickster to Fortified Position"
     }
    ],
    "turn": 12
@@ -1166,10 +967,10 @@
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Damus",
- "forced_decisions": 88,
+ "forced_decisions": 96,
  "game": 3,
  "hand_fixes": {
-  "created": 2,
+  "created": 1,
   "list": [
    {
     "card": "Treasure Hunter",
@@ -1345,14 +1146,6 @@
     "how": "pulled",
     "player": 1,
     "turn": 10,
-    "zone": "hand"
-   },
-   {
-    "card": "Fizz, Trickster",
-    "for": "Damus played Fizz, Trickster from hand to base.",
-    "how": "created",
-    "player": 1,
-    "turn": 12,
     "zone": "hand"
    }
   ],
@@ -1531,8 +1324,9 @@
   "P1": "Hexplosives Expert",
   "P2": "Pride of Nazumah"
  },
+ "log_artefacts": 0,
  "log_events": 190,
- "log_events_consumed": 190,
+ "log_events_consumed": 189,
  "out_of_order_matches": 1,
  "players": [
   "Damus",
@@ -1541,37 +1335,29 @@
  "readiness_fixes": 6,
  "result": {
   "engine_scores": [
-   7,
-   4
+   8,
+   3
   ],
   "engine_winner": 1,
   "log_scores": [
    8,
    4
   ],
-  "reason": "log ended (log score 8-4)",
+  "reason": "P1 reached 8 points",
   "turns": 14
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
  "rune_swaps": 2,
- "score_mismatch_examples": [
-  {
-   "engine_score": 7,
-   "event_index": 575,
-   "log_score": 8,
-   "text": "Damus scored 1 at turn start. Score: 7 → 8.",
-   "turn": 14
-  }
- ],
- "score_mismatches": 1,
+ "score_mismatch_examples": [],
+ "score_mismatches": 0,
  "seed": 1,
- "silent_passes": 59,
+ "silent_passes": 62,
  "soft_dropped": 1,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_k_sante_rl2_515006db61136dc8c3223b7edf48908d.json",
- "stop_reason": "log ended",
+ "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 1.678648327,
-  "seconds": 1.704132269
+  "bot_seconds": 1.855001042000001,
+  "seconds": 1.884495359
  }
 }

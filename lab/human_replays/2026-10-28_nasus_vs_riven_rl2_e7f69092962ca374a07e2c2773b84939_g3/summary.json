@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 13,
+  "agree": 8,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,14 +11,14 @@
     "rate": 1.0
    },
    "choice": {
-    "agree": 2,
-    "n": 2,
+    "agree": 1,
+    "n": 1,
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 3,
+    "agree": 2,
     "n": 5,
-    "rate": 0.6
+    "rate": 0.4
    },
    "hide": {
     "agree": 0,
@@ -36,42 +36,44 @@
     "rate": 0.75
    },
    "play": {
-    "agree": 4,
-    "n": 8,
-    "rate": 0.5
+    "agree": 1,
+    "n": 7,
+    "rate": 0.14285714285714285
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 3,
    "n": 12,
-   "rate": 0.4166666666666667
+   "rate": 0.25
   },
   "in_flight": {
-   "agree": 8,
-   "n": 11
+   "agree": 5,
+   "n": 9
   },
-  "n": 23,
-  "rate": 0.5652173913043478
+  "n": 21,
+  "rate": 0.38095238095238093
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 26,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 24,
  "bot_errors": 0,
  "bot_fallbacks": 3,
  "capture_player": "ComboMAN",
  "compare_both": false,
- "decisions": 209,
- "decisions_compared": 23,
- "decisions_human_known": 71,
+ "decisions": 196,
+ "decisions_compared": 21,
+ "decisions_human_known": 68,
  "decisions_trivial": 10,
  "deck_tops": 0,
  "desync_causes": {
+  "equipped: no equip option for 'Blade of the Exile' onto 'Scuttle Crab'": 1,
   "hidden_card_placed: no hide option at 'Star Spring'": 1,
   "moved: unit can move but not to 'Frozen Fortress'": 1,
   "moved: unit is exhausted (no move option)": 1,
-  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 2,
   "played: card in hand but not playable now (cost/timing)": 1,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 1
+  "played: engine asks P1 but the log's next action is by P2 (played)": 1,
+  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
@@ -122,6 +124,8 @@
    "event_index": 434,
    "event_kind": "moved",
    "event_text": "Sziszu moved Riven, Broken Blade to Star Spring.",
+   "log_artefact": true,
+   "log_artefact_rule": "exhausted unit moved: the log exhausts Riven, Broken Blade at line 425 (\"Sziszu moved Riven, Broken Blade to Frozen Fortress.\") and readies it nowhere before this move",
    "options": [
     "End turn",
     "Move Tideturner to base",
@@ -211,10 +215,10 @@
    "turn": 8
   },
   {
-   "decision": 196,
-   "event_index": 478,
-   "event_kind": "passed_focus",
-   "event_text": "ComboMAN passed focus at Star Spring.",
+   "decision": 183,
+   "event_index": 466,
+   "event_kind": "showdown",
+   "event_text": "ComboMAN ended showdown responses at Frozen Fortress.",
    "options": [
     "End turn",
     "Move Riven, Broken Blade to base",
@@ -230,11 +234,57 @@
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
    "turn": 8
   },
   {
-   "decision": 196,
+   "decision": 183,
+   "event_index": 474,
+   "event_kind": "played",
+   "event_text": "Played Temporal Breach from Star Spring.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Star Spring",
+    "Play Reckless Innovator to Frozen Fortress",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Star Spring",
+    "Play Traveling Merchant to Frozen Fortress",
+    "Play Zhonya's Hourglass to base",
+    "Hide Zhonya's Hourglass",
+    "Hide Zhonya's Hourglass"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (played)",
+   "turn": 8
+  },
+  {
+   "decision": 183,
+   "event_index": 475,
+   "event_kind": "equipped",
+   "event_text": "Sziszu equipped Blade of the Exile to Scuttle Crab.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Star Spring",
+    "Play Reckless Innovator to Frozen Fortress",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Star Spring",
+    "Play Traveling Merchant to Frozen Fortress",
+    "Play Zhonya's Hourglass to base",
+    "Hide Zhonya's Hourglass",
+    "Hide Zhonya's Hourglass"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no equip option for 'Blade of the Exile' onto 'Scuttle Crab'",
+   "turn": 8
+  },
+  {
+   "decision": 183,
    "event_index": 483,
    "event_kind": "passed_focus",
    "event_text": "Sziszu passed focus at Star Spring.",
@@ -257,7 +307,8 @@
    "turn": 8
   }
  ],
- "desyncs": 8,
+ "desyncs": 10,
+ "desyncs_engine": 9,
  "disagreements": [
   {
    "bot": {
@@ -269,7 +320,7 @@
    "event_text": "ComboMAN played Ravenbloom Student from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.29,
+    "share": 0.24,
     "text": "Play Ravenbloom Student to base"
    },
    "kind": "play",
@@ -277,21 +328,89 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.35,
+     "share": 0.31,
+     "text": "End turn"
+    },
+    {
+     "index": 5,
+     "share": 0.25,
+     "text": "Play Temporal Breach"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Play Ravenbloom Student to base"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 10,
+    "text": "Play Temporal Breach"
+   },
+   "clean_boundary": true,
+   "decision": 41,
+   "event_text": "ComboMAN moved Nasus, Guardian of Knowledge to base.",
+   "human": {
+    "index": 4,
+    "share": 0.14,
+    "text": "Play Nasus, Guardian of Knowledge to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 10,
+     "share": 0.28,
+     "text": "Play Temporal Breach"
+    },
+    {
+     "index": 2,
+     "share": 0.24,
+     "text": "Move Ravenbloom Student to Frozen Fortress"
+    },
+    {
+     "index": 1,
+     "share": 0.16,
+     "text": "Move Ravenbloom Student to Star Spring"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Ravenbloom Student to Frozen Fortress"
+   },
+   "clean_boundary": true,
+   "decision": 50,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.37,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.43,
+     "text": "Move Ravenbloom Student to Frozen Fortress"
+    },
+    {
+     "index": 0,
+     "share": 0.37,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.29,
-     "text": "Play Ravenbloom Student to base"
-    },
-    {
-     "index": 3,
      "share": 0.2,
-     "text": "Play Discipline"
+     "text": "Move Ravenbloom Student to Star Spring"
     }
    ],
-   "turn": 1
+   "turn": 3
   },
   {
    "bot": {
@@ -303,7 +422,7 @@
    "event_text": "Played Discipline from hand.",
    "human": {
     "index": 1,
-    "share": 0.31,
+    "share": 0.21,
     "text": "Play Discipline"
    },
    "kind": "play",
@@ -311,17 +430,51 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.39,
+     "share": 0.66,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.31,
+     "share": 0.21,
      "text": "Play Discipline"
     },
     {
      "index": 2,
-     "share": 0.3,
+     "share": 0.13,
+     "text": "Play Stupefy targeting Scuttle Crab"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 84,
+   "event_text": "Played Discipline from hand.",
+   "human": {
+    "index": 6,
+    "share": 0.26,
+    "text": "Play Discipline"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.5,
+     "text": "Pass"
+    },
+    {
+     "index": 6,
+     "share": 0.26,
+     "text": "Play Discipline"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
      "text": "Play Stupefy targeting Scuttle Crab"
     }
    ],
@@ -337,7 +490,7 @@
    "event_text": "ComboMAN moved Ravenbloom Student to Star Spring.",
    "human": {
     "index": 1,
-    "share": 0.16,
+    "share": 0.21,
     "text": "Move Ravenbloom Student to Star Spring"
    },
    "kind": "move",
@@ -345,18 +498,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.58,
+     "share": 0.32,
      "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.16,
-     "text": "Move Ravenbloom Student to Star Spring"
+     "index": 14,
+     "share": 0.22,
+     "text": "Play Temporal Breach"
     },
     {
-     "index": 8,
-     "share": 0.08,
-     "text": "Play Ravenbloom Student to base"
+     "index": 1,
+     "share": 0.21,
+     "text": "Move Ravenbloom Student to Star Spring"
     }
    ],
    "turn": 5
@@ -371,7 +524,7 @@
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 1,
-    "share": 0.07,
+    "share": 0.03,
     "text": "Play Stupefy targeting Scuttle Crab"
    },
    "kind": "play",
@@ -379,26 +532,26 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.76,
+     "share": 0.73,
      "text": "Pass focus"
     },
     {
-     "index": 7,
-     "share": 0.09,
-     "text": "Play Smoke and Mirrors"
+     "index": 6,
+     "share": 0.21,
+     "text": "Play Temporal Breach"
     },
     {
-     "index": 6,
-     "share": 0.08,
-     "text": "Play Temporal Breach"
+     "index": 1,
+     "share": 0.03,
+     "text": "Play Stupefy targeting Scuttle Crab"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 2,
+    "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 152,
@@ -412,52 +565,52 @@
    "player": 1,
    "top3": [
     {
+     "index": 2,
+     "share": 0.76,
+     "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
+    },
+    {
+     "index": 9,
+     "share": 0.13,
+     "text": "Play Temporal Breach"
+    },
+    {
      "index": 0,
-     "share": 0.37,
+     "share": 0.05,
      "text": "End turn"
-    },
-    {
-     "index": 8,
-     "share": 0.35,
-     "text": "Play Lonely Poro to base"
-    },
-    {
-     "index": 1,
-     "share": 0.12,
-     "text": "Move Nasus, Guardian of Knowledge to Star Spring"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Lonely Poro to base"
+    "index": 2,
+    "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 162,
    "event_text": "ComboMAN put a hidden card to Star Spring.",
    "human": {
     "index": 9,
-    "share": 0.24,
+    "share": 0.06,
     "text": "Hide Temporal Breach"
    },
    "kind": "hide",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.27,
-     "text": "Play Lonely Poro to base"
+     "index": 2,
+     "share": 0.56,
+     "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.25,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.21,
+     "text": "Play Temporal Breach"
     },
     {
      "index": 9,
-     "share": 0.24,
+     "share": 0.06,
      "text": "Hide Temporal Breach"
     }
    ],
@@ -465,96 +618,101 @@
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Lonely Poro to base"
+    "index": 2,
+    "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 163,
    "event_text": "ComboMAN ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.34,
+    "share": 0.17,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.37,
-     "text": "Play Lonely Poro to base"
+     "index": 2,
+     "share": 0.57,
+     "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
     },
     {
      "index": 0,
-     "share": 0.34,
+     "share": 0.17,
      "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.09,
-     "text": "Move Nasus, Guardian of Knowledge to Star Spring"
+     "index": 5,
+     "share": 0.06,
+     "text": "Play Lonely Poro to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Smoke and Mirrors"
+    "index": 2,
+    "text": "Play Temporal Breach targeting Blitzcrank, Impassive"
    },
    "clean_boundary": false,
    "decision": 175,
-   "event_text": "ComboMAN ended showdown responses at Frozen Fortress.",
+   "event_text": "ComboMAN passed focus at Star Spring.",
    "human": {
     "index": 0,
-    "share": 0.46,
+    "share": 0.21,
     "text": "Pass focus"
    },
    "kind": "pass_focus",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.54,
-     "text": "Play Smoke and Mirrors"
+     "index": 2,
+     "share": 0.59,
+     "text": "Play Temporal Breach targeting Blitzcrank, Impassive"
     },
     {
      "index": 0,
-     "share": 0.46,
+     "share": 0.21,
      "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.2,
+     "text": "Play Smoke and Mirrors"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Nasus, Guardian of Knowledge to Star Spring"
+    "index": 2,
+    "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 200,
+   "decision": 187,
    "event_text": "ComboMAN played Lonely Poro from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.18,
+    "share": 0.11,
     "text": "Play Lonely Poro to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.39,
-     "text": "Move Nasus, Guardian of Knowledge to Star Spring"
+     "index": 2,
+     "share": 0.57,
+     "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
     },
     {
-     "index": 4,
-     "share": 0.34,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 5,
+     "share": 0.12,
+     "text": "Play Sprite Burst"
     },
     {
      "index": 3,
-     "share": 0.18,
+     "share": 0.11,
      "text": "Play Lonely Poro to base"
     }
    ],
@@ -562,34 +720,34 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Nasus, Guardian of Knowledge to Star Spring"
+    "index": 2,
+    "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 205,
+   "decision": 192,
    "event_text": "ComboMAN ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.06,
+    "share": 0.1,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.73,
-     "text": "Move Nasus, Guardian of Knowledge to Star Spring"
-    },
-    {
      "index": 2,
-     "share": 0.18,
+     "share": 0.74,
      "text": "Move Nasus, Guardian of Knowledge to Frozen Fortress"
     },
     {
      "index": 0,
-     "share": 0.06,
+     "share": 0.1,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.08,
+     "text": "Move Nasus, Guardian of Knowledge to Star Spring"
     }
    ],
    "turn": 9
@@ -598,7 +756,7 @@
  "effect_lines": 2,
  "exported_records": 0,
  "first_player": "Sziszu",
- "forced_decisions": 68,
+ "forced_decisions": 66,
  "game": 3,
  "hand_fixes": {
   "created": 1,
@@ -696,7 +854,7 @@
     "for": "ComboMAN played Thousand-Tailed Watcher from hand to base.",
     "how": "pulled",
     "player": 1,
-    "turn": 8,
+    "turn": 9,
     "zone": "hand"
    }
   ],
@@ -852,9 +1010,10 @@
   "P1": "Curator of the Sands",
   "P2": "The Exile"
  },
+ "log_artefacts": 1,
  "log_events": 188,
  "log_events_consumed": 138,
- "out_of_order_matches": 5,
+ "out_of_order_matches": 6,
  "players": [
   "ComboMAN",
   "Sziszu"
@@ -879,12 +1038,12 @@
  "score_mismatch_examples": [],
  "score_mismatches": 0,
  "seed": 2,
- "silent_passes": 83,
+ "silent_passes": 74,
  "soft_dropped": 1,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_nasus_vs_riven_rl2_e7f69092962ca374a07e2c2773b84939.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 0.6902611990000002,
-  "seconds": 0.705555323
+  "bot_seconds": 0.776421961,
+  "seconds": 0.792568208
  }
 }

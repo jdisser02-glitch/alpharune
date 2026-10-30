@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 14,
+  "agree": 15,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 2,
     "n": 4,
-    "rate": 0.0
+    "rate": 0.5
    },
    "battlefield": {
     "agree": 1,
@@ -26,9 +26,9 @@
     "rate": 0.0
    },
    "pass_focus": {
-    "agree": 9,
+    "agree": 8,
     "n": 9,
-    "rate": 1.0
+    "rate": 0.8888888888888888
    },
    "play": {
     "agree": 1,
@@ -37,26 +37,26 @@
    }
   },
   "clean_boundary": {
-   "agree": 4,
+   "agree": 5,
    "n": 30,
-   "rate": 0.13333333333333333
+   "rate": 0.16666666666666666
   },
   "in_flight": {
    "agree": 10,
    "n": 11
   },
   "n": 41,
-  "rate": 0.34146341463414637
+  "rate": 0.36585365853658536
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 46,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
+ "bot_calls": 48,
  "bot_errors": 0,
- "bot_fallbacks": 5,
+ "bot_fallbacks": 7,
  "capture_player": "Emp4",
  "compare_both": false,
  "decisions": 246,
  "decisions_compared": 41,
- "decisions_human_known": 98,
+ "decisions_human_known": 100,
  "decisions_trivial": 5,
  "deck_tops": 0,
  "desync_causes": {
@@ -200,71 +200,72 @@
   }
  ],
  "desyncs": 4,
+ "desyncs_engine": 4,
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Play Temporal Breach"
+    "index": 3,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 18,
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 2,
-    "share": 0.23,
+    "share": 0.02,
     "text": "Play Stupefy targeting Sprite"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 3,
+     "share": 0.88,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 1,
-     "share": 0.24,
+     "share": 0.04,
      "text": "Play Temporal Breach"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Play Stupefy targeting Sprite"
-    },
-    {
-     "index": 4,
-     "share": 0.19,
-     "text": "Use Daughter of the Void"
+     "index": 0,
+     "share": 0.03,
+     "text": "End turn"
     }
    ],
    "turn": 1
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 2,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 22,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.22,
+    "share": 0.07,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.41,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.72,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 3,
+     "share": 0.18,
+     "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.22,
+     "share": 0.07,
      "text": "Play Noxus Hopeful to base"
-    },
-    {
-     "index": 2,
-     "share": 0.2,
-     "text": "Play Falling Star"
     }
    ],
    "turn": 1
@@ -279,7 +280,7 @@
    "event_text": "Emp4 moved Noxus Hopeful to Void Gate.",
    "human": {
     "index": 2,
-    "share": 0.2,
+    "share": 0.05,
     "text": "Move Noxus Hopeful to Void Gate"
    },
    "kind": "move",
@@ -287,18 +288,18 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.26,
+     "share": 0.59,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 2,
-     "share": 0.2,
-     "text": "Move Noxus Hopeful to Void Gate"
+     "index": 10,
+     "share": 0.18,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 4,
-     "share": 0.16,
-     "text": "Play Lecturing Yordle to base"
+     "index": 1,
+     "share": 0.11,
+     "text": "Move Noxus Hopeful to Veiled Temple"
     }
    ],
    "turn": 3
@@ -306,75 +307,75 @@
   {
    "bot": {
     "index": 4,
-    "text": "Play Lecturing Yordle to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 50,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 12,
-    "share": 0.05,
     "text": "Use Daughter of the Void"
    },
-   "kind": "ability",
+   "clean_boundary": false,
+   "decision": 48,
+   "event_text": "Emp4 passed focus at Void Gate.",
+   "human": {
+    "index": 0,
+    "share": 0.32,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
    "player": 1,
    "top3": [
     {
      "index": 4,
-     "share": 0.69,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 7,
-     "share": 0.12,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 12,
-     "share": 0.05,
+     "share": 0.65,
      "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.32,
+     "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.03,
+     "text": "Play Bellows Breath targeting Sprite"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Lecturing Yordle to Void Gate"
+    "index": 7,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 51,
    "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.03,
+    "share": 0.17,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.69,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
      "index": 7,
-     "share": 0.12,
+     "share": 0.39,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 3,
-     "share": 0.06,
-     "text": "Play Lecturing Yordle to base"
+     "index": 1,
+     "share": 0.17,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Play Bilgewater Tracker to Void Gate"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 2,
+    "text": "Play Noxus Hopeful to Void Gate"
    },
    "clean_boundary": true,
    "decision": 58,
@@ -388,154 +389,86 @@
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.79,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.55,
+     "text": "Play Noxus Hopeful to Void Gate"
     },
     {
      "index": 1,
-     "share": 0.11,
+     "share": 0.23,
      "text": "Play Noxus Hopeful to base"
     },
     {
-     "index": 3,
-     "share": 0.06,
-     "text": "Play Bellows Breath targeting Sprite"
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Lecturing Yordle to Void Gate"
+    "index": 10,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 75,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 22,
-    "share": 0.01,
+    "share": 0.19,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.76,
-     "text": "Play Lecturing Yordle to Void Gate"
+     "index": 10,
+     "share": 0.24,
+     "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 3,
-     "share": 0.09,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 22,
+     "share": 0.19,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 2,
-     "share": 0.02,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
+     "index": 4,
+     "share": 0.13,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Lecturing Yordle to Void Gate"
+    "index": 8,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 76,
    "event_text": "Played Bellows Breath from hand.",
    "human": {
     "index": 12,
-    "share": 0.01,
+    "share": 0.03,
     "text": "Play Bellows Breath targeting Scuttle Crab"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.75,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 3,
-     "share": 0.1,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 8,
+     "share": 0.17,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 10,
-     "share": 0.03,
-     "text": "Play Kai'Sa, Survivor to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Lecturing Yordle to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 83,
-   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 6,
-    "share": 0.06,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.25,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 3,
      "share": 0.15,
-     "text": "Move Bilgewater Tracker to Void Gate"
-    },
-    {
-     "index": 10,
-     "share": 0.14,
      "text": "Play Kai'Sa, Survivor to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Lecturing Yordle to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 91,
-   "event_text": "Emp4 moved Bilgewater Tracker to Veiled Temple.",
-   "human": {
-    "index": 2,
-    "share": 0.14,
-    "text": "Move Bilgewater Tracker to Veiled Temple"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.4,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 3,
-     "share": 0.2,
-     "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
      "index": 2,
-     "share": 0.14,
+     "share": 0.1,
      "text": "Move Bilgewater Tracker to Veiled Temple"
     }
    ],
@@ -543,33 +476,101 @@
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Lecturing Yordle to Void Gate"
+    "index": 10,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "clean_boundary": true,
+   "decision": 83,
+   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
+   "human": {
+    "index": 6,
+    "share": 0.04,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 10,
+     "share": 0.62,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 8,
+     "share": 0.07,
+     "text": "Play Brynhir Thundersong to base"
+    },
+    {
+     "index": 3,
+     "share": 0.06,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Brittle Steel"
+   },
+   "clean_boundary": true,
+   "decision": 91,
+   "event_text": "Emp4 moved Bilgewater Tracker to Veiled Temple.",
+   "human": {
+    "index": 2,
+    "share": 0.19,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.72,
+     "text": "Play Brittle Steel"
+    },
+    {
+     "index": 2,
+     "share": 0.19,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 5,
+     "share": 0.03,
+     "text": "Play Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Brittle Steel"
    },
    "clean_boundary": true,
    "decision": 97,
    "event_text": "Emp4 moved Noxus Hopeful to base.",
    "human": {
     "index": 1,
-    "share": 0.05,
+    "share": 0.01,
     "text": "Move Noxus Hopeful to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.47,
-     "text": "Play Lecturing Yordle to Void Gate"
+     "index": 5,
+     "share": 0.89,
+     "text": "Play Brittle Steel"
     },
     {
      "index": 3,
-     "share": 0.18,
+     "share": 0.05,
      "text": "Play Lecturing Yordle to Veiled Temple"
     },
     {
      "index": 0,
-     "share": 0.16,
+     "share": 0.02,
      "text": "End turn"
     }
    ],
@@ -577,102 +578,68 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Lecturing Yordle to Veiled Temple"
+    "index": 3,
+    "text": "Play Brittle Steel"
    },
    "clean_boundary": true,
    "decision": 98,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.26,
+    "share": 0.04,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.48,
-     "text": "Play Lecturing Yordle to Veiled Temple"
+     "index": 3,
+     "share": 0.91,
+     "text": "Play Brittle Steel"
     },
     {
      "index": 0,
-     "share": 0.26,
+     "share": 0.04,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.17,
-     "text": "Play Brittle Steel"
+     "index": 2,
+     "share": 0.04,
+     "text": "Play Lecturing Yordle to Veiled Temple"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Veiled Temple"
+    "index": 16,
+    "text": "Use Daughter of the Void"
    },
    "clean_boundary": true,
    "decision": 109,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 12,
-    "share": 0.05,
+    "share": 0.07,
     "text": "Play Kai'Sa, Survivor to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.7,
-     "text": "Move Noxus Hopeful to Veiled Temple"
+     "index": 16,
+     "share": 0.47,
+     "text": "Use Daughter of the Void"
     },
     {
      "index": 2,
-     "share": 0.09,
+     "share": 0.26,
      "text": "Move Noxus Hopeful to Void Gate"
     },
     {
      "index": 12,
-     "share": 0.05,
+     "share": 0.07,
      "text": "Play Kai'Sa, Survivor to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Veiled Temple"
-   },
-   "clean_boundary": true,
-   "decision": 115,
-   "event_text": "Emp4 moved Bilgewater Tracker to base.",
-   "human": {
-    "index": 3,
-    "share": 0.01,
-    "text": "Move Bilgewater Tracker to base"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.87,
-     "text": "Move Noxus Hopeful to Veiled Temple"
-    },
-    {
-     "index": 2,
-     "share": 0.03,
-     "text": "Move Noxus Hopeful to Void Gate"
-    },
-    {
-     "index": 0,
-     "share": 0.02,
-     "text": "End turn"
     }
    ],
    "turn": 7
@@ -683,30 +650,64 @@
     "text": "Move Noxus Hopeful to Void Gate"
    },
    "clean_boundary": true,
+   "decision": 115,
+   "event_text": "Emp4 moved Bilgewater Tracker to base.",
+   "human": {
+    "index": 3,
+    "share": 0.02,
+    "text": "Move Bilgewater Tracker to base"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.6,
+     "text": "Move Noxus Hopeful to Void Gate"
+    },
+    {
+     "index": 12,
+     "share": 0.18,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 9,
+     "share": 0.07,
+     "text": "Play Lecturing Yordle to Veiled Temple"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Brittle Steel"
+   },
+   "clean_boundary": true,
    "decision": 116,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.17,
+    "share": 0.04,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
+     "index": 8,
+     "share": 0.57,
+     "text": "Play Brittle Steel"
+    },
+    {
+     "index": 9,
      "share": 0.28,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 2,
+     "share": 0.05,
      "text": "Move Noxus Hopeful to Void Gate"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Move Noxus Hopeful to Veiled Temple"
-    },
-    {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
     }
    ],
    "turn": 7
@@ -729,17 +730,17 @@
    "top3": [
     {
      "index": 32,
-     "share": 0.24,
+     "share": 0.63,
      "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 2,
-     "share": 0.21,
-     "text": "Move Noxus Hopeful to Void Gate"
+     "index": 43,
+     "share": 0.16,
+     "text": "Use Daughter of the Void"
     },
     {
      "index": 1,
-     "share": 0.18,
+     "share": 0.07,
      "text": "Move Noxus Hopeful to Veiled Temple"
     }
    ],
@@ -747,135 +748,67 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Void Gate"
+    "index": 1,
+    "text": "Move Noxus Hopeful to Veiled Temple"
    },
    "clean_boundary": true,
    "decision": 138,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 17,
-    "share": 0.08,
+    "share": 0.02,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.27,
-     "text": "Move Noxus Hopeful to Void Gate"
-    },
-    {
      "index": 1,
-     "share": 0.26,
+     "share": 0.85,
      "text": "Move Noxus Hopeful to Veiled Temple"
     },
     {
-     "index": 16,
-     "share": 0.14,
-     "text": "Play Lecturing Yordle to Void Gate"
+     "index": 2,
+     "share": 0.02,
+     "text": "Move Noxus Hopeful to Void Gate"
+    },
+    {
+     "index": 17,
+     "share": 0.02,
+     "text": "Play Brynhir Thundersong to base"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Void Gate"
+    "index": 17,
+    "text": "Play Brittle Steel"
    },
    "clean_boundary": true,
    "decision": 147,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 28,
-    "share": 0.06,
+    "share": 0.02,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.32,
-     "text": "Move Noxus Hopeful to Void Gate"
+     "index": 17,
+     "share": 0.87,
+     "text": "Play Brittle Steel"
     },
     {
      "index": 16,
-     "share": 0.2,
+     "share": 0.03,
      "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Move Noxus Hopeful to Veiled Temple"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 148,
-   "event_text": "Played Brittle Steel from hand.",
-   "human": {
-    "index": 17,
-    "share": 0.06,
-    "text": "Play Brittle Steel"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.43,
-     "text": "Move Noxus Hopeful to Void Gate"
-    },
-    {
-     "index": 16,
-     "share": 0.2,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 1,
-     "share": 0.12,
-     "text": "Move Noxus Hopeful to Veiled Temple"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 16,
-    "text": "Play Lecturing Yordle to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 154,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.14,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 16,
-     "share": 0.34,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 2,
-     "share": 0.18,
-     "text": "Move Noxus Hopeful to Void Gate"
     },
     {
      "index": 0,
-     "share": 0.14,
+     "share": 0.02,
      "text": "End turn"
     }
    ],
@@ -883,8 +816,42 @@
   },
   {
    "bot": {
-    "index": 33,
-    "text": "Play Lecturing Yordle to Void Gate"
+    "index": 26,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 154,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.12,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 26,
+     "share": 0.72,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
+    },
+    {
+     "index": 16,
+     "share": 0.05,
+     "text": "Play Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Move Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 167,
@@ -898,87 +865,53 @@
    "player": 1,
    "top3": [
     {
-     "index": 33,
-     "share": 0.52,
-     "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
      "index": 3,
-     "share": 0.21,
+     "share": 0.29,
      "text": "Move Kai'Sa, Survivor to base"
     },
     {
-     "index": 0,
-     "share": 0.04,
-     "text": "End turn"
+     "index": 32,
+     "share": 0.16,
+     "text": "Play Lecturing Yordle to base"
+    },
+    {
+     "index": 33,
+     "share": 0.08,
+     "text": "Play Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 171,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 19,
-    "share": 0.12,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.74,
-     "text": "Pass"
-    },
-    {
-     "index": 19,
-     "share": 0.12,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 10,
-     "share": 0.09,
-     "text": "Play Stupefy targeting Patched Porobot"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Veiled Temple"
+    "index": 3,
+    "text": "Move Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 174,
    "event_text": "Played Time Warp from hand.",
    "human": {
     "index": 29,
-    "share": 0.02,
+    "share": 0.05,
     "text": "Play Time Warp"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.57,
-     "text": "Move Noxus Hopeful to Veiled Temple"
+     "index": 3,
+     "share": 0.26,
+     "text": "Move Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 17,
+     "share": 0.1,
+     "text": "Play Lecturing Yordle to Veiled Temple"
     },
     {
      "index": 18,
-     "share": 0.17,
+     "share": 0.09,
      "text": "Play Lecturing Yordle to Void Gate"
-    },
-    {
-     "index": 3,
-     "share": 0.07,
-     "text": "Move Kai'Sa, Survivor to base"
     }
    ],
    "turn": 11
@@ -993,7 +926,7 @@
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 3,
-    "share": 0.29,
+    "share": 0.02,
     "text": "Move Kai'Sa, Survivor to base"
    },
    "kind": "move",
@@ -1001,17 +934,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.33,
+     "share": 0.57,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.29,
-     "text": "Move Kai'Sa, Survivor to base"
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Noxus Hopeful to Veiled Temple"
     },
     {
      "index": 2,
-     "share": 0.15,
+     "share": 0.13,
      "text": "Move Noxus Hopeful to Void Gate"
     }
    ],
@@ -1035,17 +968,17 @@
    "top3": [
     {
      "index": 32,
-     "share": 0.7,
+     "share": 0.32,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 0,
-     "share": 0.05,
+     "share": 0.19,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.05,
+     "share": 0.15,
      "text": "Move Noxus Hopeful to Veiled Temple"
     }
    ],
@@ -1061,7 +994,7 @@
    "event_text": "Emp4 played Lecturing Yordle from hand to Void Gate.",
    "human": {
     "index": 16,
-    "share": 0.1,
+    "share": 0.18,
     "text": "Play Lecturing Yordle to Void Gate"
    },
    "kind": "play",
@@ -1069,17 +1002,51 @@
    "top3": [
     {
      "index": 17,
-     "share": 0.55,
+     "share": 0.3,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 16,
-     "share": 0.1,
+     "share": 0.18,
      "text": "Play Lecturing Yordle to Void Gate"
     },
     {
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Noxus Hopeful to Veiled Temple"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 19,
+    "text": "Play Brynhir Thundersong to base"
+   },
+   "clean_boundary": true,
+   "decision": 219,
+   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
+   "human": {
+    "index": 15,
+    "share": 0.24,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 19,
+     "share": 0.35,
+     "text": "Play Brynhir Thundersong to base"
+    },
+    {
+     "index": 15,
+     "share": 0.24,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
      "index": 0,
-     "share": 0.05,
+     "share": 0.14,
      "text": "End turn"
     }
    ],
@@ -1087,8 +1054,8 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Veiled Temple"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 231,
@@ -1102,19 +1069,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.87,
-     "text": "Move Noxus Hopeful to Veiled Temple"
-    },
-    {
      "index": 0,
-     "share": 0.06,
+     "share": 0.64,
      "text": "End turn"
     },
     {
-     "index": 2,
+     "index": 1,
+     "share": 0.29,
+     "text": "Move Noxus Hopeful to Veiled Temple"
+    },
+    {
+     "index": 31,
      "share": 0.05,
-     "text": "Move Noxus Hopeful to Void Gate"
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 13
@@ -1457,6 +1424,7 @@
   "P1": "Daughter of the Void",
   "P2": "Fire Below the Mountain"
  },
+ "log_artefacts": 0,
  "log_events": 266,
  "log_events_consumed": 265,
  "out_of_order_matches": 2,
@@ -1489,7 +1457,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_ornn_rl2_ad98658d50bc0ebf1c438f6dc99a2693.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 1.7578681759999997,
-  "seconds": 1.790179426
+  "bot_seconds": 1.6004375039999994,
+  "seconds": 1.631891338
  }
 }
