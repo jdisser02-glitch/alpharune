@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 11,
+  "agree": 13,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -16,9 +16,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 3,
     "n": 4,
-    "rate": 0.5
+    "rate": 0.75
    },
    "move": {
     "agree": 1,
@@ -26,9 +26,9 @@
     "rate": 0.3333333333333333
    },
    "pass_focus": {
-    "agree": 4,
+    "agree": 5,
     "n": 5,
-    "rate": 0.8
+    "rate": 1.0
    },
    "play": {
     "agree": 3,
@@ -37,16 +37,16 @@
    }
   },
   "clean_boundary": {
-   "agree": 5,
-   "n": 14,
-   "rate": 0.35714285714285715
+   "agree": 6,
+   "n": 15,
+   "rate": 0.4
   },
   "in_flight": {
-   "agree": 6,
-   "n": 8
+   "agree": 7,
+   "n": 7
   },
   "n": 22,
-  "rate": 0.5
+  "rate": 0.5909090909090909
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 23,
@@ -54,17 +54,15 @@
  "bot_fallbacks": 1,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 133,
+ "decisions": 145,
  "decisions_compared": 22,
- "decisions_human_known": 58,
- "decisions_trivial": 13,
+ "decisions_human_known": 63,
+ "decisions_trivial": 14,
+ "deck_tops": 0,
  "desync_causes": {
   "equipped: engine asks P1 but the log's next action is by P2 (equipped)": 1,
   "equipped: no equip option for 'Edge of Night' onto 'Gutter Guardian'": 1,
-  "hidden_card_placed: no hide option at 'Startipped Peak'": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 1,
-  "played: card in trash but not replayable now": 1,
-  "played: card playable but not to 'Startipped Peak'": 1
+  "hidden_card_placed: no hide option at 'Startipped Peak'": 1
  },
  "desync_list": [
   {
@@ -74,8 +72,8 @@
    "event_text": "Commi equipped Edge of Night to Evelynn, Entrancing.",
    "options": [
     "End turn",
+    "Play Plundering Poro to base",
     "Play Temporal Breach",
-    "Play Hextech Ray targeting Evelynn, Entrancing",
     "Play Smoke Screen targeting Gutter Guardian",
     "Play Smoke Screen targeting Noxus Hopeful",
     "Play Smoke Screen targeting Evelynn, Entrancing"
@@ -102,26 +100,7 @@
    "turn": 4
   },
   {
-   "decision": 128,
-   "event_index": 221,
-   "event_kind": "played",
-   "event_text": "Played Sabotage from trash.",
-   "options": [
-    "End turn",
-    "Move Gutter Guardian to Startipped Peak",
-    "Move Gutter Guardian to Void Gate",
-    "Play Momentary Companion to base",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Treasure Trove to base",
-    "Play Catalyst of Aeons"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in trash but not replayable now",
-   "turn": 10
-  },
-  {
-   "decision": 128,
+   "decision": 133,
    "event_index": 231,
    "event_kind": "equipped",
    "event_text": "Commi equipped Edge of Night to Gutter Guardian.",
@@ -129,8 +108,9 @@
     "End turn",
     "Move Gutter Guardian to Startipped Peak",
     "Move Gutter Guardian to Void Gate",
-    "Play Momentary Companion to base",
     "Play Rengar, Trophy Hunter to base",
+    "Play Rengar, Trophy Hunter to Startipped Peak",
+    "Play Rengar, Trophy Hunter to Void Gate",
     "Play Treasure Trove to base",
     "Play Catalyst of Aeons"
    ],
@@ -138,43 +118,9 @@
    "player": 2,
    "reason": "no equip option for 'Edge of Night' onto 'Gutter Guardian'",
    "turn": 10
-  },
-  {
-   "decision": 133,
-   "event_index": 238,
-   "event_kind": "played",
-   "event_text": "Commi played Rengar, Trophy Hunter from hand to Startipped Peak.",
-   "options": [
-    "End turn",
-    "Play Momentary Companion to base",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Treasure Trove to base",
-    "Play Catalyst of Aeons"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card playable but not to 'Startipped Peak'",
-   "turn": 10
-  },
-  {
-   "decision": 133,
-   "event_index": 239,
-   "event_kind": "passed_focus",
-   "event_text": "Commi passed focus at Startipped Peak.",
-   "options": [
-    "End turn",
-    "Play Momentary Companion to base",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Treasure Trove to base",
-    "Play Catalyst of Aeons"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 10
   }
  ],
- "desyncs": 6,
+ "desyncs": 3,
  "disagreements": [
   {
    "bot": {
@@ -186,7 +132,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.14,
+    "share": 0.11,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -194,7 +140,7 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.28,
+     "share": 0.27,
      "text": "Play Plundering Poro to base"
     },
     {
@@ -203,46 +149,12 @@
      "text": "Play Falling Star"
     },
     {
-     "index": 0,
+     "index": 1,
      "share": 0.14,
-     "text": "End turn"
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 1
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Hextech Ray targeting Evelynn, Entrancing"
-   },
-   "clean_boundary": false,
-   "decision": 25,
-   "event_text": "Emp4 ended showdown responses at Startipped Peak.",
-   "human": {
-    "index": 0,
-    "share": 0.44,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.45,
-     "text": "Play Hextech Ray targeting Evelynn, Entrancing"
-    },
-    {
-     "index": 0,
-     "share": 0.44,
-     "text": "Pass focus"
-    },
-    {
-     "index": 4,
-     "share": 0.06,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 2
   },
   {
    "bot": {
@@ -254,7 +166,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 9,
-    "share": 0.06,
+    "share": 0.03,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -262,18 +174,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.26,
+     "share": 0.43,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 8,
-     "share": 0.19,
-     "text": "Play Hextech Ray targeting Evelynn, Entrancing"
+     "index": 2,
+     "share": 0.2,
+     "text": "Play Plundering Poro to base"
     },
     {
-     "index": 2,
-     "share": 0.14,
-     "text": "Play Plundering Poro to base"
+     "index": 1,
+     "share": 0.08,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 3
@@ -287,7 +199,7 @@
    "decision": 29,
    "event_text": "Played Bellows Breath from hand.",
    "human": {
-    "index": 7,
+    "index": 8,
     "share": 0.0,
     "text": "Play Bellows Breath targeting Evelynn, Entrancing"
    },
@@ -296,32 +208,32 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.85,
+     "share": 0.71,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 2,
-     "share": 0.04,
+     "share": 0.08,
      "text": "Play Plundering Poro to base"
     },
     {
-     "index": 3,
-     "share": 0.03,
-     "text": "Play Noxus Hopeful to base"
+     "index": 1,
+     "share": 0.05,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Hextech Ray targeting Evelynn, Entrancing"
+    "index": 5,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 34,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
-    "index": 2,
+    "index": 3,
     "share": 0.07,
     "text": "Play Noxus Hopeful to base"
    },
@@ -329,53 +241,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.45,
-     "text": "Play Hextech Ray targeting Evelynn, Entrancing"
-    },
-    {
-     "index": 4,
-     "share": 0.25,
+     "index": 5,
+     "share": 0.66,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 3,
+     "index": 4,
      "share": 0.09,
      "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Hextech Ray targeting Evelynn, Entrancing"
-   },
-   "clean_boundary": true,
-   "decision": 37,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.29,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.59,
-     "text": "Play Hextech Ray targeting Evelynn, Entrancing"
     },
     {
-     "index": 0,
-     "share": 0.29,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.08,
-     "text": "Play Temporal Breach"
+     "index": 3,
+     "share": 0.07,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 3
@@ -387,63 +265,63 @@
    },
    "clean_boundary": true,
    "decision": 48,
-   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.12,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.2,
-     "text": "End turn"
-    },
-    {
-     "index": 6,
-     "share": 0.13,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 14,
-     "share": 0.13,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting K'Sante, Courageous"
-   },
-   "clean_boundary": false,
-   "decision": 53,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 6,
-    "share": 0.16,
+    "index": 13,
+    "share": 0.05,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.73,
-     "text": "Play Smoke Screen targeting K'Sante, Courageous"
+     "index": 0,
+     "share": 0.52,
+     "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.16,
-     "text": "Use Daughter of the Void"
+     "index": 7,
+     "share": 0.09,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 5,
+     "share": 0.08,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "clean_boundary": true,
+   "decision": 49,
+   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
+   "human": {
+    "index": 5,
+    "share": 0.05,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.55,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 0,
-     "share": 0.11,
-     "text": "Pass"
+     "share": 0.25,
+     "text": "End turn"
+    },
+    {
+     "index": 5,
+     "share": 0.05,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 5
@@ -475,9 +353,9 @@
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 6,
-     "share": 0.14,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 5,
+     "share": 0.13,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 7
@@ -551,9 +429,10 @@
    "turn": 9
   }
  ],
+ "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Commi",
- "forced_decisions": 52,
+ "forced_decisions": 60,
  "game": 2,
  "hand_fixes": {
   "created": 0,
@@ -615,11 +494,19 @@
     "zone": "hand"
    },
    {
+    "card": "Bilgewater Tracker",
+    "for": "Emp4 played Bilgewater Tracker from hand to base.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 3,
+    "zone": "hand"
+   },
+   {
     "card": "Momentary Companion",
     "for": "Commi put a hidden card to Startipped Peak.",
     "how": "pulled",
     "player": 2,
-    "turn": 2,
+    "turn": 3,
     "zone": "hand"
    },
    {
@@ -627,14 +514,6 @@
     "for": "Commi moved Tail-Cloaked Matriarch from hand to trash.",
     "how": "pulled",
     "player": 2,
-    "turn": 3,
-    "zone": "hand"
-   },
-   {
-    "card": "Bilgewater Tracker",
-    "for": "Emp4 played Bilgewater Tracker from hand to base.",
-    "how": "pulled",
-    "player": 1,
     "turn": 3,
     "zone": "hand"
    },
@@ -651,7 +530,7 @@
     "for": "Commi moved Sabotage from hand to trash.",
     "how": "pulled",
     "player": 2,
-    "turn": 4,
+    "turn": 5,
     "zone": "hand"
    },
    {
@@ -659,7 +538,7 @@
     "for": "Commi put a hidden card to Void Gate.",
     "how": "pulled",
     "player": 2,
-    "turn": 4,
+    "turn": 5,
     "zone": "hand"
    },
    {
@@ -683,7 +562,7 @@
     "for": "Commi played Fizz, Trickster from hand to base.",
     "how": "pulled",
     "player": 2,
-    "turn": 6,
+    "turn": 8,
     "zone": "hand"
    }
   ],
@@ -884,11 +763,12 @@
  "score_mismatch_examples": [],
  "score_mismatches": 0,
  "seed": 2,
- "silent_passes": 28,
+ "silent_passes": 30,
+ "soft_dropped": 3,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_evelynn_rl2_47bf14481a58c8081efdcd52fb250be1.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.6502177750000001,
-  "seconds": 0.661077922
+  "bot_seconds": 0.803861559,
+  "seconds": 0.817872703
  }
 }

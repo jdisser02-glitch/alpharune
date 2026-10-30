@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 24,
+  "agree": 20,
   "by_kind": {
    "ability": {
     "agree": 2,
@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 3,
-    "n": 5,
-    "rate": 0.6
+    "agree": 1,
+    "n": 4,
+    "rate": 0.25
    },
    "move": {
     "agree": 3,
-    "n": 5,
-    "rate": 0.6
+    "n": 4,
+    "rate": 0.75
    },
    "pass_focus": {
     "agree": 6,
@@ -31,89 +31,46 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 9,
-    "n": 14,
-    "rate": 0.6428571428571429
+    "agree": 7,
+    "n": 13,
+    "rate": 0.5384615384615384
    }
   },
   "clean_boundary": {
-   "agree": 17,
-   "n": 29,
-   "rate": 0.5862068965517241
+   "agree": 12,
+   "n": 25,
+   "rate": 0.48
   },
   "in_flight": {
-   "agree": 7,
-   "n": 7
+   "agree": 8,
+   "n": 8
   },
-  "n": 36,
-  "rate": 0.6666666666666666
+  "n": 33,
+  "rate": 0.6060606060606061
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 43,
+ "bot_calls": 41,
  "bot_errors": 0,
- "bot_fallbacks": 7,
+ "bot_fallbacks": 8,
  "capture_player": "Tab",
  "compare_both": false,
- "decisions": 260,
- "decisions_compared": 36,
+ "decisions": 248,
+ "decisions_compared": 33,
  "decisions_human_known": 94,
  "decisions_trivial": 16,
+ "deck_tops": 0,
  "desync_causes": {
-  "equipped: no equip option for 'Blade of the Exile' onto 'Riven, Broken Blade'": 1,
-  "equipped: no equip option for 'Blade of the Exile' onto 'Stellacorn Herder'": 1,
+  "equipped: no equip option for 'Blade of the Exile' onto 'Bedeviling Stranger'": 1,
   "equipped: no equip option for 'Blade of the Exile' onto 'Vex, Apathetic'": 1,
-  "hidden_card_placed: no hide option at 'Star Spring'": 1,
-  "moved: unit can move but not to 'Star Spring'": 1,
-  "moved: unit can move but not to 'Vilemaw's Lair'": 1,
-  "moved: unit is exhausted (no move option)": 2,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 2,
+  "moved: no such unit on board (not played / already gone)": 5,
+  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 2,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 5,
   "played: card in hand but not playable now (cost/timing)": 1,
-  "played: card in trash but not replayable now": 1,
-  "played: engine asks P1 but the log's next action is by P2 (played)": 1
+  "played: card playable but not to 'Star Spring'": 1,
+  "played: engine asks P1 but the log's next action is by P2 (played)": 1,
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1
  },
  "desync_list": [
-  {
-   "decision": 48,
-   "event_index": 44,
-   "event_kind": "moved",
-   "event_text": "I hate herons moved Stellacorn Herder to base.",
-   "options": [
-    "End turn",
-    "Move Tideturner to base",
-    "Hide Switcheroo",
-    "Hide Bedeviling Stranger"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 4
-  },
-  {
-   "decision": 86,
-   "event_index": 69,
-   "event_kind": "moved",
-   "event_text": "I hate herons moved Stellacorn Herder to base.",
-   "options": [
-    "End turn",
-    "Move Vex, Apathetic to base",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Vilemaw's Lair",
-    "Play Bedeviling Stranger to Star Spring",
-    "Play Scuttle Crab to base",
-    "Play Scuttle Crab to Vilemaw's Lair",
-    "Play Scuttle Crab to Star Spring",
-    "Play Rebuke",
-    "Play Switcheroo",
-    "Hide Switcheroo",
-    "Hide Switcheroo",
-    "Hide Bedeviling Stranger",
-    "Hide Bedeviling Stranger"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 6
-  },
   {
    "decision": 97,
    "event_index": 81,
@@ -133,7 +90,7 @@
    "turn": 7
   },
   {
-   "decision": 114,
+   "decision": 117,
    "event_index": 83,
    "event_kind": "played",
    "event_text": "Played Switcheroo from hand.",
@@ -146,74 +103,48 @@
    "turn": 7
   },
   {
-   "decision": 114,
-   "event_index": 88,
-   "event_kind": "played",
-   "event_text": "Played Lost to the Sands from trash.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in trash but not replayable now",
-   "turn": 7
-  },
-  {
-   "decision": 115,
+   "decision": 118,
    "event_index": 99,
    "event_kind": "moved",
    "event_text": "I hate herons moved Vex, Apathetic to Star Spring.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
     "Move Stellacorn Herder to Vilemaw's Lair",
     "Move Stellacorn Herder to Star Spring",
     "Play Astral Heron to base",
-    "Play Astral Heron to Star Spring",
     "Play Scuttle Crab to base",
-    "Play Scuttle Crab to Star Spring",
     "Play Stellacorn Herder to base",
-    "Play Stellacorn Herder to Star Spring",
     "Play Scuttle Crab to base",
-    "Play Scuttle Crab to Star Spring",
     "Play Riven, Broken Blade to base",
-    "Play Riven, Broken Blade to Star Spring",
-    "Play Rebuke",
-    "Play Switcheroo",
     "Play Star-Crossed",
     "Play Star-Crossed"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "unit can move but not to 'Star Spring'",
+   "reason": "no such unit on board (not played / already gone)",
    "turn": 8
   },
   {
-   "decision": 138,
-   "event_index": 109,
-   "event_kind": "played",
-   "event_text": "I hate herons played Blade of the Exile from hand to base.",
-   "options": [
-    "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Scuttle Crab to base",
-    "Move Vex, Apathetic, Scuttle Crab to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 8
-  },
-  {
-   "decision": 138,
+   "decision": 140,
    "event_index": 111,
    "event_kind": "equipped",
    "event_text": "I hate herons equipped Blade of the Exile to Vex, Apathetic.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
     "Move Scuttle Crab to base",
-    "Move Vex, Apathetic, Scuttle Crab to base"
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Star Spring",
+    "Play Tideturner to base",
+    "Play Tideturner to Star Spring",
+    "Play Switcheroo",
+    "Play Switcheroo",
+    "Equip Blade of the Exile to Stellacorn Herder",
+    "Equip Blade of the Exile to Stellacorn Herder (exhaust Scuttle Crab)",
+    "Equip Blade of the Exile to Scuttle Crab",
+    "Equip Blade of the Exile to Scuttle Crab (exhaust Scuttle Crab)",
+    "Hide Switcheroo",
+    "Hide Tideturner",
+    "Hide Switcheroo"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -221,81 +152,60 @@
    "turn": 8
   },
   {
-   "decision": 138,
-   "event_index": 113,
-   "event_kind": "hidden_card_placed",
-   "event_text": "I hate herons put a hidden card to Star Spring.",
+   "decision": 162,
+   "event_index": 133,
+   "event_kind": "played",
+   "event_text": "Tab played Treasure Trove from hand to base.",
    "options": [
-    "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Scuttle Crab to base",
-    "Move Vex, Apathetic, Scuttle Crab to base"
+    "End turn"
    ],
    "phase": "MainPhase",
-   "player": 2,
-   "reason": "no hide option at 'Star Spring'",
-   "turn": 8
+   "player": 1,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 9
   },
   {
-   "decision": 194,
+   "decision": 182,
    "event_index": 146,
    "event_kind": "moved",
    "event_text": "I hate herons moved Vex, Apathetic to Vilemaw's Lair.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Stellacorn Herder to Vilemaw's Lair",
-    "Move Stellacorn Herder to Star Spring",
     "Move Stellacorn Herder to base",
-    "Move Scuttle Crab to Vilemaw's Lair",
-    "Move Scuttle Crab to Star Spring",
-    "Move Vex, Apathetic, Stellacorn Herder to base",
-    "Move Stellacorn Herder, Scuttle Crab to Vilemaw's Lair",
-    "Move Stellacorn Herder, Scuttle Crab to Star Spring",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Star Spring",
     "Play Reckless Innovator to base",
     "Play Reckless Innovator to Star Spring",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Star Spring",
-    "Play Blade of the Exile to base",
+    "Play Switcheroo",
     "Play Star-Crossed",
     "Play Star-Crossed",
     "Play Switcheroo",
-    "Play Ride the Wind"
+    "Equip Blade of the Exile to Stellacorn Herder",
+    "Equip Blade of the Exile to Stellacorn Herder (exhaust Stellacorn Herder)"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "unit can move but not to 'Vilemaw's Lair'",
+   "reason": "no such unit on board (not played / already gone)",
    "turn": 10
   },
   {
-   "decision": 194,
+   "decision": 182,
    "event_index": 147,
    "event_kind": "passed_focus",
    "event_text": "I hate herons passed focus at Vilemaw's Lair.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Stellacorn Herder to Vilemaw's Lair",
-    "Move Stellacorn Herder to Star Spring",
     "Move Stellacorn Herder to base",
-    "Move Scuttle Crab to Vilemaw's Lair",
-    "Move Scuttle Crab to Star Spring",
-    "Move Vex, Apathetic, Stellacorn Herder to base",
-    "Move Stellacorn Herder, Scuttle Crab to Vilemaw's Lair",
-    "Move Stellacorn Herder, Scuttle Crab to Star Spring",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Star Spring",
     "Play Reckless Innovator to base",
     "Play Reckless Innovator to Star Spring",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Star Spring",
-    "Play Blade of the Exile to base",
+    "Play Switcheroo",
     "Play Star-Crossed",
     "Play Star-Crossed",
     "Play Switcheroo",
-    "Play Ride the Wind"
+    "Equip Blade of the Exile to Stellacorn Herder",
+    "Equip Blade of the Exile to Stellacorn Herder (exhaust Stellacorn Herder)"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -303,71 +213,278 @@
    "turn": 10
   },
   {
-   "decision": 194,
-   "event_index": 151,
-   "event_kind": "equipped",
-   "event_text": "I hate herons equipped Blade of the Exile to Stellacorn Herder.",
+   "decision": 201,
+   "event_index": 173,
+   "event_kind": "moved",
+   "event_text": "Tab moved Pyke, Dockside Butcher to base.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Stellacorn Herder to Vilemaw's Lair",
-    "Move Stellacorn Herder to Star Spring",
-    "Move Stellacorn Herder to base",
-    "Move Scuttle Crab to Vilemaw's Lair",
-    "Move Scuttle Crab to Star Spring",
-    "Move Vex, Apathetic, Stellacorn Herder to base",
-    "Move Stellacorn Herder, Scuttle Crab to Vilemaw's Lair",
-    "Move Stellacorn Herder, Scuttle Crab to Star Spring",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
-    "Play Reckless Innovator to base",
-    "Play Reckless Innovator to Star Spring",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Star Spring",
-    "Play Blade of the Exile to base",
-    "Play Star-Crossed",
-    "Play Star-Crossed",
-    "Play Switcheroo",
-    "Play Ride the Wind"
+    "Play Pack of Wonders to base",
+    "Play Ride the Wind",
+    "Use Bloodharbor Ripper on Vex, Apathetic"
    ],
    "phase": "MainPhase",
-   "player": 2,
-   "reason": "no equip option for 'Blade of the Exile' onto 'Stellacorn Herder'",
-   "turn": 10
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 11
   },
   {
-   "decision": 239,
-   "event_index": 187,
-   "event_kind": "equipped",
-   "event_text": "I hate herons equipped Blade of the Exile to Riven, Broken Blade.",
+   "decision": 201,
+   "event_index": 176,
+   "event_kind": "moved",
+   "event_text": "Tab moved Pyke, Dockside Butcher to Star Spring.",
    "options": [
     "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Stellacorn Herder to base",
-    "Move Scuttle Crab to Vilemaw's Lair",
-    "Move Scuttle Crab to Star Spring",
-    "Move Vex, Apathetic, Stellacorn Herder to base",
-    "Play Tideturner to base",
-    "Play Tideturner to Star Spring",
+    "Play Pack of Wonders to base",
+    "Play Ride the Wind",
+    "Use Bloodharbor Ripper on Vex, Apathetic"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 11
+  },
+  {
+   "decision": 201,
+   "event_index": 177,
+   "event_kind": "passed_focus",
+   "event_text": "Tab passed focus at Star Spring.",
+   "options": [
+    "End turn",
+    "Play Pack of Wonders to base",
+    "Play Ride the Wind",
+    "Use Bloodharbor Ripper on Vex, Apathetic"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 11
+  },
+  {
+   "decision": 201,
+   "event_index": 178,
+   "event_kind": "showdown",
+   "event_text": "I hate herons ended showdown responses at Star Spring.",
+   "options": [
+    "End turn",
+    "Play Pack of Wonders to base",
+    "Play Ride the Wind",
+    "Use Bloodharbor Ripper on Vex, Apathetic"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 11
+  },
+  {
+   "decision": 229,
+   "event_index": 225,
+   "event_kind": "moved",
+   "event_text": "I hate herons moved Reckless Innovator to Star Spring.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
     "Play Reckless Innovator to base",
-    "Play Reckless Innovator to Star Spring",
+    "Play Reckless Innovator to Vilemaw's Lair",
     "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Star Spring",
-    "Play Reckless Innovator to base",
-    "Play Reckless Innovator to Star Spring",
-    "Play Blade of the Exile to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Switcheroo",
     "Play Star-Crossed",
     "Play Star-Crossed",
     "Play Switcheroo",
-    "Play Ride the Wind"
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "no equip option for 'Blade of the Exile' onto 'Riven, Broken Blade'",
-   "turn": 12
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 14
+  },
+  {
+   "decision": 229,
+   "event_index": 229,
+   "event_kind": "passed_focus",
+   "event_text": "I hate herons passed focus at Star Spring.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Switcheroo",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 14
+  },
+  {
+   "decision": 248,
+   "event_index": 236,
+   "event_kind": "passed_focus",
+   "event_text": "Tab passed focus at Star Spring.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 14
+  },
+  {
+   "decision": 248,
+   "event_index": 239,
+   "event_kind": "played",
+   "event_text": "I hate herons played Bedeviling Stranger from hand to Star Spring.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "card playable but not to 'Star Spring'",
+   "turn": 14
+  },
+  {
+   "decision": 248,
+   "event_index": 241,
+   "event_kind": "equipped",
+   "event_text": "I hate herons equipped Blade of the Exile to Bedeviling Stranger.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no equip option for 'Blade of the Exile' onto 'Bedeviling Stranger'",
+   "turn": 14
+  },
+  {
+   "decision": 248,
+   "event_index": 244,
+   "event_kind": "passed_focus",
+   "event_text": "I hate herons passed focus at Vilemaw's Lair.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 14
+  },
+  {
+   "decision": 248,
+   "event_index": 247,
+   "event_kind": "passed_focus",
+   "event_text": "Tab passed focus at Vilemaw's Lair.",
+   "options": [
+    "End turn",
+    "Play Scuttle Crab to base",
+    "Play Scuttle Crab to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Vilemaw's Lair",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Vilemaw's Lair",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Vilemaw's Lair",
+    "Play Star-Crossed",
+    "Play Star-Crossed",
+    "Play Switcheroo",
+    "Play Ride the Wind",
+    "Hide Switcheroo",
+    "Hide Bedeviling Stranger"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 14
   }
  ],
- "desyncs": 13,
+ "desyncs": 18,
  "disagreements": [
   {
    "bot": {
@@ -536,11 +653,45 @@
   },
   {
    "bot": {
-    "index": 10,
+    "index": 4,
     "text": "Play Falling Star"
    },
    "clean_boundary": true,
-   "decision": 140,
+   "decision": 114,
+   "event_text": "Tab played Vex, Apathetic from hand to base.",
+   "human": {
+    "index": 2,
+    "share": 0.32,
+    "text": "Play Vex, Apathetic to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.58,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.32,
+     "text": "Play Vex, Apathetic to base"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Fizz, Trickster to Vilemaw's Lair"
+   },
+   "clean_boundary": true,
+   "decision": 143,
    "event_text": "Tab moved Vex, Apathetic to Vilemaw's Lair.",
    "human": {
     "index": 3,
@@ -551,19 +702,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.43,
-     "text": "Play Falling Star"
-    },
-    {
      "index": 1,
-     "share": 0.31,
+     "share": 0.36,
      "text": "Move Fizz, Trickster to Vilemaw's Lair"
     },
     {
-     "index": 7,
-     "share": 0.13,
-     "text": "Play Vex, Apathetic to base"
+     "index": 10,
+     "share": 0.31,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.15,
+     "text": "Move Fizz, Trickster to Star Spring"
     }
    ],
    "turn": 9
@@ -574,11 +725,11 @@
     "text": "Play Vex, Apathetic to base"
    },
    "clean_boundary": true,
-   "decision": 156,
+   "decision": 159,
    "event_text": "Tab played Vex, Apathetic from hand to Vilemaw's Lair.",
    "human": {
     "index": 2,
-    "share": 0.01,
+    "share": 0.02,
     "text": "Play Vex, Apathetic to Vilemaw's Lair"
    },
    "kind": "play",
@@ -586,12 +737,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.39,
+     "share": 0.37,
      "text": "Play Vex, Apathetic to base"
     },
     {
      "index": 5,
-     "share": 0.29,
+     "share": 0.28,
      "text": "Play Fizz, Trickster to base"
     },
     {
@@ -604,45 +755,11 @@
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 162,
-   "event_text": "Tab played Treasure Trove from hand to base.",
-   "human": {
     "index": 3,
-    "share": 0.1,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.84,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 3,
-     "share": 0.1,
-     "text": "Play Treasure Trove to base"
-    },
-    {
-     "index": 0,
-     "share": 0.06,
-     "text": "End turn"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Falling Star"
+    "text": "Play Shimmering Swimmer to base"
    },
    "clean_boundary": true,
-   "decision": 196,
+   "decision": 185,
    "event_text": "Tab exhausted Gold. (named by the payment)",
    "human": {
     "index": 9,
@@ -653,18 +770,52 @@
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.5,
-     "text": "Play Falling Star"
-    },
-    {
      "index": 3,
-     "share": 0.3,
+     "share": 0.5,
      "text": "Play Shimmering Swimmer to base"
     },
     {
-     "index": 11,
-     "share": 0.1,
+     "index": 10,
+     "share": 0.19,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
+    },
+    {
+     "index": 7,
+     "share": 0.11,
+     "text": "Play Treasure Trove to base"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Pack of Wonders to base"
+   },
+   "clean_boundary": true,
+   "decision": 202,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.29,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.54,
+     "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.16,
      "text": "Use Bloodharbor Ripper on Vex, Apathetic"
     }
    ],
@@ -672,71 +823,71 @@
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Pack of Wonders to base"
+    "index": 7,
+    "text": "Play Detonate targeting Blade of the Exile"
    },
    "clean_boundary": true,
-   "decision": 217,
-   "event_text": "Tab moved Pyke, Dockside Butcher to base.",
+   "decision": 212,
+   "event_text": "Tab played Pack of Wonders from hand to base.",
    "human": {
-    "index": 1,
-    "share": 0.0,
-    "text": "Play Pyke, Dockside Butcher to base"
+    "index": 5,
+    "share": 0.22,
+    "text": "Play Pack of Wonders to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.61,
-     "text": "Play Pack of Wonders to base"
-    },
-    {
-     "index": 0,
-     "share": 0.3,
-     "text": "End turn"
+     "index": 7,
+     "share": 0.39,
+     "text": "Play Detonate targeting Blade of the Exile"
     },
     {
      "index": 5,
-     "share": 0.09,
-     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 226,
-   "event_text": "Tab moved Pyke, Dockside Butcher to Star Spring.",
-   "human": {
-    "index": 2,
-    "share": 0.2,
-    "text": "Move Pyke, Dockside Butcher to Star Spring"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.44,
-     "text": "End turn"
+     "share": 0.22,
+     "text": "Play Pack of Wonders to base"
     },
     {
      "index": 1,
-     "share": 0.23,
-     "text": "Move Pyke, Dockside Butcher to Vilemaw's Lair"
-    },
-    {
-     "index": 2,
-     "share": 0.2,
-     "text": "Move Pyke, Dockside Butcher to Star Spring"
+     "share": 0.12,
+     "text": "Move Shimmering Swimmer to Vilemaw's Lair"
     }
    ],
-   "turn": 11
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Detonate targeting Blade of the Exile"
+   },
+   "clean_boundary": true,
+   "decision": 215,
+   "event_text": "Played Detonate from hand.",
+   "human": {
+    "index": 9,
+    "share": 0.0,
+    "text": "Play Detonate targeting Pack of Wonders"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.43,
+     "text": "Play Detonate targeting Blade of the Exile"
+    },
+    {
+     "index": 11,
+     "share": 0.14,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Shimmering Swimmer to Vilemaw's Lair"
+    }
+   ],
+   "turn": 13
   },
   {
    "bot": {
@@ -744,11 +895,11 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 249,
+   "decision": 220,
    "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
    "human": {
-    "index": 6,
-    "share": 0.21,
+    "index": 9,
+    "share": 0.11,
     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
    },
    "kind": "ability",
@@ -756,23 +907,24 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.46,
+     "share": 0.66,
      "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.21,
-     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
+     "index": 2,
+     "share": 0.11,
+     "text": "Move Shimmering Swimmer to Star Spring"
     },
     {
-     "index": 2,
-     "share": 0.15,
-     "text": "Move Shimmering Swimmer to Star Spring"
+     "index": 9,
+     "share": 0.11,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
     }
    ],
    "turn": 13
   }
  ],
+ "effect_lines": 4,
  "exported_records": 0,
  "first_player": "I hate herons",
  "forced_decisions": 97,
@@ -905,7 +1057,7 @@
     "for": "Tab played Vex, Apathetic from hand to Vilemaw's Lair.",
     "how": "pulled",
     "player": 1,
-    "turn": 8,
+    "turn": 7,
     "zone": "hand"
    },
    {
@@ -922,22 +1074,6 @@
     "how": "created",
     "player": 2,
     "turn": 8,
-    "zone": "hand"
-   },
-   {
-    "card": "Stellacorn Herder",
-    "for": "I hate herons played Stellacorn Herder from hand to Star Spring.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 9,
-    "zone": "hand"
-   },
-   {
-    "card": "Reckless Innovator",
-    "for": "I hate herons played Reckless Innovator from hand to base.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 9,
     "zone": "hand"
    },
    {
@@ -961,14 +1097,6 @@
     "for": "Tab played Shimmering Swimmer from hand to base.",
     "how": "pulled",
     "player": 1,
-    "turn": 9,
-    "zone": "hand"
-   },
-   {
-    "card": "Defy",
-    "for": "Played Defy from hand.",
-    "how": "pulled",
-    "player": 2,
     "turn": 10,
     "zone": "hand"
    },
@@ -977,6 +1105,14 @@
     "for": "Tab played Pack of Wonders from hand to base.",
     "how": "pulled",
     "player": 1,
+    "turn": 11,
+    "zone": "hand"
+   },
+   {
+    "card": "Defy",
+    "for": "Played Defy from hand.",
+    "how": "pulled",
+    "player": 2,
     "turn": 11,
     "zone": "hand"
    },
@@ -1003,9 +1139,17 @@
     "player": 1,
     "turn": 13,
     "zone": "hand"
+   },
+   {
+    "card": "Bedeviling Stranger",
+    "for": "I hate herons played Bedeviling Stranger from hand to Star Spring.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 14,
+    "zone": "hand"
    }
   ],
-  "pulled_from_deck": 25
+  "pulled_from_deck": 24
  },
  "inferred_decks": {
   "P1": {
@@ -1215,32 +1359,32 @@
   "P2": "The Exile"
  },
  "log_events": 253,
- "log_events_consumed": 223,
- "out_of_order_matches": 3,
+ "log_events_consumed": 253,
+ "out_of_order_matches": 4,
  "players": [
   "Tab",
   "I hate herons"
  ],
- "readiness_fixes": 5,
+ "readiness_fixes": 3,
  "result": {
   "engine_scores": [
    4,
-   8
+   6
   ],
   "engine_winner": 2,
   "log_scores": [
    6,
    8
   ],
-  "reason": "P2 reached 8 points",
+  "reason": "log ended (log score 6-8)",
   "turns": 14
  },
  "rewinds_applied": 3,
  "rewinds_ignored": 2,
- "rune_swaps": 1,
+ "rune_swaps": 2,
  "score_mismatch_examples": [
   {
-   "engine_score": 4,
+   "engine_score": 3,
    "event_index": 98,
    "log_score": 5,
    "text": "I hate herons scored 2 at turn start. Score: 3 → 5.",
@@ -1263,11 +1407,12 @@
  ],
  "score_mismatches": 3,
  "seed": 2,
- "silent_passes": 86,
+ "silent_passes": 74,
+ "soft_dropped": 3,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_riven_rl2_a651e33ceef73404914a91aef60e9520.json",
- "stop_reason": "engine game over",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.781228524,
-  "seconds": 1.810293256
+  "bot_seconds": 1.7564866399999999,
+  "seconds": 1.785588078
  }
 }

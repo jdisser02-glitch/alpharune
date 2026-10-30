@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 12,
+  "agree": 11,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,9 +11,9 @@
     "rate": 1.0
    },
    "choice": {
-    "agree": 2,
+    "agree": 1,
     "n": 2,
-    "rate": 1.0
+    "rate": 0.5
    },
    "end_turn": {
     "agree": 2,
@@ -37,11 +37,11 @@
    "rate": 0.5625
   },
   "in_flight": {
-   "agree": 3,
+   "agree": 2,
    "n": 3
   },
   "n": 19,
-  "rate": 0.631578947368421
+  "rate": 0.5789473684210527
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 20,
@@ -49,45 +49,30 @@
  "bot_fallbacks": 1,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 186,
+ "decisions": 198,
  "decisions_compared": 19,
- "decisions_human_known": 60,
- "decisions_trivial": 7,
+ "decisions_human_known": 66,
+ "decisions_trivial": 8,
+ "deck_tops": 0,
  "desync_causes": {
   "equipped: engine asks P1 but the log's next action is by P2 (equipped)": 1,
-  "equipped: no equip option for 'Boots of Swiftness' onto 'Gutter Guardian'": 1,
   "equipped: no equip option for 'Boots of Swiftness' onto 'Pyke, Returned'": 1,
   "equipped: no equip option for 'Boots of Swiftness' onto 'Tail-Cloaked Matriarch'": 1,
   "equipped: no equip option for 'Edge of Night' onto 'K'Sante, Courageous'": 1,
   "equipped: no equip option for 'Edge of Night' onto 'Tornado Warrior'": 1,
   "hidden_card_placed: engine asks P2 but the log's next action is by P1 (hidden_card_placed)": 1,
-  "hidden_card_placed: no hide option at 'Startipped Peak'": 3,
-  "moved: no such unit on board (not played / already gone)": 3,
+  "hidden_card_placed: no hide option at 'Startipped Peak'": 2,
+  "moved: no such unit on board (not played / already gone)": 2,
   "moved: unit is exhausted (no move option)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 4,
-  "played: card in hand but not playable now (cost/timing)": 1,
-  "played: card in trash but not replayable now": 1,
+  "played: card in hand but not playable now (cost/timing)": 2,
   "played: engine asks P2 but the log's next action is by P1 (played)": 1,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
-   "decision": 25,
-   "event_index": 258,
-   "event_kind": "played",
-   "event_text": "Hob played Gutter Guardian from hand to base.",
-   "options": [
-    "End turn",
-    "Hide Gutter Guardian"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 2
-  },
-  {
-   "decision": 52,
+   "decision": 58,
    "event_index": 280,
    "event_kind": "hidden_card_placed",
    "event_text": "c put a hidden card to Packed Amphitheater.",
@@ -103,81 +88,27 @@
    "turn": 4
   },
   {
-   "decision": 52,
-   "event_index": 284,
-   "event_kind": "hidden_card_placed",
-   "event_text": "Hob put a hidden card to Startipped Peak.",
-   "options": [
-    "End turn",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no hide option at 'Startipped Peak'",
-   "turn": 4
-  },
-  {
-   "decision": 74,
-   "event_index": 307,
-   "event_kind": "equipped",
-   "event_text": "Hob equipped Boots of Swiftness to Gutter Guardian.",
+   "decision": 95,
+   "event_index": 323,
+   "event_kind": "played",
+   "event_text": "Hob played Ezreal, Prodigy from hand to Startipped Peak.",
    "options": [
     "End turn",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Ezreal, Prodigy to base",
-    "Play Ezreal, Prodigy to Startipped Peak",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
+    "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Equip Boots of Swiftness to Fizz, Trickster",
-    "Equip Boots of Swiftness to Ezreal, Prodigy",
     "Equip Boots of Swiftness to Evelynn, Entrancing"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "no equip option for 'Boots of Swiftness' onto 'Gutter Guardian'",
+   "reason": "card in hand but not playable now (cost/timing)",
    "turn": 6
   },
   {
-   "decision": 74,
-   "event_index": 308,
-   "event_kind": "moved",
-   "event_text": "Hob moved Gutter Guardian to Packed Amphitheater.",
-   "options": [
-    "End turn",
-    "Move Fizz, Trickster to Startipped Peak",
-    "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Ezreal, Prodigy to base",
-    "Play Ezreal, Prodigy to Startipped Peak",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Equip Boots of Swiftness to Fizz, Trickster",
-    "Equip Boots of Swiftness to Ezreal, Prodigy",
-    "Equip Boots of Swiftness to Evelynn, Entrancing"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 6
-  },
-  {
-   "decision": 107,
+   "decision": 111,
    "event_index": 333,
    "event_kind": "moved",
    "event_text": "c moved Thousand-Tailed Watcher to Startipped Peak.",
@@ -188,7 +119,6 @@
     "Play Honest Broker to Packed Amphitheater",
     "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Evelynn, Entrancing"
    ],
@@ -198,7 +128,7 @@
    "turn": 7
   },
   {
-   "decision": 107,
+   "decision": 111,
    "event_index": 334,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Startipped Peak.",
@@ -209,7 +139,6 @@
     "Play Honest Broker to Packed Amphitheater",
     "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Evelynn, Entrancing"
    ],
@@ -219,7 +148,7 @@
    "turn": 7
   },
   {
-   "decision": 107,
+   "decision": 111,
    "event_index": 337,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to Ezreal, Prodigy.",
@@ -230,7 +159,6 @@
     "Play Honest Broker to Packed Amphitheater",
     "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Evelynn, Entrancing"
    ],
@@ -240,7 +168,7 @@
    "turn": 7
   },
   {
-   "decision": 107,
+   "decision": 111,
    "event_index": 342,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Startipped Peak.",
@@ -251,7 +179,6 @@
     "Play Honest Broker to Packed Amphitheater",
     "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Evelynn, Entrancing"
    ],
@@ -261,7 +188,7 @@
    "turn": 7
   },
   {
-   "decision": 119,
+   "decision": 123,
    "event_index": 353,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to K'Sante, Courageous.",
@@ -271,11 +198,9 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
     "Move K'Sante, Courageous, Fizz, Trickster to Startipped Peak",
-    "Move K'Sante, Courageous, Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base"
+    "Move K'Sante, Courageous, Fizz, Trickster to Packed Amphitheater"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -283,7 +208,7 @@
    "turn": 8
   },
   {
-   "decision": 120,
+   "decision": 124,
    "event_index": 355,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Startipped Peak.",
@@ -291,9 +216,7 @@
     "End turn",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base"
+    "Move Evelynn, Entrancing to base"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -301,7 +224,7 @@
    "turn": 8
   },
   {
-   "decision": 120,
+   "decision": 124,
    "event_index": 357,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Startipped Peak.",
@@ -309,9 +232,7 @@
     "End turn",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base"
+    "Move Evelynn, Entrancing to base"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -319,7 +240,7 @@
    "turn": 8
   },
   {
-   "decision": 120,
+   "decision": 124,
    "event_index": 360,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Startipped Peak.",
@@ -327,9 +248,7 @@
     "End turn",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base"
+    "Move Evelynn, Entrancing to base"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -337,7 +256,7 @@
    "turn": 8
   },
   {
-   "decision": 153,
+   "decision": 157,
    "event_index": 381,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Startipped Peak.",
@@ -347,23 +266,18 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Ezreal, Prodigy to base",
+    "Play Ezreal, Prodigy to Startipped Peak",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Startipped Peak",
+    "Play Fizz, Trickster to base",
+    "Play Fizz, Trickster to Startipped Peak",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Spirit Wheel to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Startipped Peak",
     "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Thousand-Tailed Watcher",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
@@ -373,9 +287,6 @@
     "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Fizz, Trickster, Thousand-Tailed Watcher",
     "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
-    "Play Void Assault targeting Ezreal, Prodigy, LeBlanc, Everywhere at Once",
-    "Play Void Assault targeting Ezreal, Prodigy, Thousand-Tailed Watcher",
-    "Play Void Assault targeting Ezreal, Prodigy, Watchful Sentry",
     "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Evelynn, Entrancing, Thousand-Tailed Watcher",
     "Play Void Assault targeting Evelynn, Entrancing, Watchful Sentry",
@@ -387,7 +298,7 @@
    "turn": 10
   },
   {
-   "decision": 153,
+   "decision": 157,
    "event_index": 383,
    "event_kind": "equipped",
    "event_text": "Hob equipped Boots of Swiftness to Pyke, Returned.",
@@ -397,23 +308,18 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Ezreal, Prodigy to base",
+    "Play Ezreal, Prodigy to Startipped Peak",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Startipped Peak",
+    "Play Fizz, Trickster to base",
+    "Play Fizz, Trickster to Startipped Peak",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Spirit Wheel to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Startipped Peak",
     "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Thousand-Tailed Watcher",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
@@ -423,9 +329,6 @@
     "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Fizz, Trickster, Thousand-Tailed Watcher",
     "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
-    "Play Void Assault targeting Ezreal, Prodigy, LeBlanc, Everywhere at Once",
-    "Play Void Assault targeting Ezreal, Prodigy, Thousand-Tailed Watcher",
-    "Play Void Assault targeting Ezreal, Prodigy, Watchful Sentry",
     "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Evelynn, Entrancing, Thousand-Tailed Watcher",
     "Play Void Assault targeting Evelynn, Entrancing, Watchful Sentry",
@@ -437,7 +340,7 @@
    "turn": 10
   },
   {
-   "decision": 153,
+   "decision": 157,
    "event_index": 384,
    "event_kind": "moved",
    "event_text": "Hob moved Pyke, Returned to Packed Amphitheater.",
@@ -447,23 +350,18 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Ezreal, Prodigy to base",
+    "Play Ezreal, Prodigy to Startipped Peak",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Startipped Peak",
+    "Play Fizz, Trickster to base",
+    "Play Fizz, Trickster to Startipped Peak",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Spirit Wheel to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Startipped Peak",
     "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Thousand-Tailed Watcher",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
@@ -473,9 +371,6 @@
     "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Fizz, Trickster, Thousand-Tailed Watcher",
     "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
-    "Play Void Assault targeting Ezreal, Prodigy, LeBlanc, Everywhere at Once",
-    "Play Void Assault targeting Ezreal, Prodigy, Thousand-Tailed Watcher",
-    "Play Void Assault targeting Ezreal, Prodigy, Watchful Sentry",
     "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Evelynn, Entrancing, Thousand-Tailed Watcher",
     "Play Void Assault targeting Evelynn, Entrancing, Watchful Sentry",
@@ -487,7 +382,7 @@
    "turn": 10
   },
   {
-   "decision": 153,
+   "decision": 157,
    "event_index": 385,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Packed Amphitheater.",
@@ -497,23 +392,18 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Ezreal, Prodigy to base",
+    "Play Ezreal, Prodigy to Startipped Peak",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Startipped Peak",
+    "Play Fizz, Trickster to base",
+    "Play Fizz, Trickster to Startipped Peak",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Spirit Wheel to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Startipped Peak",
     "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Thousand-Tailed Watcher",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
@@ -523,9 +413,6 @@
     "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Fizz, Trickster, Thousand-Tailed Watcher",
     "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
-    "Play Void Assault targeting Ezreal, Prodigy, LeBlanc, Everywhere at Once",
-    "Play Void Assault targeting Ezreal, Prodigy, Thousand-Tailed Watcher",
-    "Play Void Assault targeting Ezreal, Prodigy, Watchful Sentry",
     "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Evelynn, Entrancing, Thousand-Tailed Watcher",
     "Play Void Assault targeting Evelynn, Entrancing, Watchful Sentry",
@@ -537,7 +424,7 @@
    "turn": 10
   },
   {
-   "decision": 153,
+   "decision": 157,
    "event_index": 386,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Packed Amphitheater.",
@@ -547,23 +434,18 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
+    "Play Ezreal, Prodigy to base",
+    "Play Ezreal, Prodigy to Startipped Peak",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Startipped Peak",
+    "Play Fizz, Trickster to base",
+    "Play Fizz, Trickster to Startipped Peak",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Spirit Wheel to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Startipped Peak",
     "Play Void Assault targeting Tail-Cloaked Matriarch, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Thousand-Tailed Watcher",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Watchful Sentry",
@@ -573,9 +455,6 @@
     "Play Void Assault targeting Fizz, Trickster, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Fizz, Trickster, Thousand-Tailed Watcher",
     "Play Void Assault targeting Fizz, Trickster, Watchful Sentry",
-    "Play Void Assault targeting Ezreal, Prodigy, LeBlanc, Everywhere at Once",
-    "Play Void Assault targeting Ezreal, Prodigy, Thousand-Tailed Watcher",
-    "Play Void Assault targeting Ezreal, Prodigy, Watchful Sentry",
     "Play Void Assault targeting Evelynn, Entrancing, LeBlanc, Everywhere at Once",
     "Play Void Assault targeting Evelynn, Entrancing, Thousand-Tailed Watcher",
     "Play Void Assault targeting Evelynn, Entrancing, Watchful Sentry",
@@ -587,7 +466,7 @@
    "turn": 10
   },
   {
-   "decision": 165,
+   "decision": 169,
    "event_index": 393,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Packed Amphitheater.",
@@ -606,7 +485,6 @@
     "Play Bellows Breath targeting Tail-Cloaked Matriarch",
     "Play Bellows Breath targeting K'Sante, Courageous",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Vi, Peacekeeper",
     "Play Bellows Breath targeting Watchful Sentry",
@@ -618,7 +496,7 @@
    "turn": 11
   },
   {
-   "decision": 165,
+   "decision": 169,
    "event_index": 395,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Packed Amphitheater.",
@@ -637,7 +515,6 @@
     "Play Bellows Breath targeting Tail-Cloaked Matriarch",
     "Play Bellows Breath targeting K'Sante, Courageous",
     "Play Bellows Breath targeting Fizz, Trickster",
-    "Play Bellows Breath targeting Ezreal, Prodigy",
     "Play Bellows Breath targeting Thousand-Tailed Watcher",
     "Play Bellows Breath targeting Vi, Peacekeeper",
     "Play Bellows Breath targeting Watchful Sentry",
@@ -649,7 +526,7 @@
    "turn": 11
   },
   {
-   "decision": 186,
+   "decision": 198,
    "event_index": 401,
    "event_kind": "played",
    "event_text": "c played Patched Porobot from hand to base.",
@@ -659,21 +536,8 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Play Spirit Wheel to base",
     "Play Punch First"
    ],
    "phase": "MainPhase",
@@ -682,40 +546,7 @@
    "turn": 12
   },
   {
-   "decision": 186,
-   "event_index": 409,
-   "event_kind": "played",
-   "event_text": "Hob played Ezreal, Prodigy from trash to base.",
-   "options": [
-    "End turn",
-    "Move K'Sante, Courageous to base",
-    "Move K'Sante, Courageous to Packed Amphitheater",
-    "Move Fizz, Trickster to Startipped Peak",
-    "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
-    "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
-    "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Play Spirit Wheel to base",
-    "Play Punch First"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in trash but not replayable now",
-   "turn": 12
-  },
-  {
-   "decision": 186,
+   "decision": 198,
    "event_index": 417,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to Tornado Warrior.",
@@ -725,21 +556,8 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Play Spirit Wheel to base",
     "Play Punch First"
    ],
    "phase": "MainPhase",
@@ -748,7 +566,7 @@
    "turn": 12
   },
   {
-   "decision": 186,
+   "decision": 198,
    "event_index": 424,
    "event_kind": "equipped",
    "event_text": "Hob equipped Boots of Swiftness to Tail-Cloaked Matriarch.",
@@ -758,21 +576,8 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Play Spirit Wheel to base",
     "Play Punch First"
    ],
    "phase": "MainPhase",
@@ -781,7 +586,27 @@
    "turn": 12
   },
   {
-   "decision": 186,
+   "decision": 198,
+   "event_index": 425,
+   "event_kind": "played",
+   "event_text": "Played Hold 'Em from hand.",
+   "options": [
+    "End turn",
+    "Move K'Sante, Courageous to base",
+    "Move K'Sante, Courageous to Packed Amphitheater",
+    "Move Fizz, Trickster to Startipped Peak",
+    "Move Fizz, Trickster to Packed Amphitheater",
+    "Move Evelynn, Entrancing to base",
+    "Move K'Sante, Courageous, Evelynn, Entrancing to base",
+    "Play Punch First"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 12
+  },
+  {
+   "decision": 198,
    "event_index": 427,
    "event_kind": "moved",
    "event_text": "Hob moved Tail-Cloaked Matriarch to Packed Amphitheater.",
@@ -791,21 +616,8 @@
     "Move K'Sante, Courageous to Packed Amphitheater",
     "Move Fizz, Trickster to Startipped Peak",
     "Move Fizz, Trickster to Packed Amphitheater",
-    "Move Ezreal, Prodigy to base",
     "Move Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy to base",
     "Move K'Sante, Courageous, Evelynn, Entrancing to base",
-    "Move Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Move K'Sante, Courageous, Ezreal, Prodigy, Evelynn, Entrancing to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Startipped Peak",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Startipped Peak",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Startipped Peak",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Startipped Peak",
-    "Play Spirit Wheel to base",
     "Play Punch First"
    ],
    "phase": "MainPhase",
@@ -814,7 +626,7 @@
    "turn": 12
   }
  ],
- "desyncs": 25,
+ "desyncs": 22,
  "disagreements": [
   {
    "bot": {
@@ -826,7 +638,7 @@
    "event_text": "c played Watchful Sentry from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.07,
+    "share": 0.04,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -834,17 +646,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.68,
+     "share": 0.84,
      "text": "Play Dredge Up"
     },
     {
      "index": 2,
-     "share": 0.13,
+     "share": 0.06,
      "text": "Play Kennen, Keeper of Balance to base"
     },
     {
      "index": 1,
-     "share": 0.07,
+     "share": 0.04,
      "text": "Play Watchful Sentry to base"
     }
    ],
@@ -860,7 +672,7 @@
    "event_text": "c moved Watchful Sentry to Packed Amphitheater.",
    "human": {
     "index": 2,
-    "share": 0.11,
+    "share": 0.3,
     "text": "Move Watchful Sentry to Packed Amphitheater"
    },
    "kind": "move",
@@ -868,18 +680,52 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.83,
+     "share": 0.47,
      "text": "Move Watchful Sentry to Startipped Peak"
     },
     {
      "index": 2,
-     "share": 0.11,
+     "share": 0.3,
      "text": "Move Watchful Sentry to Packed Amphitheater"
     },
     {
-     "index": 3,
-     "share": 0.02,
-     "text": "Play Kennen, Keeper of Balance to base"
+     "index": 7,
+     "share": 0.08,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Choose LeBlanc, Everywhere at Once"
+   },
+   "clean_boundary": false,
+   "decision": 35,
+   "event_text": "",
+   "human": {
+    "index": 2,
+    "share": 0.27,
+    "text": "Choose Dredge Up"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.49,
+     "text": "Choose LeBlanc, Everywhere at Once"
+    },
+    {
+     "index": 2,
+     "share": 0.27,
+     "text": "Choose Dredge Up"
+    },
+    {
+     "index": 5,
+     "share": 0.16,
+     "text": "Choose Harnessed Dragon"
     }
    ],
    "turn": 3
@@ -890,11 +736,11 @@
     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
    },
    "clean_boundary": true,
-   "decision": 108,
+   "decision": 112,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.18,
+    "share": 0.12,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -902,17 +748,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.72,
+     "share": 0.85,
      "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     },
     {
      "index": 0,
-     "share": 0.18,
+     "share": 0.12,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.05,
+     "share": 0.02,
      "text": "Move LeBlanc, Everywhere at Once to base"
     }
    ],
@@ -924,11 +770,11 @@
     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
    },
    "clean_boundary": true,
-   "decision": 125,
+   "decision": 129,
    "event_text": "Played Imperial Decree from hand.",
    "human": {
     "index": 20,
-    "share": 0.13,
+    "share": 0.16,
     "text": "Play Imperial Decree"
    },
    "kind": "play",
@@ -936,17 +782,17 @@
    "top3": [
     {
      "index": 21,
-     "share": 0.3,
+     "share": 0.6,
      "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     },
     {
      "index": 20,
-     "share": 0.13,
+     "share": 0.16,
      "text": "Play Imperial Decree"
     },
     {
      "index": 0,
-     "share": 0.1,
+     "share": 0.06,
      "text": "End turn"
     }
    ],
@@ -958,11 +804,11 @@
     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
    },
    "clean_boundary": true,
-   "decision": 143,
+   "decision": 147,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.13,
+    "share": 0.05,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -970,18 +816,18 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.66,
+     "share": 0.89,
      "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     },
     {
-     "index": 0,
-     "share": 0.13,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.06,
+     "text": "Move Thousand-Tailed Watcher to Packed Amphitheater"
     },
     {
-     "index": 3,
-     "share": 0.09,
-     "text": "Move Thousand-Tailed Watcher to Packed Amphitheater"
+     "index": 0,
+     "share": 0.05,
+     "text": "End turn"
     }
    ],
    "turn": 9
@@ -992,7 +838,7 @@
     "text": "Play Vi, Peacekeeper to Packed Amphitheater"
    },
    "clean_boundary": true,
-   "decision": 158,
+   "decision": 162,
    "event_text": "c moved Watchful Sentry to Packed Amphitheater.",
    "human": {
     "index": 5,
@@ -1004,17 +850,17 @@
    "top3": [
     {
      "index": 17,
-     "share": 0.4,
+     "share": 0.43,
      "text": "Play Vi, Peacekeeper to Packed Amphitheater"
     },
     {
      "index": 24,
-     "share": 0.26,
+     "share": 0.41,
      "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     },
     {
      "index": 20,
-     "share": 0.05,
+     "share": 0.04,
      "text": "Play Black Rose Dignitary to base"
     }
    ],
@@ -1026,11 +872,11 @@
     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
    },
    "clean_boundary": true,
-   "decision": 166,
+   "decision": 170,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.11,
+    "share": 0.07,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1038,29 +884,30 @@
    "top3": [
     {
      "index": 10,
-     "share": 0.46,
+     "share": 0.7,
      "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     },
     {
-     "index": 0,
-     "share": 0.11,
-     "text": "End turn"
+     "index": 6,
+     "share": 0.08,
+     "text": "Play Black Rose Dignitary to base"
     },
     {
-     "index": 6,
-     "share": 0.11,
-     "text": "Play Black Rose Dignitary to base"
+     "index": 0,
+     "share": 0.07,
+     "text": "End turn"
     }
    ],
    "turn": 11
   }
  ],
+ "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Hob",
- "forced_decisions": 88,
+ "forced_decisions": 90,
  "game": 2,
  "hand_fixes": {
-  "created": 6,
+  "created": 5,
   "list": [
    {
     "card": "Ezreal, Prodigy",
@@ -1080,7 +927,7 @@
    },
    {
     "card": "Gutter Guardian",
-    "for": "Hob played Gutter Guardian from hand to base.",
+    "for": "Hob put a hidden card to Startipped Peak.",
     "how": "pulled",
     "player": 2,
     "turn": 0,
@@ -1119,19 +966,19 @@
     "zone": "hand"
    },
    {
-    "card": "Fizz, Trickster",
-    "for": "Hob played Fizz, Trickster from hand to base.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 2,
-    "zone": "hand"
-   },
-   {
     "card": "LeBlanc, Everywhere at Once",
     "for": "c played LeBlanc, Everywhere at Once from hand to Packed Amphitheater.",
     "how": "created",
     "player": 1,
     "turn": 3,
+    "zone": "hand"
+   },
+   {
+    "card": "Fizz, Trickster",
+    "for": "Hob played Fizz, Trickster from hand to base.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 4,
     "zone": "hand"
    },
    {
@@ -1147,15 +994,7 @@
     "for": "Hob played Ezreal, Prodigy from hand to Startipped Peak.",
     "how": "pulled",
     "player": 2,
-    "turn": 5,
-    "zone": "hand"
-   },
-   {
-    "card": "Imperial Decree",
-    "for": "Played Imperial Decree from hand.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 5,
+    "turn": 4,
     "zone": "hand"
    },
    {
@@ -1163,6 +1002,14 @@
     "for": "Hob moved Kinkou Initiate from hand to trash.",
     "how": "pulled",
     "player": 2,
+    "turn": 6,
+    "zone": "hand"
+   },
+   {
+    "card": "Imperial Decree",
+    "for": "Played Imperial Decree from hand.",
+    "how": "pulled",
+    "player": 1,
     "turn": 6,
     "zone": "hand"
    },
@@ -1171,7 +1018,7 @@
     "for": "Hob moved Fizz, Trickster from hand to trash.",
     "how": "created",
     "player": 2,
-    "turn": 6,
+    "turn": 7,
     "zone": "hand"
    },
    {
@@ -1180,22 +1027,6 @@
     "how": "pulled",
     "player": 1,
     "turn": 7,
-    "zone": "hand"
-   },
-   {
-    "card": "Kinkou Initiate",
-    "for": "Hob moved Kinkou Initiate from hand to trash.",
-    "how": "created",
-    "player": 2,
-    "turn": 8,
-    "zone": "hand"
-   },
-   {
-    "card": "Tornado Warrior",
-    "for": "Hob put a hidden card to Startipped Peak.",
-    "how": "created",
-    "player": 2,
-    "turn": 9,
     "zone": "hand"
    },
    {
@@ -1211,6 +1042,14 @@
     "for": "c played Vi, Peacekeeper from hand to Packed Amphitheater.",
     "how": "pulled",
     "player": 1,
+    "turn": 9,
+    "zone": "hand"
+   },
+   {
+    "card": "Tornado Warrior",
+    "for": "Hob put a hidden card to Startipped Peak.",
+    "how": "pulled",
+    "player": 2,
     "turn": 9,
     "zone": "hand"
    },
@@ -1235,7 +1074,7 @@
     "for": "Played Rampage from hand.",
     "how": "pulled",
     "player": 2,
-    "turn": 11,
+    "turn": 12,
     "zone": "hand"
    },
    {
@@ -1249,7 +1088,7 @@
    {
     "card": "Fizz, Trickster",
     "for": "Hob moved Fizz, Trickster from hand to trash.",
-    "how": "pulled",
+    "how": "created",
     "player": 2,
     "turn": 12,
     "zone": "hand"
@@ -1340,7 +1179,7 @@
     "same_legend": false,
     "source": "/home/user/alpharune/decks/khazix_test.txt"
    },
-   "filler_cards": 26,
+   "filler_cards": 25,
    "legal": false,
    "legend": "Agony's Embrace",
    "player": "Hob",
@@ -1374,7 +1213,7 @@
      "card": "Gutter Guardian",
      "copies": 1,
      "hand_multiplicity": 0,
-     "plays_from_hand": 1
+     "plays_from_hand": 0
     },
     {
      "card": "Hold 'Em",
@@ -1417,6 +1256,12 @@
      "copies": 1,
      "hand_multiplicity": 0,
      "plays_from_hand": 1
+    },
+    {
+     "card": "Tornado Warrior",
+     "copies": 1,
+     "hand_multiplicity": 0,
+     "plays_from_hand": 0
     }
    ],
    "validation_errors": [
@@ -1430,9 +1275,9 @@
   "P1": "Deceiver",
   "P2": "Agony's Embrace"
  },
- "log_events": 199,
- "log_events_consumed": 198,
- "out_of_order_matches": 4,
+ "log_events": 197,
+ "log_events_consumed": 197,
+ "out_of_order_matches": 6,
  "players": [
   "c",
   "Hob"
@@ -1448,11 +1293,11 @@
    4,
    7
   ],
-  "reason": "desync cap (log score 4-7)",
+  "reason": "log ended (log score 4-7)",
   "turns": 12
  },
  "rewinds_applied": 0,
- "rewinds_ignored": 1,
+ "rewinds_ignored": 0,
  "rune_swaps": 6,
  "score_mismatch_examples": [
   {
@@ -1472,11 +1317,12 @@
  ],
  "score_mismatches": 2,
  "seed": 2,
- "silent_passes": 52,
+ "silent_passes": 58,
+ "soft_dropped": 3,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_54d7da5b7cc3ebd346065b7198dfa619.json",
- "stop_reason": "desync cap",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.865545859,
-  "seconds": 0.887454312
+  "bot_seconds": 1.0149861880000002,
+  "seconds": 1.039506195
  }
 }

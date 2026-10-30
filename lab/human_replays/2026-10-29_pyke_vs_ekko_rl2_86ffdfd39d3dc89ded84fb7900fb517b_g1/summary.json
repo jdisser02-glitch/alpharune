@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 5,
+    "agree": 4,
     "n": 6,
-    "rate": 0.8333333333333334
+    "rate": 0.6666666666666666
    },
    "move": {
-    "agree": 0,
+    "agree": 1,
     "n": 4,
-    "rate": 0.0
+    "rate": 0.25
    },
    "pass_focus": {
     "agree": 7,
@@ -49,17 +49,18 @@
   "rate": 0.5
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 53,
+ "bot_calls": 54,
  "bot_errors": 0,
- "bot_fallbacks": 13,
+ "bot_fallbacks": 14,
  "capture_player": "Tab",
  "compare_both": false,
  "decisions": 293,
  "decisions_compared": 40,
- "decisions_human_known": 106,
+ "decisions_human_known": 107,
  "decisions_trivial": 11,
+ "deck_tops": 0,
  "desync_causes": {
-  "moved: no such unit on board (not played / already gone)": 1,
+  "hidden_card_placed: no hide option at 'Firelights' Hideout'": 1,
   "moved: unit is exhausted (no move option)": 1,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 1,
@@ -94,10 +95,13 @@
     "End turn",
     "Play Pyke, Dockside Butcher to base",
     "Play Pyke, Dockside Butcher to Firelights' Hideout",
-    "Play Falling Star",
+    "Play Pyke, Dockside Butcher to base",
+    "Play Pyke, Dockside Butcher to Firelights' Hideout",
+    "Play Ride the Wind",
     "Use Pack of Wonders",
     "Use Bloodharbor Ripper on Vex, Apathetic",
-    "Use The List"
+    "Use The List",
+    "Hide Pyke, Dockside Butcher"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -113,10 +117,13 @@
     "End turn",
     "Play Pyke, Dockside Butcher to base",
     "Play Pyke, Dockside Butcher to Firelights' Hideout",
-    "Play Falling Star",
+    "Play Pyke, Dockside Butcher to base",
+    "Play Pyke, Dockside Butcher to Firelights' Hideout",
+    "Play Ride the Wind",
     "Use Pack of Wonders",
     "Use Bloodharbor Ripper on Vex, Apathetic",
-    "Use The List"
+    "Use The List",
+    "Hide Pyke, Dockside Butcher"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -126,25 +133,25 @@
   {
    "decision": 178,
    "event_index": 162,
-   "event_kind": "moved",
+   "event_kind": "hidden_card_placed",
    "event_text": "Tab moved a hidden card to Firelights' Hideout.",
    "options": [
     "End turn",
+    "Play Pyke, Dockside Butcher to base",
     "Play Vex, Apathetic to base",
     "Play Pyke, Dockside Butcher to base",
-    "Play Falling Star",
+    "Play Ride the Wind",
     "Play Cleave targeting Plundering Poro",
     "Play Cleave targeting Kai'Sa, Survivor",
     "Play Cleave targeting Bewitching Spirit",
     "Play Cleave targeting Bewitching Spirit",
     "Play Cleave targeting Ekko, Ingenious",
-    "Play Lost to the Sands",
     "Use Pack of Wonders",
     "Use The List"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "no such unit on board (not played / already gone)",
+   "reason": "no hide option at 'Firelights' Hideout'",
    "turn": 9
   },
   {
@@ -205,6 +212,10 @@
     "Move Bewitching Spirit to Void Gate",
     "Play Vex, Apathetic to base",
     "Play Pyke, Dockside Butcher to base",
+    "Play Cleave targeting Plundering Poro",
+    "Play Cleave targeting Bewitching Spirit",
+    "Play Cleave targeting Bewitching Spirit",
+    "Play Cleave targeting Bilgewater Tracker",
     "Play Ride the Wind",
     "Use Gold",
     "Use Pack of Wonders",
@@ -224,6 +235,7 @@
     "End turn",
     "Move Bewitching Spirit to Firelights' Hideout",
     "Move Bewitching Spirit to Void Gate",
+    "Play Vex, Apathetic to base",
     "Play Pyke, Dockside Butcher to base",
     "Play Ride the Wind",
     "Play Falling Star",
@@ -525,7 +537,7 @@
    "event_text": "Tab played Vex, Apathetic from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.25,
+    "share": 0.26,
     "text": "Play Vex, Apathetic to base"
    },
    "kind": "play",
@@ -533,17 +545,17 @@
    "top3": [
     {
      "index": 5,
-     "share": 0.32,
+     "share": 0.33,
      "text": "Play Pack of Wonders to base"
     },
     {
      "index": 1,
-     "share": 0.27,
+     "share": 0.28,
      "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 2,
-     "share": 0.25,
+     "share": 0.26,
      "text": "Play Vex, Apathetic to base"
     }
    ],
@@ -559,7 +571,7 @@
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.29,
+    "share": 0.27,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -567,55 +579,21 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.41,
+     "share": 0.4,
      "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 1,
+     "share": 0.29,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 0,
-     "share": 0.29,
+     "share": 0.27,
      "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.26,
-     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 7
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Pack of Wonders to base"
-   },
-   "clean_boundary": true,
-   "decision": 153,
-   "event_text": "Tab moved Vex, Apathetic to Firelights' Hideout.",
-   "human": {
-    "index": 1,
-    "share": 0.17,
-    "text": "Move Vex, Apathetic to Firelights' Hideout"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.23,
-     "text": "Play Pack of Wonders to base"
-    },
-    {
-     "index": 2,
-     "share": 0.2,
-     "text": "Move Vex, Apathetic to Void Gate"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Move Vex, Apathetic to Firelights' Hideout"
-    }
-   ],
-   "turn": 9
   },
   {
    "bot": {
@@ -635,7 +613,7 @@
    "top3": [
     {
      "index": 7,
-     "share": 0.3,
+     "share": 0.28,
      "text": "Play Pack of Wonders to base"
     },
     {
@@ -645,7 +623,7 @@
     },
     {
      "index": 0,
-     "share": 0.21,
+     "share": 0.17,
      "text": "End turn"
     }
    ],
@@ -661,7 +639,7 @@
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.02,
+    "share": 0.03,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
@@ -669,17 +647,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.64,
+     "share": 0.63,
      "text": "End turn"
     },
     {
      "index": 8,
-     "share": 0.13,
+     "share": 0.14,
      "text": "Use Bloodharbor Ripper on Vex, Apathetic"
     },
     {
      "index": 7,
-     "share": 0.12,
+     "share": 0.1,
      "text": "Use Pack of Wonders"
     }
    ],
@@ -694,8 +672,8 @@
    "decision": 176,
    "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
    "human": {
-    "index": 5,
-    "share": 0.08333333333333333,
+    "index": 7,
+    "share": 0.10526315789473684,
     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
    },
    "kind": "ability",
@@ -703,18 +681,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.6145833333333334,
+     "share": 0.7368421052631579,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.16666666666666666,
-     "text": "Play Falling Star"
+     "index": 6,
+     "share": 0.10526315789473684,
+     "text": "Use Pack of Wonders"
     },
     {
-     "index": 4,
-     "share": 0.08333333333333333,
-     "text": "Use Pack of Wonders"
+     "index": 7,
+     "share": 0.10526315789473684,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
     }
    ],
    "turn": 9
@@ -728,7 +706,7 @@
    "decision": 232,
    "event_text": "Played Lost to the Sands from hand.",
    "human": {
-    "index": 6,
+    "index": 10,
     "share": 0.09,
     "text": "Play Lost to the Sands"
    },
@@ -737,17 +715,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.31,
+     "share": 0.29,
      "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.27,
+     "share": 0.24,
      "text": "Play Vex, Apathetic to base"
     },
     {
-     "index": 9,
-     "share": 0.15,
+     "index": 13,
+     "share": 0.14,
      "text": "Use Pack of Wonders"
     }
    ],
@@ -771,17 +749,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.35,
+     "share": 0.32,
      "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.29,
+     "share": 0.26,
      "text": "Play Vex, Apathetic to base"
     },
     {
-     "index": 8,
-     "share": 0.18,
+     "index": 11,
+     "share": 0.17,
      "text": "Use Pack of Wonders"
     }
    ],
@@ -789,7 +767,7 @@
   },
   {
    "bot": {
-    "index": 11,
+    "index": 15,
     "text": "Play Falling Star"
    },
    "clean_boundary": true,
@@ -804,18 +782,18 @@
    "player": 1,
    "top3": [
     {
-     "index": 11,
-     "share": 0.59,
+     "index": 15,
+     "share": 0.56,
      "text": "Play Falling Star"
     },
     {
      "index": 7,
-     "share": 0.12,
+     "share": 0.11,
      "text": "Play Vex, Apathetic to base"
     },
     {
      "index": 0,
-     "share": 0.11,
+     "share": 0.1,
      "text": "End turn"
     }
    ],
@@ -830,7 +808,7 @@
    "decision": 260,
    "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
    "human": {
-    "index": 13,
+    "index": 17,
     "share": 0.01,
     "text": "Use Bloodharbor Ripper on Bewitching Spirit"
    },
@@ -839,12 +817,12 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.79,
+     "share": 0.8,
      "text": "Play Vex, Apathetic to Void Gate"
     },
     {
-     "index": 10,
-     "share": 0.14,
+     "index": 14,
+     "share": 0.12,
      "text": "Play Falling Star"
     },
     {
@@ -857,7 +835,7 @@
   },
   {
    "bot": {
-    "index": 8,
+    "index": 11,
     "text": "Play Falling Star"
    },
    "clean_boundary": true,
@@ -865,40 +843,6 @@
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.01,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.6,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.11,
-     "text": "Play Vex, Apathetic to base"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 276,
-   "event_text": "Tab played Bewitching Spirit from hand to base.",
-   "human": {
-    "index": 3,
     "share": 0.0,
     "text": "Play Bewitching Spirit to base"
    },
@@ -906,8 +850,42 @@
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.74,
+     "index": 11,
+     "share": 0.58,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.1,
+     "text": "Play Vex, Apathetic to base"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 276,
+   "event_text": "Tab played Bewitching Spirit from hand to base.",
+   "human": {
+    "index": 4,
+    "share": 0.0,
+    "text": "Play Bewitching Spirit to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 7,
+     "share": 0.68,
      "text": "Play Falling Star"
     },
     {
@@ -916,7 +894,41 @@
      "text": "End turn"
     },
     {
-     "index": 8,
+     "index": 9,
+     "share": 0.1,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 283,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.15,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.72,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
+    },
+    {
+     "index": 6,
      "share": 0.1,
      "text": "Use Pack of Wonders"
     }
@@ -924,12 +936,13 @@
    "turn": 13
   }
  ],
+ "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Nokt",
  "forced_decisions": 113,
  "game": 1,
  "hand_fixes": {
-  "created": 8,
+  "created": 9,
   "list": [
    {
     "card": "Lecturing Yordle",
@@ -1084,9 +1097,9 @@
     "zone": "hand"
    },
    {
-    "card": "Falling Star",
-    "for": "Played Falling Star from hand.",
-    "how": "pulled",
+    "card": "Pyke, Dockside Butcher",
+    "for": "Tab moved a hidden card to Firelights' Hideout.",
+    "how": "created",
     "player": 1,
     "turn": 9,
     "zone": "hand"
@@ -1100,11 +1113,11 @@
     "zone": "hand"
    },
    {
-    "card": "Lost to the Sands",
-    "for": "Played Lost to the Sands from hand.",
+    "card": "Falling Star",
+    "for": "Played Falling Star from hand.",
     "how": "pulled",
     "player": 1,
-    "turn": 9,
+    "turn": 10,
     "zone": "hand"
    },
    {
@@ -1120,6 +1133,14 @@
     "for": "Nokt moved Pyke, Dockside Butcher from hand to trash.",
     "how": "pulled",
     "player": 2,
+    "turn": 10,
+    "zone": "hand"
+   },
+   {
+    "card": "Lost to the Sands",
+    "for": "Played Lost to the Sands from hand.",
+    "how": "pulled",
+    "player": 1,
     "turn": 10,
     "zone": "hand"
    },
@@ -1170,17 +1191,9 @@
     "player": 1,
     "turn": 13,
     "zone": "hand"
-   },
-   {
-    "card": "Falling Star",
-    "for": "Played Falling Star from hand.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 13,
-    "zone": "hand"
    }
   ],
-  "pulled_from_deck": 23
+  "pulled_from_deck": 22
  },
  "inferred_decks": {
   "P1": {
@@ -1286,9 +1299,6 @@
      "hand_multiplicity": 0,
      "plays_from_hand": 1
     }
-   ],
-   "unknown_cards": [
-    "a hidden card"
    ]
   },
   "P2": {
@@ -1412,7 +1422,7 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 1,
- "rune_swaps": 5,
+ "rune_swaps": 6,
  "score_mismatch_examples": [
   {
    "engine_score": 7,
@@ -1425,10 +1435,11 @@
  "score_mismatches": 1,
  "seed": 2,
  "silent_passes": 95,
+ "soft_dropped": 1,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_ekko_rl2_86ffdfd39d3dc89ded84fb7900fb517b.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 2.0116675129999995,
-  "seconds": 2.047321703
+  "bot_seconds": 2.5462026919999996,
+  "seconds": 2.588451906
  }
 }

@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 10,
+  "agree": 14,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,79 +11,78 @@
     "rate": 1.0
    },
    "choice": {
-    "agree": 1,
-    "n": 5,
-    "rate": 0.2
-   },
-   "combat_damage": {
-    "agree": 1,
-    "n": 1,
-    "rate": 1.0
-   },
-   "end_turn": {
-    "agree": 3,
-    "n": 5,
-    "rate": 0.6
-   },
-   "move": {
-    "agree": 0,
-    "n": 6,
-    "rate": 0.0
-   },
-   "pass_focus": {
-    "agree": 1,
-    "n": 2,
+    "agree": 6,
+    "n": 12,
     "rate": 0.5
    },
+   "end_turn": {
+    "agree": 2,
+    "n": 5,
+    "rate": 0.4
+   },
+   "hide": {
+    "agree": 0,
+    "n": 2,
+    "rate": 0.0
+   },
+   "move": {
+    "agree": 1,
+    "n": 6,
+    "rate": 0.16666666666666666
+   },
+   "pass_focus": {
+    "agree": 2,
+    "n": 2,
+    "rate": 1.0
+   },
    "play": {
-    "agree": 3,
+    "agree": 2,
     "n": 13,
-    "rate": 0.23076923076923078
+    "rate": 0.15384615384615385
    }
   },
   "clean_boundary": {
-   "agree": 5,
-   "n": 22,
-   "rate": 0.22727272727272727
+   "agree": 4,
+   "n": 23,
+   "rate": 0.17391304347826086
   },
   "in_flight": {
-   "agree": 5,
-   "n": 11
+   "agree": 10,
+   "n": 18
   },
-  "n": 33,
-  "rate": 0.30303030303030304
+  "n": 41,
+  "rate": 0.34146341463414637
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 36,
+ "bot_calls": 44,
  "bot_errors": 0,
  "bot_fallbacks": 3,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 223,
- "decisions_compared": 33,
- "decisions_human_known": 62,
- "decisions_trivial": 7,
+ "decisions": 242,
+ "decisions_compared": 41,
+ "decisions_human_known": 77,
+ "decisions_trivial": 8,
+ "deck_tops": 0,
  "desync_causes": {
   "equipped: engine asks P1 but the log's next action is by P2 (equipped)": 1,
   "equipped: no equip option for 'Edge of Night' onto 'K'Sante, Courageous'": 1,
   "hidden_card_placed: no hide option at 'Baron Pit'": 1,
-  "hidden_card_placed: no hide option at 'Rakelstake'": 2,
-  "hidden_card_placed: no hide option at 'Star Spring'": 3,
+  "hidden_card_placed: no hide option at 'Star Spring'": 2,
   "moved: no such unit on board (not played / already gone)": 3,
-  "moved: unit can move but not to 'Baron Pit'": 2,
-  "moved: unit can move but not to 'Star Spring'": 1,
-  "moved: unit can move but not to 'base'": 1,
+  "moved: unit can move but not to 'Baron Pit'": 3,
+  "moved: unit can move but not to 'Rakelstake'": 1,
+  "moved: unit can move but not to 'Star Spring'": 2,
   "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 1,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 4,
-  "played: card in hand but not playable now (cost/timing)": 1,
-  "played: card in trash but not replayable now": 1,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 5,
+  "played: card in hand but not playable now (cost/timing)": 2,
   "played: card playable but not to 'Baron Pit'": 1,
-  "played: engine asks P2 but the log's next action is by P1 (played)": 1
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1
  },
  "desync_list": [
   {
-   "decision": 64,
+   "decision": 69,
    "event_index": 47,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to K'Sante, Courageous.",
@@ -91,7 +90,8 @@
     "End turn",
     "Move Vex, Apathetic to base",
     "Move Evelynn, Entrancing to base",
-    "Move Vex, Apathetic, Evelynn, Entrancing to base"
+    "Move Vex, Apathetic, Evelynn, Entrancing to base",
+    "Hide Pyke, Returned"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -99,31 +99,19 @@
    "turn": 5
   },
   {
-   "decision": 64,
-   "event_index": 53,
-   "event_kind": "hidden_card_placed",
-   "event_text": "Hob put a hidden card to Star Spring.",
-   "options": [
-    "End turn",
-    "Move Vex, Apathetic to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Vex, Apathetic, Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no hide option at 'Star Spring'",
-   "turn": 5
-  },
-  {
-   "decision": 94,
+   "decision": 102,
    "event_index": 83,
    "event_kind": "moved",
    "event_text": "c moved Hwei, Brooding Painter to base.",
    "options": [
     "End turn",
+    "Move LeBlanc, Everywhere at Once to base",
+    "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
+    "Play Bellows Breath targeting Vex, Apathetic",
     "Play Bellows Breath targeting K'Sante, Courageous",
     "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
-    "Play Bellows Breath targeting Evelynn, Entrancing"
+    "Play Bellows Breath targeting Evelynn, Entrancing",
+    "Hide Smoke and Mirrors"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -131,61 +119,19 @@
    "turn": 6
   },
   {
-   "decision": 94,
-   "event_index": 84,
-   "event_kind": "hidden_card_placed",
-   "event_text": "c put a hidden card to Rakelstake.",
-   "options": [
-    "End turn",
-    "Play Bellows Breath targeting K'Sante, Courageous",
-    "Play Bellows Breath targeting LeBlanc, Everywhere at Once",
-    "Play Bellows Breath targeting Evelynn, Entrancing"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no hide option at 'Rakelstake'",
-   "turn": 6
-  },
-  {
-   "decision": 113,
-   "event_index": 94,
-   "event_kind": "played",
-   "event_text": "Played Smoke and Mirrors from Rakelstake.",
-   "options": [
-    "End turn",
-    "Move K'Sante, Courageous to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Lunar Boon"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 7
-  },
-  {
-   "decision": 113,
+   "decision": 128,
    "event_index": 110,
    "event_kind": "moved",
    "event_text": "Hob moved K'Sante, Courageous to Star Spring.",
    "options": [
     "End turn",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Star Spring",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Star Spring",
     "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Lunar Boon"
+    "Play Evelynn, Entrancing to Star Spring"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -193,22 +139,19 @@
    "turn": 7
   },
   {
-   "decision": 113,
+   "decision": 128,
    "event_index": 111,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Star Spring.",
    "options": [
     "End turn",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Star Spring",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Star Spring",
     "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Lunar Boon"
+    "Play Evelynn, Entrancing to Star Spring"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -216,22 +159,19 @@
    "turn": 7
   },
   {
-   "decision": 113,
+   "decision": 128,
    "event_index": 114,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Star Spring.",
    "options": [
     "End turn",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Star Spring",
-    "Play Fizz, Trickster to base",
-    "Play Fizz, Trickster to Star Spring",
     "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Lunar Boon"
+    "Play Evelynn, Entrancing to Star Spring"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -239,75 +179,55 @@
    "turn": 7
   },
   {
-   "decision": 121,
-   "event_index": 133,
-   "event_kind": "hidden_card_placed",
-   "event_text": "c put a hidden card to Rakelstake.",
+   "decision": 179,
+   "event_index": 167,
+   "event_kind": "played",
+   "event_text": "c played Hwei, Brooding Painter from hand to base.",
    "options": [
     "End turn",
-    "Play Patched Porobot to base",
+    "Move LeBlanc, Everywhere at Once to base",
+    "Move LeBlanc, Everywhere at Once to base",
+    "Move LeBlanc, Everywhere at Once, LeBlanc, Everywhere at Once to base",
     "Play Honest Broker to base",
-    "Play Hidden Blade",
+    "Play Honest Broker to Rakelstake",
+    "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Rakelstake",
+    "Play Sacrifice",
     "Play Dredge Up",
-    "Play Salvage",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "no hide option at 'Rakelstake'",
-   "turn": 8
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 10
   },
   {
-   "decision": 135,
-   "event_index": 145,
-   "event_kind": "played",
-   "event_text": "Played Rampage from trash.",
-   "options": [
-    "End turn",
-    "Move K'Sante, Courageous to base",
-    "Play Pyke, Returned to base",
-    "Play Pyke, Returned to Star Spring",
-    "Play Kharox to base",
-    "Play Kharox to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Tornado Warrior to base",
-    "Play Tornado Warrior to Star Spring",
-    "Play Edge of Night to base",
-    "Play Lunar Boon"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card in trash but not replayable now",
-   "turn": 9
-  },
-  {
-   "decision": 162,
+   "decision": 182,
    "event_index": 172,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Star Spring.",
    "options": [
     "End turn",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Kharox to base",
     "Play Kharox to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Vex, Apathetic to base",
     "Play Vex, Apathetic to Star Spring",
-    "Play Elder Dragon to base",
-    "Play Elder Dragon to Star Spring",
-    "Play Dazzling Aurora to base",
     "Play Edge of Night to base",
-    "Play Lunar Boon"
+    "Play Lunar Boon",
+    "Play Flurry of Blades"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -315,51 +235,30 @@
    "turn": 11
   },
   {
-   "decision": 181,
-   "event_index": 183,
-   "event_kind": "moved",
-   "event_text": "c moved Hwei, Brooding Painter to base.",
-   "options": [
-    "End turn",
-    "Move Hwei, Brooding Painter to Star Spring",
-    "Move Hwei, Brooding Painter to Rakelstake",
-    "Play Honest Broker to base",
-    "Play Ruined Rex to base",
-    "Play Honest Broker to base",
-    "Play Lillia, Fae Fawn to base",
-    "Play Watchful Sentry to base",
-    "Play Soaring Scout to base",
-    "Play Glasc Mixologist to base",
-    "Play Dredge Up",
-    "Play Cull the Weak",
-    "Play Sacrifice",
-    "Play Dredge Up"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "unit can move but not to 'base'",
-   "turn": 12
-  },
-  {
-   "decision": 194,
+   "decision": 219,
    "event_index": 195,
    "event_kind": "played",
    "event_text": "Played Deathgrip from hand.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to Star Spring",
-    "Move Hwei, Brooding Painter to Rakelstake",
-    "Play Honest Broker to base",
+    "Move Hwei, Brooding Painter to base",
     "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Rakelstake",
     "Play Soaring Scout to base",
-    "Play Dredge Up",
-    "Play Cull the Weak",
+    "Play Soaring Scout to Rakelstake",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
     "Play Sacrifice",
     "Play Stupefy targeting Sprite",
     "Play Stupefy targeting Hwei, Brooding Painter",
     "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Dredge Up",
+    "Play Dredge Up",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -368,25 +267,30 @@
    "turn": 12
   },
   {
-   "decision": 194,
+   "decision": 219,
    "event_index": 199,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Star Spring.",
    "options": [
     "End turn",
-    "Move Hwei, Brooding Painter to Star Spring",
-    "Move Hwei, Brooding Painter to Rakelstake",
-    "Play Honest Broker to base",
+    "Move Hwei, Brooding Painter to base",
     "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Rakelstake",
     "Play Soaring Scout to base",
-    "Play Dredge Up",
-    "Play Cull the Weak",
+    "Play Soaring Scout to Rakelstake",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
     "Play Sacrifice",
     "Play Stupefy targeting Sprite",
     "Play Stupefy targeting Hwei, Brooding Painter",
     "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Dredge Up",
+    "Play Dredge Up",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -395,31 +299,30 @@
    "turn": 12
   },
   {
-   "decision": 200,
+   "decision": 219,
    "event_index": 201,
    "event_kind": "equipped",
    "event_text": "Hob equipped Edge of Night to K'Sante, Courageous.",
    "options": [
     "End turn",
-    "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
+    "Move Hwei, Brooding Painter to base",
     "Play Watchful Sentry to base",
     "Play Watchful Sentry to Rakelstake",
     "Play Soaring Scout to base",
     "Play Soaring Scout to Rakelstake",
-    "Play Cull the Weak",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
     "Play Sacrifice",
-    "Play Bellows Breath targeting Sprite",
-    "Play Bellows Breath targeting Hwei, Brooding Painter",
-    "Play Bellows Breath targeting Vex, Apathetic",
-    "Play Bellows Breath targeting K'Sante, Courageous",
-    "Play Bellows Breath targeting Fizz, Trickster",
     "Play Sacrifice",
     "Play Stupefy targeting Sprite",
     "Play Stupefy targeting Hwei, Brooding Painter",
     "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Dredge Up",
+    "Play Dredge Up",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -428,31 +331,30 @@
    "turn": 12
   },
   {
-   "decision": 200,
+   "decision": 219,
    "event_index": 204,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Star Spring.",
    "options": [
     "End turn",
-    "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
+    "Move Hwei, Brooding Painter to base",
     "Play Watchful Sentry to base",
     "Play Watchful Sentry to Rakelstake",
     "Play Soaring Scout to base",
     "Play Soaring Scout to Rakelstake",
-    "Play Cull the Weak",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
     "Play Sacrifice",
-    "Play Bellows Breath targeting Sprite",
-    "Play Bellows Breath targeting Hwei, Brooding Painter",
-    "Play Bellows Breath targeting Vex, Apathetic",
-    "Play Bellows Breath targeting K'Sante, Courageous",
-    "Play Bellows Breath targeting Fizz, Trickster",
     "Play Sacrifice",
     "Play Stupefy targeting Sprite",
     "Play Stupefy targeting Hwei, Brooding Painter",
     "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Dredge Up",
+    "Play Dredge Up",
     "Play Dredge Up"
    ],
    "phase": "MainPhase",
@@ -461,25 +363,65 @@
    "turn": 12
   },
   {
-   "decision": 203,
+   "decision": 219,
+   "event_index": 207,
+   "event_kind": "moved",
+   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
+   "options": [
+    "End turn",
+    "Move Hwei, Brooding Painter to base",
+    "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Rakelstake",
+    "Play Soaring Scout to base",
+    "Play Soaring Scout to Rakelstake",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
+    "Play Sacrifice",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting K'Sante, Courageous",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Dredge Up",
+    "Play Dredge Up",
+    "Play Dredge Up"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "unit can move but not to 'Rakelstake'",
+   "turn": 12
+  },
+  {
+   "decision": 222,
    "event_index": 216,
    "event_kind": "played",
    "event_text": "Hob played Baron Nashor from hand to Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -487,8 +429,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -496,25 +438,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 217,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -522,8 +472,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -531,25 +481,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 218,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -557,8 +515,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -566,25 +524,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 220,
    "event_kind": "moved",
    "event_text": "Hob moved Fizz, Trickster to Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -592,8 +558,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -601,25 +567,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 221,
    "event_kind": "moved",
    "event_text": "Hob moved Evelynn, Entrancing to Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -627,8 +601,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -636,25 +610,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 222,
    "event_kind": "moved",
    "event_text": "Hob moved K'Sante, Courageous to Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -662,8 +644,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -671,25 +653,33 @@
    "turn": 13
   },
   {
-   "decision": 203,
+   "decision": 222,
    "event_index": 224,
    "event_kind": "hidden_card_placed",
    "event_text": "Hob put a hidden card to Baron Pit.",
    "options": [
     "End turn",
     "Move Vex, Apathetic to base",
+    "Move Vex, Apathetic to base",
     "Move K'Sante, Courageous to base",
     "Move Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic to base",
     "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, K'Sante, Courageous to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous to base",
     "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, Fizz, Trickster to base",
     "Move K'Sante, Courageous, Fizz, Trickster to base",
     "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Star Spring",
+    "Move Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
+    "Move Vex, Apathetic, Vex, Apathetic, K'Sante, Courageous, Fizz, Trickster to base",
     "Play Tornado Warrior to base",
     "Play Tornado Warrior to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Star Spring",
     "Play Elder Dragon to base",
     "Play Elder Dragon to Star Spring",
     "Play Tail-Cloaked Matriarch to base",
@@ -697,8 +687,8 @@
     "Play Baron Nashor to base",
     "Play Baron Nashor to Star Spring",
     "Play Edge of Night to base",
-    "Play Lunar Boon",
-    "Play Flurry of Blades"
+    "Play Flurry of Blades",
+    "Play Gust"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -706,29 +696,21 @@
    "turn": 13
   },
   {
-   "decision": 223,
+   "decision": 242,
    "event_index": 242,
    "event_kind": "moved",
    "event_text": "c moved LeBlanc, Everywhere at Once to Baron Pit.",
    "options": [
     "End turn",
     "Move Hwei, Brooding Painter to base",
-    "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
-    "Play Watchful Sentry to base",
-    "Play Watchful Sentry to Rakelstake",
-    "Play Soaring Scout to base",
-    "Play Soaring Scout to Rakelstake",
     "Play Sprite to base",
     "Play Sprite to Rakelstake",
-    "Play Cull the Weak",
     "Play Sacrifice",
-    "Play Sacrifice",
-    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
-    "Play Dredge Up"
+    "Play Stupefy targeting Hwei, Brooding Painter"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -736,33 +718,113 @@
    "turn": 14
   },
   {
-   "decision": 223,
+   "decision": 242,
    "event_index": 243,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Baron Pit.",
    "options": [
     "End turn",
     "Move Hwei, Brooding Painter to base",
-    "Play Honest Broker to base",
-    "Play Honest Broker to Rakelstake",
-    "Play Watchful Sentry to base",
-    "Play Watchful Sentry to Rakelstake",
-    "Play Soaring Scout to base",
-    "Play Soaring Scout to Rakelstake",
     "Play Sprite to base",
     "Play Sprite to Rakelstake",
-    "Play Cull the Weak",
     "Play Sacrifice",
-    "Play Sacrifice",
-    "Play Stupefy targeting Hwei, Brooding Painter",
+    "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting Vex, Apathetic",
     "Play Stupefy targeting K'Sante, Courageous",
     "Play Stupefy targeting Fizz, Trickster",
-    "Play Dredge Up"
+    "Play Stupefy targeting Hwei, Brooding Painter"
    ],
    "phase": "MainPhase",
    "player": 1,
    "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 14
+  },
+  {
+   "decision": 242,
+   "event_index": 246,
+   "event_kind": "showdown",
+   "event_text": "Hob ended showdown responses at Baron Pit.",
+   "options": [
+    "End turn",
+    "Move Hwei, Brooding Painter to base",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting K'Sante, Courageous",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 14
+  },
+  {
+   "decision": 242,
+   "event_index": 248,
+   "event_kind": "moved",
+   "event_text": "c moved Hwei, Brooding Painter to Baron Pit.",
+   "options": [
+    "End turn",
+    "Move Hwei, Brooding Painter to base",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting K'Sante, Courageous",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "unit can move but not to 'Baron Pit'",
+   "turn": 14
+  },
+  {
+   "decision": 242,
+   "event_index": 249,
+   "event_kind": "passed_focus",
+   "event_text": "c passed focus at Baron Pit.",
+   "options": [
+    "End turn",
+    "Move Hwei, Brooding Painter to base",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting K'Sante, Courageous",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 14
+  },
+  {
+   "decision": 242,
+   "event_index": 250,
+   "event_kind": "moved",
+   "event_text": "c moved Hwei, Brooding Painter to Star Spring.",
+   "options": [
+    "End turn",
+    "Move Hwei, Brooding Painter to base",
+    "Play Sprite to base",
+    "Play Sprite to Rakelstake",
+    "Play Sacrifice",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting Vex, Apathetic",
+    "Play Stupefy targeting K'Sante, Courageous",
+    "Play Stupefy targeting Fizz, Trickster",
+    "Play Stupefy targeting Hwei, Brooding Painter"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "unit can move but not to 'Star Spring'",
    "turn": 14
   }
  ],
@@ -846,7 +908,7 @@
    "event_text": "c moved LeBlanc, Everywhere at Once to Rakelstake.",
    "human": {
     "index": 2,
-    "share": 0.14,
+    "share": 0.09,
     "text": "Move LeBlanc, Everywhere at Once to Rakelstake"
    },
    "kind": "move",
@@ -854,52 +916,52 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.69,
+     "share": 0.7,
      "text": "Move LeBlanc, Everywhere at Once to Star Spring"
     },
     {
-     "index": 2,
-     "share": 0.14,
-     "text": "Move LeBlanc, Everywhere at Once to Rakelstake"
+     "index": 12,
+     "share": 0.11,
+     "text": "Play Dredge Up"
     },
     {
-     "index": 0,
-     "share": 0.06,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.09,
+     "text": "Move LeBlanc, Everywhere at Once to Rakelstake"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Choose Soaring Scout"
+    "index": 6,
+    "text": "Choose Ki Barrier"
    },
    "clean_boundary": false,
    "decision": 43,
    "event_text": "",
    "human": {
     "index": 3,
-    "share": 0.12,
+    "share": 0.06,
     "text": "Choose Stupefy"
    },
    "kind": "choice",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.26,
-     "text": "Choose Soaring Scout"
-    },
-    {
      "index": 6,
-     "share": 0.22,
+     "share": 0.26,
      "text": "Choose Ki Barrier"
     },
     {
      "index": 0,
-     "share": 0.15,
+     "share": 0.2,
      "text": "Choose Hwei, Brooding Painter"
+    },
+    {
+     "index": 1,
+     "share": 0.2,
+     "text": "Choose Soaring Scout"
     }
    ],
    "turn": 4
@@ -922,51 +984,85 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.4,
+     "share": 0.39,
      "text": "Play Hwei, Brooding Painter to Rakelstake"
     },
     {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
+     "index": 16,
+     "share": 0.14,
+     "text": "Play Dredge Up"
     },
     {
-     "index": 7,
-     "share": 0.07,
-     "text": "Play Watchful Sentry to Rakelstake"
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Eclipse targeting Vex, Apathetic"
+    "index": 2,
+    "text": "Play Stupefy targeting LeBlanc, Everywhere at Once"
+   },
+   "clean_boundary": true,
+   "decision": 54,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.47,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.52,
+     "text": "Play Stupefy targeting LeBlanc, Everywhere at Once"
+    },
+    {
+     "index": 0,
+     "share": 0.47,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.01,
+     "text": "Move LeBlanc, Everywhere at Once to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 66,
+   "decision": 72,
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 2,
-    "share": 0.11,
+    "share": 0.03,
     "text": "Play Stupefy targeting Vex, Apathetic"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.58,
-     "text": "Play Eclipse targeting Vex, Apathetic"
-    },
-    {
      "index": 0,
-     "share": 0.29,
+     "share": 0.53,
      "text": "Pass"
     },
     {
+     "index": 7,
+     "share": 0.42,
+     "text": "Play Eclipse targeting Vex, Apathetic"
+    },
+    {
      "index": 2,
-     "share": 0.11,
+     "share": 0.03,
      "text": "Play Stupefy targeting Vex, Apathetic"
     }
    ],
@@ -974,14 +1070,14 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 9,
+    "text": "Play Lillia, Fae Fawn to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 73,
+   "decision": 81,
    "event_text": "c moved LeBlanc, Everywhere at Once to base.",
    "human": {
-    "index": 3,
+    "index": 1,
     "share": 0.0,
     "text": "Move LeBlanc, Everywhere at Once to base"
    },
@@ -989,33 +1085,33 @@
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.89,
-     "text": "End turn"
+     "index": 9,
+     "share": 0.27,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.02,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
+     "share": 0.13,
+     "text": "Move Hwei, Brooding Painter to Star Spring"
     },
     {
-     "index": 1,
-     "share": 0.01,
-     "text": "Move Hwei, Brooding Painter to Star Spring"
+     "index": 13,
+     "share": 0.13,
+     "text": "Play Eclipse targeting LeBlanc, Everywhere at Once"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 5,
+    "text": "Play Glasc Mixologist to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 74,
+   "decision": 82,
    "event_text": "Played Eclipse from hand.",
    "human": {
-    "index": 10,
+    "index": 14,
     "share": 0.0,
     "text": "Play Eclipse targeting Hwei, Brooding Painter"
    },
@@ -1023,121 +1119,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.9,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.02,
-     "text": "Move Hwei, Brooding Painter to Star Spring"
-    },
-    {
-     "index": 2,
-     "share": 0.01,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 80,
-   "event_text": "c moved Hwei, Brooding Painter to Star Spring.",
-   "human": {
-    "index": 1,
-    "share": 0.03,
-    "text": "Move Hwei, Brooding Painter to Star Spring"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.92,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.03,
-     "text": "Move Hwei, Brooding Painter to Star Spring"
-    },
-    {
-     "index": 2,
-     "share": 0.01,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Choose Honest Broker"
-   },
-   "clean_boundary": false,
-   "decision": 83,
-   "event_text": "",
-   "human": {
-    "index": 2,
-    "share": 0.03,
-    "text": "Choose Lillia, Fae Fawn"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.86,
-     "text": "Choose Honest Broker"
-    },
-    {
      "index": 5,
-     "share": 0.05,
-     "text": "Choose Smoke and Mirrors"
+     "share": 0.38,
+     "text": "Play Glasc Mixologist to Rakelstake"
     },
     {
      "index": 2,
-     "share": 0.03,
-     "text": "Choose Lillia, Fae Fawn"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Dredge Up"
-   },
-   "clean_boundary": false,
-   "decision": 84,
-   "event_text": "c passed focus at Star Spring.",
-   "human": {
-    "index": 0,
-    "share": 0.24,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.73,
-     "text": "Play Dredge Up"
+     "share": 0.34,
+     "text": "Move Hwei, Brooding Painter to Rakelstake"
     },
     {
-     "index": 0,
-     "share": 0.24,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.01,
-     "text": "Play Ki Barrier"
+     "index": 7,
+     "share": 0.06,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
     }
    ],
    "turn": 6
@@ -1149,29 +1143,97 @@
    },
    "clean_boundary": true,
    "decision": 88,
+   "event_text": "c moved Hwei, Brooding Painter to Star Spring.",
+   "human": {
+    "index": 1,
+    "share": 0.06,
+    "text": "Move Hwei, Brooding Painter to Star Spring"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.55,
+     "text": "End turn"
+    },
+    {
+     "index": 10,
+     "share": 0.2,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 5,
+     "share": 0.1,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Choose Smoke and Mirrors"
+   },
+   "clean_boundary": false,
+   "decision": 91,
+   "event_text": "",
+   "human": {
+    "index": 1,
+    "share": 0.03,
+    "text": "Choose Lillia, Fae Fawn"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.91,
+     "text": "Choose Smoke and Mirrors"
+    },
+    {
+     "index": 1,
+     "share": 0.03,
+     "text": "Choose Lillia, Fae Fawn"
+    },
+    {
+     "index": 0,
+     "share": 0.02,
+     "text": "Choose Ki Barrier"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 96,
    "event_text": "Played Ki Barrier from hand.",
    "human": {
-    "index": 2,
-    "share": 0.16,
+    "index": 4,
+    "share": 0.01,
     "text": "Play Ki Barrier"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 11,
+     "share": 0.76,
+     "text": "Play Dredge Up"
+    },
+    {
      "index": 0,
-     "share": 0.41,
+     "share": 0.16,
      "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.23,
-     "text": "Play Honest Broker to base"
-    },
-    {
-     "index": 2,
-     "share": 0.16,
-     "text": "Play Ki Barrier"
+     "index": 6,
+     "share": 0.02,
+     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
     }
    ],
    "turn": 6
@@ -1182,64 +1244,132 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 115,
-   "event_text": "c played Hwei, Brooding Painter from hand to base.",
+   "decision": 103,
+   "event_text": "c put a hidden card to Rakelstake.",
    "human": {
-    "index": 3,
-    "share": 0.0425531914893617,
-    "text": "Play Hwei, Brooding Painter to base"
+    "index": 7,
+    "share": 0.01,
+    "text": "Hide Smoke and Mirrors"
    },
-   "kind": "play",
+   "kind": "hide",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.425531914893617,
+     "share": 0.79,
      "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.23404255319148937,
-     "text": "Play Dredge Up"
+     "index": 2,
+     "share": 0.19,
+     "text": "Play Bellows Breath targeting LeBlanc, Everywhere at Once"
+    },
+    {
+     "index": 1,
+     "share": 0.01,
+     "text": "Move LeBlanc, Everywhere at Once to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Choose Hwei, Brooding Painter"
+   },
+   "clean_boundary": false,
+   "decision": 133,
+   "event_text": "",
+   "human": {
+    "index": 1,
+    "share": 0.3,
+    "text": "Choose Honest Broker"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.41,
+     "text": "Choose Hwei, Brooding Painter"
+    },
+    {
+     "index": 1,
+     "share": 0.3,
+     "text": "Choose Honest Broker"
     },
     {
      "index": 2,
-     "share": 0.14893617021276595,
-     "text": "Play Patched Porobot to base"
+     "share": 0.29,
+     "text": "Choose Hidden Blade"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Dredge Up"
+    "index": 5,
+    "text": "Play Hwei, Brooding Painter to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 122,
-   "event_text": "c ended their turn.",
+   "decision": 135,
+   "event_text": "c played Hwei, Brooding Painter from hand to base.",
    "human": {
-    "index": 0,
+    "index": 4,
     "share": 0.2,
-    "text": "End turn"
+    "text": "Play Hwei, Brooding Painter to base"
    },
-   "kind": "end_turn",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.36,
-     "text": "Play Dredge Up"
+     "index": 5,
+     "share": 0.25,
+     "text": "Play Hwei, Brooding Painter to Rakelstake"
     },
     {
-     "index": 0,
+     "index": 4,
      "share": 0.2,
+     "text": "Play Hwei, Brooding Painter to base"
+    },
+    {
+     "index": 8,
+     "share": 0.17,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 144,
+   "event_text": "c put a hidden card to Rakelstake.",
+   "human": {
+    "index": 4,
+    "share": 0.15,
+    "text": "Hide Hidden Blade"
+   },
+   "kind": "hide",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.64,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.2,
-     "text": "Play Hidden Blade"
+     "index": 4,
+     "share": 0.15,
+     "text": "Hide Hidden Blade"
+    },
+    {
+     "index": 5,
+     "share": 0.12,
+     "text": "Hide Smoke and Mirrors"
     }
    ],
    "turn": 8
@@ -1247,66 +1377,32 @@
   {
    "bot": {
     "index": 1,
-    "text": "Move Hwei, Brooding Painter to Star Spring"
-   },
-   "clean_boundary": true,
-   "decision": 137,
-   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
-   "human": {
-    "index": 2,
-    "share": 0.17,
-    "text": "Move Hwei, Brooding Painter to Rakelstake"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Move Hwei, Brooding Painter to Star Spring"
-    },
-    {
-     "index": 6,
-     "share": 0.18,
-     "text": "Play Hidden Blade"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Choose Dredge Up"
+    "text": "Choose Smoke and Mirrors"
    },
    "clean_boundary": false,
-   "decision": 140,
+   "decision": 168,
    "event_text": "",
    "human": {
-    "index": 4,
-    "share": 0.16,
-    "text": "Choose Smoke and Mirrors"
+    "index": 0,
+    "share": 0.2,
+    "text": "Choose Dredge Up"
    },
    "kind": "choice",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.51,
-     "text": "Choose Dredge Up"
-    },
-    {
-     "index": 4,
-     "share": 0.16,
+     "index": 1,
+     "share": 0.35,
      "text": "Choose Smoke and Mirrors"
     },
     {
-     "index": 5,
-     "share": 0.09,
+     "index": 3,
+     "share": 0.23,
+     "text": "Choose Hwei, Brooding Painter"
+    },
+    {
+     "index": 2,
+     "share": 0.22,
      "text": "Choose Salvage"
     }
    ],
@@ -1314,33 +1410,33 @@
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Ruined Rex to Rakelstake"
+    "index": 10,
+    "text": "Play Dredge Up"
    },
    "clean_boundary": true,
-   "decision": 153,
-   "event_text": "c played Hwei, Brooding Painter from hand to base.",
+   "decision": 170,
+   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
    "human": {
-    "index": 5,
+    "index": 3,
     "share": 0.09,
-    "text": "Play Hwei, Brooding Painter to base"
+    "text": "Move Hwei, Brooding Painter to Rakelstake"
    },
-   "kind": "play",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.21,
-     "text": "Play Ruined Rex to Rakelstake"
-    },
-    {
-     "index": 12,
-     "share": 0.17,
+     "index": 10,
+     "share": 0.29,
      "text": "Play Dredge Up"
     },
     {
-     "index": 6,
-     "share": 0.12,
+     "index": 9,
+     "share": 0.22,
+     "text": "Play Salvage targeting Edge of Night"
+    },
+    {
+     "index": 7,
+     "share": 0.16,
      "text": "Play Hwei, Brooding Painter to Rakelstake"
     }
    ],
@@ -1348,151 +1444,15 @@
   },
   {
    "bot": {
-    "index": 13,
-    "text": "Play Lillia, Fae Fawn to Rakelstake"
-   },
-   "clean_boundary": true,
-   "decision": 175,
-   "event_text": "Played Hidden Blade from Rakelstake.",
-   "human": {
-    "index": 16,
-    "share": 0.07,
-    "text": "Play Hidden Blade"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 13,
-     "share": 0.23,
-     "text": "Play Lillia, Fae Fawn to Rakelstake"
-    },
-    {
-     "index": 12,
-     "share": 0.13,
-     "text": "Play Lillia, Fae Fawn to base"
-    },
-    {
-     "index": 2,
-     "share": 0.1,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 10,
+    "index": 9,
     "text": "Play Dredge Up"
    },
    "clean_boundary": true,
-   "decision": 189,
-   "event_text": "c moved Lillia, Fae Fawn to Star Spring.",
-   "human": {
-    "index": 1,
-    "share": 0.12,
-    "text": "Move Lillia, Fae Fawn to Star Spring"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 10,
-     "share": 0.33,
-     "text": "Play Dredge Up"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
-     "text": "Move Lillia, Fae Fawn to Rakelstake"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Dredge Up"
-   },
-   "clean_boundary": true,
-   "decision": 195,
-   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
-   "human": {
-    "index": 2,
-    "share": 0.22,
-    "text": "Move Hwei, Brooding Painter to Rakelstake"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.34,
-     "text": "Play Dredge Up"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
-     "text": "Move Hwei, Brooding Painter to Rakelstake"
-    },
-    {
-     "index": 0,
-     "share": 0.12,
-     "text": "End turn"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Choose Imperial Decree"
-   },
-   "clean_boundary": false,
-   "decision": 198,
-   "event_text": "",
-   "human": {
-    "index": 8,
-    "share": 0.05,
-    "text": "Choose Stupefy"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.43,
-     "text": "Choose Imperial Decree"
-    },
-    {
-     "index": 3,
-     "share": 0.14,
-     "text": "Choose Sacrifice"
-    },
-    {
-     "index": 5,
-     "share": 0.14,
-     "text": "Choose Deathgrip"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Bellows Breath targeting Sprite"
-   },
-   "clean_boundary": true,
-   "decision": 201,
+   "decision": 180,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.19,
+    "share": 0.27,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1500,17 +1460,119 @@
    "top3": [
     {
      "index": 9,
-     "share": 0.33,
-     "text": "Play Bellows Breath targeting Sprite"
+     "share": 0.51,
+     "text": "Play Dredge Up"
     },
     {
      "index": 0,
-     "share": 0.19,
+     "share": 0.27,
      "text": "End turn"
     },
     {
-     "index": 20,
-     "share": 0.19,
+     "index": 7,
+     "share": 0.12,
+     "text": "Play Watchful Sentry to Rakelstake"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 192,
+   "event_text": "Played Hidden Blade from Rakelstake.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Play Hidden Blade targeting LeBlanc, Everywhere at Once"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.5,
+     "text": "Pass"
+    },
+    {
+     "index": 2,
+     "share": 0.48,
+     "text": "Play Hidden Blade targeting Hwei, Brooding Painter"
+    },
+    {
+     "index": 1,
+     "share": 0.02,
+     "text": "Play Sacrifice"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Choose Vex, Apathetic"
+   },
+   "clean_boundary": false,
+   "decision": 195,
+   "event_text": "",
+   "human": {
+    "index": 5,
+    "share": 0.29,
+    "text": "Choose LeBlanc, Everywhere at Once"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.47,
+     "text": "Choose Vex, Apathetic"
+    },
+    {
+     "index": 5,
+     "share": 0.29,
+     "text": "Choose LeBlanc, Everywhere at Once"
+    },
+    {
+     "index": 4,
+     "share": 0.23,
+     "text": "Choose Hwei, Brooding Painter"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play Lillia, Fae Fawn to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 201,
+   "event_text": "c moved Hwei, Brooding Painter to base.",
+   "human": {
+    "index": 1,
+    "share": 0.0,
+    "text": "Move Hwei, Brooding Painter to base"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.68,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
+    },
+    {
+     "index": 8,
+     "share": 0.2,
+     "text": "Play Lillia, Fae Fawn to base"
+    },
+    {
+     "index": 15,
+     "share": 0.1,
      "text": "Play Dredge Up"
     }
    ],
@@ -1518,45 +1580,182 @@
   },
   {
    "bot": {
+    "index": 4,
+    "text": "Choose Lillia, Fae Fawn"
+   },
+   "clean_boundary": false,
+   "decision": 204,
+   "event_text": "",
+   "human": {
     "index": 3,
-    "text": "Play Ruined Rex to Rakelstake"
+    "share": 0.18,
+    "text": "Choose Dredge Up"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.36,
+     "text": "Choose Lillia, Fae Fawn"
+    },
+    {
+     "index": 3,
+     "share": 0.18,
+     "text": "Choose Dredge Up"
+    },
+    {
+     "index": 5,
+     "share": 0.16,
+     "text": "Choose Deathgrip"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Lillia, Fae Fawn to Rakelstake"
    },
    "clean_boundary": true,
-   "decision": 208,
+   "decision": 205,
+   "event_text": "c played Lillia, Fae Fawn from hand to base.",
+   "human": {
+    "index": 6,
+    "share": 0.24,
+    "text": "Play Lillia, Fae Fawn to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 7,
+     "share": 0.6,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
+    },
+    {
+     "index": 6,
+     "share": 0.24,
+     "text": "Play Lillia, Fae Fawn to base"
+    },
+    {
+     "index": 18,
+     "share": 0.11,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 17,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 220,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.12,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 17,
+     "share": 0.53,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 26,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 227,
    "event_text": "Played Imperial Decree from hand.",
    "human": {
-    "index": 18,
-    "share": 0.08,
+    "index": 20,
+    "share": 0.0,
     "text": "Play Imperial Decree"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.18,
+     "index": 26,
+     "share": 0.41,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 9,
+     "share": 0.28,
      "text": "Play Ruined Rex to Rakelstake"
     },
     {
+     "index": 8,
+     "share": 0.09,
+     "text": "Play Ruined Rex to base"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 19,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 237,
+   "event_text": "Played Bellows Breath from hand.",
+   "human": {
+    "index": 14,
+    "share": 0.09,
+    "text": "Play Bellows Breath targeting Vex, Apathetic"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
      "index": 19,
-     "share": 0.18,
-     "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
+     "share": 0.76,
+     "text": "Play Dredge Up"
     },
     {
-     "index": 28,
-     "share": 0.14,
-     "text": "Play Dredge Up"
+     "index": 14,
+     "share": 0.09,
+     "text": "Play Bellows Breath targeting Vex, Apathetic"
+    },
+    {
+     "index": 9,
+     "share": 0.08,
+     "text": "Play Stupefy targeting Vex, Apathetic"
     }
    ],
    "turn": 14
   }
  ],
+ "effect_lines": 0,
  "exported_records": 0,
  "first_player": "c",
- "forced_decisions": 101,
+ "forced_decisions": 105,
  "game": 1,
  "hand_fixes": {
-  "created": 8,
+  "created": 10,
   "list": [
    {
     "card": "Dredge Up",
@@ -1615,14 +1814,6 @@
     "zone": "hand"
    },
    {
-    "card": "Pyke, Returned",
-    "for": "Hob put a hidden card to Star Spring.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 3,
-    "zone": "hand"
-   },
-   {
     "card": "Stupefy",
     "for": "Played Stupefy from hand.",
     "how": "created",
@@ -1636,6 +1827,14 @@
     "how": "pulled",
     "player": 1,
     "turn": 4,
+    "zone": "hand"
+   },
+   {
+    "card": "Pyke, Returned",
+    "for": "Hob put a hidden card to Star Spring.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 5,
     "zone": "hand"
    },
    {
@@ -1675,12 +1874,20 @@
     "for": "c moved Patched Porobot from hand to trash.",
     "how": "pulled",
     "player": 1,
-    "turn": 7,
+    "turn": 6,
     "zone": "hand"
    },
    {
     "card": "Hwei, Brooding Painter",
     "for": "c played Hwei, Brooding Painter from hand to base.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 6,
+    "zone": "hand"
+   },
+   {
+    "card": "Honest Broker",
+    "for": "c moved Honest Broker from hand to trash.",
     "how": "pulled",
     "player": 1,
     "turn": 7,
@@ -1695,18 +1902,18 @@
     "zone": "hand"
    },
    {
-    "card": "Fizz, Trickster",
-    "for": "Hob played Fizz, Trickster from hand to Star Spring.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 7,
-    "zone": "hand"
-   },
-   {
     "card": "Hidden Blade",
     "for": "c put a hidden card to Rakelstake.",
     "how": "pulled",
     "player": 1,
+    "turn": 7,
+    "zone": "hand"
+   },
+   {
+    "card": "Fizz, Trickster",
+    "for": "Hob played Fizz, Trickster from hand to Star Spring.",
+    "how": "pulled",
+    "player": 2,
     "turn": 8,
     "zone": "hand"
    },
@@ -1721,7 +1928,7 @@
    {
     "card": "Smoke and Mirrors",
     "for": "c moved Smoke and Mirrors from hand to trash.",
-    "how": "pulled",
+    "how": "created",
     "player": 1,
     "turn": 8,
     "zone": "hand"
@@ -1739,7 +1946,7 @@
     "for": "c played Hwei, Brooding Painter from hand to base.",
     "how": "created",
     "player": 1,
-    "turn": 9,
+    "turn": 8,
     "zone": "hand"
    },
    {
@@ -1755,7 +1962,15 @@
     "for": "Hob played Vex, Apathetic from hand to Star Spring.",
     "how": "pulled",
     "player": 2,
-    "turn": 10,
+    "turn": 9,
+    "zone": "hand"
+   },
+   {
+    "card": "Dredge Up",
+    "for": "c moved Dredge Up from hand to trash.",
+    "how": "created",
+    "player": 1,
+    "turn": 11,
     "zone": "hand"
    },
    {
@@ -1763,7 +1978,7 @@
     "for": "c played Lillia, Fae Fawn from hand to base.",
     "how": "created",
     "player": 1,
-    "turn": 10,
+    "turn": 11,
     "zone": "hand"
    },
    {
@@ -1811,27 +2026,19 @@
     "for": "Played Bellows Breath from hand.",
     "how": "pulled",
     "player": 1,
-    "turn": 12,
-    "zone": "hand"
-   },
-   {
-    "card": "Stupefy",
-    "for": "c moved Stupefy from hand to trash.",
-    "how": "created",
-    "player": 1,
-    "turn": 12,
+    "turn": 13,
     "zone": "hand"
    },
    {
     "card": "Pyke, Returned",
     "for": "Hob moved Pyke, Returned from hand to trash.",
-    "how": "pulled",
+    "how": "created",
     "player": 2,
     "turn": 14,
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 26
+  "pulled_from_deck": 25
  },
  "inferred_decks": {
   "P1": {
@@ -2053,16 +2260,16 @@
   "P2": "Agony's Embrace"
  },
  "log_events": 257,
- "log_events_consumed": 244,
- "out_of_order_matches": 3,
+ "log_events_consumed": 251,
+ "out_of_order_matches": 1,
  "players": [
   "c",
   "Hob"
  ],
- "readiness_fixes": 0,
+ "readiness_fixes": 1,
  "result": {
   "engine_scores": [
-   5,
+   6,
    6
   ],
   "engine_winner": 1,
@@ -2073,46 +2280,18 @@
   "reason": "desync cap (log score 8-7)",
   "turns": 14
  },
- "rewinds_applied": 2,
+ "rewinds_applied": 3,
  "rewinds_ignored": 1,
  "rune_swaps": 0,
- "score_mismatch_examples": [
-  {
-   "engine_score": 2,
-   "event_index": 126,
-   "log_score": 3,
-   "text": "c scored 1 at turn start. Score: 2 → 3.",
-   "turn": 8
-  },
-  {
-   "engine_score": 2,
-   "event_index": 155,
-   "log_score": 4,
-   "text": "c scored 1 at turn start. Score: 3 → 4.",
-   "turn": 10
-  },
-  {
-   "engine_score": 4,
-   "event_index": 177,
-   "log_score": 5,
-   "text": "c scored 1 at turn start. Score: 4 → 5.",
-   "turn": 12
-  },
-  {
-   "engine_score": 5,
-   "event_index": 227,
-   "log_score": 6,
-   "text": "c scored 1 at turn start. Score: 5 → 6.",
-   "turn": 14
-  }
- ],
- "score_mismatches": 4,
+ "score_mismatch_examples": [],
+ "score_mismatches": 0,
  "seed": 1,
- "silent_passes": 71,
+ "silent_passes": 82,
+ "soft_dropped": 4,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_d888cb6cbabd56e082dbeca322adf94b.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 1.191503256,
-  "seconds": 1.216029406
+  "bot_seconds": 1.6551675400000005,
+  "seconds": 1.687941007
  }
 }

@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 15,
+  "agree": 11,
   "by_kind": {
    "ability": {
-    "agree": 3,
+    "agree": 1,
     "n": 5,
-    "rate": 0.6
+    "rate": 0.2
    },
    "battlefield": {
     "agree": 1,
@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 4,
+    "agree": 3,
     "n": 6,
-    "rate": 0.6666666666666666
+    "rate": 0.5
    },
    "move": {
-    "agree": 2,
+    "agree": 1,
     "n": 4,
-    "rate": 0.5
+    "rate": 0.25
    },
    "pass_focus": {
     "agree": 3,
@@ -37,16 +37,16 @@
    }
   },
   "clean_boundary": {
-   "agree": 11,
+   "agree": 7,
    "n": 22,
-   "rate": 0.5
+   "rate": 0.3181818181818182
   },
   "in_flight": {
    "agree": 4,
    "n": 4
   },
   "n": 26,
-  "rate": 0.5769230769230769
+  "rate": 0.4230769230769231
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 29,
@@ -58,6 +58,7 @@
  "decisions_compared": 26,
  "decisions_human_known": 61,
  "decisions_trivial": 7,
+ "deck_tops": 1,
  "desync_causes": {
   "moved: no such unit on board (not played / already gone)": 1,
   "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 1,
@@ -120,6 +121,7 @@
    "event_text": "MissSophia played Coalesced Energy from hand to base.",
    "options": [
     "End turn",
+    "Play Treasure Hunter to base",
     "Use Runeblade Anvil"
    ],
    "phase": "MainPhase",
@@ -141,7 +143,8 @@
     "Play Baron Nashor to Protective Sands",
     "Play Bewitching Spirit to base",
     "Play Bewitching Spirit to Protective Sands",
-    "Play Gold to base",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Protective Sands",
     "Use Gold",
     "Use Gold",
     "Use Bloodharbor Ripper on Vex, Apathetic",
@@ -166,7 +169,8 @@
     "Play Baron Nashor to Protective Sands",
     "Play Bewitching Spirit to base",
     "Play Bewitching Spirit to Protective Sands",
-    "Play Gold to base",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Protective Sands",
     "Use Gold",
     "Use Gold",
     "Use Bloodharbor Ripper on Vex, Apathetic",
@@ -186,8 +190,8 @@
     "End turn",
     "Play Baron Nashor to base",
     "Play Bewitching Spirit to base",
+    "Play Overzealous Fan to base",
     "Play Vex, Apathetic to base",
-    "Play Gold to base",
     "Use Gold",
     "Use Gold",
     "Use Runeblade Anvil"
@@ -206,8 +210,8 @@
     "End turn",
     "Play Baron Nashor to base",
     "Play Bewitching Spirit to base",
+    "Play Overzealous Fan to base",
     "Play Vex, Apathetic to base",
-    "Play Gold to base",
     "Use Gold",
     "Use Gold",
     "Use Runeblade Anvil"
@@ -264,7 +268,7 @@
    "event_text": "Tab moved Pyke, Dockside Butcher to base.",
    "human": {
     "index": 4,
-    "share": 0.26,
+    "share": 0.03,
     "text": "Play Pyke, Dockside Butcher to base"
    },
    "kind": "play",
@@ -272,21 +276,55 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.52,
+     "share": 0.72,
      "text": "End turn"
     },
     {
-     "index": 4,
-     "share": 0.26,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 1,
+     "share": 0.21,
+     "text": "Play Bewitching Spirit to base"
     },
     {
-     "index": 1,
-     "share": 0.2,
-     "text": "Play Bewitching Spirit to base"
+     "index": 2,
+     "share": 0.03,
+     "text": "Play Treasure Hunter to base"
     }
    ],
    "turn": 2
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 46,
+   "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
+   "human": {
+    "index": 10,
+    "share": 0.2,
+    "text": "Use Bloodharbor Ripper on Pyke, Dockside Butcher"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.39,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.32,
+     "text": "End turn"
+    },
+    {
+     "index": 10,
+     "share": 0.2,
+     "text": "Use Bloodharbor Ripper on Pyke, Dockside Butcher"
+    }
+   ],
+   "turn": 4
   },
   {
    "bot": {
@@ -298,7 +336,7 @@
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.11,
+    "share": 0.09,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
@@ -306,18 +344,47 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.46,
+     "share": 0.53,
      "text": "Play Falling Star"
     },
     {
      "index": 0,
-     "share": 0.32,
+     "share": 0.36,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.11,
+     "share": 0.09,
      "text": "Play Bewitching Spirit to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 57,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.49,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.51,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.49,
+     "text": "End turn"
     }
    ],
    "turn": 4
@@ -340,18 +407,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.48,
+     "share": 0.34,
      "text": "Move Bewitching Spirit to Void Gate"
     },
     {
-     "index": 2,
-     "share": 0.27,
-     "text": "Move Bewitching Spirit to Protective Sands"
+     "index": 7,
+     "share": 0.25,
+     "text": "Play Falling Star"
     },
     {
-     "index": 6,
-     "share": 0.12,
-     "text": "Play Falling Star"
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Bewitching Spirit to Protective Sands"
     }
    ],
    "turn": 6
@@ -365,8 +432,8 @@
    "decision": 80,
    "event_text": "Played Falling Star from hand.",
    "human": {
-    "index": 6,
-    "share": 0.13,
+    "index": 7,
+    "share": 0.26,
     "text": "Play Falling Star"
    },
    "kind": "play",
@@ -374,18 +441,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.46,
+     "share": 0.32,
      "text": "Move Bewitching Spirit to Void Gate"
     },
     {
-     "index": 2,
+     "index": 7,
      "share": 0.26,
-     "text": "Move Bewitching Spirit to Protective Sands"
+     "text": "Play Falling Star"
     },
     {
-     "index": 6,
-     "share": 0.13,
-     "text": "Play Falling Star"
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Bewitching Spirit to Protective Sands"
     }
    ],
    "turn": 6
@@ -400,7 +467,7 @@
    "event_text": "Tab moved Bewitching Spirit to Protective Sands.",
    "human": {
     "index": 2,
-    "share": 0.29,
+    "share": 0.24,
     "text": "Move Bewitching Spirit to Protective Sands"
    },
    "kind": "move",
@@ -408,17 +475,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.46,
+     "share": 0.35,
      "text": "Move Bewitching Spirit to Void Gate"
     },
     {
      "index": 2,
-     "share": 0.29,
+     "share": 0.24,
      "text": "Move Bewitching Spirit to Protective Sands"
     },
     {
      "index": 0,
-     "share": 0.11,
+     "share": 0.19,
      "text": "End turn"
     }
    ],
@@ -426,33 +493,33 @@
   },
   {
    "bot": {
-    "index": 6,
+    "index": 8,
     "text": "Play Vex, Apathetic to Protective Sands"
    },
    "clean_boundary": true,
    "decision": 94,
    "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
    "human": {
-    "index": 7,
-    "share": 0.16,
+    "index": 9,
+    "share": 0.1,
     "text": "Use Bloodharbor Ripper on Bewitching Spirit"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.48,
+     "index": 8,
+     "share": 0.43,
      "text": "Play Vex, Apathetic to Protective Sands"
     },
     {
-     "index": 7,
-     "share": 0.16,
-     "text": "Use Bloodharbor Ripper on Bewitching Spirit"
+     "index": 6,
+     "share": 0.13,
+     "text": "Play Treasure Hunter to Protective Sands"
     },
     {
      "index": 0,
-     "share": 0.11,
+     "share": 0.12,
      "text": "End turn"
     }
    ],
@@ -468,7 +535,7 @@
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.14,
+    "share": 0.13,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
@@ -476,17 +543,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.41,
+     "share": 0.47,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.32,
+     "index": 4,
+     "share": 0.36,
      "text": "Play Vex, Apathetic to base"
     },
     {
      "index": 2,
-     "share": 0.14,
+     "share": 0.13,
      "text": "Play Bewitching Spirit to base"
     }
    ],
@@ -494,68 +561,34 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Bewitching Spirit to Void Gate"
+    "index": 6,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 112,
    "event_text": "Tab moved Bewitching Spirit to Protective Sands.",
    "human": {
     "index": 2,
-    "share": 0.25,
+    "share": 0.18,
     "text": "Move Bewitching Spirit to Protective Sands"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 6,
+     "share": 0.27,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 1,
-     "share": 0.45,
+     "share": 0.26,
      "text": "Move Bewitching Spirit to Void Gate"
     },
     {
      "index": 2,
-     "share": 0.25,
+     "share": 0.18,
      "text": "Move Bewitching Spirit to Protective Sands"
-    },
-    {
-     "index": 6,
-     "share": 0.15,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 126,
-   "event_text": "Tab played Bewitching Spirit from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.16,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.81,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.16,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 2,
-     "share": 0.02,
-     "text": "Play Bewitching Spirit to Protective Sands"
     }
    ],
    "turn": 8
@@ -563,44 +596,147 @@
   {
    "bot": {
     "index": 3,
-    "text": "Play Vex, Apathetic to base"
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 123,
+   "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
+   "human": {
+    "index": 5,
+    "share": 0.19,
+    "text": "Use Bloodharbor Ripper on Bewitching Spirit"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.42,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.32,
+     "text": "End turn"
+    },
+    {
+     "index": 5,
+     "share": 0.19,
+     "text": "Use Bloodharbor Ripper on Bewitching Spirit"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 126,
+   "event_text": "Tab played Bewitching Spirit from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.07,
+    "text": "Play Bewitching Spirit to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.53,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.39,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.07,
+     "text": "Play Bewitching Spirit to base"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 155,
+   "event_text": "Tab moved Bewitching Spirit to Void Gate.",
+   "human": {
+    "index": 1,
+    "share": 0.26,
+    "text": "Move Bewitching Spirit to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.26,
+     "text": "Move Bewitching Spirit to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Move Bewitching Spirit to Protective Sands"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Bewitching Spirit to base"
    },
    "clean_boundary": true,
    "decision": 163,
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.19,
+    "share": 0.29,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.42,
+     "index": 2,
+     "share": 0.35,
+     "text": "Play Bewitching Spirit to base"
+    },
+    {
+     "index": 4,
+     "share": 0.31,
      "text": "Play Vex, Apathetic to base"
     },
     {
      "index": 0,
-     "share": 0.19,
+     "share": 0.29,
      "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.19,
-     "text": "Play Bewitching Spirit to base"
     }
    ],
    "turn": 10
   }
  ],
+ "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Tab",
  "forced_decisions": 56,
  "game": 1,
  "hand_fixes": {
-  "created": 1,
+  "created": 2,
   "list": [
    {
     "card": "Runeblade Anvil",
@@ -872,7 +1008,7 @@
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
- "rune_swaps": 0,
+ "rune_swaps": 5,
  "score_mismatch_examples": [
   {
    "engine_score": 3,
@@ -885,10 +1021,11 @@
  "score_mismatches": 1,
  "seed": 1,
  "silent_passes": 51,
+ "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_ekko_rl2_367528641b590c4c0d4cbb8212aaf5dc.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.708784817,
-  "seconds": 1.73232533
+  "bot_seconds": 1.2734226840000002,
+  "seconds": 1.292738611
  }
 }

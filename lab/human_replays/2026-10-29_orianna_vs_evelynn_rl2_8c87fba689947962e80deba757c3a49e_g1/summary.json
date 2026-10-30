@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 2,
  "agreement": {
-  "agree": 15,
+  "agree": 10,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,9 +11,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
-    "n": 2,
-    "rate": 1.0
+    "agree": 1,
+    "n": 3,
+    "rate": 0.3333333333333333
    },
    "move": {
     "agree": 2,
@@ -26,70 +26,57 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 8,
-    "n": 8,
-    "rate": 1.0
+    "agree": 4,
+    "n": 9,
+    "rate": 0.4444444444444444
    }
   },
   "clean_boundary": {
-   "agree": 12,
-   "n": 13,
-   "rate": 0.9230769230769231
+   "agree": 7,
+   "n": 14,
+   "rate": 0.5
   },
   "in_flight": {
    "agree": 3,
-   "n": 3
+   "n": 4
   },
-  "n": 16,
-  "rate": 0.9375
+  "n": 18,
+  "rate": 0.5555555555555556
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 21,
+ "bot_calls": 22,
  "bot_errors": 0,
- "bot_fallbacks": 5,
+ "bot_fallbacks": 4,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 141,
- "decisions_compared": 16,
- "decisions_human_known": 47,
- "decisions_trivial": 8,
+ "decisions": 150,
+ "decisions_compared": 18,
+ "decisions_human_known": 52,
+ "decisions_trivial": 10,
+ "deck_tops": 0,
  "desync_causes": {
   "equipped: engine asks P2 but the log's next action is by P1 (equipped)": 3,
   "equipped: no equip option for 'Boots of Swiftness' onto 'Evelynn, Entrancing'": 1,
-  "equipped: no equip option for 'Cloth Armor' onto 'Orianna, Exquisite'": 1,
   "hidden_card_placed: no hide option at 'Ornn's Forge'": 1,
   "moved: no such unit on board (not played / already gone)": 2,
   "moved: unit can move but not to 'Ornn's Forge'": 1,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 5,
-  "played: card in hand but not playable now (cost/timing)": 3,
-  "played: card playable but not to 'Ornn's Forge'": 1,
+  "played: card in hand but not playable now (cost/timing)": 2,
   "played: engine asks P1 but the log's next action is by P2 (played)": 1,
   "played: engine asks P2 but the log's next action is by P1 (played)": 2,
-  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
   {
-   "decision": 55,
-   "event_index": 39,
-   "event_kind": "played",
-   "event_text": "c played Helm of Suppression from hand to base.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "card in hand but not playable now (cost/timing)",
-   "turn": 4
-  },
-  {
-   "decision": 79,
+   "decision": 81,
    "event_index": 60,
    "event_kind": "played",
    "event_text": "c played Frigid Jewel from hand to base.",
    "options": [
     "End turn",
+    "Play Cloth Armor to base",
     "Hide Consult the Past"
    ],
    "phase": "MainPhase",
@@ -98,61 +85,7 @@
    "turn": 6
   },
   {
-   "decision": 80,
-   "event_index": 64,
-   "event_kind": "played",
-   "event_text": "Hob played Rengar, Trophy Hunter from hand to Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Ember Monk to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ember Monk, Evelynn, Entrancing to base",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Bandle Scouts' Academy",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Rengar, Trophy Hunter to Bandle Scouts' Academy",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Bandle Scouts' Academy",
-    "Play Tideturner to base",
-    "Play Tideturner to Bandle Scouts' Academy",
-    "Play Spirit Wheel to base",
-    "Play Boots of Swiftness to base",
-    "Play Challenge"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "card playable but not to 'Ornn's Forge'",
-   "turn": 7
-  },
-  {
-   "decision": 80,
-   "event_index": 65,
-   "event_kind": "passed_focus",
-   "event_text": "Hob passed focus at Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Ember Monk to base",
-    "Move Evelynn, Entrancing to base",
-    "Move Ember Monk, Evelynn, Entrancing to base",
-    "Play Bedeviling Stranger to base",
-    "Play Bedeviling Stranger to Bandle Scouts' Academy",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Rengar, Trophy Hunter to Bandle Scouts' Academy",
-    "Play Gemhand Hunter to base",
-    "Play Gemhand Hunter to Bandle Scouts' Academy",
-    "Play Tideturner to base",
-    "Play Tideturner to Bandle Scouts' Academy",
-    "Play Spirit Wheel to base",
-    "Play Boots of Swiftness to base",
-    "Play Challenge"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 7
-  },
-  {
-   "decision": 80,
+   "decision": 93,
    "event_index": 66,
    "event_kind": "equipped",
    "event_text": "c equipped Cloth Armor to Helm of Suppression.",
@@ -163,15 +96,15 @@
     "Move Ember Monk, Evelynn, Entrancing to base",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Bandle Scouts' Academy",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Rengar, Trophy Hunter to Bandle Scouts' Academy",
+    "Play Bedeviling Stranger to Ornn's Forge",
     "Play Gemhand Hunter to base",
     "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
     "Play Tideturner to base",
     "Play Tideturner to Bandle Scouts' Academy",
-    "Play Spirit Wheel to base",
-    "Play Boots of Swiftness to base",
-    "Play Challenge"
+    "Play Tideturner to Ornn's Forge",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -179,7 +112,7 @@
    "turn": 7
   },
   {
-   "decision": 80,
+   "decision": 93,
    "event_index": 67,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Ornn's Forge.",
@@ -190,15 +123,15 @@
     "Move Ember Monk, Evelynn, Entrancing to base",
     "Play Bedeviling Stranger to base",
     "Play Bedeviling Stranger to Bandle Scouts' Academy",
-    "Play Rengar, Trophy Hunter to base",
-    "Play Rengar, Trophy Hunter to Bandle Scouts' Academy",
+    "Play Bedeviling Stranger to Ornn's Forge",
     "Play Gemhand Hunter to base",
     "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
     "Play Tideturner to base",
     "Play Tideturner to Bandle Scouts' Academy",
-    "Play Spirit Wheel to base",
-    "Play Boots of Swiftness to base",
-    "Play Challenge"
+    "Play Tideturner to Ornn's Forge",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -206,7 +139,7 @@
    "turn": 7
   },
   {
-   "decision": 86,
+   "decision": 99,
    "event_index": 74,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Ornn's Forge.",
@@ -215,15 +148,15 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Orianna, Exquisite to base",
-    "Play Helm of Suppression to base",
     "Play Frigid Jewel to base",
+    "Play Cloth Armor to base",
     "Play Mask of Foresight to base",
     "Play Discipline",
     "Play Consult the Past",
+    "Play Stupefy targeting Rengar, Trophy Hunter",
     "Play Stupefy targeting Ember Monk",
     "Play Stupefy targeting Helm of Suppression",
     "Play Stupefy targeting Evelynn, Entrancing",
-    "Use Helm of Suppression",
     "Use Helm of Suppression"
    ],
    "phase": "MainPhase",
@@ -232,7 +165,7 @@
    "turn": 8
   },
   {
-   "decision": 90,
+   "decision": 103,
    "event_index": 75,
    "event_kind": "showdown",
    "event_text": "Hob ended showdown responses at Ornn's Forge.",
@@ -241,8 +174,10 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Frigid Jewel to base",
+    "Play Cloth Armor to base",
     "Play Mask of Foresight to base",
     "Play Discipline",
+    "Play Stupefy targeting Rengar, Trophy Hunter",
     "Play Stupefy targeting Ember Monk",
     "Play Stupefy targeting Helm of Suppression",
     "Play Stupefy targeting Orianna, Exquisite",
@@ -254,7 +189,7 @@
    "turn": 8
   },
   {
-   "decision": 90,
+   "decision": 103,
    "event_index": 80,
    "event_kind": "hidden_card_placed",
    "event_text": "c put a hidden card to Ornn's Forge.",
@@ -263,8 +198,10 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Frigid Jewel to base",
+    "Play Cloth Armor to base",
     "Play Mask of Foresight to base",
     "Play Discipline",
+    "Play Stupefy targeting Rengar, Trophy Hunter",
     "Play Stupefy targeting Ember Monk",
     "Play Stupefy targeting Helm of Suppression",
     "Play Stupefy targeting Orianna, Exquisite",
@@ -276,111 +213,30 @@
    "turn": 8
   },
   {
-   "decision": 114,
-   "event_index": 90,
-   "event_kind": "equipped",
-   "event_text": "c equipped Cloth Armor to The Ball.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (equipped)",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 91,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 98,
-   "event_kind": "played",
-   "event_text": "Played Consult the Past from Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 104,
-   "event_kind": "played",
-   "event_text": "Played Discipline from hand.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 112,
-   "event_kind": "equipped",
-   "event_text": "c equipped Cloth Armor to Orianna, Exquisite.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (equipped)",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 118,
-   "event_kind": "equipped",
-   "event_text": "Hob equipped Boots of Swiftness to Evelynn, Entrancing.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no equip option for 'Boots of Swiftness' onto 'Evelynn, Entrancing'",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 119,
-   "event_kind": "moved",
-   "event_text": "Hob moved Evelynn, Entrancing to Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Evelynn, Entrancing to base"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit can move but not to 'Ornn's Forge'",
-   "turn": 9
-  },
-  {
-   "decision": 114,
-   "event_index": 120,
+   "decision": 109,
+   "event_index": 89,
    "event_kind": "passed_focus",
    "event_text": "Hob passed focus at Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Evelynn, Entrancing to base"
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Bedeviling Stranger to base",
+    "Play Bedeviling Stranger to Bandle Scouts' Academy",
+    "Play Bedeviling Stranger to Ornn's Forge",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge",
+    "Play Punch First",
+    "Hide Bedeviling Stranger",
+    "Hide Tideturner"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -388,13 +244,224 @@
    "turn": 9
   },
   {
-   "decision": 114,
+   "decision": 122,
+   "event_index": 90,
+   "event_kind": "equipped",
+   "event_text": "c equipped Cloth Armor to The Ball.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (equipped)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 91,
+   "event_kind": "passed_focus",
+   "event_text": "c passed focus at Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 98,
+   "event_kind": "played",
+   "event_text": "Played Consult the Past from Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (played)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 104,
+   "event_kind": "played",
+   "event_text": "Played Discipline from hand.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (played)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 112,
+   "event_kind": "equipped",
+   "event_text": "c equipped Cloth Armor to Orianna, Exquisite.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (equipped)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 118,
+   "event_kind": "equipped",
+   "event_text": "Hob equipped Boots of Swiftness to Evelynn, Entrancing.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no equip option for 'Boots of Swiftness' onto 'Evelynn, Entrancing'",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 119,
+   "event_kind": "moved",
+   "event_text": "Hob moved Evelynn, Entrancing to Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "unit can move but not to 'Ornn's Forge'",
+   "turn": 9
+  },
+  {
+   "decision": 122,
+   "event_index": 120,
+   "event_kind": "passed_focus",
+   "event_text": "Hob passed focus at Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 9
+  },
+  {
+   "decision": 122,
    "event_index": 121,
    "event_kind": "showdown",
    "event_text": "c ended showdown responses at Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Evelynn, Entrancing to base"
+    "Move Rengar, Trophy Hunter to base",
+    "Move Evelynn, Entrancing to base",
+    "Play Gemhand Hunter to base",
+    "Play Gemhand Hunter to Bandle Scouts' Academy",
+    "Play Gemhand Hunter to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Bandle Scouts' Academy",
+    "Play Tideturner to Ornn's Forge",
+    "Play Overzealous Fan to base",
+    "Play Overzealous Fan to Bandle Scouts' Academy",
+    "Play Overzealous Fan to Ornn's Forge",
+    "Play Challenge"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -402,39 +469,7 @@
    "turn": 9
   },
   {
-   "decision": 120,
-   "event_index": 131,
-   "event_kind": "equipped",
-   "event_text": "c equipped Cloth Armor to Orianna, Exquisite.",
-   "options": [
-    "End turn",
-    "Move Helm of Suppression to Bandle Scouts' Academy",
-    "Move Helm of Suppression to Ornn's Forge",
-    "Move Orianna, Exquisite to Bandle Scouts' Academy",
-    "Move Orianna, Exquisite to Ornn's Forge",
-    "Move Helm of Suppression, Orianna, Exquisite to Bandle Scouts' Academy",
-    "Move Helm of Suppression, Orianna, Exquisite to Ornn's Forge",
-    "Play Mask of Foresight to base",
-    "Play Zhonya's Hourglass to base",
-    "Play Discipline",
-    "Play Consult the Past",
-    "Play Stupefy targeting Ember Monk",
-    "Play Stupefy targeting Helm of Suppression",
-    "Play Stupefy targeting Orianna, Exquisite",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Play Stupefy targeting Bedeviling Stranger",
-    "Play En Garde targeting Helm of Suppression",
-    "Play En Garde targeting Orianna, Exquisite",
-    "Use Helm of Suppression",
-    "Use Helm of Suppression"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no equip option for 'Cloth Armor' onto 'Orianna, Exquisite'",
-   "turn": 10
-  },
-  {
-   "decision": 123,
+   "decision": 131,
    "event_index": 134,
    "event_kind": "moved",
    "event_text": "c moved Frigid Jewel to Bandle Scouts' Academy.",
@@ -446,8 +481,8 @@
     "Move Orianna, Exquisite to Ornn's Forge",
     "Move Helm of Suppression, Orianna, Exquisite to Bandle Scouts' Academy",
     "Move Helm of Suppression, Orianna, Exquisite to Ornn's Forge",
-    "Play Mask of Foresight to base",
     "Play Consult the Past",
+    "Play Stupefy targeting Rengar, Trophy Hunter",
     "Play Stupefy targeting Ember Monk",
     "Play Stupefy targeting Helm of Suppression",
     "Play Stupefy targeting Orianna, Exquisite",
@@ -456,7 +491,6 @@
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Battle Preparations",
-    "Use Helm of Suppression",
     "Use Helm of Suppression"
    ],
    "phase": "MainPhase",
@@ -465,7 +499,7 @@
    "turn": 10
   },
   {
-   "decision": 123,
+   "decision": 131,
    "event_index": 135,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Bandle Scouts' Academy.",
@@ -477,8 +511,8 @@
     "Move Orianna, Exquisite to Ornn's Forge",
     "Move Helm of Suppression, Orianna, Exquisite to Bandle Scouts' Academy",
     "Move Helm of Suppression, Orianna, Exquisite to Ornn's Forge",
-    "Play Mask of Foresight to base",
     "Play Consult the Past",
+    "Play Stupefy targeting Rengar, Trophy Hunter",
     "Play Stupefy targeting Ember Monk",
     "Play Stupefy targeting Helm of Suppression",
     "Play Stupefy targeting Orianna, Exquisite",
@@ -487,7 +521,6 @@
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Battle Preparations",
-    "Use Helm of Suppression",
     "Use Helm of Suppression"
    ],
    "phase": "MainPhase",
@@ -496,7 +529,7 @@
    "turn": 10
   },
   {
-   "decision": 141,
+   "decision": 149,
    "event_index": 141,
    "event_kind": "played",
    "event_text": "Played Hold 'Em from hand.",
@@ -505,11 +538,6 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Ravenbloom Student to base",
-    "Play Stupefy targeting Ember Monk",
-    "Play Stupefy targeting Helm of Suppression",
-    "Play Stupefy targeting Orianna, Exquisite",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Play Stupefy targeting Bedeviling Stranger",
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Charm"
@@ -520,7 +548,7 @@
    "turn": 10
   },
   {
-   "decision": 141,
+   "decision": 149,
    "event_index": 144,
    "event_kind": "played",
    "event_text": "Played Defy from hand.",
@@ -529,11 +557,6 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Ravenbloom Student to base",
-    "Play Stupefy targeting Ember Monk",
-    "Play Stupefy targeting Helm of Suppression",
-    "Play Stupefy targeting Orianna, Exquisite",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Play Stupefy targeting Bedeviling Stranger",
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Charm"
@@ -544,7 +567,7 @@
    "turn": 10
   },
   {
-   "decision": 141,
+   "decision": 149,
    "event_index": 147,
    "event_kind": "moved",
    "event_text": "c moved Frigid Jewel to base.",
@@ -553,11 +576,6 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Ravenbloom Student to base",
-    "Play Stupefy targeting Ember Monk",
-    "Play Stupefy targeting Helm of Suppression",
-    "Play Stupefy targeting Orianna, Exquisite",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Play Stupefy targeting Bedeviling Stranger",
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Charm"
@@ -568,7 +586,7 @@
    "turn": 10
   },
   {
-   "decision": 141,
+   "decision": 149,
    "event_index": 162,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Ornn's Forge.",
@@ -577,11 +595,6 @@
     "Move Helm of Suppression to Bandle Scouts' Academy",
     "Move Helm of Suppression to Ornn's Forge",
     "Play Ravenbloom Student to base",
-    "Play Stupefy targeting Ember Monk",
-    "Play Stupefy targeting Helm of Suppression",
-    "Play Stupefy targeting Orianna, Exquisite",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Play Stupefy targeting Bedeviling Stranger",
     "Play En Garde targeting Helm of Suppression",
     "Play En Garde targeting Orianna, Exquisite",
     "Play Charm"
@@ -590,17 +603,240 @@
    "player": 1,
    "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 10
+  },
+  {
+   "decision": 149,
+   "event_index": 171,
+   "event_kind": "showdown",
+   "event_text": "Hob ended showdown responses at Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Helm of Suppression to Bandle Scouts' Academy",
+    "Move Helm of Suppression to Ornn's Forge",
+    "Play Ravenbloom Student to base",
+    "Play En Garde targeting Helm of Suppression",
+    "Play En Garde targeting Orianna, Exquisite",
+    "Play Charm"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 10
   }
  ],
- "desyncs": 25,
+ "desyncs": 23,
  "disagreements": [
   {
    "bot": {
-    "index": 2,
-    "text": "Move Helm of Suppression to Ornn's Forge"
+    "index": 1,
+    "text": "Play Orianna, Exquisite to base"
    },
    "clean_boundary": true,
-   "decision": 137,
+   "decision": 72,
+   "event_text": "c played The Ball from hand to Ornn's Forge.",
+   "human": {
+    "index": 4,
+    "share": 0.28,
+    "text": "Play The Ball to Ornn's Forge"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.29,
+     "text": "Play Orianna, Exquisite to base"
+    },
+    {
+     "index": 4,
+     "share": 0.28,
+     "text": "Play The Ball to Ornn's Forge"
+    },
+    {
+     "index": 5,
+     "share": 0.13,
+     "text": "Play Frigid Jewel to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Hide Consult the Past"
+   },
+   "clean_boundary": true,
+   "decision": 82,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.32,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.38,
+     "text": "Hide Consult the Past"
+    },
+    {
+     "index": 0,
+     "share": 0.32,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.3,
+     "text": "Play Cloth Armor to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Consult the Past"
+   },
+   "clean_boundary": false,
+   "decision": 124,
+   "event_text": "c equipped Cloth Armor to Orianna, Exquisite.",
+   "human": {
+    "index": 12,
+    "share": 0.0,
+    "text": "Play Cloth Armor targeting Orianna, Exquisite"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.48,
+     "text": "Play Consult the Past"
+    },
+    {
+     "index": 0,
+     "share": 0.18,
+     "text": "Pass"
+    },
+    {
+     "index": 11,
+     "share": 0.18,
+     "text": "Play Cloth Armor targeting Helm of Suppression"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 129,
+   "event_text": "c played Zhonya's Hourglass from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.13,
+    "text": "Play Zhonya's Hourglass to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.6,
+     "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+    },
+    {
+     "index": 7,
+     "share": 0.13,
+     "text": "Play Zhonya's Hourglass to base"
+    },
+    {
+     "index": 9,
+     "share": 0.13,
+     "text": "Play Consult the Past"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 132,
+   "event_text": "Played Battle Preparations from hand.",
+   "human": {
+    "index": 16,
+    "share": 0.26,
+    "text": "Play Battle Preparations"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.54,
+     "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+    },
+    {
+     "index": 16,
+     "share": 0.26,
+     "text": "Play Battle Preparations"
+    },
+    {
+     "index": 7,
+     "share": 0.11,
+     "text": "Play Consult the Past"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 138,
+   "event_text": "Played Consult the Past from hand.",
+   "human": {
+    "index": 7,
+    "share": 0.1,
+    "text": "Play Consult the Past"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.68,
+     "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Helm of Suppression to Ornn's Forge"
+    },
+    {
+     "index": 7,
+     "share": 0.1,
+     "text": "Play Consult the Past"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 145,
    "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
    "human": {
     "index": 4,
@@ -611,14 +847,48 @@
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.76,
+     "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+    },
+    {
      "index": 2,
-     "share": 0.9,
+     "share": 0.22,
      "text": "Move Helm of Suppression to Ornn's Forge"
     },
     {
+     "index": 0,
+     "share": 0.01,
+     "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 150,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.02,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
      "index": 1,
-     "share": 0.07,
+     "share": 0.59,
      "text": "Move Helm of Suppression to Bandle Scouts' Academy"
+    },
+    {
+     "index": 2,
+     "share": 0.37,
+     "text": "Move Helm of Suppression to Ornn's Forge"
     },
     {
      "index": 0,
@@ -629,12 +899,13 @@
    "turn": 10
   }
  ],
+ "effect_lines": 1,
  "exported_records": 0,
  "first_player": "c",
- "forced_decisions": 65,
+ "forced_decisions": 69,
  "game": 1,
  "hand_fixes": {
-  "created": 2,
+  "created": 1,
   "list": [
    {
     "card": "Zhonya's Hourglass",
@@ -677,19 +948,19 @@
     "zone": "hand"
    },
    {
-    "card": "Helm of Suppression",
-    "for": "c played Helm of Suppression from hand to base.",
-    "how": "created",
+    "card": "Frigid Jewel",
+    "for": "c played Frigid Jewel from hand to base.",
+    "how": "pulled",
     "player": 1,
     "turn": 4,
     "zone": "hand"
    },
    {
-    "card": "Frigid Jewel",
-    "for": "c played Frigid Jewel from hand to base.",
+    "card": "Cloth Armor",
+    "for": "c equipped Cloth Armor to Helm of Suppression.",
     "how": "pulled",
     "player": 1,
-    "turn": 5,
+    "turn": 6,
     "zone": "hand"
    },
    {
@@ -701,11 +972,19 @@
     "zone": "hand"
    },
    {
+    "card": "Cloth Armor",
+    "for": "c equipped Cloth Armor to Helm of Suppression.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 6,
+    "zone": "hand"
+   },
+   {
     "card": "Punch First",
     "for": "Played Punch First from hand.",
     "how": "pulled",
     "player": 2,
-    "turn": 8,
+    "turn": 7,
     "zone": "hand"
    },
    {
@@ -733,14 +1012,6 @@
     "zone": "hand"
    },
    {
-    "card": "Sneaky Deckhand",
-    "for": "Hob played Sneaky Deckhand from hand to base.",
-    "how": "pulled",
-    "player": 2,
-    "turn": 9,
-    "zone": "hand"
-   },
-   {
     "card": "Zhonya's Hourglass",
     "for": "c played Zhonya's Hourglass from hand to base.",
     "how": "pulled",
@@ -757,10 +1028,26 @@
     "zone": "hand"
    },
    {
+    "card": "K'Sante, Courageous",
+    "for": "Hob moved K'Sante, Courageous from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 10,
+    "zone": "hand"
+   },
+   {
     "card": "Battle Preparations",
     "for": "Played Battle Preparations from hand.",
     "how": "pulled",
     "player": 1,
+    "turn": 10,
+    "zone": "hand"
+   },
+   {
+    "card": "Sneaky Deckhand",
+    "for": "Hob played Sneaky Deckhand from hand to base.",
+    "how": "pulled",
+    "player": 2,
     "turn": 10,
     "zone": "hand"
    },
@@ -773,7 +1060,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 15
+  "pulled_from_deck": 18
  },
  "inferred_decks": {
   "P1": {
@@ -967,7 +1254,7 @@
   "P2": "Agony's Embrace"
  },
  "log_events": 205,
- "log_events_consumed": 164,
+ "log_events_consumed": 175,
  "out_of_order_matches": 7,
  "players": [
   "c",
@@ -976,64 +1263,58 @@
  "readiness_fixes": 3,
  "result": {
   "engine_scores": [
-   2,
-   5
+   1,
+   8
   ],
-  "engine_winner": 1,
+  "engine_winner": 2,
   "log_scores": [
    5,
    4
   ],
-  "reason": "desync cap (log score 5-4)",
-  "turns": 10
+  "reason": "P2 reached 8 points",
+  "turns": 11
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 1,
- "rune_swaps": 0,
+ "rune_swaps": 17,
  "score_mismatch_examples": [
   {
-   "engine_score": 5,
-   "event_index": 107,
-   "log_score": 6,
-   "text": "Hob set score to 6. (+2)",
+   "engine_score": 6,
+   "event_index": 82,
+   "log_score": 4,
+   "text": "Hob scored 1 at turn start. Score: 3 → 4.",
    "turn": 9
   },
   {
-   "engine_score": 5,
+   "engine_score": 6,
    "event_index": 108,
    "log_score": 2,
    "text": "Hob set score to 2. (-4)",
    "turn": 9
   },
   {
-   "engine_score": 5,
+   "engine_score": 6,
    "event_index": 109,
    "log_score": 3,
    "text": "Hob set score to 3. (+1)",
    "turn": 9
   },
   {
-   "engine_score": 5,
-   "event_index": 159,
-   "log_score": 6,
-   "text": "Hob set score to 6. (+2)",
-   "turn": 10
-  },
-  {
-   "engine_score": 5,
+   "engine_score": 6,
    "event_index": 161,
    "log_score": 4,
    "text": "Hob set score to 4. (-2)",
    "turn": 10
   }
  ],
- "score_mismatches": 5,
+ "score_mismatches": 4,
  "seed": 1,
- "silent_passes": 34,
+ "silent_passes": 35,
+ "soft_dropped": 1,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_orianna_vs_evelynn_rl2_8c87fba689947962e80deba757c3a49e.json",
- "stop_reason": "desync cap",
+ "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 0.9936265399999998,
-  "seconds": 1.010459682
+  "bot_seconds": 0.692889451,
+  "seconds": 0.70630418
  }
 }
