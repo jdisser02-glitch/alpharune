@@ -235,10 +235,11 @@ GameResult GameRunner::run() {
             {"turns", result.total_turns}, {"decisions", result.total_decisions},
             {"reason", result.termination_reason}};
         std::filesystem::create_directories(config_.json_replay_dir);
-        if (review)
+        if (review) {
             review->finishGame(engine.state(), std::move(review_lines));
             review->finish(header, config_.json_replay_dir + "/game_" +
                                    std::to_string(config_.game_index + 1) + ".json");
+        }
         std::lock_guard<std::mutex> lock(results_.console_mutex);
         std::ofstream(config_.json_replay_dir + "/games.ndjson", std::ios::app)
             << header.dump() << "\n";
