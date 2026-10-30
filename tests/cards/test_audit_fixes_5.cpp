@@ -505,12 +505,17 @@ TEST_F(AuditFix5Test, IvernNurturer_EmptyDeckNoop) {
 
 // ─── [644] Lillia, Fae Fawn ──────────────────────────────────────────────────
 
-// WhenIMove: creates a 3-Might Sprite token with [Temporary] at the unit's
-// current (post-move) location.
-TEST_F(AuditFix5Test, Lillia_MoveCreatesSpriteToken) {
+// "When I move from a location, play a 3 [M] Sprite unit token with
+// [Temporary] there." The token is played where Lillia moved FROM (the
+// trigger manager records it in `__moved_from_bf`: -1 = a base), and it is
+// not "ready" like the Bashful Bloom legend's Sprite, so it enters exhausted
+// (CR 143.4). Regression: the engine used to play it ready at her destination,
+// which put a 3M body into every showdown she opened.
+TEST_F(AuditFix5Test, Lillia_MoveFromBaseCreatesExhaustedSpriteAtBase) {
     EffectExecutor exec(state, events, card_db);
     BattlefieldId bf = 1;
-    auto lillia = addUnit(P1, kLillia, 3, /*at_bf=*/static_cast<int>(bf));
+    auto lillia = addUnit(P1, kLillia, 3, /*at_bf=*/static_cast<int>(bf));  // just arrived
+    state.getObject(lillia).card_counters["__moved_from_bf"] = -1;        // ... from base
 
     fireTriggerAs(kLillia, P1, lillia, TriggerType::WhenIMove, exec);
 
@@ -519,18 +524,35 @@ TEST_F(AuditFix5Test, Lillia_MoveCreatesSpriteToken) {
     auto& t = state.getObject(token);
     EXPECT_EQ(t.base_might, 3);
     EXPECT_TRUE(t.hasKeyword(Keyword::Temporary));
-    // Token spawns "there" — same battlefield Lillia is now at.
     ASSERT_TRUE(t.location.has_value());
-    EXPECT_TRUE(std::holds_alternative<BattlefieldLocation>(*t.location));
-    EXPECT_EQ(std::get<BattlefieldLocation>(*t.location).id, bf);
+    ASSERT_TRUE(std::holds_alternative<BaseLocation>(*t.location)) << "'there' is where she moved from";
+    EXPECT_EQ(std::get<BaseLocation>(*t.location).player, P1);
+    EXPECT_TRUE(t.is_exhausted) << "a token that is not played 'ready' enters exhausted";
+    // Nothing joined her at the destination.
+    EXPECT_TRUE(state.unitsAt(BattlefieldLocation{bf}, P1).size() == 1);
 }
 
-// Fallback: if the source has no location, the token spawns at the
-// controller's base.
-TEST_F(AuditFix5Test, Lillia_NoLocationFallsBackToBase) {
+// Moving between battlefields: the Sprite stays behind at the battlefield left.
+TEST_F(AuditFix5Test, Lillia_MoveBetweenBattlefieldsLeavesSpriteBehind) {
     EffectExecutor exec(state, events, card_db);
-    auto lillia = addUnit(P1, kLillia, 3);  // at base
-    state.getObject(lillia).location.reset();
+    auto lillia = addUnit(P1, kLillia, 3, /*at_bf=*/1);
+    state.getObject(lillia).card_counters["__moved_from_bf"] = 0;
+
+    fireTriggerAs(kLillia, P1, lillia, TriggerType::WhenIMove, exec);
+
+    auto token = findTokenByName(P1, "Sprite");
+    ASSERT_NE(token, kInvalidId);
+    auto& t = state.getObject(token);
+    ASSERT_TRUE(t.location.has_value());
+    ASSERT_TRUE(std::holds_alternative<BattlefieldLocation>(*t.location));
+    EXPECT_EQ(std::get<BattlefieldLocation>(*t.location).id, 0);
+    EXPECT_TRUE(t.is_exhausted);
+}
+
+// No recorded origin (older snapshots): the token falls back to the base.
+TEST_F(AuditFix5Test, Lillia_NoRecordedOriginFallsBackToBase) {
+    EffectExecutor exec(state, events, card_db);
+    auto lillia = addUnit(P1, kLillia, 3, /*at_bf=*/1);
 
     fireTriggerAs(kLillia, P1, lillia, TriggerType::WhenIMove, exec);
 

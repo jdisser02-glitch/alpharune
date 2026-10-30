@@ -2343,14 +2343,22 @@ void GameEngine::resolvePermanent(const ChainItem& item) {
                 }
             }
             if (domain_to_pay.has_value()) {
+                // The label is descriptive only (Intent equality and the action
+                // vocab key on chosen_value); it names the card so a replay or
+                // a log reader can tell this yes/no from a card's own "you may".
+                const std::string prompt = "Accelerate: pay [1][" +
+                    std::string(*domain_to_pay == Domain::Count ? "A" : toString(*domain_to_pay)) +
+                    "] to have " + card.name + " enter ready?";
                 Intent decline;
                 decline.type = IntentType::MakeChoice;
                 decline.player = item.controller;
                 decline.chosen_value = 0;  // 0 = decline
+                decline.choice_label = "No — " + prompt;
                 Intent accept;
                 accept.type = IntentType::MakeChoice;
                 accept.player = item.controller;
                 accept.chosen_value = 1;   // 1 = pay [1][D] for Accelerate
+                accept.choice_label = "Yes — " + prompt;
                 std::vector<Intent> opts = {decline, accept};
 
                 state_.decision_index++;

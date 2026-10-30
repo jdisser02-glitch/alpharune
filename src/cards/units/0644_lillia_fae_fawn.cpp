@@ -15,20 +15,32 @@ namespace {
 class LilliaFaeFawn : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
+    // "When I move from a location, play a 3 [M] Sprite unit token with
+    // [Temporary] there." "There" is the location I moved FROM, which the
+    // trigger manager leaves in `__moved_from_bf` (a battlefield id, or -1
+    // for a base). The token is not "ready" (unlike the Bashful Bloom legend's
+    // Sprite), so it enters exhausted (CR 143.4). Recorded games agree: after
+    // "moved Lillia to <battlefield>" the client logs "played Sprite token to
+    // base" and "exhausted Sprite".
     TriggerType triggerType() const override { return TriggerType::WhenIMove; }
     void onTrigger(CardContext& ctx,
                    const std::vector<GameObjectId>& /*targets*/) override {
-        LocationId loc = BaseLocation{ctx.controller};  // fallback
+        LocationId loc = BaseLocation{ctx.controller};
         if (ctx.state.objectExists(ctx.source)) {
             const auto& self = ctx.state.getObject(ctx.source);
-            if (self.location.has_value()) loc = *self.location;
+            auto it = self.card_counters.find("__moved_from_bf");
+            if (it != self.card_counters.end() && it->second >= 0) {
+                const auto from_bf = static_cast<BattlefieldId>(it->second);
+                for (const auto& bf : ctx.state.battlefields)
+                    if (bf.id == from_bf) { loc = BattlefieldLocation{from_bf}; break; }
+            }
         }
         KeywordSet kw; kw.set(Keyword::Temporary);
         ctx.executor.createToken(ctx.controller, CardType::Unit, "Sprite",
                                  /*might=*/3, /*tags=*/{"Fae"}, kw, loc,
-                                 /*enter_ready=*/true);
-        ctx.events.logTrace("LILLIA: creates 3M Sprite token (Temporary) at "
-                            "move location");
+                                 /*enter_ready=*/false);
+        ctx.events.logTrace("LILLIA: plays a 3M Sprite token (Temporary) where "
+                            "she moved from");
     }
 private:
     const CardDef def_ = [] {

@@ -13,6 +13,7 @@
 
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <string>
 
 using namespace riftbound;
@@ -197,6 +198,22 @@ TEST_F(GuidedReplayTest, ActorLessSpellLinesFollowTheirPayment) {
     events.push_back(ev(1, "Alice paid 2E — Exhaust 2.", "Alice", "paid"));
     events.push_back(ev(1, "Bob played Tideturner from hand to base.", "Bob", "played",
                         {{"card", "Tideturner"}, {"from", "hand"}, {"to", "base"}}));
+    // The capture logged the play before its payment: Bob's runes, Bob's Gold
+    // token, then the spell's effect — Bob's spell.
+    events.push_back(ev(1, "Played Cull the Weak from hand.", "Alice", "played",
+                        {{"card", "Cull the Weak"}, {"from", "hand"}, {"actor_inferred", true}}));
+    events.push_back(ev(1, "Bob exhausted 1 Chaos rune.", "Bob", "exhausted", {{"amount", 1}, {"rune", "Chaos"}}));
+    events.push_back(ev(1, "Bob exhausted 1 Calm rune.", "Bob", "exhausted", {{"amount", 1}, {"rune", "Calm"}}));
+    events.push_back(ev(1, "Bob used a Gold token.", "Bob", "token_used"));
+    events.push_back(ev(1, "Alice moved Scuttle Crab from base to trash.", "Alice", "killed",
+                        {{"card", "Scuttle Crab"}, {"from", "base"}, {"to", "trash"}}));
+    // Payment lines that lead into another play belong to that play, not to
+    // the actor-less spell before them.
+    events.push_back(ev(1, "Played Gust from hand.", "Alice", "played",
+                        {{"card", "Gust"}, {"from", "hand"}, {"actor_inferred", true}}));
+    events.push_back(ev(1, "Bob exhausted 1 Chaos rune.", "Bob", "exhausted", {{"amount", 1}, {"rune", "Chaos"}}));
+    events.push_back(ev(1, "Bob played Astral Heron from hand to base.", "Bob", "played",
+                        {{"card", "Astral Heron"}, {"from", "hand"}, {"to", "base"}}));
     file["games"][0]["events"] = {0, static_cast<int>(events.size())};
 
     auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
@@ -213,6 +230,110 @@ TEST_F(GuidedReplayTest, ActorLessSpellLinesFollowTheirPayment) {
     EXPECT_TRUE(line("Rebuke").actor_uncertain);
     EXPECT_EQ(line("Tideturner").actor, "Bob");
     EXPECT_FALSE(line("Tideturner").actor_inferred);
+    EXPECT_EQ(line("Cull the Weak").actor, "Bob");
+    EXPECT_FALSE(line("Cull the Weak").actor_uncertain);
+    EXPECT_EQ(line("Gust").actor, "Alice");
+    EXPECT_TRUE(line("Gust").actor_uncertain);
+}
+
+TEST_F(GuidedReplayTest, CaptureArtefactsAreDroppedOrFlagged) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // The site repeated the move line (same second, flagged by the importer).
+    nlohmann::json dup_move = events[14];
+    dup_move["repeat_of_previous"] = true;
+    events.insert(events.begin() + 15, dup_move);
+    // A "to banished" move is an effect (a card banished from the trash), not a move.
+    events.insert(events.begin() + 19, ev(1, "Bob moved Scuttle Crab to banished.", "Bob", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "banished"}}));
+    // "played 3 Bomb tokens" is an effect's tokens, like the singular line the importer flags.
+    events.insert(events.begin() + 20, ev(1, "Bob played 3 Bomb tokens to Emperor's Dais.", "Bob", "played",
+                                          {{"card", "Bomb"}, {"amount", 3}, {"to", "Emperor's Dais"}, {"from", "hand"}}));
+    // "Bob ended their turn." written twice at the same second, around Alice's scoring line.
+    auto& first_end = events.back();
+    first_end["seconds"] = 183;
+    events.push_back(ev(1, "Alice scored 1 at turn start. Score: 0 → 1.", "Alice", "scored", {{"amount", 1}, {"score_to", 1}}));
+    events.push_back(ev(1, "Bob ended their turn.", "Bob", "ended_turn", {{"seconds", 183}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    int moves = 0, ends_by_bob = 0;
+    bool bombs_are_tokens = false;
+    for (const auto& e : game.events) {
+        if (e.kind == "moved" && e.to == "Emperor's Dais") ++moves;
+        if (e.kind == "ended_turn" && e.actor == "Bob") ++ends_by_bob;
+        if (e.kind == "played" && e.card == "Bomb") bombs_are_tokens = e.token;
+    }
+    EXPECT_EQ(moves, 1) << "the repeated move line is dropped";
+    EXPECT_EQ(ends_by_bob, 2) << "the repeated end-of-turn line is dropped";
+    EXPECT_TRUE(bombs_are_tokens);
+
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    for (auto id : d2.deck.main_deck) EXPECT_NE(db.get(id).name, "Bomb") << "token lines do not feed the deck";
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    EXPECT_EQ(s["desyncs"].get<int>(), 0) << s["desync_list"].dump(1);
+    EXPECT_EQ(s["result"]["engine_scores"][1].get<int>(), 1) << s.dump(1);
+}
+
+TEST_F(GuidedReplayTest, AccelerateFollowsTheReadiedLine) {
+    // Bob plays Reckless Innovator ([Accelerate]) and the capture shows the
+    // [1][C]: a rune exhausted, a rune recycled, "Bob readied Reckless
+    // Innovator" — so the unit can move to Emperor's Dais this very turn.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    events.erase(events.begin() + 14, events.end());
+    for (auto e : {
+             ev(1, "Bob paid 3E — Exhaust 3.", "Bob", "paid", {{"energy", 3}}),
+             ev(1, "Bob played Reckless Innovator from hand to base.", "Bob", "played",
+                {{"card", "Reckless Innovator"}, {"from", "hand"}, {"to", "base"}}),
+             ev(1, "Bob exhausted 1 Chaos rune.", "Bob", "exhausted", {{"amount", 1}, {"rune", "Chaos"}}),
+             ev(1, "Bob recycled 1 Chaos rune.", "Bob", "recycled", {{"amount", 1}, {"rune", "Chaos"}}),
+             ev(1, "Bob readied Reckless Innovator.", "Bob", "readied", {{"card", "Reckless Innovator"}}),
+             ev(1, "Bob moved Reckless Innovator to Emperor's Dais.", "Bob", "moved",
+                {{"card", "Reckless Innovator"}, {"to", "Emperor's Dais"}, {"battlefield", "Emperor's Dais"}}),
+             ev(1, "Bob passed focus at Emperor's Dais.", "Bob", "passed_focus", {{"battlefield", "Emperor's Dais"}}),
+             ev(1, "Alice ended showdown responses at Emperor's Dais.", "Alice", "showdown", {{"battlefield", "Emperor's Dais"}}),
+             ev(1, "Bob conquered Emperor's Dais and scored 1.", "Bob", "conquered", {{"battlefield", "Emperor's Dais"}, {"amount", 1}}),
+             ev(1, "Bob ended their turn.", "Bob", "ended_turn"),
+         })
+        events.push_back(e);
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    const auto out = std::filesystem::temp_directory_path() / "riftbound_guided_accelerate_test";
+    std::filesystem::remove_all(out);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    opts.out_dir = out.string();
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    const auto& s = res.summary;
+    EXPECT_EQ(s["desyncs"].get<int>(), 0) << s["desync_list"].dump(1);
+    EXPECT_EQ(s["result"]["engine_scores"][1].get<int>(), 1) << s.dump(1);
+    EXPECT_EQ(s["readiness_fixes"].get<int>(), 0) << "the unit entered ready by itself, no god-mode ready";
+
+    // The Accelerate yes/no was answered "yes" from the log, not by default.
+    std::ifstream in(out / "game_1.json");
+    ASSERT_TRUE(in.good());
+    nlohmann::json replay;
+    in >> replay;
+    bool seen = false;
+    for (const auto& f : replay["frames"]) {
+        if (!f.contains("options")) continue;
+        for (size_t i = 0; i < f["options"].size(); ++i) {
+            const std::string o = f["options"][i].get<std::string>();
+            if (o.rfind("Yes — Accelerate", 0) != 0) continue;
+            seen = true;
+            EXPECT_EQ(f["human_choice"].get<int>(), static_cast<int>(i)) << f.dump(1);
+        }
+    }
+    EXPECT_TRUE(seen) << "no Accelerate decision was offered";
+    std::filesystem::remove_all(out);
 }
 
 TEST_F(GuidedReplayTest, ARewindAfterTheDrawDoesNotUndoThePlay) {

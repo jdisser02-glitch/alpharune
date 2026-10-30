@@ -50,6 +50,7 @@ struct LogLine {
     int amount = 0;                 // mulligan: cards recycled; scored: points
     int score_to = -1;              // scored: the score after the line
     std::vector<std::string> cards; // revealed_hand / hid_hand
+    int seconds = -1;               // the line's timestamp in the capture, when known
     bool token = false;             // played: a token made by an effect, not a card from hand
     bool actor_inferred = false;    // the importer attributed an actor-less line to the capture player
     bool actor_uncertain = false;   // ... and nothing in the log says who really acted (see inferActors)
@@ -79,10 +80,13 @@ struct HumanGame {
 /// Actor-less lines ("Played Defy from hand.") are attributed to the capture
 /// player by the importer, whoever played them. Re-attribute each such play
 /// to the player whose payment line ("<X> paid 1E / 1P", "<X> exhausted 1
-/// Calm rune", "<X> exhausted <unit>") immediately precedes it, or, for a
-/// card played from a battlefield, to the player who hid a card there; lines
-/// with neither stay with the capture player and are marked `actor_uncertain`.
-/// Returns how many lines changed actor.
+/// Calm rune", "<X> exhausted <unit>") immediately precedes it, else to the
+/// player whose payment lines immediately follow it (some captures log the
+/// play before its payment) when those lines lead into the spell's effects
+/// rather than into another play, or, for a card played from a battlefield,
+/// to the player who hid a card there; lines with none of these stay with
+/// the capture player and are marked `actor_uncertain`. Returns how many
+/// lines changed actor.
 int inferActors(HumanGame& game);
 
 /// Parse `games[game_number]` of a human-game file. Throws std::runtime_error

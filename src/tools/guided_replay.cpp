@@ -169,14 +169,41 @@ HumanGame humanGameFromJson(const nlohmann::json& file, int game_number, const s
         if (l.kind == "mulligan") l.amount = jint(e, "recycled", 0);
         else l.amount = jint(e, "amount", 0);
         l.score_to = jint(e, "score_to", -1);
+        l.seconds = jint(e, "seconds", -1);
+        bool repeat = false;
         {
             auto t = e.find("token");
             l.token = t != e.end() && t->is_boolean() && t->get<bool>();
             auto a = e.find("actor_inferred");
             l.actor_inferred = a != e.end() && a->is_boolean() && a->get<bool>();
+            auto r = e.find("repeat_of_previous");
+            repeat = r != e.end() && r->is_boolean() && r->get<bool>();
         }
         if (e.contains("cards") && e["cards"].is_array())
             for (const auto& c : e["cards"]) if (c.is_string()) l.cards.push_back(c.get<std::string>());
+        // "<X> played 3 Bomb tokens to <bf>": an effect's tokens, like the
+        // singular "played Bomb token" the importer flags.
+        if (l.kind == "played" && !l.token && l.amount > 1 &&
+            l.text.find(" tokens") != std::string::npos)
+            l.token = true;
+        // Capture artefacts: a line repeated verbatim at the same second is
+        // genuine for runes, draws and tokens (two Mech tokens, two runes
+        // exhausted), never for a decision a player can only take once (the
+        // same unit moved to the same battlefield twice, the turn ended
+        // twice). A repeated "ended their turn" can also show up a few lines
+        // later, after the other player's scoring lines, still at the same
+        // second as the first.
+        if (repeat && (l.kind == "moved" || l.kind == "ended_turn" || l.kind == "passed_focus" ||
+                       l.kind == "showdown" || l.kind == "equipped" || l.kind == "hidden_card_placed" ||
+                       l.kind == "mulligan" || l.kind == "battlefield_locked"))
+            continue;
+        if (l.kind == "ended_turn") {
+            const LogLine* prev_end = nullptr;
+            for (auto it = g.events.rbegin(); it != g.events.rend(); ++it)
+                if (it->kind == "ended_turn") { prev_end = &*it; break; }
+            if (prev_end && prev_end->actor == l.actor && l.seconds >= 0 && prev_end->seconds == l.seconds)
+                continue;
+        }
         g.events.push_back(std::move(l));
     }
     if (g.first_player.empty()) {
@@ -202,6 +229,12 @@ bool isPaymentLine(const LogLine& e) {
     return false;
 }
 
+/// A payment line, or "<X> used a Gold token": what a capture that logs the
+/// play first writes right after it.
+bool isPaymentOrTokenLine(const LogLine& e) {
+    return isPaymentLine(e) || (e.kind == "token_used" && !e.actor.empty() && e.actor != "both");
+}
+
 bool isZoneWord(const std::string& s) {
     const std::string n = normalizeName(s);
     return n.empty() || n == "hand" || n == "trash" || n == "deck" || n == "banished" ||
@@ -225,6 +258,25 @@ int inferActors(HumanGame& game) {
             if (!who.empty() && prev.actor != who) break;
             who = prev.actor;
             if (prev.kind == "paid" || isRuneLine(prev)) break;
+        }
+        // Some captures log the play first and its payment right after
+        // ("Played Cull the Weak from hand." / "W exhausted 1 Mind rune" / "W
+        // exhausted 1 Order rune" / "W used a Gold token" / the kills). The
+        // payer is the spell's player when the run of payment lines leads into
+        // the spell's effects or its resolution, not into another play (whose
+        // payment it would then be).
+        if (who.empty()) {
+            size_t j = i + 1;
+            std::string payer;
+            for (; j < ev.size() && j <= i + 4 && isPaymentOrTokenLine(ev[j]); ++j) {
+                if (!payer.empty() && ev[j].actor != payer) { payer.clear(); break; }
+                payer = ev[j].actor;
+            }
+            if (!payer.empty() && j < ev.size()) {
+                const LogLine& after = ev[j];
+                const bool another_play = after.kind == "played" && !after.token;
+                if (!another_play && !isPaymentOrTokenLine(after)) who = payer;
+            }
         }
         // A card played from a battlefield was hidden there by its player.
         if (who.empty() && !e.from.empty() && !isZoneWord(e.from)) {
@@ -297,6 +349,7 @@ bool fitsDomains(const CardDef& c, const CardDef& legend) {
 }
 
 bool isDeckCardType(const CardDef& c) {
+    if (c.super_type == SuperType::Token) return false;   // Bomb, Recruit, Sprite, ...
     return c.card_type == CardType::Unit || c.card_type == CardType::Spell ||
            c.card_type == CardType::Gear;
 }
@@ -778,6 +831,7 @@ private:
     void consumeNonDecision(const LogLine& e, const GameState& s, const std::vector<Intent>& legal);
     int nextPendingDecision(const std::vector<Intent>& legal, const GameState& s);
     int findInWindow(int after, PlayerId player, const std::vector<Intent>& legal, const GameState& s, Match& m);
+    int focusPassInWindow(int from, PlayerId player, const std::vector<Intent>& legal, const GameState& s) const;
     std::vector<std::pair<std::string, int>> lookaheadNames() const;
     std::set<std::string> upcomingPlays(PlayerId player, int max_plays) const;
     std::string hiddenCardName(const LogLine& e) const;
@@ -832,7 +886,13 @@ bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal,
     // "played <X> token to <bf>" is an effect creating a token, not a play.
     if (k == "played") return e.isCardPlay();
     if (k == "moved") {
-        if (normalizeName(e.to) == "hand") return false;
+        // "moved X to hand / trash / banished / deck" are effects (a bounce, a
+        // sacrifice, a legend banishing a card from the trash), never a move.
+        {
+            const std::string to = normalizeName(e.to);
+            if (to == "hand" || to == "trash" || to == "deck" || to == "banished" || to == "banishment")
+                return false;
+        }
         // Gear "moves to base" by itself when the unit it was attached to
         // dies; a gear move is a decision only when the engine offers one
         // (gear turned into a unit). A unit's move (or a champion / Ambush
@@ -866,6 +926,17 @@ bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal,
     if (k == "exhausted" && !e.card.empty() && e.text.find(" rune") == std::string::npos) {
         for (const auto& in : legal)
             if (isAbilityType(in.type) && nameMatches(e.card, objName(s, in.ability_source))) return true;
+        // "<X> exhausted <legend>" is an activation. While the engine is in
+        // flight (a chain to resolve, the beginning phase) the ability is not
+        // offered yet: keep the line pending rather than consuming it as a
+        // state change, which would force the legend exhausted before its
+        // ability could be used.
+        if (const CardDef* d = resolveCard(db_, e.card); d && d->card_type == CardType::Legend) {
+            bool neutral = s.turn.phase == TurnPhase::Setup || s.turn.phase == TurnPhase::Mulligan;
+            for (const auto& in : legal)
+                if (in.type == IntentType::EndTurn || in.type == IntentType::PassFocus) { neutral = true; break; }
+            if (!neutral) return true;
+        }
     }
     return false;
 }
@@ -973,6 +1044,31 @@ int Driver::findInWindow(int after, PlayerId player, const std::vector<Intent>& 
         if (seatOf(e.actor) != player || !isDecisionEvent(e, legal, s)) continue;
         m = matchEvent(e, legal, s, player);
         if (m.index >= 0) return static_cast<int>(j);
+    }
+    return -1;
+}
+
+/// The engine asks `player` for focus at a showdown; the player's next
+/// unconsumed decision line, skipping the other player's lines and anything
+/// that is not a decision, is a focus pass at that same battlefield: its
+/// index, else -1. Scanning starts at `from` (a pending line of the other
+/// player) and ends at the turn's end.
+int Driver::focusPassInWindow(int from, PlayerId player, const std::vector<Intent>& legal, const GameState& s) const {
+    bool focus = false;
+    for (const auto& in : legal) focus |= in.type == IntentType::PassFocus;
+    if (!focus) return -1;
+    std::string bf;
+    for (const auto& b : s.battlefields)
+        if (b.showdown_in_progress || b.combat_in_progress) { bf = bfName(s, b.id); break; }
+    if (bf.empty()) return -1;
+    for (size_t j = static_cast<size_t>(from); j < game_.events.size(); ++j) {
+        if (consumed_[j]) continue;
+        const LogLine& e = game_.events[j];
+        if (e.kind == "ended_turn") break;
+        if (seatOf(e.actor) != player || !isDecisionEvent(e, legal, s)) continue;
+        if ((e.kind == "passed_focus" || e.kind == "showdown") && nameMatches(e.battlefield, bf))
+            return static_cast<int>(j);
+        return -1;   // the player's next decision is something else
     }
     return -1;
 }
@@ -1128,6 +1224,20 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
 
     if (yes || no) {
         const std::string prompt = label.substr(label.find(' ') == std::string::npos ? label.size() : label.find(' '));
+        // Accelerate: the capture logs the [1][D] as rune lines after the
+        // play and then "<X> readied <unit>"; without that line the unit
+        // entered exhausted.
+        if (has(prompt, "accelerate")) {
+            const auto a = prompt.find("to have "), b = prompt.find(" enter ready");
+            std::string unit = a != std::string::npos && b != std::string::npos && b > a + 8
+                ? prompt.substr(a + 8, b - a - 8) : std::string();
+            bool readied_unit = false;
+            for (const auto* e : upcomingLinesOf(who, 10, /*stop_at_decision=*/true))
+                if (e->kind == "readied" && !e->card.empty() && e->text.find(" rune") == std::string::npos &&
+                    (unit.empty() || nameMatches(e->card, unit)))
+                    readied_unit = true;
+            return yes ? (readied_unit ? 3 : 0) : 0;
+        }
         int hits = 0;
         if (has(prompt, "pay ")) hits += paid;
         if (has(prompt, "to base") || has(prompt, "recall")) hits += to_base;
@@ -1488,6 +1598,11 @@ void Driver::prefetch(GameEngine& engine, const std::vector<Intent>& legal) {
                 ++n;
                 const CardDef* d = resolveCard(db_, hiddenCardName(e));
                 if (d && isDeckCardType(*d)) fix(p, *d, ZoneType::Hand, keep, &e);
+            } else if (e.kind == "discarded" && normalizeName(e.from) == "hand") {
+                // "<X> moved Flame Chompers from hand to trash": the card is
+                // in the hand, so the engine's discard choice can pick it.
+                const CardDef* d = resolveCard(db_, e.card);
+                if (d && isDeckCardType(*d)) fix(p, *d, ZoneType::Hand, keep, &e);
             }
         }
     }
@@ -1596,6 +1711,19 @@ GuidedResult Driver::run() {
                     choice = m.index; markDecision(i); for (int a : m.also) markDecision(a); ev = &e; known = true; note = "actor settled by the engine's turn";
                     break;
                 } else {
+                    // The engine is at a focus decision and P's own next
+                    // decision line is the focus pass at this showdown's
+                    // battlefield, behind lines of the other player (a move
+                    // matched out of order opened the showdown early, or
+                    // the capture ordered the two players' lines differently):
+                    // that pass is this decision.
+                    if (const int fp = focusPassInWindow(i, P, legal, st); fp >= 0) {
+                        for (size_t k = 0; k < legal.size(); ++k)
+                            if (legal[k].type == IntentType::PassFocus) { choice = static_cast<int>(k); break; }
+                        markDecision(fp); ev = &game_.events[fp]; known = true; ++out_of_order_;
+                        note = "focus pass matched out of order";
+                        break;
+                    }
                     const int pl = passLike(legal);
                     if (pl >= 0) { choice = pl; ++silent_passes_; note = "pass (log continues with the other player)"; break; }
                     Match m;
