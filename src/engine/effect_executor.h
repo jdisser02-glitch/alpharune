@@ -349,6 +349,10 @@ public:
     bool hasRecordedChoice() const { return last_applied_choice_.has_value(); }
 
 private:
+    /// A card on the unit's controller's board / in their Legend Zone makes
+    /// it enter ready as it is played (Card::grantsEnterReadyTo).
+    bool enterReadyGranted(const GameObject& unit) const;
+
     GameState& state_;
     EventBus& events_;
     const CardDB& card_db_;

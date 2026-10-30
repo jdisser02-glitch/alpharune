@@ -16,9 +16,10 @@ class Defy : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
 
-    // Playable only if there is a counterable spell on the chain. The [4]
-    // cost gate is re-checked at resolve via the CardDB def lookup; only the
-    // printed energy cost is modeled ([A] = additional power, not tracked).
+    // Playable only if there is a counterable spell on the chain. The cost
+    // gate ("no more than [4] and no more than [A]": printed Energy <= 4 and
+    // printed Power <= 1) is checked at resolve via the CardDB def lookup
+    // (a GameState carries no card definitions).
     bool hasLegalTargets(const GameState& state, PlayerId /*controller*/) const override {
         for (auto it = state.chain.items.rbegin(); it != state.chain.items.rend(); ++it) {
             if (!it->is_spell) continue;
@@ -34,15 +35,18 @@ public:
         if (!top.is_spell) return;
         if (isUncounterable(ctx, top)) return;
 
-        // Cost gate: "no more than [4]". Read the static energy cost of the
-        // spell being countered from the CardDB.
-        int cost = 0;
+        // Cost gate: "costs no more than [4] and no more than [A]" — the
+        // printed Energy cost is at most 4 AND the printed Power cost at most 1.
+        int cost = 0, power = 0;
         if (top.card_def_id != kInvalidId) {
-            cost = ctx.executor.cardDB().get(top.card_def_id).energy_cost;
+            const auto& tdef = ctx.executor.cardDB().get(top.card_def_id);
+            cost = tdef.energy_cost;
+            power = tdef.power_cost;
         }
-        if (cost > 4) {
-            ctx.events.logTrace("DEFY: cannot counter — cost " +
-                                 std::to_string(cost) + " exceeds [4]");
+        if (cost > 4 || power > 1) {
+            ctx.events.logTrace("DEFY: cannot counter — cost [" + std::to_string(cost) +
+                                 "] + " + std::to_string(power) +
+                                 " Power exceeds [4][A]");
             return;  // illegal target; spell resolves normally
         }
 

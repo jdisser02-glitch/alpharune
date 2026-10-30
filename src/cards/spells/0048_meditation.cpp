@@ -15,35 +15,94 @@ namespace {
 class Meditation : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
+
+    // "As an additional cost to play this, you may exhaust a friendly unit.
+    //  If you do, draw 2. Otherwise, draw 1."
+    // The player decides whether to pay and WHICH ready friendly unit to
+    // exhaust (it matters: exhausting Riven, Broken Blade or Reckless
+    // Innovator triggers them). Like Ki Burst, the choices and the payment are
+    // made at finalization (kFinalizeResolve), through exhaustObject so "When
+    // I become exhausted" triggers fire. The exhausted unit is a cost, not a
+    // choice of the spell, so it is not recorded in the item's chosen objects.
+    unsigned choicesAtFinalization() const override { return kFinalizeResolve; }
+
+    static constexpr int kAskPayer = 20;     // the payer prompt is published
+    static constexpr int kPayerKnown = 21;   // the payer is in resume_data[kPayerSlot]
+    static constexpr int kPayerSlot = 6;
+    static constexpr int kPaidSlot = 7;      // 1 once the unit was exhausted
+
+    static std::vector<GameObjectId> readyFriendlyUnits(const GameState& state, PlayerId p) {
+        std::vector<GameObjectId> out;
+        for (const auto& [id, obj] : state.objects)
+            if (obj.isUnit() && obj.controller == p && obj.location.has_value() &&
+                !obj.is_exhausted)
+                out.push_back(id);
+        std::sort(out.begin(), out.end());
+        return out;
+    }
+
     void onResolve(CardContext& ctx,
                    const std::vector<GameObjectId>& /*targets*/) override {
-        auto find_ready_friendly = [&]() -> GameObjectId {
-            for (auto& [id, obj] : ctx.state.objects) {
-                if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-                if (!obj.location.has_value()) continue;
-                if (obj.is_exhausted) continue;
-                return id;
-            }
-            return kInvalidId;
-        };
-        auto still_legal = [&]() { return find_ready_friendly() != kInvalidId; };
-
+        if (!ctx.state.chain.resuming.has_value()) {
+            // Direct invocation (no chain): pay with the first ready unit.
+            const auto payers = readyFriendlyUnits(ctx.state, ctx.controller);
+            if (!payers.empty()) ctx.executor.exhaustObject(payers.front());
+            ctx.executor.drawCards(ctx.controller, payers.empty() ? 1 : 2);
+            return;
+        }
+        auto& ri = *ctx.state.chain.resuming;
         int conf = confirmOptional(ctx,
             "Meditation: exhaust a friendly unit to draw 2 (else draw 1)?",
-            still_legal);
-        if (conf == -1) return;  // waiting for agent choice
+            [&]() {
+                return costAlreadyPaid(ctx) ||
+                       !readyFriendlyUnits(ctx.state, ctx.controller).empty();
+            });
+        if (conf == -1) return;   // waiting for the agent
 
+        bool paid = false;
         if (conf == 1) {
-            auto target = find_ready_friendly();
-            if (target != kInvalidId) {
-                ctx.executor.exhaustObject(target);
-                ctx.executor.drawCards(ctx.controller, 2);
-                ctx.events.logTrace("MEDITATION: exhausted friendly -> draw 2");
-                return;
+            while (ri.resume_data.size() <= static_cast<size_t>(kPaidSlot))
+                ri.resume_data.push_back(0);
+            if (ri.resume_point < kAskPayer) {
+                const auto payers = readyFriendlyUnits(ctx.state, ctx.controller);
+                if (payers.empty()) {
+                    ri.resume_data[kPayerSlot] = static_cast<int32_t>(kInvalidId);
+                    ri.resume_point = kPayerKnown;
+                } else {
+                    std::vector<Intent> opts;
+                    for (auto u : payers) opts.push_back(objChoice(ctx.controller, u));
+                    ctx.executor.requestChoice(ctx.controller, std::move(opts),
+                                               "Meditation: exhaust which friendly unit");
+                    ri.resume_point = kAskPayer;
+                    return;
+                }
+            } else if (ri.resume_point == kAskPayer) {
+                const auto payers = readyFriendlyUnits(ctx.state, ctx.controller);
+                GameObjectId payer = takenObject(ctx);
+                if (std::find(payers.begin(), payers.end(), payer) == payers.end())
+                    payer = payers.empty() ? kInvalidId : payers.front();
+                ri.resume_data[kPayerSlot] = static_cast<int32_t>(payer);
+                ri.resume_point = kPayerKnown;
             }
+            // ── Pay the additional cost ──
+            if (costDueNow(ctx)) {
+                const auto payer = static_cast<GameObjectId>(ri.resume_data[kPayerSlot]);
+                const auto payers = readyFriendlyUnits(ctx.state, ctx.controller);
+                if (std::find(payers.begin(), payers.end(), payer) != payers.end()) {
+                    ctx.executor.exhaustObject(payer);
+                    ri.resume_data[kPaidSlot] = 1;
+                    ctx.events.logTrace("MEDITATION: exhausted " +
+                                        ctx.state.getObject(payer).name +
+                                        " as the additional cost");
+                }
+            }
+            paid = ri.resume_data[kPaidSlot] == 1;
         }
-        ctx.executor.drawCards(ctx.controller, 1);
-        ctx.events.logTrace("MEDITATION: draw 1");
+        if (finalizingChoices(ctx)) return;   // choices and costs end here (CR 355)
+
+        ctx.executor.drawCards(ctx.controller, paid ? 2 : 1);
+        ctx.events.logTrace(paid ? "MEDITATION: exhausted a friendly unit -> draw 2"
+                                 : "MEDITATION: draw 1");
     }
 private:
     const CardDef def_ = [] {

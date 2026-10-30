@@ -23,14 +23,13 @@ public:
     // "Other units enter ready." Three routes, since the engine has no global
     // enter-ready hook:
     //  * units Firebrand's controller plays: grantsEnterReadyTo (asked of the
-    //    playing player's own board);
+    //    playing player's own board, for plays from hand and — through
+    //    EffectExecutor::playIgnoringCost / createToken — plays by an effect);
     //  * units the opponent plays: a WhenOpponentPlaysAUnit trigger that clears
     //    the unit's exhaustion (APPROXIMATION: it becomes ready when that
     //    trigger resolves, just after it enters, not as it enters);
     //  * token units: PlayerState::tokens_enter_ready for both players
     //    (applyPassiveAura).
-    // Not covered: non-token units put onto the board by an effect
-    // (EffectExecutor::playIgnoringCost) for Firebrand's own controller.
     bool grantsEnterReadyTo(const GameState& /*state*/, GameObjectId self,
                             const GameObject& played) const override {
         return played.isUnit() && played.id != self;

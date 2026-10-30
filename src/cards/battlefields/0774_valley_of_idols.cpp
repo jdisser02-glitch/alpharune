@@ -29,10 +29,19 @@ public:
         }
         if (here == kInvalidId) return;
 
-        // Find the just-played unit: newest non-token unit of ctx.controller
-        // sitting here. (Trigger carries no played-object id.)
+        // The just-played unit is the trigger's subject (the CardPlayedEvent's
+        // object, recorded by TriggerManager::fireBattlefieldTriggers). Object
+        // ids follow deck order, not play order, so the old "newest id here"
+        // guess named an arbitrary friendly unit here; it is kept only for a
+        // chain item that carries no subject.
         GameObjectId played = kInvalidId;
-        for (auto& [id, obj] : ctx.state.objects) {
+        if (ctx.state.chain.resuming.has_value()) {
+            const GameObjectId subj = ctx.state.chain.resuming->triggering_subject;
+            if (subj != kInvalidId && ctx.state.objectExists(subj) &&
+                ctx.state.getObject(subj).isUnit())
+                played = subj;
+        }
+        if (played == kInvalidId) for (auto& [id, obj] : ctx.state.objects) {
             if (!obj.isUnit() || obj.controller != ctx.controller) continue;
             if (obj.isToken()) continue;
             auto bf = obj.battlefieldId();
@@ -51,7 +60,8 @@ public:
 
         if (costDueNow(ctx) && !payEnergy(ctx, ctx.controller, 1)) return;
         if (finalizingChoices(ctx)) return;   // choices and costs end here (CR 383.3)
-        if (!ctx.state.objectExists(played)) return;
+        if (!ctx.state.objectExists(played) ||
+            !ctx.state.getObject(played).location.has_value()) return;   // it left the board
         if (ctx.state.getObject(played).buff_count == 0) {
             ctx.executor.buffUnit(played);
             ctx.events.logTrace("VALLEY OF IDOLS: paid [1] -> [Buff] the played unit");

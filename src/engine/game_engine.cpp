@@ -971,6 +971,12 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
     // If in showdown, run it. Sub-calls still use the recursive path
     // until C-1 commit 6 converts the chain / combat subsystems.
     // (By index: a showdown or combat may add a token battlefield.)
+    // After a showdown or combat ran, contested status is settled again
+    // (CR 323.10: a battlefield whose contesting units all left is no longer
+    // contested) and any showdown or combat that staged runs too, so the
+    // next main-phase decision sees the same state a resumed engine does.
+    for (int settle = 0; settle < 8; ++settle) {
+    bool ran = false;
     for (size_t i = resume ? static_cast<size_t>(site.main_bf_index) : 0;
          i < state_.battlefields.size(); ++i) {
         site.main_bf_index = static_cast<int>(i);
@@ -985,7 +991,7 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
             const bool in_combat_branch = site.combat_bf == bf_id &&
                                           !site.combat_showdown_already_closed;
             if (in_combat_branch) {
-                runCombat(bf_id, false, /*resume=*/true);
+                runCombat(bf_id, false, /*resume=*/true); ran = true;
                 if (state_.game_over) {
                     adv.kind = MainPhaseAdvance::Kind::Done;
                     return adv;
@@ -993,7 +999,7 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
                 state_.battlefields[i].combat_staged = false;
                 continue;
             }
-            runShowdown(bf_id, /*resume=*/true);
+            runShowdown(bf_id, /*resume=*/true); ran = true;
             if (state_.game_over) {
                 adv.kind = MainPhaseAdvance::Kind::Done;
                 return adv;
@@ -1003,7 +1009,7 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
             const auto& bf = state_.battlefields[i];
             if (bf.showdown_staged && !bf.showdown_in_progress &&
                 !bf.combat_staged) {
-                runShowdown(bf_id);
+                runShowdown(bf_id); ran = true;
                 if (state_.game_over) {
                     adv.kind = MainPhaseAdvance::Kind::Done;
                     return adv;
@@ -1013,7 +1019,7 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
         }
         const auto& bf = state_.battlefields[i];
         if (bf.combat_staged && !bf.combat_in_progress) {
-            runCombat(bf_id);
+            runCombat(bf_id); ran = true;
             if (state_.game_over) {
                 adv.kind = MainPhaseAdvance::Kind::Done;
                 return adv;
@@ -1021,6 +1027,17 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, boo
             state_.battlefields[i].combat_staged = false;
         }
     }
+    if (!ran) break;
+    processContestedBattlefields();
+    if (state_.game_over) {
+        adv.kind = MainPhaseAdvance::Kind::Done;
+        return adv;
+    }
+    bool staged = false;
+    for (const auto& b : state_.battlefields)
+        if ((b.showdown_staged && !b.showdown_in_progress) || (b.combat_staged && !b.combat_in_progress)) staged = true;
+    if (!staged) break;
+    }   // settle
 
     auto actions = generateLegalActions();
     if (actions.empty()) {

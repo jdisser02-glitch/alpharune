@@ -22,9 +22,12 @@ public:
         ps.additional_turns.push_back(ctx.controller);
         ctx.events.logTrace("TIME WARP: queued extra turn for " +
                              std::string(toString(ctx.controller)));
-        // "Banish this" — route source to banishment instead of trash.
+        // "Banish this" — it is banished instead of trashed as it leaves the
+        // chain (ChainManager honours banish_on_leave_chain, as for [Flow]).
+        // Banishing it here left it in the banishment list AND, once the chain
+        // trashed the resolved spell, in the trash too.
         if (ctx.state.objectExists(ctx.source)) {
-            ctx.executor.banishObject(ctx.source);
+            ctx.state.getObject(ctx.source).banish_on_leave_chain = true;
         }
     }
 private:

@@ -1191,6 +1191,27 @@ void EffectExecutor::copyUnit(GameObjectId token_id, GameObjectId source_id) {
 // Token creation
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// A continuous effect of the unit's controller's board or legend that makes a
+// unit being played enter ready (Card::grantsEnterReadyTo — Riven, The Exile:
+// "Units you play to battlefields you control enter ready"). The same question
+// GameEngine::resolvePermanent asks for a unit played from hand, asked here for
+// a unit an effect plays (playIgnoringCost) or a unit token (createToken), with
+// the unit already at its destination.
+bool EffectExecutor::enterReadyGranted(const GameObject& unit) const {
+    if (!card_registry_ || !unit.isUnit() || !unit.location.has_value()) return false;
+    for (const auto& [oid, obj] : state_.objects) {
+        if (oid == unit.id || obj.controller != unit.controller) continue;
+        if (!obj.location.has_value() && obj.zone != ZoneType::LegendZone) continue;
+        if (obj.card_def_id == kInvalidId) continue;
+        const Card* granter = card_registry_->get(obj.card_def_id);
+        if (granter && granter->grantsEnterReadyTo(state_, oid, unit)) {
+            events_.logTrace("ENTERS_READY: " + unit.name + " (" + obj.name + ")");
+            return true;
+        }
+    }
+    return false;
+}
+
 GameObjectId EffectExecutor::createToken(PlayerId controller, CardType type,
                                           const std::string& name, int might,
                                           const std::vector<std::string>& tags,
@@ -1213,6 +1234,10 @@ GameObjectId EffectExecutor::createToken(PlayerId controller, CardType type,
     // replacement on token creation — a friendly token never enters exhausted
     // while the flag is set (refreshed each cleanup via applyPassiveAura).
     if (state_.player(controller).tokens_enter_ready) enter_ready = true;
+    // A token is played (CR 185.2.a), so "Units you play to battlefields you
+    // control enter ready" (Riven, The Exile) covers a unit token played there
+    // (Emperor's Dais's Sand Soldier).
+    if (!enter_ready && type == CardType::Unit && enterReadyGranted(obj)) enter_ready = true;
     obj.is_exhausted = !enter_ready && type == CardType::Unit; // units enter exhausted unless ready
 
     if (std::holds_alternative<BaseLocation>(location)) {
@@ -1772,6 +1797,12 @@ void EffectExecutor::playIgnoringCost(PlayerId player, GameObjectId card,
             card_obj->onPlay(ctx);
         }
     }
+
+    // A unit an effect plays at its final location may be made to enter
+    // ready by its controller's board or legend, as a unit played from hand
+    // is in GameEngine::resolvePermanent (Riven, The Exile: "Units you play
+    // to battlefields you control enter ready" — Temporal Breach, Fizz, ...).
+    if (obj.isUnit() && obj.is_exhausted && enterReadyGranted(obj)) obj.is_exhausted = false;
 
     // Re-read the (possibly-relocated) location for the EnteredBoardEvent
     // so subscribers see where the unit actually landed, not the default

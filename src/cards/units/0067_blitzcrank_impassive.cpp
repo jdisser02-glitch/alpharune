@@ -33,36 +33,36 @@ public:
             return;
         }
 
-        // WhenYouPlayMe: pull an enemy unit to my battlefield.
-        auto& self = ctx.state.getObject(ctx.source);
-        auto my_bf = self.battlefieldId();
-        if (!my_bf) return;  // not at a BF — trigger condition not met
-
-        auto find_enemy_elsewhere = [&]() -> GameObjectId {
-            for (auto& [id, obj] : ctx.state.objects) {
-                if (id == ctx.source) continue;
-                if (!obj.isUnit()) continue;
-                if (obj.controller == ctx.controller) continue;
-                if (obj.battlefieldId() == my_bf) continue;
-                if (!obj.location.has_value()) continue;
-                return id;
-            }
-            return kInvalidId;
+        // "When you play me to a battlefield, you may move an enemy unit to
+        //  here." The player chooses which enemy unit (one at another location
+        //  that an enemy effect may choose and move), at finalization.
+        const auto my_bf = ctx.state.getObject(ctx.source).battlefieldId();
+        if (!my_bf) return;                   // not at a battlefield: nothing to do
+        const BattlefieldId here = *my_bf;
+        auto pullable = [&]() {
+            auto out = chooseableUnits(ctx.state, ctx.controller, [&](const GameObject& o) {
+                if (o.controller == ctx.controller || o.cant_be_moved_by_enemy) return false;
+                const auto obf = o.battlefieldId();
+                return !(obf && *obf == here);
+            });
+            std::sort(out.begin(), out.end());
+            return out;
         };
-        auto still_legal = [&]() { return find_enemy_elsewhere() != kInvalidId; };
-
-        int conf = confirmOptional(ctx,
-            "Blitzcrank: pull an enemy unit to my battlefield?", still_legal);
-        if (conf == -1) return;
-        if (conf == 0) return;
+        int conf = confirmOptional(ctx, "Blitzcrank: move an enemy unit to my battlefield?",
+                                   [&]() { return !pullable().empty(); });
+        GameObjectId target = kInvalidId;
+        if (conf == 1)
+            target = pickTarget(ctx, "Blitzcrank: move which enemy unit here", pullable());
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
-
-        auto target = find_enemy_elsewhere();
-        if (target == kInvalidId) return;
+        if (conf != 1) return;                // waiting for the agent, or declined
+        if (target == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;                           // waiting for the target
+        if (target == kInvalidId || !ctx.state.objectExists(target)) return;
         std::string name = ctx.state.getObject(target).name;
-        ctx.executor.moveToBattlefield(target, *my_bf);
+        ctx.executor.moveToBattlefield(target, here);
         ctx.events.logTrace("BLITZCRANK: pulled " + name + " to BF#" +
-                             std::to_string(static_cast<int>(*my_bf)));
+                             std::to_string(static_cast<int>(here)));
     }
 private:
     const CardDef def_ = [] {
