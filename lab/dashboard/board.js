@@ -23,6 +23,7 @@
       nav / navPos          {prevTurn, prev, next, nextTurn} callbacks: step buttons in the top bar; navPos = "12/80" shown between them
       story / slow          story: true (tell frame.log over the table) or an array from RiftBoard.story(frame); slow: longer animations
       stage                 false hides the played card shown large at the centre of the table after a play
+      onBlocked  function(cardName): a click on a card of yours in hand or the champion zone that is not playable now
           legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
 (function () {
@@ -682,6 +683,9 @@
         const idx = +pick.dataset.pick; const entry = (S.frame && S.frame.legal || []).find(x => x.index === idx) || { index: idx };
         hideZoom(); S.opts.onPick(idx, entry); e.preventDefault(); return;
       }
+      // a card of yours that cannot be played right now: say why instead of doing nothing
+      const blocked = e.target.closest(".rb-me .rb-hand .rb-card, .rb-me .rb-champ .rb-card");
+      if (blocked && root.contains(blocked) && !blocked.hasAttribute("data-pick") && typeof S.opts.onBlocked === "function") S.opts.onBlocked(blocked.dataset.name || "");
       const t = e.target.closest("[data-z]"); if (!t || !root.contains(t)) return;
       if (S.touch || e.detail === 0) showZoom(+t.dataset.z, true); // tap or keyboard: open the modal preview
     });

@@ -355,7 +355,7 @@ function drawGame() {
       <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
     </div>`;
   G.boardEl = $("#vp-board", G.root);
-  RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), players: players() });
+  RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), onBlocked: name => toast(whyNotPlayable(name), ""), players: players() });
   G.root.addEventListener("click", e => {
     const opt = e.target.closest(".po-opt[data-pick]");
     if (opt) { e.stopPropagation(); /* the chip inside must not open the card preview on tap */ pick(+opt.dataset.pick); return; }
@@ -465,6 +465,32 @@ function playedHtml() {
     const what = e.hidden ? `<span class="muted">a hidden card</span>` : chipText(e.card, "sm");
     return `${sep}<span class="fi play ${now - e.t < 2500 ? "new" : ""}">${whoB}${what}${e.target ? `<span class="pl-arrow">→</span>${chipText(e.target, "sm")}` : ""}</span>`;
   }).join("")}`;
+}
+/** Why a card of yours is not playable right now, in one sentence (a click on it says so instead of doing nothing). */
+function whyNotPlayable(name) {
+  const st = G.st || {}, c = cardByName(name) || {}, label = c.name || name || "This card";
+  if (G.stage !== "playing") return `${label}: the game is over.`;
+  if (!st.decision_is_human) return `${label}: wait, the bot is deciding.`;
+  if (st.paying_cost) return `${label}: finish paying the current cost first.`;
+  const me = ((st.board || {}).players || [])[G.seat - 1] || {};
+  const runes = Array.isArray(me.runes) ? me.runes : [];
+  const ready = runes.filter(r => !r.exhausted).length + (me.energy_pool || 0);
+  const energy = c.energy || 0, power = c.power || 0;
+  const phase = String((st.board || {}).phase || ""), myTurn = (st.board || {}).turn_player === G.seat;
+  const typ = c.type || "";
+  if ((typ === "unit" || typ === "gear") && !/Reaction|Ambush|Quick-Draw/i.test(c.text || "") && (!myTurn || !/Main/i.test(phase)))
+    return `${label} is played in your own main phase, when nothing is waiting on the chain.`;
+  if (ready < energy) return `${label} costs ${energy} energy${power ? ` and ${power} power` : ""}: you have ${ready} ready rune${ready === 1 ? "" : "s"}${ready ? "" : " (they ready at the start of your turn)"}.`;
+  // Power is paid by recycling runes of the card's domain (an exhausted rune still counts), plus any power already in the pool.
+  const doms = (c.domains || []).map(d => String(d).toLowerCase());
+  const runeDom = r => String(r.name || "").toLowerCase().replace(/ rune$/, "");
+  const domRunes = runes.filter(r => doms.includes(runeDom(r))).length + (me.power_pool || 0);
+  if (power && domRunes < power)
+    return `${label} also needs ${power} power of its domain${doms.length ? ` (${doms.join(" or ")})` : ""}: you have ${domRunes} rune${domRunes === 1 ? "" : "s"} of that domain to recycle.`;
+  const timing = /Action/i.test(c.text || "") ? "an Action is played on your turn or in a showdown"
+    : /Reaction/i.test(c.text || "") ? "a Reaction can be played almost any time you have priority"
+    : "played on your turn, when the chain is empty";
+  return `${label} cannot be played right now: it may have no legal target, or the timing is wrong (${timing}).`;
 }
 function feedHtml(over) {
   // A one-line strip under the table (it used to float over the board and hide the opponent's runes and energy):
