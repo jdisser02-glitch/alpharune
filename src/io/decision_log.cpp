@@ -170,6 +170,17 @@ nlohmann::json boardJson(const GameState& s) {
             if (!o.isUnit() && !o.isGear() && !o.is_hidden) continue;
             side[o.controller == PlayerId::Player1 ? 0 : 1].push_back(objJson(s, o));
         }
+        // Hidden cards sit in the battlefield's facedown zone, which is not a
+        // location (CR 359), so the loop above never sees them: list them here
+        // under their controller, marked facedown (masked for the other player
+        // by the browser API).
+        for (const auto fid : bf.facedown) {
+            if (!s.objectExists(fid)) continue;
+            const auto& o = s.getObject(fid);
+            auto j = objJson(s, o);
+            j["facedown"] = true;
+            side[o.controller == PlayerId::Player1 ? 0 : 1].push_back(std::move(j));
+        }
         bj["p1"] = side[0];
         bj["p2"] = side[1];
         if (bf.combat_in_progress) bj["combat"] = true;

@@ -425,7 +425,20 @@
     const k = S.opts.slow ? 2.6 : 1, arrows = [];
     S.el.querySelectorAll("[data-oid]").forEach(e => {
       const a = prev.get(e.dataset.oid);
-      if (!a) { e.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1 }], { duration: 260 * k, easing: "ease-out" }); return; }
+      if (!a) {
+        if (e.classList.contains("facedown") && e.closest(".rb-bf")) {
+          // a card just hidden at a battlefield: it comes from its owner's hand, lands with a flip and keeps a ring for a moment
+          const side = e.classList.contains("p1") ? 1 : 2, rail = S.el.querySelector(`.rb-rail .rb-side.p${side}`);
+          const hand = rail ? rail.closest(".rb-rail").querySelector(".rb-hand") : null, b = e.getBoundingClientRect();
+          if (hand) { const h = hand.getBoundingClientRect(); const dx = h.left + h.width / 2 - (b.left + b.width / 2), dy = h.top + h.height / 2 - (b.top + b.height / 2);
+            e.animate([{ transform: `translate(${dx}px, ${dy}px) rotateY(180deg) scale(.8)`, opacity: .4 }, { transform: "none", opacity: 1 }], { duration: 650 * k, easing: "cubic-bezier(.2,.8,.2,1)" });
+            arrows.push([h, b]); }
+          else e.animate([{ opacity: 0, transform: "rotateY(180deg)" }, { opacity: 1, transform: "none" }], { duration: 500 * k, easing: "ease-out" });
+          e.classList.add("rb-just-hidden"); setTimeout(() => e.classList.remove("rb-just-hidden"), 4000 * k);
+          return;
+        }
+        e.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1 }], { duration: 260 * k, easing: "ease-out" }); return;
+      }
       const b = e.getBoundingClientRect(); const dx = a.r.left - b.left, dy = a.r.top - b.top;
       const moved = Math.abs(dx) + Math.abs(dy) > 3 && Math.abs(dx) + Math.abs(dy) < 2000;
       const ex = e.classList.contains("ex");
@@ -453,17 +466,22 @@
   }
   /** The card just played or cast, shown large at the centre of the table for a moment (longer in slow mode). */
   function showStage(frame) {
-    if (S.stageTimer) { clearTimeout(S.stageTimer); S.stageTimer = 0; }
-    const old = S.el.querySelector(".rb-stage"); if (old) old.remove();
     if (S.opts.stage === false || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const plays = story(frame).filter(l => l.kind === "play" && l.cards && l.cards[0]);
+    const plays = story(frame).filter(l => (l.kind === "play" && l.cards && l.cards[0]) || l.kind === "hide");
     if (!plays.length) return;
+    // a repaint of the same moment (a banner update, a hover) does not show the stage again
+    const key = plays.map(l => l.text).join("|") + "#" + ((frame.board || {}).turn ?? "") + "#" + (frame.n ?? "");
+    if (key === S.stageKey) return; S.stageKey = key;
+    if (S.stageTimer) { clearTimeout(S.stageTimer); S.stageTimer = 0; }
     const k = S.opts.slow ? 2.6 : 1;
     const el = document.createElement("div"); el.className = "rb-stage"; el.setAttribute("aria-hidden", "true");
-    el.innerHTML = plays.slice(-2).map(l => { const n = l.cards[0], c = card(n); return `<div class="rb-stage-card"><div class="rb-stage-pic">${pic(c, n, 480) || fallback(c, n, null, "card")}</div><div class="rb-stage-cap">${esc(l.text)}</div></div>`; }).join("");
-    S.el.append(el);
+    el.innerHTML = plays.slice(-2).map(l => {
+      if (l.kind === "hide") return `<div class="rb-stage-card hide"><div class="rb-stage-pic back"></div><div class="rb-stage-cap">${esc(l.text)}</div></div>`;
+      const n = l.cards[0], c = card(n); return `<div class="rb-stage-card"><div class="rb-stage-pic">${pic(c, n, 480) || fallback(c, n, null, "card")}</div><div class="rb-stage-cap">${esc(l.text)}</div></div>`; }).join("");
+    if (S.stageEl) S.stageEl.remove();
+    S.stageEl = el; S.el.append(el);
     el.animate([{ opacity: 0, transform: "translate(-50%, -50%) scale(.8)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }], { duration: 260 * k, easing: "ease-out" });
-    S.stageTimer = setTimeout(() => { el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 * k }).onfinish = () => el.remove(); }, 1300 * k);
+    S.stageTimer = setTimeout(() => { S.stageTimer = 0; el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 * k }).onfinish = () => { el.remove(); if (S.stageEl === el) S.stageEl = null; }; }, 1300 * k);
   }
 
   // ── the story of a frame: the engine's log since the previous decision, told as sentences ──────────────────────
@@ -474,6 +492,7 @@
     [/^SPELL: (.+?)(?: \(id=\d+.*)?$/, (m, f) => ({ icon: "✦", kind: "play", cards: [m[1]], text: `${seatOf(f)} casts ${m[1]}` })],
     [/^MOVE: (.+?) \(id=\d+\) -> BF#(\d+)/, (m, f) => ({ icon: "➜", kind: "move", cards: [m[1]], text: `${m[1]} moves to ${bfName(f, +m[2])}` })],
     [/^MOVE: (.+?) \(id=\d+\) -> (.+)/, (m) => ({ icon: "➜", kind: "move", cards: [m[1]], text: `${m[1]} moves to ${m[2]}` })],
+    [/^HIDE: (.+?) at BF#(\d+)(?: by P(\d))?/, (m, f) => ({ icon: "◧", kind: "hide", cards: m[1] === "a card" ? [] : [m[1]], text: `${m[3] ? "P" + m[3] : seatOf(f)} hides ${m[1] === "a card" ? "a card" : m[1]} face down at ${bfName(f, +m[2])}`.trim() })],
     [/^EXHAUST_RUNE: (.+?) \(id=\d+\) for (\w+)/, (m) => ({ icon: "↻", kind: "rune", cards: [], text: `taps a ${m[1]} for ${m[2]}` })],
     [/^RECYCLE_RUNE: (.+?) \(id=\d+\)(.*)/, (m) => ({ icon: "⟲", kind: "rune", cards: [], text: `recycles a ${m[1]} for power` })],
     [/^CHANNELED: (.+?) \(id=\d+, (\w+)\)/, (m) => ({ icon: "◆", kind: "rune", cards: [], text: `channels a ${m[1]} (${m[2]})` })],
@@ -698,10 +717,12 @@
     // the battlefield where the action is takes the room: 1.8 columns against 1 for each of the others
     S.el.style.setProperty("--rb-cols", bfs.map((_, i) => sit && sit.index === i ? "minmax(0, 1.8fr)" : "minmax(0, 1fr)").join(" ") || "minmax(0, 1fr)");
     S.el.classList.toggle("rb-in-combat", !!(sit && sit.index >= 0 && sit.mode));
+    const keepStage = S.stageEl && S.stageTimer ? S.stageEl : null;   // a stage still on show survives the repaint
     S.el.innerHTML = topBar(board, sit) + storyHtml(frame) + rail(board, opp, L.any ? L : null, false, sit)
       + `<section class="rb-field ${sit && sit.index >= 0 ? "rb-has-hot" : ""}" aria-label="battlefields">${bfs.map((bf, i) => battlefield(bf, i, L.any ? L : null, viewer, sit, board)).join("")}</section>`
       + rail(board, me, L.any ? L : null, true, sit) + legalBar(frame);
     if (S.opts.nav) S.el.querySelectorAll("[data-nav]").forEach(b => { b.onclick = () => { const fn = S.opts.nav[b.dataset.nav]; if (fn) fn(); }; });
+    if (keepStage) S.el.append(keepStage);
     animate(prev);
     if (prev.size) showStage(frame);
   }

@@ -448,3 +448,9 @@ img.rb-pic { object-fit: cover; }
 .rb-stage-pic { width: min(190px, 22vw); aspect-ratio: 744 / 1039; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 2px var(--rb-gold), 0 0 40px rgba(214, 178, 94, .55), 0 24px 50px rgba(0, 0, 0, .8); background: #1b1a24; }
 .rb-stage-pic .rb-pic { width: 100%; height: 100%; }
 .rb-stage-cap { font: 600 12px/1.3 var(--rb-display); color: #fff; background: rgba(10, 14, 26, .9); border: 1px solid var(--rb-chrome); padding: 5px 10px; border-radius: 999px; max-width: 260px; text-align: center; text-shadow: 0 1px 3px #000; }
+
+/* a card just hidden at a battlefield, and the stage's card back */
+.rb-unit.facedown.rb-just-hidden { box-shadow: 0 0 0 2px #fff, 0 0 20px rgba(255, 255, 255, .55) !important; }
+.rb-unit.facedown .rb-name { font-weight: 600; }
+.rb-stage-pic.back { background: radial-gradient(circle at 50% 50%, rgba(214, 178, 94, .45) 0 12%, transparent 13%), linear-gradient(135deg, #2b2446, #15122a 60%, #221c3a); position: relative; }
+.rb-stage-pic.back::after { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; transform: translate(-50%, -50%) rotate(45deg); border: 2px solid var(--rb-gold); }

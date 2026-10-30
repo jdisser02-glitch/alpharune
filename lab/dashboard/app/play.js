@@ -123,7 +123,7 @@ function notePass(text, type, player) {
 /** The engine lines that name the current showdown or combat ("SHOWDOWN: BF#1 (non-combat)", "COMBAT: BF#0 attacker=P1 …"). */
 const showdownLog = () => { for (let i = G.log.length - 1, n = 0; i >= 0 && n < 160; i--, n++) if (/(SHOWDOWN|COMBAT): BF#/.test(G.log[i])) return [G.log[i]]; return []; };
 /** The frame the table draws: the board plus what tells the renderer where the action is. */
-function frameOf(st, legal) { return { board: st.board, legal, log: showdownLog(), decision_player: st.decision_player, passes: G.passes }; }
+function frameOf(st, legal) { return { board: st.board, legal, log: showdownLog(), events: st.log || [], decision_player: st.decision_player, passes: G.passes }; }
 
 // ── game flow ───────────────────────────────────────────────────────────────
 function noteLog(st) {

@@ -97,7 +97,13 @@ const CMDS = {
       const l = legal.find(x => x.index === o.index);
       o.text = !l ? "option " + o.index : (/^(PlayCard|PlayReaction|HideCard)$/.test(l.type) && l.index !== index) ? "a card from hand" : l.text;
     }
-    return { index, text: opt ? opt.text : "", type: opt ? opt.type : "", player: who, options: legal.length, search, ms, state: stateFor() };
+    // A card the bot hides stays secret: the move reads "Hide a card at <battlefield>" and the engine's own log lines
+    // naming it are masked the same way.
+    const hidden = opt && opt.type === "HideCard";
+    const text = !opt ? "" : hidden ? opt.text.replace(/^Hide .+? at /, "Hide a card at ").replace(/^Hide (?!a card).+$/, "Hide a card") : opt.text;
+    const state = stateFor();
+    if (hidden && Array.isArray(state.log)) state.log = state.log.map(l => String(l).replace(/(HIDE|HIDDEN): .+? (at BF#|hidden at BF#)/, "$1: a card $2"));
+    return { index, text, type: opt ? opt.type : "", player: who, options: legal.length, search, ms, state };
   },
   async result() { return parse(api.resultJson()); },
   async end() { if (api) api.endGame(); return true; },
