@@ -21,22 +21,27 @@ public:
     // helpers run once per resolution). The [A] cost is approximated as
     // ignoring-cost — there's no clean cost-payment cursor in a reveal-trigger
     // context (TODO).
+    // CR 359 example (Nocturne): the replacement applies as the look/reveal
+    // happens. The engine puts this ability on the chain instead, so it is
+    // decided and resolved right after the looking effect, which may already
+    // have put me where it puts "the rest" — the trash (Lightning Rush) or
+    // the deck bottom (Trifarian Captain). I am therefore banished from the
+    // deck or from the trash; drawn to hand, I am no longer reachable.
     TriggerType triggerType() const override { return TriggerType::WhenIRevealedFromTop; }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>&) override {
         if (!ctx.state.objectExists(ctx.source)) return;
         PlayerId owner = ctx.state.getObject(ctx.source).owner;
-        auto still_in_deck = [&] {
-            return ctx.state.objectExists(ctx.source) &&
-                   ctx.state.getObject(ctx.source).zone == ZoneType::MainDeck;
+        auto reachable = [&] {
+            if (!ctx.state.objectExists(ctx.source)) return false;
+            const auto zone = ctx.state.getObject(ctx.source).zone;
+            return zone == ZoneType::MainDeck || zone == ZoneType::Trash;
         };
-        if (!still_in_deck()) return;  // already left the deck top
+        if (!reachable()) return;  // already left the deck top for good
         int conf = confirmOptional(ctx, "Nocturne: banish from deck and play for [A]?",
-                                    still_in_deck);
+                                    reachable);
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (conf != 1) return;
-        auto& ps = ctx.state.player(owner);
-        auto it = std::find(ps.main_deck.begin(), ps.main_deck.end(), ctx.source);
-        if (it != ps.main_deck.end()) ps.main_deck.erase(it);
+        // banishObject drops me from the deck / trash list I am in.
         ctx.executor.banishObject(ctx.source);
         auto& bz = ctx.state.player(owner).banishment;
         bz.erase(std::remove(bz.begin(), bz.end(), ctx.source), bz.end());

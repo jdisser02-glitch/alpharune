@@ -31,6 +31,16 @@ public:
                  it != ps.main_deck.rend() && ri.resume_data.size() < 3; ++it)
                 ri.resume_data.push_back(static_cast<int32_t>(*it));
             if (ri.resume_data.empty()) { ri.resume_point = 2; return; }
+            // Looking at them is private, but it is a look from the top of
+            // the deck: "As you look at or reveal me from the top of your
+            // deck" (Nocturne, Horrifying) applies.
+            for (auto v : ri.resume_data) {
+                const auto& obj = ctx.state.getObject(static_cast<GameObjectId>(v));
+                ctx.events.emit(CardRevealedEvent{
+                    static_cast<GameObjectId>(v), obj.card_def_id, obj.owner,
+                    /*revealed_to_all=*/false, /*revealed_to=*/ctx.controller,
+                    ZoneType::MainDeck});
+            }
             std::vector<Intent> opts;
             for (auto v : ri.resume_data)
                 opts.push_back(objChoice(ctx.controller, static_cast<GameObjectId>(v)));

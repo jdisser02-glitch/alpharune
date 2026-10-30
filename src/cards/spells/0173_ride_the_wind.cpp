@@ -20,19 +20,68 @@ public:
                                    .must_be_friendly = true};
     }
     bool needsPlayTimeTarget() const override { return true; }
+    // "Move a friendly unit and ready it." The unit is chosen as the spell is
+    // played (pickTarget, resume points 6-8); its controller then chooses the
+    // Move's destination (CR 355.4: base or any battlefield other than where
+    // it is) at resume points 9 (asked) / 10 (done), with the unit kept in
+    // resume_data[3].
+    static constexpr int kAskDestination = 9;
+    static constexpr int kDone = 10;
     void onResolve(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        GameObjectId picked = kInvalidId;
-        if (!targets.empty()) {
-            picked = targets[0];
-        } else {
-            auto legal = enumerateLegalTargets(ctx.state, ctx.controller);
-            picked = pickTarget(ctx, "Ride the Wind", legal);
+        auto& ri_opt = ctx.state.chain.resuming;
+        if (!ri_opt.has_value()) {
+            // Direct invocation (no chain): first target, moved to base.
+            GameObjectId picked = !targets.empty() ? targets[0]
+                : pickTarget(ctx, "Ride the Wind", enumerateLegalTargets(ctx.state, ctx.controller));
+            if (picked == kInvalidId || !ctx.state.objectExists(picked)) return;
+            auto dests = moveDests(ctx.state, ctx.state.getObject(picked));
+            if (!dests.empty()) moveTo(ctx, picked, dests.front());
+            ctx.executor.readyObject(picked);
+            return;
         }
-        if (picked == kInvalidId || !ctx.state.objectExists(picked)) return;
-        ctx.executor.moveToBase(picked);
+        auto& ri = *ri_opt;
+        if (ri.resume_point < kAskDestination) {
+            GameObjectId picked = kInvalidId;
+            if (!targets.empty()) {
+                picked = targets[0];
+            } else {
+                picked = pickTarget(ctx, "Ride the Wind",
+                                    enumerateLegalTargets(ctx.state, ctx.controller));
+                if (picked == kInvalidId && ri.resume_point == 7) return;   // waiting
+            }
+            if (picked == kInvalidId || !ctx.state.objectExists(picked)) {
+                ri.resume_point = kDone;
+                return;
+            }
+            auto dests = moveDests(ctx.state, ctx.state.getObject(picked));
+            if (dests.empty()) {   // nowhere to move: it is still readied
+                ri.resume_point = kDone;
+                ctx.executor.readyObject(picked);
+                return;
+            }
+            while (ri.resume_data.size() < 4) ri.resume_data.push_back(0);
+            ri.resume_data[3] = static_cast<int32_t>(picked);
+            std::vector<Intent> opts;
+            for (int d : dests) opts.push_back(valChoice(ctx.controller, d, destLabel(d)));
+            ctx.executor.requestChoice(ctx.controller, std::move(opts),
+                                       "Ride the Wind: move " +
+                                       ctx.state.getObject(picked).name + " where?");
+            ri.resume_point = kAskDestination;
+            return;
+        }
+        if (ri.resume_point != kAskDestination) return;
+        ri.resume_point = kDone;
+        if (ri.resume_data.size() < 4) return;
+        const auto picked = static_cast<GameObjectId>(ri.resume_data[3]);
+        if (!ctx.state.objectExists(picked)) return;
+        auto dests = moveDests(ctx.state, ctx.state.getObject(picked));
+        if (dests.empty()) { ctx.executor.readyObject(picked); return; }
+        int d = takenValue(ctx, dests.front());
+        if (std::find(dests.begin(), dests.end(), d) == dests.end()) d = dests.front();
+        moveTo(ctx, picked, d);
         ctx.executor.readyObject(picked);
-        ctx.events.logTrace("RIDE THE WIND: moved + readied " +
-                             ctx.state.getObject(picked).name);
+        ctx.events.logTrace("RIDE THE WIND: moved " + ctx.state.getObject(picked).name +
+                            " to " + destLabel(d) + " and readied it");
     }
 private:
     const CardDef def_ = [] {

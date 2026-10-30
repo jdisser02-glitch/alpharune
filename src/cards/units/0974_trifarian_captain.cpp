@@ -44,6 +44,19 @@ public:
     }
 
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        // First entry: the look itself. It is private, but it is a look from
+        // the top of the deck, so "As you look at or reveal me from the top
+        // of your deck" (Nocturne, Horrifying) applies to each card.
+        const auto& ri = ctx.state.chain.resuming;
+        if (!ri.has_value() || ri->resume_point == 0) {
+            for (auto id : topFour(ctx)) {
+                const auto& obj = ctx.state.getObject(id);
+                ctx.events.emit(CardRevealedEvent{
+                    id, obj.card_def_id, obj.owner,
+                    /*revealed_to_all=*/false, /*revealed_to=*/ctx.controller,
+                    ZoneType::MainDeck});
+            }
+        }
         int conf = confirmOptional(ctx,
             "Trifarian Captain: reveal a unit or gear ([3] or less, [A] or less) from the top 4 and draw it?",
             [&]() { return !eligible(ctx).empty(); });

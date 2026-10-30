@@ -1703,6 +1703,16 @@ void EffectExecutor::playIgnoringCost(PlayerId player, GameObjectId card,
                                        std::optional<LocationId> location) {
     if (!state_.objectExists(card)) return;
     auto& obj = state_.getObject(card);
+    // "When you play a card from anywhere other than your hand" (Heart of the
+    // Tempest, Agony's Embrace): a card an effect plays out of the trash, the
+    // Main Deck, banishment or the Champion Zone is such a play. The intent
+    // paths (Flow / Hidden / Champion Zone plays) announce it themselves; a
+    // token or a copy put into play by an effect is not a card and does not.
+    const ZoneType from_zone = obj.zone;
+    const bool not_from_hand =
+        from_zone == ZoneType::Trash || from_zone == ZoneType::MainDeck ||
+        from_zone == ZoneType::Banishment || from_zone == ZoneType::ChampionZone ||
+        from_zone == ZoneType::FacedownZone;
 
     // Landing zone: caller-supplied (CR 355.2.a — controller picks base
     // or a battlefield they control) or, by default, the controller's
@@ -1721,6 +1731,8 @@ void EffectExecutor::playIgnoringCost(PlayerId player, GameObjectId card,
         sps.cards_played_this_turn++;
         events_.emit(CardPlayedEvent{card, player, obj.card_type,
                                      sps.cards_played_this_turn});
+        if (not_from_hand)
+            events_.emit(ObjectStateChangedEvent{card, "played_not_from_hand"});
         queue_spell_(player, card);
         return;
     }
@@ -1770,6 +1782,8 @@ void EffectExecutor::playIgnoringCost(PlayerId player, GameObjectId card,
 
     events_.emit(CardPlayedEvent{card, player, obj.card_type,
         ps.cards_played_this_turn});
+    if (not_from_hand)
+        events_.emit(ObjectStateChangedEvent{card, "played_not_from_hand"});
     events_.emit(EnteredBoardEvent{card, player, obj.card_type,
         final_loc, true});
 }

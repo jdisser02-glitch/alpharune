@@ -48,6 +48,10 @@ public:
     }
 
     TriggerType equippedTriggerType() const override { return TriggerType::WhenIConquerOrHold; }
+    // "When I conquer or hold, you may play a unit from your trash. (You still
+    //  pay its costs.)" The unit is paid for through the engine's cost path
+    // (EffectExecutor::playPayingCost), so cost modifiers such as Rhasa the
+    // Sunderer's own reduction apply; only affordable units are offered.
     void onEquippedTrigger(CardContext& ctx, GameObjectId /*unit*/,
                            const std::vector<GameObjectId>& /*targets*/) override {
         auto units_in_trash = [&]() {
@@ -55,7 +59,9 @@ public:
             auto& ps = ctx.state.player(ctx.controller);
             for (auto card_id : ps.trash) {
                 if (!ctx.state.objectExists(card_id)) continue;
-                if (ctx.state.getObject(card_id).isUnit()) out.push_back(card_id);
+                if (!ctx.state.getObject(card_id).isUnit()) continue;
+                if (!ctx.executor.canPlayPayingCost(ctx.controller, card_id, {})) continue;
+                out.push_back(card_id);
             }
             return out;
         };
@@ -71,15 +77,16 @@ public:
         if (picked == kInvalidId) return;  // yielded / no legal target
 
         auto& ps = ctx.state.player(ctx.controller);
-        ctx.events.logTrace("LAST RITES: plays " +
-                             ctx.state.getObject(picked).name +
-                             " from trash (cost-payment not yet wired — engine limitation)");
-        // NOTE: text says "You still pay its costs", but EffectExecutor cannot
-        // drive the engine's payCardCost cursor from inside a chain-resolving
-        // trigger, so we play it for free for now (documented engine gap).
-        ctx.executor.playIgnoringCost(ctx.controller, picked);
+        const std::string name = ctx.state.getObject(picked).name;
+        // Out of the trash first (the play moves it onto the board).
         ps.trash.erase(std::remove(ps.trash.begin(), ps.trash.end(), picked),
                        ps.trash.end());
+        if (!ctx.executor.playPayingCost(ctx.controller, picked, std::nullopt, {})) {
+            ps.trash.push_back(picked);   // could not pay after all: it stays
+            ctx.events.logTrace("LAST RITES: could not pay for " + name);
+            return;
+        }
+        ctx.events.logTrace("LAST RITES: played " + name + " from trash, paying its cost");
     }
 private:
     const CardDef def_ = [] {

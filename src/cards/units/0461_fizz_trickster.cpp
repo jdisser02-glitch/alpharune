@@ -22,31 +22,35 @@ public:
         auto& ps = ctx.state.player(ctx.controller);
         const auto& db = ctx.executor.cardDB();
 
-        auto find_spell = [&]() -> GameObjectId {
-            // Most-recent first.
-            for (int i = static_cast<int>(ps.trash.size()) - 1; i >= 0; --i) {
-                auto cid = ps.trash[i];
+        // Energy is waived; "(You must still pay its Power cost.)" (CR 356.1.b.2).
+        const EffectExecutor::EffectPlayCost power_only{.ignore_energy = true};
+        // Spells in the trash with Energy cost no more than [3] whose Power
+        // cost can be paid; the player chooses which one.
+        auto eligible = [&]() {
+            std::vector<GameObjectId> out;
+            for (auto cid : ps.trash) {
                 if (!ctx.state.objectExists(cid)) continue;
                 auto& obj = ctx.state.getObject(cid);
                 if (obj.card_type != CardType::Spell) continue;
                 if (obj.card_def_id == kInvalidId) continue;
-                // Energy cost gate: no more than 3.
                 if (db.get(obj.card_def_id).energy_cost > 3) continue;
-                return cid;
+                if (!ctx.executor.canPlayPayingCost(ctx.controller, cid, power_only)) continue;
+                out.push_back(cid);
             }
-            return kInvalidId;
+            return out;
         };
-        auto still_legal = [&]() { return find_spell() != kInvalidId; };
+        auto still_legal = [&]() { return !eligible().empty(); };
 
         int conf = confirmOptional(ctx,
             "Fizz: play a spell (cost <= 3) from trash for free?", still_legal);
+        GameObjectId chosen = kInvalidId;
+        if (conf == 1) chosen = pickTarget(ctx, "Fizz: spell to play from trash", eligible());
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (conf != 1) return;
-
-        GameObjectId chosen = find_spell();
-        if (chosen == kInvalidId) return;
-        // Energy is waived; "(You must still pay its Power cost.)" (CR 356.1.b.2).
-        const EffectExecutor::EffectPlayCost power_only{.ignore_energy = true};
+        if (chosen == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;                           // waiting for the agent
+        if (chosen == kInvalidId || !ctx.state.objectExists(chosen)) return;
         if (!ctx.executor.canPlayPayingCost(ctx.controller, chosen, power_only)) return;
         // Remove from trash before playing.
         auto it = std::find(ps.trash.begin(), ps.trash.end(), chosen);
