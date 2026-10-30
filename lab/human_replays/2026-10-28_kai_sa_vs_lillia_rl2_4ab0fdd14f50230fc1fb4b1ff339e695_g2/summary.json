@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 4,
+  "agree": 9,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -15,10 +15,15 @@
     "n": 1,
     "rate": 1.0
    },
-   "end_turn": {
+   "combat_damage": {
     "agree": 1,
-    "n": 3,
-    "rate": 0.3333333333333333
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 2,
+    "n": 4,
+    "rate": 0.5
    },
    "hide": {
     "agree": 0,
@@ -26,48 +31,54 @@
     "rate": 0.0
    },
    "move": {
-    "agree": 0,
+    "agree": 2,
+    "n": 2,
+    "rate": 1.0
+   },
+   "pass_focus": {
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
     "agree": 2,
-    "n": 6,
-    "rate": 0.3333333333333333
+    "n": 9,
+    "rate": 0.2222222222222222
    }
   },
   "clean_boundary": {
-   "agree": 3,
-   "n": 11,
-   "rate": 0.2727272727272727
+   "agree": 6,
+   "n": 15,
+   "rate": 0.4
   },
   "in_flight": {
-   "agree": 1,
-   "n": 3
+   "agree": 3,
+   "n": 6
   },
-  "n": 14,
-  "rate": 0.2857142857142857
+  "n": 21,
+  "rate": 0.42857142857142855
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 17,
+ "bot_calls": 24,
  "bot_errors": 0,
  "bot_fallbacks": 3,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 141,
- "decisions_compared": 14,
- "decisions_human_known": 43,
- "decisions_trivial": 8,
+ "decisions": 205,
+ "decisions_compared": 21,
+ "decisions_human_known": 68,
+ "decisions_trivial": 11,
  "desync_causes": {
   "equipped: no equip option for 'Brutalizer' onto 'Sprite'": 1,
   "moved: no such unit on board (not played / already gone)": 6,
-  "moved: unit is exhausted (no move option)": 3,
+  "moved: unit is exhausted (no move option)": 1,
   "moved: unit on board but no move option": 1,
   "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 5,
   "played: card in hand but not playable now (cost/timing)": 3,
+  "played: card playable but not to 'Dusk Rose Lab'": 1,
   "played: engine asks P1 but the log's next action is by P2 (played)": 2,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 3
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
@@ -131,24 +142,6 @@
    "phase": "MainPhase",
    "player": 2,
    "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 3
-  },
-  {
-   "decision": 39,
-   "event_index": 354,
-   "event_kind": "showdown",
-   "event_text": "Emp4 ended showdown responses at Dusk Rose Lab.",
-   "options": [
-    "End turn",
-    "Move Ravenbloom Student to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations",
-    "Play Battle Preparations",
-    "Play Charm"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
    "turn": 3
   },
   {
@@ -385,70 +378,7 @@
    "turn": 7
   },
   {
-   "decision": 100,
-   "event_index": 436,
-   "event_kind": "moved",
-   "event_text": "Milan moved Sprite to Dusk Rose Lab.",
-   "options": [
-    "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Frozen Fortress",
-    "Play Sprite Fountain to base",
-    "Play Battle Preparations",
-    "Play Sprite Burst",
-    "Play Charm",
-    "Equip Brutalizer to Sprite",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 7
-  },
-  {
-   "decision": 100,
-   "event_index": 437,
-   "event_kind": "passed_focus",
-   "event_text": "Milan passed focus at Dusk Rose Lab.",
-   "options": [
-    "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Frozen Fortress",
-    "Play Sprite Fountain to base",
-    "Play Battle Preparations",
-    "Play Sprite Burst",
-    "Play Charm",
-    "Equip Brutalizer to Sprite",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 7
-  },
-  {
-   "decision": 100,
-   "event_index": 438,
-   "event_kind": "showdown",
-   "event_text": "Emp4 ended showdown responses at Dusk Rose Lab.",
-   "options": [
-    "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Frozen Fortress",
-    "Play Sprite Fountain to base",
-    "Play Battle Preparations",
-    "Play Sprite Burst",
-    "Play Charm",
-    "Equip Brutalizer to Sprite",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 7
-  },
-  {
-   "decision": 116,
+   "decision": 122,
    "event_index": 451,
    "event_kind": "moved",
    "event_text": "Emp4 moved Brynhir Thundersong to Dusk Rose Lab.",
@@ -464,7 +394,7 @@
    "turn": 8
   },
   {
-   "decision": 123,
+   "decision": 131,
    "event_index": 461,
    "event_kind": "played",
    "event_text": "Played Bellows Breath from hand.",
@@ -477,14 +407,14 @@
    "turn": 8
   },
   {
-   "decision": 141,
+   "decision": 152,
    "event_index": 483,
    "event_kind": "equipped",
    "event_text": "Milan equipped Brutalizer to Sprite.",
    "options": [
     "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Dusk Rose Lab",
+    "Move Sprite to Dusk Rose Lab",
+    "Move Sprite to Frozen Fortress",
     "Play Sprite Fountain to base",
     "Play Battle Preparations",
     "Play Sprite Burst",
@@ -498,35 +428,12 @@
    "turn": 9
   },
   {
-   "decision": 141,
-   "event_index": 485,
-   "event_kind": "moved",
-   "event_text": "Milan moved Sprite to Dusk Rose Lab.",
-   "options": [
-    "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Dusk Rose Lab",
-    "Play Sprite Fountain to base",
-    "Play Battle Preparations",
-    "Play Sprite Burst",
-    "Play Charm",
-    "Play Twilight Shroud",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 9
-  },
-  {
-   "decision": 141,
+   "decision": 153,
    "event_index": 486,
    "event_kind": "passed_focus",
    "event_text": "Milan passed focus at Dusk Rose Lab.",
    "options": [
     "End turn",
-    "Play Riptide Rex to base",
-    "Play Riptide Rex to Dusk Rose Lab",
     "Play Sprite Fountain to base",
     "Play Battle Preparations",
     "Play Sprite Burst",
@@ -538,9 +445,72 @@
    "player": 2,
    "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 9
+  },
+  {
+   "decision": 153,
+   "event_index": 488,
+   "event_kind": "showdown",
+   "event_text": "Emp4 ended showdown responses at Dusk Rose Lab.",
+   "options": [
+    "End turn",
+    "Play Sprite Fountain to base",
+    "Play Battle Preparations",
+    "Play Sprite Burst",
+    "Play Charm",
+    "Play Twilight Shroud",
+    "Hide Smoke and Mirrors"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 9
+  },
+  {
+   "decision": 170,
+   "event_index": 507,
+   "event_kind": "played",
+   "event_text": "Emp4 played Watchful Sentry from hand to Dusk Rose Lab.",
+   "options": [
+    "End turn",
+    "Play Watchful Sentry to base",
+    "Play Plundering Poro to base",
+    "Play Forecaster to base",
+    "Use Daughter of the Void"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card playable but not to 'Dusk Rose Lab'",
+   "turn": 10
+  },
+  {
+   "decision": 205,
+   "event_index": 533,
+   "event_kind": "passed_focus",
+   "event_text": "Milan passed focus at Dusk Rose Lab.",
+   "options": [
+    "End turn",
+    "Move Sprite to Dusk Rose Lab",
+    "Move Sprite to Frozen Fortress",
+    "Move Sprite to Dusk Rose Lab",
+    "Move Sprite to Frozen Fortress",
+    "Move Sprite, Sprite to Dusk Rose Lab",
+    "Move Sprite, Sprite to Frozen Fortress",
+    "Play Charm",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Sprite",
+    "Play Stupefy targeting Noxus Hopeful",
+    "Play Stupefy targeting Forecaster",
+    "Hide Smoke and Mirrors"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 11
   }
  ],
- "desyncs": 25,
+ "desyncs": 23,
  "disagreements": [
   {
    "bot": {
@@ -713,11 +683,11 @@
     "text": "Move Noxus Hopeful to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 106,
+   "decision": 112,
    "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.09,
+    "share": 0.08,
     "text": "Play Thousand-Tailed Watcher to base"
    },
    "kind": "play",
@@ -725,52 +695,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.57,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 0,
-     "share": 0.11,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.09,
-     "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 117,
-   "event_text": "Emp4 moved Noxus Hopeful to Dusk Rose Lab.",
-   "human": {
-    "index": 1,
-    "share": 0.21,
-    "text": "Move Noxus Hopeful to Dusk Rose Lab"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.52,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
+     "share": 0.44,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
-     "share": 0.21,
+     "share": 0.24,
      "text": "Move Noxus Hopeful to Dusk Rose Lab"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
     }
    ],
    "turn": 8
@@ -781,11 +717,11 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 120,
+   "decision": 128,
    "event_text": "Emp4 put a hidden card to Dusk Rose Lab.",
    "human": {
     "index": 2,
-    "share": 0.18,
+    "share": 0.16,
     "text": "Hide Temporal Breach"
    },
    "kind": "hide",
@@ -793,17 +729,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.71,
+     "share": 0.7,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.18,
+     "share": 0.16,
      "text": "Hide Temporal Breach"
     },
     {
      "index": 1,
-     "share": 0.11,
+     "share": 0.14,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -815,11 +751,11 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 121,
+   "decision": 129,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 1,
-    "share": 0.15,
+    "share": 0.21,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -827,12 +763,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.85,
+     "share": 0.79,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.15,
+     "share": 0.21,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -844,7 +780,7 @@
     "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 126,
+   "decision": 134,
    "event_text": "Played Temporal Breach from Dusk Rose Lab.",
    "human": {
     "index": 1,
@@ -866,11 +802,113 @@
     }
    ],
    "turn": 9
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Stupefy targeting Sprite"
+   },
+   "clean_boundary": false,
+   "decision": 155,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Play Stupefy targeting Thousand-Tailed Watcher"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.43,
+     "text": "Play Stupefy targeting Sprite"
+    },
+    {
+     "index": 4,
+     "share": 0.33,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 0,
+     "share": 0.24,
+     "text": "Pass"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Watchful Sentry to base"
+   },
+   "clean_boundary": true,
+   "decision": 168,
+   "event_text": "Emp4 played Noxus Hopeful from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.13,
+    "text": "Play Noxus Hopeful to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 0,
+     "share": 0.23,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.18,
+     "text": "Play Plundering Poro to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 171,
+   "event_text": "Emp4 played Forecaster from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.15,
+    "text": "Play Forecaster to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.33,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.25,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Play Plundering Poro to base"
+    }
+   ],
+   "turn": 10
   }
  ],
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 41,
+ "forced_decisions": 60,
  "game": 2,
  "hand_fixes": {
   "created": 0,
@@ -978,9 +1016,25 @@
     "player": 1,
     "turn": 9,
     "zone": "hand"
+   },
+   {
+    "card": "Watchful Sentry",
+    "for": "Emp4 played Watchful Sentry from hand to Dusk Rose Lab.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 10,
+    "zone": "hand"
+   },
+   {
+    "card": "Forecaster",
+    "for": "Emp4 played Forecaster from hand to base.",
+    "how": "pulled",
+    "player": 1,
+    "turn": 10,
+    "zone": "hand"
    }
   ],
-  "pulled_from_deck": 13
+  "pulled_from_deck": 15
  },
  "inferred_decks": {
   "P1": {
@@ -1151,25 +1205,25 @@
   "P2": "Bashful Bloom"
  },
  "log_events": 207,
- "log_events_consumed": 160,
+ "log_events_consumed": 207,
  "out_of_order_matches": 4,
  "players": [
   "Emp4",
   "Milan"
  ],
- "readiness_fixes": 3,
+ "readiness_fixes": 1,
  "result": {
   "engine_scores": [
    1,
-   4
+   6
   ],
   "engine_winner": 2,
   "log_scores": [
    3,
    6
   ],
-  "reason": "desync cap (log score 3-6)",
-  "turns": 9
+  "reason": "log ended (log score 3-6)",
+  "turns": 11
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
@@ -1191,11 +1245,11 @@
  ],
  "score_mismatches": 2,
  "seed": 1,
- "silent_passes": 62,
+ "silent_passes": 85,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_lillia_rl2_4ab0fdd14f50230fc1fb4b1ff339e695.json",
- "stop_reason": "desync cap",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.612255514,
-  "seconds": 0.624934836
+  "bot_seconds": 0.8808779489999999,
+  "seconds": 0.901344367
  }
 }

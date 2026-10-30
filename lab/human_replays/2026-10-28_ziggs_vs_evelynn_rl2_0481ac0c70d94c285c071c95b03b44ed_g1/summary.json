@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 7,
+  "agree": 8,
   "by_kind": {
    "ability": {
     "agree": 1,
-    "n": 5,
-    "rate": 0.2
+    "n": 8,
+    "rate": 0.125
    },
    "battlefield": {
     "agree": 1,
@@ -16,66 +16,84 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 0,
-    "n": 6,
-    "rate": 0.0
+    "agree": 1,
+    "n": 5,
+    "rate": 0.2
    },
    "play": {
     "agree": 5,
-    "n": 11,
-    "rate": 0.45454545454545453
+    "n": 9,
+    "rate": 0.5555555555555556
    }
   },
   "clean_boundary": {
-   "agree": 4,
-   "n": 20,
-   "rate": 0.2
+   "agree": 6,
+   "n": 21,
+   "rate": 0.2857142857142857
   },
   "in_flight": {
-   "agree": 3,
-   "n": 3
+   "agree": 2,
+   "n": 2
   },
   "n": 23,
-  "rate": 0.30434782608695654
+  "rate": 0.34782608695652173
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 27,
+ "bot_calls": 26,
  "bot_errors": 0,
- "bot_fallbacks": 4,
+ "bot_fallbacks": 3,
  "capture_player": "Damus",
  "compare_both": false,
- "decisions": 194,
+ "decisions": 189,
  "decisions_compared": 23,
  "decisions_human_known": 66,
- "decisions_trivial": 11,
+ "decisions_trivial": 12,
  "desync_causes": {
   "equipped: no equip option for 'Trinity Force' onto 'Kinkou Initiate'": 2,
   "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit can move but not to 'Bandle Scouts' Academy'": 1,
+  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 4,
-  "played: card in hand but not playable now (cost/timing)": 2,
+  "played: card in hand but not playable now (cost/timing)": 3,
   "played: card in trash but not replayable now": 1,
+  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 3
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
-   "decision": 77,
+   "decision": 87,
+   "event_index": 88,
+   "event_kind": "played",
+   "event_text": "Played An Offer You Can't Refuse from hand.",
+   "options": [
+    "End turn"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (played)",
+   "turn": 6
+  },
+  {
+   "decision": 87,
+   "event_index": 89,
+   "event_kind": "passed_focus",
+   "event_text": "Damus passed focus at Rakelstake.",
+   "options": [
+    "End turn"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 6
+  },
+  {
+   "decision": 87,
    "event_index": 96,
    "event_kind": "passed_focus",
    "event_text": "Silver Lining passed focus at Rakelstake.",
    "options": [
-    "End turn",
-    "Play Vex, Apathetic to base",
-    "Play Vex, Apathetic to Rakelstake",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Rakelstake",
-    "Play Trinity Force to base",
-    "Play Rampage",
-    "Play Challenge",
-    "Play Void Assault targeting Evelynn, Entrancing, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Use Tail-Cloaked Matriarch"
+    "End turn"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -83,7 +101,7 @@
    "turn": 6
   },
   {
-   "decision": 92,
+   "decision": 87,
    "event_index": 97,
    "event_kind": "showdown",
    "event_text": "Damus ended showdown responses at Rakelstake.",
@@ -96,17 +114,29 @@
    "turn": 6
   },
   {
-   "decision": 134,
+   "decision": 97,
+   "event_index": 117,
+   "event_kind": "played",
+   "event_text": "Damus played Bewitching Spirit from hand to base.",
+   "options": [
+    "End turn",
+    "Play An Offer You Can't Refuse",
+    "Use Pack of Wonders",
+    "Use Hexplosives Expert"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 7
+  },
+  {
+   "decision": 129,
    "event_index": 146,
    "event_kind": "played",
    "event_text": "Damus played Fizz, Trickster from hand to base.",
    "options": [
     "End turn",
-    "Move Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit to Rakelstake",
     "Play Overzealous Fan to base",
-    "Play Ziggs, Explosive to base",
-    "Use Gold",
     "Use Pack of Wonders",
     "Use Hexplosives Expert"
    ],
@@ -116,17 +146,13 @@
    "turn": 9
   },
   {
-   "decision": 134,
+   "decision": 129,
    "event_index": 147,
    "event_kind": "played",
    "event_text": "Played Falling Star from trash.",
    "options": [
     "End turn",
-    "Move Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit to Rakelstake",
     "Play Overzealous Fan to base",
-    "Play Ziggs, Explosive to base",
-    "Use Gold",
     "Use Pack of Wonders",
     "Use Hexplosives Expert"
    ],
@@ -136,7 +162,7 @@
    "turn": 9
   },
   {
-   "decision": 144,
+   "decision": 139,
    "event_index": 163,
    "event_kind": "equipped",
    "event_text": "Silver Lining equipped Trinity Force to Kinkou Initiate.",
@@ -150,19 +176,19 @@
     "Move Vex, Apathetic, Kinkou Initiate to Rakelstake",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
+    "Hide Tideturner",
     "Hide Tideturner"
    ],
    "phase": "MainPhase",
@@ -171,7 +197,7 @@
    "turn": 10
   },
   {
-   "decision": 145,
+   "decision": 140,
    "event_index": 166,
    "event_kind": "passed_focus",
    "event_text": "Silver Lining passed focus at Rakelstake.",
@@ -181,19 +207,19 @@
     "Move Vex, Apathetic to Rakelstake",
     "Play Tail-Cloaked Matriarch to base",
     "Play Tail-Cloaked Matriarch to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Kinkou Initiate to base",
     "Play Kinkou Initiate to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
+    "Hide Tideturner",
     "Hide Tideturner"
    ],
    "phase": "MainPhase",
@@ -202,36 +228,7 @@
    "turn": 10
   },
   {
-   "decision": 154,
-   "event_index": 167,
-   "event_kind": "showdown",
-   "event_text": "Damus ended showdown responses at Rakelstake.",
-   "options": [
-    "End turn",
-    "Move Vex, Apathetic to Bandle Scouts' Academy",
-    "Move Vex, Apathetic to Rakelstake",
-    "Play Tideturner to base",
-    "Play Tideturner to Rakelstake",
-    "Play Evelynn, Entrancing to base",
-    "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Use Tail-Cloaked Matriarch"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 10
-  },
-  {
-   "decision": 154,
+   "decision": 148,
    "event_index": 178,
    "event_kind": "played",
    "event_text": "Silver Lining played Kinkou Initiate from hand to base.",
@@ -241,18 +238,19 @@
     "Move Vex, Apathetic to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Use Tail-Cloaked Matriarch"
+    "Use Tail-Cloaked Matriarch",
+    "Hide Tideturner",
+    "Hide Tideturner",
+    "Hide Tornado Warrior"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -260,7 +258,7 @@
    "turn": 10
   },
   {
-   "decision": 155,
+   "decision": 150,
    "event_index": 184,
    "event_kind": "moved",
    "event_text": "Damus moved Fizz, Trickster to Bandle Scouts' Academy.",
@@ -268,15 +266,10 @@
     "End turn",
     "Move Bewitching Spirit to Bandle Scouts' Academy",
     "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit, Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit, Bewitching Spirit to Rakelstake",
     "Play Fizz, Trickster to base",
     "Play Amateur Demolitionist to base",
     "Play Ziggs, Explosive to base",
     "Play Ride the Wind",
-    "Use Gold",
     "Use Pack of Wonders",
     "Use Hexplosives Expert"
    ],
@@ -286,7 +279,7 @@
    "turn": 11
   },
   {
-   "decision": 155,
+   "decision": 150,
    "event_index": 185,
    "event_kind": "passed_focus",
    "event_text": "Damus passed focus at Bandle Scouts' Academy.",
@@ -294,15 +287,10 @@
     "End turn",
     "Move Bewitching Spirit to Bandle Scouts' Academy",
     "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit, Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit, Bewitching Spirit to Rakelstake",
     "Play Fizz, Trickster to base",
     "Play Amateur Demolitionist to base",
     "Play Ziggs, Explosive to base",
     "Play Ride the Wind",
-    "Use Gold",
     "Use Pack of Wonders",
     "Use Hexplosives Expert"
    ],
@@ -312,7 +300,7 @@
    "turn": 11
   },
   {
-   "decision": 179,
+   "decision": 174,
    "event_index": 186,
    "event_kind": "showdown",
    "event_text": "Silver Lining ended showdown responses at Bandle Scouts' Academy.",
@@ -320,15 +308,8 @@
     "End turn",
     "Move Bewitching Spirit to Bandle Scouts' Academy",
     "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit to Rakelstake",
-    "Move Bewitching Spirit, Bewitching Spirit to Bandle Scouts' Academy",
-    "Move Bewitching Spirit, Bewitching Spirit to Rakelstake",
-    "Play Fizz, Trickster to base",
     "Play Amateur Demolitionist to base",
-    "Play Ziggs, Explosive to base",
-    "Play Ride the Wind",
-    "Use Gold"
+    "Play Ride the Wind"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -336,7 +317,7 @@
    "turn": 11
   },
   {
-   "decision": 192,
+   "decision": 187,
    "event_index": 226,
    "event_kind": "equipped",
    "event_text": "Silver Lining equipped Trinity Force to Kinkou Initiate.",
@@ -351,26 +332,22 @@
     "Move Tail-Cloaked Matriarch, Kinkou Initiate to base",
     "Move Kinkou Initiate, Kinkou Initiate to base",
     "Move Tail-Cloaked Matriarch, Kinkou Initiate, Kinkou Initiate to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
-    "Play Gold to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Amateur Demolitionist",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Amateur Demolitionist",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit"
+    "Play Grim Resolve"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -378,7 +355,7 @@
    "turn": 12
   },
   {
-   "decision": 192,
+   "decision": 187,
    "event_index": 227,
    "event_kind": "moved",
    "event_text": "Silver Lining moved Kinkou Initiate to Bandle Scouts' Academy.",
@@ -393,26 +370,22 @@
     "Move Tail-Cloaked Matriarch, Kinkou Initiate to base",
     "Move Kinkou Initiate, Kinkou Initiate to base",
     "Move Tail-Cloaked Matriarch, Kinkou Initiate, Kinkou Initiate to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
-    "Play Gold to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Amateur Demolitionist",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Amateur Demolitionist",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit"
+    "Play Grim Resolve"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -420,7 +393,7 @@
    "turn": 12
   },
   {
-   "decision": 192,
+   "decision": 187,
    "event_index": 228,
    "event_kind": "passed_focus",
    "event_text": "Silver Lining passed focus at Bandle Scouts' Academy.",
@@ -435,26 +408,22 @@
     "Move Tail-Cloaked Matriarch, Kinkou Initiate to base",
     "Move Kinkou Initiate, Kinkou Initiate to base",
     "Move Tail-Cloaked Matriarch, Kinkou Initiate, Kinkou Initiate to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
-    "Play Gold to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Amateur Demolitionist",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Amateur Demolitionist",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit"
+    "Play Grim Resolve"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -462,7 +431,7 @@
    "turn": 12
   },
   {
-   "decision": 192,
+   "decision": 187,
    "event_index": 229,
    "event_kind": "showdown",
    "event_text": "Damus ended showdown responses at Bandle Scouts' Academy.",
@@ -477,26 +446,22 @@
     "Move Tail-Cloaked Matriarch, Kinkou Initiate to base",
     "Move Kinkou Initiate, Kinkou Initiate to base",
     "Move Tail-Cloaked Matriarch, Kinkou Initiate, Kinkou Initiate to base",
-    "Play Kinkou Initiate to base",
-    "Play Kinkou Initiate to Rakelstake",
+    "Play Tideturner to base",
+    "Play Tideturner to Rakelstake",
     "Play Tideturner to base",
     "Play Tideturner to Rakelstake",
     "Play Evelynn, Entrancing to base",
     "Play Evelynn, Entrancing to Rakelstake",
-    "Play Spirit Wheel to base",
-    "Play Gold to base",
+    "Play Punch First",
     "Play Void Assault targeting Vex, Apathetic, Amateur Demolitionist",
-    "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Vex, Apathetic, Bewitching Spirit",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Amateur Demolitionist",
     "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
-    "Play Void Assault targeting Tail-Cloaked Matriarch, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
     "Play Void Assault targeting Kinkou Initiate, Amateur Demolitionist",
     "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit",
-    "Play Void Assault targeting Kinkou Initiate, Bewitching Spirit"
+    "Play Grim Resolve"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -504,7 +469,7 @@
    "turn": 12
   }
  ],
- "desyncs": 15,
+ "desyncs": 17,
  "disagreements": [
   {
    "bot": {
@@ -516,7 +481,7 @@
    "event_text": "Damus played Treasure Hunter from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.07,
+    "share": 0.02,
     "text": "Play Treasure Hunter to base"
    },
    "kind": "play",
@@ -524,17 +489,17 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.83,
+     "share": 0.82,
      "text": "Play Seal of Rage to base"
     },
     {
      "index": 0,
-     "share": 0.09,
+     "share": 0.16,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.07,
+     "share": 0.02,
      "text": "Play Treasure Hunter to base"
     }
    ],
@@ -550,7 +515,7 @@
    "event_text": "Damus exhausted Seal of Rage.",
    "human": {
     "index": 1,
-    "share": 0.34,
+    "share": 0.22,
     "text": "Use Seal of Rage"
    },
    "kind": "ability",
@@ -558,12 +523,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.66,
+     "share": 0.78,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.34,
+     "share": 0.22,
      "text": "Use Seal of Rage"
     }
    ],
@@ -579,7 +544,7 @@
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 4,
-    "share": 0.05,
+    "share": 0.03,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
@@ -587,7 +552,7 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.36,
+     "share": 0.39,
      "text": "Play Detonate targeting Pack of Wonders"
     },
     {
@@ -596,9 +561,9 @@
      "text": "Use Pack of Wonders"
     },
     {
-     "index": 5,
-     "share": 0.18,
-     "text": "Use Seal of Rage"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 3
@@ -621,17 +586,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.46,
+     "share": 0.38,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 1,
-     "share": 0.28,
+     "share": 0.35,
      "text": "Play Detonate targeting Bomb"
     },
     {
      "index": 0,
-     "share": 0.26,
+     "share": 0.27,
      "text": "End turn"
     }
    ],
@@ -647,7 +612,7 @@
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.22,
+    "share": 0.27,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -655,12 +620,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.78,
+     "share": 0.73,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.22,
+     "share": 0.27,
      "text": "End turn"
     }
    ],
@@ -676,7 +641,7 @@
    "event_text": "Damus played Bewitching Spirit from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.11,
+    "share": 0.07,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
@@ -684,17 +649,80 @@
    "top3": [
     {
      "index": 5,
-     "share": 0.31,
+     "share": 0.23,
      "text": "Use Pack of Wonders"
     },
     {
+     "index": 3,
+     "share": 0.22,
+     "text": "Play Falling Star"
+    },
+    {
      "index": 4,
-     "share": 0.19,
+     "share": 0.2,
+     "text": "Play An Offer You Can't Refuse"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 64,
+   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.3835616438356164,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.3561643835616438,
      "text": "Play An Offer You Can't Refuse"
     },
     {
+     "index": 2,
+     "share": 0.2602739726027397,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Use Pack of Wonders"
+   },
+   "clean_boundary": true,
+   "decision": 68,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.44,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.56,
+     "text": "Use Pack of Wonders"
+    },
+    {
      "index": 0,
-     "share": 0.14,
+     "share": 0.44,
      "text": "End turn"
     }
    ],
@@ -706,209 +734,107 @@
     "text": "Play An Offer You Can't Refuse"
    },
    "clean_boundary": true,
-   "decision": 64,
-   "event_text": "Damus ended their turn.",
+   "decision": 98,
+   "event_text": "Damus exhausted Pack of Wonders.",
    "human": {
-    "index": 0,
-    "share": 0.28205128205128205,
-    "text": "End turn"
+    "index": 2,
+    "share": 0.26,
+    "text": "Use Pack of Wonders"
    },
-   "kind": "end_turn",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.3717948717948718,
+     "share": 0.42,
      "text": "Play An Offer You Can't Refuse"
     },
     {
-     "index": 2,
-     "share": 0.34615384615384615,
-     "text": "Use Pack of Wonders"
+     "index": 0,
+     "share": 0.31,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.28205128205128205,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.26,
+     "text": "Use Pack of Wonders"
     }
    ],
-   "turn": 5
+   "turn": 7
   },
   {
    "bot": {
-    "index": 3,
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 102,
+   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 1,
+    "share": 0.03,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.97,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.03,
+     "text": "Use Hexplosives Expert"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 5,
     "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
-   "decision": 103,
+   "decision": 120,
    "event_text": "Damus played Bewitching Spirit from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.17,
+    "share": 0.09,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.46,
+     "index": 5,
+     "share": 0.29,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.35,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Play Bewitching Spirit to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 111,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.5,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.5,
+     "share": 0.26,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.5,
-     "text": "Use Pack of Wonders"
+     "share": 0.21,
+     "text": "Play Fizz, Trickster to base"
     }
    ],
-   "turn": 7
+   "turn": 9
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 125,
-   "event_text": "Damus played Bewitching Spirit from hand to base.",
-   "human": {
     "index": 4,
-    "share": 0.07,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.23,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 2,
-     "share": 0.19,
-     "text": "Move Bewitching Spirit to Rakelstake"
-    },
-    {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 135,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.27906976744186046,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.27906976744186046,
-     "text": "End turn"
-    },
-    {
-     "index": 6,
-     "share": 0.27906976744186046,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 2,
-     "share": 0.18604651162790697,
-     "text": "Move Bewitching Spirit to Rakelstake"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 156,
-   "event_text": "Damus played Amateur Demolitionist from hand to base.",
-   "human": {
-    "index": 8,
-    "share": 0.27,
     "text": "Play Amateur Demolitionist to base"
    },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.37,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 8,
-     "share": 0.27,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 1,
-     "share": 0.09,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Ziggs, Explosive to base"
-   },
    "clean_boundary": true,
-   "decision": 164,
+   "decision": 159,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
-    "index": 13,
+    "index": 8,
     "share": 0.0,
     "text": "Use Hexplosives Expert"
    },
@@ -916,14 +842,48 @@
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.37,
-     "text": "Play Ziggs, Explosive to base"
+     "index": 4,
+     "share": 0.38,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 8,
-     "share": 0.28,
+     "index": 7,
+     "share": 0.14,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Bewitching Spirit to Rakelstake"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 163,
+   "event_text": "Damus exhausted Pack of Wonders.",
+   "human": {
+    "index": 7,
+    "share": 0.14,
+    "text": "Use Pack of Wonders"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.39,
      "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 7,
+     "share": 0.14,
+     "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
@@ -935,101 +895,67 @@
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Ziggs, Explosive to base"
+    "index": 3,
+    "text": "Play Amateur Demolitionist to base"
    },
    "clean_boundary": true,
-   "decision": 168,
-   "event_text": "Damus exhausted Pack of Wonders.",
-   "human": {
-    "index": 12,
-    "share": 0.07,
-    "text": "Use Pack of Wonders"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.38,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 8,
-     "share": 0.26,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 180,
+   "decision": 175,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.16,
+    "share": 0.23,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.33,
-     "text": "Play Ziggs, Explosive to base"
+     "index": 3,
+     "share": 0.52,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 8,
+     "index": 0,
+     "share": 0.23,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Bewitching Spirit to Rakelstake"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 189,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.07,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 7,
      "share": 0.31,
      "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 15,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "clean_boundary": true,
-   "decision": 194,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.04,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 15,
-     "share": 0.32,
-     "text": "Play Amateur Demolitionist to base"
-    },
-    {
-     "index": 19,
-     "share": 0.29,
+     "index": 10,
+     "share": 0.26,
      "text": "Play Falling Star"
     },
     {
      "index": 2,
-     "share": 0.11,
+     "share": 0.14,
      "text": "Move Amateur Demolitionist to Rakelstake"
     }
    ],
@@ -1038,10 +964,10 @@
  ],
  "exported_records": 0,
  "first_player": "Silver Lining",
- "forced_decisions": 80,
+ "forced_decisions": 75,
  "game": 1,
  "hand_fixes": {
-  "created": 8,
+  "created": 7,
   "list": [
    {
     "card": "Rampage",
@@ -1084,8 +1010,24 @@
     "zone": "hand"
    },
    {
+    "card": "Kinkou Initiate",
+    "for": "Silver Lining moved Kinkou Initiate from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 2,
+    "zone": "hand"
+   },
+   {
     "card": "Tail-Cloaked Matriarch",
     "for": "Silver Lining played Tail-Cloaked Matriarch from hand to base.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 2,
+    "zone": "hand"
+   },
+   {
+    "card": "Portable Portal",
+    "for": "Silver Lining moved Portable Portal from hand to trash.",
     "how": "pulled",
     "player": 2,
     "turn": 2,
@@ -1097,6 +1039,14 @@
     "how": "pulled",
     "player": 2,
     "turn": 2,
+    "zone": "hand"
+   },
+   {
+    "card": "Portable Portal",
+    "for": "Silver Lining moved Portable Portal from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 3,
     "zone": "hand"
    },
    {
@@ -1124,6 +1074,14 @@
     "zone": "hand"
    },
    {
+    "card": "Portable Portal",
+    "for": "Silver Lining moved Portable Portal from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 4,
+    "zone": "hand"
+   },
+   {
     "card": "Falling Star",
     "for": "Played Falling Star from hand.",
     "how": "pulled",
@@ -1132,16 +1090,8 @@
     "zone": "hand"
    },
    {
-    "card": "Bewitching Spirit",
-    "for": "Damus played Bewitching Spirit from hand to base.",
-    "how": "pulled",
-    "player": 1,
-    "turn": 6,
-    "zone": "hand"
-   },
-   {
-    "card": "Kinkou Initiate",
-    "for": "Silver Lining played Kinkou Initiate from hand to base.",
+    "card": "Star-Crossed",
+    "for": "Silver Lining moved Star-Crossed from hand to trash.",
     "how": "pulled",
     "player": 2,
     "turn": 6,
@@ -1164,11 +1114,11 @@
     "zone": "hand"
    },
    {
-    "card": "Bewitching Spirit",
-    "for": "Damus played Bewitching Spirit from hand to base.",
-    "how": "created",
-    "player": 1,
-    "turn": 7,
+    "card": "Punch First",
+    "for": "Silver Lining moved Punch First from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 8,
     "zone": "hand"
    },
    {
@@ -1252,7 +1202,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 18
+  "pulled_from_deck": 22
  },
  "inferred_decks": {
   "P1": {
@@ -1268,7 +1218,7 @@
     "same_legend": false,
     "source": "/home/user/alpharune/decks/pyke_test.txt"
    },
-   "filler_cards": 27,
+   "filler_cards": 28,
    "legal": false,
    "legend": "Hexplosives Expert",
    "player": "Damus",
@@ -1297,12 +1247,6 @@
      "copies": 2,
      "hand_multiplicity": 0,
      "plays_from_hand": 3
-    },
-    {
-     "card": "Bomb",
-     "copies": 1,
-     "hand_multiplicity": 0,
-     "plays_from_hand": 0
     },
     {
      "card": "Detonate",
@@ -1452,7 +1396,7 @@
   "Damus",
   "Silver Lining"
  ],
- "readiness_fixes": 4,
+ "readiness_fixes": 2,
  "result": {
   "engine_scores": [
    0,
@@ -1493,11 +1437,11 @@
  ],
  "score_mismatches": 3,
  "seed": 2,
- "silent_passes": 55,
+ "silent_passes": 54,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_evelynn_rl2_0481ac0c70d94c285c071c95b03b44ed.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.1192718659999998,
-  "seconds": 1.140291033
+  "bot_seconds": 1.0491395510000001,
+  "seconds": 1.069989814
  }
 }

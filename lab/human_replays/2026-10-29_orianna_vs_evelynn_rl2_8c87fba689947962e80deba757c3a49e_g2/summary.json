@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 2,
  "agreement": {
-  "agree": 5,
+  "agree": 4,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -31,9 +31,9 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 2,
+    "agree": 1,
     "n": 9,
-    "rate": 0.2222222222222222
+    "rate": 0.1111111111111111
    }
   },
   "clean_boundary": {
@@ -42,11 +42,11 @@
    "rate": 0.07142857142857142
   },
   "in_flight": {
-   "agree": 4,
+   "agree": 3,
    "n": 5
   },
   "n": 19,
-  "rate": 0.2631578947368421
+  "rate": 0.21052631578947367
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 22,
@@ -56,19 +56,18 @@
  "compare_both": false,
  "decisions": 166,
  "decisions_compared": 19,
- "decisions_human_known": 46,
+ "decisions_human_known": 47,
  "decisions_trivial": 5,
  "desync_causes": {
   "equipped: engine asks P1 but the log's next action is by P2 (equipped)": 1,
   "equipped: no equip option for 'Cloth Armor' onto 'Frigid Jewel'": 1,
   "equipped: no equip option for 'Cloth Armor' onto 'Orianna, Exquisite'": 1,
   "hidden_card_placed: no hide option at 'Rockfall Path'": 1,
-  "moved: engine asks P1 but the log's next action is by P2 (moved)": 1,
   "moved: engine asks P2 but the log's next action is by P1 (moved)": 1,
   "moved: no such unit on board (not played / already gone)": 1,
   "moved: unit is exhausted (no move option)": 2,
   "moved: unit on board but no move option": 1,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 3,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 2,
   "played: engine asks P2 but the log's next action is by P1 (played)": 1,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 1,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
@@ -85,19 +84,6 @@
    "phase": "MainPhase",
    "player": 2,
    "reason": "engine asks P2 but the log's next action is by P1 (moved)",
-   "turn": 2
-  },
-  {
-   "decision": 23,
-   "event_index": 222,
-   "event_kind": "passed_focus",
-   "event_text": "Hob passed focus at Grove of the God-Willow.",
-   "options": [
-    "End turn"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 2
   },
   {
@@ -184,26 +170,6 @@
    "phase": "MainPhase",
    "player": 1,
    "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 5
-  },
-  {
-   "decision": 83,
-   "event_index": 268,
-   "event_kind": "moved",
-   "event_text": "Hob moved Evelynn, in Control to banished.",
-   "options": [
-    "End turn",
-    "Move The Ball to base",
-    "Move The Ball to Grove of the God-Willow",
-    "Play Stupefy targeting Evelynn, In Control",
-    "Play Stupefy targeting Ravenbloom Student",
-    "Play Stupefy targeting The Ball",
-    "Play Stupefy targeting Evelynn, Entrancing",
-    "Hide Smoke and Mirrors"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (moved)",
    "turn": 5
   },
   {
@@ -343,7 +309,7 @@
    "turn": 9
   }
  ],
- "desyncs": 16,
+ "desyncs": 14,
  "disagreements": [
   {
    "bot": {
@@ -491,7 +457,7 @@
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.26,
+    "share": 0.19,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -499,18 +465,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.37,
+     "share": 0.34,
      "text": "Move The Ball to Grove of the God-Willow"
     },
     {
-     "index": 0,
-     "share": 0.26,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.27,
+     "text": "Play Stupefy targeting Evelynn, In Control"
     },
     {
-     "index": 7,
-     "share": 0.13,
-     "text": "Hide Smoke and Mirrors"
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
     }
    ],
    "turn": 5
@@ -585,6 +551,40 @@
   },
   {
    "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 112,
+   "event_text": "Played Defy from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.32,
+    "text": "Play Defy"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.45,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.32,
+     "text": "Play Defy"
+    },
+    {
+     "index": 2,
+     "share": 0.23,
+     "text": "Play Stupefy targeting Evelynn, In Control"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
     "index": 1,
     "text": "Move Ravenbloom Student to Grove of the God-Willow"
    },
@@ -627,7 +627,7 @@
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.17,
+    "share": 0.2,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -635,17 +635,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.43,
+     "share": 0.41,
      "text": "Move Ravenbloom Student to Rockfall Path"
     },
     {
      "index": 1,
-     "share": 0.4,
+     "share": 0.39,
      "text": "Move Ravenbloom Student to Grove of the God-Willow"
     },
     {
      "index": 0,
-     "share": 0.17,
+     "share": 0.2,
      "text": "End turn"
     }
    ],
@@ -771,12 +771,12 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.45,
+     "share": 0.47,
      "text": "Play Decree of Insight"
     },
     {
      "index": 2,
-     "share": 0.19,
+     "share": 0.16,
      "text": "Play Disarming Rake to base"
     },
     {
@@ -886,6 +886,14 @@
     "zone": "hand"
    },
    {
+    "card": "Vex, Apathetic",
+    "for": "Hob moved Vex, Apathetic from hand to trash.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 4,
+    "zone": "hand"
+   },
+   {
     "card": "Rengar, Trophy Hunter",
     "for": "Hob played Rengar, Trophy Hunter from hand to base.",
     "how": "pulled",
@@ -950,7 +958,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 13
+  "pulled_from_deck": 14
  },
  "inferred_decks": {
   "P1": {
@@ -1157,7 +1165,7 @@
  },
  "log_events": 202,
  "log_events_consumed": 148,
- "out_of_order_matches": 6,
+ "out_of_order_matches": 7,
  "players": [
   "c",
   "Hob"
@@ -1217,11 +1225,11 @@
  ],
  "score_mismatches": 5,
  "seed": 2,
- "silent_passes": 61,
+ "silent_passes": 60,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_orianna_vs_evelynn_rl2_8c87fba689947962e80deba757c3a49e.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 0.8517899219999998,
-  "seconds": 0.87220237
+  "bot_seconds": 0.7760067069999999,
+  "seconds": 0.793661773
  }
 }

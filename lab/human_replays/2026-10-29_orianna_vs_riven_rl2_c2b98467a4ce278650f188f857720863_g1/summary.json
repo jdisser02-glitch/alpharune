@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 13,
+  "agree": 14,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -15,14 +15,9 @@
     "n": 1,
     "rate": 1.0
    },
-   "combat_damage": {
-    "agree": 1,
-    "n": 1,
-    "rate": 1.0
-   },
    "end_turn": {
-    "agree": 2,
-    "n": 4,
+    "agree": 1,
+    "n": 2,
     "rate": 0.5
    },
    "hide": {
@@ -32,72 +27,57 @@
    },
    "move": {
     "agree": 2,
-    "n": 6,
-    "rate": 0.3333333333333333
+    "n": 3,
+    "rate": 0.6666666666666666
    },
    "pass_focus": {
-    "agree": 2,
-    "n": 2,
+    "agree": 3,
+    "n": 3,
     "rate": 1.0
    },
    "play": {
-    "agree": 4,
-    "n": 10,
-    "rate": 0.4
+    "agree": 6,
+    "n": 9,
+    "rate": 0.6666666666666666
    }
   },
   "clean_boundary": {
-   "agree": 8,
-   "n": 20,
-   "rate": 0.4
+   "agree": 9,
+   "n": 15,
+   "rate": 0.6
   },
   "in_flight": {
    "agree": 5,
-   "n": 6
+   "n": 5
   },
-  "n": 26,
-  "rate": 0.5
+  "n": 20,
+  "rate": 0.7
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 31,
+ "bot_calls": 27,
  "bot_errors": 0,
- "bot_fallbacks": 5,
+ "bot_fallbacks": 7,
  "capture_player": "c",
  "compare_both": false,
- "decisions": 247,
- "decisions_compared": 26,
- "decisions_human_known": 77,
- "decisions_trivial": 15,
+ "decisions": 211,
+ "decisions_compared": 20,
+ "decisions_human_known": 66,
+ "decisions_trivial": 14,
  "desync_causes": {
   "equipped: no equip option for 'Cloth Armor' onto 'Frigid Jewel'": 1,
   "equipped: no equip option for 'Cloth Armor' onto 'Orianna, Exquisite'": 1,
-  "equipped: no equip option for 'Cloth Armor' onto 'Resplendent Rostrum'": 1,
-  "hidden_card_placed: no hide option at 'Ornn's Forge'": 2,
+  "hidden_card_placed: no hide option at 'Ornn's Forge'": 1,
   "moved: engine asks P1 but the log's next action is by P2 (moved)": 1,
-  "moved: no such unit on board (not played / already gone)": 3,
-  "moved: unit can move but not to 'Emperor's Dais'": 1,
-  "moved: unit can move but not to 'base'": 1,
-  "moved: unit is exhausted (no move option)": 1,
+  "moved: no such unit on board (not played / already gone)": 9,
   "moved: unit on board but no move option": 1,
-  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 4,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 6,
+  "passed_focus: engine asks P1 but the log's next action is by P2 (passed_focus)": 2,
+  "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 1,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 4,
+  "played: card in hand but not playable now (cost/timing)": 2,
+  "played: card playable but not to 'Emperor's Dais'": 1,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
-  {
-   "decision": 50,
-   "event_index": 40,
-   "event_kind": "moved",
-   "event_text": "Last moved Sand Soldier to base.",
-   "options": [
-    "End turn",
-    "Hide Tideturner"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit is exhausted (no move option)",
-   "turn": 3
-  },
   {
    "decision": 56,
    "event_index": 43,
@@ -122,15 +102,12 @@
    "turn": 4
   },
   {
-   "decision": 74,
+   "decision": 83,
    "event_index": 51,
    "event_kind": "moved",
    "event_text": "Last moved Riven, Broken Blade to Ornn's Forge.",
    "options": [
-    "End turn",
-    "Move Frigid Jewel to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations"
+    "End turn"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -138,15 +115,12 @@
    "turn": 4
   },
   {
-   "decision": 74,
+   "decision": 83,
    "event_index": 52,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Ornn's Forge.",
    "options": [
-    "End turn",
-    "Move Frigid Jewel to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations"
+    "End turn"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -154,47 +128,12 @@
    "turn": 4
   },
   {
-   "decision": 74,
-   "event_index": 54,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Frigid Jewel to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 4
-  },
-  {
-   "decision": 74,
-   "event_index": 57,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Emperor's Dais.",
-   "options": [
-    "End turn",
-    "Move Frigid Jewel to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 4
-  },
-  {
-   "decision": 74,
+   "decision": 83,
    "event_index": 58,
    "event_kind": "passed_focus",
    "event_text": "Last passed focus at Emperor's Dais.",
    "options": [
-    "End turn",
-    "Move Frigid Jewel to base",
-    "Play Brutalizer to base",
-    "Play Battle Preparations"
+    "End turn"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -202,88 +141,127 @@
    "turn": 4
   },
   {
-   "decision": 81,
-   "event_index": 68,
+   "decision": 95,
+   "event_index": 74,
+   "event_kind": "played",
+   "event_text": "Last played Stellacorn Herder from hand to Emperor's Dais.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Play Stellacorn Herder to base",
+    "Play Stellacorn Herder to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
+    "Play Tideturner to base",
+    "Play Tideturner to Ornn's Forge",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Ornn's Forge",
+    "Play Blade of the Exile to base",
+    "Play Blade of the Exile to base",
+    "Play Blade of the Exile to base",
+    "Hide Tideturner"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "card playable but not to 'Emperor's Dais'",
+   "turn": 5
+  },
+  {
+   "decision": 108,
+   "event_index": 85,
    "event_kind": "moved",
-   "event_text": "Last moved Sand Soldier to Emperor's Dais.",
+   "event_text": "c moved Frigid Jewel to base.",
    "options": [
     "End turn",
     "Move Sand Soldier to base",
-    "Move Riven, Broken Blade to Ornn's Forge",
-    "Move Riven, Broken Blade to Emperor's Dais",
-    "Play Stellacorn Herder to base",
-    "Play Stellacorn Herder to Emperor's Dais",
-    "Play Traveling Merchant to base",
-    "Play Traveling Merchant to Emperor's Dais",
-    "Play Tideturner to base",
-    "Play Tideturner to Emperor's Dais",
-    "Play Reckless Innovator to base",
-    "Play Reckless Innovator to Emperor's Dais",
-    "Play Blade of the Exile to base",
-    "Play Blade of the Exile to base",
-    "Play Blade of the Exile to base",
-    "Hide Tideturner"
+    "Play Orianna, Exquisite to base",
+    "Play Orianna, Exquisite to Emperor's Dais",
+    "Play Mask of Foresight to base",
+    "Play Battle Preparations"
    ],
    "phase": "MainPhase",
-   "player": 2,
-   "reason": "unit can move but not to 'Emperor's Dais'",
-   "turn": 5
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 6
   },
   {
-   "decision": 81,
-   "event_index": 69,
+   "decision": 112,
+   "event_index": 90,
    "event_kind": "passed_focus",
-   "event_text": "Last passed focus at Emperor's Dais.",
+   "event_text": "Last passed focus at Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Sand Soldier to base",
-    "Move Riven, Broken Blade to Ornn's Forge",
-    "Move Riven, Broken Blade to Emperor's Dais",
-    "Play Stellacorn Herder to base",
-    "Play Stellacorn Herder to Emperor's Dais",
+    "Move Riven, Broken Blade to base",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Ornn's Forge",
+    "Play Astral Heron to base",
+    "Play Astral Heron to Ornn's Forge",
     "Play Traveling Merchant to base",
-    "Play Traveling Merchant to Emperor's Dais",
+    "Play Traveling Merchant to Ornn's Forge",
     "Play Tideturner to base",
-    "Play Tideturner to Emperor's Dais",
+    "Play Tideturner to Ornn's Forge",
     "Play Reckless Innovator to base",
-    "Play Reckless Innovator to Emperor's Dais",
+    "Play Reckless Innovator to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
     "Play Blade of the Exile to base",
     "Play Blade of the Exile to base",
     "Play Blade of the Exile to base",
-    "Hide Tideturner"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 5
-  },
-  {
-   "decision": 89,
-   "event_index": 70,
-   "event_kind": "showdown",
-   "event_text": "c ended showdown responses at Emperor's Dais.",
-   "options": [
-    "End turn",
-    "Move Sand Soldier to base",
-    "Move Riven, Broken Blade to Ornn's Forge",
-    "Move Riven, Broken Blade to Emperor's Dais",
+    "Play Zhonya's Hourglass to base",
     "Hide Tideturner",
     "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
-   "turn": 5
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 7
   },
   {
-   "decision": 155,
-   "event_index": 122,
-   "event_kind": "moved",
-   "event_text": "c moved Frigid Jewel to base.",
+   "decision": 127,
+   "event_index": 91,
+   "event_kind": "showdown",
+   "event_text": "c ended showdown responses at Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Orianna, Exquisite to Ornn's Forge",
-    "Move Orianna, Exquisite to Emperor's Dais"
+    "Move Riven, Broken Blade to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
+    "Play Zhonya's Hourglass to base"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 7
+  },
+  {
+   "decision": 127,
+   "event_index": 99,
+   "event_kind": "moved",
+   "event_text": "Last moved Sand Soldier to base.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Play Tideturner to base",
+    "Play Tideturner to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
+    "Play Zhonya's Hourglass to base"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 7
+  },
+  {
+   "decision": 156,
+   "event_index": 119,
+   "event_kind": "moved",
+   "event_text": "c moved Frigid Jewel to Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Sand Soldier to base"
    ],
    "phase": "MainPhase",
    "player": 1,
@@ -291,51 +269,62 @@
    "turn": 8
   },
   {
-   "decision": 155,
-   "event_index": 124,
+   "decision": 156,
+   "event_index": 120,
    "event_kind": "passed_focus",
-   "event_text": "Last passed focus at Ornn's Forge.",
+   "event_text": "c passed focus at Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Orianna, Exquisite to Ornn's Forge",
-    "Move Orianna, Exquisite to Emperor's Dais"
+    "Move Sand Soldier to base"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
+   "reason": "no Pass focus option (no showdown in the engine)",
    "turn": 8
   },
   {
-   "decision": 155,
+   "decision": 156,
+   "event_index": 122,
+   "event_kind": "moved",
+   "event_text": "c moved Frigid Jewel to base.",
+   "options": [
+    "End turn",
+    "Move Sand Soldier to base"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 8
+  },
+  {
+   "decision": 156,
    "event_index": 128,
    "event_kind": "moved",
    "event_text": "c moved Orianna, Exquisite to base.",
    "options": [
     "End turn",
-    "Move Orianna, Exquisite to Ornn's Forge",
-    "Move Orianna, Exquisite to Emperor's Dais"
+    "Move Sand Soldier to base"
    ],
    "phase": "MainPhase",
    "player": 1,
-   "reason": "unit can move but not to 'base'",
+   "reason": "no such unit on board (not played / already gone)",
    "turn": 8
   },
   {
-   "decision": 178,
+   "decision": 180,
    "event_index": 141,
    "event_kind": "hidden_card_placed",
    "event_text": "Last put a hidden card to Ornn's Forge.",
    "options": [
     "End turn",
-    "Move Sand Soldier to Ornn's Forge",
-    "Move Sand Soldier to Emperor's Dais",
-    "Move Riven, Broken Blade to Ornn's Forge",
-    "Move Riven, Broken Blade to Emperor's Dais",
+    "Move Riven, Broken Blade to base",
     "Move Astral Heron to base",
+    "Move Astral Heron to Emperor's Dais",
     "Move Astral Heron to base",
-    "Move Sand Soldier, Riven, Broken Blade to Ornn's Forge",
-    "Move Sand Soldier, Riven, Broken Blade to Emperor's Dais",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
     "Move Astral Heron, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron, Astral Heron to base",
     "Play Reckless Innovator to base",
     "Play Reckless Innovator to Ornn's Forge",
     "Play Traveling Merchant to base",
@@ -344,28 +333,11 @@
     "Play Evelynn, Entrancing to Ornn's Forge",
     "Play Blade of the Exile to base",
     "Play Zhonya's Hourglass to base",
-    "Play En Garde targeting Sand Soldier",
     "Play En Garde targeting Stellacorn Herder",
     "Play En Garde targeting Stellacorn Herder",
     "Play En Garde targeting Riven, Broken Blade",
     "Play En Garde targeting Astral Heron",
-    "Play En Garde targeting Astral Heron",
-    "Equip Blade of the Exile to Sand Soldier",
-    "Equip Blade of the Exile to Sand Soldier (exhaust Sand Soldier)",
-    "Equip Blade of the Exile to Sand Soldier (exhaust Riven, Broken Blade)",
-    "Equip Blade of the Exile to Sand Soldier (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Sand Soldier (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Stellacorn Herder",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Sand Soldier)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Riven, Broken Blade)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Stellacorn Herder",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Sand Soldier)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Riven, Broken Blade)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Stellacorn Herder (exhaust Astral Heron)",
-    "Equip Blade of the Exile to Riven, Broken Blade"
+    "Play En Garde targeting Astral Heron"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -373,19 +345,134 @@
    "turn": 9
   },
   {
-   "decision": 214,
+   "decision": 180,
+   "event_index": 142,
+   "event_kind": "moved",
+   "event_text": "Last moved Sand Soldier to Emperor's Dais.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Move Astral Heron to base",
+    "Move Astral Heron to Emperor's Dais",
+    "Move Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron, Astral Heron to base",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Ornn's Forge",
+    "Play Blade of the Exile to base",
+    "Play Zhonya's Hourglass to base",
+    "Play En Garde targeting Stellacorn Herder",
+    "Play En Garde targeting Stellacorn Herder",
+    "Play En Garde targeting Riven, Broken Blade",
+    "Play En Garde targeting Astral Heron",
+    "Play En Garde targeting Astral Heron"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 9
+  },
+  {
+   "decision": 180,
+   "event_index": 143,
+   "event_kind": "passed_focus",
+   "event_text": "Last passed focus at Emperor's Dais.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Move Astral Heron to base",
+    "Move Astral Heron to Emperor's Dais",
+    "Move Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron, Astral Heron to base",
+    "Play Reckless Innovator to base",
+    "Play Reckless Innovator to Ornn's Forge",
+    "Play Traveling Merchant to base",
+    "Play Traveling Merchant to Ornn's Forge",
+    "Play Evelynn, Entrancing to base",
+    "Play Evelynn, Entrancing to Ornn's Forge",
+    "Play Blade of the Exile to base",
+    "Play Zhonya's Hourglass to base",
+    "Play En Garde targeting Stellacorn Herder",
+    "Play En Garde targeting Stellacorn Herder",
+    "Play En Garde targeting Riven, Broken Blade",
+    "Play En Garde targeting Astral Heron",
+    "Play En Garde targeting Astral Heron"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 9
+  },
+  {
+   "decision": 188,
+   "event_index": 144,
+   "event_kind": "passed_focus",
+   "event_text": "c passed focus at Emperor's Dais.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Move Astral Heron to base",
+    "Move Astral Heron to Emperor's Dais",
+    "Move Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron, Astral Heron to base"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "engine asks P2 but the log's next action is by P1 (passed_focus)",
+   "turn": 9
+  },
+  {
+   "decision": 188,
+   "event_index": 147,
+   "event_kind": "played",
+   "event_text": "Last played Reckless Innovator from hand to Emperor's Dais.",
+   "options": [
+    "End turn",
+    "Move Riven, Broken Blade to base",
+    "Move Astral Heron to base",
+    "Move Astral Heron to Emperor's Dais",
+    "Move Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron to base",
+    "Move Astral Heron, Astral Heron to base",
+    "Move Riven, Broken Blade, Astral Heron, Astral Heron to base"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 9
+  },
+  {
+   "decision": 205,
    "event_index": 162,
    "event_kind": "equipped",
    "event_text": "c equipped Cloth Armor to Orianna, Exquisite.",
    "options": [
     "End turn",
-    "Move Orianna, Exquisite to Ornn's Forge",
-    "Move Orianna, Exquisite to Emperor's Dais",
+    "Move Sand Soldier to base",
     "Move Thousand-Tailed Watcher to Ornn's Forge",
     "Move Thousand-Tailed Watcher to Emperor's Dais",
-    "Move Orianna, Exquisite, Thousand-Tailed Watcher to Ornn's Forge",
-    "Move Orianna, Exquisite, Thousand-Tailed Watcher to Emperor's Dais",
     "Play Mask of Foresight to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
     "Play Battle Preparations",
     "Play Discipline",
     "Use Resplendent Rostrum"
@@ -396,15 +483,52 @@
    "turn": 10
   },
   {
-   "decision": 218,
+   "decision": 205,
+   "event_index": 163,
+   "event_kind": "moved",
+   "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
+   "options": [
+    "End turn",
+    "Move Sand Soldier to base",
+    "Move Thousand-Tailed Watcher to Ornn's Forge",
+    "Move Thousand-Tailed Watcher to Emperor's Dais",
+    "Play Mask of Foresight to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
+    "Play Battle Preparations",
+    "Play Discipline",
+    "Use Resplendent Rostrum"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no such unit on board (not played / already gone)",
+   "turn": 10
+  },
+  {
+   "decision": 205,
    "event_index": 165,
    "event_kind": "moved",
    "event_text": "c moved Orianna, Exquisite to base.",
    "options": [
     "End turn",
+    "Move Sand Soldier to base",
     "Move Thousand-Tailed Watcher to Ornn's Forge",
     "Move Thousand-Tailed Watcher to Emperor's Dais",
     "Play Mask of Foresight to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
     "Play Battle Preparations",
     "Play Discipline",
     "Use Resplendent Rostrum"
@@ -415,15 +539,24 @@
    "turn": 10
   },
   {
-   "decision": 218,
+   "decision": 205,
    "event_index": 166,
    "event_kind": "moved",
    "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
    "options": [
     "End turn",
+    "Move Sand Soldier to base",
     "Move Thousand-Tailed Watcher to Ornn's Forge",
     "Move Thousand-Tailed Watcher to Emperor's Dais",
     "Play Mask of Foresight to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
     "Play Battle Preparations",
     "Play Discipline",
     "Use Resplendent Rostrum"
@@ -434,15 +567,24 @@
    "turn": 10
   },
   {
-   "decision": 218,
+   "decision": 205,
    "event_index": 167,
    "event_kind": "passed_focus",
    "event_text": "c passed focus at Ornn's Forge.",
    "options": [
     "End turn",
+    "Move Sand Soldier to base",
     "Move Thousand-Tailed Watcher to Ornn's Forge",
     "Move Thousand-Tailed Watcher to Emperor's Dais",
     "Play Mask of Foresight to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
     "Play Battle Preparations",
     "Play Discipline",
     "Use Resplendent Rostrum"
@@ -453,99 +595,65 @@
    "turn": 10
   },
   {
-   "decision": 227,
+   "decision": 211,
+   "event_index": 173,
+   "event_kind": "played",
+   "event_text": "Played Defy from hand.",
+   "options": [
+    "End turn",
+    "Move Sand Soldier to base",
+    "Move Thousand-Tailed Watcher to Ornn's Forge",
+    "Move Thousand-Tailed Watcher to Emperor's Dais",
+    "Play Mask of Foresight to base",
+    "Play Zhonya's Hourglass to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
+    "Play Discipline",
+    "Use Resplendent Rostrum",
+    "Hide Zhonya's Hourglass"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 10
+  },
+  {
+   "decision": 211,
    "event_index": 178,
    "event_kind": "moved",
    "event_text": "c moved Resplendent Rostrum to Ornn's Forge.",
    "options": [
     "End turn",
+    "Move Sand Soldier to base",
     "Move Thousand-Tailed Watcher to Ornn's Forge",
     "Move Thousand-Tailed Watcher to Emperor's Dais",
-    "Use Resplendent Rostrum"
+    "Play Mask of Foresight to base",
+    "Play Zhonya's Hourglass to base",
+    "Play Stupefy targeting Sand Soldier",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Stellacorn Herder",
+    "Play Stupefy targeting Reckless Innovator",
+    "Play Stupefy targeting Thousand-Tailed Watcher",
+    "Play Stupefy targeting Riven, Broken Blade",
+    "Play Stupefy targeting Astral Heron",
+    "Play Stupefy targeting Astral Heron",
+    "Play Discipline",
+    "Use Resplendent Rostrum",
+    "Hide Zhonya's Hourglass"
    ],
    "phase": "MainPhase",
    "player": 1,
    "reason": "unit on board but no move option",
    "turn": 10
-  },
-  {
-   "decision": 227,
-   "event_index": 180,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Move Thousand-Tailed Watcher to Ornn's Forge",
-    "Move Thousand-Tailed Watcher to Emperor's Dais",
-    "Use Resplendent Rostrum"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 10
-  },
-  {
-   "decision": 235,
-   "event_index": 186,
-   "event_kind": "hidden_card_placed",
-   "event_text": "c put a hidden card to Ornn's Forge.",
-   "options": [
-    "End turn",
-    "Use Resplendent Rostrum",
-    "Hide Zhonya's Hourglass"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no hide option at 'Ornn's Forge'",
-   "turn": 10
-  },
-  {
-   "decision": 235,
-   "event_index": 189,
-   "event_kind": "passed_focus",
-   "event_text": "c passed focus at Emperor's Dais.",
-   "options": [
-    "End turn",
-    "Use Resplendent Rostrum",
-    "Hide Zhonya's Hourglass"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no Pass focus option (no showdown in the engine)",
-   "turn": 10
-  },
-  {
-   "decision": 235,
-   "event_index": 190,
-   "event_kind": "passed_focus",
-   "event_text": "Last passed focus at Emperor's Dais.",
-   "options": [
-    "End turn",
-    "Use Resplendent Rostrum",
-    "Hide Zhonya's Hourglass"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "engine asks P1 but the log's next action is by P2 (passed_focus)",
-   "turn": 10
-  },
-  {
-   "decision": 235,
-   "event_index": 194,
-   "event_kind": "equipped",
-   "event_text": "c equipped Cloth Armor to Resplendent Rostrum.",
-   "options": [
-    "End turn",
-    "Use Resplendent Rostrum",
-    "Hide Zhonya's Hourglass"
-   ],
-   "phase": "MainPhase",
-   "player": 1,
-   "reason": "no equip option for 'Cloth Armor' onto 'Resplendent Rostrum'",
-   "turn": 10
   }
  ],
- "desyncs": 24,
+ "desyncs": 25,
  "disagreements": [
   {
    "bot": {
@@ -557,7 +665,7 @@
    "event_text": "Played Discipline from hand.",
    "human": {
     "index": 5,
-    "share": 0.18,
+    "share": 0.15,
     "text": "Play Discipline"
    },
    "kind": "play",
@@ -565,17 +673,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.38,
+     "share": 0.35,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
     },
     {
      "index": 0,
-     "share": 0.18,
+     "share": 0.19,
      "text": "End turn"
     },
     {
      "index": 5,
-     "share": 0.18,
+     "share": 0.15,
      "text": "Play Discipline"
     }
    ],
@@ -591,7 +699,7 @@
    "event_text": "Played Charm from hand.",
    "human": {
     "index": 11,
-    "share": 0.07,
+    "share": 0.05,
     "text": "Play Charm"
    },
    "kind": "play",
@@ -599,17 +707,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.47,
+     "share": 0.53,
      "text": "Play Orianna, Exquisite to base"
     },
     {
      "index": 2,
-     "share": 0.24,
+     "share": 0.2,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
     },
     {
      "index": 0,
-     "share": 0.12,
+     "share": 0.17,
      "text": "End turn"
     }
    ],
@@ -617,105 +725,105 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 4,
+    "text": "Play Battle Preparations"
    },
    "clean_boundary": true,
-   "decision": 71,
+   "decision": 76,
    "event_text": "c moved Orianna, Exquisite to Emperor's Dais.",
    "human": {
-    "index": 3,
-    "share": 0.01,
+    "index": 2,
+    "share": 0.1,
     "text": "Move Orianna, Exquisite to Emperor's Dais"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.54,
-     "text": "End turn"
+     "index": 4,
+     "share": 0.37,
+     "text": "Play Battle Preparations"
     },
     {
-     "index": 2,
-     "share": 0.23,
+     "index": 1,
+     "share": 0.31,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
     },
     {
-     "index": 5,
-     "share": 0.18,
-     "text": "Play Battle Preparations"
+     "index": 0,
+     "share": 0.21,
+     "text": "End turn"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 3,
+    "index": 5,
     "text": "Play Battle Preparations"
    },
    "clean_boundary": true,
-   "decision": 75,
+   "decision": 109,
    "event_text": "c ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.16,
+    "share": 0.17,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.68,
+     "index": 5,
+     "share": 0.33,
      "text": "Play Battle Preparations"
     },
     {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.26,
+     "text": "Play Orianna, Exquisite to base"
     },
     {
-     "index": 2,
-     "share": 0.14,
-     "text": "Play Brutalizer to base"
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
     }
    ],
-   "turn": 4
+   "turn": 6
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Battle Preparations"
+    "index": 4,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
-   "decision": 96,
-   "event_text": "c played Orianna, Exquisite from hand to base.",
+   "decision": 137,
+   "event_text": "c played Resplendent Rostrum from hand to base.",
    "human": {
-    "index": 4,
-    "share": 0.31,
-    "text": "Play Orianna, Exquisite to base"
+    "index": 7,
+    "share": 0.29,
+    "text": "Play Resplendent Rostrum to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.37,
-     "text": "Play Battle Preparations"
+     "index": 4,
+     "share": 0.43,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 4,
-     "share": 0.31,
-     "text": "Play Orianna, Exquisite to base"
+     "index": 7,
+     "share": 0.29,
+     "text": "Play Resplendent Rostrum to base"
     },
     {
      "index": 2,
-     "share": 0.22,
+     "share": 0.07,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
     }
    ],
-   "turn": 6
+   "turn": 8
   },
   {
    "bot": {
@@ -723,146 +831,10 @@
     "text": "Move Orianna, Exquisite to Ornn's Forge"
    },
    "clean_boundary": true,
-   "decision": 100,
-   "event_text": "c moved Frigid Jewel to base.",
-   "human": {
-    "index": 1,
-    "share": 0.07,
-    "text": "Move Frigid Jewel to base"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.42,
-     "text": "Move Orianna, Exquisite to Ornn's Forge"
-    },
-    {
-     "index": 0,
-     "share": 0.25,
-     "text": "End turn"
-    },
-    {
-     "index": 5,
-     "share": 0.12,
-     "text": "Play Battle Preparations"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Orianna, Exquisite to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 101,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.06,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.72,
-     "text": "Move Orianna, Exquisite to Ornn's Forge"
-    },
-    {
-     "index": 2,
-     "share": 0.1,
-     "text": "Move Orianna, Exquisite to Emperor's Dais"
-    },
-    {
-     "index": 4,
-     "share": 0.07,
-     "text": "Play Battle Preparations"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 123,
-   "event_text": "Played Battle Preparations from hand.",
-   "human": {
-    "index": 1,
-    "share": 0.21,
-    "text": "Play Battle Preparations"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.49,
-     "text": "Pass"
-    },
-    {
-     "index": 2,
-     "share": 0.3,
-     "text": "Play Stupefy targeting Orianna, Exquisite"
-    },
-    {
-     "index": 1,
-     "share": 0.21,
-     "text": "Play Battle Preparations"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Orianna, Exquisite to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 133,
-   "event_text": "c played Resplendent Rostrum from hand to base.",
-   "human": {
-    "index": 16,
-    "share": 0.22,
-    "text": "Play Resplendent Rostrum to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.62,
-     "text": "Move Orianna, Exquisite to Ornn's Forge"
-    },
-    {
-     "index": 16,
-     "share": 0.22,
-     "text": "Play Resplendent Rostrum to base"
-    },
-    {
-     "index": 15,
-     "share": 0.1,
-     "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Orianna, Exquisite to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 143,
+   "decision": 147,
    "event_text": "c exhausted Resplendent Rostrum.",
    "human": {
-    "index": 15,
+    "index": 4,
     "share": 0.09,
     "text": "Use Resplendent Rostrum"
    },
@@ -870,129 +842,27 @@
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.86,
-     "text": "Move Orianna, Exquisite to Ornn's Forge"
-    },
-    {
-     "index": 15,
-     "share": 0.09,
-     "text": "Use Resplendent Rostrum"
-    },
-    {
      "index": 2,
-     "share": 0.03,
-     "text": "Move Orianna, Exquisite to Emperor's Dais"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Orianna, Exquisite to Ornn's Forge"
-   },
-   "clean_boundary": true,
-   "decision": 151,
-   "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
-   "human": {
-    "index": 7,
-    "share": 0.0,
-    "text": "Move Orianna, Exquisite, Frigid Jewel to Ornn's Forge"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.85,
+     "share": 0.3,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
-    },
-    {
-     "index": 2,
-     "share": 0.08,
-     "text": "Move Orianna, Exquisite to Emperor's Dais"
     },
     {
      "index": 0,
-     "share": 0.07,
+     "share": 0.29,
      "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.17,
+     "text": "Move Orianna, Exquisite to Emperor's Dais"
     }
    ],
    "turn": 8
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Battle Preparations"
-   },
-   "clean_boundary": true,
-   "decision": 215,
-   "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
-   "human": {
-    "index": 1,
-    "share": 0.16,
-    "text": "Move Orianna, Exquisite to Ornn's Forge"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.36,
-     "text": "Play Battle Preparations"
-    },
-    {
-     "index": 2,
-     "share": 0.18,
-     "text": "Move Orianna, Exquisite to Emperor's Dais"
-    },
-    {
-     "index": 1,
-     "share": 0.16,
-     "text": "Move Orianna, Exquisite to Ornn's Forge"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Thousand-Tailed Watcher to Emperor's Dais"
-   },
-   "clean_boundary": true,
-   "decision": 219,
-   "event_text": "Played Battle Preparations from hand.",
-   "human": {
-    "index": 4,
-    "share": 0.3,
-    "text": "Play Battle Preparations"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.5,
-     "text": "Move Thousand-Tailed Watcher to Emperor's Dais"
-    },
-    {
-     "index": 4,
-     "share": 0.3,
-     "text": "Play Battle Preparations"
-    },
-    {
-     "index": 1,
-     "share": 0.13,
-     "text": "Move Thousand-Tailed Watcher to Ornn's Forge"
-    }
-   ],
-   "turn": 10
   }
  ],
  "exported_records": 0,
  "first_player": "c",
- "forced_decisions": 88,
+ "forced_decisions": 83,
  "game": 1,
  "hand_fixes": {
   "created": 2,
@@ -1110,6 +980,14 @@
     "zone": "hand"
    },
    {
+    "card": "Reckless Innovator",
+    "for": "Last played Reckless Innovator from hand to Emperor's Dais.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 9,
+    "zone": "hand"
+   },
+   {
     "card": "Blitzcrank, Impassive",
     "for": "Last played Blitzcrank, Impassive from hand to Emperor's Dais.",
     "how": "pulled",
@@ -1126,7 +1004,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 14
+  "pulled_from_deck": 15
  },
  "inferred_decks": {
   "P1": {
@@ -1296,44 +1174,44 @@
   "P2": "The Exile"
  },
  "log_events": 223,
- "log_events_consumed": 207,
- "out_of_order_matches": 4,
+ "log_events_consumed": 179,
+ "out_of_order_matches": 9,
  "players": [
   "c",
   "Last"
  ],
- "readiness_fixes": 2,
+ "readiness_fixes": 3,
  "result": {
   "engine_scores": [
-   4,
-   8
+   6,
+   5
   ],
   "engine_winner": 2,
   "log_scores": [
    6,
    8
   ],
-  "reason": "P2 reached 8 points",
-  "turns": 11
+  "reason": "desync cap (log score 6-8)",
+  "turns": 10
  },
- "rewinds_applied": 1,
+ "rewinds_applied": 0,
  "rewinds_ignored": 2,
  "score_mismatch_examples": [
   {
-   "engine_score": 3,
-   "event_index": 79,
-   "log_score": 4,
-   "text": "c scored 1 at turn start. Score: 3 → 4.",
-   "turn": 6
+   "engine_score": 4,
+   "event_index": 87,
+   "log_score": 3,
+   "text": "Last scored 1 at turn start. Score: 2 → 3.",
+   "turn": 7
   }
  ],
  "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 94,
+ "silent_passes": 74,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_orianna_vs_riven_rl2_c2b98467a4ce278650f188f857720863.json",
- "stop_reason": "engine game over",
+ "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 1.422627089,
-  "seconds": 1.46433753
+  "bot_seconds": 0.9072668740000001,
+  "seconds": 0.934732149
  }
 }

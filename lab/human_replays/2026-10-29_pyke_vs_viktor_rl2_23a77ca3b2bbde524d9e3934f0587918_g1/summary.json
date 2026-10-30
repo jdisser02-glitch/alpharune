@@ -1,9 +1,9 @@
 {
- "actors_reattributed": 2,
+ "actors_reattributed": 3,
  "actors_settled": 0,
- "actors_uncertain": 1,
+ "actors_uncertain": 0,
  "agreement": {
-  "agree": 12,
+  "agree": 11,
   "by_kind": {
    "ability": {
     "agree": 1,
@@ -16,9 +16,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 3,
+    "agree": 2,
     "n": 3,
-    "rate": 1.0
+    "rate": 0.6666666666666666
    },
    "play": {
     "agree": 7,
@@ -27,16 +27,16 @@
    }
   },
   "clean_boundary": {
-   "agree": 11,
+   "agree": 10,
    "n": 13,
-   "rate": 0.8461538461538461
+   "rate": 0.7692307692307693
   },
   "in_flight": {
    "agree": 1,
    "n": 1
   },
   "n": 14,
-  "rate": 0.8571428571428571
+  "rate": 0.7857142857142857
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 16,
@@ -44,16 +44,15 @@
  "bot_fallbacks": 2,
  "capture_player": "Tab",
  "compare_both": false,
- "decisions": 125,
+ "decisions": 131,
  "decisions_compared": 14,
- "decisions_human_known": 44,
+ "decisions_human_known": 45,
  "decisions_trivial": 6,
  "desync_causes": {
   "moved: unit is exhausted (no move option)": 2,
   "passed_focus: engine asks P2 but the log's next action is by P1 (passed_focus)": 2,
   "passed_focus: no Pass focus option (no showdown in the engine)": 2,
   "played: card in hand but not playable now (cost/timing)": 1,
-  "played: engine asks P2 but the log's next action is by P1 (played)": 1,
   "played: play from 'banished' not offered": 1
  },
  "desync_list": [
@@ -121,9 +120,11 @@
     "End turn",
     "Move Viktor, Leader to Forbidding Waste",
     "Move Viktor, Leader to Frozen Fortress",
-    "Play Recruit to base",
     "Play Cull the Weak",
-    "Play Cull the Weak"
+    "Play Cull the Weak",
+    "Play Salvage targeting Concert Poster",
+    "Play Salvage targeting The List",
+    "Play Shadow's Call"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -139,9 +140,11 @@
     "End turn",
     "Move Viktor, Leader to Forbidding Waste",
     "Move Viktor, Leader to Frozen Fortress",
-    "Play Recruit to base",
     "Play Cull the Weak",
-    "Play Cull the Weak"
+    "Play Cull the Weak",
+    "Play Salvage targeting Concert Poster",
+    "Play Salvage targeting The List",
+    "Play Shadow's Call"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -156,8 +159,7 @@
    "options": [
     "End turn",
     "Move Viktor, Leader to Forbidding Waste",
-    "Move Viktor, Leader to Frozen Fortress",
-    "Play Recruit to base"
+    "Move Viktor, Leader to Frozen Fortress"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -184,34 +186,7 @@
    "turn": 5
   },
   {
-   "decision": 100,
-   "event_index": 88,
-   "event_kind": "played",
-   "event_text": "Played Shadow's Call from hand.",
-   "options": [
-    "End turn",
-    "Move Carrion Dredger to Forbidding Waste",
-    "Move Carrion Dredger to Frozen Fortress",
-    "Move Viktor, Leader to Forbidding Waste",
-    "Move Viktor, Leader to Frozen Fortress",
-    "Move Carrion Dredger, Viktor, Leader to Forbidding Waste",
-    "Move Carrion Dredger, Viktor, Leader to Frozen Fortress",
-    "Play Recruit to base",
-    "Play Recruit to Frozen Fortress",
-    "Play Bellows Breath targeting Recruit",
-    "Play Bellows Breath targeting Recruit",
-    "Play Bellows Breath targeting Recruit",
-    "Play Bellows Breath targeting Recruit",
-    "Play Bellows Breath targeting Carrion Dredger",
-    "Play Bellows Breath targeting Viktor, Leader"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "engine asks P2 but the log's next action is by P1 (played)",
-   "turn": 6
-  },
-  {
-   "decision": 116,
+   "decision": 122,
    "event_index": 114,
    "event_kind": "played",
    "event_text": "Played Detonate from banished.",
@@ -231,7 +206,7 @@
    "turn": 7
   }
  ],
- "desyncs": 9,
+ "desyncs": 8,
  "disagreements": [
   {
    "bot": {
@@ -300,14 +275,48 @@
     }
    ],
    "turn": 3
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Runeblade Anvil to base"
+   },
+   "clean_boundary": true,
+   "decision": 76,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.35,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.46,
+     "text": "Play Runeblade Anvil to base"
+    },
+    {
+     "index": 0,
+     "share": 0.35,
+     "text": "End turn"
+    },
+    {
+     "index": 4,
+     "share": 0.18,
+     "text": "Play Pack of Wonders to base"
+    }
+   ],
+   "turn": 5
   }
  ],
  "exported_records": 0,
  "first_player": "etrnal",
- "forced_decisions": 36,
+ "forced_decisions": 39,
  "game": 1,
  "hand_fixes": {
-  "created": 3,
+  "created": 2,
   "list": [
    {
     "card": "The List",
@@ -322,6 +331,14 @@
     "for": "Played Detonate from hand.",
     "how": "pulled",
     "player": 1,
+    "turn": 0,
+    "zone": "hand"
+   },
+   {
+    "card": "Stupefy",
+    "for": "etrnal moved Stupefy from hand to trash.",
+    "how": "pulled",
+    "player": 2,
     "turn": 0,
     "zone": "hand"
    },
@@ -359,10 +376,18 @@
    },
    {
     "card": "Treasure Trove",
-    "for": "Tab played Treasure Trove from hand to base.",
+    "for": "Tab moved Treasure Trove from hand to trash.",
     "how": "pulled",
     "player": 1,
     "turn": 3,
+    "zone": "hand"
+   },
+   {
+    "card": "Shadow's Call",
+    "for": "Played Shadow's Call from hand.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 4,
     "zone": "hand"
    },
    {
@@ -371,14 +396,6 @@
     "how": "pulled",
     "player": 2,
     "turn": 4,
-    "zone": "hand"
-   },
-   {
-    "card": "Shadow's Call",
-    "for": "Played Shadow's Call from hand.",
-    "how": "created",
-    "player": 1,
-    "turn": 5,
     "zone": "hand"
    },
    {
@@ -394,7 +411,7 @@
     "for": "Tab played Pack of Wonders from hand to base.",
     "how": "pulled",
     "player": 1,
-    "turn": 7,
+    "turn": 5,
     "zone": "hand"
    },
    {
@@ -406,7 +423,7 @@
     "zone": "hand"
    }
   ],
-  "pulled_from_deck": 9
+  "pulled_from_deck": 11
  },
  "inferred_decks": {
   "P1": {
@@ -418,10 +435,6 @@
    ],
    "champion": "Pyke, Dockside Butcher",
    "dropped": [
-    {
-     "card": "Shadow's Call",
-     "reason": "outside the legend's domains"
-    },
     {
      "card": "The Good Stuff",
      "reason": "outside the legend's domains"
@@ -485,7 +498,7 @@
    ],
    "champion": "Viktor, Leader",
    "filler": {
-    "overlap": 5,
+    "overlap": 6,
     "same_legend": true,
     "source": "/home/user/alpharune/lab/decks/meta/sacramento_showdown_2026-10-24/02_calvin_jin_viktor.txt"
    },
@@ -520,10 +533,10 @@
      "plays_from_hand": 1
     },
     {
-     "card": "Recruit",
+     "card": "Shadow's Call",
      "copies": 1,
      "hand_multiplicity": 0,
-     "plays_from_hand": 0
+     "plays_from_hand": 1
     },
     {
      "card": "Stupefy",
@@ -540,7 +553,7 @@
  },
  "log_events": 132,
  "log_events_consumed": 132,
- "out_of_order_matches": 5,
+ "out_of_order_matches": 3,
  "players": [
   "Tab",
   "etrnal"
@@ -579,11 +592,11 @@
  ],
  "score_mismatches": 2,
  "seed": 2,
- "silent_passes": 50,
+ "silent_passes": 52,
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_viktor_rl2_23a77ca3b2bbde524d9e3934f0587918.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.8450767859999999,
-  "seconds": 0.857829166
+  "bot_seconds": 0.7688295230000001,
+  "seconds": 0.782008074
  }
 }

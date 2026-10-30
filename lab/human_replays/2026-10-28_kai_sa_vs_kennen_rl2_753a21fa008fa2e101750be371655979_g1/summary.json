@@ -1,7 +1,7 @@
 {
- "actors_reattributed": 5,
- "actors_settled": 1,
- "actors_uncertain": 3,
+ "actors_reattributed": 6,
+ "actors_settled": 0,
+ "actors_uncertain": 2,
  "agreement": {
   "agree": 17,
   "by_kind": {
@@ -59,7 +59,7 @@
  "bot_fallbacks": 4,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 232,
+ "decisions": 234,
  "decisions_compared": 27,
  "decisions_human_known": 80,
  "decisions_trivial": 7,
@@ -69,15 +69,15 @@
   "hidden_card_placed: engine asks P2 but the log's next action is by P1 (hidden_card_placed)": 1,
   "hidden_card_placed: no hide option at 'Rockfall Path'": 1,
   "moved: engine asks P1 but the log's next action is by P2 (moved)": 1,
-  "moved: no such unit on board (not played / already gone)": 5,
-  "passed_focus: no Pass focus option (no showdown in the engine)": 4,
+  "moved: no such unit on board (not played / already gone)": 4,
+  "passed_focus: no Pass focus option (no showdown in the engine)": 3,
   "played: card in hand but not playable now (cost/timing)": 1,
   "played: card in trash but not replayable now": 2,
   "played: engine asks P1 but the log's next action is by P2 (played)": 1,
   "played: engine asks P2 but the log's next action is by P1 (played)": 3,
-  "played: play from 'top of deck to base' not offered": 1,
+  "played: play from 'top of deck to base' not offered": 2,
   "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2,
-  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
+  "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 2
  },
  "desync_list": [
   {
@@ -411,21 +411,6 @@
   },
   {
    "decision": 167,
-   "event_index": 211,
-   "event_kind": "moved",
-   "event_text": "bertilQ moved Ezreal, Prodigy to banished.",
-   "options": [
-    "End turn",
-    "Use Seal of Discord",
-    "Use Heart of the Tempest"
-   ],
-   "phase": "MainPhase",
-   "player": 2,
-   "reason": "no such unit on board (not played / already gone)",
-   "turn": 9
-  },
-  {
-   "decision": 167,
    "event_index": 212,
    "event_kind": "played",
    "event_text": "bertilQ played Fizz, Trickster from trash to base.",
@@ -455,7 +440,7 @@
    "turn": 9
   },
   {
-   "decision": 232,
+   "decision": 234,
    "event_index": 250,
    "event_kind": "hidden_card_placed",
    "event_text": "Emp4 put a hidden card to Ruined Monastery.",
@@ -464,8 +449,7 @@
     "Use Seal of Discord",
     "Use Heart of the Tempest",
     "Equip Last Rites to Trifarian Captain",
-    "Equip Last Rites to Rhasa the Sunderer",
-    "Equip Last Rites to Fizz, Trickster"
+    "Equip Last Rites to Rhasa the Sunderer"
    ],
    "phase": "MainPhase",
    "player": 2,
@@ -473,21 +457,37 @@
    "turn": 11
   },
   {
-   "decision": 232,
-   "event_index": 254,
-   "event_kind": "passed_focus",
-   "event_text": "bertilQ passed focus at Rockfall Path.",
+   "decision": 234,
+   "event_index": 255,
+   "event_kind": "showdown",
+   "event_text": "Emp4 ended showdown responses at Rockfall Path.",
    "options": [
     "End turn",
     "Use Seal of Discord",
     "Use Heart of the Tempest",
     "Equip Last Rites to Trifarian Captain",
-    "Equip Last Rites to Rhasa the Sunderer",
-    "Equip Last Rites to Fizz, Trickster"
+    "Equip Last Rites to Rhasa the Sunderer"
    ],
    "phase": "MainPhase",
    "player": 2,
-   "reason": "no Pass focus option (no showdown in the engine)",
+   "reason": "engine asks P2 but the log's next action is by P1 (showdown)",
+   "turn": 11
+  },
+  {
+   "decision": 234,
+   "event_index": 266,
+   "event_kind": "played",
+   "event_text": "bertilQ played Nocturne, Horrifying from top of deck to base.",
+   "options": [
+    "End turn",
+    "Use Seal of Discord",
+    "Use Heart of the Tempest",
+    "Equip Last Rites to Trifarian Captain",
+    "Equip Last Rites to Rhasa the Sunderer"
+   ],
+   "phase": "MainPhase",
+   "player": 2,
+   "reason": "play from 'top of deck to base' not offered",
    "turn": 11
   }
  ],
@@ -836,10 +836,10 @@
  ],
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 94,
+ "forced_decisions": 92,
  "game": 1,
  "hand_fixes": {
-  "created": 3,
+  "created": 5,
   "list": [
    {
     "card": "Forecaster",
@@ -915,7 +915,7 @@
    },
    {
     "card": "Tail-Cloaked Matriarch",
-    "for": "bertilQ played Tail-Cloaked Matriarch from hand to base.",
+    "for": "bertilQ moved Tail-Cloaked Matriarch from hand to trash.",
     "how": "pulled",
     "player": 2,
     "turn": 5,
@@ -974,7 +974,7 @@
     "for": "Played Lightning Rush from trash.",
     "how": "created",
     "player": 1,
-    "turn": 8,
+    "turn": 9,
     "zone": "trash"
    },
    {
@@ -1023,6 +1023,22 @@
     "how": "pulled",
     "player": 2,
     "turn": 10,
+    "zone": "hand"
+   },
+   {
+    "card": "Star-Crossed",
+    "for": "Played Star-Crossed from trash.",
+    "how": "created",
+    "player": 1,
+    "turn": 10,
+    "zone": "trash"
+   },
+   {
+    "card": "Star-Crossed",
+    "for": "bertilQ moved Star-Crossed from hand to trash.",
+    "how": "created",
+    "player": 2,
+    "turn": 11,
     "zone": "hand"
    },
    {
@@ -1270,8 +1286,8 @@
   "P2": "Heart of the Tempest"
  },
  "log_events": 321,
- "log_events_consumed": 262,
- "out_of_order_matches": 15,
+ "log_events_consumed": 271,
+ "out_of_order_matches": 16,
  "players": [
   "Emp4",
   "bertilQ"
@@ -1303,11 +1319,11 @@
  ],
  "score_mismatches": 1,
  "seed": 1,
- "silent_passes": 71,
+ "silent_passes": 74,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_kennen_rl2_753a21fa008fa2e101750be371655979.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 1.2310996180000002,
-  "seconds": 1.261877062
+  "bot_seconds": 1.059462567,
+  "seconds": 1.087027465
  }
 }

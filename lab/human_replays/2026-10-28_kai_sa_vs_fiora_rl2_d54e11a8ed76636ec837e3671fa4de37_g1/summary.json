@@ -26,42 +26,43 @@
     "rate": 0.0
    },
    "pass_focus": {
-    "agree": 4,
-    "n": 4,
+    "agree": 5,
+    "n": 5,
     "rate": 1.0
    },
    "play": {
-    "agree": 8,
-    "n": 13,
-    "rate": 0.6153846153846154
+    "agree": 7,
+    "n": 12,
+    "rate": 0.5833333333333334
    }
   },
   "clean_boundary": {
-   "agree": 10,
-   "n": 24,
-   "rate": 0.4166666666666667
+   "agree": 9,
+   "n": 23,
+   "rate": 0.391304347826087
   },
   "in_flight": {
-   "agree": 7,
-   "n": 7
+   "agree": 8,
+   "n": 8
   },
   "n": 31,
   "rate": 0.5483870967741935
  },
  "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
- "bot_calls": 36,
+ "bot_calls": 37,
  "bot_errors": 0,
- "bot_fallbacks": 5,
+ "bot_fallbacks": 6,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 278,
+ "decisions": 265,
  "decisions_compared": 31,
- "decisions_human_known": 84,
- "decisions_trivial": 12,
+ "decisions_human_known": 83,
+ "decisions_trivial": 11,
  "desync_causes": {
   "equipped: no equip option for 'Shepherd's Heirloom' onto 'Kinkou Initiate'": 1,
   "moved: no such unit on board (not played / already gone)": 1,
   "passed_focus: no Pass focus option (no showdown in the engine)": 1,
+  "played: card in hand but not playable now (cost/timing)": 1,
   "showdown: engine asks P2 but the log's next action is by P1 (showdown)": 1
  },
  "desync_list": [
@@ -81,14 +82,18 @@
    "turn": 6
   },
   {
-   "decision": 117,
+   "decision": 114,
    "event_index": 105,
    "event_kind": "passed_focus",
    "event_text": "Billie passed focus at Rockfall Path.",
    "options": [
     "End turn",
+    "Move Kinkou Initiate to Risen Altar",
+    "Move Kinkou Initiate to Rockfall Path",
     "Move Kayle, Justified to Risen Altar",
     "Move Kayle, Justified to Rockfall Path",
+    "Move Kinkou Initiate, Kayle, Justified to Risen Altar",
+    "Move Kinkou Initiate, Kayle, Justified to Rockfall Path",
     "Play Legion Marauder to base",
     "Play Unsung Hero to base",
     "Use Kayle, Justified",
@@ -101,14 +106,18 @@
    "turn": 8
   },
   {
-   "decision": 117,
+   "decision": 114,
    "event_index": 106,
    "event_kind": "showdown",
    "event_text": "Emp4 ended showdown responses at Rockfall Path.",
    "options": [
     "End turn",
+    "Move Kinkou Initiate to Risen Altar",
+    "Move Kinkou Initiate to Rockfall Path",
     "Move Kayle, Justified to Risen Altar",
     "Move Kayle, Justified to Rockfall Path",
+    "Move Kinkou Initiate, Kayle, Justified to Risen Altar",
+    "Move Kinkou Initiate, Kayle, Justified to Rockfall Path",
     "Play Legion Marauder to base",
     "Play Unsung Hero to base",
     "Use Kayle, Justified",
@@ -121,7 +130,7 @@
    "turn": 8
   },
   {
-   "decision": 182,
+   "decision": 177,
    "event_index": 157,
    "event_kind": "moved",
    "event_text": "Emp4 moved Noxus Hopeful to base.",
@@ -132,10 +141,14 @@
     "Move Forecaster, Thousand-Tailed Watcher to base",
     "Play Lecturing Yordle to base",
     "Play Lecturing Yordle to Risen Altar",
+    "Play Smoke Screen targeting Kinkou Initiate",
+    "Play Smoke Screen targeting Kayle, Justified",
     "Play Smoke Screen targeting Elder Dragon",
     "Play Smoke Screen targeting Forecaster",
     "Play Smoke Screen targeting Thousand-Tailed Watcher",
     "Play Falling Star",
+    "Play Stupefy targeting Kinkou Initiate",
+    "Play Stupefy targeting Kayle, Justified",
     "Play Stupefy targeting Elder Dragon",
     "Play Stupefy targeting Forecaster",
     "Play Stupefy targeting Thousand-Tailed Watcher"
@@ -144,9 +157,28 @@
    "player": 1,
    "reason": "no such unit on board (not played / already gone)",
    "turn": 11
+  },
+  {
+   "decision": 233,
+   "event_index": 206,
+   "event_kind": "played",
+   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
+   "options": [
+    "End turn",
+    "Move Thousand-Tailed Watcher to base",
+    "Play Watchful Sentry to base",
+    "Play Watchful Sentry to Risen Altar",
+    "Play Hextech Ray targeting Thousand-Tailed Watcher",
+    "Play Hextech Ray targeting Thousand-Tailed Watcher",
+    "Use Daughter of the Void"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card in hand but not playable now (cost/timing)",
+   "turn": 15
   }
  ],
- "desyncs": 4,
+ "desyncs": 5,
  "disagreements": [
   {
    "bot": {
@@ -426,7 +458,7 @@
     "text": "Move Mech to Risen Altar"
    },
    "clean_boundary": true,
-   "decision": 119,
+   "decision": 116,
    "event_text": "Emp4 moved Mech to Rockfall Path.",
    "human": {
     "index": 20,
@@ -438,7 +470,7 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.35,
+     "share": 0.37,
      "text": "Move Mech to Risen Altar"
     },
     {
@@ -448,6 +480,40 @@
     },
     {
      "index": 41,
+     "share": 0.15,
+     "text": "Play Falling Star"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Noxus Hopeful to Risen Altar"
+   },
+   "clean_boundary": true,
+   "decision": 119,
+   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.14,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.34,
+     "text": "Move Noxus Hopeful to Risen Altar"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Noxus Hopeful to Rockfall Path"
+    },
+    {
+     "index": 17,
      "share": 0.16,
      "text": "Play Falling Star"
     }
@@ -460,41 +526,7 @@
     "text": "Move Noxus Hopeful to Risen Altar"
    },
    "clean_boundary": true,
-   "decision": 124,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.14,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.32,
-     "text": "Move Noxus Hopeful to Risen Altar"
-    },
-    {
-     "index": 0,
-     "share": 0.17,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Risen Altar"
-   },
-   "clean_boundary": true,
-   "decision": 136,
+   "decision": 131,
    "event_text": "Emp4 moved Thousand-Tailed Watcher to Risen Altar.",
    "human": {
     "index": 10,
@@ -506,17 +538,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.33,
+     "share": 0.45,
      "text": "Move Noxus Hopeful to Risen Altar"
     },
     {
      "index": 0,
-     "share": 0.22,
+     "share": 0.25,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.2,
+     "share": 0.25,
      "text": "Move Noxus Hopeful to Rockfall Path"
     }
    ],
@@ -524,57 +556,23 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 17,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
-   "decision": 166,
+   "decision": 161,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 19,
-    "share": 0.09,
+    "index": 24,
+    "share": 0.1,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 0,
+     "index": 17,
      "share": 0.33,
-     "text": "End turn"
-    },
-    {
-     "index": 14,
-     "share": 0.3,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 4,
-     "share": 0.2,
-     "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 183,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.29,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.56,
      "text": "Play Falling Star"
     },
     {
@@ -583,43 +581,77 @@
      "text": "End turn"
     },
     {
-     "index": 10,
-     "share": 0.12,
-     "text": "Play Stupefy targeting Elder Dragon"
+     "index": 5,
+     "share": 0.2,
+     "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Stupefy targeting Forecaster"
+    "index": 11,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
-   "decision": 204,
+   "decision": 178,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.09,
+    "share": 0.33,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.9,
-     "text": "Play Stupefy targeting Forecaster"
+     "index": 11,
+     "share": 0.4,
+     "text": "Play Falling Star"
     },
     {
      "index": 0,
-     "share": 0.09,
+     "share": 0.33,
+     "text": "End turn"
+    },
+    {
+     "index": 12,
+     "share": 0.21,
+     "text": "Play Stupefy targeting Kinkou Initiate"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 10,
+    "text": "Play Stupefy targeting Kinkou Initiate"
+   },
+   "clean_boundary": true,
+   "decision": 199,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.36,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 10,
+     "share": 0.56,
+     "text": "Play Stupefy targeting Kinkou Initiate"
+    },
+    {
+     "index": 0,
+     "share": 0.36,
      "text": "End turn"
     },
     {
      "index": 6,
-     "share": 0.01,
-     "text": "Play Smoke Screen targeting Forecaster"
+     "share": 0.04,
+     "text": "Play Smoke Screen targeting Kinkou Initiate"
     }
    ],
    "turn": 13
@@ -627,7 +659,7 @@
  ],
  "exported_records": 0,
  "first_player": "Billie",
- "forced_decisions": 141,
+ "forced_decisions": 134,
  "game": 1,
  "hand_fixes": {
   "created": 0,
@@ -926,11 +958,11 @@
   "Emp4",
   "Billie"
  ],
- "readiness_fixes": 2,
+ "readiness_fixes": 1,
  "result": {
   "engine_scores": [
-   6,
-   4
+   7,
+   3
   ],
   "engine_winner": 2,
   "log_scores": [
@@ -940,16 +972,24 @@
   "reason": "log ended (log score 4-6)",
   "turns": 17
  },
- "rewinds_applied": 0,
+ "rewinds_applied": 1,
  "rewinds_ignored": 0,
- "score_mismatch_examples": [],
- "score_mismatches": 0,
+ "score_mismatch_examples": [
+  {
+   "engine_score": 5,
+   "event_index": 144,
+   "log_score": 4,
+   "text": "Emp4 scored 1 at turn start. Score: 3 → 4.",
+   "turn": 11
+  }
+ ],
+ "score_mismatches": 1,
  "seed": 2,
- "silent_passes": 60,
+ "silent_passes": 56,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_fiora_rl2_d54e11a8ed76636ec837e3671fa4de37.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 2.0866578970000003,
-  "seconds": 2.119539
+  "bot_seconds": 1.6729606049999997,
+  "seconds": 1.702473217
  }
 }
