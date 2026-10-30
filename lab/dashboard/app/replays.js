@@ -12,7 +12,7 @@ import { data, esc, $, $$, store, pct, num, fmtDate, badge, chip, pageHead, empt
 // ── state (module scope: survives navigation within the view) ───────────────
 const st = {
   file: null, rep: null, error: null, frame: 0, viewer: 1, hands: "both",
-  playing: false, speed: 1, timer: 0,
+  playing: false, speed: 1, timer: 0, explain: store("rl.replays.explain") === "on",
   filter: { kind: "all", test: "", legend: "", result: "any" },
   db: null, meId: "", annotations: new Map(), rtStarted: false,
 };
@@ -256,6 +256,7 @@ function renderViewer() {
           <button class="tr-btn" id="t-next" title="Next decision (→)" aria-label="next decision">${ICON.next}</button>
           <button class="tr-btn" id="t-last" title="Last decision (End)" aria-label="last decision">${ICON.last}</button>
           <select id="t-speed" aria-label="autoplay speed" title="autoplay speed">${SPEEDS.map(x => `<option value="${x}" ${st.speed === x ? "selected" : ""}>${x}×</option>`).join("")}</select>
+          <label class="tr-explain" title="Tell every move over the table (what is played, from where to where, what taps and why), with slower animations and a slower autoplay"><input type="checkbox" id="t-explain" ${st.explain ? "checked" : ""}><span>Explain</span></label>
         </div>
         <div class="tr-slider"><input type="range" id="t-range" min="0" max="${n - 1}" value="${st.frame}" aria-label="decision"><div class="tr-ticks" aria-hidden="true">${turnSegments(frames).filter(sg => sg.turn > 0).map(sg => `<i style="left:${(100 * sg.start / Math.max(1, n - 1)).toFixed(2)}%">${sg.count / n >= 0.045 ? `<span>${sg.turn}</span>` : ""}</i>`).join("")}</div></div>
         <div class="tr-pos mono" id="t-pos"></div>
@@ -284,6 +285,7 @@ function renderViewer() {
   $("#t-prev", host).onclick = () => go(st.frame - 1); $("#t-next", host).onclick = () => go(st.frame + 1);
   $("#t-play", host).onclick = toggleAutoplay;
   $("#t-speed", host).onchange = e => { st.speed = +e.target.value; if (st.playing) { stopAutoplay(); startAutoplay(); } };
+  $("#t-explain", host).onchange = e => { st.explain = e.target.checked; store("rl.replays.explain", st.explain ? "on" : "off"); renderFrame(); if (st.playing) { stopAutoplay(); startAutoplay(); } };
   $("#t-range", host).oninput = e => go(+e.target.value);
   if (hg) {
     const ds = desyncSet(hg);
@@ -320,7 +322,7 @@ function renderFrame() {
   const b = f.board || {};
   $("#t-pos", host).innerHTML = `<b>${st.frame + 1}</b><span class="muted">/${n}</span> · turn ${b.turn ?? "–"} · ${esc(phaseName(b.phase))}`;
   const compared = hg && isCompared(f);
-  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "", nav: navHandlers(frames), navPos: `${st.frame + 1}/${n}` });
+  RiftBoard.render({ ...f, focus: frameFocus(f), decision_player: f.player, passes: passesBefore(frames, st.frame), log: showdownLog(frames, st.frame) }, { viewer: st.viewer, hands: st.hands, banner: compared ? (f.agree ? "Bot agrees" : "Bot disagrees") : "", bannerKind: compared ? (f.agree ? "agree" : "disagree") : "", nav: navHandlers(frames), navPos: `${st.frame + 1}/${n}`, story: st.explain && window.RiftBoard ? RiftBoard.story(f) : false, slow: st.explain });
   // the current move, one line under the transport
   const who = hg ? ((hg.players || [])[f.player - 1] || "P" + f.player) : (s ? (f.player === s.featured.seat ? s.featured : s.opp).player : "P" + f.player);
   const playedIdx = hg && f.human_known && f.human_choice >= 0 ? f.human_choice : f.chosen;
@@ -349,7 +351,9 @@ function renderFrame() {
     ? `<textarea id="a-comment" placeholder="What you would have done and why">${esc(ann ? ann.comment || "" : "")}</textarea><div class="toolbar"><button class="primary" id="a-save">Save</button>${ann ? `<span class="small muted">Saved${ann.would_play != null ? ` — you would have played ${esc((f.options || [])[ann.would_play] || "")}` : ""}</span>` : ""}</div>`
     : `<p class="small muted">Votes ("me") and comments are saved when the page is opened on claude.ai with your account.</p>`}`;
   const as = $("#a-save", host); if (as) as.onclick = () => saveAnnotation(f, ann ? ann.would_play : null);
-  $("#before", host).innerHTML = f.log && f.log.length ? `<details class="panel"><summary><h3>What happened before this decision</h3></summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : "";
+  const tale = f.log && f.log.length && window.RiftBoard ? RiftBoard.story(f) : [];
+  $("#before", host).innerHTML = (tale.length ? `<section class="panel d-story"><h3>What happened before this decision</h3><p class="xs muted">The engine's events since the previous decision, in order: what was played and from where, what moved where, what tapped to pay, what triggered and resolved, what died, what scored.</p><ol>${tale.map(l => `<li class="${esc(l.kind)}"><i>${l.icon}</i><span>${optionHtml(l.text)}</span></li>`).join("")}</ol></section>` : "")
+    + (f.log && f.log.length ? `<details class="panel"><summary><h3>Engine log</h3></summary><div class="log">${f.log.map(esc).join("\n")}</div></details>` : "");
   const play = $("#t-play", host); if (play) { play.innerHTML = st.playing ? ICON.pause : ICON.play; play.setAttribute("aria-pressed", st.playing); play.setAttribute("aria-label", st.playing ? "pause" : "play"); }
 }
 /** The bot's reason at a compared move, reconstructed from where its search went: how sure it was, where the human's move
@@ -487,7 +491,7 @@ function aboutPanel(hg, frames) {
 function startAutoplay() {
   const n = ((st.rep || {}).frames || []).length; if (!n) return;
   if (st.frame >= n - 1) st.frame = 0;
-  st.playing = true; st.timer = setInterval(() => { if (!host || !host.isConnected || !$("#t-play", host)) return stopAutoplay(); if (st.frame >= n - 1) { stopAutoplay(); return; } st.frame++; renderFrame(); }, 900 / st.speed);
+  st.playing = true; st.timer = setInterval(() => { if (!host || !host.isConnected || !$("#t-play", host)) return stopAutoplay(); if (st.frame >= n - 1) { stopAutoplay(); return; } st.frame++; renderFrame(); }, (st.explain ? 3200 : 900) / st.speed);
   renderFrame();
 }
 function stopAutoplay() { if (st.timer) clearInterval(st.timer); st.timer = 0; const was = st.playing; st.playing = false; if (was && host && $("#t-play", host)) renderFrame(); }

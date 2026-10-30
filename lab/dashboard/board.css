@@ -422,3 +422,16 @@ img.rb-pic { object-fit: cover; }
 .rb-champ.zone { display: grid; grid-template-columns: auto; justify-items: center; gap: 3px; }
 .rb-champ.zone .rb-card.champ { width: 58px; }
 .rb-me .rb-champ.zone .rb-card.champ.rb-legal-hl { transform: translateY(-4px); }
+
+/* The story caption: what happened since the previous decision, told over the table. */
+.rb { position: relative; }
+.rb-story { position: absolute; left: 14px; top: 44px; z-index: 6; max-width: min(380px, 46%); padding: 8px 10px 6px; border-radius: 10px; background: rgba(10, 14, 26, .9); border: 1px solid var(--rb-chrome); backdrop-filter: blur(6px); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); font-size: 12.5px; line-height: 1.35; }
+.rb-story-h { font: 700 9.5px/1 var(--rb-display); letter-spacing: .14em; text-transform: uppercase; color: var(--rb-gold); margin-bottom: 5px; }
+.rb-sl { display: flex; gap: 7px; align-items: baseline; padding: 2px 0; color: var(--rb-ink-dim); }
+.rb-sl.last { color: var(--rb-ink); }
+.rb-sl i { font-style: normal; width: 14px; flex: 0 0 14px; text-align: center; color: var(--rb-gold-dim); }
+.rb-sl.play i, .rb-sl.move i, .rb-sl.score i { color: var(--rb-gold); } .rb-sl.kill i { color: #ff8a84; } .rb-sl.equip i, .rb-sl.damage i { color: #ffb37a; }
+.rb-sl.last.play, .rb-sl.last.move { animation: rb-sl-in .6s ease-out; }
+@keyframes rb-sl-in { from { background: rgba(214, 178, 94, .25); } to { background: transparent; } }
+.rb-sc { color: var(--rb-ink); font-weight: 600; border-bottom: 1px dotted var(--rb-gold-dim); cursor: zoom-in; }
+@media (max-width: 720px) { .rb-story { position: static; max-width: none; margin: 6px 10px; } }

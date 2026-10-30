@@ -21,6 +21,7 @@
           animate    false disables the FLIP transition of units between frames (default true)
           banner / bannerKind   short status text in the top bar ("Bot is thinking…"), kind "me" | "bot" | "over"
       nav / navPos          {prevTurn, prev, next, nextTurn} callbacks: step buttons in the top bar; navPos = "12/80" shown between them
+      story / slow          story: true (tell frame.log over the table) or an array from RiftBoard.story(frame); slow: longer animations
           legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
 (function () {
@@ -409,19 +410,77 @@
   }
 
   // ── transitions (FLIP on object ids) ───────────────────────────────────────
-  function snapshot() { const m = new Map(); S.el.querySelectorAll("[data-oid]").forEach(e => m.set(e.dataset.oid, e.getBoundingClientRect())); return m; }
+  function snapshot() { const m = new Map(); S.el.querySelectorAll("[data-oid]").forEach(e => m.set(e.dataset.oid, { r: e.getBoundingClientRect(), ex: e.classList.contains("ex") })); return m; }
+  /** Moves between two frames: a card that changed place flies there, a new one fades in, a unit that got exhausted
+      taps (rotates into place) and one that readied untaps. Slow mode (opts.slow) stretches every duration. */
   function animate(prev) {
     if (!prev.size || !("animate" in Element.prototype) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const scroll = { x: window.scrollX, y: window.scrollY };
+    const k = S.opts.slow ? 2.6 : 1;
     S.el.querySelectorAll("[data-oid]").forEach(e => {
       const a = prev.get(e.dataset.oid);
-      if (!a) { e.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1 }], { duration: 260, easing: "ease-out" }); return; }
-      const b = e.getBoundingClientRect(); const dx = a.left - b.left, dy = a.top - b.top;
-      if (Math.abs(dx) + Math.abs(dy) > 3 && Math.abs(dx) + Math.abs(dy) < 2000) e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 380, easing: "cubic-bezier(.2,.7,.2,1)" });
+      if (!a) { e.animate([{ opacity: 0, transform: "scale(.6)" }, { opacity: 1 }], { duration: 260 * k, easing: "ease-out" }); return; }
+      const b = e.getBoundingClientRect(); const dx = a.r.left - b.left, dy = a.r.top - b.top;
+      const moved = Math.abs(dx) + Math.abs(dy) > 3 && Math.abs(dx) + Math.abs(dy) < 2000;
+      const ex = e.classList.contains("ex");
+      if (moved) e.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 380 * k, easing: "cubic-bezier(.2,.8,.2,1)" });
+      else if (ex && !a.ex) e.animate([{ transform: "rotate(-12deg)", filter: "brightness(1.6)" }, { transform: "rotate(14deg)", offset: .6 }, { transform: "rotate(7deg)" }], { duration: 520 * k, easing: "ease-out" });
+      else if (!ex && a.ex) e.animate([{ transform: "rotate(7deg)" }, { transform: "rotate(-3deg)", offset: .7 }, { transform: "none" }], { duration: 420 * k, easing: "ease-out" });
     });
-    void scroll;
   }
 
+  // ── the story of a frame: the engine's log since the previous decision, told as sentences ──────────────────────
+  // Each entry: {icon, text, cards:[names], kind}. The caption over the table shows the last few; the Replays panel
+  // the whole list. Patterns follow src/engine trace lines (PLAY, MOVE, EXHAUST_RUNE, ATTACH, KILL, SCORE, …).
+  const STORY = [
+    [/^PLAY: (.+?) \(id=\d+, (\w+)(?:, cost=([^)]+))?\)/, (m, f) => ({ icon: "▲", kind: "play", cards: [m[1]], text: `${seatOf(f)} plays ${m[1]} from hand${m[3] ? ` for ${m[3].replace(/(\d)E/, "$1 energy")}` : ""} (${m[2].toLowerCase()})` })],
+    [/^SPELL: (.+?)(?: \(id=\d+.*)?$/, (m, f) => ({ icon: "✦", kind: "play", cards: [m[1]], text: `${seatOf(f)} casts ${m[1]}` })],
+    [/^MOVE: (.+?) \(id=\d+\) -> BF#(\d+)/, (m, f) => ({ icon: "➜", kind: "move", cards: [m[1]], text: `${m[1]} moves to ${bfName(f, +m[2])}` })],
+    [/^MOVE: (.+?) \(id=\d+\) -> (.+)/, (m) => ({ icon: "➜", kind: "move", cards: [m[1]], text: `${m[1]} moves to ${m[2]}` })],
+    [/^EXHAUST_RUNE: (.+?) \(id=\d+\) for (\w+)/, (m) => ({ icon: "↻", kind: "rune", cards: [], text: `taps a ${m[1]} for ${m[2]}` })],
+    [/^RECYCLE_RUNE: (.+?) \(id=\d+\)(.*)/, (m) => ({ icon: "⟲", kind: "rune", cards: [], text: `recycles a ${m[1]} for power` })],
+    [/^CHANNELED: (.+?) \(id=\d+, (\w+)\)/, (m) => ({ icon: "◆", kind: "rune", cards: [], text: `channels a ${m[1]} (${m[2]})` })],
+    [/^PAY_COST: (.+?) E=(\d+) P=(\d+)/, (m) => ({ icon: "⬢", kind: "cost", cards: [m[1]], text: `pays ${m[2]} energy${+m[3] ? ` and ${m[3]} power` : ""} for ${m[1]}` })],
+    [/^ATTACH(?: \((\w+)\))?: (.+?) -> (.+)/, (m) => ({ icon: "⚔", kind: "equip", cards: [m[2], m[3]], text: `${m[2]} is equipped to ${m[3]}${m[1] === "free" ? " (free)" : ""}` })],
+    [/^EQUIP_COST: exhausted (.+)/, (m) => ({ icon: "↻", kind: "tap", cards: [m[1]], text: `taps ${m[1]} to equip it` })],
+    [/^ENTERS_READY: (.+?)(?: \(.*)?$/, (m) => ({ icon: "◇", kind: "ready", cards: [m[1]], text: `${m[1]} enters ready` })],
+    [/^KILL: (.+?) \(id=\d+, (\d+)M, dmg=(\d+)\)/, (m) => ({ icon: "✖", kind: "kill", cards: [m[1]], text: `${m[1]} dies (${m[3]} damage on ${m[2]} might)` })],
+    [/^ASSIGN_DAMAGE: (.+)/, (m) => ({ icon: "⚔", kind: "damage", cards: [], text: `damage: ${m[1]}` })],
+    [/^SCORE: P([12]) \+(\d+) via (\w+)(?: -> (\d+))?/, (m) => ({ icon: "★", kind: "score", cards: [], text: `P${m[1]} scores ${m[2]} via ${m[3]}${m[4] ? `, now ${m[4]}` : ""}` })],
+    [/^CONQUER: (.+)/, (m) => ({ icon: "★", kind: "score", cards: [], text: `conquers ${m[1]}` })],
+    [/^SHOWDOWN: (.+)/, (m) => ({ icon: "⚑", kind: "phase", cards: [], text: `showdown: ${m[1]}` })],
+    [/^COMBAT: BF#(\d+) attacker=P(\d) defender=P(\d)/, (m, f) => ({ icon: "⚔", kind: "phase", cards: [], text: `combat at ${bfName(f, +m[1])}: P${m[2]} attacks, P${m[3]} defends` })],
+    [/^DAMAGE_STEP: (.+)/, (m) => ({ icon: "⚔", kind: "phase", cards: [], text: `damage step: ${m[1]}` })],
+    [/^TRIGGER: (.+?)(?: \(.*)?$/, (m) => ({ icon: "⚡", kind: "trigger", cards: [m[1].replace(/:.*$/, "")], text: `${m[1]} triggers` })],
+    [/^RESOLVE: (.+?) \(chain_item=\d+.*\)/, (m) => ({ icon: "✓", kind: "resolve", cards: [m[1]], text: `${m[1]} resolves` })],
+    [/^EFFECT: (.+)/, (m) => ({ icon: "·", kind: "effect", cards: [], text: m[1] })],
+    [/^DREW: (.+?) \(id=\d+\)/, (m, f) => ({ icon: "▤", kind: "draw", cards: [m[1]], text: `${seatOf(f)} draws ${m[1]}` })],
+    [/^MULLIGAN: P(\d) set aside (.+?) \(id=\d+\)/, (m) => ({ icon: "▤", kind: "draw", cards: [m[2]], text: `P${m[1]} sets aside ${m[2]}` })],
+    [/^MAY_DECLINED: (.+)/, (m) => ({ icon: "–", kind: "choice", cards: [], text: `declines: ${m[1]}` })],
+    [/^(?:ADDITIONAL_TURN|PHASE): (.+)/, (m) => ({ icon: "⟶", kind: "phase", cards: [], text: m[1] })],
+  ];
+  const bfName = (f, i) => { const b = f && f.board && f.board.battlefields && f.board.battlefields[i]; return b ? b.name : `battlefield ${i + 1}`; };
+  const seatOf = f => f && f.player ? `P${f.player}` : "";
+  function story(frame) {
+    const out = [];
+    for (const raw of (frame && frame.log) || []) {
+      const line = String(raw).replace(/^\[D:[\d.]+\]\s*/, "").trim();
+      if (/^(CHOSE|INTENT|DECISION)\b/.test(line)) continue;
+      let hit = null;
+      for (const [re, fn] of STORY) { const m = re.exec(line); if (m) { hit = fn(m, frame); break; } }
+      if (!hit) { const m = /^([A-Z][A-Z _']+?): (.+)$/.exec(line); if (m && /[a-z]/.test(m[2])) hit = { icon: "·", kind: "card", cards: [titleCase(m[1])], text: `${titleCase(m[1])}: ${m[2]}` }; }
+      if (hit) out.push(hit);
+    }
+    return out;
+  }
+  const titleCase = s => String(s).toLowerCase().replace(/(^|\s|')([a-z])/g, (_, a, b) => a + b.toUpperCase());
+  /** The caption over the table: the last few story lines, card names clickable (preview). */
+  function storyHtml(frame) {
+    const lines = Array.isArray(S.opts.story) ? S.opts.story : S.opts.story ? story(frame) : [];
+    if (!lines.length) return "";
+    const tail = lines.slice(-6);
+    const chipify = (text, cards) => { let t = esc(text); for (const n of cards || []) { if (!n) continue; const c = card(n); const k = zoomKey({ card: c, name: n, state: "in the story" }); t = t.replace(esc(n), `<span class="rb-sc" data-z="${k}" tabindex="0">${esc(n)}</span>`); } return t; };
+    return `<div class="rb-story" aria-live="polite"><div class="rb-story-h">What happens${lines.length > tail.length ? ` · last ${tail.length} of ${lines.length}` : ""}</div>${tail.map((l, i) => `<div class="rb-sl ${l.kind} ${i === tail.length - 1 ? "last" : ""}"><i>${l.icon}</i><span>${chipify(l.text, l.cards)}</span></div>`).join("")}</div>`;
+  }
   // ── zoom preview ───────────────────────────────────────────────────────────
   function ensureZoom() {
     if (S.zoom) return;
@@ -600,7 +659,7 @@
     // the battlefield where the action is takes the room: 1.8 columns against 1 for each of the others
     S.el.style.setProperty("--rb-cols", bfs.map((_, i) => sit && sit.index === i ? "minmax(0, 1.8fr)" : "minmax(0, 1fr)").join(" ") || "minmax(0, 1fr)");
     S.el.classList.toggle("rb-in-combat", !!(sit && sit.index >= 0 && sit.mode));
-    S.el.innerHTML = topBar(board, sit) + rail(board, opp, L.any ? L : null, false, sit)
+    S.el.innerHTML = topBar(board, sit) + storyHtml(frame) + rail(board, opp, L.any ? L : null, false, sit)
       + `<section class="rb-field ${sit && sit.index >= 0 ? "rb-has-hot" : ""}" aria-label="battlefields">${bfs.map((bf, i) => battlefield(bf, i, L.any ? L : null, viewer, sit, board)).join("")}</section>`
       + rail(board, me, L.any ? L : null, true, sit) + legalBar(frame);
     if (S.opts.nav) S.el.querySelectorAll("[data-nav]").forEach(b => { b.onclick = () => { const fn = S.opts.nav[b.dataset.nav]; if (fn) fn(); }; });
@@ -611,6 +670,6 @@
     S.handlers = []; if (S.zoom) S.zoom.remove(); if (S.backdrop) S.backdrop.remove(); S.zoom = S.backdrop = null;
     if (S.el) { S.el.classList.remove("rb", "rb-in-combat"); S.el.innerHTML = ""; } S.el = null; S.frame = null; S.z = [];
   }
-  const API = { mount, render, destroy, cardImage, sprite, card, situation, parseOption, concerns, keywords: unitKeywords, DOMAINS };
+  const API = { mount, render, destroy, cardImage, sprite, card, situation, parseOption, concerns, story, keywords: unitKeywords, DOMAINS };
   window.RiftBoard = API;
 })();
