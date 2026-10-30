@@ -35,6 +35,13 @@
 #include "ml/value_net.h"
 #include "rules/deck_validator.h"
 #include "wasm/greedy_bot.h"
+#include "agents/ismcts_search.h"
+#include "agents/search_options.h"
+
+#include <algorithm>
+#include <chrono>
+#include <cstdlib>
+#include <cstring>
 
 #include <nlohmann/json.hpp>
 
@@ -89,6 +96,10 @@ struct Session {
     std::unique_ptr<GameEngine> engine;
     std::vector<int> history;             // legal indices applied so far
     std::unique_ptr<wasm::GreedyBot> bots[2];
+    // bot = "search[:sims=N,worlds=K]": the lab's own ISMCTS (pmcts), the same
+    // searcher the training loop plays with, over the loaded value net.
+    std::unique_ptr<search::PuctAgent> search[2];
+    int search_worlds = 0;
     std::vector<std::string> log;         // engine log since the last move
     int last_bot_index = -1;
     PlayerId last_bot_player = PlayerId::None;
@@ -228,6 +239,17 @@ wasm::GreedyBot& botFor(Session& ses, PlayerId p) {
     return *slot;
 }
 
+/// "search:sims=50,worlds=6" -> (50, 6); defaults 50 and 6.
+std::pair<int, int> parseSearchSpec(const std::string& spec) {
+    int sims = 50, worlds = 6;
+    auto grab = [&](const char* key, int& out) {
+        const auto k = spec.find(key); if (k == std::string::npos) return;
+        const int v = std::atoi(spec.c_str() + k + std::strlen(key)); if (v > 0) out = v;
+    };
+    grab("sims=", sims); grab("worlds=", worlds);
+    return {std::min(sims, 400), std::min(worlds, 16)};
+}
+
 }  // namespace
 
 extern "C" {
@@ -282,12 +304,30 @@ RB_EXPORT int rb_new_game(const char* deck1_txt, const char* deck2_txt, int huma
                 (e.level == LogLevel::Trace && raw->log.size() < 300))
                 raw->log.push_back(e.message);
         });
-        const auto cfg = wasm::GreedyBotConfig::parse(bot_spec ? bot_spec : "greedy");
-        for (int k = 0; k < 2; ++k) {
-            ses->bots[k] = std::make_unique<wasm::GreedyBot>(
-                c.db, c.registry, ses->deck1, ses->deck2, ses->seed, cfg,
-                ses->seed * 7919u + 17u + static_cast<uint64_t>(k));
-            ses->bots[k]->setValueNet(g_net);
+        const std::string spec = bot_spec ? bot_spec : "greedy";
+        if (spec.rfind("search", 0) == 0) {
+            const auto [sims, worlds] = parseSearchSpec(spec);
+            SearchOptions opts;
+            opts.eval = "score";            // replaced by the loaded net below
+            opts.worlds = worlds;
+            opts.threads = 1;
+            opts.prior = "heuristic";
+            for (int k = 0; k < 2; ++k) {
+                ses->search[k] = std::make_unique<search::PuctAgent>(
+                    c.db, c.registry, ses->deck1, ses->deck2, ses->seed,
+                    ses->seed * 7919u + 17u + static_cast<uint64_t>(k), sims, opts);
+                if (g_net) ses->search[k]->searcher().setValueNet(g_net);
+                ses->search[k]->setDecisionHistory(&ses->history);
+            }
+            ses->search_worlds = worlds;
+        } else {
+            const auto cfg = wasm::GreedyBotConfig::parse(spec);
+            for (int k = 0; k < 2; ++k) {
+                ses->bots[k] = std::make_unique<wasm::GreedyBot>(
+                    c.db, c.registry, ses->deck1, ses->deck2, ses->seed, cfg,
+                    ses->seed * 7919u + 17u + static_cast<uint64_t>(k));
+                ses->bots[k]->setValueNet(g_net);
+            }
         }
         ses->engine->beginGame(ses->deck1, ses->deck2, ses->seed);
         g_session = std::move(ses);
@@ -354,21 +394,35 @@ RB_EXPORT int rb_bot_move() {
     auto& ses = *g_session;
     if (ses.engine->isStepDone()) return -fail(kNotADecision, "game is over");
     try {
-        const PlayerId who = decisionPlayer(ses.engine->currentStep());
+        const StepResult step = ses.engine->currentStep();
+        const PlayerId who = decisionPlayer(step);
         if (who == PlayerId::None) return -fail(kNotADecision, "no decision pending");
-        auto& bot = botFor(ses, who);
-        const int idx = bot.choose(*ses.engine, who, ses.history);
+        int idx = 0;
+        json arr = json::array();
+        double ms = 0; int worlds = 0; bool replayed = false;
+        if (ses.search[0]) {
+            auto& agent = *ses.search[who == PlayerId::Player2 ? 1 : 0];
+            const auto t0 = std::chrono::steady_clock::now();
+            const Intent chosen = agent.selectAction(ses.engine->state(), step.legal);
+            ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - t0).count();
+            for (size_t i = 0; i < step.legal.size(); ++i) if (step.legal[i] == chosen) { idx = static_cast<int>(i); break; }
+            for (const auto& [i, v] : agent.lastSearch()) arr.push_back({{"index", i}, {"score", v}});
+            worlds = ses.search_worlds; replayed = !agent.lastResult().resumed;
+        } else {
+            auto& bot = botFor(ses, who);
+            idx = bot.choose(*ses.engine, who, ses.history);
+            for (const auto& [i, v] : bot.lastSearch()) arr.push_back({{"index", i}, {"score", v}});
+            ms = bot.lastMs(); worlds = bot.lastWorlds(); replayed = bot.lastReplayed();
+        }
         ses.log.clear();
         ses.history.push_back(idx);
         ses.engine->applyChoice(idx);
         ses.last_bot_index = idx;
         ses.last_bot_player = who;
         // Search record for rb_bot_last_search_json.
-        json arr = json::array();
-        for (const auto& [i, v] : bot.lastSearch()) arr.push_back({{"index", i}, {"score", v}});
         g_search_buf = json{{"player", playerToSeat(who)}, {"chosen", idx},
-                            {"ms", bot.lastMs()}, {"worlds", bot.lastWorlds()},
-                            {"replayed", bot.lastReplayed()}, {"options", arr}}.dump();
+                            {"ms", ms}, {"worlds", worlds},
+                            {"replayed", replayed}, {"options", arr}}.dump();
         return idx;
     } catch (const std::exception& e) {
         return -fail(kEngineError, e.what());
@@ -413,8 +467,10 @@ RB_EXPORT int rb_load_value_net(const uint8_t* data, int len) {
     try {
         auto net = std::make_shared<const ml::ValueNet>(data, static_cast<size_t>(len), "value net");
         g_net = net;
-        if (g_session)
+        if (g_session) {
             for (auto& b : g_session->bots) if (b) b->setValueNet(g_net);
+            for (auto& a : g_session->search) if (a) a->searcher().setValueNet(g_net);
+        }
         return kOk;
     } catch (const std::exception& e) {
         return fail(kBadNet, e.what());

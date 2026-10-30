@@ -6,7 +6,7 @@
    The table is RiftBoard (board.js, a global) with the human's seat at the bottom and the bot's hand face down; the options are
    the board's gold highlights plus the list under the table. The game lives in module scope: leaving the screen and coming back
    finds it where it was. Router contract: render(container) / destroy(); no params. Styles: app/play.css (prefix .v-play). */
-import { data, esc, $, $$, store, sleep, card, cardByName, cardImg, portrait, domainDots, pageHead, chip, cssOnce, chipText as libChipText,
+import { runtime, data, esc, $, $$, store, sleep, card, cardByName, cardImg, portrait, domainDots, pageHead, chip, cssOnce, chipText as libChipText,
          empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural } from "./lib.js";
 
 const CSS = new URL("./play.css", import.meta.url).href;
@@ -15,6 +15,8 @@ const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacram
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
+  search:  { label: "Search",  spec: "search:sims=50,worlds=6",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move." },
+  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8",  help: "The same search with 150 simulations and 8 redeals. The strongest the browser can run; expect 5 to 15 s per move." },
 };
 const SEATS = { "1": "Player 1, on the play", "2": "Player 2, on the draw", random: "Random" };
 const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100, focus: 1100 }, LOG_MAX = 400;
@@ -43,6 +45,7 @@ const G = {
   busy: false, thinking: false, thinkStart: 0, timer: 0, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1,
   tally: null, result: null, lastHint: "", error: null,
   feed: [],                        // what happened since your last real decision: the bot's moves, your automatic passes, points scored
+  rec: null, saved: null,          // the game record (every decision, for review) and where it was saved
 };
 let keysBound = false;
 
@@ -144,6 +147,8 @@ async function start() {
     const me = deckByPath(c.me), bot = deckByPath(c.bot);
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
+    G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [] };
+    G.saved = null;
     Object.assign(G, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null,
                        tally: { 1: { conquer: 0, hold: 0, effect: 0 }, 2: { conquer: 0, hold: 0, effect: 0 } } });
     G.ui.sheet = true; draw(); advance();
@@ -156,7 +161,9 @@ async function advance() {
   if (st.game_over) {
     G.busy = true; paint();
     try { G.result = await call("result"); G.st = await call("state", { perspective: 0 }); noteLog(G.st); G.lastHint = decidingLine(G.result).replace(/\.$/, ""); } catch (e) { G.error = e.message; }
-    G.busy = false; G.stage = "over"; draw(); return;
+    G.busy = false; G.stage = "over"; draw();
+    saveGame();                                   // for review: the whole game, every decision with its options
+    return;
   }
   if (st.decision_is_human) {
     // no real choice: a cost step with auto-pay on, or a lone Pass (priority / focus) — answered after a short beat
@@ -164,7 +171,7 @@ async function advance() {
     if ((st.paying_cost && G.autopay && st.legal.length) || lonePass) {
       // a lone "Pass focus" in a showdown or combat is held a beat longer, so the combat panel can be read
       G.busy = true; paint(); await sleep(lonePass ? (st.legal[0].type === "PassFocus" ? AUTO_PAUSE.focus : AUTO_PAUSE.pass) : AUTO_PAUSE.pay);
-      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); if (lonePass) G.feed.push({ kind: "me", text: st.legal[0].text, t: Date.now() }); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
+      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); if (lonePass) G.feed.push({ kind: "me", text: st.legal[0].text, t: Date.now() }); record(st, st.legal[0].index, "auto"); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
       G.busy = false; return advance();
     }
     paint(); return;
@@ -175,6 +182,7 @@ async function advance() {
     notePass(mv.text, mv.type, mv.player || 3 - G.seat);
     G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer();
     G.feed.push({ kind: "bot", text: mv.text || "option " + mv.index, type: mv.type, t: Date.now() });
+    if (G.rec) G.rec.decisions.push({ n: st.n, player: 3 - G.seat, turn: (st.board || {}).turn, phase: (st.board || {}).phase, who: "bot", chosen: mv.index, text: mv.text || "", options: (mv.search && mv.search.options || []).map(o => [o.index, +(+o.score).toFixed(4)]), ms: Math.round(mv.ms || 0) });
     paint();
     const inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
     await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : inShowdown ? AUTO_PAUSE.focus : BOT_PAUSE.forced);
@@ -186,6 +194,7 @@ async function pick(index) {
   G.busy = true; paint();
   const chosen = G.st.legal.find(l => l.index === index) || {};
   if (!G.st.paying_cost) G.feed = [];        // a real decision of yours: the feed restarts from here
+  record(G.st, index, G.st.paying_cost ? "pay" : "me");
   try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null; } catch (e) { G.error = e.message; }
   G.busy = false; advance();
 }
@@ -428,6 +437,33 @@ function feedHtml(over) {
     return `<div class="fi bot ${fresh}"><span class="badge p${bot}">Bot</span><span class="fi-t">${chipText(e.text, "sm")}</span></div>`;
   }).join("")}`;
 }
+/** One decision of yours into the game record: the options you had and what you chose ("me": a real choice, "auto": a lone
+    pass taken for you, "pay": which rune paid a cost). */
+function record(st, index, who) {
+  if (!G.rec || !st) return;
+  const legal = st.legal || [];
+  G.rec.decisions.push({ n: st.n, player: G.seat, turn: (st.board || {}).turn, phase: (st.board || {}).phase, who, chosen: index,
+    text: (legal.find(l => l.index === index) || {}).text || "", options: who === "me" ? legal.map(l => [l.index, l.text]) : legal.length });
+}
+/** Save the finished game to the lab's database (when the page runs on claude.ai), so it can be replayed with the strong
+    bot and annotated like the human games. */
+async function saveGame() {
+  if (!G.rec || !G.result) return;
+  const { db, meId } = await runtime();
+  const id = `${G.rec.started.slice(0, 19).replace(/[-:T]/g, "")}_${G.seed}`;
+  const doc = { ...G.rec, id, finished: new Date().toISOString(), result: G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
+    engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "" };
+  if (!db) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); return; }
+  try { await db.collection("games").doc(id).set(doc); G.saved = { ok: true, id }; }
+  catch (e) { G.saved = { ok: false, why: e.message || e.code || "the database refused the write" }; }
+  paintSaved();
+}
+function paintSaved() { const el = G.host && $("#vp-saved", G.host); if (el) el.innerHTML = savedHtml(); }
+function savedHtml() {
+  if (!G.saved) return `<span class="hint">Saving this game for review…</span>`;
+  return G.saved.ok ? notice(`Saved for review as <b class="mono">${esc(G.saved.id)}</b>: it can be replayed with the strong bot and annotated in Replays.`, "ok")
+                    : notice(`Not saved: ${esc(G.saved.why)}.`, "");
+}
 function asideHtml(st, over) {
   const lb = G.lastBot, sh = lb && lb.search, shares = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score), max = Math.max(1e-9, ...shares.map(o => o.score));
   const ms = G.botMoves, avg = ms.length ? ms.reduce((a, b) => a + b, 0) / ms.length : 0, mx = ms.length ? Math.max(...ms) : 0;
@@ -477,6 +513,7 @@ function resultHtml() {
     ${hint ? `<p class="r-hint">${esc(hint)}</p>` : ""}
     <div class="r-decks">${deck(G.cfg.me, "You", me, won)}<div class="vp-vs" aria-hidden="true">VS</div>${deck(G.cfg.bot, "The bot", opp, !draw && !won)}</div>
     <div class="r-facts">${chip(`<b>${plural(r.turns, "turn")}</b>`)}${chip(`${plural(r.decisions, "decision")}`)}${chip(`your moves <b>${G.myMoves}</b>`)}${chip(`bot moves <b>${ms.length}</b>${ms.length ? `, ${avg.toFixed(0)} ms each` : ""}`)}${chip(`bot ${esc(LEVELS[G.level].label.toLowerCase())}`)}${chip(`seed ${G.seed}`, "mono")}</div>
+    <div id="vp-saved" class="r-saved">${savedHtml()}</div>
     <div class="r-actions"><button type="button" class="primary" id="vp-again">Play again</button><button type="button" id="vp-new">New game</button></div>
     <p class="hint">Both hands are face up on the table below.</p>
   </section>`;

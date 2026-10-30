@@ -95,6 +95,9 @@ public:
     bool hasPrior() const { return static_cast<bool>(prior_); }
     /// The two-head network behind eval=policy:<file>, if any.
     const ml::PolicyNet* policyNet() const { return pnet_.get(); }
+    /// Use an already loaded value net as the leaf evaluation (the browser
+    /// engine has no file to name in SearchOptions::eval).
+    void setValueNet(std::shared_ptr<const ml::ValueNet> net) { net_ = std::move(net); }
 
     /// Run the search for `perspective`, who must decide among `legal` at
     /// `state`. `seed` drives world sampling and tie-breaks: the same inputs
