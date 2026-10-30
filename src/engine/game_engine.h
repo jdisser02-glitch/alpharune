@@ -365,6 +365,11 @@ public:
     /// spinning up the full engine subsystem stack.
     static void expireTemporaryKeywords(GameObject& obj, const CardDB& db);
 
+    /// CR 468.7.c: as a combat ends, the grants given "this combat"
+    /// (EffectExecutor::giveKeywordThisCombat / giveMightThisCombat) expire.
+    /// Public for the per-card tests.
+    static void expireThisCombatEffects(GameObject& obj, const CardDB& db);
+
     /// Restore control of any object whose "until <source> leaves the board"
     /// controlling source is no longer in play (Akshan, Mischievous). Run as
     /// part of cleanup; exposed publicly so per-card tests can verify the

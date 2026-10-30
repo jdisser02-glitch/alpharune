@@ -35,10 +35,25 @@ public:
         for (auto g : gear) ctx.executor.unattachGear(g);
 
         ctx.executor.banishObject(picked);
+        // CR 183.1: a banished token ceases to exist — nothing to play back.
+        if (token) {
+            auto& bz = ctx.state.player(owner).banishment;
+            bz.erase(std::remove(bz.begin(), bz.end(), picked), bz.end());
+            return;
+        }
+        // The owner cannot play it there ("can't" beats "can", CR 054.2): a
+        // battlefield where units can't be played (Rockfall Path), a
+        // battlefield while they may only play units to their base (Mageseeker
+        // Warden), or another player's base (Vendetta FAQ, Temporal Breach and
+        // Hostile Takeover). The play fails its legality check and the unit
+        // stays in banishment.
+        if (!ownerCanPlayUnitAt(ctx.state, owner, *where)) {
+            ctx.events.logTrace("TEMPORAL BREACH: " + ctx.state.getObject(picked).name +
+                                " can't be played there; it stays banished");
+            return;
+        }
         auto& bz = ctx.state.player(owner).banishment;
         bz.erase(std::remove(bz.begin(), bz.end(), picked), bz.end());
-        // CR 183.1: a banished token ceases to exist — nothing to play back.
-        if (token) return;
 
         // It comes back as a new object: no damage, buffs, statuses or roles.
         auto& unit = ctx.state.getObject(picked);
@@ -52,6 +67,15 @@ public:
         ctx.executor.playIgnoringCost(owner, picked, *where);
     }
 private:
+    static bool ownerCanPlayUnitAt(const GameState& state, PlayerId owner, const LocationId& where) {
+        if (const auto* base = std::get_if<BaseLocation>(&where)) return base->player == owner;
+        if (const auto* at = std::get_if<BattlefieldLocation>(&where)) {
+            if (state.player(owner).units_play_base_only) return false;
+            for (const auto& bf : state.battlefields)
+                if (bf.id == at->id) return !bf.blocks_unit_play;
+        }
+        return true;
+    }
     const CardDef def_ = [] {
         CardDef d;
         d.id = 853;

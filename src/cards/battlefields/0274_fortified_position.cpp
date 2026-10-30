@@ -33,7 +33,7 @@ public:
             return;  // suspended for agent decision
         }
         if (picked == kInvalidId || !ctx.state.objectExists(picked)) return;
-        ctx.executor.giveTemporaryKeyword(picked, Keyword::Shield, 2);
+        ctx.executor.giveKeywordThisCombat(picked, Keyword::Shield, 2);
         ctx.events.logTrace("FORTIFIED POSITION: defend -> grant Shield 2");
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouDefendHere; }

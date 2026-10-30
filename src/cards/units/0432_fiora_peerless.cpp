@@ -30,7 +30,7 @@ public:
         if (attackers != 1 || defenders != 1) return;  // not one on one
         // Double my Might this combat: add my current Might as temporary might.
         int cur = ctx.state.getObject(ctx.source).current_might;
-        ctx.executor.giveTemporaryMight(ctx.source, cur);
+        ctx.executor.giveMightThisCombat(ctx.source, cur);
         ctx.events.logTrace("FIORA PEERLESS: one on one -> doubled Might this combat (+" +
                             std::to_string(cur) + ")");
     }

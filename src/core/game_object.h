@@ -122,6 +122,13 @@ struct GameObject {
     int temp_assault_value = 0;  // temporary assault applied "this turn"
     int temp_shield_value = 0;   // temporary shield applied "this turn"
     int temp_might_bonus = 0;    // temporary +N might applied "this turn"
+    // The part of the grants above given "this combat" only (Fortified
+    // Position's [Shield 2], Durand Memorial's [Tank], Fiora, Peerless): they
+    // expire when the combat ends (CR 468.7.c), not at the end of the turn.
+    int combat_shield_value = 0;
+    int combat_assault_value = 0;
+    int combat_might_bonus = 0;
+    KeywordSet combat_keywords;
     int moves_this_turn = 0;     // times this unit moved this turn (Kayn, Unleashed)
     bool immune_to_damage = false; // recomputed each recalculateAuras; set by a
                                    // card's applyPassiveAura when its condition

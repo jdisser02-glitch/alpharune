@@ -1198,6 +1198,37 @@ void GameEngine::expireTemporaryKeywords(GameObject& obj, const CardDB& db) {
     obj.temp_keywords.reset();
 }
 
+void GameEngine::expireThisCombatEffects(GameObject& obj, const CardDB& db) {
+    if (obj.combat_shield_value == 0 && obj.combat_assault_value == 0 &&
+        obj.combat_might_bonus == 0 && obj.combat_keywords.bits == 0)
+        return;
+    KeywordSet printed;
+    if (obj.card_def_id != kInvalidId) printed = db.get(obj.card_def_id).keywords;
+    auto drop = [&](Keyword kw) {
+        if (!printed.has(kw) && !obj.aura_keywords.has(kw)) obj.keywords.clear(kw);
+        obj.temp_keywords.clear(kw);
+    };
+    if (obj.combat_shield_value != 0) {
+        obj.shield_value = std::max(0, obj.shield_value - obj.combat_shield_value);
+        obj.temp_shield_value = std::max(0, obj.temp_shield_value - obj.combat_shield_value);
+        if (obj.shield_value == 0) drop(Keyword::Shield);
+    }
+    if (obj.combat_assault_value != 0) {
+        obj.assault_value = std::max(0, obj.assault_value - obj.combat_assault_value);
+        obj.temp_assault_value = std::max(0, obj.temp_assault_value - obj.combat_assault_value);
+        if (obj.assault_value == 0) drop(Keyword::Assault);
+    }
+    for (int k = 0; k < static_cast<int>(Keyword::Count); ++k) {
+        const Keyword kw = static_cast<Keyword>(k);
+        if (!obj.combat_keywords.has(kw) || kw == Keyword::Shield || kw == Keyword::Assault) continue;
+        drop(kw);
+    }
+    obj.temp_might_bonus -= obj.combat_might_bonus;
+    obj.combat_shield_value = obj.combat_assault_value = obj.combat_might_bonus = 0;
+    obj.combat_keywords.reset();
+    obj.recomputeMight();
+}
+
 void GameEngine::expirationStep(bool resume) {
     auto& site = state_.decision_site;
     if (!resume) {
@@ -1273,6 +1304,9 @@ void GameEngine::doExpirationBody() {
         // just clear it. recomputeMight (below / in cleanup) drops the bonus.
         bool had_temp_might = (obj.temp_might_bonus != 0);
         obj.temp_might_bonus = 0;
+        // Whatever of it was "this combat" only goes with it.
+        obj.combat_shield_value = obj.combat_assault_value = obj.combat_might_bonus = 0;
+        obj.combat_keywords.reset();
         if (obj.temp_assault_value != 0) {
             obj.assault_value -= obj.temp_assault_value;
             obj.temp_assault_value = 0;
@@ -1748,7 +1782,10 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
         cleanup();
         // Only a trigger the activation itself caused needs the chain.
         const bool chain_grew = state_.chain.items.size() > chain_before;
-        last_activation_only_added_ = !chain_grew;
+        // Only an activation made with an empty chain is a showdown action of
+        // its own; an [Add] used at chain priority (paying for, or answering,
+        // a spell on the chain) is part of that spell's play (CR 346).
+        last_activation_only_added_ = !chain_grew && chain_before == 0;
         return chain_grew;
     }
     return true;
@@ -2794,12 +2831,27 @@ void GameEngine::executeHideCard(const Intent& intent) {
     auto it = std::find(ps.hand.begin(), ps.hand.end(), intent.card);
     if (it != ps.hand.end()) ps.hand.erase(it);
 
-    // Pay [A] cost — recycle a rune (universal power cost, CR 164.2.b). A
-    // rune is recycled ready or exhausted; an exhausted one is preferred so
-    // the hide costs no Energy the player could still spend.
+    // Pay [A] cost: power already in the rune pool first (Seal of Rage's
+    // "[Add] [R]" pays an [A]), else recycle a rune (universal power cost,
+    // CR 164.2.b). A rune is recycled ready or exhausted; an exhausted one is
+    // preferred so the hide costs no Energy the player could still spend.
     auto base_loc = BaseLocation{intent.player};
     GameObjectId pay_with = kInvalidId;
+    bool paid_from_pool = false;
+    if (ps.rune_pool.universal_power > 0) {
+        --ps.rune_pool.universal_power;
+        paid_from_pool = true;
+    } else {
+        for (int di = 0; di < static_cast<int>(Domain::Count); ++di) {
+            if (ps.rune_pool.power[di] <= 0) continue;
+            --ps.rune_pool.power[di];
+            paid_from_pool = true;
+            break;
+        }
+    }
+    if (paid_from_pool) events_.logTrace("HIDE_COST: paid [A] from the rune pool");
     for (auto& [id, obj] : state_.objects) {
+        if (paid_from_pool) break;
         if (!obj.isRune() || obj.controller != intent.player) continue;
         if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
         if (pay_with == kInvalidId || (obj.is_exhausted && !state_.getObject(pay_with).is_exhausted))
@@ -3280,7 +3332,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         // recycled ready or exhausted, so an all-exhausted base still pays
         // it (the human client logs "paid 4E — Exhaust 4" and then
         // "recycled 1 Calm rune" for a hide).
-        if (availableAnyPower(player) <= 0) continue;
+        if (availableAnyPower(player) + ps.rune_pool.totalPower() <= 0) continue;
 
         // Can hide at any controlled BF with available facedown slot
         for (auto& bf : state_.battlefields) {
@@ -3338,6 +3390,26 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
         generateTrashReplayActions(player, /*action_ok=*/true, /*reaction_ok=*/true,
                                     actions);
         generateFacedownPlays(player, actions);
+    }
+
+    // [Quick-Draw] gear has [Reaction] (CR 813.1.b: Reaction grants every
+    // permission of Action), so it is played in a showdown too, attaching to
+    // a friendly unit as in the closed state.
+    for (auto card_id : state_.player(player).hand) {
+        if (locked_out) break;
+        auto& card = state_.getObject(card_id);
+        if (!card.isGear() || !card.hasKeyword(Keyword::QuickDraw)) continue;
+        if (!canAfford(player, card_id)) continue;
+        for (auto& [uid, unit] : state_.objects) {
+            if (!unit.isUnit() || unit.controller != player) continue;
+            if (!unit.location.has_value()) continue;
+            Intent qd;
+            qd.type = IntentType::PlayReaction;
+            qd.player = player;
+            qd.card = card_id;
+            qd.targets = {uid};  // the unit it attaches to
+            actions.push_back(qd);
+        }
     }
 
     // Ambush: play units with [Ambush] during showdowns
@@ -4242,8 +4314,15 @@ std::optional<PlayerId> GameEngine::resolveShowdownDecision(
             cleanup();
             // An [Add] ability resolved at once: focus does not pass and the
             // passes stand (CR 430.2.a) — its controller goes on to spend it.
-            if (last_activation_only_added_) {
-                last_activation_only_added_ = false;
+            // Only when that activation is the action taken here: a card played
+            // with focus passes it when its chain closes (CR 346), even if an
+            // [Add] was used to pay for it.
+            const bool is_activation = chosen.type == IntentType::ActivateActionAbility ||
+                                       chosen.type == IntentType::ActivateReactionAbility ||
+                                       chosen.type == IntentType::ActivateAbility;
+            const bool only_added = is_activation && last_activation_only_added_;
+            last_activation_only_added_ = false;
+            if (only_added) {
                 state_.turn.players_passed_focus = passed_before;
                 return current_focus;
             }
@@ -4753,12 +4832,14 @@ void GameEngine::combatResolutionStep(BattlefieldId bf_id) {
         combat_winner = *bf.defender;
     }
 
-    // Clear combat designations
+    // Clear combat designations (CR 468.7.a); "this combat" effects expire
+    // with them (468.7.c).
     for (auto& [id, obj] : state_.objects) {
         if (obj.combat_designation != CombatDesignation::None) {
             obj.combat_designation = CombatDesignation::None;
             obj.recomputeMight();
         }
+        expireThisCombatEffects(obj, card_db_);
     }
 
     // End combat

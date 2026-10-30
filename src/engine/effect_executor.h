@@ -85,6 +85,12 @@ public:
     void bounceToHand(GameObjectId target);
     void giveTemporaryMight(GameObjectId target, int amount, int minimum = 0);
     void giveTemporaryKeyword(GameObjectId target, Keyword kw, int value);
+    /// "It gains [Shield 2] this combat", "give it [Tank] this combat": a
+    /// temporary grant that ends with the combat (CR 468.7.c) rather than at
+    /// the end of the turn (GameEngine::expireThisCombatEffects).
+    void giveKeywordThisCombat(GameObjectId target, Keyword kw, int value);
+    /// "+N [M] this combat" (Fiora, Peerless); see giveKeywordThisCombat.
+    void giveMightThisCombat(GameObjectId target, int amount);
     void buffUnit(GameObjectId target);
     void readyObject(GameObjectId target);
     void moveToBase(GameObjectId target);

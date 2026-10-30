@@ -616,3 +616,111 @@ TEST_F(GuidedReplayTest, OneBattlefieldNameConqueredTwiceInATurnIsTwoBattlefield
     auto plain = guided::humanGameFromJson(syntheticGame(), 1, "synthetic.json");
     EXPECT_EQ(guided::inferDeck(plain, "Bob", db, candidates).preferred_battlefield, "");
 }
+
+namespace {
+
+guided::GuidedResult replayWith(const nlohmann::json& file, const CardDB& db, const CardRegistry& registry,
+                                const std::vector<std::string>& candidates) {
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    return guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+}
+
+}  // namespace
+
+TEST_F(GuidedReplayTest, ADraggedUnitMovedOnceToWhereItWasDropped) {
+    // "Bob moved Scuttle Crab to Emperor's Dais", at once "... to base" and
+    // "... to Emperor's Dais": a move exhausts the Crab, nothing readies it,
+    // so these are the spots the client logged while Bob dragged it — one
+    // move, to Emperor's Dais.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob moved Scuttle Crab to Emperor's Dais.", "Bob", "moved",
+           {{"card", "Scuttle Crab"}, {"to", "Emperor's Dais"}, {"battlefield", "Emperor's Dais"}}),
+        ev(1, "Bob moved Scuttle Crab to base.", "Bob", "moved", {{"card", "Scuttle Crab"}, {"to", "base"}}),
+    });
+    events.insert(events.begin() + 14, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto res = replayWith(file, db, registry, candidates);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+    EXPECT_EQ(res.summary["result"]["engine_scores"][1].get<int>(), 1) << "Bob still conquers";
+}
+
+TEST_F(GuidedReplayTest, ACardDraggedOutOfTheTrashAndBackWasNotPlayed) {
+    // "Bob played Scuttle Crab from trash to base", at once "Bob moved Scuttle
+    // Crab from base to trash": the client's drag, taken back — no play.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob played Scuttle Crab from trash to base.", "Bob", "played",
+           {{"card", "Scuttle Crab"}, {"from", "trash"}, {"to", "base"}}),
+        ev(1, "Bob moved Scuttle Crab from base to trash.", "Bob", "killed",
+           {{"card", "Scuttle Crab"}, {"from", "base"}, {"to", "trash"}}),
+    });
+    events.insert(events.begin() + 18, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto res = replayWith(file, db, registry, candidates);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+}
+
+TEST_F(GuidedReplayTest, ADeathTheClientTookBackIsNotAPlayFromTheTrash) {
+    // "Bob moved Scuttle Crab from Emperor's Dais to trash" with nothing that
+    // kills it, then "Bob played Scuttle Crab from trash to Emperor's Dais":
+    // the engine has the Crab alive there all along.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob moved Scuttle Crab from Emperor's Dais to trash.", "Bob", "killed",
+           {{"card", "Scuttle Crab"}, {"from", "Emperor's Dais"}, {"to", "trash"}}),
+        ev(1, "Bob played Scuttle Crab from trash to Emperor's Dais.", "Bob", "played",
+           {{"card", "Scuttle Crab"}, {"from", "trash"}, {"to", "Emperor's Dais"}}),
+    });
+    events.insert(events.begin() + 18, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto res = replayWith(file, db, registry, candidates);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+}
+
+TEST_F(GuidedReplayTest, TheFocusPassesOfAnImpossibleMoveAreLogArtefactsToo) {
+    // Bob's Crab, exhausted by its move to Emperor's Dais, "moves" on to
+    // another battlefield and both players "pass focus" there: the move is a
+    // log artefact, and so are the passes of the showdown it opened.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob moved Scuttle Crab to Hidden Grove.", "Bob", "moved",
+           {{"card", "Scuttle Crab"}, {"to", "Hidden Grove"}, {"battlefield", "Hidden Grove"}}),
+        ev(1, "Bob passed focus at Hidden Grove.", "Bob", "passed_focus", {{"battlefield", "Hidden Grove"}}),
+    });
+    events.insert(events.begin() + 18, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto res = replayWith(file, db, registry, candidates);
+    const auto& s = res.summary;
+    ASSERT_EQ(s["desyncs"].get<int>(), 2) << s["desync_list"].dump(1);
+    EXPECT_EQ(s["log_artefacts"].get<int>(), 2) << s["desync_list"].dump(1);
+    EXPECT_NE(s["desync_list"][1].value("log_artefact_rule", std::string()).find("Bob moved Scuttle Crab to Hidden Grove"),
+              std::string::npos) << s["desync_list"][1].dump(1);
+}
+
+TEST_F(GuidedReplayTest, AHideLoggedAfterTheEndOfTurnBelongsBeforeIt) {
+    // "Bob ended their turn", then "Bob put a hidden card to Emperor's Dais"
+    // and its "Bob recycled 1 Calm rune": a card is hidden only on its
+    // controller's own turn (CR 811.1.b), so both go before the end of turn.
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    events.push_back(ev(1, "Bob put a hidden card to Emperor's Dais.", "Bob", "hidden_card_placed",
+                        {{"to", "Emperor's Dais"}}));
+    events.push_back(ev(1, "Bob recycled 1 Calm rune.", "Bob", "recycled", {{"amount", 1}, {"rune", "Calm"}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    ASSERT_GE(game.events.size(), 3u);
+    const auto n = game.events.size();
+    EXPECT_EQ(game.events[n - 1].kind, "ended_turn");
+    EXPECT_EQ(game.events[n - 1].actor, "Bob");
+    EXPECT_EQ(game.events[n - 3].kind, "hidden_card_placed");
+    EXPECT_EQ(game.events[n - 2].kind, "recycled");
+}

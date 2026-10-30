@@ -172,10 +172,11 @@ const CardDef* resolveCard(const CardDB& db, const std::string& name,
 /// in `protect` back to the bottom of the deck, so the hand size stays what
 /// the engine dealt — or creates one when the deck has none either.
 /// Returns "already", "pulled" or "created".
+/// `copies`: how many such cards the zone must hold (one is pulled per call).
 std::string ensureCardIn(GameState& state, const CardDB& db, PlayerId player,
                          CardDefId def, ZoneType zone,
                          const std::set<std::string>& keep_names,
-                         const std::set<GameObjectId>& protect);
+                         const std::set<GameObjectId>& protect, int copies = 1);
 
 /// A seed in [first, first + 1024) whose coin toss (GameEngine::determineTurnOrder)
 /// makes `first_player` the turn player.

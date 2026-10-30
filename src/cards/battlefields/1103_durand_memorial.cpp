@@ -19,9 +19,8 @@ public:
 
     // "When you defend here, choose a unit you control here. Give it [Tank]
     //  this combat."
-    // The unit is chosen as the ability is finalized. APPROXIMATION: the
-    // engine has no "this combat" duration, so [Tank] lasts this turn (it only
-    // matters in combat; a second combat here this turn would still see it).
+    // The unit is chosen as the ability is finalized; [Tank] ends with the
+    // combat (CR 468.7.c).
     TriggerType triggerType() const override { return TriggerType::WhenYouDefendHere; }
 
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
@@ -36,7 +35,7 @@ public:
         if (unit == kInvalidId || !ctx.state.objectExists(unit)) return;
         const auto& u = ctx.state.getObject(unit);
         if (!u.isUnit() || u.controller != ctx.controller || u.battlefieldId() != here) return;
-        ctx.executor.giveTemporaryKeyword(unit, Keyword::Tank, 0);
+        ctx.executor.giveKeywordThisCombat(unit, Keyword::Tank, 0);
         ctx.events.logTrace("DURAND MEMORIAL: " + u.name + " has [Tank] this combat");
     }
 private:

@@ -669,6 +669,24 @@ void EffectExecutor::giveTemporaryKeyword(GameObjectId target,
     events_.emit(ObjectStateChangedEvent{target, "buffed"});
 }
 
+void EffectExecutor::giveKeywordThisCombat(GameObjectId target, Keyword kw, int value) {
+    if (!state_.objectExists(target)) return;
+    giveTemporaryKeyword(target, kw, value);
+    auto& obj = state_.getObject(target);
+    obj.combat_keywords.set(kw);
+    if (kw == Keyword::Shield) obj.combat_shield_value += value;
+    else if (kw == Keyword::Assault) obj.combat_assault_value += value;
+    events_.logTrace("  (" + obj.name + ": [" + toString(kw) + "] lasts this combat)");
+}
+
+void EffectExecutor::giveMightThisCombat(GameObjectId target, int amount) {
+    if (!state_.objectExists(target)) return;
+    const int before = state_.getObject(target).temp_might_bonus;
+    giveTemporaryMight(target, amount);
+    auto& obj = state_.getObject(target);
+    obj.combat_might_bonus += obj.temp_might_bonus - before;
+}
+
 void EffectExecutor::buffUnit(GameObjectId target) {
     // [Buff] = a PERMANENT +1 [M] counter (CR), not this-turn temp might. It
     // persists past the expiration step and is what "spend a buff" / "if it

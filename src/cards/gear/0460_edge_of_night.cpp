@@ -27,22 +27,40 @@ public:
     TriggerType triggerType() const override {
         return TriggerType::WhenYouPlayThis;
     }
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play this from face down, attach it to a unit you control
+    // (here)": the player picks which of their units here.
     void onTrigger(CardContext& ctx,
                    const std::vector<GameObjectId>& /*targets*/) override {
         if (!ctx.state.objectExists(ctx.source)) return;
-        auto& self = ctx.state.getObject(ctx.source);
+        const auto& self = ctx.state.getObject(ctx.source);
         // Only the play-from-facedown case: unattached gear sitting at a BF.
-        if (self.attached_to.has_value()) return;
-        if (!self.isAtBattlefield()) return;
-        if (!self.location.has_value()) return;
-        const auto here = *self.location;
-        // Attach to a friendly unit "here" (same battlefield).
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-            if (!obj.location.has_value() || *obj.location != here) continue;
-            attachFree(ctx, ctx.source, id);
+        if (self.attached_to.has_value() || !self.isAtBattlefield() || !self.location.has_value()) {
+            (void)finalizingChoices(ctx);   // no choice in this branch
             return;
         }
+        const auto here = *self.location;
+        auto unitsHere = [&]() {
+            std::vector<GameObjectId> out;
+            for (const auto& [id, obj] : ctx.state.objects)
+                if (obj.isUnit() && obj.controller == ctx.controller && obj.location.has_value() &&
+                    *obj.location == here)
+                    out.push_back(id);
+            return out;
+        };
+        const auto units = unitsHere();
+        if (units.empty()) {
+            (void)finalizingChoices(ctx);   // no choice in this branch
+            return;
+        }
+        GameObjectId picked = pickTarget(ctx, "Edge of Night: attach to a unit you control here", units);
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (picked == kInvalidId && ctx.state.chain.resuming.has_value() &&
+            ctx.state.chain.resuming->resume_point == 7)
+            return;  // suspended for agent decision
+        const auto still = unitsHere();
+        if (picked == kInvalidId || std::find(still.begin(), still.end(), picked) == still.end()) return;
+        attachFree(ctx, ctx.source, picked);
     }
 private:
     const CardDef def_ = [] {
