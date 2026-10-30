@@ -47,7 +47,6 @@ private:
         d.tags = {R"RB(Bilgewater)RB"};
         d.energy_cost = 6;
         d.might = 6;
-        d.keywords.set(Keyword::Ganking);
         d.ability_text = R"RB(Spend 3 XP: Give your units here [Ganking] this turn. (We can move from battlefield to battlefield.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/d073247bc2437443d8a9901f089632a15d11e7a0-744x1039.png)RB";
         return d;

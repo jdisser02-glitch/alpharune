@@ -89,6 +89,12 @@ struct HumanGame {
 /// lines changed actor.
 int inferActors(HumanGame& game);
 
+/// An actor-less play ("Played Hextech Ray from hand.") that inferActors
+/// gave to a player whose legend's domains cannot hold the card, while the
+/// other player's can, is the other player's: a deck only holds cards of its
+/// legend's domains. Returns how many lines changed actor.
+int settleActorsByDomain(HumanGame& game, const CardDB& db);
+
 /// Parse `games[game_number]` of a human-game file. Throws std::runtime_error
 /// when the file or the game is missing.
 HumanGame loadHumanGame(const std::string& path, int game_number);

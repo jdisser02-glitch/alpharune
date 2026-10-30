@@ -27,13 +27,13 @@ public:
             {
                 .cost = {.exhaust = true},
                 .targets = {},
-                .is_action = false, .is_reaction = true,
+                .is_action = false, .is_reaction = true, .adds_resources = true,
             },
             // Ability 1: [Level 6] [Reaction] [E]: [Add] [1][A].
             {
                 .cost = {.exhaust = true},
                 .targets = {},
-                .is_action = false, .is_reaction = true,
+                .is_action = false, .is_reaction = true, .adds_resources = true,
             },
         };
     }

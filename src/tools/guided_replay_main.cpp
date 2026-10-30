@@ -116,6 +116,7 @@ int main(int argc, char* argv[]) {
         const int index = vm["index"].as<int>();
         const std::string root = vm["root"].as<std::string>();
         auto game = guided::loadHumanGame(game_path, index);
+        guided::settleActorsByDomain(game, db);
         if (game.players.size() != 2) throw std::runtime_error("expected two players in " + game_path);
 
         std::string out_dir = vm["out"].as<std::string>();

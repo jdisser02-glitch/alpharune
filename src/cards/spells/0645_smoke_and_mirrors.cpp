@@ -15,31 +15,86 @@ namespace {
 class SmokeAndMirrors : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
+    unsigned choicesAtFinalization() const override { return kFinalizeResolve; }
+    // "Choose a unit you control and another unit you control at a different
+    //  location. If at least one of them has [Temporary], move each to the
+    //  other's location. Draw 1."
+    // Both units are friendly: the engine's generic two-target play (one
+    // friendly x one enemy unit) never offered this card, so it chooses its
+    // own pair as it is played.
     TargetRequirements getTargetRequirements() const override {
         return TargetRequirements{.count = 2, .must_be_unit = true,
                                    .must_be_friendly = true};
     }
+    bool needsPlayTimeTargetPair() const override { return true; }
+    static std::vector<GameObjectId> mine(const GameState& s, PlayerId me) {
+        return chooseableUnits(s, me, [me](const GameObject& o) { return o.controller == me; });
+    }
+    /// My units at a different location than `first`.
+    static std::vector<GameObjectId> elsewhere(const GameState& s, PlayerId me, GameObjectId first) {
+        std::vector<GameObjectId> out;
+        if (!s.objectExists(first)) return out;
+        const auto here = s.getObject(first).location;
+        for (auto id : mine(s, me))
+            if (id != first && s.getObject(id).location != here) out.push_back(id);
+        return out;
+    }
+    bool hasLegalTargets(const GameState& state, PlayerId controller) const override {
+        for (auto id : mine(state, controller))
+            if (!elsewhere(state, controller, id).empty()) return true;
+        return false;
+    }
     void onResolve(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (targets.size() < 2) return;
-        if (!ctx.state.objectExists(targets[0]) ||
-            !ctx.state.objectExists(targets[1])) return;
-        auto& a = ctx.state.getObject(targets[0]);
-        auto& b = ctx.state.getObject(targets[1]);
-        auto la = a.location;
-        auto lb = b.location;
-        // "at a different location" — if they share a location, the swap is
-        // a no-op; still draw 1 per the card's last clause.
-        // "If at least one of them has [Temporary]" — gate the move.
-        bool has_temp = a.hasKeyword(Keyword::Temporary) ||
-                        b.hasKeyword(Keyword::Temporary);
-        if (has_temp && la != lb) {
-            moveToLocation(ctx.executor, targets[0], lb);
-            moveToLocation(ctx.executor, targets[1], la);
-            ctx.events.logTrace("SMOKE AND MIRRORS: swapped two friendly units (Temporary gate met)");
+        const PlayerId me = ctx.controller;
+        GameObjectId a = kInvalidId, b = kInvalidId;
+        bool waiting = false;
+        if (targets.size() >= 2) {
+            a = targets[0];                        // both chosen already
+            b = targets[1];
+            if (finalizingChoices(ctx)) return;
+        } else if (targets.size() == 1) {
+            // Played from facedown: the first unit had to be at the battlefield
+            // the card was hidden at (the hidden-play generator hands it in);
+            // the second, "at a different location", can be anywhere else
+            // (CR 811.1.d.4 uses this very card as its example).
+            a = targets[0];
+            b = pickTarget(ctx, "Smoke and Mirrors: another unit you control at a different location",
+                           elsewhere(ctx.state, me, a));
+            if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+            waiting = b == kInvalidId && ctx.state.chain.resuming.has_value() &&
+                      ctx.state.chain.resuming->resume_point == 7;
         } else {
-            ctx.events.logTrace("SMOKE AND MIRRORS: no swap (Temporary gate not met / same loc)");
+            auto picked = pickTargetPair(ctx, "Smoke and Mirrors", mine(ctx.state, me),
+                                         [&](GameObjectId first) { return elsewhere(ctx.state, me, first); });
+            a = picked.first;
+            b = picked.second;
+            if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+            waiting = (a == kInvalidId || b == kInvalidId) && ctx.state.chain.resuming.has_value() &&
+                      (ctx.state.chain.resuming->resume_point == 10 ||
+                       ctx.state.chain.resuming->resume_point == 12);
         }
-        ctx.executor.drawCards(ctx.controller, 1);
+        if (waiting) return;                       // the agent is still choosing
+        if (a == kInvalidId || b == kInvalidId) return;   // no pair could be chosen
+        const bool has_a = a != kInvalidId && ctx.state.objectExists(a) &&
+                           ctx.state.getObject(a).location.has_value();
+        const bool has_b = b != kInvalidId && ctx.state.objectExists(b) &&
+                           ctx.state.getObject(b).location.has_value();
+        if (!has_a && !has_b) return;             // every target gone: the spell does nothing
+        if (has_a && has_b) {
+            const auto& ua = ctx.state.getObject(a);
+            const auto& ub = ctx.state.getObject(b);
+            const auto la = ua.location;
+            const auto lb = ub.location;
+            const bool has_temp = ua.hasKeyword(Keyword::Temporary) || ub.hasKeyword(Keyword::Temporary);
+            if (has_temp && la != lb) {
+                moveToLocation(ctx.executor, a, *lb);
+                moveToLocation(ctx.executor, b, *la);
+                ctx.events.logTrace("SMOKE AND MIRRORS: swapped two friendly units (Temporary gate met)");
+            } else {
+                ctx.events.logTrace("SMOKE AND MIRRORS: no swap (Temporary gate not met / same loc)");
+            }
+        }
+        ctx.executor.drawCards(me, 1);
     }
 private:
     const CardDef def_ = [] {
@@ -58,7 +113,6 @@ private:
         d.rarity = Rarity::Rare;
         d.keywords.set(Keyword::Action);
         d.keywords.set(Keyword::Hidden);
-        d.keywords.set(Keyword::Temporary);
         d.ability_text = R"RB([Hidden] (Hide now for [A] to react with later for .)
 [Action] (Play on your turn or in showdowns.)
 Choose a unit you control and another unit you control at a different location. If at least one of them has [Temporary], move each to the other's location. Draw 1.)RB";

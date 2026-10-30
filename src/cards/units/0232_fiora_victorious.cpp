@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -19,13 +20,15 @@ public:
             if (self.card_def_id != cardDefId()) continue;
             if (self.controller != controller) continue;
             if (!self.location.has_value()) continue;
-            if (self.current_might < 5) continue;   // "While I'm [Mighty]"
-            for (Keyword kw : {Keyword::Deflect, Keyword::Ganking, Keyword::Shield}) {
-                GameObject::AuraEffect ae;
-                ae.source = sid;
-                ae.keyword = kw;
-                self.aura_effects.push_back(ae);
-            }
+            // "While I'm [Mighty]" (5+ [M]), before this aura's own [Shield]
+            // could count: printed Might, buffs, this turn's and attached Might.
+            const int pre_aura_might = self.base_might + self.buff_count +
+                                       self.temp_might_bonus + self.attachment_might_bonus;
+            if (pre_aura_might < 5) continue;
+            // Only while Mighty: none of the three is printed on her as her
+            // own keyword. auraKeyword adds [Shield]'s +1 [M] while defending.
+            for (Keyword kw : {Keyword::Deflect, Keyword::Ganking, Keyword::Shield})
+                auraKeyword(self, sid, kw, kw == Keyword::Shield ? 1 : 0);
         }
     }
 private:
@@ -46,11 +49,6 @@ private:
         d.energy_cost = 4;
         d.might = 4;
         d.rarity = Rarity::Rare;
-        d.shield_value = 1;
-        d.deflect_value = 1;
-        d.keywords.set(Keyword::Deflect);
-        d.keywords.set(Keyword::Ganking);
-        d.keywords.set(Keyword::Shield);
         d.ability_text = R"RB(While I'm [Mighty], I have [Deflect], [Ganking], and [Shield]. (I'm Mighty while I have 5+ [M].))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/24d4d1997e6a5b145412e402fc69399d590ecda0-744x1039.png)RB";
         return d;

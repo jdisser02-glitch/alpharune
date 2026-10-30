@@ -61,7 +61,6 @@ private:
         d.might = 3;
         d.rarity = Rarity::Rare;
         d.keywords.set(Keyword::Accelerate);
-        d.keywords.set(Keyword::Temporary);
         d.ability_text = R"RB([Accelerate] (You may pay [1][B] as an additional cost to have me enter ready.)
 When I move from a location, play a 3 [M] Sprite unit token with [Temporary] there. (Kill it at the start of its controller's Beginning Phase, before scoring.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/65d0af5361b335a7e65c7aa03a099fc0de3431e6-744x1039.png)RB";

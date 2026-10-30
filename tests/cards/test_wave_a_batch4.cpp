@@ -264,10 +264,11 @@ TEST_F(CardTestFixture, ArenaKingpin_AbilityGivesPlus3ThisTurn) {
 
 // ─── [652] LeBlanc — Backline present; Temporary-suppression escalated. ─────
 
-TEST_F(CardTestFixture, LeBlanc_HasBacklineAndTemporary) {
+TEST_F(CardTestFixture, LeBlanc_HasBacklineNotTemporary) {
     const auto& def = card_db.get(kLeBlanc);
     EXPECT_TRUE(def.keywords.has(Keyword::Backline));
-    EXPECT_TRUE(def.keywords.has(Keyword::Temporary));
+    // "Your [Temporary] effects ..." names the keyword; she does not have it.
+    EXPECT_FALSE(def.keywords.has(Keyword::Temporary));
 }
 
 }  // namespace

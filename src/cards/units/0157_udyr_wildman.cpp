@@ -107,7 +107,6 @@ private:
         d.power_cost = 1;
         d.might = 6;
         d.rarity = Rarity::Rare;
-        d.keywords.set(Keyword::Ganking);
         d.ability_text = R"RB(Spend my buff: Choose one you've not chosen this turn —
 Deal 2 to a unit at a battlefield.Stun a unit at a battlefield.Ready me.Give me [Ganking] this turn.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/2e461e5d05b5ee86e47a425c42c6f3b3c12bc4cf-744x1039.png)RB";

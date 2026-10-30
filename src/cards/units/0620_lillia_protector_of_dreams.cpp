@@ -47,7 +47,6 @@ private:
         d.energy_cost = 5;
         d.might = 4;
         d.rarity = Rarity::Epic;
-        d.keywords.set(Keyword::Tank);
         d.ability_text = R"RB(When you play a token unit, give me +1 [M] this turn.
 Your token units have [Tank]. (They must be assigned combat damage first.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/daa5fe15e0a1c14c8dbb8f858d8a6d444ea6096e-744x1039.png)RB";

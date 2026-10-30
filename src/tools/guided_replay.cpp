@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstring>
 #include <cctype>
 #include <filesystem>
 #include <fstream>
@@ -206,6 +207,104 @@ HumanGame humanGameFromJson(const nlohmann::json& file, int game_number, const s
         }
         g.events.push_back(std::move(l));
     }
+    // "<X> paid 2E / 1P — Exhaust 2 · Kai'Sa, Daughter of the Void · Recycle 1
+    // Fury rune": besides runes, the payment names the sources whose [Add]
+    // abilities paid part of it (a legend, Gold tokens, Seals; CR 430.3).
+    // Each is an activation: give it its own "<X> exhausted <source>" line
+    // right before the payment, the way other captures log it, so the
+    // ability is used before the card is paid.
+    {
+        const std::string dash = "\xE2\x80\x94 ", dot = " \xC2\xB7 ", times = "\xC3\x97";
+        std::vector<LogLine> out;
+        out.reserve(g.events.size());
+        std::string prev_text;
+        for (auto& l : g.events) {
+            const auto d = l.text.find(dash);
+            // A payment line repeated verbatim right after itself is one
+            // payment (the second copy is a capture artefact: one play follows).
+            const bool repeated = l.text == prev_text;
+            prev_text = l.text;
+            if (l.kind == "paid" && !l.actor.empty() && d != std::string::npos && !repeated) {
+                std::string rest = l.text.substr(d + dash.size());
+                while (!rest.empty() && rest.back() == '.') rest.pop_back();
+                std::vector<std::string> parts;
+                for (size_t a = 0;;) {
+                    const auto b = rest.find(dot, a);
+                    parts.push_back(rest.substr(a, b == std::string::npos ? std::string::npos : b - a));
+                    if (b == std::string::npos) break;
+                    a = b + dot.size();
+                }
+                for (std::string part : parts) {
+                    auto starts = [&](const char* w) { return part.rfind(w, 0) == 0; };
+                    if (part.empty() || starts("Exhaust ") || starts("Recycle ") || starts("Float ")) continue;
+                    int n = 1;
+                    size_t k = 0;
+                    while (k < part.size() && std::isdigit(static_cast<unsigned char>(part[k]))) ++k;
+                    if (k > 0 && k < part.size()) {
+                        size_t after = k;
+                        if (part.compare(after, times.size(), times) == 0) after += times.size();
+                        if (after < part.size() && part[after] == ' ') {
+                            n = std::max(1, std::stoi(part.substr(0, k)));
+                            part = part.substr(after + 1);
+                        }
+                    }
+                    for (int c = 0; c < n && c < 6; ++c) {
+                        LogLine x;
+                        x.index = l.index;
+                        x.actor = l.actor;
+                        x.kind = "exhausted";
+                        x.card = part;
+                        x.text = l.actor + " exhausted " + part + ". (named by the payment)";
+                        x.seconds = l.seconds;
+                        out.push_back(std::move(x));
+                    }
+                }
+            }
+            out.push_back(std::move(l));
+        }
+        g.events = std::move(out);
+    }
+    // A move the client took back: "<X> moved U to <battlefield>", then at
+    // once "<X> moved U to base" and "<X> readied U". No rule moves a unit
+    // from a battlefield to base and readies it in the same breath (a move
+    // exhausts, a recall keeps the unit's state, CR 460); it is the client
+    // undoing the first move, so neither move happened.
+    for (size_t i = 0; i + 2 < g.events.size();) {
+        const LogLine& a = g.events[i];
+        const LogLine& b = g.events[i + 1];
+        const LogLine& c = g.events[i + 2];
+        const std::string to = normalizeName(a.to);
+        const bool to_battlefield = !to.empty() && to != "base" && to != "hand" && to != "trash" &&
+                                    to != "deck" && to.rfind("deck", 0) != 0 && to != "banished" &&
+                                    to != "banishment" && to != "champion area";
+        const bool undo = a.kind == "moved" && b.kind == "moved" && c.kind == "readied" &&
+                          !a.actor.empty() && a.actor == b.actor && b.actor == c.actor &&
+                          to_battlefield && normalizeName(b.to) == "base" &&
+                          !a.card.empty() && normalizeName(a.card) == normalizeName(b.card) &&
+                          normalizeName(b.card) == normalizeName(c.card) &&
+                          (a.seconds < 0 || c.seconds < 0 || c.seconds - a.seconds <= 5);
+        if (undo) {
+            g.events.erase(g.events.begin() + static_cast<long>(i), g.events.begin() + static_cast<long>(i) + 3);
+            continue;
+        }
+        // A champion played and put back: "<X> paid 2E — Exhaust 2", "<X>
+        // moved Evelynn, Entrancing to base", "<X> moved Evelynn, Entrancing
+        // to champion area", "<X> readied 1 Chaos rune" ×2. Nothing returns a
+        // unit to the Champion Zone: the client undid the play and its payment.
+        if (a.kind == "moved" && b.kind == "moved" && !a.actor.empty() && a.actor == b.actor &&
+            !a.card.empty() && normalizeName(a.card) == normalizeName(b.card) &&
+            normalizeName(b.to) == "champion area") {
+            size_t from = i, to_end = i + 2;
+            if (from > 0 && g.events[from - 1].kind == "paid" && g.events[from - 1].actor == a.actor) --from;
+            while (to_end < g.events.size() && g.events[to_end].kind == "readied" &&
+                   g.events[to_end].actor == a.actor && g.events[to_end].text.find(" rune") != std::string::npos)
+                ++to_end;
+            g.events.erase(g.events.begin() + static_cast<long>(from), g.events.begin() + static_cast<long>(to_end));
+            i = from;
+            continue;
+        }
+        ++i;
+    }
     if (g.first_player.empty()) {
         for (const auto& e : g.events)
             if (e.kind == "first_turn" || e.kind == "ended_turn") { g.first_player = e.actor; break; }
@@ -369,6 +468,36 @@ std::string sectionLines(const CardDB& db, const std::vector<CardDefId>& ids) {
 }
 
 }  // namespace
+
+int settleActorsByDomain(HumanGame& game, const CardDB& db) {
+    if (game.players.size() != 2) return 0;
+    const CardDef* legends[2] = {nullptr, nullptr};
+    for (int i = 0; i < 2; ++i) {
+        auto it = game.legends.find(game.players[static_cast<size_t>(i)]);
+        if (it == game.legends.end()) return 0;
+        const CardDef* l = resolveCard(db, it->second.legend_name, it->second.legend_code);
+        if (!l || l->card_type != CardType::Legend) {
+            l = nullptr;
+            for (const auto& [id, c] : db.all())
+                if (c.card_type == CardType::Legend && nameMatches(it->second.legend_name, c.name)) { l = &c; break; }
+        }
+        if (!l) return 0;
+        legends[i] = l;
+    }
+    int changed = 0;
+    for (auto& e : game.events) {
+        if (e.kind != "played" || !e.actor_inferred || !e.isCardPlay()) continue;
+        const CardDef* d = resolveCard(db, e.card);
+        if (!d || d->domains.empty()) continue;
+        const int seat = e.actor == game.players[0] ? 0 : e.actor == game.players[1] ? 1 : -1;
+        if (seat < 0) continue;
+        if (fitsDomains(*d, *legends[seat]) || !fitsDomains(*d, *legends[1 - seat])) continue;
+        e.actor = game.players[static_cast<size_t>(1 - seat)];
+        e.actor_uncertain = false;
+        ++changed;
+    }
+    return changed;
+}
 
 DeckInference inferDeck(const HumanGame& game, const std::string& player, const CardDB& db,
                         const std::vector<std::string>& candidate_lists) {
@@ -815,7 +944,21 @@ public:
     Driver(const HumanGame& game, const DeckInference& p1, const DeckInference& p2, const CardDB& db,
            const CardRegistry& registry, AgentInterface* bot, const GuidedOptions& opts)
         : game_(game), decks_{&p1, &p2}, db_(db), registry_(registry), bot_(bot), opts_(opts),
-          consumed_(game.events.size(), 0), matched_(game.events.size(), 0) {}
+          consumed_(game.events.size(), 0), matched_(game.events.size(), 0) {
+        // Whose turn each log line falls in, from the log's own turn ends
+        // ("<X> queued an extra turn" makes X's next turn follow X's).
+        std::string current = game_.first_player;
+        std::set<std::string> extra;
+        turn_of_.reserve(game_.events.size());
+        for (const LogLine& e : game_.events) {
+            turn_of_.push_back(current);
+            if (e.kind == "extra_turn" && !e.actor.empty()) extra.insert(e.actor);
+            if (e.kind == "ended_turn" && game_.players.size() == 2) {
+                if (extra.erase(e.actor)) current = e.actor;
+                else current = e.actor == game_.players[0] ? game_.players[1] : game_.players[0];
+            }
+        }
+    }
 
     GuidedResult run();
 
@@ -837,12 +980,21 @@ private:
     std::string hiddenCardName(const LogLine& e) const;
     Match matchEvent(const LogLine& e, const std::vector<Intent>& legal, const GameState& s, PlayerId p);
     int chooseForced(const std::vector<Intent>& legal, const GameState& s, bool& known, std::string& note);
+    int paymentChoice(const std::vector<Intent>& legal, const GameState& s, bool& known) const;
+    struct LoggedPayment {
+        int energy = 0, power = 0;           // what the payment lines add up to
+        std::vector<std::string> recycled;   // normalised domain of each recycled rune
+        bool ready_recycled = false;         // "(+1E)": a ready rune was recycled
+        bool any = false;
+    };
+    LoggedPayment paymentAround(PlayerId payer) const;
     int choiceEvidence(const Intent& in, const GameState& s) const;
     int combatEvidence(const Intent& in, const GameState& s) const;
     std::vector<const LogLine*> upcomingLinesOf(PlayerId player, int max_lines, bool stop_at_decision) const;
     int passLike(const std::vector<Intent>& legal) const;
     int scoreIntent(const Intent& in, const GameState& s, const std::vector<std::pair<std::string, int>>& preferred) const;
     void prefetch(GameEngine& engine, const std::vector<Intent>& legal);
+    void fixRuneDomains(GameState& ms, PlayerId p, const std::set<GameObjectId>& protect);
     void desync(const LogLine& e, const std::vector<Intent>& legal, const GameState& s, const std::string& reason);
 
     HumanGame game_;                 // a copy: uncertain actors are settled as the replay runs
@@ -855,6 +1007,7 @@ private:
     std::vector<char> consumed_;
     std::vector<char> matched_;      // consumed as a decision line (or undone / desynced)
     int last_matched_ = -1;          // evidence for engine-side choices starts after this line
+    std::vector<std::string> turn_of_;   // the log's turn player at each line
     PlayerId current_player_ = PlayerId::None;  // whose decision the engine is asking for
     size_t cursor_ = 0;
     void markDecision(int i) {
@@ -871,6 +1024,7 @@ private:
     int decisions_ = 0, desyncs_ = 0, silent_passes_ = 0, out_of_order_ = 0, forced_ = 0;
     int rewinds_ = 0, rewinds_ignored_ = 0, readiness_fixes_ = 0, actors_settled_ = 0;
     int score_mismatches_ = 0, pulled_ = 0, created_ = 0, bot_calls_ = 0, bot_fallbacks_ = 0, bot_errors_ = 0;
+    int rune_swaps_ = 0;
     double bot_seconds_ = 0;
     nlohmann::json desync_list_ = nlohmann::json::array();
     nlohmann::json score_mismatch_list_ = nlohmann::json::array();
@@ -892,6 +1046,20 @@ bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal,
             const std::string to = normalizeName(e.to);
             if (to == "hand" || to == "trash" || to == "deck" || to == "banished" || to == "banishment")
                 return false;
+        }
+        // A Standard Move is the turn player's, in their Main Phase (CR
+        // 144.1.a). The other player's unit "moving" is an effect: Charm or
+        // Blitzcrank pulling it, Tideturner's swap, Zhonya's recall. Only a
+        // play logged as a move (a champion from the Champion Zone) can be
+        // that player's own action, and only when the engine offers it.
+        {
+            const size_t pos = static_cast<size_t>(&e - game_.events.data());
+            if (pos < turn_of_.size() && !turn_of_[pos].empty() && !e.actor.empty() &&
+                e.actor != turn_of_[pos]) {
+                for (const auto& in : legal)
+                    if (isPlayType(in.type) && nameMatches(e.card, objName(s, in.card))) return true;
+                return false;
+            }
         }
         // Gear "moves to base" by itself when the unit it was attached to
         // dies; a gear move is a decision only when the engine offers one
@@ -962,6 +1130,15 @@ void Driver::consumeNonDecision(const LogLine& e, const GameState& s, const std:
             if (!o.location.has_value() && o.zone != ZoneType::LegendZone) continue;
             if (!(o.isUnit() || o.card_type == CardType::Legend) || !nameMatches(e.card, o.name)) continue;
             if (exhausted && referenced.count(id)) continue;
+            // A legend with no activated ability is exhausted only as the cost
+            // of its own triggered ability ("you may exhaust me to channel 1
+            // rune", Grand Duelist), which the engine pays when the trigger
+            // is finalized; the capture can log that before the event that
+            // triggers it. Exhausting it here would deny the trigger its cost.
+            if (exhausted && o.card_type == CardType::Legend && o.card_def_id != kInvalidId) {
+                const Card* lc = registry_.get(o.card_def_id);
+                if (lc && lc->activatedAbilities().empty()) continue;
+            }
             o.is_exhausted = exhausted;
             ++readiness_fixes_;
             break;
@@ -1224,6 +1401,28 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
 
     if (yes || no) {
         const std::string prompt = label.substr(label.find(' ') == std::string::npos ? label.size() : label.find(' '));
+        // "additional cost for Rampage: pay 0 energy + 1 power?": the play's
+        // payment lines show it when they add up to more than the card's own
+        // cost ("Billie paid 3E — Exhaust 3." + "Billie recycled 1 Body rune."
+        // for a 3-Energy Rampage).
+        if (const auto f = prompt.find("additional cost for "); f != std::string::npos) {
+            const auto colon = prompt.find(": pay ", f);
+            if (colon != std::string::npos) {
+                const std::string name = prompt.substr(f + 20, colon - f - 20);
+                std::istringstream is(prompt.substr(colon + 6));
+                int add_e = 0, add_p = 0;
+                std::string w1, plus;
+                is >> add_e >> w1 >> plus >> add_p;
+                const CardDef* d = resolveCard(db_, name);
+                const LoggedPayment paid = paymentAround(who);
+                if (d && paid.any) {
+                    const bool did = add_p > 0 ? paid.power >= d->power_cost + add_p
+                                               : paid.energy >= d->energy_cost + add_e;
+                    return yes ? (did ? 3 : 0) : (did ? 0 : 2);
+                }
+            }
+            return 0;
+        }
         // Accelerate: the capture logs the [1][D] as rune lines after the
         // play and then "<X> readied <unit>"; without that line the unit
         // entered exhausted.
@@ -1256,6 +1455,22 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
         // through scoreIntent's target hits; here only the prompt's own effect.
         if (yes) return hits > 0 ? 3 : 0;
         return 0;
+    }
+    // "Deal 1 to each of up to 2 units" (Bilgewater Tracker): how many units
+    // the log kills before the player's next decision.
+    if (label == "no units" || label == "one unit" || label == "two units") {
+        int kills = 0, seen = 0;
+        for (size_t i = evidenceStart(); i < game_.events.size() && seen < 8; ++i) {
+            if (matched_[i]) continue;
+            ++seen;
+            const LogLine& e = game_.events[i];
+            if (seatOf(e.actor) == who && (e.isCardPlay() || e.kind == "ended_turn" || e.kind == "passed_focus"))
+                break;
+            if (e.kind == "killed") ++kills;
+        }
+        if (label == "no units") return kills == 0 ? 1 : 0;
+        if (label == "one unit") return kills >= 1 ? 2 : 0;
+        return kills >= 2 ? 3 : 0;
     }
     // Modal labels.
     int score = 0;
@@ -1349,7 +1564,11 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
         {
             std::vector<int> run;
             std::vector<std::string> names{e.card};
-            for (size_t j = static_cast<size_t>(e.index) + 1; j < game_.events.size() && run.size() < 4; ++j) {
+            // `e` is one of game_.events; LogLine::index is its position in
+            // the FILE (games 2-3 of a BO3 start further on, dropped capture
+            // artefacts shift it), not in game_.events.
+            const size_t pos = static_cast<size_t>(&e - game_.events.data());
+            for (size_t j = pos + 1; j < game_.events.size() && run.size() < 4; ++j) {
                 if (consumed_[j]) continue;
                 const LogLine& f = game_.events[j];
                 if (f.kind == "moved" && f.actor == e.actor && normalizeName(f.to) == normalizeName(e.to) &&
@@ -1514,9 +1733,26 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
         return m;
     }
     if (k == "exhausted") {
+        // An [Add] ability used before the turn's Main Phase would lose its
+        // resources when the Rune Pool empties there (CR 167): the capture's
+        // "<X> exhausted Kai'Sa" sits among the Main Phase's payment lines.
+        const bool before_main = s.turn.phase == TurnPhase::AwakenPhase ||
+                                 s.turn.phase == TurnPhase::BeginningStep ||
+                                 s.turn.phase == TurnPhase::ScoringStep ||
+                                 s.turn.phase == TurnPhase::ChannelPhase ||
+                                 s.turn.phase == TurnPhase::DrawPhase;
+        auto addsResources = [&](const Intent& in) {
+            if (!s.objectExists(in.ability_source)) return false;
+            const Card* c = registry_.get(s.getObject(in.ability_source).card_def_id);
+            if (!c) return false;
+            const auto abs = c->activatedAbilities();
+            return in.ability_index >= 0 && in.ability_index < static_cast<int>(abs.size()) &&
+                   abs[in.ability_index].adds_resources;
+        };
         std::vector<int> cands;
         for (size_t i = 0; i < legal.size(); ++i)
-            if (isAbilityType(legal[i].type) && nameMatches(e.card, objName(s, legal[i].ability_source)))
+            if (isAbilityType(legal[i].type) && nameMatches(e.card, objName(s, legal[i].ability_source)) &&
+                !(before_main && addsResources(legal[i])))
                 cands.push_back(static_cast<int>(i));
         if (cands.empty()) { m.why = "no ability option for '" + e.card + "'"; return m; }
         m.index = pickBest(cands, [](const Intent& in) { return in.targets.empty() ? 1 : 0; });
@@ -1537,9 +1773,96 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
     return m;
 }
 
+/// The payment lines of the play just matched (game_.events[last_matched_]):
+/// up to four lines before it (the usual order) and the ones right after it
+/// (captures that log the play first), never another play's. "<X> paid 2E /
+/// 1P — Exhaust 2 · Recycle 1 Mind rune", "<X> exhausted 1 Fury rune",
+/// "<X> recycled 1 Mind rune".
+Driver::LoggedPayment Driver::paymentAround(PlayerId payer) const {
+    LoggedPayment out;
+    auto parse = [&](const LogLine& e) {
+        const std::string& text = e.text;
+        if (e.kind == "paid") {
+            const auto at = text.find(" paid ");
+            if (at != std::string::npos) {
+                std::istringstream is(text.substr(at + 6));
+                int x = 0;
+                char unit = 0;
+                if (is >> x >> unit && unit == 'E') {
+                    out.energy += x;
+                    std::string slash;
+                    int y = 0;
+                    if (is >> slash && slash == "/" && is >> y >> unit && unit == 'P') out.power += y;
+                    out.any = true;
+                }
+            }
+        } else if (e.kind == "exhausted" && text.find(" rune") != std::string::npos) {
+            out.energy += 1;
+            out.any = true;
+        }
+        for (const std::string verb : {"Recycle ", "recycled "}) {
+            for (size_t at = text.find(verb); at != std::string::npos; at = text.find(verb, at + 1)) {
+                std::istringstream is(text.substr(at + verb.size()));
+                int n = 0;
+                std::string dom, word;
+                if (!(is >> n >> dom >> word) || word.rfind("rune", 0) != 0) continue;
+                for (int c = 0; c < n && c < 8; ++c) out.recycled.push_back(normalizeName(dom));
+                if (e.kind == "recycled") { out.power += n; out.any = true; }
+                if (text.find("(+", at) != std::string::npos) out.ready_recycled = true;
+            }
+        }
+    };
+    if (last_matched_ < 0) return out;
+    const int lm = last_matched_;
+    for (int j = lm - 1; j >= 0 && j >= lm - 4; --j) {
+        const LogLine& e = game_.events[static_cast<size_t>(j)];
+        if (e.isCardPlay() || e.kind == "ended_turn" || e.kind == "moved") break;
+        if (seatOf(e.actor) == payer && (e.kind == "paid" || e.kind == "recycled" || e.kind == "exhausted")) parse(e);
+    }
+    for (size_t j = static_cast<size_t>(lm) + 1; j < game_.events.size() && j <= static_cast<size_t>(lm) + 5; ++j) {
+        const LogLine& e = game_.events[j];
+        if (e.isCardPlay() || e.kind == "ended_turn" || e.kind == "moved" || e.kind == "passed_focus") break;
+        if (seatOf(e.actor) == payer && (e.kind == "paid" || e.kind == "recycled" || e.kind == "exhausted")) parse(e);
+    }
+    return out;
+}
+
+/// A rune to recycle while a cost is paid. The payment lines around the play
+/// name the recycled runes' domains ("<X> recycled 1 Mind rune", "<X> paid
+/// 2E / 1P — Exhaust 2 · Recycle 1 Mind rune"), and a READY rune recycled is
+/// marked "(+1E)" (its Energy floats). Recycling the domain the log names
+/// keeps the right runes on the board for the next plays; without a name, an
+/// exhausted rune goes first (the client spends exhausted runes for power).
+int Driver::paymentChoice(const std::vector<Intent>& legal, const GameState& s, bool& known) const {
+    known = false;
+    const auto& cur = *s.cost_cursor;
+    if (cur.phase != GameState::CostPaymentCursor::Phase::PayingPower) return 0;
+    const LoggedPayment paid = paymentAround(cur.player);
+    const std::vector<std::string>& named = paid.recycled;
+    const bool ready_recycled = paid.ready_recycled;
+    int best = 0, best_score = -1;
+    for (size_t i = 0; i < legal.size(); ++i) {
+        if (legal[i].chosen_objects.empty() || !s.objectExists(legal[i].chosen_objects[0])) continue;
+        const auto& rune = s.getObject(legal[i].chosen_objects[0]);
+        int sc = 0;
+        for (auto d : rune.domains)
+            if (std::find(named.begin(), named.end(), normalizeName(toString(d))) != named.end()) { sc += 4; break; }
+        if (rune.is_exhausted != ready_recycled) sc += 1;
+        if (sc > best_score) { best_score = sc; best = static_cast<int>(i); }
+    }
+    known = !named.empty();
+    return best;
+}
+
 int Driver::chooseForced(const std::vector<Intent>& legal, const GameState& s, bool& known, std::string& note) {
     known = false;
-    if (s.cost_cursor.has_value()) { note = "cost payment"; return 0; }
+    if (s.cost_cursor.has_value()) {
+        note = "cost payment";
+        const int pick = paymentChoice(legal, s, known);
+        if (known) note = "cost payment: rune the log names";
+        known = false;   // a rune pick is never a compared decision
+        return pick;
+    }
     const auto preferred = lookaheadNames();
     int best = 0, best_score = 0;
     for (size_t i = 0; i < legal.size(); ++i) {
@@ -1608,6 +1931,98 @@ void Driver::prefetch(GameEngine& engine, const std::vector<Intent>& legal) {
     }
     for (const auto& [p, def] : pending_hand_) fix(p, db_.get(def), ZoneType::Hand, upcomingPlays(p, 6), nullptr);
     pending_hand_.clear();
+    for (PlayerId p : {PlayerId::Player1, PlayerId::Player2}) fixRuneDomains(ms, p, protect);
+}
+
+/// The rune deck's order is hidden: the engine's shuffle channels other runes
+/// than the human's. The log names the domain of each rune a payment uses
+/// ("<X> exhausted 1 Fury rune", "<X> recycled 1 Mind rune", "<X> paid 2E /
+/// 1P — Exhaust 2 · Recycle 1 Body rune"). When `p`'s next payment names more
+/// runes of a domain than `p` has on the board, a board rune of a domain the
+/// payment does not use is swapped with one of the needed domain from the rune
+/// deck (same place on the board, same readiness).
+void Driver::fixRuneDomains(GameState& ms, PlayerId p, const std::set<GameObjectId>& protect) {
+    // Runes exhausted for Energy and runes recycled for Power, per domain. A
+    // rune is often exhausted and then recycled, so a domain needs as many
+    // runes as the larger of the two counts.
+    std::map<std::string, int> exhausted, recycled;
+    bool started = false;
+    int seen = 0;
+    auto add = [&](std::map<std::string, int>& into, const std::string& text, const char* verb) {
+        for (size_t at = text.find(verb); at != std::string::npos; at = text.find(verb, at + 1)) {
+            std::istringstream is(text.substr(at + std::strlen(verb)));
+            int n = 0;
+            std::string dom, word;
+            if (!(is >> n >> dom >> word) || word.rfind("rune", 0) != 0) continue;
+            into[normalizeName(dom)] += std::min(n, 12);
+            started = true;
+        }
+    };
+    for (size_t i = cursor_; i < game_.events.size() && seen < 10; ++i) {
+        if (consumed_[i]) continue;
+        const LogLine& e = game_.events[i];
+        if (seatOf(e.actor) != p) continue;
+        ++seen;
+        const bool rune_line = e.text.find(" rune") != std::string::npos;
+        const bool payment = e.kind == "paid" || isPaymentOrTokenLine(e);
+        if (e.kind == "paid") add(recycled, e.text, "Recycle ");
+        else if (e.kind == "exhausted" && rune_line) add(exhausted, e.text, " exhausted ");
+        else if (e.kind == "recycled" && rune_line) add(recycled, e.text, " recycled ");
+        if (payment) continue;
+        // The payment's own play may be logged before it; anything else of
+        // the player's ends the payment (or, before it, the search).
+        if (started) break;
+        if (e.kind == "ended_turn" || e.kind == "passed_focus" || e.kind == "showdown" ||
+            e.kind == "hidden_card_placed" || e.kind == "equipped")
+            break;
+    }
+    std::map<std::string, int> need;
+    for (const auto& [d, n] : exhausted) need[d] = std::max(need[d], n);
+    for (const auto& [d, n] : recycled) need[d] = std::max(need[d], n);
+    if (need.empty()) return;
+
+    auto& ps = ms.player(p);
+    std::map<std::string, std::vector<GameObjectId>> board;
+    for (auto& [id, o] : ms.objects)
+        if (o.isRune() && o.controller == p && o.location.has_value() && !o.domains.empty())
+            board[normalizeName(toString(o.domains.front()))].push_back(id);
+    for (const auto& [dom, n] : need) {
+        int have = static_cast<int>(board[dom].size());
+        while (have < n) {
+            // A board rune of a domain this payment needs less of than there is.
+            GameObjectId out = kInvalidId;
+            for (auto& [od, ids] : board) {
+                if (od == dom) continue;
+                const int spare = static_cast<int>(ids.size()) - (need.count(od) ? need.at(od) : 0);
+                if (spare <= 0) continue;
+                for (auto it = ids.rbegin(); it != ids.rend(); ++it)
+                    if (!protect.count(*it)) { out = *it; break; }
+                if (out != kInvalidId) { ids.erase(std::find(ids.begin(), ids.end(), out)); break; }
+            }
+            if (out == kInvalidId) return;
+            // The topmost rune of the needed domain in the rune deck.
+            auto in_it = ps.rune_deck.end();
+            for (auto it = ps.rune_deck.rbegin(); it != ps.rune_deck.rend(); ++it) {
+                if (!ms.objectExists(*it)) continue;
+                const auto& r = ms.getObject(*it);
+                if (!r.domains.empty() && normalizeName(toString(r.domains.front())) == dom) { in_it = std::next(it).base(); break; }
+            }
+            if (in_it == ps.rune_deck.end()) return;
+            auto& leaving = ms.getObject(out);
+            auto& coming = ms.getObject(*in_it);
+            coming.zone = leaving.zone;
+            coming.location = leaving.location;
+            coming.is_exhausted = leaving.is_exhausted;
+            leaving.zone = ZoneType::RuneDeck;
+            leaving.location.reset();
+            leaving.is_exhausted = false;
+            const GameObjectId in_id = *in_it;
+            *in_it = out;
+            board[dom].push_back(in_id);
+            ++have;
+            ++rune_swaps_;
+        }
+    }
 }
 
 void Driver::desync(const LogLine& e, const std::vector<Intent>& legal, const GameState& s, const std::string& reason) {
@@ -1916,6 +2331,7 @@ GuidedResult Driver::run() {
         {"exported_records", static_cast<int>(export_samples_.size())},
         {"score_mismatch_examples", score_mismatch_list_},
         {"hand_fixes", {{"pulled_from_deck", pulled_}, {"created", created_}, {"list", hand_fixes_}}},
+        {"rune_swaps", rune_swaps_},
         {"log_events", static_cast<int>(game_.events.size())},
         {"log_events_consumed", static_cast<int>(std::count(consumed_.begin(), consumed_.end(), 1))},
         {"stop_reason", stop_reason_},

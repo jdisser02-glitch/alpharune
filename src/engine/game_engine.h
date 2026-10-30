@@ -680,6 +680,9 @@ private:
     Intent decideNow(PlayerId player, const std::vector<Intent>& options, const std::string& what);
     /// Pay an activated ability's costs and add it to the chain (no chain run).
     bool payAndQueueAbility(const Intent& intent);
+    /// Set by payAndQueueAbility: the last activation was an [Add] ability
+    /// that resolved at once and queued nothing, so focus stays (CR 430.2.a).
+    bool last_activation_only_added_ = false;
     /// CR 323.6: recall unattached gear at battlefields and permanents / runes
     /// sitting in a base other than their controller's.
     void recallMisplacedObjects();
@@ -692,6 +695,9 @@ private:
                                 Domain domain, bool for_unit = false) const;
     bool payAdditionalCost(PlayerId player, int energy, int power,
                             Domain domain, bool for_unit = false);
+    /// A ready rune about to be recycled for power is exhausted for its [1]
+    /// first; the Energy floats in the Rune Pool (CR 164.2, 167).
+    void floatEnergyOfRecycledRune(PlayerId player, GameObject& rune);
 
     /// Pays the matching PlayerState::TrashReplayGrant's override cost for
     /// `card_id` (auto-spends via payAdditionalCost; an [A] grant picks the

@@ -38,7 +38,6 @@ private:
         d.tags = {R"RB(Mech)RB", R"RB(Bandle City)RB"};
         d.energy_cost = 2;
         d.might = 2;
-        d.keywords.set(Keyword::Ganking);
         d.ability_text = R"RB(When you play me, give a unit [Ganking] this turn. (It can move from battlefield to battlefield.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9f487e8a76e6e6b9f2e32de0c9c147be42f49e59-744x1039.png)RB";
         return d;

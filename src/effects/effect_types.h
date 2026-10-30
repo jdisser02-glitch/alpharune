@@ -349,6 +349,9 @@ struct ActivatedAbility {
     TargetRequirements targets;
     bool is_action = false;
     bool is_reaction = false;
+    // The ability only [Add]s resources: it resolves at once, no chain item,
+    // priority and focus stay with its controller (CR 430.2).
+    bool adds_resources = false;
     // Phase 6q+ — if true, the action generator does NOT enumerate one
     // intent per legal target; instead it emits ONE intent with empty
     // targets and the card's onActivate uses pickTarget() at resolve

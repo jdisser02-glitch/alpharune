@@ -202,6 +202,13 @@ public:
     /// text. Default false; opt-in per card.
     virtual bool isReactionAbility() const { return false; }
 
+    /// Whether the (single, legacy) activated ability only [Add]s resources
+    /// ("[E]: [Reaction] — [Add] [A]", Gold, Seals). Such an ability finalizes
+    /// and resolves as soon as it is activated, without a chain item, and
+    /// priority and focus do not pass (CR 430.2). Opt in only when onActivate
+    /// asks the agent nothing.
+    virtual bool isAddAbility() const { return false; }
+
     /// Multi-ability surface (Phase 6r — multi-ability per Card).
     /// Returns one ActivatedAbility descriptor per distinct activated
     /// ability on this card. Default impl wraps the legacy single-ability

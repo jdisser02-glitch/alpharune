@@ -752,6 +752,7 @@ std::vector<ActivatedAbility> Card::activatedAbilities() const {
         .targets = getTargetRequirements(),
         .is_action = isActionAbility(),
         .is_reaction = isReactionAbility(),
+        .adds_resources = isAddAbility(),
         // Single-ability cards don't use the multi-ability target-defer
         // hook today; opt in by overriding activatedAbilities() directly.
         .needs_activation_time_target = false,

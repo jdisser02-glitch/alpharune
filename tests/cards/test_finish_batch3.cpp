@@ -150,15 +150,16 @@ TEST_F(FinishBatch3, FioraWorthyWiredTrigger) {
 }
 
 // ── LeBlanc, Everywhere at Once (652) — Backline ENGINE-HANDLED, supp ESC ──
-TEST_F(FinishBatch3, LeBlancHasBacklineAndTemporaryKeywords) {
+TEST_F(FinishBatch3, LeBlancHasBacklineNotTemporary) {
     Card* c = card_registry.get(kLeBlancEverywhere);
     ASSERT_NE(c, nullptr);
     const auto& d = c->def();
     EXPECT_EQ(d.super_type, SuperType::Champion);
-    // Clause 1 ([Backline]) is engine-handled via the keyword; verify it (and
-    // the [Temporary] supertype the suppression clause references) are set.
+    // Clause 1 ([Backline]) is engine-handled via the keyword. [Temporary]
+    // only appears in the suppression clause: LeBlanc herself is not
+    // Temporary (she would die at her controller's Beginning Phase).
     EXPECT_TRUE(d.keywords.has(Keyword::Backline));
-    EXPECT_TRUE(d.keywords.has(Keyword::Temporary));
+    EXPECT_FALSE(d.keywords.has(Keyword::Temporary));
     // The suppression clause (clause 2) is escalated -> no trigger declared.
     EXPECT_TRUE(c->triggerTypes().empty());
 }

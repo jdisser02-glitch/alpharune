@@ -48,9 +48,7 @@ private:
         d.power_cost = 1;
         d.might = 5;
         d.rarity = Rarity::Uncommon;
-        d.assault_value = 1;
         d.keywords.set(Keyword::Ambush);
-        d.keywords.set(Keyword::Assault);
         d.keywords.set(Keyword::Reaction);
         d.ability_text = R"RB([Ambush] (You may play me as a [Reaction] to a battlefield where you have units.)
 When you play me, give your other units here [Assault] this turn. (+1 [M] while they're attackers.))RB";

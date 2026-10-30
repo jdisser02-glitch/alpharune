@@ -59,9 +59,7 @@ private:
         d.energy_cost = 5;
         d.might = 4;
         d.rarity = Rarity::Uncommon;
-        d.assault_value = 1;
         d.keywords.set(Keyword::Accelerate);
-        d.keywords.set(Keyword::Assault);
         d.ability_text = R"RB([Accelerate] (You may pay [1][P] as an additional cost to have me enter ready.)
 I have [Assault] equal to the number of enemy units here. (+1 [M] while I'm an attacker for each instance of Assault.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/8ba05afcfbe6901fb4bdb736d5e61656a551f668-744x1039.png?accountingTag=RB)RB";

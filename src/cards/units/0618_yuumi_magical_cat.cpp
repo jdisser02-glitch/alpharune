@@ -41,7 +41,6 @@ private:
         d.power_cost = 1;
         d.might = 1;
         d.rarity = Rarity::Rare;
-        d.keywords.set(Keyword::Tank);
         d.ability_text = R"RB(When I attack or defend, give one of your other units here +3 [M] and [Tank] this turn. (It must be assigned combat damage first.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/588ddfeb01ab7b37110d8a7e656cf9f35530ce4e-744x1039.png)RB";
         return d;

@@ -17,6 +17,7 @@ public:
     const CardDef& def() const override { return def_; }
     bool hasActivatedAbility() const override { return true; }
     bool isReactionAbility() const override { return true; }
+    bool isAddAbility() const override { return true; }   // [Add]: resolves at once (CR 430.2)
     ActivationCost getActivationCost() const override {
         return ActivationCost{.exhaust = true};
     }

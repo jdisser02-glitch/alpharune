@@ -58,9 +58,6 @@ private:
         d.energy_cost = 4;
         d.might = 4;
         d.rarity = Rarity::Rare;
-        d.deflect_value = 1;
-        d.keywords.set(Keyword::Deflect);
-        d.keywords.set(Keyword::Ganking);
         d.keywords.set(Keyword::Hunt);
         d.keywords.set(Keyword::Level);
         d.ability_text = R"RB([Hunt 2] (When I conquer or hold, gain 2 XP.)

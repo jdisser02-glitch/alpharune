@@ -279,6 +279,97 @@ TEST_F(GuidedReplayTest, CaptureArtefactsAreDroppedOrFlagged) {
     EXPECT_EQ(s["result"]["engine_scores"][1].get<int>(), 1) << s.dump(1);
 }
 
+TEST_F(GuidedReplayTest, ClientUndoLinesAreDropped) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // Bob moves his Crab to Emperor's Dais, the client takes it back (the
+    // Crab "moves" to base and is readied), then he moves it for real.
+    events.insert(events.begin() + 14, ev(1, "Bob moved Scuttle Crab to Emperor's Dais.", "Bob", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "Emperor's Dais"}}));
+    events.insert(events.begin() + 15, ev(1, "Bob moved Scuttle Crab to base.", "Bob", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "base"}}));
+    events.insert(events.begin() + 16, ev(1, "Bob readied Scuttle Crab.", "Bob", "readied", {{"card", "Scuttle Crab"}}));
+    // Alice plays her champion and puts it back into the Champion Zone: the
+    // play and its payment are undone (her runes are readied again).
+    events.insert(events.begin() + 11, ev(1, "Alice paid 4E — Exhaust 4.", "Alice", "paid"));
+    events.insert(events.begin() + 12, ev(1, "Alice moved Riven, Broken Blade to base.", "Alice", "moved",
+                                          {{"card", "Riven, Broken Blade"}, {"to", "base"}}));
+    events.insert(events.begin() + 13, ev(1, "Alice moved Riven, Broken Blade to champion area.", "Alice", "moved",
+                                          {{"card", "Riven, Broken Blade"}, {"to", "champion area"}}));
+    events.insert(events.begin() + 14, ev(1, "Alice readied 1 Calm rune.", "Alice", "readied"));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    EXPECT_EQ(game.events.size(), 19u) << "both undone actions leave no line";
+    for (const auto& e : game.events) EXPECT_NE(e.card, "Riven, Broken Blade");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+}
+
+TEST_F(GuidedReplayTest, TheOtherPlayersUnitMovingIsAnEffect) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // During Bob's turn, after his conquest, Alice's Crab "moves": only the
+    // turn player makes Standard Moves (CR 144.1.a), so it is the effect of
+    // something Bob did (Charm, Blitzcrank), not a decision of Alice's.
+    events.insert(events.begin() + 18, ev(1, "Alice moved Scuttle Crab to Emperor's Dais.", "Alice", "moved",
+                                          {{"card", "Scuttle Crab"}, {"to", "Emperor's Dais"}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+}
+
+TEST_F(GuidedReplayTest, APaymentNamingAnAddSourceActivatesIt) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    events.insert(events.begin() + 11, ev(1, "Alice paid 2E / 2P — Exhaust 2 · 2\xC3\x97 Seal of Rage · Recycle 1 Fury rune.",
+                                          "Alice", "paid"));
+    // The same payment line repeated by the capture is one payment.
+    events.insert(events.begin() + 12, ev(1, "Alice paid 2E / 2P — Exhaust 2 · 2\xC3\x97 Seal of Rage · Recycle 1 Fury rune.",
+                                          "Alice", "paid"));
+    events.insert(events.begin() + 13, ev(1, "Bob paid 1E / 1P — Exhaust 1 · Kai'Sa, Daughter of the Void.", "Bob", "paid"));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    std::vector<std::string> activations;
+    for (const auto& e : game.events)
+        if (e.kind == "exhausted") activations.push_back(e.actor + ": " + e.card);
+    ASSERT_EQ(activations.size(), 3u);
+    EXPECT_EQ(activations[0], "Alice: Seal of Rage");
+    EXPECT_EQ(activations[1], "Alice: Seal of Rage");
+    EXPECT_EQ(activations[2], "Bob: Kai'Sa, Daughter of the Void");
+}
+
+TEST_F(GuidedReplayTest, AnActorLessPlayGoesToThePlayerWhoseDomainsHoldIt) {
+    nlohmann::json file = syntheticGame();
+    // Bob is now a Kai'Sa player (Fury / Mind); Riven is Calm / Chaos.
+    file["legends"]["Bob"] = {{"legend", "Kai'Sa, Daughter of the Void"},
+                              {"cards", {{{"name", "Kai'Sa, Daughter of the Void"}, {"code", "OGN-299"}},
+                                         {{"name", "Kai'Sa, Survivor"}, {"code", "OGN-039"}}}}};
+    auto& events = file["events"];
+    // Alice's rune line comes right before Hextech Ray (Fury): the payment
+    // rule gives the spell to Alice, whose Riven deck cannot hold it.
+    events.insert(events.begin() + 11, ev(1, "Alice exhausted 1 Calm rune.", "Alice", "exhausted"));
+    events.insert(events.begin() + 12, ev(1, "Played Hextech Ray from hand.", "Alice", "played",
+                                          {{"card", "Hextech Ray"}, {"from", "hand"}, {"actor_inferred", true}}));
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    EXPECT_EQ(guided::settleActorsByDomain(game, db), 1);
+    for (const auto& e : game.events)
+        if (e.card == "Hextech Ray") EXPECT_EQ(e.actor, "Bob");
+}
+
 TEST_F(GuidedReplayTest, AccelerateFollowsTheReadiedLine) {
     // Bob plays Reckless Innovator ([Accelerate]) and the capture shows the
     // [1][C]: a rune exhausted, a rune recycled, "Bob readied Reckless

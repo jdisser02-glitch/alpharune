@@ -60,8 +60,6 @@ private:
         d.power_cost = 1;
         d.might = 5;
         d.rarity = Rarity::Uncommon;
-        d.assault_value = 1;
-        d.keywords.set(Keyword::Assault);
         d.ability_text = R"RB(Other friendly units here have [Assault]. (+1 [M] while they're attackers.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/4c65e2cae6748590f589ad8b26bc5a20c0d770c2-744x1039.png?accountingTag=RB)RB";
         return d;

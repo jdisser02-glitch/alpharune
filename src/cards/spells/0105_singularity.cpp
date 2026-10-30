@@ -15,12 +15,71 @@ namespace {
 class Singularity : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
+    unsigned choicesAtFinalization() const override { return kFinalizeResolve; }
+    // "Deal 6 to each of up to two units." Any units: two enemy units as well
+    // as one of each. The engine's generic two-target play pairs one friendly
+    // with one enemy unit, so it could not hit two enemies and was never
+    // offered while its player had no unit; the card chooses its own targets
+    // (how many, then which), like Bilgewater Tracker.
     TargetRequirements getTargetRequirements() const override {
         return TargetRequirements{.count = 2, .must_be_unit = true, .optional = true};
     }
+    bool needsPlayTimeTargetPair() const override { return true; }
+    static std::vector<GameObjectId> boardUnits(const GameState& state, PlayerId chooser) {
+        auto out = chooseableUnits(state, chooser, [](const GameObject&) { return true; });
+        std::sort(out.begin(), out.end());
+        return out;
+    }
+    bool hasLegalTargets(const GameState& state, PlayerId controller) const override {
+        return !boardUnits(state, controller).empty();
+    }
     void onResolve(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        for (auto t : targets) {
-            if (ctx.state.objectExists(t)) ctx.executor.dealDamage(t, 6, ctx.source);
+        std::vector<GameObjectId> chosen = targets;   // a direct play names them
+        if (chosen.empty()) {
+            const auto units = boardUnits(ctx.state, ctx.controller);
+            uint32_t legal = 0;
+            if (units.size() >= 1) legal |= 1u;
+            if (units.size() >= 2) legal |= 2u;
+            const int count = pickMode(ctx, "Singularity: deal 6 to how many units", 2,
+                                       {"One unit", "Two units"}, legal);
+            if (count == -1) return;   // waiting for the agent
+            if (count == 0) {
+                GameObjectId a = pickTarget(ctx, "Singularity: deal 6", units);
+                if (a == kInvalidId && ctx.state.chain.resuming.has_value() &&
+                    ctx.state.chain.resuming->resume_point == 7)
+                    return;   // waiting for the agent
+                chosen.push_back(a);
+            } else if (count == 1) {
+                auto [a, b] = pickTargetPair(
+                    ctx, "Singularity: deal 6 to each of two units", units,
+                    [&](GameObjectId first) {
+                        std::vector<GameObjectId> out;
+                        for (auto u : units) if (u != first) out.push_back(u);
+                        return out;
+                    });
+                const bool suspending = (a == kInvalidId || b == kInvalidId) &&
+                                        ctx.state.chain.resuming.has_value() &&
+                                        (ctx.state.chain.resuming->resume_point == 10 ||
+                                         ctx.state.chain.resuming->resume_point == 12);
+                if (suspending) return;   // waiting for the agent
+                chosen.push_back(a);
+                chosen.push_back(b);
+            }
+        }
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+
+        // Deal all the damage first, then kill what is lethally damaged.
+        std::vector<GameObjectId> hit;
+        for (auto t : chosen) {
+            if (t == kInvalidId || !ctx.state.objectExists(t)) continue;
+            if (!ctx.state.getObject(t).location.has_value()) continue;
+            ctx.executor.dealDamage(t, 6, ctx.source);
+            hit.push_back(t);
+        }
+        for (auto t : hit) {
+            if (!ctx.state.objectExists(t)) continue;
+            const auto& o = ctx.state.getObject(t);
+            if (o.location.has_value() && o.hasLethalDamage()) ctx.executor.killObject(t);
         }
     }
 private:

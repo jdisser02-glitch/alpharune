@@ -52,8 +52,6 @@ private:
         d.tags = {R"RB(Poro)RB", R"RB(Freljord)RB"};
         d.energy_cost = 5;
         d.might = 5;
-        d.deflect_value = 1;
-        d.keywords.set(Keyword::Deflect);
         d.ability_text = R"RB([E]: Play two [1] [M] Bird unit tokens with [Deflect]. Use this ability only while I'm at a battlefield. (Opponents must pay [A] to choose a [Deflect] unit with a spell or ability.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/36900508e2ce61196450a4bf7e27722ae36521d9-744x1039.png)RB";
         return d;

@@ -25,6 +25,7 @@ public:
     bool hasActivatedAbility() const override { return true; }
     ActivationCost getActivationCost() const override { return {.exhaust = true}; }
     bool isReactionAbility() const override { return true; }  // [Reaction], not [Action]
+    bool isAddAbility() const override { return true; }   // [Add]: resolves at once (CR 430.2)
     void onActivate(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
         ctx.executor.addFloatingEnergy(ctx.controller, 2);
         ctx.events.logTrace("LUX CROWNGUARD: [Add] [2] energy (spell-only "

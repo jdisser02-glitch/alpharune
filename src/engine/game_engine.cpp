@@ -1692,19 +1692,32 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
     // stepResolve dispatches through Card::onActivate (not
     // onTrigger). Triggered abilities flow through TriggerManager
     // which calls addAbility with the default is_activated=false.
+    const bool source_is_gear = source.isGear();
     {
         auto& aps = state_.player(intent.player);
         aps.abilities_activated_this_turn++;
-        if (source.isGear()) aps.gear_abilities_activated_this_turn++;
+        if (source_is_gear) aps.gear_abilities_activated_this_turn++;
     }
-    chain_manager_->addAbility(intent.ability_source, intent.player,
-                                source.card_def_id, intent.targets,
-                                /*is_activated=*/true,
-                                intent.ability_index);
-    // Carry the granted-ability source onto the chain item so resolution
-    // dispatches to the granting card's onActivate (Forge/Gardens/Heimer).
-    if (intent.granted_ability_def != 0 && !state_.chain.items.empty())
-        state_.chain.items.back().granted_ability_def = intent.granted_ability_def;
+    // CR 430.2: an activated ability that [Add]s resources finalizes and
+    // resolves as soon as it is activated — no chain item, and priority and
+    // focus stay with its controller (430.2.a).
+    bool adds_resources = false;
+    if (ability_card && intent.granted_ability_def == 0) {
+        auto abilities = ability_card->activatedAbilities();
+        if (intent.ability_index >= 0 && intent.ability_index < static_cast<int>(abilities.size()))
+            adds_resources = abilities[intent.ability_index].adds_resources;
+    }
+    const size_t chain_before = state_.chain.items.size();
+    if (!adds_resources) {
+        chain_manager_->addAbility(intent.ability_source, intent.player,
+                                    source.card_def_id, intent.targets,
+                                    /*is_activated=*/true,
+                                    intent.ability_index);
+        // Carry the granted-ability source onto the chain item so resolution
+        // dispatches to the granting card's onActivate (Forge/Gardens/Heimer).
+        if (intent.granted_ability_def != 0 && !state_.chain.items.empty())
+            state_.chain.items.back().granted_ability_def = intent.granted_ability_def;
+    }
     if (state_.objectExists(intent.ability_source)) {
         auto& src = state_.getObject(intent.ability_source);
         // "Only once each turn" abilities count the activation, not the
@@ -1722,6 +1735,21 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
         }
         src.card_counters["__ability_energy_cost"] = printed_energy;
         events_.emit(ObjectStateChangedEvent{intent.ability_source, "ability_activated"});
+    }
+    if (adds_resources) {
+        events_.logTrace("ADD: " + std::string(ability_card->def().name) +
+                         " resolves at once (CR 430.2)");
+        CardContext ctx{state_, events_, *effect_executor_,
+                        intent.player, intent.ability_source};
+        ctx.registry = &card_registry_;
+        ability_card->onActivate(ctx, intent.ability_index, intent.targets);
+        if (source_is_gear && state_.objectExists(intent.ability_source))
+            events_.emit(ObjectStateChangedEvent{intent.ability_source, "gear_ability_used"});
+        cleanup();
+        // Only a trigger the activation itself caused needs the chain.
+        const bool chain_grew = state_.chain.items.size() > chain_before;
+        last_activation_only_added_ = !chain_grew;
+        return chain_grew;
     }
     return true;
 }
@@ -3325,7 +3353,9 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
         }
     }
 
-    // Can activate [E]: abilities with [Action] timing during showdowns (CR 806)
+    // Can activate [E]: abilities with [Action] timing during showdowns (CR 806),
+    // and [Reaction] ones: Reaction grants all the permissions of Action
+    // (CR 813.1.b) — Gold tokens, Seals, Kai'Sa's legend.
     for (auto& [id, obj] : state_.objects) {
         if (obj.controller != player) continue;
         if (!obj.location.has_value() && obj.zone != ZoneType::LegendZone) continue;
@@ -3337,7 +3367,7 @@ std::vector<Intent> GameEngine::generateShowdownActions(PlayerId player) const {
         auto abilities = card->activatedAbilities();
         for (size_t ai = 0; ai < abilities.size(); ++ai) {
             const auto& ab = abilities[ai];
-            if (!ab.is_action) continue;
+            if (!ab.is_action && !ab.is_reaction) continue;
             if (!canPayActivationCost(player, id, obj, *card, (int)ai, ab)) continue;
 
             auto legal_targets = card->enumerateLegalTargets(
@@ -4156,12 +4186,21 @@ std::optional<PlayerId> GameEngine::resolveShowdownDecision(
         case IntentType::ActivateActionAbility: // [Action] [E]: abilities
         case IntentType::ActivateReactionAbility: // [Reaction] [E]: abilities
         case IntentType::ActivateAbility: {  // generic activate (safety)
+            const auto passed_before = state_.turn.players_passed_focus;
             state_.turn.players_passed_focus.clear();  // reset passes
+            last_activation_only_added_ = false;
             // A chain decision inside this play resumes in runShowdownLoop.
             state_.decision_site.showdown_in_intent = true;
             executeIntent(chosen);
             state_.decision_site.showdown_in_intent = false;
             cleanup();
+            // An [Add] ability resolved at once: focus does not pass and the
+            // passes stand (CR 430.2.a) — its controller goes on to spend it.
+            if (last_activation_only_added_) {
+                last_activation_only_added_ = false;
+                state_.turn.players_passed_focus = passed_before;
+                return current_focus;
+            }
             // After chain resolves, focus passes to opponent
             return opponent(current_focus);
         }
@@ -5264,30 +5303,8 @@ void GameEngine::recalculateAuras() {
             }
         }
 
-        // "While I'm [Mighty], I have [Deflect], [Ganking], and [Shield]"
-        if (clean.find("while i'm [mighty]") != std::string::npos ||
-            clean.find("while i\xe2\x80\x99m [mighty]") != std::string::npos) {
-            // Mighty = 5+ might (check base + buffs + temp, before this aura)
-            int pre_aura_might = obj.base_might + obj.buff_count +
-                                 obj.temp_might_bonus + obj.attachment_might_bonus;
-            if (pre_aura_might >= 5) {
-                if (clean.find("[deflect]") != std::string::npos) {
-                    GameObject::AuraEffect ae; ae.source = id;
-                    ae.keyword = Keyword::Deflect; ae.keyword_value = 1;
-                    obj.aura_effects.push_back(ae);
-                }
-                if (clean.find("[ganking]") != std::string::npos) {
-                    GameObject::AuraEffect ae; ae.source = id;
-                    ae.keyword = Keyword::Ganking;
-                    obj.aura_effects.push_back(ae);
-                }
-                if (clean.find("[shield]") != std::string::npos) {
-                    GameObject::AuraEffect ae; ae.source = id;
-                    ae.keyword = Keyword::Shield; ae.keyword_value = 1;
-                    obj.aura_effects.push_back(ae);
-                }
-            }
-        }
+        // (Fiora, Victorious's "While I'm [Mighty], I have [Deflect], [Ganking],
+        // and [Shield]" is her own Card::applyPassiveAura.)
     }
 
     // Step 3c: Equipment-granted keywords and stats
@@ -5936,50 +5953,16 @@ GameEngine::RepeatCost GameEngine::parseRepeatCost(const std::string& text) {
     return rc;
 }
 
-// Pay one additional Repeat tranche (R is the per-tranche cost). Iterates
-// the same primitives canAfford / payCardCost use, but for ONE extra
-// (energy, domain_power) charge — called by executePlaySpell after the
-// base cost has already been paid.
+// Pay one additional Repeat tranche (R is the per-tranche cost) — called by
+// executePlaySpell after the base cost has been paid. Same resources as any
+// extra charge (payAdditionalCost): floating Energy and Power first, then
+// runes exhausted for Energy and recycled to the RUNE deck for Power. (This
+// used to skip the pool, recycle only exhausted runes, and put them into the
+// MAIN deck.)
 bool GameEngine::payRepeatCost(PlayerId player, const RepeatCost& cost) {
     if (!cost.valid) return true;
-    auto base_loc = BaseLocation{player};
-
-    // Energy: exhaust ready runes
-    int need_energy = cost.energy;
-    if (need_energy > 0) {
-        for (auto& [id, obj] : state_.objects) {
-            if (need_energy == 0) break;
-            if (!obj.isRune() || obj.controller != player || obj.is_exhausted) continue;
-            if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
-            obj.is_exhausted = true;
-            --need_energy;
-        }
-        if (need_energy > 0) return false;
-    }
-
-    // Power: recycle exhausted matching-domain rune to deck
-    int need_power = cost.power;
-    if (need_power > 0) {
-        auto& ps = state_.player(player);
-        bool universal = (cost.power_domain == Domain::Count);
-        for (auto& [id, obj] : state_.objects) {
-            if (need_power == 0) break;
-            if (!obj.isRune() || obj.controller != player) continue;
-            if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
-            if (!obj.is_exhausted) continue;
-            bool match = universal;
-            if (!match) {
-                for (auto d : obj.domains) if (d == cost.power_domain) { match = true; break; }
-            }
-            if (!match) continue;
-            obj.zone = ZoneType::MainDeck;
-            obj.location = std::nullopt;
-            ps.main_deck.insert(ps.main_deck.begin(), id);
-            --need_power;
-        }
-        if (need_power > 0) return false;
-    }
-    return true;
+    return payAdditionalCost(player, std::max(0, cost.energy), std::max(0, cost.power),
+                             cost.power_domain);
 }
 
 void GameEngine::maybePayOptionalAdditionalCost(PlayerId player, GameObjectId card_id) {
@@ -6035,8 +6018,16 @@ void GameEngine::maybePayOptionalAdditionalCost(PlayerId player, GameObjectId ca
     if (!dom.has_value()) return;  // can't afford -> not offered (CR: choice only when payable)
 
     // Optional ("you may") -> yes/no agent decision. Mirrors the Accelerate flow.
+    // The label is descriptive only (Intent equality and the action vocab key
+    // on chosen_value); it names the card and the cost for a replay or a log
+    // reader.
+    const std::string prompt = "additional cost for " + card.name + ": pay " +
+        std::to_string(std::max(0, cost.energy)) + " energy + " +
+        std::to_string(std::max(0, cost.power)) + " power?";
     Intent decline; decline.type = IntentType::MakeChoice; decline.player = player; decline.chosen_value = 0;
     Intent accept;  accept.type  = IntentType::MakeChoice; accept.player  = player; accept.chosen_value  = 1;
+    decline.choice_label = "No — " + prompt;
+    accept.choice_label = "Yes — " + prompt;
     std::vector<Intent> opts = {decline, accept};
     state_.decision_index++;
     events_.logTrace("DECISION #" + std::to_string(state_.decision_index) + " (" +
@@ -6541,6 +6532,10 @@ GameEngine::CostPaymentAdvance GameEngine::resolveCostPaymentDecision(
                          std::to_string(rune_id) + ", " +
                          (rune.is_exhausted ? "exhausted" : "ready") +
                          ") for power [agent choice]");
+        // A ready rune is exhausted for its [1] before it is recycled for its
+        // power (CR 164.2.a/b: two abilities, only "[E]: Add [1]" needs the
+        // rune ready); the Energy floats in the Rune Pool (CR 167).
+        if (!rune.is_exhausted) floatEnergyOfRecycledRune(cur.player, rune);
         auto base_loc = BaseLocation{cur.player};
         rune.location = std::nullopt;
         rune.zone = ZoneType::RuneDeck;
@@ -6554,6 +6549,18 @@ GameEngine::CostPaymentAdvance GameEngine::resolveCostPaymentDecision(
     }
 
     return advanceCostPayment();
+}
+
+// Recycling a READY rune for its power: its "[E]: Add [1]" is used first, the
+// way a player pays (the client logs "Recycle 1 Chaos rune (+1E)"). Both are
+// the rune's own [Reaction] Add abilities (CR 164.2.a/b); exhausting before
+// recycling never costs anything, and the Energy floats in the Rune Pool until
+// the next Main Phase or the end of the turn (CR 167).
+void GameEngine::floatEnergyOfRecycledRune(PlayerId player, GameObject& rune) {
+    rune.is_exhausted = true;
+    state_.player(player).rune_pool.energy += 1;
+    events_.logTrace("  EXHAUST_RUNE: " + rune.name + " for [1] before recycling it (pool energy=" +
+                     std::to_string(state_.player(player).rune_pool.energy) + ")");
 }
 
 bool GameEngine::canPayActivationResources(PlayerId player, int energy,
@@ -6666,6 +6673,7 @@ bool GameEngine::payAdditionalCost(PlayerId player, int energy, int power,
         if (p_need <= 0) break;
         auto& rune = state_.getObject(rid);
         if (!runePaysPower(rune, domain)) continue;
+        if (!rune.is_exhausted) floatEnergyOfRecycledRune(player, rune);
         rune.location = std::nullopt;
         rune.zone = ZoneType::RuneDeck;
         rune.is_exhausted = false;
