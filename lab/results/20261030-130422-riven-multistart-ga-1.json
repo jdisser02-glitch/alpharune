@@ -1,0 +1,5532 @@
+{
+ "id": "20261030-130422-riven-multistart-ga-1",
+ "name": "riven-multistart-ga-1",
+ "kind": "ga",
+ "description": "Genetic search seeded with every Riven list of the current meta (Sacramento, RRO 25, Radiance release) so crossover can mix them; pool = all cards those lists play plus a few named ones; jury weighted toward the mirror and Kai'Sa while the engine's Kennen is under review.",
+ "started_utc": "2026-10-30T13:04:22+00:00",
+ "finished_utc": "2026-10-30T13:11:02+00:00",
+ "engine_commit": "ae56f50",
+ "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+ "opp_agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+ "games_per_matchup": 8,
+ "threads": 4,
+ "seed": 23,
+ "spec": {
+  "name": "riven-multistart-ga-1",
+  "description": "Genetic search seeded with every Riven list of the current meta (Sacramento, RRO 25, Radiance release) so crossover can mix them; pool = all cards those lists play plus a few named ones; jury weighted toward the mirror and Kai'Sa while the engine's Kennen is under review.",
+  "base": "decks/riven_sacramento.txt",
+  "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+  "opponents": [
+   {
+    "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+    "label": "Riven mirror (Nam Dang)",
+    "weight": 3
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+    "label": "Kai'Sa (IcrazyFool)",
+    "weight": 2
+   },
+   {
+    "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+    "label": "Kennen (Dylan Sumner)",
+    "weight": 1
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (zombro)",
+    "weight": 1
+   },
+   {
+    "deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+    "label": "Kennen (Simple)",
+    "weight": 1
+   }
+  ],
+  "seeds": [
+   "lab/decks/meta/*/*riven*.txt"
+  ],
+  "pool": {
+   "from_decks": [
+    "lab/decks/meta/*/*riven*.txt"
+   ],
+   "extra": [
+    "Baron Nashor",
+    "Ki Burst",
+    "Meditation"
+   ],
+   "exclude": []
+  },
+  "population": 16,
+  "generations": 8,
+  "elite": 5,
+  "games": 8,
+  "swaps": [
+   1,
+   2
+  ],
+  "crossover": 0.6,
+  "max_copies": 3,
+  "threads": 4,
+  "seed": 23
+ },
+ "ga": {
+  "generations": [
+   {
+    "generation": 1,
+    "games_per_opponent": 8,
+    "standings": [
+     {
+      "key": "7856b08c78",
+      "label": "05_capt_dewgong_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Battle Preparations, +1 Baron Nashor, +1 Bedeviling Stranger, +1 Charm, +1 Ride the Wind, +1 Twilight Shroud, +1 Vex, Apathetic, +1 Vilemaw",
+      "rate": 0.8125,
+      "games": 40
+     },
+     {
+      "key": "0f42ca7d3f",
+      "label": "-1 Zhonya's Hourglass, -1 Defy, +1 Not So Fast, +1 Abandon",
+      "rate": 0.7969,
+      "games": 40
+     },
+     {
+      "key": "57cdf17561",
+      "label": "-1 Tideturner, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw",
+      "rate": 0.7656,
+      "games": 40
+     },
+     {
+      "key": "6bf6c35cb1",
+      "label": "base (control)",
+      "rate": 0.75,
+      "games": 40
+     },
+     {
+      "key": "a0a69d9c6c",
+      "label": "05_dgmanisch_riven: -1 Tideturner, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Rebuke, +1 Star-Crossed, +2 Ki Burst",
+      "rate": 0.7344,
+      "games": 40
+     },
+     {
+      "key": "bc254fd422",
+      "label": "-1 Astral Heron, -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Vex, Apathetic",
+      "rate": 0.7344,
+      "games": 40
+     },
+     {
+      "key": "a291e31111",
+      "label": "-1 Bedeviling Stranger, -1 Gust, +2 Baron Nashor",
+      "rate": 0.7188,
+      "games": 40
+     },
+     {
+      "key": "c0e4dcef8a",
+      "label": "08_aa_matmatu_riven: -1 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Gust, -1 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst",
+      "rate": 0.6875,
+      "games": 40
+     },
+     {
+      "key": "f0ad6243f9",
+      "label": "04_bo_su_riven: -3 Scuttle Crab, -2 Battle Preparations, -2 Switcheroo, -1 Not So Fast, +1 Baron Nashor, +1 Bedeviling Stranger, +2 Evelynn, Entrancing, +1 Ki Burst, +1 Rebuke, +1 Reckless Innovator, +1 Star-Crossed",
+      "rate": 0.6875,
+      "games": 40
+     },
+     {
+      "key": "89fd828fcf",
+      "label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, +1 Switcheroo, +1 Vilemaw",
+      "rate": 0.6875,
+      "games": 40
+     },
+     {
+      "key": "df1f1c53d6",
+      "label": "05_alex_shans_riven: -1 Zhonya's Hourglass, -2 Scuttle Crab, -2 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing",
+      "rate": 0.6562,
+      "games": 40
+     },
+     {
+      "key": "4a13a5a51a",
+      "label": "03_aa_romomo_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst, +1 Siren's Song",
+      "rate": 0.6562,
+      "games": 40
+     },
+     {
+      "key": "4a03a936c4",
+      "label": "07_newrof_riven: -3 Scuttle Crab, -1 Tideturner, -3 Stellacorn Herder, -1 Blitzcrank, Impassive, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +3 Traveling Merchant, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +2 Ride the Wind, +1 Edge of Night, +2 Vex, Apathetic, +1 Fizz, Trickster",
+      "rate": 0.6406,
+      "games": 40
+     },
+     {
+      "key": "94eb362aea",
+      "label": "-1 Switcheroo, -1 Star-Crossed, +1 Abandon, +1 Traveling Merchant",
+      "rate": 0.625,
+      "games": 40
+     },
+     {
+      "key": "c7582ec87f",
+      "label": "-1 Blitzcrank, Impassive, +1 Rebuke",
+      "rate": 0.6094,
+      "games": 40
+     },
+     {
+      "key": "b1e92397bb",
+      "label": "-1 Reckless Innovator, +1 Switcheroo",
+      "rate": 0.6094,
+      "games": 40
+     }
+    ]
+   }
+  ],
+  "complete": false,
+  "population": [
+   "6bf6c35cb1",
+   "df1f1c53d6",
+   "4a13a5a51a",
+   "a0a69d9c6c",
+   "4a03a936c4",
+   "c0e4dcef8a",
+   "f0ad6243f9",
+   "7856b08c78",
+   "0f42ca7d3f",
+   "57cdf17561",
+   "c7582ec87f",
+   "b1e92397bb",
+   "bc254fd422",
+   "94eb362aea",
+   "a291e31111",
+   "89fd828fcf"
+  ],
+  "pool": [
+   "Abandon",
+   "Astral Heron",
+   "Baron Nashor",
+   "Battle Preparations",
+   "Bedeviling Stranger",
+   "Blitzcrank, Impassive",
+   "Charm",
+   "Defy",
+   "Discipline",
+   "Edge of Night",
+   "En Garde",
+   "Evelynn, Entrancing",
+   "Fizz, Trickster",
+   "Gust",
+   "Ki Burst",
+   "Meditation",
+   "Not So Fast",
+   "Rebuke",
+   "Reckless Innovator",
+   "Ride the Wind",
+   "Scuttle Crab",
+   "Siren's Song",
+   "Star-Crossed",
+   "Stellacorn Herder",
+   "Switcheroo",
+   "Tideturner",
+   "Traveling Merchant",
+   "Twilight Shroud",
+   "Vex, Apathetic",
+   "Vilemaw",
+   "Zhonya's Hourglass"
+  ]
+ },
+ "decks": [
+  {
+   "label": "05_capt_dewgong_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Battle Preparations, +1 Baron Nashor, +1 Bedeviling Stranger, +1 Charm, +1 Ride the Wind, +1 Twilight Shroud, +1 Vex, Apathetic, +1 Vilemaw",
+   "path": "lab/variants/riven-multistart-ga-1--7856b08c78.txt",
+   "hash": "48f676b46c",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 6,
+     "2": 18,
+     "3": 6,
+     "4": 5,
+     "7": 3,
+     "8": 1,
+     "10": 1
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 10,
+     "chaos": 14
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 12,
+     "Action": 4,
+     "Deflect": 1
+    },
+    "two_drops": 24,
+    "list": [
+     {
+      "name": "Charm",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Twilight Shroud",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ride the Wind",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Vilemaw",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Vex, Apathetic": 1,
+     "Scuttle Crab": -1,
+     "Bedeviling Stranger": 1,
+     "Ride the Wind": 1,
+     "Gust": -1,
+     "Blitzcrank, Impassive": -2,
+     "Baron Nashor": 1,
+     "Twilight Shroud": 1,
+     "Vilemaw": 1,
+     "Battle Preparations": -2,
+     "Tideturner": -1,
+     "Charm": 1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.8125
+  },
+  {
+   "label": "-1 Zhonya's Hourglass, -1 Defy, +1 Not So Fast, +1 Abandon",
+   "path": "lab/variants/riven-multistart-ga-1--0f42ca7d3f.txt",
+   "hash": "ffa97e71f6",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.77,
+    "curve": {
+     "1": 4,
+     "2": 21,
+     "3": 6,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 5,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 2,
+     "Reaction": 15,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Abandon",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Defy": -1,
+     "Not So Fast": 1,
+     "Abandon": 1,
+     "Zhonya's Hourglass": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.7969
+  },
+  {
+   "label": "-1 Tideturner, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw",
+   "path": "lab/variants/riven-multistart-ga-1--57cdf17561.txt",
+   "hash": "bf80c6e247",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.85,
+    "curve": {
+     "1": 6,
+     "2": 19,
+     "3": 5,
+     "4": 4,
+     "5": 2,
+     "7": 3,
+     "8": 1
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 11,
+     "chaos": 9
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 4
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Vilemaw",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 8
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Vilemaw": 1,
+     "Ki Burst": 1,
+     "Tideturner": -1,
+     "Star-Crossed": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.7656
+  },
+  {
+   "label": "base (control)",
+   "path": "lab/variants/riven-multistart-ga-1--6bf6c35cb1.txt",
+   "hash": "2e9f42d953",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.75,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 6,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {}
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.75
+  },
+  {
+   "label": "05_dgmanisch_riven: -1 Tideturner, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Rebuke, +1 Star-Crossed, +2 Ki Burst",
+   "path": "lab/variants/riven-multistart-ga-1--a0a69d9c6c.txt",
+   "hash": "3edb008fe1",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.8,
+    "curve": {
+     "1": 5,
+     "2": 18,
+     "3": 8,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 20,
+     "gear": 6,
+     "spell": 14
+    },
+    "power_symbols": {
+     "calm": 8,
+     "chaos": 13
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 3,
+     "Reaction": 11,
+     "Tank": 2,
+     "Action": 6
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Reckless Innovator": 1,
+     "Rebuke": 1,
+     "Ki Burst": 2,
+     "Bedeviling Stranger": 1,
+     "Gust": -2,
+     "Star-Crossed": 1,
+     "Not So Fast": -1,
+     "Battle Preparations": -2,
+     "Tideturner": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.7344
+  },
+  {
+   "label": "-1 Astral Heron, -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Vex, Apathetic",
+   "path": "lab/variants/riven-multistart-ga-1--bc254fd422.txt",
+   "hash": "fd1b433f79",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.67,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 6,
+     "4": 5,
+     "5": 2,
+     "7": 2
+    },
+    "types": {
+     "unit": 20,
+     "gear": 5,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 3,
+     "Deflect": 1
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 2,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Vex, Apathetic": 1,
+     "Astral Heron": -1,
+     "Bedeviling Stranger": 1,
+     "Zhonya's Hourglass": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.7344
+  },
+  {
+   "label": "-1 Bedeviling Stranger, -1 Gust, +2 Baron Nashor",
+   "path": "lab/variants/riven-multistart-ga-1--a291e31111.txt",
+   "hash": "58f740565e",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.17,
+    "curve": {
+     "1": 4,
+     "2": 19,
+     "3": 6,
+     "4": 4,
+     "5": 2,
+     "7": 3,
+     "10": 2
+    },
+    "types": {
+     "unit": 20,
+     "gear": 6,
+     "spell": 14
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 16
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 2,
+     "Reaction": 13,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 2,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Baron Nashor": 2,
+     "Bedeviling Stranger": -1,
+     "Gust": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.7188
+  },
+  {
+   "label": "08_aa_matmatu_riven: -1 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Gust, -1 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst",
+   "path": "lab/variants/riven-multistart-ga-1--c0e4dcef8a.txt",
+   "hash": "533cf2e98e",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.9,
+    "curve": {
+     "1": 5,
+     "2": 19,
+     "3": 7,
+     "4": 4,
+     "5": 1,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 7,
+     "chaos": 11
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 3,
+     "Reaction": 15,
+     "Tank": 1,
+     "Action": 3
+    },
+    "two_drops": 24,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Abandon",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Meditation",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Reckless Innovator": 1,
+     "Baron Nashor": 1,
+     "Not So Fast": -1,
+     "Meditation": 1,
+     "Abandon": 1,
+     "Scuttle Crab": -1,
+     "Switcheroo": -1,
+     "Ki Burst": 1,
+     "Bedeviling Stranger": 1,
+     "Gust": -1,
+     "Blitzcrank, Impassive": -1,
+     "Tideturner": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6875
+  },
+  {
+   "label": "04_bo_su_riven: -3 Scuttle Crab, -2 Battle Preparations, -2 Switcheroo, -1 Not So Fast, +1 Baron Nashor, +1 Bedeviling Stranger, +2 Evelynn, Entrancing, +1 Ki Burst, +1 Rebuke, +1 Reckless Innovator, +1 Star-Crossed",
+   "path": "lab/variants/riven-multistart-ga-1--f0ad6243f9.txt",
+   "hash": "b9088d8e02",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 6,
+     "2": 16,
+     "3": 8,
+     "4": 4,
+     "5": 2,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 21,
+     "gear": 6,
+     "spell": 13
+    },
+    "power_symbols": {
+     "calm": 8,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 11,
+     "Accelerate": 3,
+     "Reaction": 13,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 22,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Baron Nashor": 1,
+     "Reckless Innovator": 1,
+     "Not So Fast": -1,
+     "Evelynn, Entrancing": 2,
+     "Scuttle Crab": -3,
+     "Switcheroo": -2,
+     "Rebuke": 1,
+     "Battle Preparations": -2,
+     "Ki Burst": 1,
+     "Bedeviling Stranger": 1,
+     "Star-Crossed": 1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6875
+  },
+  {
+   "label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, +1 Switcheroo, +1 Vilemaw",
+   "path": "lab/variants/riven-multistart-ga-1--89fd828fcf.txt",
+   "hash": "60a8ade783",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.85,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 6,
+     "4": 3,
+     "5": 2,
+     "7": 3,
+     "8": 1
+    },
+    "types": {
+     "unit": 18,
+     "gear": 6,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 11,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 15,
+     "Tank": 2,
+     "Action": 4
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Vilemaw",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 8
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Stellacorn Herder": -1,
+     "Switcheroo": 1,
+     "Vilemaw": 1,
+     "Bedeviling Stranger": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6875
+  },
+  {
+   "label": "05_alex_shans_riven: -1 Zhonya's Hourglass, -2 Scuttle Crab, -2 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing",
+   "path": "lab/variants/riven-multistart-ga-1--df1f1c53d6.txt",
+   "hash": "eeedb33ae2",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.65,
+    "curve": {
+     "1": 7,
+     "2": 18,
+     "3": 7,
+     "4": 4,
+     "5": 1,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 5,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 8,
+     "chaos": 11
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 1,
+     "Action": 4
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "En Garde",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Evelynn, Entrancing": 2,
+     "Traveling Merchant": 3,
+     "Scuttle Crab": -2,
+     "En Garde": 1,
+     "Battle Preparations": -2,
+     "Ki Burst": 1,
+     "Zhonya's Hourglass": -1,
+     "Blitzcrank, Impassive": -1,
+     "Tideturner": -2,
+     "Star-Crossed": 1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6562
+  },
+  {
+   "label": "03_aa_romomo_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst, +1 Siren's Song",
+   "path": "lab/variants/riven-multistart-ga-1--4a13a5a51a.txt",
+   "hash": "a950210e11",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.83,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 7,
+     "4": 4,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 18,
+     "gear": 6,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 6,
+     "chaos": 9
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 8,
+     "Accelerate": 3,
+     "Reaction": 17,
+     "Action": 2
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ki Burst",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Abandon",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Meditation",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Siren's Song",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Reckless Innovator": 1,
+     "Baron Nashor": 1,
+     "Not So Fast": -1,
+     "Meditation": 2,
+     "Abandon": 1,
+     "Scuttle Crab": -1,
+     "Switcheroo": -2,
+     "Ki Burst": 1,
+     "Bedeviling Stranger": 1,
+     "Gust": -1,
+     "Blitzcrank, Impassive": -2,
+     "Tideturner": -1,
+     "Siren's Song": 1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6562
+  },
+  {
+   "label": "07_newrof_riven: -3 Scuttle Crab, -1 Tideturner, -3 Stellacorn Herder, -1 Blitzcrank, Impassive, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +3 Traveling Merchant, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +2 Ride the Wind, +1 Edge of Night, +2 Vex, Apathetic, +1 Fizz, Trickster",
+   "path": "lab/variants/riven-multistart-ga-1--4a03a936c4.txt",
+   "hash": "44621f3065",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.75,
+    "curve": {
+     "1": 3,
+     "2": 21,
+     "3": 9,
+     "4": 3,
+     "5": 1,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 7,
+     "spell": 14
+    },
+    "power_symbols": {
+     "calm": 7,
+     "chaos": 13
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 11,
+     "Accelerate": 3,
+     "Reaction": 12,
+     "Tank": 1,
+     "Action": 5,
+     "Deflect": 2
+    },
+    "two_drops": 24,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Meditation",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ride the Wind",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 1,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Stellacorn Herder": -3,
+     "Vex, Apathetic": 2,
+     "Reckless Innovator": 1,
+     "Not So Fast": -1,
+     "Meditation": 2,
+     "Fizz, Trickster": 1,
+     "Traveling Merchant": 3,
+     "Scuttle Crab": -3,
+     "Battle Preparations": -2,
+     "Bedeviling Stranger": 1,
+     "Ride the Wind": 2,
+     "Edge of Night": 1,
+     "Gust": -2,
+     "Blitzcrank, Impassive": -1,
+     "Tideturner": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6406
+  },
+  {
+   "label": "-1 Switcheroo, -1 Star-Crossed, +1 Abandon, +1 Traveling Merchant",
+   "path": "lab/variants/riven-multistart-ga-1--94eb362aea.txt",
+   "hash": "ee884cac6f",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.73,
+    "curve": {
+     "1": 5,
+     "2": 21,
+     "3": 5,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 20,
+     "gear": 6,
+     "spell": 14
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 7
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 9,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 2
+    },
+    "two_drops": 26,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Abandon",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 5,
+     "win_rate": 0.625,
+     "ci95": [
+      0.3057,
+      0.8632
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Abandon": 1,
+     "Traveling Merchant": 1,
+     "Switcheroo": -1,
+     "Star-Crossed": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.625
+  },
+  {
+   "label": "-1 Blitzcrank, Impassive, +1 Rebuke",
+   "path": "lab/variants/riven-multistart-ga-1--c7582ec87f.txt",
+   "hash": "67274b820e",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.67,
+    "curve": {
+     "1": 5,
+     "2": 21,
+     "3": 6,
+     "4": 4,
+     "5": 1,
+     "7": 3
+    },
+    "types": {
+     "unit": 18,
+     "gear": 6,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 8,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 1,
+     "Action": 4
+    },
+    "two_drops": 26,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Rebuke": 1,
+     "Blitzcrank, Impassive": -1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6094
+  },
+  {
+   "label": "-1 Reckless Innovator, +1 Switcheroo",
+   "path": "lab/variants/riven-multistart-ga-1--b1e92397bb.txt",
+   "hash": "fb4fe062bd",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.73,
+    "curve": {
+     "1": 5,
+     "2": 21,
+     "3": 5,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 18,
+     "gear": 6,
+     "spell": 16
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 11,
+     "Accelerate": 1,
+     "Reaction": 13,
+     "Tank": 2,
+     "Action": 4
+    },
+    "two_drops": 26,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven mirror (Nam Dang)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",
+     "weight": 3,
+     "games": 8,
+     "wins": 4,
+     "win_rate": 0.5,
+     "ci95": [
+      0.2152,
+      0.7848
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 2,
+     "games": 8,
+     "wins": 3,
+     "win_rate": 0.375,
+     "ci95": [
+      0.1368,
+      0.6943
+     ]
+    },
+    {
+     "opponent": "Kennen (Dylan Sumner)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 6,
+     "win_rate": 0.75,
+     "ci95": [
+      0.4093,
+      0.9285
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 7,
+     "win_rate": 0.875,
+     "ci95": [
+      0.5291,
+      0.9776
+     ]
+    },
+    {
+     "opponent": "Kennen (Simple)",
+     "opponent_deck": "lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt",
+     "weight": 1,
+     "games": 8,
+     "wins": 8,
+     "win_rate": 1.0,
+     "ci95": [
+      0.6756,
+      1.0
+     ]
+    }
+   ],
+   "changes": {
+    "maindeck": {
+     "Reckless Innovator": -1,
+     "Switcheroo": 1
+    }
+   },
+   "born": 0,
+   "generations": [
+    1
+   ],
+   "alive": true,
+   "weighted_win_rate": 0.6094
+  }
+ ]
+}
