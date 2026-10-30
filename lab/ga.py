@@ -254,8 +254,12 @@ class GA:
             self.write(population, complete=gen + 1 == G)
             if gen + 1 == G:
                 break
-            # next generation: elites stay, children replace the rest
+            # next generation: elites stay, children replace the rest; the base list stays as the control
+            # whatever its rank, so its evidence keeps growing alongside the survivors'
             nxt = ranked[:E]
+            base_key = key_of(dict(self.base["maindeck"]))
+            if base_key in self.archive and base_key not in nxt:
+                nxt = nxt[:-1] + [base_key] if len(nxt) >= E else nxt + [base_key]
             tries = 0
             while len(nxt) < P and tries < 200:
                 tries += 1
