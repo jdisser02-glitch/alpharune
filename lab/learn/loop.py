@@ -61,13 +61,24 @@ def deck_pool():
     return pool
 
 
+BATCH_TIMEOUT_S = int(os.environ.get("RIFTBOUND_BATCH_TIMEOUT", 20 * 60))
+
+
 def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None):
     cmd = [str(ENGINE), "--deck1", deck1, "--deck2", deck2, "--agent1", a1, "--agent2", a2,
            "--games", str(max(2, games)), "--threads", str(threads), "--seed", str(seed),
            "--render-html", "off", "--web", "off"]
     if value_data:
         cmd += ["--value-data", str(value_data), "--value-samples", "0"]
-    out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    # A batch that runs far longer than its games should (an engine loop in
+    # one game: 2026-10-30, Ekko, Revolutionary) is killed and skipped, so one
+    # game cannot stall a night of training.
+    try:
+        out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
+                             timeout=BATCH_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        print(f"batch timed out after {BATCH_TIMEOUT_S}s, skipped: {' '.join(cmd)}", flush=True)
+        return 0, 0
     if out.returncode != 0:
         raise RuntimeError(out.stderr[-1500:])
     w1 = int(re.search(r"P1 wins:\s+(\d+)", out.stdout).group(1))
