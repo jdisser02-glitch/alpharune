@@ -69,7 +69,7 @@ export async function render(container) {
 
     <section class="v-bot panel stack" aria-labelledby="bot-ladder">
       <div class="panel-head"><h2 id="bot-ladder">The ladder</h2><span class="small muted">${it.length ? `${plural(it.length, "iteration")}, ${esc(fmtDate(it[0].started_utc))} to ${esc(fmtDate(latest.started_utc))}` : ""}</span></div>
-      ${it.length ? `<p class="small muted">Each point is one iteration. Filled points were adopted, hollow ones rejected. The band is the 95% interval of the gate match; the dashed line is 50%, even with the previous bot. Hover a column for the numbers.</p>${chart(it)}` : empty("No iteration yet", "Training has not produced a row in the ladder.")}
+      ${it.length ? `<p class="small muted">Each point is one iteration. Filled points were adopted, hollow ones rejected. The band is the 95% interval of the gate match; the dashed line is 50%, even with the previous bot. Hover a column for the numbers.</p>${chart(it)}${eloChart(it)}` : empty("No iteration yet", "Training has not produced a row in the ladder.")}
     </section>
 
     <section class="v-bot panel" aria-labelledby="bot-table">
@@ -107,12 +107,20 @@ function chart(it) {
   s += `<polygon points="${band}" fill="var(--info)" opacity=".12"/>`;
   s += `<path d="${path(r => r.vs_current && r.vs_current.rate)}" fill="none" stroke="var(--info)" stroke-width="2" stroke-linejoin="round"/>`;
   s += `<path d="${path(r => r.vs_random && r.vs_random.rate)}" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>`;
+  s += `<path d="${path(r => r.vs_reference && r.vs_reference.rate)}" fill="none" stroke="#f08cc0" stroke-width="2" stroke-linejoin="round" stroke-dasharray="6 3"/>`;
+  // direct labels at the right end of each line (identity is never color alone)
+  const lastOf = key => { for (let i = n - 1; i >= 0; i--) { const v = key(it[i]); if (v != null) return [i, v]; } return null; };
+  const ends = [[lastOf(r => r.vs_random && r.vs_random.rate), "random", "var(--gold)"], [lastOf(r => r.vs_current && r.vs_current.rate), "previous", "var(--info)"],
+                [lastOf(r => r.vs_reference && r.vs_reference.rate), "net_006", "#f08cc0"]].filter(e => e[0]);
+  ends.sort((a, b) => a[0][1] - b[0][1]); let lastY = 1e9;
+  for (const [[i, v], label, color] of ends) { let yy = y(v); if (lastY - yy < 11) yy = lastY - 11; lastY = yy; s += `<text x="${(x(i) + 7).toFixed(1)}" y="${(yy + 4).toFixed(1)}" class="v-bot-end" style="fill:${color}">${label}</text>`; }
   let hits = "";
   it.forEach((r, i) => {
     const cx = x(i), col = n === 1 ? W - L - R : (W - L - R) / Math.max(1, n - 1);
     hits += `<rect class="v-bot-hit" data-i="${i}" x="${(cx - col / 2).toFixed(1)}" y="${T}" width="${col.toFixed(1)}" height="${H - T - B}" fill="transparent"/>`;
     if (r.vs_current) s += marker(cx, y(r.vs_current.rate), "var(--info)", r.accepted, true);
     if (r.vs_random) s += marker(cx, y(r.vs_random.rate), "var(--gold)", r.accepted, false);
+    if (r.vs_reference) s += marker(cx, y(r.vs_reference.rate), "#f08cc0", r.accepted, false);
     s += `<text x="${cx}" y="${H - 20}" text-anchor="middle" class="v-bot-xl">${r.iteration}</text>`;
     s += `<text x="${cx}" y="${H - 6}" text-anchor="middle" class="v-bot-xs ${r.accepted ? "ok" : "no"}">${r.accepted ? "adopted" : "rejected"}</text>`;
   });
@@ -121,10 +129,31 @@ function chart(it) {
     <div class="v-bot-legend" aria-hidden="true">
       <span><i class="dot gold"></i>vs random player</span>
       <span><i class="dot info square"></i>vs previous bot (gate)</span>
+      <span><i class="dot" style="background:#f08cc0;border-color:#f08cc0"></i>vs a fixed yardstick (net_006, iteration 6)</span>
       <span><i class="band"></i>95% interval of the gate</span>
       <span><i class="dash"></i>50%: even with the previous bot</span>
       <span><i class="dot gold"></i>adopted &nbsp;<i class="dot gold hollow"></i>rejected</span>
     </div></div>`;
+}
+/* ── the Elo chart: one line, the simplest view of whether learning goes well ── */
+function eloChart(it) {
+  const rows = it.filter(r => r.elo != null); if (rows.length < 2) return "";
+  const W = 680, H = 170, L = 46, R = 44, T = 16, B = 30, n = it.length;
+  const vals = rows.map(r => r.elo), lo = Math.floor(Math.min(...vals, 0) / 100) * 100, hi = Math.ceil(Math.max(...vals) / 100) * 100 || 100;
+  const x = i => L + (n === 1 ? (W - L - R) / 2 : i * (W - L - R) / (n - 1));
+  const y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  let s = `<svg class="v-bot-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Elo of each iteration's network, relative to random play at zero.">`;
+  for (let v = lo; v <= hi; v += (hi - lo) / 4) s += `<line x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--line)"/><text x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${Math.round(v)}</text>`;
+  // the network in use at each iteration (the step line): adopted iterations raise it, rejected ones leave it
+  let cur = null; const step = it.map((r, i) => { if (r.accepted && r.elo != null) cur = r.elo; else if (r.elo_current != null) cur = r.elo_current; return cur == null ? "" : `${i ? "L" : "M"}${x(i).toFixed(1)},${y(cur).toFixed(1)}`; }).join(" ");
+  s += `<path d="${step}" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>`;
+  it.forEach((r, i) => { if (r.elo == null) return; s += `<circle cx="${x(i).toFixed(1)}" cy="${y(r.elo).toFixed(1)}" r="4.5" fill="${r.accepted ? "var(--gold)" : "var(--s1)"}" stroke="var(--gold)" stroke-width="2"><title>Iteration ${r.iteration}: Elo ${Math.round(r.elo)}, ${r.accepted ? "adopted" : "rejected"}</title></circle>`;
+    s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" class="v-bot-xl">${r.iteration}</text>`; });
+  const last = rows[rows.length - 1];
+  s += `<text x="${(x(it.indexOf(last)) + 7).toFixed(1)}" y="${(y(cur ?? last.elo) + 4).toFixed(1)}" class="v-bot-end" style="fill:var(--gold)">in use</text></svg>`;
+  return `<h3 class="v-bot-h3">Strength over time (Elo)</h3>
+    <p class="small muted">One number per iteration: the Elo of that network, with random play at 0, from all its matches (vs the previous bot, vs random, vs the fixed yardstick). The line is the network in use; a hollow point is a candidate that was rejected. Rising line, learning works; flat line, the loop has run out of what this setting can teach.</p>
+    <div class="v-bot-chart v-bot-elo">${s}</div>`;
 }
 function wireChart(root) {
   const host = $(".v-bot-chart", root); if (!host) return;
@@ -136,6 +165,8 @@ function wireChart(root) {
     tip.innerHTML = `<b>Iteration ${r.iteration}</b> · ${esc(fmtDate(r.started_utc))} · ${badge(r.accepted ? "adopted" : "rejected", r.accepted ? "win" : "loss")}
       <div>vs random: <span class="mono">${vr ? `${pct0(vr.rate)} (${vr.wins}/${vr.games}, ${interval(wilson(vr.wins, vr.games))})` : "—"}</span></div>
       <div>vs ${vc && vc.opponent === "random" ? "random (first gate)" : "previous bot"}: <span class="mono">${vc ? `${pct0(vc.rate)} (${vc.wins}/${vc.games}, ${interval(vc.ci95)})` : "—"}</span></div>
+      ${r.vs_reference ? `<div>vs net_006 (fixed yardstick): <span class="mono">${pct0(r.vs_reference.rate)} (${r.vs_reference.wins}/${r.vs_reference.games})</span></div>` : ""}
+      ${r.elo != null ? `<div>Elo: <span class="mono">${Math.round(r.elo)}</span>${r.policy && r.policy.human_top1 != null ? ` · human top-1 <span class="mono">${pct0(r.policy.human_top1)}</span>` : ""}</div>` : ""}
       <div class="muted">${num(r.self_play_games)} self-play games · ${num(r.records)} positions · val acc ${pct0(r.val_acc)} · ${num(r.minutes)} min</div>`;
     tip.classList.add("on");
     const w = tip.offsetWidth || 260, h = tip.offsetHeight || 90;
