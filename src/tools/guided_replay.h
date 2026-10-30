@@ -54,6 +54,8 @@ struct LogLine {
     bool token = false;             // played: a token made by an effect, not a card from hand
     bool actor_inferred = false;    // the importer attributed an actor-less line to the capture player
     bool actor_uncertain = false;   // ... and nothing in the log says who really acted (see inferActors)
+    bool soft = false;              // read as a decision only when the engine can take it then
+                                    // ("<X> revealed <C> on the board": a play from face down)
 
     /// A recorded play of a real card (not a token).
     bool isCardPlay() const { return kind == "played" && !token && from != "token"; }

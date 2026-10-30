@@ -20,14 +20,14 @@ public:
     // "When you play this or when this leaves the board, banish the top card
     //  of your Main Deck. Until your next Ending Phase, you may play that card.
     //  (You still pay its costs.)"
-    // APPROXIMATION: "leaves the board" is modeled as WhenIDie (no
-    // leave-the-board trigger exists; Treasure Trove does the same), and a
-    // gear's death triggers only when it is killed through
-    // killWithDeathTrigger (see radiance_helpers.h) — as this card's own
-    // "Kill this" does. Bounce / banish / recycle departures don't trigger it.
+    // "Leaves the board" is the WhenIDie trigger: a gear's death triggers when
+    // it is killed through killWithDeathTrigger (see radiance_helpers.h) — as
+    // this card's own "Kill this" does — and deathAbilityOnLeavingBoard()
+    // fires it on a bounce, banish or recycle too.
     // The play permission is the legend-granted ability of radiance_helpers.h
     // (ability index kPlayBanished below); AtStartOfMain is its delayed
     // re-grant, never a trigger of the Anvil itself.
+    bool deathAbilityOnLeavingBoard() const override { return true; }
     std::vector<TriggerType> triggerTypes() const override {
         return {TriggerType::WhenYouPlayThis, TriggerType::WhenIDie};
     }

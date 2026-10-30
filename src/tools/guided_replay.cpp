@@ -10,11 +10,13 @@
 
 #include <algorithm>
 #include <chrono>
+#include <cstdlib>
 #include <cstring>
 #include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -182,6 +184,22 @@ HumanGame humanGameFromJson(const nlohmann::json& file, int game_number, const s
         }
         if (e.contains("cards") && e["cards"].is_array())
             for (const auto& c : e["cards"]) if (c.is_string()) l.cards.push_back(c.get<std::string>());
+        // "<X> played Seal of Rage from banished to base.": the importer left
+        // the destination inside `from`.
+        if (l.kind == "played" && l.to.empty()) {
+            const auto at = l.from.rfind(" to ");
+            if (at != std::string::npos && at > 0) {
+                l.to = l.from.substr(at + 4);
+                l.from = l.from.substr(0, at);
+            }
+        }
+        // "<X> moved a hidden card to <bf>." is how some captures log a hide
+        // (the [A] is the "recycled 1 <D> rune" line before it), the way
+        // others log "<X> put a hidden card to <bf>."
+        if (l.kind == "moved" && normalizeName(l.card) == "a hidden card") {
+            l.kind = "hidden_card_placed";
+            l.card.clear();
+        }
         // "<X> played 3 Bomb tokens to <bf>": an effect's tokens, like the
         // singular "played Bomb token" the importer flags.
         if (l.kind == "played" && !l.token && l.amount > 1 &&
@@ -263,6 +281,64 @@ HumanGame humanGameFromJson(const nlohmann::json& file, int game_number, const s
             out.push_back(std::move(l));
         }
         g.events = std::move(out);
+    }
+    // "<X> revealed Edge of Night on the board.": the capture's line for a
+    // card played from face down (CR 811) — the play's own line, unless an
+    // explicit "Played <C> from <battlefield>." follows.
+    for (size_t i = 0; i < g.events.size(); ++i) {
+        LogLine& l = g.events[i];
+        if (l.kind != "revealed" || l.text.find(" on the board") == std::string::npos || l.card.empty()) continue;
+        bool explicit_play = false;
+        for (size_t j = i + 1; j < g.events.size() && j <= i + 3; ++j)
+            if (g.events[j].kind == "played" && normalizeName(g.events[j].card) == normalizeName(l.card))
+                explicit_play = true;
+        if (explicit_play) continue;
+        l.kind = "played";
+        l.from = "face down";
+        l.to.clear();
+        // The capture logs the reveal where the card shows, not always where
+        // it was played (a reaction to a spell or a replacement such as
+        // Zhonya's Hourglass): when the engine cannot take the play there,
+        // the line is dropped the way it was before plays from face down
+        // were read.
+        l.soft = true;
+    }
+    // A play the client took back: "<X> played C from hand to <loc>", at once
+    // "<X> moved C to hand", then "<X> readied 1 <D> rune" for each rune its
+    // payment used. Nothing returns a card to its owner's hand as it is
+    // played; neither the play nor its payment happened.
+    for (size_t i = 0; i + 1 < g.events.size();) {
+        const LogLine& a = g.events[i];
+        const LogLine& b = g.events[i + 1];
+        const bool undo = a.isCardPlay() && (a.from.empty() || normalizeName(a.from) == "hand") &&
+                          b.kind == "moved" && b.actor == a.actor && !a.actor.empty() &&
+                          normalizeName(b.to) == "hand" && !a.card.empty() &&
+                          normalizeName(a.card) == normalizeName(b.card);
+        if (!undo) { ++i; continue; }
+        size_t to_end = i + 2;
+        int refunded = 0;
+        while (to_end < g.events.size() && g.events[to_end].kind == "readied" &&
+               g.events[to_end].actor == a.actor && g.events[to_end].text.find(" rune") != std::string::npos) {
+            ++refunded;
+            ++to_end;
+        }
+        size_t from = i;
+        // The payment the refund gives back: "<X> paid 2E — Exhaust 2" or one
+        // "<X> exhausted 1 <D> rune" line per rune, right before the play.
+        while (refunded > 0 && from > 0) {
+            const LogLine& p = g.events[from - 1];
+            if (p.actor != a.actor) break;
+            if (p.kind == "exhausted" && p.text.find(" rune") != std::string::npos) { --refunded; --from; continue; }
+            if (p.kind == "paid") {
+                const auto at = p.text.find(" paid ");
+                int x = 0;
+                if (at != std::string::npos) { std::istringstream is(p.text.substr(at + 6)); is >> x; }
+                if (x > 0 && x <= refunded) { refunded -= x; --from; continue; }
+            }
+            break;
+        }
+        g.events.erase(g.events.begin() + static_cast<long>(from), g.events.begin() + static_cast<long>(to_end));
+        i = from;
     }
     // A move the client took back: "<X> moved U to <battlefield>", then at
     // once "<X> moved U to base" and "<X> readied U". No rule moves a unit
@@ -934,9 +1010,11 @@ bool cleanBoundary(const GameState& s) {
 }
 
 struct Match {
+    static constexpr int kAlreadyDone = -2;  // the line describes what an engine effect already did
     int index = -1;
     std::string why;               // when index < 0
     std::vector<int> also;         // further log lines this one intent covers (a group move)
+    std::string effect_name;       // a card the chosen intent's effect then picks (lookahead evidence)
 };
 
 class Driver {
@@ -945,6 +1023,7 @@ public:
            const CardRegistry& registry, AgentInterface* bot, const GuidedOptions& opts)
         : game_(game), decks_{&p1, &p2}, db_(db), registry_(registry), bot_(bot), opts_(opts),
           consumed_(game.events.size(), 0), matched_(game.events.size(), 0) {
+        addSourcesBeforePlays();
         // Whose turn each log line falls in, from the log's own turn ends
         // ("<X> queued an extra turn" makes X's next turn follow X's).
         std::string current = game_.first_player;
@@ -963,6 +1042,70 @@ public:
     GuidedResult run();
 
 private:
+    /// "<X> played Nasus from hand", "<X> exhausted 1 Calm rune" ×5, "<X>
+    /// moved Gold from base to trash": a capture that logs the play first
+    /// lists the [Add] sources used to pay it among the payment lines after
+    /// it (CR 430.3: an Add Reaction can be used while paying). The engine
+    /// pays a card's cost from the Rune Pool as it is played, so each such
+    /// source is activated right before the play instead: its line moves
+    /// there, a Gold token's sacrifice as "<X> exhausted Gold". Returns how
+    /// many lines moved.
+    int addSourcesBeforePlays() {
+        int moved = 0;
+        auto addSource = [&](const LogLine& f) -> bool {
+            std::string name = f.card;
+            if (f.kind == "killed") {
+                if (normalizeName(f.from) != "base" && f.text.find(" from base to trash") == std::string::npos) return false;
+            } else if (f.kind != "exhausted" || name.empty() || isRuneLine(f)) {
+                return false;
+            }
+            const CardDef* d = resolveCard(db_, name);
+            const Card* c = d ? registry_.get(d->id) : nullptr;
+            if (!c) return false;
+            for (const auto& ab : c->activatedAbilities()) if (ab.adds_resources) return true;
+            return false;
+        };
+        for (size_t i = 0; i < game_.events.size(); ++i) {
+            const LogLine& play = game_.events[i];
+            bool is_play = play.isCardPlay();
+            if (!is_play && play.kind == "moved" && !play.actor.empty()) {
+                auto it = game_.legends.find(play.actor);
+                is_play = it != game_.legends.end() && !it->second.champion_name.empty() &&
+                          nameMatches(play.card, it->second.champion_name);
+            }
+            if (!is_play) continue;
+            // The payment run after the play: rune lines and add sources of the
+            // same player, nothing else.
+            std::vector<size_t> sources;
+            size_t j = i + 1;
+            bool runes = false;
+            for (; j < game_.events.size(); ++j) {
+                const LogLine& f = game_.events[j];
+                if (f.actor != play.actor) break;
+                if (isPaymentLine(f) && isRuneLine(f)) { runes = true; continue; }
+                if (addSource(f)) { sources.push_back(j); continue; }
+                break;
+            }
+            if (!runes || sources.empty()) continue;
+            size_t at = i;
+            for (size_t src : sources) {
+                LogLine line = game_.events[src];
+                if (line.kind == "killed") {
+                    line.kind = "exhausted";
+                    line.from.clear();
+                    line.to.clear();
+                    line.text = line.actor + " exhausted " + line.card + ". (used for the payment)";
+                }
+                game_.events.erase(game_.events.begin() + static_cast<long>(src));
+                game_.events.insert(game_.events.begin() + static_cast<long>(at), std::move(line));
+                ++at;
+                ++moved;
+            }
+            i = j;
+        }
+        return moved;
+    }
+
     // ── log cursor ──
     PlayerId seatOf(const std::string& actor) const {
         if (game_.players.size() > 0 && actor == game_.players[0]) return PlayerId::Player1;
@@ -989,6 +1132,9 @@ private:
     };
     LoggedPayment paymentAround(PlayerId payer) const;
     int choiceEvidence(const Intent& in, const GameState& s) const;
+    int effectPlayEvidence(const Intent& in, PlayerId who) const;
+    int relocationAfterPlay(const LogLine& e, bool logged_location_illegal = false) const;
+    std::vector<std::string> effect_names_;   // cards an effect just played (lookahead evidence)
     int combatEvidence(const Intent& in, const GameState& s) const;
     std::vector<const LogLine*> upcomingLinesOf(PlayerId player, int max_lines, bool stop_at_decision) const;
     int passLike(const std::vector<Intent>& legal) const;
@@ -1007,14 +1153,60 @@ private:
     std::vector<char> consumed_;
     std::vector<char> matched_;      // consumed as a decision line (or undone / desynced)
     int last_matched_ = -1;          // evidence for engine-side choices starts after this line
+    int prev_matched_ = -1;          // the decision line matched before it
     std::vector<std::string> turn_of_;   // the log's turn player at each line
     PlayerId current_player_ = PlayerId::None;  // whose decision the engine is asking for
     size_t cursor_ = 0;
     void markDecision(int i) {
         consumed_[i] = 1;
         matched_[i] = 1;
-        if (i > last_matched_) last_matched_ = i;
+        if (i > last_matched_) {
+            prev_matched_ = last_matched_;
+            last_matched_ = i;
+        }
+        snapshotLocations();
+        effect_names_.clear();
+        effect_location_.clear();
     }
+    std::string effect_location_;   // where an effect just played a card (a "where to" choice)
+    // Where each player's units and gear were (by name) when the last log line
+    // was matched: a later "<X> moved U to D" whose U the engine has since put
+    // at D by an effect (Star Spring, a Zhonya's recall, a [Temporary]
+    // gear's repeated play effect) describes that effect, not a move.
+    std::map<std::tuple<int, std::string, std::string>, int> locations_at_match_;
+    static std::string locKey(const GameState& s, const GameObject& o) {
+        if (const auto bf = o.battlefieldId()) return "bf:" + normalizeName(bfName(s, *bf));
+        return "base";
+    }
+    void snapshotLocations() {
+        if (!mutable_state_) return;
+        locations_at_match_.clear();
+        for (const auto& [id, o] : mutable_state_->objects) {
+            if (!o.location.has_value() || o.isRune() || !(o.isUnit() || o.isGear())) continue;
+            ++locations_at_match_[{seatIndex(o.controller), normalizeName(o.name), locKey(*mutable_state_, o)}];
+        }
+    }
+    bool alreadyMovedByEffect(const LogLine& e, const GameState& s, PlayerId p) const {
+        const std::string to = normalizeName(e.to);
+        if (to.empty() || e.card.empty()) return false;
+        const std::string key = to == "base" ? std::string("base") : "bf:" + to;
+        int now = 0;
+        for (const auto& [id, o] : s.objects) {
+            if (o.controller != p || !o.location.has_value() || o.isRune()) continue;
+            if (!nameMatches(e.card, o.name) || !locMatches(s, o.location, e.to)) continue;
+            ++now;
+        }
+        if (now == 0) return false;
+        int then = 0;
+        for (const auto& [k, n] : locations_at_match_)
+            if (std::get<0>(k) == seatIndex(p) && std::get<2>(k) == key && nameMatches(e.card, std::get<1>(k)))
+                then += n;
+        return now > then;
+    }
+    int effect_lines_ = 0;   // log lines read as what an engine effect already did
+    int deck_tops_ = 0;      // cards put on top of a Main Deck for an effect the log shows taking them
+    int soft_dropped_ = 0;   // soft lines (plays from face down) the engine could not take where logged
+    std::set<std::string> deck_top_names_;   // ... their names: a "draw one of them" choice leaves them
     size_t evidenceStart() const { return static_cast<size_t>(last_matched_ + 1); }
     std::vector<std::pair<PlayerId, CardDefId>> pending_hand_;
 
@@ -1044,7 +1236,8 @@ bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal,
         // sacrifice, a legend banishing a card from the trash), never a move.
         {
             const std::string to = normalizeName(e.to);
-            if (to == "hand" || to == "trash" || to == "deck" || to == "banished" || to == "banishment")
+            if (to == "hand" || to == "trash" || to.rfind("deck", 0) == 0 || to.rfind("bottom", 0) == 0 ||
+                to.rfind("top of", 0) == 0 || to == "banished" || to == "banishment")
                 return false;
         }
         // A Standard Move is the turn player's, in their Main Phase (CR
@@ -1125,6 +1318,19 @@ void Driver::consumeNonDecision(const LogLine& e, const GameState& s, const std:
             for (auto id : in.targets) referenced.insert(id);
         }
         const bool exhausted = e.kind == "exhausted";
+        // "<X> exhausted Scuttle Crab", "<X> equipped Blade of the Exile to
+        // Astral Heron": the unit is exhausted to pay the equip ("[Equip] —
+        // [A] or exhaust a friendly unit"); the equip's own match reads that
+        // line as its cost, which needs the unit still ready.
+        if (exhausted) {
+            const size_t pos = static_cast<size_t>(&e - game_.events.data());
+            for (size_t j = pos + 1; j < game_.events.size() && j <= pos + 3; ++j) {
+                const LogLine& f = game_.events[j];
+                if (f.actor != e.actor) continue;
+                if (f.kind == "equipped") return;
+                if (!isPaymentLine(f)) break;
+            }
+        }
         for (auto& [id, o] : mutable_state_->objects) {
             if (o.controller != actor || o.is_exhausted == exhausted) continue;
             if (!o.location.has_value() && o.zone != ZoneType::LegendZone) continue;
@@ -1258,6 +1464,13 @@ int Driver::focusPassInWindow(int from, PlayerId player, const std::vector<Inten
 /// count: they are the effects of what is being decided now.
 std::vector<std::pair<std::string, int>> Driver::lookaheadNames() const {
     std::vector<std::pair<std::string, int>> names;
+    for (const auto& n : effect_names_) names.emplace_back(n, 3);
+    // Discards logged just before the last matched line (see choiceEvidence).
+    for (int i = last_matched_ - 1; i > prev_matched_ && i >= 0 && i >= last_matched_ - 6; --i) {
+        const LogLine& e = game_.events[static_cast<size_t>(i)];
+        if (!matched_[static_cast<size_t>(i)] && e.kind == "discarded" && !e.card.empty())
+            names.emplace_back(e.card, 3);
+    }
     int seen = 0;
     for (size_t i = evidenceStart(); i < game_.events.size() && seen < opts_.lookahead; ++i) {
         if (matched_[i]) continue;
@@ -1271,6 +1484,13 @@ std::vector<std::pair<std::string, int>> Driver::lookaheadNames() const {
             names.emplace_back(e.card, 2);
         else if ((e.kind == "moved" || (e.kind == "played" && e.token)) && seatOf(e.actor) == current_player_)
             names.emplace_back(e.card, 1);
+        // A unit of a player who is not the turn player "moving" was moved by
+        // an effect (Charm, Blitzcrank): what the decision now chose.
+        else if (e.kind == "moved" && seatOf(e.actor) != PlayerId::None && seatOf(e.actor) != current_player_) {
+            const size_t pos = i;
+            if (pos < turn_of_.size() && !turn_of_[pos].empty() && e.actor != turn_of_[pos])
+                names.emplace_back(e.card, 2);
+        }
         if (e.kind == "equipped") {
             if (!e.card.empty()) names.emplace_back(e.card, 2);
             if (!e.to.empty()) names.emplace_back(e.to, 2);
@@ -1303,12 +1523,23 @@ std::string Driver::hiddenCardName(const LogLine& e) const {
         if (f.index <= e.index || f.actor != e.actor) continue;
         if (f.kind == "played" && !f.from.empty() && nameMatches(f.from, e.to)) return f.card;
         if (f.kind == "revealed" && f.text.find("on the board") != std::string::npos) return f.card;
+        if (f.kind == "played" && normalizeName(f.from) == "face down") return f.card;
     }
     return "";
 }
 
 int Driver::scoreIntent(const Intent& in, const GameState& s, const std::vector<std::pair<std::string, int>>& preferred) const {
     int score = choiceEvidence(in, s) + combatEvidence(in, s);
+    // A card the log has an effect take from the top of the deck later this
+    // turn was not drawn or picked now ("look at the top 3, draw one").
+    if (in.type == IntentType::MakeChoice && !deck_top_names_.empty()) {
+        auto top = [&](GameObjectId id) {
+            return s.objectExists(id) && s.getObject(id).zone == ZoneType::MainDeck &&
+                   deck_top_names_.count(normalizeName(s.getObject(id).name));
+        };
+        for (auto t : in.targets) if (top(t)) score -= 1;
+        for (auto t : in.chosen_objects) if (top(t)) score -= 1;
+    }
     if (preferred.empty()) return score;
     auto hit = [&](const std::string& nm) {
         int w = 0;
@@ -1353,6 +1584,55 @@ std::string lower(std::string s) {
 bool has(const std::string& hay, const char* needle) { return hay.find(needle) != std::string::npos; }
 }  // namespace
 
+/// A "Yes" whose effect plays a card: "Fizz: play a spell (cost <= 3) from
+/// trash for free?" (the next play is from the trash), "Flame Chompers: pay
+/// [R] to play me?" / "Nocturne: banish from deck and play for [A]?" (the next
+/// play is the prompt's own card), "Last Caress: play a unit to any
+/// battlefield" (the next unit play). The index of `who`'s card-play line
+/// that effect logged, else -1.
+int Driver::effectPlayEvidence(const Intent& in, PlayerId who) const {
+    const std::string label = lower(in.choice_label);
+    std::string self;
+    const bool from_trash = label.find("from trash") != std::string::npos;
+    if (!from_trash) {
+        const std::string dash = "\xE2\x80\x94 ";
+        const auto d = label.find(dash);
+        const auto colon = label.find(':', d == std::string::npos ? 0 : d);
+        if (d != std::string::npos && colon != std::string::npos && colon > d + dash.size())
+            self = label.substr(d + dash.size(), colon - d - dash.size());
+    }
+    // "Last Caress: play a unit to any battlefield": the player's next unit
+    // play, a champion's from the Champion Zone logged as a move included.
+    const bool any_unit = label.find("play a unit") != std::string::npos;
+    int seen = 0;
+    for (size_t i = evidenceStart(); i < game_.events.size() && seen < 8; ++i) {
+        if (matched_[i]) continue;
+        ++seen;
+        const LogLine& e = game_.events[i];
+        if (seatOf(e.actor) != who) continue;
+        if (e.kind == "ended_turn" || e.kind == "passed_focus" || e.kind == "showdown") break;
+        if (any_unit) {
+            const CardDef* d = resolveCard(db_, e.card);
+            const bool unit = d && d->card_type == CardType::Unit;
+            bool champion_move = false;
+            if (e.kind == "moved" && unit) {
+                auto it = game_.legends.find(e.actor);
+                champion_move = it != game_.legends.end() && nameMatches(e.card, it->second.champion_name);
+            }
+            if ((e.isCardPlay() && unit) || champion_move) return static_cast<int>(i);
+            if (e.isCardPlay()) return -1;
+            continue;
+        }
+        if (!e.isCardPlay()) continue;
+        if (from_trash && normalizeName(e.from) != "trash") return -1;
+        if (!from_trash && (self.empty() || !(nameMatches(e.card, self) ||
+                                              normalizeName(e.card).rfind(normalizeName(self) + ",", 0) == 0)))
+            return -1;
+        return static_cast<int>(i);
+    }
+    return -1;
+}
+
 /// Evidence in the log for a yes/no or modal answer the engine asks for.
 /// "Yes — <prompt>" scores when the lines that follow show the prompt's
 /// effect (a payment for "pay [1]", a unit moved to base for "to base", a
@@ -1367,14 +1647,54 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
     const bool yes = label.rfind("yes", 0) == 0;
     const bool no = label.rfind("no", 0) == 0 && (label.size() == 2 || !std::isalpha(static_cast<unsigned char>(label[2])));
     auto lines = upcomingLinesOf(who, 8, /*stop_at_decision=*/true);
+    // The rune lines right before the player's next card play pay for that
+    // play ("<X> exhausted 1 Calm rune" ×7, "<X> played Astral Heron"), not for
+    // an ability's "[1]" asked about now.
+    std::set<const LogLine*> next_play_payment;
+    {
+        std::vector<const LogLine*> run;
+        int seen = 0;
+        for (size_t i = evidenceStart(); i < game_.events.size() && seen < 16; ++i) {
+            if (matched_[i]) continue;
+            ++seen;
+            const LogLine& e = game_.events[i];
+            if (seatOf(e.actor) != who) continue;
+            if (e.isCardPlay()) { next_play_payment.insert(run.begin(), run.end()); break; }
+            if (e.kind == "ended_turn" || e.kind == "passed_focus" || e.kind == "showdown" ||
+                e.kind == "hidden_card_placed" || e.kind == "equipped")
+                break;
+            if (isPaymentLine(e) && isRuneLine(e)) run.push_back(&e);
+            else run.clear();
+        }
+    }
     // "move an enemy unit", "an opponent discards": the effect shows up as
     // the other player's line.
+    const PlayerId other = who == PlayerId::Player1 ? PlayerId::Player2 : PlayerId::Player1;
+    bool enemy_moved = false;
     if (has(label, "enemy") || has(label, "opponent")) {
-        const PlayerId other = who == PlayerId::Player1 ? PlayerId::Player2 : PlayerId::Player1;
-        for (const auto* e : upcomingLinesOf(other, 8, /*stop_at_decision=*/true))
+        for (const auto* e : upcomingLinesOf(other, 8, /*stop_at_decision=*/true)) {
             if (e->kind == "moved" || e->kind == "killed" || e->kind == "discarded" || e->kind == "exhausted" ||
                 e->kind == "readied" || e->kind == "revealed" || e->kind == "revealed_hand")
                 lines.push_back(e);
+            if (e->kind == "moved") {
+                const std::string to = normalizeName(e->to);
+                if (!to.empty() && to != "hand" && to != "trash" && to != "deck" && to != "banished" &&
+                    to != "banishment")
+                    enemy_moved = true;
+            }
+        }
+    }
+    // The effects of what the engine asks about now can sit just BEFORE the
+    // last matched line: "<X> duplicated Honest Broker", "<X> moved Dredge Up
+    // from hand to trash" (LeBlanc, Deceiver's conquest trigger) logged ahead
+    // of the other player's "ended showdown responses" that closed the
+    // showdown. Such lines of the player, consumed as state changes since the
+    // decision line before, count too: copies and discards only (an exhausted
+    // unit or rune there belongs to what came before).
+    for (int i = last_matched_ - 1; i > prev_matched_ && i >= 0 && i >= last_matched_ - 6; --i) {
+        const LogLine& e = game_.events[static_cast<size_t>(i)];
+        if (matched_[static_cast<size_t>(i)] || seatOf(e.actor) != who) continue;
+        if (e.kind == "duplicated" || e.kind == "discarded") lines.push_back(&e);
     }
     auto any = [&](auto pred) {
         for (const auto* e : lines) if (pred(*e)) return true;
@@ -1382,11 +1702,15 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
     };
     // An ability's "[1]" / "[A]" shows as "<X> exhausted 1 Calm rune" /
     // "<X> recycled 1 Calm rune"; "<X> paid 2E" lines belong to card plays.
-    const bool paid = any([](const LogLine& e) { return (e.kind == "exhausted" || e.kind == "recycled") && e.text.find(" rune") != std::string::npos; });
+    const bool paid = any([&](const LogLine& e) {
+        return (e.kind == "exhausted" || e.kind == "recycled") && e.text.find(" rune") != std::string::npos &&
+               !next_play_payment.count(&e);
+    });
+    const bool made_unit = any([](const LogLine& e) { return e.kind == "made_unit"; });
     const bool to_base = any([](const LogLine& e) { return e.kind == "moved" && normalizeName(e.to) == "base"; });
     const bool to_hand = any([](const LogLine& e) { return e.kind == "moved" && normalizeName(e.to) == "hand"; });
     const bool moved_any = any([](const LogLine& e) { return e.kind == "moved"; });
-    const bool token = any([](const LogLine& e) { return e.kind == "played" && e.token; });
+    const bool token = any([](const LogLine& e) { return (e.kind == "played" && e.token) || e.kind == "duplicated"; });
     const bool drew = any([](const LogLine& e) { return e.kind == "drew"; });
     const bool channeled = any([](const LogLine& e) { return e.kind == "channeled"; });
     const bool discarded = any([](const LogLine& e) { return e.kind == "discarded"; });
@@ -1437,10 +1761,20 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
                     readied_unit = true;
             return yes ? (readied_unit ? 3 : 0) : 0;
         }
+        // "play a spell from your trash" (Fizz), "pay [R] to play me" (Flame
+        // Chompers, discarded): the player's next card play is that card,
+        // from the trash.
+        if (has(prompt, "from trash") || has(prompt, "play me") || has(prompt, "play for") ||
+            has(prompt, "play a unit")) {
+            const int line = effectPlayEvidence(in, who);
+            return yes ? (line >= 0 ? 3 : 0) : (line >= 0 ? 0 : 1);
+        }
         int hits = 0;
         if (has(prompt, "pay ")) hits += paid;
         if (has(prompt, "to base") || has(prompt, "recall")) hits += to_base;
-        else if (has(prompt, "move")) hits += moved_any;
+        else if (has(prompt, "move")) hits += has(prompt, "enemy") ? enemy_moved : moved_any;
+        // Lady of Clockwork: "<X> made The Ball a unit with Orianna".
+        if (has(prompt, "choose a friendly gear")) hits += made_unit;
         if (has(prompt, "hand") || has(prompt, "return")) hits += to_hand;
         if (has(prompt, "token")) hits += token;
         if (has(prompt, "draw")) hits += drew;
@@ -1474,6 +1808,8 @@ int Driver::choiceEvidence(const Intent& in, const GameState& s) const {
     }
     // Modal labels.
     int score = 0;
+    // "Base" / a battlefield's name: where the card an effect plays went.
+    if (!effect_location_.empty() && nameMatches(effect_location_, in.choice_label)) score += 3;
     if (has(label, "buff me") || has(label, "[buff]")) score += buff_applied ? 3 : 0;
     if (has(label, "spend")) score += buff_consumed ? 2 : -1;
     if (has(label, "ready")) score += readied ? 2 : -1;
@@ -1516,6 +1852,38 @@ int Driver::passLike(const std::vector<Intent>& legal) const {
     return -1;
 }
 
+/// "<X> played Ember Monk from hand to base", "<X> moved Ember Monk to
+/// Grove of the God-Willow" with nothing readying the unit in between: a
+/// unit enters exhausted (CR 143.4, 359.2.c) and cannot make that move, so
+/// the client logged the play at its default location before the player put
+/// the card where it was played. The index of that move line, else -1. A
+/// unit with [Accelerate] may have entered ready and moved: left alone.
+int Driver::relocationAfterPlay(const LogLine& e, bool logged_location_illegal) const {
+    if (e.card.empty()) return -1;
+    if (!logged_location_illegal) {
+        if (normalizeName(e.to) != "base") return -1;
+        if (const CardDef* d = resolveCard(db_, e.card); !d || d->card_type != CardType::Unit ||
+            d->keywords.has(Keyword::Accelerate))
+            return -1;
+    }
+    const size_t pos = static_cast<size_t>(&e - game_.events.data());
+    for (size_t j = pos + 1; j < game_.events.size() && j <= pos + 8; ++j) {
+        if (consumed_[j]) continue;
+        const LogLine& f = game_.events[j];
+        if (f.kind == "ended_turn" || f.kind == "passed_focus" || f.kind == "showdown" ||
+            f.kind == "conquered" || f.kind == "rewound")
+            return -1;
+        if (f.card.empty() || !nameMatches(e.card, f.card)) continue;
+        if (f.kind != "moved") return -1;   // readied, exhausted, killed, ...: not a relocation
+        if (f.actor != e.actor) return -1;
+        const std::string to = normalizeName(f.to);
+        if (to == "base" && logged_location_illegal) return static_cast<int>(j);
+        if (isZoneWord(to) || to == "champion area") return -1;
+        return static_cast<int>(j);
+    }
+    return -1;
+}
+
 Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, const GameState& s, PlayerId p) {
     Match m;
     const auto preferred = lookaheadNames();
@@ -1539,6 +1907,47 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
             if (!e.to.empty() && !locMatches(s, in.play_location, e.to)) { loc_miss = true; continue; }
             cands.push_back(static_cast<int>(i));
         }
+        // "<X> played Plundering Poro from hand to Bandle Scouts' Academy", at
+        // once "<X> moved Plundering Poro to base": the logged location is not
+        // one the card can be played to (a unit goes to its controller's base
+        // or a battlefield they control, CR 813.3.a); the client let the card
+        // be dropped there and the player put it where it was played.
+        if (cands.empty() && name_hit && loc_miss) {
+            if (const int r = relocationAfterPlay(e, /*logged_location_illegal=*/true); r >= 0) {
+                std::vector<int> moved_to;
+                for (size_t i = 0; i < legal.size(); ++i) {
+                    const Intent& in = legal[i];
+                    if (isPlayType(in.type) && nameMatches(e.card, objName(s, in.card)) &&
+                        locMatches(s, in.play_location, game_.events[static_cast<size_t>(r)].to))
+                        moved_to.push_back(static_cast<int>(i));
+                }
+                if (!moved_to.empty()) {
+                    m.index = pickBest(moved_to, [](const Intent&) { return 0; });
+                    m.also.push_back(r);
+                    return m;
+                }
+            }
+        }
+        // "<X> played Seal of Rage from banished": a play permission granted
+        // to the legend (Runeblade Anvil: "Until your next Ending Phase, you
+        // may play that card") is the legend's granted ability, whose
+        // resolution picks the banished card.
+        if (cands.empty() && normalizeName(e.from) == "banished") {
+            bool banished = false;
+            for (const auto& [id, o] : s.objects)
+                if (o.owner == p && o.zone == ZoneType::Banishment && nameMatches(e.card, o.name)) banished = true;
+            if (banished) {
+                for (size_t i = 0; i < legal.size(); ++i) {
+                    const Intent& in = legal[i];
+                    if (in.type == IntentType::ActivateAbility && in.granted_ability_def != 0 &&
+                        in.ability_source == s.player(p).legend_zone) {
+                        m.index = static_cast<int>(i);
+                        m.effect_name = e.card;
+                        return m;
+                    }
+                }
+            }
+        }
         if (cands.empty()) {
             if (name_hit && loc_miss) m.why = "card playable but not to '" + e.to + "'";
             else {
@@ -1552,6 +1961,27 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
             return m;
         }
         const bool from_trash = normalizeName(e.from) == "trash";
+        const bool from_facedown = normalizeName(e.from) == "face down";
+        if (from_facedown) {
+            m.index = pickBest(cands, [&](const Intent& in) {
+                return s.objectExists(in.card) && s.getObject(in.card).is_hidden ? 2 : 0;
+            });
+            return m;
+        }
+        if (const int r = relocationAfterPlay(e); r >= 0) {
+            std::vector<int> moved_to;
+            for (size_t i = 0; i < legal.size(); ++i) {
+                const Intent& in = legal[i];
+                if (isPlayType(in.type) && nameMatches(e.card, objName(s, in.card)) &&
+                    locMatches(s, in.play_location, game_.events[static_cast<size_t>(r)].to))
+                    moved_to.push_back(static_cast<int>(i));
+            }
+            if (!moved_to.empty()) {
+                m.index = pickBest(moved_to, [](const Intent&) { return 0; });
+                m.also.push_back(r);
+                return m;
+            }
+        }
         m.index = pickBest(cands, [&](const Intent& in) {
             return (from_trash && in.play_source == Intent::PlaySource::Trash) ? 1 : 0;
         });
@@ -1617,6 +2047,10 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
             unit_hit = true;
             if (locMatches(s, in.move_destination, e.to)) cands.push_back(static_cast<int>(i));
         }
+        if (cands.empty() && alreadyMovedByEffect(e, s, p)) {
+            m.index = Match::kAlreadyDone;
+            return m;
+        }
         if (cands.empty()) {
             // A champion played from the champion zone, or an Ambush unit from hand,
             // is logged as "moved <card> to <location>".
@@ -1625,6 +2059,22 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
                 if (isPlayType(in.type) && nameMatches(e.card, objName(s, in.card)) &&
                     locMatches(s, in.play_location, e.to))
                     cands.push_back(static_cast<int>(i));
+            }
+            if (!cands.empty()) {
+                if (const int r = relocationAfterPlay(e); r >= 0) {
+                    std::vector<int> moved_to;
+                    for (size_t i = 0; i < legal.size(); ++i) {
+                        const Intent& in = legal[i];
+                        if (isPlayType(in.type) && nameMatches(e.card, objName(s, in.card)) &&
+                            locMatches(s, in.play_location, game_.events[static_cast<size_t>(r)].to))
+                            moved_to.push_back(static_cast<int>(i));
+                    }
+                    if (!moved_to.empty()) {
+                        m.index = pickBest(moved_to, [](const Intent&) { return 0; });
+                        m.also.push_back(r);
+                        return m;
+                    }
+                }
             }
         }
         if (cands.empty()) {
@@ -1705,6 +2155,20 @@ Match Driver::matchEvent(const LogLine& e, const std::vector<Intent>& legal, con
             if (!nameMatches(e.card, objName(s, in.ability_source))) continue;
             if (!nameMatches(e.to, objName(s, in.targets[0]))) continue;
             cands.push_back(static_cast<int>(i));
+        }
+        if (cands.empty()) {
+            // [Quick-Draw] ("When you play it, attach it to a unit you
+            // control"): a play of the gear from hand carrying the unit.
+            for (size_t i = 0; i < legal.size(); ++i) {
+                const Intent& in = legal[i];
+                if (!isPlayType(in.type) || in.targets.empty() || !nameMatches(e.card, objName(s, in.card))) continue;
+                if (!nameMatches(e.to, objName(s, in.targets[0]))) continue;
+                cands.push_back(static_cast<int>(i));
+            }
+            if (!cands.empty()) {
+                m.index = cands.front();
+                return m;
+            }
         }
         if (cands.empty()) { m.why = "no equip option for '" + e.card + "' onto '" + e.to + "'"; return m; }
         // The exhaust cost: the log's "<actor> exhausted <unit>" lines just
@@ -1864,7 +2328,7 @@ int Driver::chooseForced(const std::vector<Intent>& legal, const GameState& s, b
         return pick;
     }
     const auto preferred = lookaheadNames();
-    int best = 0, best_score = 0;
+    int best = 0, best_score = std::numeric_limits<int>::min();
     for (size_t i = 0; i < legal.size(); ++i) {
         const int sc = scoreIntent(legal[i], s, preferred);
         if (sc > best_score) { best_score = sc; best = static_cast<int>(i); }
@@ -1872,6 +2336,25 @@ int Driver::chooseForced(const std::vector<Intent>& legal, const GameState& s, b
     if (best_score > 0) {
         known = true;
         note = "matched upcoming log lines";
+        // The card a "Yes" plays (from the trash, the deck top, the Champion
+        // Zone) is played by the effect: its "played <X>" line is that
+        // effect, not a later decision.
+        const Intent& chosen = legal[static_cast<size_t>(best)];
+        const std::string label = lower(chosen.choice_label);
+        if (chosen.type == IntentType::MakeChoice && label.rfind("yes", 0) == 0 &&
+            (has(label, "from trash") || has(label, "play me") || has(label, "play for") ||
+             has(label, "play a unit"))) {
+            const PlayerId who = chosen.player != PlayerId::None ? chosen.player : current_player_;
+            const int line = effectPlayEvidence(chosen, who);
+            if (line >= 0) {
+                const std::string card = game_.events[static_cast<size_t>(line)].card;
+                const std::string where = game_.events[static_cast<size_t>(line)].to;
+                markDecision(line);
+                effect_names_.push_back(card);
+                effect_location_ = where;
+                note = "matched upcoming log lines; the effect plays " + card;
+            }
+        }
     } else {
         note = "no log evidence: first option";
     }
@@ -1921,6 +2404,15 @@ void Driver::prefetch(GameEngine& engine, const std::vector<Intent>& legal) {
                 ++n;
                 const CardDef* d = resolveCard(db_, hiddenCardName(e));
                 if (d && isDeckCardType(*d)) fix(p, *d, ZoneType::Hand, keep, &e);
+            } else if (e.kind == "equipped" && !e.card.empty()) {
+                // A gear equipped that is not on the board is played from hand
+                // and attached ([Quick-Draw]).
+                bool on_board = false;
+                for (const auto& [id, o] : ms.objects)
+                    if (o.controller == p && o.location.has_value() && nameMatches(e.card, o.name)) on_board = true;
+                const CardDef* d = resolveCard(db_, e.card);
+                if (!on_board && d && d->card_type == CardType::Gear && d->keywords.has(Keyword::QuickDraw))
+                    fix(p, *d, ZoneType::Hand, keep, &e);
             } else if (e.kind == "discarded" && normalizeName(e.from) == "hand") {
                 // "<X> moved Flame Chompers from hand to trash": the card is
                 // in the hand, so the engine's discard choice can pick it.
@@ -1931,6 +2423,63 @@ void Driver::prefetch(GameEngine& engine, const std::vector<Intent>& legal) {
     }
     for (const auto& [p, def] : pending_hand_) fix(p, db_.get(def), ZoneType::Hand, upcomingPlays(p, 6), nullptr);
     pending_hand_.clear();
+    deck_top_names_.clear();
+    // "<X> banished Seal of Rage from the top of their deck with Runeblade
+    // Anvil", "<X> played Nocturne, Horrifying from top of deck to base": the
+    // log names a card an effect takes from the top of the Main Deck, whose
+    // order is hidden. Put it there (the first one named on top).
+    for (PlayerId p : {PlayerId::Player1, PlayerId::Player2}) {
+        // This turn only: a card put there before the Draw Phase is drawn.
+        std::vector<CardDefId> tops;
+        int seen = 0;
+        for (size_t i = cursor_; i < game_.events.size() && seen < 12; ++i) {
+            if (consumed_[i]) continue;
+            const LogLine& e = game_.events[i];
+            if (e.kind == "ended_turn") break;
+            if (seatOf(e.actor) != p) continue;
+            ++seen;
+            const std::string from = normalizeName(e.from);
+            if ((e.kind == "played" || e.kind == "banished") && !e.token &&
+                (from.rfind("top of", 0) == 0 || from.rfind("the top of", 0) == 0)) {
+                const CardDef* d = resolveCard(db_, e.card);
+                if (d && isDeckCardType(*d)) {
+                    tops.push_back(d->id);
+                    deck_top_names_.insert(normalizeName(d->name));
+                }
+            }
+        }
+        auto& deck = ms.player(p).main_deck;
+        for (auto it = tops.rbegin(); it != tops.rend(); ++it) {
+            // Already among the top cards this many lines name: leave it.
+            const size_t window = tops.size();
+            bool near_top = false;
+            for (size_t k = 0; k < window && k < deck.size(); ++k)
+                if (ms.objectExists(deck[deck.size() - 1 - k]) &&
+                    ms.getObject(deck[deck.size() - 1 - k]).card_def_id == *it)
+                    near_top = true;
+            if (near_top) continue;
+            bool placed = false;
+            for (size_t k = deck.size(); k-- > 0;) {
+                if (!ms.objectExists(deck[k]) || ms.getObject(deck[k]).card_def_id != *it) continue;
+                const GameObjectId id = deck[k];
+                deck.erase(deck.begin() + static_cast<long>(k));
+                deck.push_back(id);
+                ++deck_tops_;
+                placed = true;
+                break;
+            }
+            if (!placed) {
+                // Not in the deck (the inferred list holds fewer copies than the
+                // human's): conjure one, as the hand fixes do.
+                const auto id = ms.createObject();
+                fillFromDef(ms.getObject(id), db_.get(*it), p);
+                ms.getObject(id).zone = ZoneType::MainDeck;
+                deck.push_back(id);
+                ++deck_tops_;
+                ++created_;
+            }
+        }
+    }
     for (PlayerId p : {PlayerId::Player1, PlayerId::Player2}) fixRuneDomains(ms, p, protect);
 }
 
@@ -1986,6 +2535,10 @@ void Driver::fixRuneDomains(GameState& ms, PlayerId p, const std::set<GameObject
     for (auto& [id, o] : ms.objects)
         if (o.isRune() && o.controller == p && o.location.has_value() && !o.domains.empty())
             board[normalizeName(toString(o.domains.front()))].push_back(id);
+    // Runes of a needed domain the board cannot supply by a swap (no rune of
+    // a spare domain there yet, as before a player's first Channel Phase) go
+    // to the top of the rune deck, so the next channel brings them.
+    std::vector<std::pair<std::string, int>> to_top;
     for (const auto& [dom, n] : need) {
         int have = static_cast<int>(board[dom].size());
         while (have < n) {
@@ -1999,7 +2552,7 @@ void Driver::fixRuneDomains(GameState& ms, PlayerId p, const std::set<GameObject
                     if (!protect.count(*it)) { out = *it; break; }
                 if (out != kInvalidId) { ids.erase(std::find(ids.begin(), ids.end(), out)); break; }
             }
-            if (out == kInvalidId) return;
+            if (out == kInvalidId) { to_top.emplace_back(dom, n - have); break; }
             // The topmost rune of the needed domain in the rune deck.
             auto in_it = ps.rune_deck.end();
             for (auto it = ps.rune_deck.rbegin(); it != ps.rune_deck.rend(); ++it) {
@@ -2023,6 +2576,30 @@ void Driver::fixRuneDomains(GameState& ms, PlayerId p, const std::set<GameObject
             ++rune_swaps_;
         }
     }
+    for (const auto& [dom, count] : to_top) {
+        // The top `count` runes of the deck (its back) should hold `count`
+        // runes of `dom`: move the nearest ones there, keeping the rest in order.
+        auto& deck = ps.rune_deck;
+        auto isDom = [&](GameObjectId id) {
+            if (!ms.objectExists(id)) return false;
+            const auto& r = ms.getObject(id);
+            return !r.domains.empty() && normalizeName(toString(r.domains.front())) == dom;
+        };
+        const int top = std::min<int>(count, static_cast<int>(deck.size()));
+        int already = 0;
+        for (int k = 0; k < top; ++k) already += isDom(deck[deck.size() - 1 - static_cast<size_t>(k)]);
+        const size_t block = deck.size() - static_cast<size_t>(top);   // first index of the top block
+        for (int have_top = already; have_top < top; ++have_top) {
+            // Swap a rune of another domain in the top block with the nearest
+            // rune of `dom` below it.
+            size_t out = deck.size(), in = deck.size();
+            for (size_t k = block; k < deck.size(); ++k) if (!isDom(deck[k])) { out = k; break; }
+            for (size_t k = block; k-- > 0;) if (isDom(deck[k])) { in = k; break; }
+            if (out == deck.size() || in == deck.size()) break;
+            std::swap(deck[out], deck[in]);
+            ++rune_swaps_;
+        }
+    }
 }
 
 void Driver::desync(const LogLine& e, const std::vector<Intent>& legal, const GameState& s, const std::string& reason) {
@@ -2035,9 +2612,32 @@ void Driver::desync(const LogLine& e, const std::vector<Intent>& legal, const Ga
                             {"phase", toString(s.turn.phase)}, {"player", seatIndex(legal.empty() ? PlayerId::None : legal[0].player)},
                             {"event_index", e.index}, {"event_text", e.text}, {"event_kind", e.kind},
                             {"reason", reason}, {"options", opts}});
-    if (opts_.verbose)
+    if (opts_.verbose) {
         std::cerr << "  [desync " << desyncs_ << "] turn " << s.turn.turn_number << " ev#" << e.index
                   << " \"" << e.text << "\": " << reason << "\n";
+        // The board as the engine has it, to tell an engine gap from a log artefact.
+        for (PlayerId p : {PlayerId::Player1, PlayerId::Player2}) {
+            const auto& ps = s.player(p);
+            int ready = 0, exhausted = 0;
+            std::string units, hand;
+            for (const auto& [id, o] : s.objects) {
+                if (o.controller != p || !o.location.has_value()) continue;
+                if (o.isRune()) {
+                    (o.is_exhausted ? exhausted : ready)++;
+                    units += std::string(" rune:") + (o.domains.empty() ? "?" : toString(o.domains.front())) +
+                             (o.is_exhausted ? "(x)" : "");
+                    continue;
+                }
+                units += " " + o.name + (o.is_exhausted ? "(x)" : "") + "@" +
+                         (o.battlefieldId() ? bfName(s, *o.battlefieldId()) : std::string("base"));
+            }
+            for (auto id : ps.hand) hand += " " + objName(s, id) + ";";
+            std::cerr << "    P" << seatIndex(p) << " score " << ps.score << " runes " << ready << " ready/"
+                      << exhausted << " exhausted, pool " << ps.rune_pool.energy << "E/"
+                      << ps.rune_pool.totalPower() << "P, deck " << ps.main_deck.size() << "\n      board:" << units
+                      << "\n      hand:" << hand << "\n";
+        }
+    }
 }
 
 GuidedResult Driver::run() {
@@ -2050,7 +2650,11 @@ GuidedResult Driver::run() {
     EventBus events;
     GameEngine engine(db_, events, registry_);
     mutable_state_ = &engine.mutableState();
-    events.on_log.connect([&review_lines](const LogEvent& e) {
+    // RIFTBOUND_LOG_STREAM=1 (with --verbose) streams the engine trace to
+    // stderr between the decision lines, as the riftbound CLI does.
+    static const bool stream = std::getenv("RIFTBOUND_LOG_STREAM") != nullptr;
+    events.on_log.connect([&review_lines, this](const LogEvent& e) {
+        if (stream && opts_.verbose) std::cerr << "    | " << e.message << "\n";
         if (e.level == LogLevel::Debug || e.level == LogLevel::Info ||
             (e.level == LogLevel::Trace && review_lines.size() < 200))
             review_lines.push_back(e.message);
@@ -2109,9 +2713,26 @@ GuidedResult Driver::run() {
                 if (i < 0) { stop = true; stop_reason_ = "log ended"; break; }
                 const LogLine& e = game_.events[i];
                 const PlayerId actor = seatOf(e.actor);
+                if (e.soft) {
+                    Match m;
+                    if (actor == P) m = matchEvent(e, legal, st, P);
+                    if (m.index >= 0) {
+                        choice = m.index; markDecision(i); ev = &e; known = true;
+                        break;
+                    }
+                    consumed_[i] = 1;
+                    matched_[i] = 1;
+                    ++soft_dropped_;
+                    continue;
+                }
                 if (actor == P) {
                     Match m = matchEvent(e, legal, st, P);
-                    if (m.index >= 0) { choice = m.index; markDecision(i); for (int a : m.also) markDecision(a); ev = &e; known = true; break; }
+                    if (m.index == Match::kAlreadyDone) {
+                        markDecision(i);
+                        ++effect_lines_;
+                        continue;
+                    }
+                    if (m.index >= 0) { choice = m.index; markDecision(i); for (int a : m.also) markDecision(a); if (!m.effect_name.empty()) effect_names_.push_back(m.effect_name); ev = &e; known = true; break; }
                     const int pl = passLike(legal);
                     if (pl >= 0) { choice = pl; ++silent_passes_; note = "pass (engine still in flight before: " + e.text + ")"; break; }
                     desync(e, legal, st, m.why);
@@ -2123,7 +2744,7 @@ GuidedResult Driver::run() {
                     game_.events[i].actor = P == PlayerId::Player1 ? game_.players[0] : game_.players[1];
                     game_.events[i].actor_uncertain = false;
                     ++actors_settled_;
-                    choice = m.index; markDecision(i); for (int a : m.also) markDecision(a); ev = &e; known = true; note = "actor settled by the engine's turn";
+                    choice = m.index; markDecision(i); for (int a : m.also) markDecision(a); if (!m.effect_name.empty()) effect_names_.push_back(m.effect_name); ev = &e; known = true; note = "actor settled by the engine's turn";
                     break;
                 } else {
                     // The engine is at a focus decision and P's own next
@@ -2143,7 +2764,7 @@ GuidedResult Driver::run() {
                     if (pl >= 0) { choice = pl; ++silent_passes_; note = "pass (log continues with the other player)"; break; }
                     Match m;
                     const int j = findInWindow(i, P, legal, st, m);
-                    if (j >= 0) { choice = m.index; markDecision(j); for (int a : m.also) markDecision(a); ev = &game_.events[j]; known = true; ++out_of_order_; note = "matched out of order"; break; }
+                    if (j >= 0) { choice = m.index; markDecision(j); for (int a : m.also) markDecision(a); if (!m.effect_name.empty()) effect_names_.push_back(m.effect_name); ev = &game_.events[j]; known = true; ++out_of_order_; note = "matched out of order"; break; }
                     std::string who = actor == PlayerId::None ? std::string("nobody") : "P" + std::to_string(seatIndex(actor));
                     desync(e, legal, st, "engine asks P" + std::to_string(seatIndex(P)) + " but the log's next action is by " + who + " (" + e.kind + ")");
                     markDecision(i);
@@ -2324,7 +2945,7 @@ GuidedResult Driver::run() {
         {"desyncs", desyncs_}, {"desync_causes", causes}, {"desync_list", desync_list_},
         {"silent_passes", silent_passes_}, {"out_of_order_matches", out_of_order_},
         {"rewinds_applied", rewinds_}, {"rewinds_ignored", rewinds_ignored_},
-        {"readiness_fixes", readiness_fixes_},
+        {"readiness_fixes", readiness_fixes_}, {"effect_lines", effect_lines_}, {"deck_tops", deck_tops_}, {"soft_dropped", soft_dropped_},
         {"actors_reattributed", actors_reattributed}, {"actors_settled", actors_settled_},
         {"actors_uncertain", actors_uncertain},
         {"forced_decisions", forced_}, {"score_mismatches", score_mismatches_},

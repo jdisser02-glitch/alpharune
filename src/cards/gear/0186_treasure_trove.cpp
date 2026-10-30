@@ -15,9 +15,11 @@ class TreasureTrove : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
 
-    // PARTIAL: modeled on WhenIDie (no "leaves the board" trigger exists, so a
-    // bounce-to-hand departure does not fire the draw + channel).
+    // "When this leaves the board": the WhenIDie trigger, which also fires on
+    // a departure that is not a death (returned to hand by Pack of Wonders,
+    // banished) through deathAbilityOnLeavingBoard().
     TriggerType triggerType() const override { return TriggerType::WhenIDie; }
+    bool deathAbilityOnLeavingBoard() const override { return true; }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
         ctx.executor.drawCards(ctx.controller, 1);
         ctx.executor.channelRunes(ctx.controller, 1, /*enter_exhausted=*/true);

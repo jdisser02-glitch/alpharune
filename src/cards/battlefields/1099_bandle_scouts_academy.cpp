@@ -17,12 +17,9 @@ public:
     const CardDef& def() const override { return def_; }
 
     // "When you hide a card here, play a Gold gear token exhausted."
-    // ENGINE GAP: TriggerManager::onCardHidden fires WhenYouHideACard only on
-    // the hiding player's on-board cards; a battlefield card has no location,
-    // so this never fires today. Declared so it works once the hide is also
-    // announced to the battlefield it was hidden at (the natural wiring:
-    // fireBattlefieldTriggers(WhenYouHideACard, e.player, card.hidden_at),
-    // or fireTrigger with the hidden card as the subject).
+    // TriggerManager::onCardHidden announces a hide to the battlefield it was
+    // hidden at, for the hiding player, the hidden card as the subject
+    // (fireBattlefieldTriggers(WhenYouHideACard, ...)).
     TriggerType triggerType() const override { return TriggerType::WhenYouHideACard; }
 
     bool triggerCondition(const GameState& state, GameObjectId source, PlayerId /*controller*/,

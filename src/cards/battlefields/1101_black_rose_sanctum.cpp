@@ -18,13 +18,9 @@ public:
 
     // "For each player, the first time each turn a non-token unit they control
     //  dies here, they play a 1 [M] Recruit unit token to their base."
-    // ENGINE GAP: TriggerManager::onUnitDied fires "a friendly unit dies" on
-    // the dying unit's controller's on-board cards only — never on the card of
-    // the battlefield it died at — so this does not fire today. Declared so it
-    // works once a death at a battlefield is also announced to that
-    // battlefield's card for the dying unit's controller, with the unit as the
-    // subject (fireTrigger(bf.card_object_id, e.controller, 0,
-    // WhenAFriendlyUnitDies, e.object)).
+    // TriggerManager::onUnitDied announces a death at a battlefield to that
+    // battlefield's card for the dying unit's controller, the unit as the
+    // subject (fireBattlefieldTriggers(WhenAFriendlyUnitDies, ...)).
     TriggerType triggerType() const override { return TriggerType::WhenAFriendlyUnitDies; }
 
     static std::string usedKey(PlayerId p) {

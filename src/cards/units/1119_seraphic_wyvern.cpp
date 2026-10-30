@@ -44,10 +44,14 @@ public:
     static constexpr const char* kSeenPrefix = "__seraphic_seen_";
     static constexpr const char* kExtra = "__seraphic_extra_rune";
 
-    // Fresh records each time I enter the board by being played.
+    // Played: the runes in base as I am played (costs paid) are the ones that
+    // were not channeled while I am on the board. A channel resolving before
+    // the next aura pass — "when you play a unit, channel 1 rune" (Relentless
+    // Storm) resolves with me already on the board (CR 359.2) — then still
+    // counts; recording at the first aura pass instead missed it.
     void onPlay(CardContext& ctx) override {
         if (!ctx.state.objectExists(ctx.source)) return;
-        resetRecords(ctx.state.getObject(ctx.source));
+        record(ctx.state.getObject(ctx.source), baseRunes(ctx.state, ctx.controller));
     }
 
     void applyPassiveAura(GameState& state, PlayerId controller) const override {

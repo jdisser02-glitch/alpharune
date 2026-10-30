@@ -617,9 +617,20 @@ void TriggerManager::onCombatEnded(const CombatEndedEvent& e) {
 void TriggerManager::onLeftBoard(const LeftBoardEvent& e) {
     // A gear's own "When this dies" (units go through onUnitDied). Gear killed
     // by an effect, a [Deploy] hold kill or a kill cost all land here.
-    if (e.card_type != CardType::Gear || !e.was_killed) return;
+    if (e.card_type != CardType::Gear) return;
     if (!state_.objectExists(e.object)) return;
     auto& obj = state_.getObject(e.object);
+    if (!e.was_killed) {
+        // "When this leaves the board" (Treasure Trove): returned to hand,
+        // banished or recycled is leaving the board too.
+        const Card* c = obj.card_def_id != kInvalidId ? card_registry_.get(obj.card_def_id) : nullptr;
+        if (!c || !c->deathAbilityOnLeavingBoard() || !c->firesOn(TriggerType::WhenIDie)) return;
+        events_.logTrace("GEAR LEAVES THE BOARD: " + obj.name + " -> its leave-the-board ability triggers");
+        chain_.addAbility(e.object, e.controller, obj.card_def_id);
+        if (!state_.chain.items.empty())
+            state_.chain.items.back().fired_trigger = TriggerType::WhenIDie;
+        return;
+    }
     // "If a friendly gear died this turn" (turn_number + 1; 0 = never).
     obj.card_counters["__died_turn"] = state_.turn.turn_number + 1;
     if (obj.card_def_id == kInvalidId ||
@@ -706,6 +717,13 @@ void TriggerManager::onUnitDied(const UnitDiedEvent& e) {
             fireTrigger(id, opp, 0, TriggerType::WhenAnEnemyUnitDies);
         }
     }
+    // The battlefield it died at: "For each player, the first time each turn a
+    // non-token unit they control dies here, ..." (Black Rose Sanctum). A
+    // battlefield's card is not on the board as an object of either player,
+    // so the loop above never reaches it; it fires for the dying unit's
+    // controller, the unit as its subject.
+    if (const auto* at = std::get_if<BattlefieldLocation>(&e.was_at))
+        fireBattlefieldTriggers(TriggerType::WhenAFriendlyUnitDies, e.controller, at->id, e.object);
 
     // "When you kill a unit with a spell" (Immortal Phoenix 037). Attributed to
     // the controller of the spell currently resolving on the chain. Fans to that
@@ -1372,6 +1390,14 @@ void TriggerManager::onCardHidden(const CardHiddenEvent& e) {
             fireTrigger(id, e.player, 0, TriggerType::WhenYouHideACard);
         }
     }
+    // "When you hide a card here" — the battlefield it was hidden at (Bandle
+    // Scouts' Academy). A battlefield's card is not on the board as either
+    // player's object, so the loop above never reaches it; it fires for the
+    // hiding player, the hidden card as its subject.
+    if (state_.objectExists(e.card) && state_.getObject(e.card).is_hidden &&
+        state_.getObject(e.card).hidden_at != kInvalidId)
+        fireBattlefieldTriggers(TriggerType::WhenYouHideACard, e.player,
+                                state_.getObject(e.card).hidden_at, e.card);
 }
 
 void TriggerManager::onPlayedFromFacedown(const PlayedFromFacedownEvent& e) {

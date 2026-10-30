@@ -441,3 +441,79 @@ TEST_F(GuidedReplayTest, ARewindAfterTheDrawDoesNotUndoThePlay) {
     EXPECT_EQ(s["desyncs"].get<int>(), 0) << s["desync_list"].dump(1);
     EXPECT_EQ(s["result"]["engine_scores"][1].get<int>(), 1) << s.dump(1);
 }
+
+TEST_F(GuidedReplayTest, ClientReadingsOfHidesUndonePlaysAndFaceDownPlays) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // After Alice's Crab: a play taken back (into the hand, its two runes
+    // readied again), a hide logged as a move, a play from banishment whose
+    // destination the importer left in `from`, and a card shown from face
+    // down.
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Alice paid 2E — Exhaust 2.", "Alice", "paid"),
+        ev(1, "Alice played Scuttle Crab from hand to base.", "Alice", "played",
+           {{"card", "Scuttle Crab"}, {"from", "hand"}, {"to", "base"}}),
+        ev(1, "Alice moved Scuttle Crab to hand.", "Alice", "moved", {{"card", "Scuttle Crab"}, {"to", "hand"}}),
+        ev(1, "Alice readied 1 Calm rune.", "Alice", "readied"),
+        ev(1, "Alice readied 1 Calm rune.", "Alice", "readied"),
+        ev(1, "Alice recycled 1 Calm rune.", "Alice", "recycled"),
+        ev(1, "Alice moved a hidden card to Emperor's Dais.", "Alice", "moved",
+           {{"card", "a hidden card"}, {"to", "Emperor's Dais"}}),
+        ev(1, "Alice played Seal of Rage from banished to base.", "Alice", "played",
+           {{"card", "Seal of Rage"}, {"from", "banished to base"}}),
+        ev(1, "Alice revealed Tideturner on the board.", "Alice", "revealed", {{"card", "Tideturner"}}),
+    });
+    events.insert(events.begin() + 13, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    int crab_plays = 0, readied = 0;
+    const guided::LogLine* hide = nullptr;
+    const guided::LogLine* banished = nullptr;
+    const guided::LogLine* facedown = nullptr;
+    for (const auto& e : game.events) {
+        if (e.kind == "played" && e.card == "Scuttle Crab" && e.actor == "Alice") ++crab_plays;
+        if (e.kind == "readied" && e.actor == "Alice") ++readied;
+        if (e.kind == "hidden_card_placed" && e.actor == "Alice") hide = &e;
+        if (e.card == "Seal of Rage") banished = &e;
+        if (e.card == "Tideturner") facedown = &e;
+    }
+    EXPECT_EQ(crab_plays, 1) << "the play taken back into the hand is gone, the real one stays";
+    EXPECT_EQ(readied, 0) << "and so are the readied runes that refunded it";
+    ASSERT_NE(hide, nullptr) << "'moved a hidden card to' is a hide";
+    EXPECT_EQ(hide->to, "Emperor's Dais");
+    EXPECT_TRUE(hide->card.empty());
+    ASSERT_NE(banished, nullptr);
+    EXPECT_EQ(banished->from, "banished");
+    EXPECT_EQ(banished->to, "base");
+    ASSERT_NE(facedown, nullptr);
+    EXPECT_EQ(facedown->kind, "played") << "a card revealed on the board was played from face down";
+    EXPECT_EQ(facedown->from, "face down");
+    EXPECT_TRUE(facedown->soft) << "dropped, not a desync, where the engine cannot take it";
+}
+
+TEST_F(GuidedReplayTest, AUnitLoggedAtBaseAndMovedAtOnceWasPlayedThere) {
+    nlohmann::json file = syntheticGame();
+    auto& events = file["events"];
+    // After his conquest Bob plays a second Crab "to base" and "moves" it to
+    // Emperor's Dais before anything readies it: a unit enters exhausted
+    // (CR 143.4), so it cannot have moved — it was played to the battlefield
+    // Bob now controls, the location the client logged last.
+    const nlohmann::json extra = nlohmann::json::array({
+        ev(1, "Bob paid 2E — Exhaust 2.", "Bob", "paid"),
+        ev(1, "Bob played Scuttle Crab from hand to base.", "Bob", "played",
+           {{"card", "Scuttle Crab"}, {"from", "hand"}, {"to", "base"}}),
+        ev(1, "Bob moved Scuttle Crab to Emperor's Dais.", "Bob", "moved",
+           {{"card", "Scuttle Crab"}, {"to", "Emperor's Dais"}, {"battlefield", "Emperor's Dais"}}),
+    });
+    events.insert(events.begin() + 18, extra.begin(), extra.end());
+    file["games"][0]["events"] = {0, static_cast<int>(events.size())};
+
+    auto game = guided::humanGameFromJson(file, 1, "synthetic.json");
+    auto d1 = guided::inferDeck(game, "Alice", db, candidates);
+    auto d2 = guided::inferDeck(game, "Bob", db, candidates);
+    guided::GuidedOptions opts;
+    opts.seed = 3;
+    auto res = guided::runGuidedReplay(game, d1, d2, db, registry, nullptr, opts);
+    EXPECT_EQ(res.summary["desyncs"].get<int>(), 0) << res.summary["desync_list"].dump(1);
+}

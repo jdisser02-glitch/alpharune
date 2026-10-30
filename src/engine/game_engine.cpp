@@ -2989,6 +2989,18 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
         }
     }
 
+    // [Ambush] (CR 822.1.b): "I may be played to a battlefield where you
+    // control units" — a play location at any time a unit can be played, the
+    // open main phase included, not only as a [Reaction]. Rengar, Trophy
+    // Hunter widens it to battlefields with enemy units (CR 822.1.d).
+    auto ambushLocationOk = [&](const GameObject& unit, const BattlefieldState& bf) {
+        if (!unit.hasKeyword(Keyword::Ambush)) return false;
+        if (bf.hasUnitsFrom(player, state_.objects)) return true;
+        const Card* amb = unit.card_def_id != kInvalidId ? card_registry_.get(unit.card_def_id) : nullptr;
+        return amb && amb->ambushToEnemyBattlefields() &&
+               bf.hasUnitsFrom(opponent(player), state_.objects);
+    };
+
     // Play units from hand — must be able to afford the cost.
     auto& ps = state_.player(player);
     const bool locked_out = ps.cant_play_cards_this_turn;  // Brynhir Thundersong
@@ -3059,6 +3071,7 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
             if (can_play_open_bf && open) can_play_here = true;
             if (can_play_enemy_bf && enemy_occupied) can_play_here = true;
             if (can_play_any_bf) can_play_here = true;
+            if (ambushLocationOk(card, bf)) can_play_here = true;
 
             if (can_play_here) {
                 if (!affordAt(BattlefieldLocation{bf.id})) continue;
@@ -3096,7 +3109,9 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
             if (!ps.units_play_base_only) {
                 for (const auto& bf : state_.battlefields) {
                     if (bf.blocks_unit_play) continue;
-                    if (!bf.controller.has_value() || *bf.controller != player) continue;
+                    if ((!bf.controller.has_value() || *bf.controller != player) &&
+                        !ambushLocationOk(champ, bf))
+                        continue;
                     const LocationId where = BattlefieldLocation{bf.id};
                     if (!canAfford(player, ps.champion_zone, 0,
                                    playLocationDiscount(player, ps.champion_zone, where)))

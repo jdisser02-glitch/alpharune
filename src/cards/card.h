@@ -185,6 +185,12 @@ public:
     /// other effects may check ("a friendly gear with [Deploy]").
     virtual bool deploys() const { return false; }
 
+    /// A gear whose "When this leaves the board" ability is its WhenIDie
+    /// trigger (Treasure Trove, Runeblade Anvil): it fires on any departure
+    /// from the board — returned to hand, banished, recycled — not only when
+    /// the gear dies (TriggerManager::onLeftBoard). Default: dying only.
+    virtual bool deathAbilityOnLeavingBoard() const { return false; }
+
     /// Play-legality gate independent of cost/targets ("I can't be played on
     /// your first, second, or third turns" — Ol' Poro). Default: playable.
     virtual bool canBePlayed(const GameState& /*state*/, PlayerId /*player*/) const { return true; }

@@ -51,12 +51,12 @@ public:
         int where = pickMode(ctx, "Last Caress: where to play the unit", n, labels, legal);
         if (where < 0 || where >= n) return;   // waiting for the agent
 
-        GameObjectId unit = pickTarget(ctx, "Last Caress: unit to play", candidates(ctx));
-        if (unit == kInvalidId || !ctx.state.objectExists(unit)) return;   // waiting / none
-
         const LocationId dest = where == 0
             ? LocationId{BaseLocation{ctx.controller}}
             : LocationId{BattlefieldLocation{bfs[where - 1].id}};
+        GameObjectId unit = pickTarget(ctx, "Last Caress: unit to play", candidates(ctx, where));
+        if (unit == kInvalidId || !ctx.state.objectExists(unit)) return;   // waiting / none
+
         auto& obj = ctx.state.getObject(unit);
         const std::string uname = obj.name;
         if (obj.is_hidden) {
@@ -72,16 +72,32 @@ public:
             ctx.events.emit(PlayedFromFacedownEvent{unit, ctx.controller});
             ctx.executor.playIgnoringCost(ctx.controller, unit, dest);
             ctx.events.emit(ObjectStateChangedEvent{unit, "played_not_from_hand"});
+        } else if (obj.zone == ZoneType::ChampionZone) {
+            // The chosen champion, from the Champion Zone (a unit you play).
+            EffectExecutor::EffectPlayCost cost;
+            cost.energy_reduction = discountAt(ctx, where, unit);
+            if (!ctx.executor.canPlayPayingCost(ctx.controller, unit, cost)) return;
+            if (!ctx.executor.playPayingCost(ctx.controller, unit, dest, cost)) return;
+            auto& ps = ctx.state.player(ctx.controller);
+            if (ps.champion_zone == unit) ps.champion_zone = kInvalidId;
         } else {
-            if (!ctx.executor.canPlayPayingCost(ctx.controller, unit)) return;
+            EffectExecutor::EffectPlayCost cost;
+            cost.energy_reduction = discountAt(ctx, where, unit);
+            if (!ctx.executor.canPlayPayingCost(ctx.controller, unit, cost)) return;
             auto& hand = ctx.state.player(ctx.controller).hand;
             auto it = std::find(hand.begin(), hand.end(), unit);
             if (it == hand.end()) return;
             hand.erase(it);
-            if (!ctx.executor.playPayingCost(ctx.controller, unit, dest)) {
+            if (!ctx.executor.playPayingCost(ctx.controller, unit, dest, cost)) {
                 hand.push_back(unit);   // not paid: it stays in hand
                 return;
             }
+        }
+        if (where > 0 && where - 1 < static_cast<int>(bfs.size())) {
+            // "The first unit or gear a player plays here each turn" (Hunters'
+            // Circle) counts this play.
+            auto& bf = ctx.state.battlefields[static_cast<size_t>(where - 1)];
+            bf.last_play_here_turn[ctx.controller == PlayerId::Player1 ? 0 : 1] = ctx.state.turn.turn_number;
         }
         if (!ctx.state.objectExists(unit) || !ctx.state.getObject(unit).location.has_value()) return;
         if (ctx.state.getObject(unit).buff_count == 0) ctx.executor.buffUnit(unit);
@@ -89,11 +105,33 @@ public:
     }
 
 private:
-    std::vector<GameObjectId> candidates(const CardContext& ctx) const {
+    // The battlefield's own play discount where the unit goes ("the first unit
+    // or gear they play here on their turn costs [1] less", Hunters' Circle).
+    static int discountAt(const CardContext& ctx, int where, GameObjectId unit) {
+        const auto& bfs = ctx.state.battlefields;
+        if (where <= 0 || where - 1 >= static_cast<int>(bfs.size()) || !ctx.registry) return 0;
+        const auto& bf = bfs[static_cast<size_t>(where - 1)];
+        if (!ctx.state.objectExists(bf.card_object_id) || !ctx.state.objectExists(unit)) return 0;
+        const auto* bc = dynamic_cast<const BattlefieldCard*>(
+            ctx.registry->get(ctx.state.getObject(bf.card_object_id).card_def_id));
+        return bc ? bc->playCostReductionHere(ctx.state, bf, ctx.controller, ctx.state.getObject(unit)) : 0;
+    }
+    // Units that could be played now; `where` (0 base, 1 + i battlefield i)
+    // prices them with that location's discount, -1 with the best one.
+    std::vector<GameObjectId> candidates(const CardContext& ctx, int where = -1) const {
         const auto& st = ctx.state;
         const bool main_timing = st.turn.turn_player == ctx.controller &&
                                  st.turn.ns_state == NeutralShowdownState::Neutral &&
                                  st.chain.items.empty();
+        auto affordable = [&](GameObjectId cid) {
+            int lo = where < 0 ? 0 : where, hi = where < 0 ? static_cast<int>(st.battlefields.size()) : where;
+            for (int w = lo; w <= hi; ++w) {
+                EffectExecutor::EffectPlayCost cost;
+                cost.energy_reduction = discountAt(ctx, w, cid);
+                if (ctx.executor.canPlayPayingCost(ctx.controller, cid, cost)) return true;
+            }
+            return false;
+        };
         std::vector<GameObjectId> out;
         for (auto cid : st.player(ctx.controller).hand) {
             if (!st.objectExists(cid)) continue;
@@ -101,8 +139,17 @@ private:
             if (!c.isUnit() || c.card_def_id == kInvalidId) continue;
             if (!main_timing && !c.keywords.has(Keyword::Reaction) && !c.keywords.has(Keyword::Ambush))
                 continue;
-            if (!ctx.executor.canPlayPayingCost(ctx.controller, cid)) continue;
+            if (!affordable(cid)) continue;
             out.push_back(cid);
+        }
+        // The chosen champion in the Champion Zone is a unit you may play too.
+        if (const auto champ = st.player(ctx.controller).champion_zone;
+            champ != kInvalidId && st.objectExists(champ)) {
+            const auto& c = st.getObject(champ);
+            if (c.zone == ZoneType::ChampionZone && c.isUnit() && c.card_def_id != kInvalidId &&
+                (main_timing || c.keywords.has(Keyword::Reaction) || c.keywords.has(Keyword::Ambush)) &&
+                affordable(champ))
+                out.push_back(champ);
         }
         for (const auto& [id, c] : st.objects) {
             if (!c.is_hidden || !c.isUnit() || c.controller != ctx.controller) continue;
