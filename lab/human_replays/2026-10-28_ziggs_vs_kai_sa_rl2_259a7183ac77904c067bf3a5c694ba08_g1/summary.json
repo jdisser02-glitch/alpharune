@@ -6,9 +6,9 @@
   "agree": 9,
   "by_kind": {
    "ability": {
-    "agree": 1,
+    "agree": 0,
     "n": 6,
-    "rate": 0.16666666666666666
+    "rate": 0.0
    },
    "battlefield": {
     "agree": 1,
@@ -26,9 +26,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 1,
     "n": 9,
-    "rate": 0.2222222222222222
+    "rate": 0.1111111111111111
    },
    "move": {
     "agree": 0,
@@ -36,9 +36,9 @@
     "rate": 0.0
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 2,
     "n": 2,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
     "agree": 4,
@@ -47,18 +47,18 @@
    }
   },
   "clean_boundary": {
-   "agree": 7,
+   "agree": 5,
    "n": 33,
-   "rate": 0.21212121212121213
+   "rate": 0.15151515151515152
   },
   "in_flight": {
-   "agree": 2,
+   "agree": 4,
    "n": 5
   },
   "n": 38,
   "rate": 0.23684210526315788
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 45,
  "bot_errors": 0,
  "bot_fallbacks": 7,
@@ -449,34 +449,29 @@
  "disagreements": [
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 1,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
-   "decision": 5,
-   "event_text": "tom played Pack of Wonders from hand to base.",
+   "decision": 8,
+   "event_text": "tom ended their turn.",
    "human": {
-    "index": 2,
-    "share": 0.14,
-    "text": "Play Pack of Wonders to base"
+    "index": 0,
+    "share": 0.09,
+    "text": "End turn"
    },
-   "kind": "play",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.2733333333333333,
-     "text": "End turn"
-    },
-    {
      "index": 1,
-     "share": 0.24333333333333335,
-     "text": "Play Treasure Hunter to base"
+     "share": 0.91,
+     "text": "Use Pack of Wonders"
     },
     {
-     "index": 3,
-     "share": 0.18,
-     "text": "Play Treasure Trove to base"
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
     }
    ],
    "turn": 0
@@ -491,7 +486,7 @@
    "event_text": "tom moved Ziggs, Explosive to base.",
    "human": {
     "index": 4,
-    "share": 0.07333333333333333,
+    "share": 0.02,
     "text": "Play Ziggs, Explosive to base"
    },
    "kind": "play",
@@ -499,17 +494,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.5133333333333333,
+     "share": 0.54,
      "text": "Play Shimmering Swimmer to base"
     },
     {
-     "index": 2,
-     "share": 0.12333333333333334,
-     "text": "Play Treasure Hunter to base"
+     "index": 5,
+     "share": 0.22,
+     "text": "Play Treasure Trove to base"
     },
     {
      "index": 6,
-     "share": 0.10333333333333333,
+     "share": 0.19,
      "text": "Use Pack of Wonders"
     }
    ],
@@ -525,7 +520,7 @@
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.36333333333333334,
+    "share": 0.13,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -533,12 +528,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.6366666666666667,
+     "share": 0.87,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.36333333333333334,
+     "share": 0.13,
      "text": "End turn"
     }
    ],
@@ -546,68 +541,34 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to Rockfall Path"
+    "index": 6,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 32,
    "event_text": "tom exhausted Ziggs, Explosive.",
    "human": {
     "index": 10,
-    "share": 0.006666666666666667,
+    "share": 0.0,
     "text": "Use Ziggs, Explosive"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.91,
-     "text": "Move Ziggs, Explosive to Rockfall Path"
-    },
-    {
-     "index": 4,
-     "share": 0.02,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
      "index": 6,
-     "share": 0.013333333333333334,
+     "share": 0.5,
      "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 36,
-   "event_text": "tom played Shimmering Swimmer from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.03333333333333333,
-    "text": "Play Shimmering Swimmer to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.8066666666666666,
-     "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.056666666666666664,
-     "text": "Play Treasure Hunter to base"
+     "index": 3,
+     "share": 0.17,
+     "text": "Play Shimmering Swimmer to base"
     },
     {
-     "index": 4,
-     "share": 0.04,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 1,
+     "share": 0.13,
+     "text": "Move Ziggs, Explosive to Rockfall Path"
     }
    ],
    "turn": 4
@@ -615,32 +576,32 @@
   {
    "bot": {
     "index": 4,
-    "text": "Use Hexplosives Expert"
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
-   "decision": 48,
-   "event_text": "tom ended their turn.",
+   "decision": 36,
+   "event_text": "tom played Shimmering Swimmer from hand to base.",
    "human": {
-    "index": 0,
-    "share": 0.11666666666666667,
-    "text": "End turn"
+    "index": 1,
+    "share": 0.21,
+    "text": "Play Shimmering Swimmer to base"
    },
-   "kind": "end_turn",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 4,
-     "share": 0.44,
-     "text": "Use Hexplosives Expert"
-    },
-    {
-     "index": 3,
-     "share": 0.24,
-     "text": "Use Pack of Wonders"
+     "share": 0.59,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 1,
-     "share": 0.13333333333333333,
+     "share": 0.21,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 5,
+     "share": 0.12,
      "text": "Play Treasure Trove to base"
     }
    ],
@@ -648,34 +609,136 @@
   },
   {
    "bot": {
+    "index": 1,
+    "text": "Play Treasure Trove to base"
+   },
+   "clean_boundary": true,
+   "decision": 48,
+   "event_text": "tom ended their turn.",
+   "human": {
     "index": 0,
+    "share": 0.06,
     "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.37,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 2,
+     "share": 0.36,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 3,
+     "share": 0.21,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Shimmering Swimmer to base"
    },
    "clean_boundary": true,
    "decision": 64,
    "event_text": "tom moved Shimmering Swimmer to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.12666666666666668,
+    "share": 0.18,
     "text": "Move Shimmering Swimmer to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.18,
-     "text": "End turn"
-    },
-    {
-     "index": 5,
-     "share": 0.15,
-     "text": "Play Treasure Trove to base"
+     "index": 3,
+     "share": 0.28,
+     "text": "Play Shimmering Swimmer to base"
     },
     {
      "index": 1,
-     "share": 0.12666666666666668,
+     "share": 0.18,
      "text": "Move Shimmering Swimmer to Rockfall Path"
+    },
+    {
+     "index": 7,
+     "share": 0.13,
+     "text": "Play Falling Star"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Shimmering Swimmer to base"
+   },
+   "clean_boundary": true,
+   "decision": 73,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 5,
+    "share": 0.16,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.36,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 3,
+     "share": 0.16,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 5,
+     "share": 0.16,
+     "text": "Play Falling Star"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Shimmering Swimmer to base"
+   },
+   "clean_boundary": true,
+   "decision": 82,
+   "event_text": "tom played Vex, Apathetic from hand to base.",
+   "human": {
+    "index": 2,
+    "share": 0.17,
+    "text": "Play Vex, Apathetic to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.44,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 3,
+     "share": 0.2,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Play Vex, Apathetic to base"
     }
    ],
    "turn": 6
@@ -683,33 +746,33 @@
   {
    "bot": {
     "index": 3,
-    "text": "Play Treasure Trove to base"
+    "text": "Play Detonate targeting Pack of Wonders"
    },
    "clean_boundary": true,
-   "decision": 82,
-   "event_text": "tom played Vex, Apathetic from hand to base.",
+   "decision": 87,
+   "event_text": "tom played Treasure Trove from hand to base.",
    "human": {
-    "index": 2,
-    "share": 0.16333333333333333,
-    "text": "Play Vex, Apathetic to base"
+    "index": 1,
+    "share": 0.23,
+    "text": "Play Treasure Trove to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 3,
-     "share": 0.25,
+     "share": 0.56,
+     "text": "Play Detonate targeting Pack of Wonders"
+    },
+    {
+     "index": 1,
+     "share": 0.23,
      "text": "Play Treasure Trove to base"
     },
     {
-     "index": 6,
-     "share": 0.19666666666666666,
-     "text": "Use Hexplosives Expert"
-    },
-    {
-     "index": 2,
-     "share": 0.16333333333333333,
-     "text": "Play Vex, Apathetic to base"
+     "index": 4,
+     "share": 0.18,
+     "text": "Use Pack of Wonders"
     }
    ],
    "turn": 6
@@ -724,7 +787,7 @@
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.21,
+    "share": 0.27,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -732,18 +795,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.45,
+     "share": 0.71,
      "text": "Use Pack of Wonders"
     },
     {
-     "index": 2,
-     "share": 0.34,
-     "text": "Use Treasure Trove"
+     "index": 0,
+     "share": 0.27,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.21,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.02,
+     "text": "Use Treasure Trove"
     }
    ],
    "turn": 6
@@ -766,162 +829,94 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.3933333333333333,
+     "share": 0.28,
      "text": "Play Detonate targeting Pack of Wonders"
     },
     {
-     "index": 0,
-     "share": 0.20333333333333334,
-     "text": "End turn"
+     "index": 6,
+     "share": 0.22,
+     "text": "Play Falling Star"
     },
     {
-     "index": 9,
-     "share": 0.17,
-     "text": "Use Treasure Trove"
+     "index": 1,
+     "share": 0.16,
+     "text": "Move Vex, Apathetic to Rockfall Path"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 5,
+    "text": "Play The List to base"
    },
    "clean_boundary": true,
    "decision": 110,
    "event_text": "tom played Pack of Wonders from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.06333333333333334,
+    "share": 0.21,
     "text": "Play Pack of Wonders to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.23333333333333334,
-     "text": "End turn"
+     "index": 5,
+     "share": 0.4,
+     "text": "Play The List to base"
     },
     {
-     "index": 2,
-     "share": 0.18333333333333332,
-     "text": "Move Vex, Apathetic to Void Gate"
+     "index": 4,
+     "share": 0.21,
+     "text": "Play Pack of Wonders to base"
     },
     {
-     "index": 7,
-     "share": 0.17333333333333334,
-     "text": "Use Hexplosives Expert"
+     "index": 1,
+     "share": 0.16,
+     "text": "Move Vex, Apathetic to Rockfall Path"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Use Pack of Wonders"
+    "index": 3,
+    "text": "Play Amateur Demolitionist to base"
    },
    "clean_boundary": true,
    "decision": 113,
    "event_text": "tom played The List from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.08,
+    "share": 0.24,
     "text": "Play The List to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.32,
-     "text": "Use Pack of Wonders"
-    },
-    {
      "index": 3,
-     "share": 0.23333333333333334,
+     "share": 0.48,
      "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 0,
-     "share": 0.20666666666666667,
-     "text": "End turn"
+     "index": 4,
+     "share": 0.24,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Vex, Apathetic to Void Gate"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 115,
-   "event_text": "tom played Amateur Demolitionist from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.07,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.39,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 8,
-     "share": 0.13,
-     "text": "Use The List"
-    },
-    {
-     "index": 0,
-     "share": 0.12666666666666668,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 121,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.21,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.39,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 5,
-     "share": 0.2633333333333333,
-     "text": "Use The List"
-    },
-    {
-     "index": 0,
-     "share": 0.21,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Amateur Demolitionist to Rockfall Path"
+    "index": 7,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 134,
@@ -935,121 +930,121 @@
    "player": 1,
    "top3": [
     {
+     "index": 7,
+     "share": 0.51,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 2,
+     "share": 0.15,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
      "index": 1,
-     "share": 0.39,
+     "share": 0.14,
      "text": "Move Amateur Demolitionist to Rockfall Path"
-    },
-    {
-     "index": 0,
-     "share": 0.16333333333333333,
-     "text": "End turn"
-    },
-    {
-     "index": 9,
-     "share": 0.13,
-     "text": "Use Pack of Wonders"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Use Pack of Wonders"
+    "index": 3,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 137,
    "event_text": "tom moved Amateur Demolitionist to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.013333333333333334,
+    "share": 0.12,
     "text": "Move Amateur Demolitionist to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.82,
-     "text": "Use Pack of Wonders"
+     "index": 3,
+     "share": 0.5,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 5,
-     "share": 0.043333333333333335,
-     "text": "Play Acceptable Losses"
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Amateur Demolitionist to Rockfall Path"
     },
     {
-     "index": 9,
-     "share": 0.03666666666666667,
-     "text": "Use The List"
+     "index": 2,
+     "share": 0.12,
+     "text": "Move Amateur Demolitionist to Void Gate"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Use Pack of Wonders"
+    "index": 1,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 140,
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 6,
-    "share": 0.05333333333333334,
+    "share": 0.0,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.63,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
      "index": 4,
-     "share": 0.74,
+     "share": 0.15,
      "text": "Use Pack of Wonders"
     },
     {
-     "index": 3,
-     "share": 0.08,
-     "text": "Play Acceptable Losses"
-    },
-    {
-     "index": 7,
-     "share": 0.06,
-     "text": "Use The List"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Use Pack of Wonders"
+    "index": 1,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 144,
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.023333333333333334,
+    "share": 0.15,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.61,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
+    },
+    {
      "index": 4,
-     "share": 0.7933333333333333,
+     "share": 0.15,
      "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 6,
-     "share": 0.06666666666666667,
-     "text": "Use The List"
-    },
-    {
-     "index": 3,
-     "share": 0.06333333333333334,
-     "text": "Play Acceptable Losses"
     }
    ],
    "turn": 10
@@ -1057,90 +1052,100 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Acceptable Losses"
-   },
-   "clean_boundary": false,
-   "decision": 156,
-   "event_text": "tom passed focus at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.2966666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7033333333333334,
-     "text": "Play Acceptable Losses"
-    },
-    {
-     "index": 0,
-     "share": 0.2966666666666667,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Acceptable Losses"
-   },
-   "clean_boundary": false,
-   "decision": 173,
-   "event_text": "tom passed focus at Rockfall Path.",
-   "human": {
-    "index": 0,
-    "share": 0.19,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.81,
-     "text": "Play Acceptable Losses"
-    },
-    {
-     "index": 0,
-     "share": 0.19,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Use Pack of Wonders"
+    "text": "Play Fizz, Trickster to base"
    },
    "clean_boundary": true,
    "decision": 177,
    "event_text": "Played Acceptable Losses from hand.",
    "human": {
     "index": 2,
-    "share": 0.2833333333333333,
+    "share": 0.04,
     "text": "Play Acceptable Losses"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.46,
+     "text": "Play Fizz, Trickster to base"
+    },
+    {
      "index": 4,
-     "share": 0.31333333333333335,
+     "share": 0.25,
      "text": "Use Pack of Wonders"
     },
     {
-     "index": 2,
-     "share": 0.2833333333333333,
-     "text": "Play Acceptable Losses"
+     "index": 7,
+     "share": 0.17,
+     "text": "Use The List"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Choose The List"
+   },
+   "clean_boundary": false,
+   "decision": 181,
+   "event_text": "",
+   "human": {
+    "index": 0,
+    "share": 0.11,
+    "text": "Choose Bomb"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.88,
+     "text": "Choose The List"
     },
     {
-     "index": 7,
-     "share": 0.19666666666666666,
+     "index": 0,
+     "share": 0.11,
+     "text": "Choose Bomb"
+    },
+    {
+     "index": 2,
+     "share": 0.01,
+     "text": "Choose Pack of Wonders"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play The List to base"
+   },
+   "clean_boundary": true,
+   "decision": 196,
+   "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.47,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 0,
+     "share": 0.37,
+     "text": "End turn"
+    },
+    {
+     "index": 6,
+     "share": 0.08,
      "text": "Use The List"
     }
    ],
@@ -1149,33 +1154,33 @@
   {
    "bot": {
     "index": 2,
-    "text": "Choose Pack of Wonders"
+    "text": "Play The List to base"
    },
-   "clean_boundary": false,
-   "decision": 181,
-   "event_text": "",
+   "clean_boundary": true,
+   "decision": 200,
+   "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.19333333333333333,
-    "text": "Choose Bomb"
+    "share": 0.29,
+    "text": "End turn"
    },
-   "kind": "choice",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
      "index": 2,
-     "share": 0.58,
-     "text": "Choose Pack of Wonders"
-    },
-    {
-     "index": 4,
-     "share": 0.22666666666666666,
-     "text": "Choose The List"
+     "share": 0.39,
+     "text": "Play The List to base"
     },
     {
      "index": 0,
-     "share": 0.19333333333333333,
-     "text": "Choose Bomb"
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Ekko, Revolutionary to base"
     }
    ],
    "turn": 12
@@ -1183,101 +1188,101 @@
   {
    "bot": {
     "index": 3,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 188,
-   "event_text": "tom played Fizz, Trickster from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.08666666666666667,
-    "text": "Play Fizz, Trickster to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.3,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 0,
-     "share": 0.2733333333333333,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.15666666666666668,
-     "text": "Play Acceptable Losses"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 196,
-   "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
-   "human": {
-    "index": 5,
-    "share": 0.06,
-    "text": "Use Hexplosives Expert"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.42,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.23333333333333334,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 1,
-     "share": 0.15666666666666668,
-     "text": "Play The List to base"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Ekko, Revolutionary to base"
+    "text": "Play The List to base"
    },
    "clean_boundary": true,
    "decision": 218,
    "event_text": "tom exhausted Pack of Wonders.",
    "human": {
     "index": 4,
-    "share": 0.19333333333333333,
+    "share": 0.16,
     "text": "Use Pack of Wonders"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 3,
+     "share": 0.43,
+     "text": "Play The List to base"
+    },
+    {
      "index": 1,
-     "share": 0.22,
+     "share": 0.17,
      "text": "Play Ekko, Revolutionary to base"
     },
     {
-     "index": 4,
-     "share": 0.19333333333333333,
-     "text": "Use Pack of Wonders"
+     "index": 7,
+     "share": 0.17,
+     "text": "Use The List"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 224,
+   "event_text": "tom exhausted The List.",
+   "human": {
+    "index": 4,
+    "share": 0.1,
+    "text": "Use The List"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.43,
+     "text": "Play Falling Star"
     },
     {
-     "index": 7,
-     "share": 0.18,
-     "text": "Use The List"
+     "index": 2,
+     "share": 0.25,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 1,
+     "share": 0.1,
+     "text": "Play Ekko, Revolutionary to base"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 228,
+   "event_text": "tom played Ekko, Revolutionary from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.11,
+    "text": "Play Ekko, Revolutionary to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.48,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.28,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 1,
+     "share": 0.11,
+     "text": "Play Ekko, Revolutionary to base"
     }
    ],
    "turn": 14
@@ -1292,7 +1297,7 @@
    "event_text": "tom moved Ekko, Revolutionary to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.14333333333333334,
+    "share": 0.02,
     "text": "Move Ekko, Revolutionary to Rockfall Path"
    },
    "kind": "move",
@@ -1300,18 +1305,18 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.22,
+     "share": 0.61,
      "text": "Play Falling Star"
     },
     {
-     "index": 0,
-     "share": 0.16666666666666666,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.22,
+     "text": "Play Treasure Trove to base"
     },
     {
-     "index": 1,
-     "share": 0.14333333333333334,
-     "text": "Move Ekko, Revolutionary to Rockfall Path"
+     "index": 5,
+     "share": 0.1,
+     "text": "Use Pack of Wonders"
     }
    ],
    "turn": 14
@@ -1326,74 +1331,6 @@
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.05,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.5433333333333333,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 3,
-     "share": 0.19333333333333333,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 4,
-     "share": 0.12333333333333334,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 262,
-   "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
-   "human": {
-    "index": 7,
-    "share": 0.16333333333333333,
-    "text": "Use Hexplosives Expert"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.41,
-     "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 4,
-     "share": 0.22333333333333333,
-     "text": "Use The List"
-    },
-    {
-     "index": 7,
-     "share": 0.16333333333333333,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 16
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Use Pack of Wonders"
-   },
-   "clean_boundary": true,
-   "decision": 266,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
     "share": 0.03,
     "text": "End turn"
    },
@@ -1401,19 +1338,87 @@
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.5166666666666667,
-     "text": "Use Pack of Wonders"
+     "index": 2,
+     "share": 0.58,
+     "text": "Play Falling Star"
     },
     {
-     "index": 4,
-     "share": 0.21,
-     "text": "Use The List"
+     "index": 1,
+     "share": 0.26,
+     "text": "Play Treasure Trove to base"
     },
     {
      "index": 3,
-     "share": 0.10333333333333333,
+     "share": 0.13,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 262,
+   "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 7,
+    "share": 0.0,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.61,
      "text": "Play Falling Star"
+    },
+    {
+     "index": 1,
+     "share": 0.21,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 5,
+     "share": 0.11,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 16
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 266,
+   "event_text": "tom ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.01,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.57,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 1,
+     "share": 0.23,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 5,
+     "share": 0.12,
+     "text": "Use Pack of Wonders"
     }
    ],
    "turn": 16
@@ -1918,7 +1923,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_kai_sa_rl2_259a7183ac77904c067bf3a5c694ba08.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 3.8104406689999997,
-  "seconds": 3.837949802
+  "bot_seconds": 1.713666319,
+  "seconds": 1.744075264
  }
 }

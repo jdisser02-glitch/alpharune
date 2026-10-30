@@ -3,52 +3,52 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 6,
+  "agree": 10,
   "by_kind": {
    "ability": {
-    "agree": 0,
-    "n": 3,
-    "rate": 0.0
-   },
-   "battlefield": {
-    "agree": 0,
-    "n": 1,
-    "rate": 0.0
-   },
-   "end_turn": {
     "agree": 1,
-    "n": 6,
-    "rate": 0.16666666666666666
-   },
-   "move": {
-    "agree": 3,
-    "n": 9,
+    "n": 3,
     "rate": 0.3333333333333333
    },
-   "pass_focus": {
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 2,
+    "n": 6,
+    "rate": 0.3333333333333333
+   },
+   "move": {
     "agree": 0,
-    "n": 5,
+    "n": 9,
     "rate": 0.0
    },
+   "pass_focus": {
+    "agree": 5,
+    "n": 5,
+    "rate": 1.0
+   },
    "play": {
-    "agree": 2,
+    "agree": 1,
     "n": 10,
-    "rate": 0.2
+    "rate": 0.1
    }
   },
   "clean_boundary": {
-   "agree": 6,
+   "agree": 4,
    "n": 28,
-   "rate": 0.21428571428571427
+   "rate": 0.14285714285714285
   },
   "in_flight": {
-   "agree": 0,
+   "agree": 6,
    "n": 6
   },
   "n": 34,
-  "rate": 0.17647058823529413
+  "rate": 0.29411764705882354
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 35,
  "bot_errors": 0,
  "bot_fallbacks": 1,
@@ -514,69 +514,6 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Emp4 locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.2833333333333333,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.38,
-     "text": "Bring battlefield Daughter of the Void"
-    },
-    {
-     "index": 2,
-     "share": 0.33666666666666667,
-     "text": "Bring battlefield Kai'Sa, Survivor"
-    },
-    {
-     "index": 0,
-     "share": 0.2833333333333333,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 6,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.47,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.53,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.47,
-     "text": "End turn"
-    }
-   ],
-   "turn": 1
-  },
-  {
-   "bot": {
     "index": 3,
     "text": "Play Kai'Sa, Survivor to base"
    },
@@ -585,7 +522,7 @@
    "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.056666666666666664,
+    "share": 0.24,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
@@ -593,154 +530,188 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.6833333333333333,
+     "share": 0.55,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 1,
-     "share": 0.056666666666666664,
+     "share": 0.24,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 4,
-     "share": 0.05333333333333334,
-     "text": "Play Stupefy targeting Clockwork Keeper"
+     "index": 2,
+     "share": 0.08,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Clockwork Keeper"
-   },
-   "clean_boundary": true,
-   "decision": 26,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 6,
-    "share": 0.15666666666666668,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.35,
-     "text": "Play Stupefy targeting Clockwork Keeper"
-    },
-    {
-     "index": 4,
-     "share": 0.20666666666666667,
-     "text": "Play Bellows Breath targeting Clockwork Keeper"
-    },
-    {
-     "index": 3,
-     "share": 0.20333333333333334,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Clockwork Keeper"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 29,
    "event_text": "Played Bellows Breath from hand.",
    "human": {
     "index": 4,
-    "share": 0.19666666666666666,
+    "share": 0.06,
     "text": "Play Bellows Breath targeting Clockwork Keeper"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.45,
-     "text": "Play Stupefy targeting Clockwork Keeper"
-    },
-    {
      "index": 0,
-     "share": 0.21,
+     "share": 0.4,
      "text": "End turn"
     },
     {
-     "index": 4,
-     "share": 0.19666666666666666,
-     "text": "Play Bellows Breath targeting Clockwork Keeper"
+     "index": 3,
+     "share": 0.3,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Play Stupefy targeting Clockwork Keeper"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 2,
+    "text": "Move Bilgewater Tracker to Void Gate"
    },
    "clean_boundary": true,
    "decision": 46,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 13,
-    "share": 0.043333333333333335,
+    "share": 0.01,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.46,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 2,
+     "share": 0.52,
+     "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
-     "index": 9,
-     "share": 0.20333333333333334,
-     "text": "Play Bellows Breath targeting Scuttle Crab"
+     "index": 1,
+     "share": 0.26,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     },
     {
-     "index": 6,
-     "share": 0.10333333333333333,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 8,
+     "share": 0.11,
+     "text": "Play Kai'Sa, Survivor to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 1,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
+   },
+   "clean_boundary": true,
+   "decision": 49,
+   "event_text": "Played Bellows Breath from hand.",
+   "human": {
+    "index": 9,
+    "share": 0.01,
+    "text": "Play Bellows Breath targeting Scuttle Crab"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.62,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
+     "index": 8,
+     "share": 0.07,
+     "text": "Play Kai'Sa, Survivor to base"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
    },
    "clean_boundary": true,
    "decision": 56,
    "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.04666666666666667,
+    "share": 0.05,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.53,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
      "index": 1,
-     "share": 0.18333333333333332,
+     "share": 0.38,
      "text": "Move Bilgewater Tracker to Veiled Temple"
     },
     {
-     "index": 5,
-     "share": 0.08333333333333333,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 6,
+     "share": 0.24,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 2,
+     "share": 0.19,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Bilgewater Tracker to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 63,
+   "event_text": "Emp4 moved Bilgewater Tracker to Veiled Temple.",
+   "human": {
+    "index": 1,
+    "share": 0.28,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.48,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.28,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
     }
    ],
    "turn": 5
@@ -755,7 +726,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.16,
+    "share": 0.2,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -763,120 +734,120 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.42333333333333334,
+     "share": 0.61,
      "text": "Play Lecturing Yordle to Veiled Temple"
     },
     {
-     "index": 1,
-     "share": 0.38,
-     "text": "Play Lecturing Yordle to base"
+     "index": 0,
+     "share": 0.2,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.16,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.11,
+     "text": "Play Brittle Steel"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 2,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
    },
    "clean_boundary": true,
    "decision": 80,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 12,
-    "share": 0.056666666666666664,
+    "share": 0.04,
     "text": "Play Kai'Sa, Survivor to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.4,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 2,
+     "share": 0.74,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     },
     {
-     "index": 15,
-     "share": 0.19666666666666666,
-     "text": "Play Smoke Screen targeting Patched Porobot"
+     "index": 9,
+     "share": 0.06,
+     "text": "Play Lecturing Yordle to Veiled Temple"
     },
     {
-     "index": 1,
-     "share": 0.08,
-     "text": "Move Bilgewater Tracker to base"
+     "index": 12,
+     "share": 0.04,
+     "text": "Play Kai'Sa, Survivor to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Lecturing Yordle to Veiled Temple"
+    "index": 2,
+    "text": "Move Bilgewater Tracker to Veiled Temple"
    },
    "clean_boundary": true,
    "decision": 86,
    "event_text": "Emp4 moved Bilgewater Tracker to base.",
    "human": {
     "index": 1,
-    "share": 0.05333333333333334,
+    "share": 0.01,
     "text": "Move Bilgewater Tracker to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 2,
+     "share": 0.9,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 3,
+     "share": 0.02,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
      "index": 5,
-     "share": 0.44333333333333336,
+     "share": 0.02,
      "text": "Play Lecturing Yordle to Veiled Temple"
-    },
-    {
-     "index": 7,
-     "share": 0.28,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 13,
-     "share": 0.056666666666666664,
-     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Smoke Screen targeting Patched Porobot"
+    "index": 2,
+    "text": "Move Bilgewater Tracker to Void Gate"
    },
    "clean_boundary": true,
    "decision": 87,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.03333333333333333,
+    "share": 0.1,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.5066666666666667,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 11,
-     "share": 0.16,
-     "text": "Use Daughter of the Void"
-    },
-    {
      "index": 2,
-     "share": 0.1,
+     "share": 0.46,
      "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.21,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
     }
    ],
    "turn": 7
@@ -884,62 +855,169 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Smoke Screen targeting Patched Porobot"
+    "text": "Move Kai'Sa, Survivor to Veiled Temple"
    },
-   "clean_boundary": false,
-   "decision": 99,
-   "event_text": "Emp4 ended showdown responses at Veiled Temple.",
+   "clean_boundary": true,
+   "decision": 104,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to Void Gate.",
    "human": {
-    "index": 0,
-    "share": 0.08666666666666667,
-    "text": "Pass focus"
+    "index": 2,
+    "share": 0.14,
+    "text": "Move Kai'Sa, Survivor to Void Gate"
    },
-   "kind": "pass_focus",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.9133333333333333,
-     "text": "Play Smoke Screen targeting Patched Porobot"
+     "share": 0.36,
+     "text": "Move Kai'Sa, Survivor to Veiled Temple"
     },
     {
-     "index": 0,
-     "share": 0.08666666666666667,
-     "text": "Pass focus"
+     "index": 15,
+     "share": 0.21,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     }
    ],
-   "turn": 8
+   "turn": 9
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Patched Porobot"
+    "index": 12,
+    "text": "Play Lecturing Yordle to Void Gate"
    },
-   "clean_boundary": false,
-   "decision": 105,
-   "event_text": "Emp4 passed focus at Void Gate.",
+   "clean_boundary": true,
+   "decision": 110,
+   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
-    "index": 0,
-    "share": 0.4,
-    "text": "Pass focus"
+    "index": 13,
+    "share": 0.03,
+    "text": "Play Brynhir Thundersong to base"
    },
-   "kind": "pass_focus",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 12,
+     "share": 0.58,
+     "text": "Play Lecturing Yordle to Void Gate"
+    },
+    {
      "index": 1,
-     "share": 0.5066666666666667,
-     "text": "Play Smoke Screen targeting Patched Porobot"
+     "share": 0.09,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Lecturing Yordle to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 119,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 20,
+    "share": 0.02,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.59,
+     "text": "Play Lecturing Yordle to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.1,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Lecturing Yordle to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 122,
+   "event_text": "Played Brittle Steel from hand.",
+   "human": {
+    "index": 9,
+    "share": 0.06,
+    "text": "Play Brittle Steel"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.48,
+     "text": "Play Lecturing Yordle to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.2,
+     "text": "Move Bilgewater Tracker to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Lecturing Yordle to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 128,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.17,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.31,
+     "text": "Play Lecturing Yordle to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.2,
+     "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
      "index": 0,
-     "share": 0.4,
-     "text": "Pass focus"
-    },
-    {
-     "index": 8,
-     "share": 0.09333333333333334,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+     "share": 0.17,
+     "text": "End turn"
     }
    ],
    "turn": 9
@@ -947,237 +1025,101 @@
   {
    "bot": {
     "index": 16,
-    "text": "Play Smoke Screen targeting Patched Porobot"
-   },
-   "clean_boundary": true,
-   "decision": 110,
-   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
-   "human": {
-    "index": 13,
-    "share": 0.02,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 16,
-     "share": 0.7,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 7,
-     "share": 0.06,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 32,
-     "share": 0.056666666666666664,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 12,
-    "text": "Play Smoke Screen targeting Patched Porobot"
-   },
-   "clean_boundary": true,
-   "decision": 119,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 20,
-    "share": 0.06333333333333334,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 12,
-     "share": 0.2833333333333333,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 7,
-     "share": 0.19666666666666666,
-     "text": "Play Lecturing Yordle to base"
-    },
-    {
-     "index": 1,
-     "share": 0.16666666666666666,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Lecturing Yordle to base"
-   },
-   "clean_boundary": true,
-   "decision": 122,
-   "event_text": "Played Brittle Steel from hand.",
-   "human": {
-    "index": 9,
-    "share": 0.016666666666666666,
-    "text": "Play Brittle Steel"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.27,
-     "text": "Play Lecturing Yordle to base"
-    },
-    {
-     "index": 12,
-     "share": 0.25333333333333335,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 1,
-     "share": 0.18666666666666668,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Smoke Screen targeting Patched Porobot"
-   },
-   "clean_boundary": true,
-   "decision": 128,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.016666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.32666666666666666,
-     "text": "Play Smoke Screen targeting Patched Porobot"
-    },
-    {
-     "index": 1,
-     "share": 0.23666666666666666,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
-    },
-    {
-     "index": 9,
-     "share": 0.18666666666666668,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Move Bilgewater Tracker to Void Gate"
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 145,
    "event_text": "Emp4 moved Bilgewater Tracker to Veiled Temple.",
    "human": {
     "index": 2,
-    "share": 0.11666666666666667,
+    "share": 0.06,
     "text": "Move Bilgewater Tracker to Veiled Temple"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.6166666666666667,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 16,
+     "share": 0.24,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 2,
-     "share": 0.11666666666666667,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
+     "index": 21,
+     "share": 0.15,
+     "text": "Play Lecturing Yordle to Void Gate"
     },
     {
-     "index": 23,
-     "share": 0.09666666666666666,
-     "text": "Play Smoke Screen targeting Patched Porobot"
+     "index": 31,
+     "share": 0.13,
+     "text": "Play Time Warp"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Smoke Screen targeting Patched Porobot"
+    "index": 8,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
-   "clean_boundary": false,
-   "decision": 146,
-   "event_text": "Emp4 passed focus at Veiled Temple.",
+   "clean_boundary": true,
+   "decision": 151,
+   "event_text": "Played Time Warp from hand.",
    "human": {
-    "index": 0,
-    "share": 0.2733333333333333,
-    "text": "Pass focus"
+    "index": 27,
+    "share": 0.13,
+    "text": "Play Time Warp"
    },
-   "kind": "pass_focus",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.6,
-     "text": "Play Smoke Screen targeting Patched Porobot"
+     "index": 8,
+     "share": 0.19,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 0,
-     "share": 0.2733333333333333,
-     "text": "Pass focus"
+     "index": 27,
+     "share": 0.13,
+     "text": "Play Time Warp"
     },
     {
-     "index": 1,
-     "share": 0.12666666666666668,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+     "index": 16,
+     "share": 0.12,
+     "text": "Play Lecturing Yordle to Void Gate"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bilgewater Tracker to Veiled Temple"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 173,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 1,
-    "share": 0.10666666666666667,
+    "share": 0.12,
     "text": "Move Kai'Sa, Survivor to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.2833333333333333,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.2833333333333333,
+     "share": 0.29,
      "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
-     "index": 8,
-     "share": 0.2,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+     "index": 2,
+     "share": 0.25,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     }
    ],
    "turn": 11
@@ -1192,7 +1134,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.14333333333333334,
+    "share": 0.31,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1200,149 +1142,86 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.38333333333333336,
+     "share": 0.35,
      "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
-     "index": 1,
-     "share": 0.33666666666666667,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
+     "index": 0,
+     "share": 0.31,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.14333333333333334,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.29,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Hextech Ray targeting Bilgewater Tracker"
+    "index": 15,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
-   "clean_boundary": false,
-   "decision": 181,
-   "event_text": "Emp4 ended showdown responses at Veiled Temple.",
+   "clean_boundary": true,
+   "decision": 188,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to Void Gate.",
    "human": {
-    "index": 0,
-    "share": 0.25333333333333335,
-    "text": "Pass focus"
+    "index": 2,
+    "share": 0.09,
+    "text": "Move Kai'Sa, Survivor to Void Gate"
    },
-   "kind": "pass_focus",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.7466666666666667,
-     "text": "Play Hextech Ray targeting Bilgewater Tracker"
+     "index": 15,
+     "share": 0.58,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 0,
-     "share": 0.25333333333333335,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Stupefy targeting Pit Crew"
-   },
-   "clean_boundary": false,
-   "decision": 189,
-   "event_text": "Emp4 passed focus at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.06,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.43333333333333335,
-     "text": "Play Stupefy targeting Pit Crew"
-    },
-    {
-     "index": 3,
-     "share": 0.39666666666666667,
-     "text": "Play Smoke Screen targeting Pit Crew"
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
     },
     {
      "index": 1,
-     "share": 0.11,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+     "share": 0.08,
+     "text": "Move Kai'Sa, Survivor to Veiled Temple"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 24,
-    "text": "Play Stupefy targeting Pit Crew"
+    "index": 7,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 194,
    "event_text": "Emp4 played Lecturing Yordle from hand to Void Gate.",
    "human": {
     "index": 12,
-    "share": 0.01,
+    "share": 0.18,
     "text": "Play Lecturing Yordle to Void Gate"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 24,
-     "share": 0.26,
-     "text": "Play Stupefy targeting Pit Crew"
+     "index": 7,
+     "share": 0.42,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 15,
-     "share": 0.20333333333333334,
-     "text": "Play Smoke Screen targeting Pit Crew"
+     "index": 12,
+     "share": 0.18,
+     "text": "Play Lecturing Yordle to Void Gate"
     },
     {
-     "index": 2,
-     "share": 0.13333333333333333,
-     "text": "Move Bilgewater Tracker to Void Gate"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Thousand-Tailed Watcher to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 200,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.013333333333333334,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.7733333333333333,
-     "text": "Play Thousand-Tailed Watcher to Void Gate"
-    },
-    {
-     "index": 16,
-     "share": 0.05333333333333334,
-     "text": "Play Smoke Screen targeting Pit Crew"
-    },
-    {
-     "index": 26,
-     "share": 0.05333333333333334,
-     "text": "Play Stupefy targeting Pit Crew"
+     "index": 1,
+     "share": 0.07,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     }
    ],
    "turn": 13
@@ -1365,18 +1244,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.8466666666666667,
+     "share": 0.32,
      "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
      "index": 1,
-     "share": 0.13,
+     "share": 0.3,
      "text": "Move Bilgewater Tracker to Veiled Temple"
     },
     {
-     "index": 15,
-     "share": 0.013333333333333334,
-     "text": "Use Daughter of the Void"
+     "index": 0,
+     "share": 0.28,
+     "text": "End turn"
     }
    ],
    "turn": 13
@@ -1399,52 +1278,52 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.7733333333333333,
+     "share": 0.38,
      "text": "Move Bilgewater Tracker to Void Gate"
     },
     {
-     "index": 1,
-     "share": 0.13,
-     "text": "Move Bilgewater Tracker to Veiled Temple"
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.05,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.27,
+     "text": "Move Bilgewater Tracker to Veiled Temple"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bilgewater Tracker to Void Gate"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 220,
    "event_text": "Emp4 moved Bilgewater Tracker to Veiled Temple.",
    "human": {
     "index": 1,
-    "share": 0.23,
+    "share": 0.31,
     "text": "Move Bilgewater Tracker to Veiled Temple"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.3433333333333333,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 0,
+     "share": 0.32,
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.23,
+     "share": 0.31,
      "text": "Move Bilgewater Tracker to Veiled Temple"
     },
     {
-     "index": 0,
-     "share": 0.21666666666666667,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.31,
+     "text": "Move Bilgewater Tracker to Void Gate"
     }
    ],
    "turn": 13
@@ -1843,7 +1722,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_ornn_rl2_ad98658d50bc0ebf1c438f6dc99a2693.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 3.4458483359999996,
-  "seconds": 3.470139467
+  "bot_seconds": 1.356861008,
+  "seconds": 1.38418621
  }
 }

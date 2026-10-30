@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 3,
+  "agree": 11,
   "by_kind": {
    "ability": {
     "agree": 1,
@@ -11,14 +11,14 @@
     "rate": 0.3333333333333333
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 5,
     "n": 7,
-    "rate": 0.14285714285714285
+    "rate": 0.7142857142857143
    },
    "move": {
     "agree": 0,
@@ -26,29 +26,29 @@
     "rate": 0.0
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 2,
     "n": 2,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
-    "agree": 1,
+    "agree": 2,
     "n": 8,
-    "rate": 0.125
+    "rate": 0.25
    }
   },
   "clean_boundary": {
-   "agree": 2,
+   "agree": 7,
    "n": 18,
-   "rate": 0.1111111111111111
+   "rate": 0.3888888888888889
   },
   "in_flight": {
-   "agree": 1,
+   "agree": 4,
    "n": 5
   },
   "n": 23,
-  "rate": 0.13043478260869565
+  "rate": 0.4782608695652174
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 25,
  "bot_errors": 0,
  "bot_fallbacks": 2,
@@ -556,165 +556,102 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Emp4 auto-selected the last remaining battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.30333333333333334,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.43666666666666665,
-     "text": "Bring battlefield Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.30333333333333334,
-     "text": "Bring battlefield ?"
-    },
-    {
-     "index": 2,
-     "share": 0.26,
-     "text": "Bring battlefield Kai'Sa, Survivor"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 7,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.49,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.51,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.49,
-     "text": "End turn"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Bilgewater Tracker to base"
+    "index": 3,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 20,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.15,
+    "share": 0.1,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.35333333333333333,
-     "text": "Play Bilgewater Tracker to base"
-    },
-    {
-     "index": 4,
-     "share": 0.23333333333333334,
-     "text": "Use Daughter of the Void"
-    },
-    {
      "index": 3,
-     "share": 0.15333333333333332,
+     "share": 0.6,
      "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 1,
+     "share": 0.13,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 4,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "clean_boundary": true,
+   "decision": 32,
+   "event_text": "Emp4 played Ferrous Forerunner from hand to base.",
+   "human": {
+    "index": 2,
+    "share": 0.04,
+    "text": "Play Ferrous Forerunner to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.51,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 3,
+     "share": 0.16,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 74,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 12,
-    "share": 0.06333333333333334,
+    "share": 0.01,
     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 11,
+     "share": 0.37,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
      "index": 7,
-     "share": 0.8633333333333333,
+     "share": 0.22,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 12,
-     "share": 0.06333333333333334,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
-    },
-    {
      "index": 1,
-     "share": 0.03,
+     "share": 0.16,
      "text": "Move Mech to Frozen Fortress"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Mech to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 79,
-   "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
-   "human": {
-    "index": 9,
-    "share": 0.016666666666666666,
-    "text": "Play Kai'Sa, Survivor to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7166666666666667,
-     "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 2,
-     "share": 0.12666666666666668,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 8,
-     "share": 0.09666666666666666,
-     "text": "Play Brynhir Thundersong to base"
     }
    ],
    "turn": 6
@@ -729,7 +666,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.006666666666666667,
+    "share": 0.26,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -737,120 +674,52 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.7,
+     "share": 0.32,
      "text": "Move Mech to Frozen Fortress"
     },
     {
-     "index": 2,
-     "share": 0.27666666666666667,
-     "text": "Move Mech to Void Gate"
+     "index": 0,
+     "share": 0.26,
+     "text": "End turn"
     },
     {
-     "index": 7,
-     "share": 0.016666666666666666,
-     "text": "Play Watchful Sentry to base"
+     "index": 2,
+     "share": 0.22,
+     "text": "Move Mech to Void Gate"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 20,
-    "text": "Play Hextech Ray targeting Bilgewater Tracker"
-   },
-   "clean_boundary": true,
-   "decision": 99,
-   "event_text": "Emp4 played The Empyrean from hand to base.",
-   "human": {
-    "index": 18,
-    "share": 0.016666666666666666,
-    "text": "Play The Empyrean to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 20,
-     "share": 0.6766666666666666,
-     "text": "Play Hextech Ray targeting Bilgewater Tracker"
-    },
-    {
-     "index": 2,
-     "share": 0.16333333333333333,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 1,
-     "share": 0.06666666666666667,
-     "text": "Move Mech to Frozen Fortress"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Mech to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 111,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.023333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7966666666666666,
-     "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 0,
-     "share": 0.023333333333333334,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Mech to Frozen Fortress"
+    "index": 39,
+    "text": "Play Time Warp"
    },
    "clean_boundary": true,
    "decision": 127,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 32,
-    "share": 0.0033333333333333335,
+    "share": 0.06,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.8966666666666666,
-     "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 2,
-     "share": 0.05333333333333334,
-     "text": "Move Mech to Void Gate"
+     "index": 39,
+     "share": 0.56,
+     "text": "Play Time Warp"
     },
     {
      "index": 0,
-     "share": 0.016666666666666666,
+     "share": 0.08,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.07,
+     "text": "Move Mech to Frozen Fortress"
     }
    ],
    "turn": 10
@@ -873,119 +742,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.91,
+     "share": 0.2,
      "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 2,
-     "share": 0.03333333333333333,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 37,
-     "share": 0.023333333333333334,
-     "text": "Play Smoke Screen targeting Mech"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Smoke Screen targeting Mech"
-   },
-   "clean_boundary": false,
-   "decision": 137,
-   "event_text": "Emp4 passed focus at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.0033333333333333335,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.9433333333333334,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
-     "index": 1,
-     "share": 0.05,
-     "text": "Play Hextech Ray targeting Ferrous Forerunner"
     },
     {
      "index": 0,
-     "share": 0.0033333333333333335,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 17,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "clean_boundary": true,
-   "decision": 141,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 29,
-    "share": 0.006666666666666667,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 17,
-     "share": 0.62,
-     "text": "Play Bilgewater Tracker to base"
+     "share": 0.19,
+     "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.11666666666666667,
-     "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 21,
-     "share": 0.06666666666666667,
-     "text": "Play Smoke Screen targeting Mech"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Mech to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 144,
-   "event_text": "Played Temporal Breach from hand.",
-   "human": {
-    "index": 20,
-    "share": 0.01,
-    "text": "Play Temporal Breach"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5366666666666666,
-     "text": "Move Mech to Frozen Fortress"
-    },
-    {
-     "index": 21,
-     "share": 0.21666666666666667,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
-     "index": 17,
-     "share": 0.12,
+     "index": 33,
+     "share": 0.19,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -995,6 +762,74 @@
    "bot": {
     "index": 2,
     "text": "Move Mech to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 141,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 29,
+    "share": 0.07,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.2,
+     "text": "Move Mech to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Move Mech to Frozen Fortress"
+    },
+    {
+     "index": 17,
+     "share": 0.18,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Mech to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 144,
+   "event_text": "Played Temporal Breach from hand.",
+   "human": {
+    "index": 20,
+    "share": 0.07,
+    "text": "Play Temporal Breach"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.2,
+     "text": "Move Mech to Frozen Fortress"
+    },
+    {
+     "index": 2,
+     "share": 0.2,
+     "text": "Move Mech to Void Gate"
+    },
+    {
+     "index": 17,
+     "share": 0.2,
+     "text": "Play Bilgewater Tracker to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Mech to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 150,
@@ -1008,81 +843,18 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.7966666666666666,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 15,
-     "share": 0.10666666666666667,
-     "text": "Play Plundering Poro to base"
-    },
-    {
      "index": 1,
-     "share": 0.05,
+     "share": 0.27,
      "text": "Move Mech to Frozen Fortress"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Mech"
-   },
-   "clean_boundary": false,
-   "decision": 151,
-   "event_text": "Emp4 passed focus at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.006666666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9933333333333333,
-     "text": "Play Smoke Screen targeting Mech"
     },
     {
      "index": 0,
-     "share": 0.006666666666666667,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Smoke Screen targeting Mech"
-   },
-   "clean_boundary": true,
-   "decision": 158,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.056666666666666664,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.49,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
-     "index": 1,
-     "share": 0.20666666666666667,
-     "text": "Move Mech to Frozen Fortress"
+     "share": 0.26,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.17666666666666667,
+     "share": 0.26,
      "text": "Move Mech to Void Gate"
     }
    ],
@@ -1090,42 +862,42 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Mech"
+    "index": 0,
+    "text": "Pass"
    },
    "clean_boundary": false,
    "decision": 177,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 10,
-    "share": 0.09666666666666666,
+    "share": 0.33,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.7733333333333333,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
      "index": 0,
-     "share": 0.13,
+     "share": 0.49,
      "text": "Pass"
     },
     {
      "index": 10,
-     "share": 0.09666666666666666,
+     "share": 0.33,
      "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Smoke Screen targeting Mech"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 29,
-    "text": "Play Singularity targeting Mech, Mech"
+    "index": 19,
+    "text": "Play Time Warp"
    },
    "clean_boundary": true,
    "decision": 182,
@@ -1139,52 +911,18 @@
    "player": 1,
    "top3": [
     {
+     "index": 19,
+     "share": 0.65,
+     "text": "Play Time Warp"
+    },
+    {
      "index": 29,
-     "share": 0.3566666666666667,
+     "share": 0.13,
      "text": "Play Singularity targeting Mech, Mech"
     },
     {
-     "index": 20,
-     "share": 0.20333333333333334,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
-     "index": 2,
-     "share": 0.14666666666666667,
-     "text": "Move Mech to Void Gate"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Smoke Screen targeting Mech"
-   },
-   "clean_boundary": true,
-   "decision": 193,
-   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 9,
-    "share": 0.13333333333333333,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.33,
-     "text": "Play Smoke Screen targeting Mech"
-    },
-    {
-     "index": 7,
-     "share": 0.17666666666666667,
-     "text": "Play Lecturing Yordle to base"
-    },
-    {
-     "index": 9,
-     "share": 0.13333333333333333,
+     "index": 17,
+     "share": 0.09,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -1192,34 +930,34 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Mech to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 200,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.08333333333333333,
     "text": "End turn"
    },
-   "kind": "end_turn",
+   "clean_boundary": true,
+   "decision": 193,
+   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
+   "human": {
+    "index": 9,
+    "share": 0.22,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.26,
+     "text": "End turn"
+    },
+    {
      "index": 1,
-     "share": 0.56,
+     "share": 0.24,
      "text": "Move Mech to Frozen Fortress"
     },
     {
-     "index": 2,
-     "share": 0.3566666666666667,
-     "text": "Move Mech to Void Gate"
-    },
-    {
-     "index": 0,
-     "share": 0.08333333333333333,
-     "text": "End turn"
+     "index": 9,
+     "share": 0.22,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 12
@@ -1537,7 +1275,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_kai_sa_rl2_066ad24169cee3ce9250c51c31700859.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 3.1079229089999996,
-  "seconds": 3.130011721
+  "bot_seconds": 1.205983006,
+  "seconds": 1.233189904
  }
 }

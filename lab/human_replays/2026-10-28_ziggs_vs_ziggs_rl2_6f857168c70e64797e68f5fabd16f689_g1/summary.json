@@ -3,17 +3,17 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 12,
+  "agree": 20,
   "by_kind": {
    "ability": {
-    "agree": 3,
+    "agree": 1,
     "n": 11,
-    "rate": 0.2727272727272727
+    "rate": 0.09090909090909091
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "choice": {
     "agree": 0,
@@ -21,39 +21,39 @@
     "rate": 0.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 6,
     "n": 11,
-    "rate": 0.09090909090909091
+    "rate": 0.5454545454545454
    },
    "move": {
-    "agree": 3,
+    "agree": 2,
     "n": 6,
-    "rate": 0.5
+    "rate": 0.3333333333333333
    },
    "pass_focus": {
-    "agree": 1,
+    "agree": 2,
     "n": 2,
-    "rate": 0.5
+    "rate": 1.0
    },
    "play": {
-    "agree": 4,
+    "agree": 8,
     "n": 17,
-    "rate": 0.23529411764705882
+    "rate": 0.47058823529411764
    }
   },
   "clean_boundary": {
-   "agree": 9,
+   "agree": 15,
    "n": 40,
-   "rate": 0.225
+   "rate": 0.375
   },
   "in_flight": {
-   "agree": 3,
+   "agree": 5,
    "n": 9
   },
   "n": 49,
-  "rate": 0.24489795918367346
+  "rate": 0.40816326530612246
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 55,
  "bot_errors": 0,
  "bot_fallbacks": 6,
@@ -594,67 +594,62 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Hexplosives Expert"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Damus locked in a battlefield.",
-   "human": {
     "index": 0,
-    "share": 0.3466666666666667,
-    "text": "Bring battlefield ?"
+    "text": "End turn"
    },
-   "kind": "battlefield",
+   "clean_boundary": true,
+   "decision": 7,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 1,
+    "share": 0.38,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.36,
-     "text": "Bring battlefield Hexplosives Expert"
+     "index": 0,
+     "share": 0.56,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.3466666666666667,
-     "text": "Bring battlefield ?"
+     "index": 1,
+     "share": 0.38,
+     "text": "Use Seal of Rage"
     },
     {
      "index": 2,
-     "share": 0.29333333333333333,
-     "text": "Bring battlefield Ziggs, Explosive"
+     "share": 0.06,
+     "text": "Use Hexplosives Expert"
     }
    ],
    "turn": 0
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Treasure Hunter to base"
-   },
-   "clean_boundary": true,
-   "decision": 5,
-   "event_text": "Damus played Seal of Rage from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.17,
+    "index": 1,
     "text": "Play Seal of Rage to base"
    },
-   "kind": "play",
+   "clean_boundary": true,
+   "decision": 10,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.07,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.30333333333333334,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
      "index": 1,
-     "share": 0.23666666666666666,
-     "text": "Play Tideturner to base"
+     "share": 0.93,
+     "text": "Play Seal of Rage to base"
     },
     {
      "index": 0,
-     "share": 0.18666666666666668,
+     "share": 0.07,
      "text": "End turn"
     }
    ],
@@ -662,15 +657,49 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Bewitching Spirit to base"
+    "index": 4,
+    "text": "Play Seal of Rage to base"
    },
    "clean_boundary": true,
    "decision": 18,
    "event_text": "Damus exhausted Seal of Rage.",
    "human": {
     "index": 5,
-    "share": 0.06333333333333334,
+    "share": 0.06,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.56,
+     "text": "Play Seal of Rage to base"
+    },
+    {
+     "index": 2,
+     "share": 0.22,
+     "text": "Play Bewitching Spirit to base"
+    },
+    {
+     "index": 1,
+     "share": 0.08,
+     "text": "Play Treasure Hunter to base"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Ziggs, Explosive to base"
+   },
+   "clean_boundary": true,
+   "decision": 46,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 5,
+    "share": 0.03,
     "text": "Use Seal of Rage"
    },
    "kind": "ability",
@@ -678,217 +707,52 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.6766666666666666,
-     "text": "Play Bewitching Spirit to base"
+     "share": 0.45,
+     "text": "Play Ziggs, Explosive to base"
     },
     {
-     "index": 5,
-     "share": 0.06333333333333334,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 6,
-     "share": 0.06333333333333334,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "clean_boundary": true,
-   "decision": 21,
-   "event_text": "Damus played Seal of Rage from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.17,
-    "text": "Play Seal of Rage to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.38,
-     "text": "Play Bewitching Spirit to base"
+     "index": 1,
+     "share": 0.28,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 4,
-     "share": 0.17,
-     "text": "Play Seal of Rage to base"
-    },
-    {
-     "index": 5,
-     "share": 0.14,
-     "text": "Use Hexplosives Expert"
+     "share": 0.13,
+     "text": "Play Falling Star"
     }
    ],
-   "turn": 2
+   "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 30,
-   "event_text": "Damus ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.42,
     "text": "End turn"
    },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.58,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 0,
-     "share": 0.42,
-     "text": "End turn"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 4,
+   "clean_boundary": true,
+   "decision": 76,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 5,
+    "share": 0.1,
     "text": "Play Falling Star"
    },
-   "clean_boundary": true,
-   "decision": 49,
-   "event_text": "Damus moved Ziggs, Explosive to base.",
-   "human": {
-    "index": 2,
-    "share": 0.12666666666666668,
-    "text": "Play Ziggs, Explosive to base"
-   },
    "kind": "play",
    "player": 1,
    "top3": [
-    {
-     "index": 3,
-     "share": 0.22333333333333333,
-     "text": "Play Gold to base"
-    },
-    {
-     "index": 4,
-     "share": 0.22333333333333333,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 1,
-     "share": 0.19333333333333333,
-     "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Gold to base"
-   },
-   "clean_boundary": true,
-   "decision": 54,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.22666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.45,
-     "text": "Play Gold to base"
-    },
-    {
-     "index": 2,
-     "share": 0.3233333333333333,
-     "text": "Use Seal of Rage"
-    },
     {
      "index": 0,
-     "share": 0.22666666666666666,
+     "share": 0.33,
      "text": "End turn"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Ziggs, Explosive to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 85,
-   "event_text": "Damus played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.056666666666666664,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.53,
-     "text": "Move Ziggs, Explosive to Hall of Legends"
     },
     {
-     "index": 6,
-     "share": 0.11666666666666667,
-     "text": "Use Seal of Rage"
+     "index": 10,
+     "share": 0.16,
+     "text": "Use Ziggs, Explosive"
     },
     {
-     "index": 1,
-     "share": 0.06666666666666667,
-     "text": "Move Ziggs, Explosive to Void Gate"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Ziggs, Explosive to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 92,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.04,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.38333333333333336,
-     "text": "Move Ziggs, Explosive to Hall of Legends"
-    },
-    {
-     "index": 1,
-     "share": 0.22333333333333333,
-     "text": "Move Ziggs, Explosive to Void Gate"
-    },
-    {
-     "index": 5,
-     "share": 0.14333333333333334,
-     "text": "Use Seal of Rage"
+     "index": 3,
+     "share": 0.14,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 6
@@ -899,30 +763,64 @@
     "text": "Move Ziggs, Explosive to Void Gate"
    },
    "clean_boundary": true,
+   "decision": 92,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.11,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Move Ziggs, Explosive to Void Gate"
+    },
+    {
+     "index": 3,
+     "share": 0.19,
+     "text": "Play Runeblade Anvil to base"
+    },
+    {
+     "index": 2,
+     "share": 0.18,
+     "text": "Move Ziggs, Explosive to Hall of Legends"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Ziggs, Explosive to Hall of Legends"
+   },
+   "clean_boundary": true,
    "decision": 107,
    "event_text": "Damus played Runeblade Anvil from hand to base.",
    "human": {
     "index": 8,
-    "share": 0.03333333333333333,
+    "share": 0.11,
     "text": "Play Runeblade Anvil to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.35333333333333333,
-     "text": "Move Ziggs, Explosive to Void Gate"
-    },
-    {
      "index": 2,
-     "share": 0.21333333333333335,
+     "share": 0.35,
      "text": "Move Ziggs, Explosive to Hall of Legends"
     },
     {
      "index": 10,
-     "share": 0.14666666666666667,
+     "share": 0.26,
      "text": "Use Seal of Rage"
+    },
+    {
+     "index": 1,
+     "share": 0.12,
+     "text": "Move Ziggs, Explosive to Void Gate"
     }
    ],
    "turn": 8
@@ -945,840 +843,199 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.4166666666666667,
+     "share": 0.91,
      "text": "Move Ziggs, Explosive to Void Gate"
     },
     {
      "index": 2,
-     "share": 0.17,
+     "share": 0.02,
      "text": "Move Ziggs, Explosive to Hall of Legends"
     },
     {
-     "index": 9,
-     "share": 0.10666666666666667,
-     "text": "Use Seal of Rage"
+     "index": 14,
+     "share": 0.02,
+     "text": "Use Ziggs, Explosive"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Rebuke"
-   },
-   "clean_boundary": false,
-   "decision": 112,
-   "event_text": "Damus passed focus at Void Gate.",
-   "human": {
     "index": 0,
-    "share": 0.43666666666666665,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5633333333333334,
-     "text": "Play Rebuke"
-    },
-    {
-     "index": 0,
-     "share": 0.43666666666666665,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Use Seal of Rage"
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 121,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 7,
-    "share": 0.14,
-    "text": "Use Hexplosives Expert"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.24,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 1,
-     "share": 0.16666666666666666,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
-     "index": 7,
-     "share": 0.14,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Fizz, Trickster to base"
-   },
-   "clean_boundary": true,
-   "decision": 131,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.05,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7066666666666667,
-     "text": "Play Fizz, Trickster to base"
-    },
-    {
-     "index": 3,
-     "share": 0.07,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 2,
-     "share": 0.06,
-     "text": "Play Fizz, Trickster to Void Gate"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Treasure Hunter to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 170,
-   "event_text": "Damus played Fizz, Trickster from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.11666666666666667,
-    "text": "Play Fizz, Trickster to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.46,
-     "text": "Move Treasure Hunter to Hall of Legends"
-    },
-    {
-     "index": 5,
-     "share": 0.15,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 3,
-     "share": 0.11666666666666667,
-     "text": "Play Fizz, Trickster to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Treasure Hunter to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 178,
-   "event_text": "Damus moved Treasure Hunter to Void Gate.",
-   "human": {
-    "index": 1,
-    "share": 0.04666666666666667,
-    "text": "Move Treasure Hunter to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.5333333333333333,
-     "text": "Move Treasure Hunter to Hall of Legends"
-    },
-    {
-     "index": 5,
-     "share": 0.16666666666666666,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 3,
-     "share": 0.07666666666666666,
-     "text": "Play Amateur Demolitionist to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 183,
-   "event_text": "Damus played Treasure Trove from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.1,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.4033333333333333,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 4,
-     "share": 0.24666666666666667,
-     "text": "Use Gold"
-    },
-    {
-     "index": 7,
-     "share": 0.11,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 186,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.03333333333333333,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.32,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 8,
-     "share": 0.27666666666666667,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 3,
-     "share": 0.17666666666666667,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Fizz, Trickster to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 215,
-   "event_text": "Damus played Amateur Demolitionist from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.016666666666666666,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.47333333333333333,
-     "text": "Move Fizz, Trickster to Hall of Legends"
-    },
-    {
-     "index": 1,
-     "share": 0.23333333333333334,
-     "text": "Move Fizz, Trickster to Void Gate"
-    },
-    {
-     "index": 7,
-     "share": 0.10333333333333333,
-     "text": "Use Seal of Rage"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 224,
-   "event_text": "Damus played Explosimian from hand to Void Gate.",
-   "human": {
-    "index": 2,
     "share": 0.02,
-    "text": "Play Explosimian to Void Gate"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.4066666666666667,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 4,
-     "share": 0.18666666666666668,
-     "text": "Use Gold"
-    },
-    {
-     "index": 8,
-     "share": 0.15666666666666668,
-     "text": "Use Treasure Trove"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 231,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.06333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.38666666666666666,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 5,
-     "share": 0.25333333333333335,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Choose Seal of Rage"
-   },
-   "clean_boundary": false,
-   "decision": 246,
-   "event_text": "",
-   "human": {
-    "index": 0,
-    "share": 0.30333333333333334,
-    "text": "Choose Bomb"
-   },
-   "kind": "choice",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.4066666666666667,
-     "text": "Choose Seal of Rage"
-    },
-    {
-     "index": 0,
-     "share": 0.30333333333333334,
-     "text": "Choose Bomb"
-    },
-    {
-     "index": 1,
-     "share": 0.19,
-     "text": "Choose Gold"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 263,
-   "event_text": "Played An Offer You Can't Refuse from hand.",
-   "human": {
-    "index": 6,
-    "share": 0.04666666666666667,
-    "text": "Play An Offer You Can't Refuse"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.36333333333333334,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 9,
-     "share": 0.2633333333333333,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 8,
-     "share": 0.08333333333333333,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Amateur Demolitionist to Hall of Legends"
-   },
-   "clean_boundary": true,
-   "decision": 275,
-   "event_text": "Damus moved Amateur Demolitionist to Void Gate.",
-   "human": {
-    "index": 1,
-    "share": 0.01,
-    "text": "Move Amateur Demolitionist to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.5833333333333334,
-     "text": "Move Amateur Demolitionist to Hall of Legends"
-    },
-    {
-     "index": 3,
-     "share": 0.14,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 9,
-     "share": 0.08666666666666667,
-     "text": "Use Seal of Rage"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 276,
-   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
-   "human": {
-    "index": 9,
-    "share": 0.01,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.8233333333333334,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 7,
-     "share": 0.05333333333333334,
-     "text": "Use Seal of Rage"
+     "index": 0,
+     "share": 0.59,
+     "text": "End turn"
     },
     {
      "index": 4,
-     "share": 0.03,
+     "share": 0.28,
+     "text": "Use Seal of Rage"
+    },
+    {
+     "index": 1,
+     "share": 0.04,
      "text": "Play Treasure Hunter to base"
     }
    ],
-   "turn": 14
+   "turn": 8
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 280,
-   "event_text": "Damus exhausted Seal of Rage.",
-   "human": {
-    "index": 7,
-    "share": 0.06666666666666667,
-    "text": "Use Seal of Rage"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.81,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 7,
-     "share": 0.06666666666666667,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 6,
-     "share": 0.03333333333333333,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 283,
-   "event_text": "Damus played Amateur Demolitionist from hand to base.",
-   "human": {
-    "index": 2,
-    "share": 0.023333333333333334,
-    "text": "Play Amateur Demolitionist to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7933333333333333,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 7,
-     "share": 0.04,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 6,
-     "share": 0.03666666666666667,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 289,
-   "event_text": "Damus ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.023333333333333334,
     "text": "End turn"
    },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7133333333333334,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 2,
-     "share": 0.11,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
-     "index": 6,
-     "share": 0.05,
-     "text": "Use Seal of Rage"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 299,
-   "event_text": "Damus exhausted Seal of Rage.",
-   "human": {
-    "index": 4,
-    "share": 0.08,
-    "text": "Use Seal of Rage"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.82,
-     "text": "Pass"
-    },
-    {
-     "index": 4,
-     "share": 0.08,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 2,
-     "share": 0.07333333333333333,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 16
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Move Explosimian to base"
-   },
    "clean_boundary": true,
-   "decision": 307,
+   "decision": 128,
    "event_text": "Damus played Treasure Hunter from hand to base.",
    "human": {
-    "index": 4,
-    "share": 0.04,
+    "index": 1,
+    "share": 0.01,
     "text": "Play Treasure Hunter to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.38333333333333336,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 2,
-     "share": 0.2866666666666667,
-     "text": "Move Amateur Demolitionist to Hall of Legends"
-    },
-    {
-     "index": 9,
-     "share": 0.06666666666666667,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 16
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 310,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.02666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.43,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 2,
-     "share": 0.21666666666666667,
-     "text": "Move Amateur Demolitionist to Hall of Legends"
-    },
-    {
-     "index": 7,
-     "share": 0.07,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 16
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 340,
-   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
-   "human": {
-    "index": 11,
-    "share": 0.04,
-    "text": "Use Hexplosives Expert"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.12333333333333334,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 9,
-     "share": 0.12333333333333334,
-     "text": "Use Gold"
-    },
-    {
      "index": 0,
-     "share": 0.10333333333333333,
+     "share": 0.67,
      "text": "End turn"
-    }
-   ],
-   "turn": 18
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Explosimian to base"
-   },
-   "clean_boundary": true,
-   "decision": 344,
-   "event_text": "Damus exhausted Seal of Rage.",
-   "human": {
-    "index": 11,
-    "share": 0.09,
-    "text": "Use Seal of Rage"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.15,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 9,
-     "share": 0.13,
-     "text": "Use Gold"
     },
     {
      "index": 4,
-     "share": 0.09333333333333334,
-     "text": "Play Overzealous Fan to base"
-    }
-   ],
-   "turn": 18
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Use Gold"
-   },
-   "clean_boundary": true,
-   "decision": 347,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.08333333333333333,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.13666666666666666,
-     "text": "Use Gold"
-    },
-    {
-     "index": 1,
-     "share": 0.13,
-     "text": "Move Explosimian to base"
-    },
-    {
-     "index": 4,
-     "share": 0.09333333333333334,
-     "text": "Play Overzealous Fan to base"
-    }
-   ],
-   "turn": 18
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 386,
-   "event_text": "Damus exhausted Seal of Rage.",
-   "human": {
-    "index": 3,
-    "share": 0.21,
-    "text": "Use Seal of Rage"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.41333333333333333,
-     "text": "Pass"
-    },
-    {
-     "index": 2,
-     "share": 0.3,
-     "text": "Use Gold"
+     "share": 0.26,
+     "text": "Use Seal of Rage"
     },
     {
      "index": 3,
-     "share": 0.21,
-     "text": "Use Seal of Rage"
+     "share": 0.03,
+     "text": "Play Rebuke"
     }
    ],
-   "turn": 20
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 170,
+   "event_text": "Damus played Fizz, Trickster from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.1,
+    "text": "Play Fizz, Trickster to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.42,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 1,
+     "share": 0.31,
+     "text": "Move Treasure Hunter to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.11,
+     "text": "Move Treasure Hunter to Hall of Legends"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 178,
+   "event_text": "Damus moved Treasure Hunter to Void Gate.",
+   "human": {
+    "index": 1,
+    "share": 0.31,
+    "text": "Move Treasure Hunter to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.42,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 1,
+     "share": 0.31,
+     "text": "Move Treasure Hunter to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Treasure Hunter to Hall of Legends"
+    }
+   ],
+   "turn": 10
   },
   {
    "bot": {
     "index": 1,
-    "text": "Move Explosimian to base"
+    "text": "Play Amateur Demolitionist to base"
    },
    "clean_boundary": true,
-   "decision": 394,
+   "decision": 183,
+   "event_text": "Damus played Treasure Trove from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.09,
+    "text": "Play Treasure Trove to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.7,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.09,
+     "text": "Play Treasure Trove to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 186,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
@@ -1790,8 +1047,8 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.19333333333333333,
-     "text": "Move Explosimian to base"
+     "share": 0.74,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
      "index": 0,
@@ -1799,24 +1056,432 @@
      "text": "End turn"
     },
     {
-     "index": 9,
-     "share": 0.11666666666666667,
-     "text": "Use Gold"
+     "index": 4,
+     "share": 0.06,
+     "text": "Use Seal of Rage"
     }
    ],
-   "turn": 20
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Fizz, Trickster to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 215,
+   "event_text": "Damus played Amateur Demolitionist from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.16,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.71,
+     "text": "Move Fizz, Trickster to Void Gate"
+    },
+    {
+     "index": 3,
+     "share": 0.16,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 4,
+     "share": 0.07,
+     "text": "Play Explosimian to base"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Choose Treasure Trove"
+   },
+   "clean_boundary": false,
+   "decision": 246,
+   "event_text": "",
+   "human": {
+    "index": 0,
+    "share": 0.01,
+    "text": "Choose Bomb"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.98,
+     "text": "Choose Treasure Trove"
+    },
+    {
+     "index": 0,
+     "share": 0.01,
+     "text": "Choose Bomb"
+    },
+    {
+     "index": 3,
+     "share": 0.01,
+     "text": "Choose Seal of Rage"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 263,
+   "event_text": "Played An Offer You Can't Refuse from hand.",
+   "human": {
+    "index": 6,
+    "share": 0.18,
+    "text": "Play An Offer You Can't Refuse"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.52,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 6,
+     "share": 0.18,
+     "text": "Play An Offer You Can't Refuse"
+    },
+    {
+     "index": 1,
+     "share": 0.16,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 275,
+   "event_text": "Damus moved Amateur Demolitionist to Void Gate.",
+   "human": {
+    "index": 1,
+    "share": 0.19,
+    "text": "Move Amateur Demolitionist to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.63,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.13,
+     "text": "Move Amateur Demolitionist to Hall of Legends"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 276,
+   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 9,
+    "share": 0.0,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.91,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    },
+    {
+     "index": 7,
+     "share": 0.02,
+     "text": "Use Seal of Rage"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Amateur Demolitionist to base"
+   },
+   "clean_boundary": true,
+   "decision": 280,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 7,
+    "share": 0.02,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.91,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    },
+    {
+     "index": 7,
+     "share": 0.02,
+     "text": "Use Seal of Rage"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Star-Crossed"
+   },
+   "clean_boundary": false,
+   "decision": 299,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 4,
+    "share": 0.35,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.43,
+     "text": "Play Star-Crossed"
+    },
+    {
+     "index": 4,
+     "share": 0.35,
+     "text": "Use Seal of Rage"
+    },
+    {
+     "index": 0,
+     "share": 0.22,
+     "text": "Pass"
+    }
+   ],
+   "turn": 16
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Amateur Demolitionist to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 307,
+   "event_text": "Damus played Treasure Hunter from hand to base.",
+   "human": {
+    "index": 4,
+    "share": 0.0,
+    "text": "Play Treasure Hunter to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.56,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Move Amateur Demolitionist to Hall of Legends"
+    },
+    {
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
+    }
+   ],
+   "turn": 16
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Amateur Demolitionist to Void Gate"
+   },
+   "clean_boundary": true,
+   "decision": 310,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.12,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.51,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.27,
+     "text": "Move Amateur Demolitionist to Hall of Legends"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
+    }
+   ],
+   "turn": 16
   },
   {
    "bot": {
     "index": 0,
-    "text": "Pass"
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 337,
+   "event_text": "Damus moved Treasure Hunter to Void Gate.",
+   "human": {
+    "index": 1,
+    "share": 0.3,
+    "text": "Move Treasure Hunter to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.32,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.3,
+     "text": "Move Treasure Hunter to Void Gate"
+    },
+    {
+     "index": 2,
+     "share": 0.26,
+     "text": "Move Treasure Hunter to Hall of Legends"
+    }
+   ],
+   "turn": 18
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 340,
+   "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
+   "human": {
+    "index": 11,
+    "share": 0.0,
+    "text": "Use Hexplosives Expert"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.33,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.3,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
+     "index": 3,
+     "share": 0.25,
+     "text": "Move Amateur Demolitionist to Hall of Legends"
+    }
+   ],
+   "turn": 18
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 344,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 11,
+    "share": 0.02,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.35,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Move Amateur Demolitionist to Void Gate"
+    },
+    {
+     "index": 3,
+     "share": 0.23,
+     "text": "Move Amateur Demolitionist to Hall of Legends"
+    }
+   ],
+   "turn": 18
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
    },
    "clean_boundary": false,
-   "decision": 398,
+   "decision": 350,
    "event_text": "Played Star-Crossed from hand.",
    "human": {
     "index": 1,
-    "share": 0.11666666666666667,
+    "share": 0.0,
     "text": "Play Star-Crossed"
    },
    "kind": "play",
@@ -1824,21 +1489,79 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.46,
-     "text": "Pass"
-    },
-    {
-     "index": 2,
-     "share": 0.32,
-     "text": "Use Gold"
-    },
-    {
-     "index": 1,
-     "share": 0.11666666666666667,
-     "text": "Play Star-Crossed"
+     "share": 1.0,
+     "text": "Pass focus"
     }
    ],
-   "turn": 21
+   "turn": 19
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Star-Crossed"
+   },
+   "clean_boundary": false,
+   "decision": 386,
+   "event_text": "Damus exhausted Seal of Rage.",
+   "human": {
+    "index": 3,
+    "share": 0.22,
+    "text": "Use Seal of Rage"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.7,
+     "text": "Play Star-Crossed"
+    },
+    {
+     "index": 3,
+     "share": 0.22,
+     "text": "Use Seal of Rage"
+    },
+    {
+     "index": 0,
+     "share": 0.08,
+     "text": "Pass"
+    }
+   ],
+   "turn": 20
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 394,
+   "event_text": "Damus ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.06,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.7,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 6,
+     "share": 0.17,
+     "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    }
+   ],
+   "turn": 20
   }
  ],
  "exported_records": 0,
@@ -2405,7 +2128,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_ziggs_rl2_6f857168c70e64797e68f5fabd16f689.json",
  "stop_reason": "decision cap",
  "timing": {
-  "bot_seconds": 4.782363748999998,
-  "seconds": 4.826394387
+  "bot_seconds": 2.6684881110000003,
+  "seconds": 2.721405037
  }
 }

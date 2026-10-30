@@ -3,22 +3,22 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 6,
+  "agree": 14,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 1,
     "n": 2,
-    "rate": 0.0
+    "rate": 0.5
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 0,
+    "agree": 3,
     "n": 5,
-    "rate": 0.0
+    "rate": 0.6
    },
    "move": {
     "agree": 1,
@@ -26,29 +26,29 @@
     "rate": 0.3333333333333333
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 6,
     "n": 6,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
-    "agree": 5,
+    "agree": 2,
     "n": 10,
-    "rate": 0.5
+    "rate": 0.2
    }
   },
   "clean_boundary": {
-   "agree": 3,
+   "agree": 6,
    "n": 16,
-   "rate": 0.1875
+   "rate": 0.375
   },
   "in_flight": {
-   "agree": 3,
+   "agree": 8,
    "n": 11
   },
   "n": 27,
-  "rate": 0.2222222222222222
+  "rate": 0.5185185185185185
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 32,
  "bot_errors": 0,
  "bot_fallbacks": 5,
@@ -236,34 +236,34 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Daughter of the Void"
+    "index": 2,
+    "text": "Play Watchful Sentry to base"
    },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Emp4 auto-selected the last remaining battlefield.",
+   "clean_boundary": true,
+   "decision": 7,
+   "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.34,
-    "text": "Bring battlefield ?"
+    "share": 0.22,
+    "text": "End turn"
    },
-   "kind": "battlefield",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 2,
+     "share": 0.4,
+     "text": "Play Watchful Sentry to base"
+    },
+    {
      "index": 1,
-     "share": 0.36,
-     "text": "Bring battlefield Daughter of the Void"
+     "share": 0.25,
+     "text": "Play Forecaster to base"
     },
     {
      "index": 0,
-     "share": 0.34,
-     "text": "Bring battlefield ?"
-    },
-    {
-     "index": 2,
-     "share": 0.3,
-     "text": "Bring battlefield Kai'Sa, Survivor"
+     "share": 0.22,
+     "text": "End turn"
     }
    ],
    "turn": 0
@@ -271,169 +271,101 @@
   {
    "bot": {
     "index": 3,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 7,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.20666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.37,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 1,
-     "share": 0.21333333333333335,
-     "text": "Play Forecaster to base"
-    },
-    {
-     "index": 2,
-     "share": 0.21,
-     "text": "Play Watchful Sentry to base"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Falling Star"
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 16,
    "event_text": "Emp4 played Forecaster from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.19333333333333333,
+    "share": 0.05,
     "text": "Play Forecaster to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.25666666666666665,
-     "text": "Play Falling Star"
-    },
-    {
      "index": 3,
-     "share": 0.20333333333333334,
+     "share": 0.61,
      "text": "Play Kai'Sa, Survivor to base"
     },
     {
-     "index": 1,
-     "share": 0.19333333333333333,
-     "text": "Play Forecaster to base"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 19,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.23666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
+     "index": 5,
+     "share": 0.17,
+     "text": "Use Daughter of the Void"
+    },
     {
      "index": 2,
-     "share": 0.38333333333333336,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 0,
-     "share": 0.23666666666666666,
-     "text": "End turn"
-    },
-    {
-     "index": 3,
-     "share": 0.21333333333333335,
-     "text": "Play Stupefy targeting Carrion Dredger"
+     "share": 0.09,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Forecaster to Rockfall Path"
+    "index": 1,
+    "text": "Move Forecaster to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 41,
    "event_text": "Played Falling Star from hand.",
    "human": {
     "index": 6,
-    "share": 0.016666666666666666,
+    "share": 0.01,
     "text": "Play Falling Star"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.47333333333333333,
-     "text": "Move Forecaster to Rockfall Path"
-    },
-    {
-     "index": 7,
-     "share": 0.26,
-     "text": "Play Stupefy targeting Bird"
+     "index": 1,
+     "share": 0.36,
+     "text": "Move Forecaster to Frozen Fortress"
     },
     {
      "index": 5,
-     "share": 0.08,
+     "share": 0.33,
      "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 4,
+     "share": 0.1,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Forecaster to Rockfall Path"
+    "index": 1,
+    "text": "Move Forecaster to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 55,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.14333333333333334,
+    "share": 0.16,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.47,
+     "text": "Move Forecaster to Frozen Fortress"
+    },
+    {
      "index": 2,
-     "share": 0.41333333333333333,
+     "share": 0.28,
      "text": "Move Forecaster to Rockfall Path"
     },
     {
-     "index": 3,
-     "share": 0.25,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 1,
-     "share": 0.19333333333333333,
-     "text": "Move Forecaster to Frozen Fortress"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     }
    ],
    "turn": 4
@@ -448,7 +380,7 @@
    "event_text": "Emp4 moved Kai'Sa, Survivor to Rockfall Path.",
    "human": {
     "index": 2,
-    "share": 0.04,
+    "share": 0.26,
     "text": "Move Kai'Sa, Survivor to Rockfall Path"
    },
    "kind": "move",
@@ -456,119 +388,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.6633333333333333,
+     "share": 0.57,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 9,
-     "share": 0.12,
-     "text": "Play Stupefy targeting Recruit"
+     "index": 2,
+     "share": 0.26,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
-     "index": 0,
-     "share": 0.05,
-     "text": "End turn"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Recruit"
-   },
-   "clean_boundary": false,
-   "decision": 83,
-   "event_text": "Emp4 passed focus at Rockfall Path.",
-   "human": {
-    "index": 0,
-    "share": 0.02,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9166666666666666,
-     "text": "Play Stupefy targeting Recruit"
-    },
-    {
-     "index": 7,
-     "share": 0.06333333333333334,
-     "text": "Play Hextech Ray targeting Recruit"
-    },
-    {
-     "index": 0,
-     "share": 0.02,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Recruit"
-   },
-   "clean_boundary": false,
-   "decision": 91,
-   "event_text": "Emp4 passed focus at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.04666666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5233333333333333,
-     "text": "Play Stupefy targeting Recruit"
-    },
-    {
-     "index": 6,
-     "share": 0.43,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
-    },
-    {
-     "index": 0,
-     "share": 0.04666666666666667,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 12,
-    "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
-   },
-   "clean_boundary": true,
-   "decision": 93,
-   "event_text": "Played Stupefy from hand.",
-   "human": {
-    "index": 7,
-    "share": 0.18333333333333332,
-    "text": "Play Stupefy targeting Recruit"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 12,
-     "share": 0.35,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
-    },
-    {
-     "index": 7,
-     "share": 0.18333333333333332,
-     "text": "Play Stupefy targeting Recruit"
-    },
-    {
-     "index": 3,
-     "share": 0.10666666666666667,
+     "index": 8,
+     "share": 0.06,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -576,66 +406,37 @@
   },
   {
    "bot": {
-    "index": 2,
+    "index": 6,
     "text": "Play Plundering Poro to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 105,
-   "event_text": "Emp4 ended their turn.",
+   "decision": 93,
+   "event_text": "Played Stupefy from hand.",
    "human": {
-    "index": 0,
-    "share": 0.03666666666666667,
-    "text": "End turn"
+    "index": 7,
+    "share": 0.04,
+    "text": "Play Stupefy targeting Recruit"
    },
-   "kind": "end_turn",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.39,
+     "index": 6,
+     "share": 0.32,
      "text": "Play Plundering Poro to Frozen Fortress"
     },
     {
      "index": 3,
-     "share": 0.36333333333333334,
-     "text": "Play Hextech Ray targeting Kai'Sa, Survivor"
+     "share": 0.15,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 1,
-     "share": 0.14333333333333334,
-     "text": "Play Plundering Poro to base"
+     "share": 0.12,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Hextech Ray targeting Sprite"
-   },
-   "clean_boundary": false,
-   "decision": 118,
-   "event_text": "Emp4 ended showdown responses at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.023333333333333334,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9766666666666667,
-     "text": "Play Hextech Ray targeting Sprite"
-    },
-    {
-     "index": 0,
-     "share": 0.023333333333333334,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 7
   },
   {
    "bot": {
@@ -643,159 +444,130 @@
     "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 131,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "decision": 95,
+   "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 1,
-    "share": 0.48333333333333334,
-    "text": "Use Daughter of the Void"
+    "share": 0.18,
+    "text": "Play Stupefy targeting Recruit"
    },
-   "kind": "ability",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.5166666666666667,
+     "share": 0.51,
      "text": "Pass"
     },
     {
-     "index": 1,
-     "share": 0.48333333333333334,
+     "index": 6,
+     "share": 0.31,
      "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Stupefy targeting Recruit"
     }
    ],
-   "turn": 7
+   "turn": 6
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Hextech Ray targeting Recruit"
+    "index": 0,
+    "text": "Pass"
    },
    "clean_boundary": false,
-   "decision": 137,
-   "event_text": "Emp4 passed focus at Rockfall Path.",
+   "decision": 97,
+   "event_text": "Played Stupefy from hand.",
    "human": {
-    "index": 0,
-    "share": 0.07333333333333333,
-    "text": "Pass focus"
+    "index": 1,
+    "share": 0.25,
+    "text": "Play Stupefy targeting Recruit"
    },
-   "kind": "pass_focus",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.5433333333333333,
-     "text": "Play Hextech Ray targeting Recruit"
+     "index": 0,
+     "share": 0.42,
+     "text": "Pass"
     },
     {
-     "index": 3,
-     "share": 0.38333333333333336,
-     "text": "Play Bellows Breath targeting Recruit"
+     "index": 6,
+     "share": 0.33,
+     "text": "Use Daughter of the Void"
     },
+    {
+     "index": 1,
+     "share": 0.25,
+     "text": "Play Stupefy targeting Recruit"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 128,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.39,
+    "text": "Play Hextech Ray targeting Sprite"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
     {
      "index": 0,
-     "share": 0.07333333333333333,
+     "share": 0.61,
      "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.39,
+     "text": "Play Hextech Ray targeting Sprite"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 4,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 153,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 11,
-    "share": 0.016666666666666666,
+    "share": 0.22,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.5733333333333334,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 5,
-     "share": 0.20666666666666667,
-     "text": "Play Bellows Breath targeting Recruit"
-    },
-    {
-     "index": 0,
-     "share": 0.09666666666666666,
-     "text": "End turn"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Plundering Poro to base"
-   },
-   "clean_boundary": true,
-   "decision": 161,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.03333333333333333,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.65,
-     "text": "Play Plundering Poro to base"
-    },
-    {
      "index": 4,
-     "share": 0.20666666666666667,
-     "text": "Play Smoke Screen targeting Recruit"
+     "share": 0.39,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 2,
-     "share": 0.05,
-     "text": "Play Lecturing Yordle to base"
+     "index": 11,
+     "share": 0.22,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.2,
+     "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
    "turn": 8
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Recruit"
-   },
-   "clean_boundary": false,
-   "decision": 166,
-   "event_text": "Emp4 ended showdown responses at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.18666666666666668,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.8133333333333334,
-     "text": "Play Smoke Screen targeting Recruit"
-    },
-    {
-     "index": 0,
-     "share": 0.18666666666666668,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 9
   },
   {
    "bot": {
@@ -803,126 +575,97 @@
     "text": "Play Plundering Poro to base"
    },
    "clean_boundary": true,
-   "decision": 184,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
+   "decision": 156,
+   "event_text": "Played Bellows Breath from hand.",
    "human": {
-    "index": 1,
-    "share": 0.22666666666666666,
-    "text": "Play Thousand-Tailed Watcher to base"
+    "index": 5,
+    "share": 0.06,
+    "text": "Play Bellows Breath targeting Recruit"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 2,
-     "share": 0.32666666666666666,
+     "share": 0.35,
      "text": "Play Plundering Poro to base"
     },
     {
-     "index": 1,
-     "share": 0.22666666666666666,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 4,
+     "share": 0.32,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 4,
-     "share": 0.14666666666666667,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 1,
+     "share": 0.19,
+     "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
-   "turn": 10
+   "turn": 8
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Plundering Poro to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 196,
    "event_text": "Emp4 moved Thousand-Tailed Watcher to Rockfall Path.",
    "human": {
     "index": 2,
-    "share": 0.023333333333333334,
+    "share": 0.05,
     "text": "Move Thousand-Tailed Watcher to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.63,
-     "text": "Play Plundering Poro to base"
-    },
-    {
-     "index": 4,
-     "share": 0.14333333333333334,
-     "text": "Play Smoke Screen targeting Recruit"
-    },
-    {
      "index": 0,
-     "share": 0.056666666666666664,
+     "share": 0.38,
      "text": "End turn"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Recruit"
-   },
-   "clean_boundary": false,
-   "decision": 197,
-   "event_text": "Emp4 passed focus at Rockfall Path.",
-   "human": {
-    "index": 0,
-    "share": 0.2633333333333333,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
+    },
     {
      "index": 1,
-     "share": 0.7366666666666667,
-     "text": "Play Smoke Screen targeting Recruit"
+     "share": 0.23,
+     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
     },
     {
-     "index": 0,
-     "share": 0.2633333333333333,
-     "text": "Pass focus"
+     "index": 8,
+     "share": 0.17,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Watchful Sentry to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 207,
    "event_text": "Played Falling Star from hand.",
    "human": {
     "index": 5,
-    "share": 0.22666666666666666,
+    "share": 0.13,
     "text": "Play Falling Star"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.52,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.28,
+     "share": 0.3,
      "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 1,
-     "share": 0.2733333333333333,
-     "text": "Play Plundering Poro to base"
-    },
-    {
      "index": 5,
-     "share": 0.22666666666666666,
+     "share": 0.13,
      "text": "Play Falling Star"
     }
    ],
@@ -1261,7 +1004,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_viktor_rl2_298c2f1c615ddade1c8085d8bc5962e4.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 3.032811545,
-  "seconds": 3.053325832
+  "bot_seconds": 1.0040979010000002,
+  "seconds": 1.023955508
  }
 }

@@ -3,42 +3,42 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 6,
+  "agree": 7,
   "by_kind": {
    "ability": {
-    "agree": 2,
+    "agree": 1,
     "n": 5,
-    "rate": 0.4
+    "rate": 0.2
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 0,
     "n": 6,
-    "rate": 0.16666666666666666
+    "rate": 0.0
    },
    "play": {
-    "agree": 3,
+    "agree": 5,
     "n": 11,
-    "rate": 0.2727272727272727
+    "rate": 0.45454545454545453
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 4,
    "n": 20,
-   "rate": 0.25
+   "rate": 0.2
   },
   "in_flight": {
-   "agree": 1,
+   "agree": 3,
    "n": 3
   },
   "n": 23,
-  "rate": 0.2608695652173913
+  "rate": 0.30434782608695654
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 27,
  "bot_errors": 0,
  "bot_fallbacks": 4,
@@ -508,67 +508,33 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Hexplosives Expert"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Damus locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.25,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.4,
-     "text": "Bring battlefield Hexplosives Expert"
-    },
-    {
-     "index": 2,
-     "share": 0.35,
-     "text": "Bring battlefield Ziggs, Explosive"
-    },
-    {
-     "index": 0,
-     "share": 0.25,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 3,
+    "text": "Play Seal of Rage to base"
    },
    "clean_boundary": true,
    "decision": 11,
    "event_text": "Damus played Treasure Hunter from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.22,
+    "share": 0.07,
     "text": "Play Treasure Hunter to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 3,
+     "share": 0.83,
+     "text": "Play Seal of Rage to base"
+    },
+    {
      "index": 0,
-     "share": 0.2633333333333333,
+     "share": 0.09,
      "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.25,
-     "text": "Play Tideturner to base"
-    },
-    {
      "index": 1,
-     "share": 0.22,
+     "share": 0.07,
      "text": "Play Treasure Hunter to base"
     }
    ],
@@ -580,30 +546,25 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 14,
-   "event_text": "Damus played Seal of Rage from hand to base.",
+   "decision": 16,
+   "event_text": "Damus exhausted Seal of Rage.",
    "human": {
     "index": 1,
-    "share": 0.3433333333333333,
-    "text": "Play Seal of Rage to base"
+    "share": 0.34,
+    "text": "Use Seal of Rage"
    },
-   "kind": "play",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
      "index": 0,
-     "share": 0.36333333333333334,
+     "share": 0.66,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.3433333333333333,
-     "text": "Play Seal of Rage to base"
-    },
-    {
-     "index": 2,
-     "share": 0.29333333333333333,
-     "text": "Use Hexplosives Expert"
+     "share": 0.34,
+     "text": "Use Seal of Rage"
     }
    ],
    "turn": 1
@@ -611,75 +572,41 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Tideturner to base"
-   },
-   "clean_boundary": true,
-   "decision": 34,
-   "event_text": "Damus played Pack of Wonders from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.13333333333333333,
-    "text": "Play Pack of Wonders to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.32,
-     "text": "Play Tideturner to base"
-    },
-    {
-     "index": 4,
-     "share": 0.23666666666666666,
-     "text": "Play Detonate targeting Seal of Rage"
-    },
-    {
-     "index": 6,
-     "share": 0.16333333333333333,
-     "text": "Use Seal of Rage"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Use Pack of Wonders"
+    "text": "Play Detonate targeting Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 37,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 4,
-    "share": 0.08333333333333333,
+    "share": 0.05,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.36,
+     "text": "Play Detonate targeting Pack of Wonders"
+    },
+    {
      "index": 3,
-     "share": 0.43666666666666665,
+     "share": 0.3,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 5,
-     "share": 0.24333333333333335,
+     "share": 0.18,
      "text": "Use Seal of Rage"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Play Detonate targeting Pack of Wonders"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Detonate targeting Bomb"
+    "index": 4,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 44,
@@ -693,18 +620,18 @@
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.5766666666666667,
-     "text": "Play Detonate targeting Bomb"
-    },
-    {
      "index": 4,
-     "share": 0.37,
+     "share": 0.46,
      "text": "Use Pack of Wonders"
     },
     {
+     "index": 1,
+     "share": 0.28,
+     "text": "Play Detonate targeting Bomb"
+    },
+    {
      "index": 0,
-     "share": 0.05333333333333334,
+     "share": 0.26,
      "text": "End turn"
     }
    ],
@@ -720,7 +647,7 @@
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.34,
+    "share": 0.22,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -728,12 +655,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.66,
+     "share": 0.78,
      "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.34,
+     "share": 0.22,
      "text": "End turn"
     }
    ],
@@ -741,335 +668,369 @@
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass focus"
+    "index": 5,
+    "text": "Use Pack of Wonders"
    },
-   "clean_boundary": false,
-   "decision": 67,
-   "event_text": "Played An Offer You Can't Refuse from hand.",
+   "clean_boundary": true,
+   "decision": 56,
+   "event_text": "Damus played Bewitching Spirit from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.37666666666666665,
-    "text": "Play An Offer You Can't Refuse"
+    "share": 0.11,
+    "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.6233333333333333,
-     "text": "Pass focus"
+     "index": 5,
+     "share": 0.31,
+     "text": "Use Pack of Wonders"
     },
     {
-     "index": 1,
-     "share": 0.37666666666666665,
+     "index": 4,
+     "share": 0.19,
      "text": "Play An Offer You Can't Refuse"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
-   "turn": 6
+   "turn": 5
   },
   {
    "bot": {
     "index": 1,
-    "text": "Play Bewitching Spirit to base"
+    "text": "Play An Offer You Can't Refuse"
    },
    "clean_boundary": true,
-   "decision": 94,
-   "event_text": "Played Falling Star from hand.",
+   "decision": 64,
+   "event_text": "Damus ended their turn.",
    "human": {
+    "index": 0,
+    "share": 0.28205128205128205,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.3717948717948718,
+     "text": "Play An Offer You Can't Refuse"
+    },
+    {
+     "index": 2,
+     "share": 0.34615384615384615,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 0,
+     "share": 0.28205128205128205,
+     "text": "End turn"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
     "index": 3,
-    "share": 0.10333333333333333,
-    "text": "Play Falling Star"
+    "text": "Use Pack of Wonders"
+   },
+   "clean_boundary": true,
+   "decision": 103,
+   "event_text": "Damus played Bewitching Spirit from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.17,
+    "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.63,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
      "index": 3,
-     "share": 0.10333333333333333,
-     "text": "Play Falling Star"
+     "share": 0.46,
+     "text": "Use Pack of Wonders"
     },
     {
-     "index": 4,
-     "share": 0.07,
-     "text": "Use Gold"
+     "index": 0,
+     "share": 0.35,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Play Bewitching Spirit to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Use Gold"
+    "index": 2,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 111,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.2966666666666667,
+    "share": 0.5,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.36,
-     "text": "Use Gold"
+     "index": 0,
+     "share": 0.5,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.3433333333333333,
+     "share": 0.5,
      "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 0,
-     "share": 0.2966666666666667,
-     "text": "End turn"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bewitching Spirit to Rakelstake"
+    "index": 8,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 125,
    "event_text": "Damus played Bewitching Spirit from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.24666666666666667,
+    "share": 0.07,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.23,
+     "text": "Use Pack of Wonders"
+    },
+    {
      "index": 2,
-     "share": 0.3233333333333333,
+     "share": 0.19,
      "text": "Move Bewitching Spirit to Rakelstake"
     },
     {
-     "index": 4,
-     "share": 0.24666666666666667,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 1,
-     "share": 0.12333333333333334,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bewitching Spirit to Rakelstake"
+    "index": 6,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 135,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.05078125,
+    "share": 0.27906976744186046,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.27906976744186046,
+     "text": "End turn"
+    },
+    {
+     "index": 6,
+     "share": 0.27906976744186046,
+     "text": "Use Pack of Wonders"
+    },
+    {
      "index": 2,
-     "share": 0.21875,
+     "share": 0.18604651162790697,
      "text": "Move Bewitching Spirit to Rakelstake"
-    },
-    {
-     "index": 1,
-     "share": 0.1953125,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
-    },
-    {
-     "index": 3,
-     "share": 0.1640625,
-     "text": "Play Overzealous Fan to base"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
+    "index": 9,
+    "text": "Play Ziggs, Explosive to base"
    },
    "clean_boundary": true,
    "decision": 156,
    "event_text": "Damus played Amateur Demolitionist from hand to base.",
    "human": {
     "index": 8,
-    "share": 0.043333333333333335,
+    "share": 0.27,
     "text": "Play Amateur Demolitionist to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.3433333333333333,
-     "text": "Play Ride the Wind"
+     "index": 9,
+     "share": 0.37,
+     "text": "Play Ziggs, Explosive to base"
+    },
+    {
+     "index": 8,
+     "share": 0.27,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
      "index": 1,
-     "share": 0.17,
+     "share": 0.09,
      "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
-    },
-    {
-     "index": 2,
-     "share": 0.14,
-     "text": "Move Bewitching Spirit to Rakelstake"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
+    "index": 9,
+    "text": "Play Ziggs, Explosive to base"
    },
    "clean_boundary": true,
    "decision": 164,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 13,
-    "share": 0.03666666666666667,
+    "share": 0.0,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.5266666666666666,
-     "text": "Play Ride the Wind"
+     "index": 9,
+     "share": 0.37,
+     "text": "Play Ziggs, Explosive to base"
     },
     {
-     "index": 1,
-     "share": 0.08333333333333333,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
+     "index": 8,
+     "share": 0.28,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 2,
-     "share": 0.08333333333333333,
-     "text": "Move Bewitching Spirit to Rakelstake"
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
+    "index": 9,
+    "text": "Play Ziggs, Explosive to base"
    },
    "clean_boundary": true,
    "decision": 168,
    "event_text": "Damus exhausted Pack of Wonders.",
    "human": {
     "index": 12,
-    "share": 0.11333333333333333,
+    "share": 0.07,
     "text": "Use Pack of Wonders"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.38333333333333336,
-     "text": "Play Ride the Wind"
+     "index": 9,
+     "share": 0.38,
+     "text": "Play Ziggs, Explosive to base"
     },
     {
-     "index": 1,
-     "share": 0.16666666666666666,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
+     "index": 8,
+     "share": 0.26,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 12,
-     "share": 0.11333333333333333,
-     "text": "Use Pack of Wonders"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
+    "index": 9,
+    "text": "Play Ziggs, Explosive to base"
    },
    "clean_boundary": true,
    "decision": 180,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.023333333333333334,
+    "share": 0.16,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.5166666666666667,
-     "text": "Play Ride the Wind"
+     "index": 9,
+     "share": 0.33,
+     "text": "Play Ziggs, Explosive to base"
     },
     {
-     "index": 1,
-     "share": 0.11666666666666667,
-     "text": "Move Bewitching Spirit to Bandle Scouts' Academy"
+     "index": 8,
+     "share": 0.31,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 11,
-     "share": 0.11666666666666667,
-     "text": "Use Gold"
+     "index": 0,
+     "share": 0.16,
+     "text": "End turn"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 21,
-    "text": "Use Pack of Wonders"
+    "index": 15,
+    "text": "Play Amateur Demolitionist to base"
    },
    "clean_boundary": true,
    "decision": 194,
    "event_text": "Damus ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.01,
+    "share": 0.04,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 21,
-     "share": 0.44333333333333336,
-     "text": "Use Pack of Wonders"
+     "index": 15,
+     "share": 0.32,
+     "text": "Play Amateur Demolitionist to base"
+    },
+    {
+     "index": 19,
+     "share": 0.29,
+     "text": "Play Falling Star"
     },
     {
      "index": 2,
-     "share": 0.2,
+     "share": 0.11,
      "text": "Move Amateur Demolitionist to Rakelstake"
-    },
-    {
-     "index": 1,
-     "share": 0.16666666666666666,
-     "text": "Move Amateur Demolitionist to Bandle Scouts' Academy"
     }
    ],
    "turn": 13
@@ -1536,7 +1497,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_evelynn_rl2_0481ac0c70d94c285c071c95b03b44ed.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 2.7166514389999996,
-  "seconds": 2.743288029
+  "bot_seconds": 1.1192718659999998,
+  "seconds": 1.140291033
  }
 }

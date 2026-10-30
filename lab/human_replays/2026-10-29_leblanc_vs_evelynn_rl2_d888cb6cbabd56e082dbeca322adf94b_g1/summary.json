@@ -3,7 +3,7 @@
  "actors_settled": 1,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 7,
+  "agree": 6,
   "by_kind": {
    "battlefield": {
     "agree": 1,
@@ -11,19 +11,19 @@
     "rate": 1.0
    },
    "choice": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "combat_damage": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 3,
     "n": 4,
-    "rate": 0.25
+    "rate": 0.75
    },
    "move": {
     "agree": 0,
@@ -31,29 +31,29 @@
     "rate": 0.0
    },
    "pass_focus": {
-    "agree": 1,
+    "agree": 0,
     "n": 1,
-    "rate": 1.0
+    "rate": 0.0
    },
    "play": {
-    "agree": 4,
+    "agree": 0,
     "n": 11,
-    "rate": 0.36363636363636365
+    "rate": 0.0
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 3,
    "n": 18,
-   "rate": 0.2777777777777778
+   "rate": 0.16666666666666666
   },
   "in_flight": {
-   "agree": 2,
+   "agree": 3,
    "n": 5
   },
   "n": 23,
-  "rate": 0.30434782608695654
+  "rate": 0.2608695652173913
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 25,
  "bot_errors": 0,
  "bot_fallbacks": 2,
@@ -621,33 +621,33 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Play Soaring Scout to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 5,
    "event_text": "Played Dredge Up from hand.",
    "human": {
     "index": 3,
-    "share": 0.17,
+    "share": 0.13,
     "text": "Play Dredge Up"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.44,
+     "text": "End turn"
+    },
+    {
      "index": 1,
-     "share": 0.38,
+     "share": 0.39,
      "text": "Play Soaring Scout to base"
     },
     {
-     "index": 2,
-     "share": 0.32666666666666666,
-     "text": "Play Watchful Sentry to base"
-    },
-    {
      "index": 3,
-     "share": 0.17,
+     "share": 0.13,
      "text": "Play Dredge Up"
     }
    ],
@@ -655,71 +655,110 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Vex, Apathetic"
-   },
-   "clean_boundary": true,
-   "decision": 45,
-   "event_text": "c ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.25333333333333335,
     "text": "End turn"
    },
-   "kind": "end_turn",
+   "clean_boundary": true,
+   "decision": 17,
+   "event_text": "c moved LeBlanc, Everywhere at Once to base.",
+   "human": {
+    "index": 2,
+    "share": 0.07,
+    "text": "Play LeBlanc, Everywhere at Once to base"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.7466666666666667,
-     "text": "Play Stupefy targeting Vex, Apathetic"
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 5,
+     "share": 0.28,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 4,
+     "share": 0.2,
+     "text": "Play Cull the Weak"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 36,
+   "event_text": "c played Hwei, Brooding Painter from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.11,
+    "text": "Play Hwei, Brooding Painter to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.28,
+     "text": "Play Dredge Up"
     },
     {
      "index": 0,
-     "share": 0.25333333333333335,
+     "share": 0.25,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.11,
+     "text": "Play Hwei, Brooding Painter to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Cull the Weak"
+    "index": 4,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 57,
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 5,
-    "share": 0.12,
+    "share": 0.01,
     "text": "Play Stupefy targeting Vex, Apathetic"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.19,
-     "text": "Play Cull the Weak"
+     "index": 4,
+     "share": 0.43,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Move Hwei, Brooding Painter to Star Spring"
     },
     {
      "index": 2,
-     "share": 0.14666666666666667,
+     "share": 0.17,
      "text": "Move Hwei, Brooding Painter to Rakelstake"
-    },
-    {
-     "index": 10,
-     "share": 0.13333333333333333,
-     "text": "Play Ki Barrier"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Eclipse targeting Vex, Apathetic"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 61,
@@ -733,285 +772,256 @@
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.76,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.09,
+     "text": "Move Hwei, Brooding Painter to Star Spring"
+    },
+    {
      "index": 7,
-     "share": 0.22,
+     "share": 0.09,
      "text": "Play Eclipse targeting Vex, Apathetic"
-    },
-    {
-     "index": 4,
-     "share": 0.18666666666666668,
-     "text": "Play Honest Broker to base"
-    },
-    {
-     "index": 5,
-     "share": 0.14,
-     "text": "Play Cull the Weak"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Ki Barrier"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 67,
    "event_text": "c moved Hwei, Brooding Painter to Star Spring.",
    "human": {
     "index": 1,
-    "share": 0.19,
+    "share": 0.1,
     "text": "Move Hwei, Brooding Painter to Star Spring"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.22333333333333333,
-     "text": "Play Ki Barrier"
+     "index": 0,
+     "share": 0.8,
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.19,
+     "share": 0.1,
      "text": "Move Hwei, Brooding Painter to Star Spring"
     },
     {
-     "index": 6,
-     "share": 0.18,
-     "text": "Play Dredge Up"
+     "index": 2,
+     "share": 0.04,
+     "text": "Move Hwei, Brooding Painter to Rakelstake"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Choose Hidden Blade"
+    "index": 3,
+    "text": "Play Dredge Up"
    },
    "clean_boundary": false,
-   "decision": 70,
-   "event_text": "",
+   "decision": 71,
+   "event_text": "c passed focus at Star Spring.",
    "human": {
-    "index": 5,
-    "share": 0.23666666666666666,
-    "text": "Choose Lillia, Fae Fawn"
+    "index": 0,
+    "share": 0.19,
+    "text": "Pass focus"
    },
-   "kind": "choice",
+   "kind": "pass_focus",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.27,
-     "text": "Choose Hidden Blade"
-    },
-    {
-     "index": 5,
-     "share": 0.23666666666666666,
-     "text": "Choose Lillia, Fae Fawn"
+     "index": 3,
+     "share": 0.46,
+     "text": "Play Dredge Up"
     },
     {
      "index": 2,
-     "share": 0.15,
-     "text": "Choose Thousand-Tailed Watcher"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Assign damage: 4 to K'Sante, Courageous;"
-   },
-   "clean_boundary": false,
-   "decision": 73,
-   "event_text": "",
-   "human": {
-    "index": 0,
-    "share": 0.44,
-    "text": "Assign damage: 3 to Vex, Apathetic; 1 to K'Sante, Courageous;"
-   },
-   "kind": "combat_damage",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.56,
-     "text": "Assign damage: 4 to K'Sante, Courageous;"
+     "share": 0.35,
+     "text": "Play Hidden Blade"
     },
     {
      "index": 0,
-     "share": 0.44,
-     "text": "Assign damage: 3 to Vex, Apathetic; 1 to K'Sante, Courageous;"
+     "share": 0.19,
+     "text": "Pass focus"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 3,
+    "text": "Play Hidden Blade"
    },
    "clean_boundary": true,
    "decision": 75,
    "event_text": "Played Ki Barrier from hand.",
    "human": {
     "index": 2,
-    "share": 0.18333333333333332,
+    "share": 0.0,
     "text": "Play Ki Barrier"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.43,
-     "text": "End turn"
-    },
-    {
      "index": 3,
-     "share": 0.21,
+     "share": 0.51,
      "text": "Play Hidden Blade"
     },
     {
-     "index": 2,
-     "share": 0.18333333333333332,
-     "text": "Play Ki Barrier"
+     "index": 4,
+     "share": 0.2,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Bellows Breath targeting K'Sante, Courageous"
-   },
-   "clean_boundary": true,
-   "decision": 101,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.05,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.6466666666666666,
-     "text": "Play Bellows Breath targeting K'Sante, Courageous"
-    },
-    {
-     "index": 5,
-     "share": 0.2,
-     "text": "Play Dredge Up"
-    },
-    {
-     "index": 1,
-     "share": 0.056666666666666664,
-     "text": "Play Honest Broker to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Honest Broker to base"
-   },
-   "clean_boundary": true,
-   "decision": 125,
-   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
-   "human": {
-    "index": 2,
-    "share": 0.03333333333333333,
-    "text": "Move Hwei, Brooding Painter to Rakelstake"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.3933333333333333,
-     "text": "Play Honest Broker to base"
-    },
-    {
-     "index": 4,
-     "share": 0.21,
-     "text": "Play Hwei, Brooding Painter to base"
-    },
-    {
-     "index": 7,
-     "share": 0.14333333333333334,
-     "text": "Play Bellows Breath targeting Fizz, Trickster"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Bellows Breath targeting Fizz, Trickster"
-   },
-   "clean_boundary": false,
-   "decision": 129,
-   "event_text": "Played Salvage from hand.",
-   "human": {
     "index": 4,
-    "share": 0.17,
-    "text": "Play Salvage"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.44666666666666666,
-     "text": "Play Bellows Breath targeting Fizz, Trickster"
-    },
-    {
-     "index": 1,
-     "share": 0.23,
-     "text": "Play Hidden Blade"
-    },
-    {
-     "index": 4,
-     "share": 0.17,
-     "text": "Play Salvage"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Ruined Rex to base"
+    "text": "Play Hidden Blade"
    },
    "clean_boundary": true,
-   "decision": 140,
+   "decision": 94,
    "event_text": "c played Hwei, Brooding Painter from hand to base.",
    "human": {
-    "index": 1,
-    "share": 0.09333333333333334,
+    "index": 3,
+    "share": 0.02,
     "text": "Play Hwei, Brooding Painter to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.43333333333333335,
-     "text": "Play Ruined Rex to base"
+     "index": 4,
+     "share": 0.43,
+     "text": "Play Hidden Blade"
     },
     {
      "index": 1,
-     "share": 0.09333333333333334,
-     "text": "Play Hwei, Brooding Painter to base"
+     "share": 0.35,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 8,
-     "share": 0.09,
+     "index": 0,
+     "share": 0.11,
+     "text": "End turn"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Hidden Blade"
+   },
+   "clean_boundary": true,
+   "decision": 101,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.08,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.69,
+     "text": "Play Hidden Blade"
+    },
+    {
+     "index": 5,
+     "share": 0.17,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play Salvage"
+   },
+   "clean_boundary": true,
+   "decision": 125,
+   "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
+   "human": {
+    "index": 2,
+    "share": 0.19,
+    "text": "Move Hwei, Brooding Painter to Rakelstake"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.28,
+     "text": "Play Salvage"
+    },
+    {
+     "index": 2,
+     "share": 0.19,
+     "text": "Move Hwei, Brooding Painter to Rakelstake"
+    },
+    {
+     "index": 10,
+     "share": 0.16,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 129,
+   "event_text": "Played Salvage from hand.",
+   "human": {
+    "index": 4,
+    "share": 0.32,
+    "text": "Play Salvage"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.48,
+     "text": "Pass focus"
+    },
+    {
+     "index": 4,
+     "share": 0.32,
+     "text": "Play Salvage"
+    },
+    {
+     "index": 2,
+     "share": 0.11,
      "text": "Play Bellows Breath targeting Fizz, Trickster"
     }
    ],
@@ -1019,136 +1029,170 @@
   },
   {
    "bot": {
-    "index": 13,
-    "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
+    "index": 11,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 140,
+   "event_text": "c played Hwei, Brooding Painter from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.04,
+    "text": "Play Hwei, Brooding Painter to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 11,
+     "share": 0.21,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 2,
+     "share": 0.2,
+     "text": "Play Hwei, Brooding Painter to Rakelstake"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play Lillia, Fae Fawn to Rakelstake"
    },
    "clean_boundary": true,
    "decision": 160,
    "event_text": "Played Hidden Blade from Rakelstake.",
    "human": {
     "index": 12,
-    "share": 0.12666666666666668,
+    "share": 0.06,
     "text": "Play Hidden Blade"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 13,
-     "share": 0.22,
-     "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
+     "index": 9,
+     "share": 0.26,
+     "text": "Play Lillia, Fae Fawn to Rakelstake"
     },
     {
-     "index": 19,
-     "share": 0.21,
-     "text": "Hide Hidden Blade"
+     "index": 18,
+     "share": 0.14,
+     "text": "Play Dredge Up"
     },
     {
-     "index": 12,
-     "share": 0.12666666666666668,
-     "text": "Play Hidden Blade"
+     "index": 8,
+     "share": 0.11,
+     "text": "Play Lillia, Fae Fawn to base"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Lillia, Fae Fawn to Rakelstake"
+    "index": 12,
+    "text": "Play Dredge Up"
+   },
+   "clean_boundary": true,
+   "decision": 167,
+   "event_text": "c played Lillia, Fae Fawn from hand to base.",
+   "human": {
+    "index": 4,
+    "share": 0.17,
+    "text": "Play Lillia, Fae Fawn to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 12,
+     "share": 0.19,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Move Hwei, Brooding Painter to Rakelstake"
+    },
+    {
+     "index": 4,
+     "share": 0.17,
+     "text": "Play Lillia, Fae Fawn to base"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 14,
+    "text": "Play Dredge Up"
    },
    "clean_boundary": true,
    "decision": 174,
    "event_text": "c moved Lillia, Fae Fawn to Star Spring.",
    "human": {
     "index": 1,
-    "share": 0.02666666666666667,
+    "share": 0.11,
     "text": "Move Lillia, Fae Fawn to Star Spring"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 14,
+     "share": 0.25,
+     "text": "Play Dredge Up"
+    },
+    {
+     "index": 0,
+     "share": 0.22,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.8466666666666667,
+     "share": 0.19,
      "text": "Move Lillia, Fae Fawn to Rakelstake"
-    },
-    {
-     "index": 9,
-     "share": 0.07666666666666666,
-     "text": "Play Bellows Breath targeting Lillia, Fae Fawn"
-    },
-    {
-     "index": 1,
-     "share": 0.02666666666666667,
-     "text": "Move Lillia, Fae Fawn to Star Spring"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
+    "index": 9,
+    "text": "Play Dredge Up"
    },
    "clean_boundary": true,
    "decision": 181,
    "event_text": "c moved Hwei, Brooding Painter to Rakelstake.",
    "human": {
     "index": 2,
-    "share": 0.02666666666666667,
+    "share": 0.19,
     "text": "Move Hwei, Brooding Painter to Rakelstake"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.4066666666666667,
-     "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
-    },
-    {
      "index": 9,
-     "share": 0.23333333333333334,
+     "share": 0.22,
      "text": "Play Dredge Up"
     },
     {
-     "index": 3,
-     "share": 0.20666666666666667,
-     "text": "Play Honest Broker to base"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
-   },
-   "clean_boundary": true,
-   "decision": 187,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.02666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.4033333333333333,
-     "text": "Play Bellows Breath targeting Hwei, Brooding Painter"
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
     },
     {
-     "index": 6,
-     "share": 0.12333333333333334,
-     "text": "Play Soaring Scout to Rakelstake"
-    },
-    {
-     "index": 11,
-     "share": 0.11,
-     "text": "Play Dredge Up"
+     "index": 2,
+     "share": 0.19,
+     "text": "Move Hwei, Brooding Painter to Rakelstake"
     }
    ],
    "turn": 12
@@ -1638,7 +1682,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_d888cb6cbabd56e082dbeca322adf94b.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 1.9947550809999999,
-  "seconds": 2.01237953
+  "bot_seconds": 0.8301872210000003,
+  "seconds": 0.848254152
  }
 }

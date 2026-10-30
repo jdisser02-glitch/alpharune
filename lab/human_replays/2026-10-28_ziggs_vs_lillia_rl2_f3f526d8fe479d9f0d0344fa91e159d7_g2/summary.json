@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 6,
+  "agree": 14,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -11,44 +11,44 @@
     "rate": 0.0
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 5,
     "n": 6,
-    "rate": 0.3333333333333333
+    "rate": 0.8333333333333334
    },
    "move": {
-    "agree": 1,
+    "agree": 0,
     "n": 5,
-    "rate": 0.2
+    "rate": 0.0
    },
    "pass_focus": {
-    "agree": 2,
+    "agree": 4,
     "n": 4,
-    "rate": 0.5
+    "rate": 1.0
    },
    "play": {
-    "agree": 1,
+    "agree": 4,
     "n": 15,
-    "rate": 0.06666666666666667
+    "rate": 0.26666666666666666
    }
   },
   "clean_boundary": {
-   "agree": 4,
+   "agree": 9,
    "n": 30,
-   "rate": 0.13333333333333333
+   "rate": 0.3
   },
   "in_flight": {
-   "agree": 2,
+   "agree": 5,
    "n": 6
   },
   "n": 36,
-  "rate": 0.16666666666666666
+  "rate": 0.3888888888888889
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 45,
  "bot_errors": 0,
  "bot_fallbacks": 9,
@@ -697,104 +697,133 @@
   {
    "bot": {
     "index": 1,
-    "text": "Bring battlefield Hexplosives Expert"
+    "text": "Use Pack of Wonders"
    },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Kuzong locked in a random battlefield.",
+   "clean_boundary": true,
+   "decision": 10,
+   "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.33,
-    "text": "Bring battlefield ?"
+    "share": 0.12,
+    "text": "End turn"
    },
-   "kind": "battlefield",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.35333333333333333,
-     "text": "Bring battlefield Hexplosives Expert"
+     "share": 0.88,
+     "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.33,
-     "text": "Bring battlefield ?"
-    },
-    {
-     "index": 2,
-     "share": 0.31666666666666665,
-     "text": "Bring battlefield Ziggs, Explosive"
+     "share": 0.12,
+     "text": "End turn"
     }
    ],
    "turn": 0
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Treasure Hunter to base"
-   },
-   "clean_boundary": true,
-   "decision": 7,
-   "event_text": "tom played Pack of Wonders from hand to base.",
-   "human": {
     "index": 3,
-    "share": 0.11666666666666667,
-    "text": "Play Pack of Wonders to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.3333333333333333,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
-     "index": 1,
-     "share": 0.29333333333333333,
-     "text": "Play Tideturner to base"
-    },
-    {
-     "index": 4,
-     "share": 0.13333333333333333,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 19,
    "event_text": "tom played Shimmering Swimmer from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.10666666666666667,
+    "share": 0.38,
     "text": "Play Shimmering Swimmer to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.2866666666666667,
-     "text": "End turn"
+     "index": 3,
+     "share": 0.44,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 1,
+     "share": 0.38,
+     "text": "Play Shimmering Swimmer to base"
     },
     {
      "index": 6,
-     "share": 0.23333333333333334,
+     "share": 0.14,
      "text": "Use Pack of Wonders"
-    },
-    {
-     "index": 2,
-     "share": 0.17333333333333334,
-     "text": "Play Treasure Hunter to base"
     }
    ],
    "turn": 2
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Shimmering Swimmer to base"
+   },
+   "clean_boundary": true,
+   "decision": 48,
+   "event_text": "tom moved Shimmering Swimmer to Void Gate.",
+   "human": {
+    "index": 1,
+    "share": 0.14,
+    "text": "Move Shimmering Swimmer to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.36,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 3,
+     "share": 0.27,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Move Shimmering Swimmer to Void Gate"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Shimmering Swimmer to base"
+   },
+   "clean_boundary": true,
+   "decision": 51,
+   "event_text": "tom moved Ziggs, Explosive to Void Gate.",
+   "human": {
+    "index": 10,
+    "share": 0.19,
+    "text": "Play Ziggs, Explosive to Void Gate"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.36,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 1,
+     "share": 0.27,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 10,
+     "share": 0.19,
+     "text": "Play Ziggs, Explosive to Void Gate"
+    }
+   ],
+   "turn": 4
   },
   {
    "bot": {
@@ -802,228 +831,97 @@
     "text": "End turn"
    },
    "clean_boundary": true,
-   "decision": 48,
-   "event_text": "tom moved Shimmering Swimmer to Void Gate.",
-   "human": {
-    "index": 1,
-    "share": 0.23666666666666666,
-    "text": "Move Shimmering Swimmer to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.41333333333333333,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.23666666666666666,
-     "text": "Move Shimmering Swimmer to Void Gate"
-    },
-    {
-     "index": 2,
-     "share": 0.07333333333333333,
-     "text": "Move Shimmering Swimmer to Dusk Rose Lab"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Ekko, Revolutionary to base"
-   },
-   "clean_boundary": true,
-   "decision": 51,
-   "event_text": "tom moved Ziggs, Explosive to Void Gate.",
-   "human": {
-    "index": 10,
-    "share": 0.02,
-    "text": "Play Ziggs, Explosive to Void Gate"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.23333333333333334,
-     "text": "Play Ekko, Revolutionary to base"
-    },
-    {
-     "index": 5,
-     "share": 0.14333333333333334,
-     "text": "Play Shimmering Swimmer to base"
-    },
-    {
-     "index": 11,
-     "share": 0.13666666666666666,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Treasure Hunter to base"
-   },
-   "clean_boundary": true,
    "decision": 56,
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 3,
-    "share": 0.09333333333333334,
+    "share": 0.02,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.65,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
      "index": 0,
-     "share": 0.18666666666666668,
+     "share": 0.87,
      "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.09333333333333334,
-     "text": "Use Hexplosives Expert"
+     "index": 2,
+     "share": 0.09,
+     "text": "Play Treasure Hunter to Void Gate"
+    },
+    {
+     "index": 1,
+     "share": 0.02,
+     "text": "Play Treasure Hunter to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to base"
+    "index": 6,
+    "text": "Play Shimmering Swimmer to base"
    },
    "clean_boundary": true,
    "decision": 90,
    "event_text": "tom played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.08333333333333333,
+    "share": 0.3,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.30666666666666664,
-     "text": "Move Ziggs, Explosive to base"
-    },
-    {
      "index": 6,
-     "share": 0.10333333333333333,
+     "share": 0.43,
      "text": "Play Shimmering Swimmer to base"
     },
     {
-     "index": 12,
-     "share": 0.10333333333333333,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Use Hexplosives Expert"
-   },
-   "clean_boundary": true,
-   "decision": 97,
-   "event_text": "tom played Shimmering Swimmer from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.1,
-    "text": "Play Shimmering Swimmer to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.20666666666666667,
-     "text": "Use Hexplosives Expert"
-    },
-    {
-     "index": 9,
-     "share": 0.2,
-     "text": "Use Ziggs, Explosive"
-    },
-    {
-     "index": 1,
-     "share": 0.14,
-     "text": "Move Ziggs, Explosive to base"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Existential Dread"
-   },
-   "clean_boundary": false,
-   "decision": 120,
-   "event_text": "tom ended showdown responses at Dusk Rose Lab.",
-   "human": {
-    "index": 0,
-    "share": 0.29,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.71,
-     "text": "Play Existential Dread"
+     "index": 2,
+     "share": 0.3,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 0,
-     "share": 0.29,
-     "text": "Pass focus"
+     "share": 0.15,
+     "text": "End turn"
     }
    ],
-   "turn": 7
+   "turn": 6
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to Void Gate"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 124,
    "event_text": "tom played Ekko, Revolutionary from hand to base.",
    "human": {
     "index": 7,
-    "share": 0.08,
+    "share": 0.14,
     "text": "Play Ekko, Revolutionary to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.4633333333333333,
-     "text": "Move Shimmering Swimmer to Void Gate"
+     "index": 0,
+     "share": 0.43,
+     "text": "End turn"
     },
     {
-     "index": 2,
-     "share": 0.2833333333333333,
-     "text": "Move Shimmering Swimmer to Dusk Rose Lab"
+     "index": 9,
+     "share": 0.2,
+     "text": "Play Existential Dread"
     },
     {
      "index": 7,
-     "share": 0.08,
+     "share": 0.14,
      "text": "Play Ekko, Revolutionary to base"
     }
    ],
@@ -1031,8 +929,8 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Shimmering Swimmer to Dusk Rose Lab"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 131,
@@ -1046,422 +944,325 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.59,
-     "text": "Move Shimmering Swimmer to Dusk Rose Lab"
-    },
-    {
-     "index": 1,
-     "share": 0.30333333333333334,
-     "text": "Move Shimmering Swimmer to Void Gate"
+     "index": 0,
+     "share": 0.34,
+     "text": "End turn"
     },
     {
      "index": 15,
-     "share": 0.023333333333333334,
+     "share": 0.21,
      "text": "Play The List to base"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Shimmering Swimmer to Dusk Rose Lab"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to Void Gate"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 140,
    "event_text": "tom moved Shimmering Swimmer to Dusk Rose Lab.",
    "human": {
     "index": 2,
-    "share": 0.22333333333333333,
+    "share": 0.17,
     "text": "Move Shimmering Swimmer to Dusk Rose Lab"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.62,
-     "text": "Move Shimmering Swimmer to Void Gate"
+     "index": 0,
+     "share": 0.37,
+     "text": "End turn"
+    },
+    {
+     "index": 7,
+     "share": 0.3,
+     "text": "Play The List to base"
     },
     {
      "index": 2,
-     "share": 0.22333333333333333,
+     "share": 0.17,
      "text": "Move Shimmering Swimmer to Dusk Rose Lab"
-    },
-    {
-     "index": 8,
-     "share": 0.06333333333333334,
-     "text": "Play Ride the Wind"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 143,
+   "event_text": "tom moved Bilgewater Tracker to Void Gate.",
+   "human": {
     "index": 1,
-    "text": "Play The List to base"
+    "share": 0.15,
+    "text": "Move Bilgewater Tracker to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.36,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.29,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 2,
+     "share": 0.17,
+     "text": "Move Bilgewater Tracker to Dusk Rose Lab"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 146,
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 3,
-    "share": 0.15666666666666668,
+    "share": 0.01,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.44666666666666666,
-     "text": "Play The List to base"
-    },
-    {
-     "index": 2,
-     "share": 0.35,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 3,
-     "share": 0.15666666666666668,
-     "text": "Use Hexplosives Expert"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": true,
-   "decision": 150,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.1,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.4866666666666667,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 1,
-     "share": 0.41333333333333333,
-     "text": "Play The List to base"
-    },
-    {
      "index": 0,
-     "share": 0.1,
+     "share": 0.52,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.43,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 2,
+     "share": 0.04,
+     "text": "Play Ride the Wind"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Play Ride the Wind"
+    "index": 0,
+    "text": "Pass focus"
    },
    "clean_boundary": false,
    "decision": 171,
    "event_text": "Played Existential Dread from hand.",
    "human": {
     "index": 1,
-    "share": 0.10666666666666667,
+    "share": 0.11,
     "text": "Play Existential Dread"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.8466666666666667,
-     "text": "Play Ride the Wind"
+     "index": 0,
+     "share": 0.87,
+     "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.10666666666666667,
+     "share": 0.11,
      "text": "Play Existential Dread"
     },
     {
-     "index": 0,
-     "share": 0.04666666666666667,
-     "text": "Pass focus"
+     "index": 2,
+     "share": 0.02,
+     "text": "Play Ride the Wind"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 185,
    "event_text": "tom played The List from hand to base.",
    "human": {
     "index": 9,
-    "share": 0.10333333333333333,
+    "share": 0.21,
     "text": "Play The List to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.4066666666666667,
-     "text": "Move Shimmering Swimmer to base"
-    },
-    {
-     "index": 10,
-     "share": 0.23,
-     "text": "Use Hexplosives Expert"
+     "index": 0,
+     "share": 0.26,
+     "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.11333333333333333,
+     "share": 0.21,
      "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 9,
+     "share": 0.21,
+     "text": "Play The List to base"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 187,
    "event_text": "tom exhausted The List.",
    "human": {
     "index": 8,
-    "share": 0.10333333333333333,
+    "share": 0.14,
     "text": "Use The List"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.43666666666666665,
-     "text": "Move Shimmering Swimmer to base"
-    },
-    {
-     "index": 6,
-     "share": 0.21333333333333335,
-     "text": "Play Star-Crossed"
+     "index": 0,
+     "share": 0.37,
+     "text": "End turn"
     },
     {
      "index": 3,
-     "share": 0.10666666666666667,
+     "share": 0.3,
      "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 8,
+     "share": 0.14,
+     "text": "Use The List"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 191,
    "event_text": "tom played Bilgewater Tracker from hand to Dusk Rose Lab.",
    "human": {
     "index": 5,
-    "share": 0.02,
+    "share": 0.01,
     "text": "Play Bilgewater Tracker to Dusk Rose Lab"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.36666666666666664,
-     "text": "Move Shimmering Swimmer to base"
-    },
-    {
-     "index": 6,
-     "share": 0.32666666666666666,
-     "text": "Play Star-Crossed"
-    },
-    {
-     "index": 3,
-     "share": 0.13,
-     "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to base"
-   },
-   "clean_boundary": true,
-   "decision": 207,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.016666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.88,
-     "text": "Move Shimmering Swimmer to base"
-    },
-    {
-     "index": 4,
-     "share": 0.043333333333333335,
-     "text": "Play Star-Crossed"
-    },
-    {
-     "index": 3,
-     "share": 0.03,
-     "text": "Play Whirling Twirligig to base"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Star-Crossed"
-   },
-   "clean_boundary": false,
-   "decision": 248,
-   "event_text": "tom ended showdown responses at Dusk Rose Lab.",
-   "human": {
-    "index": 0,
-    "share": 0.08666666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9133333333333333,
-     "text": "Play Star-Crossed"
-    },
-    {
      "index": 0,
-     "share": 0.08666666666666667,
-     "text": "Pass focus"
+     "share": 0.43,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.35,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 1,
+     "share": 0.1,
+     "text": "Move Shimmering Swimmer to base"
     }
    ],
-   "turn": 11
+   "turn": 10
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Use The List"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 255,
    "event_text": "tom played Whirling Twirligig from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.05,
+    "share": 0.24,
     "text": "Play Whirling Twirligig to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.37666666666666665,
-     "text": "Use The List"
-    },
-    {
-     "index": 4,
-     "share": 0.31333333333333335,
-     "text": "Play Star-Crossed"
-    },
-    {
      "index": 0,
-     "share": 0.09666666666666666,
+     "share": 0.31,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.26,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 3,
+     "share": 0.24,
+     "text": "Play Whirling Twirligig to base"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Use The List"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 261,
    "event_text": "tom played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.07,
+    "share": 0.2,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.4633333333333333,
-     "text": "Use The List"
-    },
-    {
-     "index": 5,
-     "share": 0.13,
-     "text": "Use Whirling Twirligig"
-    },
-    {
      "index": 0,
-     "share": 0.12333333333333334,
+     "share": 0.21,
      "text": "End turn"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Use The List"
-   },
-   "clean_boundary": true,
-   "decision": 277,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.03666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.26,
-     "text": "Use The List"
     },
     {
-     "index": 2,
-     "share": 0.24,
-     "text": "Play Falling Star"
+     "index": 1,
+     "share": 0.2,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 5,
-     "share": 0.18666666666666668,
-     "text": "Use Whirling Twirligig ability 2"
+     "share": 0.17,
+     "text": "Use Whirling Twirligig"
     }
    ],
    "turn": 12
@@ -1476,7 +1277,7 @@
    "event_text": "Played Falling Star from hand.",
    "human": {
     "index": 4,
-    "share": 0.02666666666666667,
+    "share": 0.14,
     "text": "Play Falling Star"
    },
    "kind": "play",
@@ -1484,18 +1285,18 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.7433333333333333,
+     "share": 0.2,
      "text": "End turn"
     },
     {
-     "index": 9,
-     "share": 0.06,
-     "text": "Use Whirling Twirligig ability 2"
+     "index": 4,
+     "share": 0.14,
+     "text": "Play Falling Star"
     },
     {
-     "index": 5,
-     "share": 0.04,
-     "text": "Play Ride the Wind"
+     "index": 8,
+     "share": 0.14,
+     "text": "Use Whirling Twirligig"
     }
    ],
    "turn": 14
@@ -1510,7 +1311,7 @@
    "event_text": "tom played Treasure Trove from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.18333333333333332,
+    "share": 0.11,
     "text": "Play Treasure Trove to base"
    },
    "kind": "play",
@@ -1518,157 +1319,89 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.21333333333333335,
+     "share": 0.21,
      "text": "Play Seal of Rage to base"
     },
     {
-     "index": 8,
-     "share": 0.2,
-     "text": "Use Whirling Twirligig ability 2"
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
     },
     {
-     "index": 3,
-     "share": 0.18333333333333332,
-     "text": "Play Treasure Trove to base"
+     "index": 7,
+     "share": 0.13,
+     "text": "Use Whirling Twirligig"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Bilgewater Tracker to Void Gate"
+    "index": 3,
+    "text": "Play Seal of Rage to base"
    },
    "clean_boundary": true,
    "decision": 318,
    "event_text": "tom exhausted Treasure Trove.",
    "human": {
     "index": 7,
-    "share": 0.07,
+    "share": 0.01,
     "text": "Use Treasure Trove"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.34,
-     "text": "Move Bilgewater Tracker to Void Gate"
-    },
-    {
      "index": 3,
-     "share": 0.16,
+     "share": 0.2,
      "text": "Play Seal of Rage to base"
     },
     {
-     "index": 9,
-     "share": 0.15333333333333332,
-     "text": "Use Whirling Twirligig ability 2"
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
+    },
+    {
+     "index": 4,
+     "share": 0.14,
+     "text": "Play Falling Star"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Bilgewater Tracker to Void Gate"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 325,
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 6,
-    "share": 0.02666666666666667,
+    "share": 0.0,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.42333333333333334,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 0,
+     "share": 0.27,
+     "text": "End turn"
     },
     {
-     "index": 9,
-     "share": 0.15666666666666668,
-     "text": "Use Whirling Twirligig ability 2"
-    },
-    {
-     "index": 7,
-     "share": 0.12333333333333334,
-     "text": "Use The List"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Bilgewater Tracker to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 329,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.013333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5166666666666667,
-     "text": "Move Bilgewater Tracker to Void Gate"
+     "index": 3,
+     "share": 0.2,
+     "text": "Play Falling Star"
     },
     {
      "index": 8,
-     "share": 0.12666666666666668,
-     "text": "Use Whirling Twirligig ability 2"
-    },
-    {
-     "index": 6,
-     "share": 0.09333333333333334,
-     "text": "Use The List"
+     "share": 0.14,
+     "text": "Use Whirling Twirligig"
     }
    ],
    "turn": 14
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Use Seal of Rage"
-   },
-   "clean_boundary": true,
-   "decision": 349,
-   "event_text": "Played Falling Star from hand.",
-   "human": {
-    "index": 4,
-    "share": 0.056666666666666664,
-    "text": "Play Falling Star"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.5166666666666667,
-     "text": "Use Seal of Rage"
-    },
-    {
-     "index": 10,
-     "share": 0.08,
-     "text": "Use Whirling Twirligig ability 2"
-    },
-    {
-     "index": 8,
-     "share": 0.06666666666666667,
-     "text": "Use The List"
-    }
-   ],
-   "turn": 16
   },
   {
    "bot": {
@@ -1680,26 +1413,26 @@
    "event_text": "tom moved Bilgewater Tracker to Void Gate.",
    "human": {
     "index": 1,
-    "share": 0.18,
+    "share": 0.12,
     "text": "Move Bilgewater Tracker to Void Gate"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 7,
+     "share": 0.2,
+     "text": "Use Whirling Twirligig"
+    },
+    {
      "index": 8,
-     "share": 0.19333333333333333,
+     "share": 0.2,
      "text": "Use Whirling Twirligig ability 2"
     },
     {
-     "index": 1,
-     "share": 0.18,
-     "text": "Move Bilgewater Tracker to Void Gate"
-    },
-    {
-     "index": 7,
-     "share": 0.12333333333333334,
-     "text": "Use Whirling Twirligig"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 16
@@ -2186,7 +1919,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_lillia_rl2_f3f526d8fe479d9f0d0344fa91e159d7.json",
  "stop_reason": "desync cap",
  "timing": {
-  "bot_seconds": 4.007663698,
-  "seconds": 4.0455186
+  "bot_seconds": 1.730911409,
+  "seconds": 1.771521284
  }
 }

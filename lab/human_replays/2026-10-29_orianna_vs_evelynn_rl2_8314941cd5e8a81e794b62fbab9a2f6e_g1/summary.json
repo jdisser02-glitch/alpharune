@@ -3,17 +3,17 @@
  "actors_settled": 0,
  "actors_uncertain": 3,
  "agreement": {
-  "agree": 7,
+  "agree": 6,
   "by_kind": {
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 2,
     "n": 3,
-    "rate": 0.3333333333333333
+    "rate": 0.6666666666666666
    },
    "move": {
     "agree": 0,
@@ -26,24 +26,24 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 5,
+    "agree": 2,
     "n": 9,
-    "rate": 0.5555555555555556
+    "rate": 0.2222222222222222
    }
   },
   "clean_boundary": {
-   "agree": 3,
+   "agree": 4,
    "n": 11,
-   "rate": 0.2727272727272727
+   "rate": 0.36363636363636365
   },
   "in_flight": {
-   "agree": 4,
+   "agree": 2,
    "n": 5
   },
   "n": 16,
-  "rate": 0.4375
+  "rate": 0.375
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 18,
  "bot_errors": 0,
  "bot_fallbacks": 2,
@@ -375,40 +375,6 @@
  "disagreements": [
   {
    "bot": {
-    "index": 2,
-    "text": "Bring battlefield Orianna, Exquisite"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "c locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.27666666666666667,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.37,
-     "text": "Bring battlefield Orianna, Exquisite"
-    },
-    {
-     "index": 1,
-     "share": 0.35333333333333333,
-     "text": "Bring battlefield Lady of Clockwork"
-    },
-    {
-     "index": 0,
-     "share": 0.27666666666666667,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
     "index": 1,
     "text": "Play Orianna, Exquisite to base"
    },
@@ -417,7 +383,7 @@
    "event_text": "c played Helm of Suppression from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.23,
+    "share": 0.14,
     "text": "Play Helm of Suppression to base"
    },
    "kind": "play",
@@ -425,81 +391,47 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.26666666666666666,
+     "share": 0.47,
      "text": "Play Orianna, Exquisite to base"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Play Helm of Suppression to base"
+     "index": 4,
+     "share": 0.22,
+     "text": "Play Battle Preparations"
     },
     {
-     "index": 3,
-     "share": 0.20333333333333334,
-     "text": "Play Stupefy targeting Evelynn, Entrancing"
+     "index": 2,
+     "share": 0.14,
+     "text": "Play Helm of Suppression to base"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Use Helm of Suppression"
+    "index": 0,
+    "text": "Pass"
    },
-   "clean_boundary": true,
-   "decision": 53,
-   "event_text": "c moved Orianna, Exquisite to base.",
+   "clean_boundary": false,
+   "decision": 42,
+   "event_text": "Played Battle Preparations from hand.",
    "human": {
     "index": 1,
-    "share": 0.19333333333333333,
-    "text": "Play Orianna, Exquisite to base"
+    "share": 0.47,
+    "text": "Play Battle Preparations"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.28,
-     "text": "Use Helm of Suppression"
-    },
-    {
-     "index": 1,
-     "share": 0.19333333333333333,
-     "text": "Play Orianna, Exquisite to base"
-    },
-    {
-     "index": 4,
-     "share": 0.18,
-     "text": "Play Bellows Breath targeting Evelynn, Entrancing"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Bellows Breath targeting Orianna, Exquisite"
-   },
-   "clean_boundary": true,
-   "decision": 57,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.18333333333333332,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.8166666666666667,
-     "text": "Play Bellows Breath targeting Orianna, Exquisite"
-    },
-    {
      "index": 0,
-     "share": 0.18333333333333332,
-     "text": "End turn"
+     "share": 0.53,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.47,
+     "text": "Play Battle Preparations"
     }
    ],
    "turn": 4
@@ -514,7 +446,7 @@
    "event_text": "c moved Orianna, Exquisite to Ornn's Forge.",
    "human": {
     "index": 2,
-    "share": 0.06,
+    "share": 0.02,
     "text": "Move Orianna, Exquisite to Ornn's Forge"
    },
    "kind": "move",
@@ -522,154 +454,256 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.8566666666666667,
+     "share": 0.91,
      "text": "Move Orianna, Exquisite to Bandle Scouts' Academy"
     },
     {
      "index": 2,
-     "share": 0.06,
+     "share": 0.02,
      "text": "Move Orianna, Exquisite to Ornn's Forge"
     },
     {
-     "index": 5,
-     "share": 0.02666666666666667,
-     "text": "Play Bellows Breath targeting Rengar, Trophy Hunter"
+     "index": 4,
+     "share": 0.02,
+     "text": "Play The Ball to Ornn's Forge"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Stupefy targeting Rengar, Trophy Hunter"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 75,
    "event_text": "c played The Ball from hand to Ornn's Forge.",
    "human": {
     "index": 2,
-    "share": 0.016666666666666666,
+    "share": 0.24,
     "text": "Play The Ball to Ornn's Forge"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.79,
-     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
+     "index": 0,
+     "share": 0.28,
+     "text": "End turn"
     },
     {
-     "index": 9,
-     "share": 0.08,
-     "text": "Use Helm of Suppression"
-    },
-    {
-     "index": 3,
-     "share": 0.056666666666666664,
-     "text": "Play Bellows Breath targeting Rengar, Trophy Hunter"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Stupefy targeting Rengar, Trophy Hunter"
-   },
-   "clean_boundary": true,
-   "decision": 87,
-   "event_text": "c ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.023333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.6233333333333333,
-     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
-    },
-    {
-     "index": 1,
-     "share": 0.27666666666666667,
-     "text": "Play Bellows Breath targeting Rengar, Trophy Hunter"
-    },
-    {
-     "index": 7,
-     "share": 0.07666666666666666,
-     "text": "Play Discipline"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Stupefy targeting Rengar, Trophy Hunter"
-   },
-   "clean_boundary": true,
-   "decision": 109,
-   "event_text": "c played The Ball from hand to Ornn's Forge.",
-   "human": {
-    "index": 5,
-    "share": 0.07333333333333333,
-    "text": "Play The Ball to Ornn's Forge"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.3566666666666667,
-     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
-    },
-    {
-     "index": 5,
-     "share": 0.07333333333333333,
+     "index": 2,
+     "share": 0.24,
      "text": "Play The Ball to Ornn's Forge"
     },
     {
-     "index": 12,
-     "share": 0.07333333333333333,
-     "text": "Play Discipline"
+     "index": 6,
+     "share": 0.17,
+     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 103,
+   "event_text": "Played Bellows Breath from hand.",
+   "human": {
+    "index": 7,
+    "share": 0.01,
+    "text": "Play Bellows Breath targeting Rengar, Trophy Hunter"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.9,
+     "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+    },
+    {
+     "index": 0,
+     "share": 0.01,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.01,
+     "text": "Move Frigid Jewel to Ornn's Forge"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 9,
+    "index": 1,
+    "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 109,
+   "event_text": "c played The Ball from hand to Ornn's Forge.",
+   "human": {
+    "index": 5,
+    "share": 0.04,
+    "text": "Play The Ball to Ornn's Forge"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.78,
+     "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+    },
+    {
+     "index": 5,
+     "share": 0.04,
+     "text": "Play The Ball to Ornn's Forge"
+    },
+    {
+     "index": 13,
+     "share": 0.04,
+     "text": "Play Battle Preparations"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+   },
+   "clean_boundary": true,
+   "decision": 120,
+   "event_text": "c ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.02,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.95,
+     "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+    },
+    {
+     "index": 0,
+     "share": 0.02,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.02,
+     "text": "Move Frigid Jewel to Ornn's Forge"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 129,
+   "event_text": "Played Eclipse from hand.",
+   "human": {
+    "index": 3,
+    "share": 0.31,
+    "text": "Play Eclipse targeting Vex, Apathetic"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.33,
+     "text": "Pass"
+    },
+    {
+     "index": 3,
+     "share": 0.31,
+     "text": "Play Eclipse targeting Vex, Apathetic"
+    },
+    {
+     "index": 2,
+     "share": 0.25,
+     "text": "Play Battle Preparations"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 134,
+   "event_text": "Played Discipline from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.16,
     "text": "Play Discipline"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.43,
+     "text": "Pass"
+    },
+    {
+     "index": 2,
+     "share": 0.41,
+     "text": "Play Battle Preparations"
+    },
+    {
+     "index": 1,
+     "share": 0.16,
+     "text": "Play Discipline"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Frigid Jewel to Bandle Scouts' Academy"
    },
    "clean_boundary": true,
    "decision": 148,
    "event_text": "c moved Orianna, Exquisite to base.",
    "human": {
     "index": 3,
-    "share": 0.016666666666666666,
+    "share": 0.04,
     "text": "Move Orianna, Exquisite to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.31333333333333335,
-     "text": "Play Discipline"
+     "index": 1,
+     "share": 0.48,
+     "text": "Move Frigid Jewel to Bandle Scouts' Academy"
     },
     {
      "index": 8,
-     "share": 0.2833333333333333,
+     "share": 0.1,
      "text": "Play Battle Preparations"
     },
     {
-     "index": 1,
-     "share": 0.14,
-     "text": "Move Frigid Jewel to Bandle Scouts' Academy"
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
     }
    ],
    "turn": 10
@@ -1049,7 +1083,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_orianna_vs_evelynn_rl2_8314941cd5e8a81e794b62fbab9a2f6e.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.444395367,
-  "seconds": 1.457267345
+  "bot_seconds": 0.8302660669999999,
+  "seconds": 0.848449566
  }
 }

@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 4,
+  "agree": 6,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 2,
     "n": 5,
-    "rate": 0.2
+    "rate": 0.4
    },
    "move": {
-    "agree": 0,
+    "agree": 1,
     "n": 4,
-    "rate": 0.0
+    "rate": 0.25
    },
    "play": {
     "agree": 2,
@@ -32,18 +32,18 @@
    }
   },
   "clean_boundary": {
-   "agree": 3,
+   "agree": 5,
    "n": 17,
-   "rate": 0.17647058823529413
+   "rate": 0.29411764705882354
   },
   "in_flight": {
    "agree": 1,
    "n": 2
   },
   "n": 19,
-  "rate": 0.21052631578947367
+  "rate": 0.3157894736842105
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 22,
  "bot_errors": 0,
  "bot_fallbacks": 3,
@@ -232,131 +232,34 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 10,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.37,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.63,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.37,
-     "text": "End turn"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
     "index": 2,
-    "text": "Move Plundering Poro to Trifarian War Camp"
+    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 19,
-   "event_text": "Emp4 moved Plundering Poro to Frozen Fortress.",
+   "decision": 48,
+   "event_text": "Emp4 played Ferrous Forerunner from hand to base.",
    "human": {
-    "index": 1,
-    "share": 0.23666666666666666,
-    "text": "Move Plundering Poro to Frozen Fortress"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.2733333333333333,
-     "text": "Move Plundering Poro to Trifarian War Camp"
-    },
-    {
-     "index": 1,
-     "share": 0.23666666666666666,
-     "text": "Move Plundering Poro to Frozen Fortress"
-    },
-    {
-     "index": 4,
-     "share": 0.18,
-     "text": "Play Kai'Sa, Survivor to base"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Watchful Sentry to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 25,
-   "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
-   "human": {
-    "index": 3,
-    "share": 0.12666666666666668,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 4,
+    "share": 0.01,
+    "text": "Play Ferrous Forerunner to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 2,
-     "share": 0.3233333333333333,
-     "text": "Play Watchful Sentry to Frozen Fortress"
+     "share": 0.36,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 5,
-     "share": 0.22666666666666666,
-     "text": "Use Daughter of the Void"
+     "index": 8,
+     "share": 0.17,
+     "text": "Play Bilgewater Tracker to base"
     },
-    {
-     "index": 0,
-     "share": 0.12666666666666668,
-     "text": "End turn"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
-   },
-   "clean_boundary": true,
-   "decision": 56,
-   "event_text": "Emp4 moved Plundering Poro to base.",
-   "human": {
-    "index": 1,
-    "share": 0.27666666666666667,
-    "text": "Move Plundering Poro to base"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
     {
      "index": 3,
-     "share": 0.45666666666666667,
+     "share": 0.16,
      "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
-    },
-    {
-     "index": 1,
-     "share": 0.27666666666666667,
-     "text": "Move Plundering Poro to base"
-    },
-    {
-     "index": 4,
-     "share": 0.08666666666666667,
-     "text": "Use Gold"
     }
    ],
    "turn": 4
@@ -364,33 +267,67 @@
   {
    "bot": {
     "index": 2,
-    "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+   },
+   "clean_boundary": true,
+   "decision": 56,
+   "event_text": "Emp4 moved Plundering Poro to base.",
+   "human": {
+    "index": 1,
+    "share": 0.03,
+    "text": "Move Plundering Poro to base"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.45,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    },
+    {
+     "index": 3,
+     "share": 0.25,
+     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+    },
+    {
+     "index": 0,
+     "share": 0.24,
+     "text": "End turn"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 57,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.08666666666666667,
+    "share": 0.23,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.4066666666666667,
-     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
-    },
-    {
      "index": 1,
-     "share": 0.19,
+     "share": 0.47,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 3,
-     "share": 0.17,
-     "text": "Use Gold"
+     "index": 2,
+     "share": 0.27,
+     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+    },
+    {
+     "index": 0,
+     "share": 0.23,
+     "text": "End turn"
     }
    ],
    "turn": 4
@@ -405,25 +342,25 @@
    "event_text": "Emp4 moved Plundering Poro to Frozen Fortress.",
    "human": {
     "index": 1,
-    "share": 0.2633333333333333,
+    "share": 0.18,
     "text": "Move Plundering Poro to Frozen Fortress"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 18,
-     "share": 0.5433333333333333,
-     "text": "Play Singularity targeting Plundering Poro, Kinkou Initiate"
-    },
-    {
      "index": 1,
-     "share": 0.2633333333333333,
+     "share": 0.18,
      "text": "Move Plundering Poro to Frozen Fortress"
     },
     {
+     "index": 18,
+     "share": 0.18,
+     "text": "Play Singularity targeting Plundering Poro, Kinkou Initiate"
+    },
+    {
      "index": 2,
-     "share": 0.15666666666666668,
+     "share": 0.15,
      "text": "Move Plundering Poro to Trifarian War Camp"
     }
    ],
@@ -447,18 +384,18 @@
    "top3": [
     {
      "index": 12,
-     "share": 0.77,
+     "share": 0.19,
      "text": "Play Singularity targeting Plundering Poro, Kinkou Initiate"
     },
     {
-     "index": 2,
-     "share": 0.09666666666666666,
-     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+     "index": 1,
+     "share": 0.15,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 1,
-     "share": 0.02666666666666667,
-     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+     "index": 9,
+     "share": 0.14,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 6
@@ -473,7 +410,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 18,
-    "share": 0.06666666666666667,
+    "share": 0.03,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -481,18 +418,18 @@
    "top3": [
     {
      "index": 10,
-     "share": 0.65,
+     "share": 0.17,
      "text": "Play Singularity targeting Plundering Poro, Kinkou Initiate"
     },
     {
-     "index": 17,
-     "share": 0.08,
-     "text": "Use Gold"
+     "index": 16,
+     "share": 0.14,
+     "text": "Play Falling Star"
     },
     {
-     "index": 18,
-     "share": 0.06666666666666667,
-     "text": "Use Daughter of the Void"
+     "index": 1,
+     "share": 0.13,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     }
    ],
    "turn": 6
@@ -515,52 +452,18 @@
    "top3": [
     {
      "index": 10,
-     "share": 0.45666666666666667,
+     "share": 0.19,
      "text": "Play Singularity targeting Plundering Poro, Kinkou Initiate"
     },
     {
-     "index": 6,
-     "share": 0.08333333333333333,
-     "text": "Play Bilgewater Tracker to base"
-    },
-    {
-     "index": 17,
-     "share": 0.08,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Gold to base"
-   },
-   "clean_boundary": true,
-   "decision": 96,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.12333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.28,
-     "text": "Play Gold to base"
+     "index": 16,
+     "share": 0.15,
+     "text": "Play Falling Star"
     },
     {
      "index": 1,
-     "share": 0.25333333333333335,
+     "share": 0.13,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
-    },
-    {
-     "index": 4,
-     "share": 0.24666666666666667,
-     "text": "Use Gold"
     }
    ],
    "turn": 6
@@ -571,38 +474,72 @@
     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
    },
    "clean_boundary": true,
+   "decision": 96,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.29,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.46,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    },
+    {
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.21,
+     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Noxus Hopeful to base"
+   },
+   "clean_boundary": true,
    "decision": 129,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 12,
-    "share": 0.05,
+    "share": 0.02,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 6,
+     "share": 0.51,
+     "text": "Play Noxus Hopeful to base"
+    },
+    {
      "index": 1,
-     "share": 0.13666666666666666,
+     "share": 0.12,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 9,
-     "share": 0.11666666666666667,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 3,
-     "share": 0.11,
-     "text": "Move Ferrous Forerunner to base"
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Watchful Sentry to Trifarian War Camp"
+    "index": 6,
+    "text": "Play Noxus Hopeful to base"
    },
    "clean_boundary": true,
    "decision": 132,
@@ -616,13 +553,13 @@
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.21333333333333335,
-     "text": "Play Watchful Sentry to Trifarian War Camp"
+     "index": 6,
+     "share": 0.55,
+     "text": "Play Noxus Hopeful to base"
     },
     {
      "index": 1,
-     "share": 0.17333333333333334,
+     "share": 0.11,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
@@ -635,68 +572,68 @@
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Noxus Hopeful to Trifarian War Camp"
+    "index": 6,
+    "text": "Play Noxus Hopeful to base"
    },
    "clean_boundary": true,
    "decision": 140,
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.023333333333333334,
+    "share": 0.02,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.6733333333333333,
-     "text": "Play Noxus Hopeful to Trifarian War Camp"
-    },
-    {
-     "index": 2,
-     "share": 0.08666666666666667,
-     "text": "Move Kai'Sa, Survivor to Trifarian War Camp"
+     "index": 6,
+     "share": 0.56,
+     "text": "Play Noxus Hopeful to base"
     },
     {
      "index": 1,
-     "share": 0.04666666666666667,
+     "share": 0.19,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    },
+    {
+     "index": 0,
+     "share": 0.11,
+     "text": "End turn"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Noxus Hopeful to Trifarian War Camp"
+    "index": 4,
+    "text": "Play Noxus Hopeful to base"
    },
    "clean_boundary": true,
    "decision": 143,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.01,
+    "share": 0.11,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.51,
-     "text": "Play Noxus Hopeful to Trifarian War Camp"
-    },
-    {
-     "index": 6,
-     "share": 0.24333333333333335,
-     "text": "Play Hextech Ray targeting Ferrous Forerunner"
-    },
-    {
      "index": 4,
-     "share": 0.07,
+     "share": 0.61,
      "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    },
+    {
+     "index": 0,
+     "share": 0.11,
+     "text": "End turn"
     }
    ],
    "turn": 8
@@ -711,7 +648,7 @@
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 1,
-    "share": 0.14333333333333334,
+    "share": 0.02,
     "text": "Play Hextech Ray targeting Rengar, Trophy Hunter"
    },
    "kind": "play",
@@ -719,12 +656,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.8566666666666667,
+     "share": 0.98,
      "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.14333333333333334,
+     "share": 0.02,
      "text": "Play Hextech Ray targeting Rengar, Trophy Hunter"
     }
    ],
@@ -1002,7 +939,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_fiora_rl2_d54e11a8ed76636ec837e3671fa4de37.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 2.242134351,
-  "seconds": 2.267107075
+  "bot_seconds": 0.718701024,
+  "seconds": 0.736362667
  }
 }

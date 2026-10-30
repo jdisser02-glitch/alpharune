@@ -3,17 +3,17 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 7,
+  "agree": 9,
   "by_kind": {
    "ability": {
-    "agree": 1,
+    "agree": 0,
     "n": 3,
-    "rate": 0.3333333333333333
+    "rate": 0.0
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "combat_damage": {
     "agree": 0,
@@ -21,9 +21,9 @@
     "rate": 0.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 4,
     "n": 7,
-    "rate": 0.14285714285714285
+    "rate": 0.5714285714285714
    },
    "move": {
     "agree": 2,
@@ -31,29 +31,29 @@
     "rate": 0.2857142857142857
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
-    "agree": 3,
+    "agree": 1,
     "n": 15,
-    "rate": 0.2
+    "rate": 0.06666666666666667
    }
   },
   "clean_boundary": {
-   "agree": 6,
+   "agree": 7,
    "n": 26,
-   "rate": 0.23076923076923078
+   "rate": 0.2692307692307692
   },
   "in_flight": {
-   "agree": 1,
+   "agree": 2,
    "n": 9
   },
   "n": 35,
-  "rate": 0.2
+  "rate": 0.2571428571428571
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 40,
  "bot_errors": 0,
  "bot_fallbacks": 5,
@@ -566,48 +566,14 @@
   {
    "bot": {
     "index": 1,
-    "text": "Bring battlefield Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Emp4 locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.2966666666666667,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.36666666666666664,
-     "text": "Bring battlefield Daughter of the Void"
-    },
-    {
-     "index": 2,
-     "share": 0.33666666666666667,
-     "text": "Bring battlefield Kai'Sa, Survivor"
-    },
-    {
-     "index": 0,
-     "share": 0.2966666666666667,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Use Daughter of the Void"
+    "text": "Play Watchful Sentry to base"
    },
    "clean_boundary": true,
    "decision": 7,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.24666666666666667,
+    "share": 0.28,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -615,55 +581,21 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.37666666666666665,
+     "share": 0.56,
      "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 2,
-     "share": 0.37666666666666665,
-     "text": "Use Daughter of the Void"
+     "index": 0,
+     "share": 0.28,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.24666666666666667,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.16,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Use Gold"
-   },
-   "clean_boundary": true,
-   "decision": 26,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.25,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.38333333333333336,
-     "text": "Use Gold"
-    },
-    {
-     "index": 2,
-     "share": 0.36666666666666664,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.25,
-     "text": "End turn"
-    }
-   ],
-   "turn": 2
   },
   {
    "bot": {
@@ -675,7 +607,7 @@
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 1,
-    "share": 0.38,
+    "share": 0.21,
     "text": "Play Stupefy targeting Card Sharp"
    },
    "kind": "play",
@@ -683,154 +615,154 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.4266666666666667,
+     "share": 0.45,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.38,
+     "share": 0.21,
      "text": "Play Stupefy targeting Card Sharp"
     },
     {
-     "index": 4,
-     "share": 0.11,
-     "text": "Use Gold"
+     "index": 5,
+     "share": 0.19,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 45,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.1,
+    "share": 0.07,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.58,
+     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    },
+    {
      "index": 2,
-     "share": 0.3233333333333333,
+     "share": 0.22,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 5,
-     "share": 0.22,
-     "text": "Use Gold"
-    },
-    {
-     "index": 6,
-     "share": 0.15,
-     "text": "Use Daughter of the Void"
+     "index": 3,
+     "share": 0.07,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 48,
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.10666666666666667,
+    "share": 0.07,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.52,
+     "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
+    },
+    {
      "index": 2,
-     "share": 0.5866666666666667,
+     "share": 0.24,
      "text": "Move Kai'Sa, Survivor to Frozen Fortress"
     },
     {
-     "index": 4,
-     "share": 0.10666666666666667,
-     "text": "Play Noxus Hopeful to base"
-    },
-    {
-     "index": 3,
-     "share": 0.09666666666666666,
-     "text": "Play Watchful Sentry to base"
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    "index": 1,
+    "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 51,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.06666666666666667,
+    "share": 0.14,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.47333333333333333,
-     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
-    },
-    {
      "index": 1,
-     "share": 0.16333333333333333,
+     "share": 0.59,
      "text": "Move Kai'Sa, Survivor to Sigil of the Storm"
     },
     {
-     "index": 4,
-     "share": 0.16333333333333333,
-     "text": "Use Daughter of the Void"
+     "index": 2,
+     "share": 0.24,
+     "text": "Move Kai'Sa, Survivor to Frozen Fortress"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 15,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 68,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 18,
-    "share": 0.006666666666666667,
+    "share": 0.19,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.8866666666666667,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.03666666666666667,
-     "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
      "index": 15,
-     "share": 0.023333333333333334,
+     "share": 0.27,
      "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 18,
+     "share": 0.19,
+     "text": "Play Brynhir Thundersong to base"
+    },
+    {
+     "index": 2,
+     "share": 0.16,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 6
@@ -845,7 +777,7 @@
    "event_text": "Played Discipline from hand.",
    "human": {
     "index": 1,
-    "share": 0.12666666666666668,
+    "share": 0.24,
     "text": "Play Discipline"
    },
    "kind": "play",
@@ -853,26 +785,26 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.5233333333333333,
+     "share": 0.35,
      "text": "Pass"
     },
     {
-     "index": 2,
-     "share": 0.18,
-     "text": "Use Gold"
+     "index": 3,
+     "share": 0.26,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 3,
-     "share": 0.17,
-     "text": "Use Daughter of the Void"
+     "index": 1,
+     "share": 0.24,
+     "text": "Play Discipline"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 83,
@@ -886,87 +818,87 @@
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.33,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.65,
+     "share": 0.31,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
-     "share": 0.20666666666666667,
+     "share": 0.22,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
-     "index": 15,
-     "share": 0.07333333333333333,
-     "text": "Use Gold"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 89,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 8,
-    "share": 0.10666666666666667,
+    "share": 0.07,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.44,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.31333333333333335,
+     "share": 0.22,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
-     "share": 0.22333333333333333,
+     "share": 0.17,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
-     "index": 9,
-     "share": 0.21666666666666667,
-     "text": "Hide Temporal Breach"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 92,
    "event_text": "Emp4 moved Noxus Hopeful to Sigil of the Storm.",
    "human": {
     "index": 1,
-    "share": 0.21333333333333335,
+    "share": 0.18,
     "text": "Move Noxus Hopeful to Sigil of the Storm"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.49,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.4266666666666667,
+     "share": 0.23,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
-     "share": 0.21333333333333335,
+     "share": 0.18,
      "text": "Move Noxus Hopeful to Sigil of the Storm"
-    },
-    {
-     "index": 8,
-     "share": 0.17666666666666667,
-     "text": "Hide Temporal Breach"
     }
    ],
    "turn": 6
@@ -981,7 +913,7 @@
    "event_text": "Emp4 moved Noxus Hopeful to Sigil of the Storm.",
    "human": {
     "index": 1,
-    "share": 0.17333333333333334,
+    "share": 0.17,
     "text": "Move Noxus Hopeful to Sigil of the Storm"
    },
    "kind": "move",
@@ -989,182 +921,119 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.36,
-     "text": "End turn"
-    },
-    {
-     "index": 4,
-     "share": 0.19,
-     "text": "Hide Temporal Breach"
-    },
-    {
-     "index": 3,
-     "share": 0.18666666666666668,
-     "text": "Use Gold"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Use Gold"
-   },
-   "clean_boundary": true,
-   "decision": 108,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.27666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.45666666666666667,
-     "text": "Use Gold"
-    },
-    {
-     "index": 0,
-     "share": 0.27666666666666667,
+     "share": 0.43,
      "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.26666666666666666,
-     "text": "Hide Temporal Breach"
+     "share": 0.32,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Move Noxus Hopeful to Sigil of the Storm"
     }
    ],
    "turn": 6
   },
   {
    "bot": {
-    "index": 12,
-    "text": "Play Time Warp"
+    "index": 8,
+    "text": "Play Lecturing Yordle to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 137,
    "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.05333333333333334,
+    "share": 0.03,
     "text": "Play Thousand-Tailed Watcher to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.84,
+     "text": "Play Lecturing Yordle to Frozen Fortress"
+    },
+    {
+     "index": 1,
+     "share": 0.03,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
      "index": 12,
-     "share": 0.26666666666666666,
+     "share": 0.02,
      "text": "Play Time Warp"
-    },
-    {
-     "index": 11,
-     "share": 0.20333333333333334,
-     "text": "Play Temporal Breach"
-    },
-    {
-     "index": 14,
-     "share": 0.09333333333333334,
-     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 8
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting The Empyrean"
+    "index": 4,
+    "text": "Play Lecturing Yordle to Frozen Fortress"
    },
    "clean_boundary": true,
-   "decision": 152,
-   "event_text": "Emp4 ended their turn.",
+   "decision": 149,
+   "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
-    "index": 0,
-    "share": 0.016666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6133333333333333,
-     "text": "Play Stupefy targeting The Empyrean"
-    },
-    {
-     "index": 7,
-     "share": 0.16666666666666666,
-     "text": "Use Gold"
-    },
-    {
-     "index": 8,
-     "share": 0.15,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
     "index": 1,
-    "text": "Play Stupefy targeting The Empyrean"
+    "share": 0.01,
+    "text": "Play Watchful Sentry to base"
    },
-   "clean_boundary": false,
-   "decision": 157,
-   "event_text": "Emp4 ended showdown responses at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.013333333333333334,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.9866666666666667,
-     "text": "Play Stupefy targeting The Empyrean"
+     "index": 4,
+     "share": 0.86,
+     "text": "Play Lecturing Yordle to Frozen Fortress"
     },
     {
      "index": 0,
-     "share": 0.013333333333333334,
-     "text": "Pass focus"
+     "share": 0.05,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.01,
+     "text": "Play Watchful Sentry to base"
     }
    ],
-   "turn": 9
+   "turn": 8
   },
   {
    "bot": {
-    "index": 12,
-    "text": "Play Stupefy targeting The Empyrean"
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 184,
    "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
    "human": {
     "index": 7,
-    "share": 0.016666666666666666,
+    "share": 0.19,
     "text": "Play Thousand-Tailed Watcher to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 12,
-     "share": 0.37666666666666665,
-     "text": "Play Stupefy targeting The Empyrean"
-    },
-    {
      "index": 1,
-     "share": 0.34,
+     "share": 0.41,
      "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
     },
     {
+     "index": 7,
+     "share": 0.19,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
      "index": 10,
-     "share": 0.09666666666666666,
+     "share": 0.16,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -1172,8 +1041,8 @@
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Use Daughter of the Void"
+    "index": 0,
+    "text": "Pass"
    },
    "clean_boundary": false,
    "decision": 194,
@@ -1187,34 +1056,34 @@
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.33,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 1,
-     "share": 0.32,
-     "text": "Play Stupefy targeting The Empyrean"
-    },
-    {
      "index": 0,
-     "share": 0.18666666666666668,
+     "share": 0.34,
      "text": "Pass"
+    },
+    {
+     "index": 9,
+     "share": 0.32,
+     "text": "Use Gold"
+    },
+    {
+     "index": 10,
+     "share": 0.25,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 0,
-    "text": "Pass"
+    "index": 1,
+    "text": "Use Gold"
    },
    "clean_boundary": false,
    "decision": 196,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 2,
-    "share": 0.056666666666666664,
+    "share": 0.32,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -1222,17 +1091,17 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.8866666666666667,
+     "share": 0.34,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.056666666666666664,
+     "share": 0.34,
      "text": "Use Gold"
     },
     {
      "index": 2,
-     "share": 0.056666666666666664,
+     "share": 0.32,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -1240,34 +1109,68 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 203,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 16,
-    "share": 0.06333333333333334,
+    "share": 0.06,
     "text": "Play Hextech Ray targeting The Empyrean"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.8966666666666666,
-     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+     "index": 1,
+     "share": 0.55,
+     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
     },
     {
-     "index": 16,
-     "share": 0.06333333333333334,
-     "text": "Play Hextech Ray targeting The Empyrean"
+     "index": 15,
+     "share": 0.18,
+     "text": "Play Temporal Breach"
     },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
+   },
+   "clean_boundary": true,
+   "decision": 215,
+   "event_text": "Emp4 moved Thousand-Tailed Watcher to Frozen Fortress.",
+   "human": {
+    "index": 2,
+    "share": 0.03,
+    "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
     {
      "index": 1,
-     "share": 0.03,
+     "share": 0.77,
      "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
+    },
+    {
+     "index": 15,
+     "share": 0.13,
+     "text": "Use Gold"
+    },
+    {
+     "index": 0,
+     "share": 0.07,
+     "text": "End turn"
     }
    ],
    "turn": 10
@@ -1282,7 +1185,7 @@
    "event_text": "",
    "human": {
     "index": 1,
-    "share": 0.06,
+    "share": 0.3,
     "text": "Assign damage: 3 to Astral Heron; 3 to The Empyrean;"
    },
    "kind": "combat_damage",
@@ -1290,12 +1193,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.94,
+     "share": 0.7,
      "text": "Assign damage: 4 to The Empyrean; 2 to Astral Heron;"
     },
     {
      "index": 1,
-     "share": 0.06,
+     "share": 0.3,
      "text": "Assign damage: 3 to Astral Heron; 3 to The Empyrean;"
     }
    ],
@@ -1303,8 +1206,8 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 220,
@@ -1318,18 +1221,18 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.9633333333333334,
-     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
-    },
-    {
      "index": 1,
-     "share": 0.023333333333333334,
+     "share": 0.75,
      "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
     },
     {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    },
+    {
      "index": 0,
-     "share": 0.006666666666666667,
+     "share": 0.1,
      "text": "End turn"
     }
    ],
@@ -1337,101 +1240,101 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 228,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.016666666666666666,
+    "share": 0.16,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.58,
+     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
+    },
+    {
      "index": 2,
-     "share": 0.9566666666666667,
+     "share": 0.25,
      "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
     },
     {
      "index": 0,
-     "share": 0.016666666666666666,
+     "share": 0.16,
      "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.013333333333333334,
-     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Smoke Screen targeting The Empyrean"
+    "index": 1,
+    "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
    "clean_boundary": true,
    "decision": 242,
    "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.013333333333333334,
+    "share": 0.06,
     "text": "Play Brynhir Thundersong to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.6833333333333333,
-     "text": "Play Smoke Screen targeting The Empyrean"
+     "index": 1,
+     "share": 0.72,
+     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
+    },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
     },
     {
      "index": 3,
-     "share": 0.14,
+     "share": 0.06,
      "text": "Play Bilgewater Tracker to base"
-    },
-    {
-     "index": 8,
-     "share": 0.04666666666666667,
-     "text": "Play Discipline"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Use Gold"
+    "index": 0,
+    "text": "Pass"
    },
    "clean_boundary": false,
    "decision": 249,
    "event_text": "Played Discipline from hand.",
    "human": {
     "index": 1,
-    "share": 0.01,
+    "share": 0.13,
     "text": "Play Discipline"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.39,
+     "text": "Pass"
+    },
+    {
      "index": 8,
-     "share": 0.9033333333333333,
+     "share": 0.25,
      "text": "Use Gold"
     },
     {
-     "index": 2,
-     "share": 0.05333333333333334,
-     "text": "Play Smoke Screen targeting The Empyrean"
-    },
-    {
      "index": 9,
-     "share": 0.023333333333333334,
+     "share": 0.2,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -1439,67 +1342,101 @@
   },
   {
    "bot": {
-    "index": 13,
-    "text": "Play Falling Star"
+    "index": 0,
+    "text": "Pass"
    },
-   "clean_boundary": true,
-   "decision": 260,
-   "event_text": "Played Temporal Breach from hand.",
+   "clean_boundary": false,
+   "decision": 253,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
-    "index": 6,
-    "share": 0.05,
-    "text": "Play Temporal Breach"
+    "index": 8,
+    "share": 0.29,
+    "text": "Use Daughter of the Void"
    },
-   "kind": "play",
+   "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 13,
-     "share": 0.36,
-     "text": "Play Falling Star"
+     "index": 0,
+     "share": 0.43,
+     "text": "Pass"
     },
     {
-     "index": 4,
-     "share": 0.24333333333333335,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 8,
+     "share": 0.29,
+     "text": "Use Daughter of the Void"
     },
     {
-     "index": 5,
-     "share": 0.12666666666666668,
-     "text": "Play Watchful Sentry to base"
+     "index": 7,
+     "share": 0.22,
+     "text": "Use Gold"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 272,
-   "event_text": "Emp4 moved Thousand-Tailed Watcher to Sigil of the Storm.",
-   "human": {
     "index": 1,
-    "share": 0.013333333333333334,
     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
    },
-   "kind": "move",
+   "clean_boundary": true,
+   "decision": 260,
+   "event_text": "Played Temporal Breach from hand.",
+   "human": {
+    "index": 6,
+    "share": 0.03,
+    "text": "Play Temporal Breach"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.7366666666666667,
-     "text": "Play Falling Star"
+     "index": 1,
+     "share": 0.77,
+     "text": "Move Thousand-Tailed Watcher to Sigil of the Storm"
     },
     {
      "index": 4,
-     "share": 0.12,
-     "text": "Play Smoke Screen targeting The Empyrean"
+     "share": 0.05,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 3,
-     "share": 0.08333333333333333,
+     "index": 2,
+     "share": 0.04,
+     "text": "Move Thousand-Tailed Watcher to Frozen Fortress"
+    }
+   ],
+   "turn": 12
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 280,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 8,
+    "share": 0.21,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.36,
+     "text": "End turn"
+    },
+    {
+     "index": 8,
+     "share": 0.21,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 1,
+     "share": 0.19,
      "text": "Play Watchful Sentry to base"
     }
    ],
@@ -1858,7 +1795,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_nasus_rl2_dc882c4b34ad0972d43b57e591cd0a32.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 3.300983509999999,
-  "seconds": 3.330273616
+  "bot_seconds": 1.7101192519999997,
+  "seconds": 1.749344656
  }
 }

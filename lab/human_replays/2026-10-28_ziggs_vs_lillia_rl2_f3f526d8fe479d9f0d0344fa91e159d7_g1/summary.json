@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 7,
+  "agree": 17,
   "by_kind": {
    "ability": {
-    "agree": 1,
+    "agree": 2,
     "n": 5,
-    "rate": 0.2
+    "rate": 0.4
    },
    "battlefield": {
     "agree": 1,
@@ -16,14 +16,14 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 3,
     "n": 5,
-    "rate": 0.4
+    "rate": 0.6
    },
    "move": {
-    "agree": 0,
+    "agree": 1,
     "n": 5,
-    "rate": 0.0
+    "rate": 0.2
    },
    "pass_focus": {
     "agree": 2,
@@ -31,24 +31,24 @@
     "rate": 1.0
    },
    "play": {
-    "agree": 1,
+    "agree": 8,
     "n": 15,
-    "rate": 0.06666666666666667
+    "rate": 0.5333333333333333
    }
   },
   "clean_boundary": {
-   "agree": 4,
+   "agree": 14,
    "n": 30,
-   "rate": 0.13333333333333333
+   "rate": 0.4666666666666667
   },
   "in_flight": {
    "agree": 3,
    "n": 3
   },
   "n": 33,
-  "rate": 0.21212121212121213
+  "rate": 0.5151515151515151
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 37,
  "bot_errors": 0,
  "bot_fallbacks": 4,
@@ -407,33 +407,33 @@
  "disagreements": [
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 5,
+    "text": "Play Treasure Trove to base"
    },
    "clean_boundary": true,
    "decision": 6,
    "event_text": "tom played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.14333333333333334,
+    "share": 0.25,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.22333333333333333,
-     "text": "End turn"
+     "index": 5,
+     "share": 0.45,
+     "text": "Play Treasure Trove to base"
     },
     {
-     "index": 3,
-     "share": 0.21666666666666667,
-     "text": "Play Traveling Merchant to base"
+     "index": 6,
+     "share": 0.28,
+     "text": "Play Acceptable Losses"
     },
     {
      "index": 2,
-     "share": 0.14333333333333334,
+     "share": 0.25,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -441,101 +441,33 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bilgewater Tracker to Rockfall Path"
-   },
-   "clean_boundary": true,
-   "decision": 19,
-   "event_text": "tom moved Bilgewater Tracker to Abandoned Hall.",
-   "human": {
     "index": 1,
-    "share": 0.03666666666666667,
-    "text": "Move Bilgewater Tracker to Abandoned Hall"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.4,
-     "text": "Move Bilgewater Tracker to Rockfall Path"
-    },
-    {
-     "index": 10,
-     "share": 0.09666666666666666,
-     "text": "Play Flash"
-    },
-    {
-     "index": 8,
-     "share": 0.09333333333333334,
-     "text": "Play Acceptable Losses"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 22,
-   "event_text": "tom moved Ziggs, Explosive to Abandoned Hall.",
-   "human": {
-    "index": 8,
-    "share": 0.013333333333333334,
-    "text": "Play Ziggs, Explosive to Abandoned Hall"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.2733333333333333,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 13,
-     "share": 0.15333333333333332,
-     "text": "Use Hexplosives Expert"
-    },
-    {
-     "index": 12,
-     "share": 0.14333333333333334,
-     "text": "Play Flash"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
+    "text": "Play Acceptable Losses"
    },
    "clean_boundary": true,
    "decision": 27,
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 2,
-    "share": 0.21,
+    "share": 0.06,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 0,
-     "share": 0.5733333333333334,
-     "text": "End turn"
-    },
-    {
      "index": 1,
-     "share": 0.21666666666666667,
+     "share": 0.85,
      "text": "Play Acceptable Losses"
     },
     {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.21,
+     "share": 0.06,
      "text": "Use Hexplosives Expert"
     }
    ],
@@ -543,110 +475,110 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Ziggs, Explosive to Rockfall Path"
+    "index": 7,
+    "text": "Play Treasure Trove to base"
    },
    "clean_boundary": true,
    "decision": 66,
    "event_text": "Played Acceptable Losses from hand.",
    "human": {
     "index": 8,
-    "share": 0.02,
+    "share": 0.04,
     "text": "Play Acceptable Losses"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.7166666666666667,
-     "text": "Move Ziggs, Explosive to Rockfall Path"
+     "index": 7,
+     "share": 0.38,
+     "text": "Play Treasure Trove to base"
     },
     {
-     "index": 10,
-     "share": 0.06666666666666667,
-     "text": "Play Flash"
+     "index": 1,
+     "share": 0.24,
+     "text": "Move Ziggs, Explosive to Abandoned Hall"
     },
     {
-     "index": 4,
-     "share": 0.043333333333333335,
-     "text": "Play Traveling Merchant to base"
+     "index": 9,
+     "share": 0.11,
+     "text": "Play Falling Star"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Play Flash"
+    "index": 7,
+    "text": "Play Treasure Trove to base"
    },
    "clean_boundary": true,
    "decision": 78,
    "event_text": "Played Falling Star from hand.",
    "human": {
     "index": 8,
-    "share": 0.14666666666666667,
+    "share": 0.18,
     "text": "Play Falling Star"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.5333333333333333,
-     "text": "Play Flash"
+     "index": 7,
+     "share": 0.41,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 6,
+     "share": 0.33,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
      "index": 8,
-     "share": 0.14666666666666667,
+     "share": 0.18,
      "text": "Play Falling Star"
-    },
-    {
-     "index": 3,
-     "share": 0.08333333333333333,
-     "text": "Play Traveling Merchant to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Flash"
+    "index": 7,
+    "text": "Play Treasure Trove to base"
    },
    "clean_boundary": true,
    "decision": 89,
    "event_text": "tom played Amateur Demolitionist from hand to base.",
    "human": {
     "index": 6,
-    "share": 0.06333333333333334,
+    "share": 0.42,
     "text": "Play Amateur Demolitionist to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.3433333333333333,
-     "text": "Play Flash"
+     "index": 7,
+     "share": 0.49,
+     "text": "Play Treasure Trove to base"
     },
     {
-     "index": 2,
-     "share": 0.23,
-     "text": "Move Ziggs, Explosive to Rockfall Path"
+     "index": 6,
+     "share": 0.42,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 3,
-     "share": 0.12,
-     "text": "Play Traveling Merchant to base"
+     "index": 0,
+     "share": 0.05,
+     "text": "End turn"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Ziggs, Explosive to Rockfall Path"
+    "index": 10,
+    "text": "Play Treasure Trove to base"
    },
    "clean_boundary": true,
    "decision": 110,
@@ -660,192 +592,22 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.7033333333333334,
-     "text": "Move Ziggs, Explosive to Rockfall Path"
-    },
-    {
-     "index": 1,
-     "share": 0.06,
-     "text": "Move Ziggs, Explosive to Abandoned Hall"
-    },
-    {
-     "index": 7,
-     "share": 0.05,
-     "text": "Play Traveling Merchant to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Flash"
-   },
-   "clean_boundary": true,
-   "decision": 113,
-   "event_text": "tom played Treasure Trove from hand to base.",
-   "human": {
-    "index": 6,
-    "share": 0.043333333333333335,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.5033333333333333,
-     "text": "Play Flash"
-    },
-    {
-     "index": 5,
-     "share": 0.13,
-     "text": "Play Grim Apothecary to base"
-    },
-    {
-     "index": 3,
-     "share": 0.09666666666666666,
-     "text": "Play Traveling Merchant to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Flash"
-   },
-   "clean_boundary": true,
-   "decision": 116,
-   "event_text": "tom played Treasure Trove from hand to base.",
-   "human": {
-    "index": 6,
-    "share": 0.06666666666666667,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.33,
-     "text": "Play Flash"
-    },
-    {
-     "index": 4,
-     "share": 0.12,
-     "text": "Play Grim Apothecary to base"
-    },
-    {
      "index": 10,
-     "share": 0.12,
-     "text": "Use Treasure Trove"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Use Treasure Trove"
-   },
-   "clean_boundary": true,
-   "decision": 119,
-   "event_text": "tom played Treasure Trove from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.1,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.38666666666666666,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 3,
-     "share": 0.22333333333333333,
-     "text": "Play Long Sword to base"
-    },
-    {
-     "index": 4,
-     "share": 0.1,
+     "share": 0.82,
      "text": "Play Treasure Trove to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Use Treasure Trove"
-   },
-   "clean_boundary": true,
-   "decision": 122,
-   "event_text": "tom ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.21333333333333335,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.5733333333333334,
-     "text": "Use Treasure Trove"
     },
     {
      "index": 0,
-     "share": 0.21333333333333335,
+     "share": 0.08,
      "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.18666666666666668,
+     "share": 0.05,
      "text": "Move Ziggs, Explosive to Abandoned Hall"
     }
    ],
    "turn": 7
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 142,
-   "event_text": "tom played Ferrous Forerunner from hand to base.",
-   "human": {
-    "index": 3,
-    "share": 0.013333333333333334,
-    "text": "Play Ferrous Forerunner to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.8233333333333334,
-     "text": "End turn"
-    },
-    {
-     "index": 9,
-     "share": 0.06,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 5,
-     "share": 0.02,
-     "text": "Play Long Sword to base"
-    }
-   ],
-   "turn": 9
   },
   {
    "bot": {
@@ -857,7 +619,7 @@
    "event_text": "tom exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 5,
-    "share": 0.02,
+    "share": 0.07,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
@@ -865,119 +627,119 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.81,
+     "share": 0.35,
      "text": "End turn"
     },
     {
-     "index": 7,
-     "share": 0.07666666666666666,
-     "text": "Use Treasure Trove"
+     "index": 4,
+     "share": 0.24,
+     "text": "Play The List to base"
     },
     {
-     "index": 3,
-     "share": 0.02666666666666667,
-     "text": "Play Noxus Hopeful to base"
+     "index": 2,
+     "share": 0.1,
+     "text": "Move Ziggs, Explosive to Rockfall Path"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 0,
-    "text": "End turn"
+    "index": 8,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 162,
    "event_text": "tom moved Ferrous Forerunner to Rockfall Path.",
    "human": {
     "index": 2,
-    "share": 0.06666666666666667,
+    "share": 0.09,
     "text": "Move Ferrous Forerunner to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.27,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 9,
+     "share": 0.18,
+     "text": "Play The List to base"
+    },
+    {
      "index": 0,
-     "share": 0.6966666666666667,
+     "share": 0.16,
      "text": "End turn"
-    },
-    {
-     "index": 13,
-     "share": 0.08,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 2,
-     "share": 0.06666666666666667,
-     "text": "Move Ferrous Forerunner to Rockfall Path"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 9,
-    "text": "Use Treasure Trove"
+    "index": 4,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 165,
    "event_text": "tom played The List from hand to base.",
    "human": {
     "index": 5,
-    "share": 0.03666666666666667,
+    "share": 0.18,
     "text": "Play The List to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 9,
-     "share": 0.68,
-     "text": "Use Treasure Trove"
+     "index": 4,
+     "share": 0.24,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 0,
-     "share": 0.06333333333333334,
+     "share": 0.19,
      "text": "End turn"
     },
     {
-     "index": 4,
-     "share": 0.04666666666666667,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 5,
+     "share": 0.18,
+     "text": "Play The List to base"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Use Treasure Trove"
+    "index": 4,
+    "text": "Play Amateur Demolitionist to base"
    },
    "clean_boundary": true,
    "decision": 171,
    "event_text": "tom played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.06,
+    "share": 0.24,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.65,
-     "text": "Use Treasure Trove"
+     "index": 4,
+     "share": 0.32,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 1,
-     "share": 0.06666666666666667,
-     "text": "Move Ziggs, Explosive to Abandoned Hall"
+     "index": 3,
+     "share": 0.24,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 0,
-     "share": 0.06333333333333334,
+     "share": 0.15,
      "text": "End turn"
     }
    ],
@@ -993,7 +755,7 @@
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.03666666666666667,
+    "share": 0.17,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1001,17 +763,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.73,
+     "share": 0.36,
      "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 12,
-     "share": 0.14666666666666667,
-     "text": "Use Treasure Trove"
+     "index": 3,
+     "share": 0.29,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
      "index": 0,
-     "share": 0.03666666666666667,
+     "share": 0.17,
      "text": "End turn"
     }
    ],
@@ -1019,34 +781,34 @@
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Detonate targeting Bomb"
+    "index": 18,
+    "text": "Use The List"
    },
    "clean_boundary": true,
    "decision": 186,
    "event_text": "tom exhausted Treasure Trove.",
    "human": {
     "index": 19,
-    "share": 0.08333333333333333,
+    "share": 0.05,
     "text": "Use Treasure Trove"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
+     "index": 18,
+     "share": 0.23,
+     "text": "Use The List"
+    },
+    {
      "index": 10,
-     "share": 0.49,
+     "share": 0.2,
      "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 1,
-     "share": 0.21,
-     "text": "Move Ferrous Forerunner to base"
-    },
-    {
-     "index": 18,
-     "share": 0.10333333333333333,
-     "text": "Use The List"
+     "index": 8,
+     "share": 0.18,
+     "text": "Play Amateur Demolitionist to base"
     }
    ],
    "turn": 13
@@ -1061,7 +823,7 @@
    "event_text": "tom played Amateur Demolitionist from hand to base.",
    "human": {
     "index": 8,
-    "share": 0.01,
+    "share": 0.27,
     "text": "Play Amateur Demolitionist to base"
    },
    "kind": "play",
@@ -1069,26 +831,26 @@
    "top3": [
     {
      "index": 12,
-     "share": 0.7266666666666667,
+     "share": 0.39,
      "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 1,
-     "share": 0.06666666666666667,
-     "text": "Move Ferrous Forerunner to base"
+     "index": 8,
+     "share": 0.27,
+     "text": "Play Amateur Demolitionist to base"
     },
     {
-     "index": 2,
-     "share": 0.04666666666666667,
-     "text": "Move Ziggs, Explosive to Abandoned Hall"
+     "index": 19,
+     "share": 0.17,
+     "text": "Use The List"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Ziggs, Explosive to Abandoned Hall"
+    "index": 12,
+    "text": "Use The List"
    },
    "clean_boundary": true,
    "decision": 213,
@@ -1102,163 +864,61 @@
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.6533333333333333,
-     "text": "Move Ziggs, Explosive to Abandoned Hall"
-    },
-    {
-     "index": 13,
-     "share": 0.09,
-     "text": "Use Treasure Trove"
-    },
-    {
      "index": 12,
-     "share": 0.06333333333333334,
-     "text": "Use The List"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Use Treasure Trove"
-   },
-   "clean_boundary": true,
-   "decision": 216,
-   "event_text": "tom played Ferrous Forerunner from hand to Abandoned Hall.",
-   "human": {
-    "index": 5,
-    "share": 0.01,
-    "text": "Play Ferrous Forerunner to Abandoned Hall"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.58,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 10,
-     "share": 0.24333333333333335,
+     "share": 0.34,
      "text": "Use The List"
     },
     {
-     "index": 6,
-     "share": 0.03666666666666667,
+     "index": 9,
+     "share": 0.3,
      "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 0,
+     "share": 0.19,
+     "text": "End turn"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Use Treasure Trove"
+    "index": 4,
+    "text": "Use The List"
    },
    "clean_boundary": true,
    "decision": 224,
    "event_text": "tom ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.05333333333333334,
+    "share": 0.33,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.43,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 1,
-     "share": 0.30666666666666664,
-     "text": "Move Ferrous Forerunner to base"
-    },
-    {
      "index": 4,
-     "share": 0.16666666666666666,
+     "share": 0.52,
      "text": "Use The List"
+    },
+    {
+     "index": 0,
+     "share": 0.33,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.07,
+     "text": "Move Ziggs, Explosive to Rockfall Path"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Ferrous Forerunner to base"
-   },
-   "clean_boundary": true,
-   "decision": 250,
-   "event_text": "tom exhausted The List.",
-   "human": {
-    "index": 17,
-    "share": 0.056666666666666664,
-    "text": "Use The List"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.64,
-     "text": "Move Ferrous Forerunner to base"
-    },
-    {
-     "index": 18,
-     "share": 0.11333333333333333,
-     "text": "Use Treasure Trove"
-    },
-    {
-     "index": 17,
-     "share": 0.056666666666666664,
-     "text": "Use The List"
-    }
-   ],
-   "turn": 15
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Ferrous Forerunner to base"
-   },
-   "clean_boundary": true,
-   "decision": 254,
-   "event_text": "tom played Shimmering Swimmer from hand to base.",
-   "human": {
-    "index": 11,
-    "share": 0.09,
-    "text": "Play Shimmering Swimmer to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6566666666666666,
-     "text": "Move Ferrous Forerunner to base"
-    },
-    {
-     "index": 11,
-     "share": 0.09,
-     "text": "Play Shimmering Swimmer to base"
-    },
-    {
-     "index": 17,
-     "share": 0.06666666666666667,
-     "text": "Use Treasure Trove"
-    }
-   ],
-   "turn": 15
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Ferrous Forerunner to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 261,
@@ -1272,19 +932,19 @@
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.7666666666666667,
-     "text": "Move Ferrous Forerunner to base"
-    },
-    {
-     "index": 15,
-     "share": 0.08333333333333333,
-     "text": "Use Treasure Trove"
+     "index": 0,
+     "share": 0.54,
+     "text": "End turn"
     },
     {
      "index": 4,
-     "share": 0.03666666666666667,
+     "share": 0.16,
      "text": "Move Ziggs, Explosive to Rockfall Path"
+    },
+    {
+     "index": 3,
+     "share": 0.08,
+     "text": "Move Ziggs, Explosive to Abandoned Hall"
     }
    ],
    "turn": 15
@@ -1628,7 +1288,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_lillia_rl2_f3f526d8fe479d9f0d0344fa91e159d7.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 3.9004991380000007,
-  "seconds": 3.930237325
+  "bot_seconds": 1.6186592939999995,
+  "seconds": 1.64614022
  }
 }

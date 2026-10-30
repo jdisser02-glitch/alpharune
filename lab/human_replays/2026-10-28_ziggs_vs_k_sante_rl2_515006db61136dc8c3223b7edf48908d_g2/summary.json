@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 3,
+  "agree": 17,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 3,
     "n": 6,
-    "rate": 0.0
+    "rate": 0.5
    },
    "battlefield": {
     "agree": 1,
@@ -16,9 +16,9 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 5,
     "n": 5,
-    "rate": 0.2
+    "rate": 1.0
    },
    "move": {
     "agree": 1,
@@ -26,29 +26,29 @@
     "rate": 0.5
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
-    "agree": 0,
+    "agree": 6,
     "n": 8,
-    "rate": 0.0
+    "rate": 0.75
    }
   },
   "clean_boundary": {
-   "agree": 2,
+   "agree": 15,
    "n": 21,
-   "rate": 0.09523809523809523
+   "rate": 0.7142857142857143
   },
   "in_flight": {
-   "agree": 1,
+   "agree": 2,
    "n": 2
   },
   "n": 23,
-  "rate": 0.13043478260869565
+  "rate": 0.7391304347826086
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 28,
  "bot_errors": 0,
  "bot_fallbacks": 5,
@@ -388,68 +388,34 @@
  "disagreements": [
   {
    "bot": {
-    "index": 3,
-    "text": "Play Sneaky Deckhand to Amateur Recital"
-   },
-   "clean_boundary": true,
-   "decision": 6,
-   "event_text": "Damus played Treasure Hunter from hand to base.",
-   "human": {
     "index": 1,
-    "share": 0.07333333333333333,
-    "text": "Play Treasure Hunter to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.49,
-     "text": "Play Sneaky Deckhand to Amateur Recital"
-    },
-    {
-     "index": 4,
-     "share": 0.14333333333333334,
-     "text": "Play Sneaky Deckhand to Void Gate"
-    },
-    {
-     "index": 5,
-     "share": 0.1,
-     "text": "Play Tideturner to base"
-    }
-   ],
-   "turn": 1
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Sneaky Deckhand to Amateur Recital"
+    "text": "Move Treasure Hunter to Amateur Recital"
    },
    "clean_boundary": true,
-   "decision": 16,
-   "event_text": "Damus played Ziggs, Explosive from hand to Void Gate.",
+   "decision": 11,
+   "event_text": "Damus moved Treasure Hunter to Void Gate.",
    "human": {
-    "index": 7,
-    "share": 0.02,
-    "text": "Play Ziggs, Explosive to Void Gate"
+    "index": 2,
+    "share": 0.33,
+    "text": "Move Treasure Hunter to Void Gate"
    },
-   "kind": "play",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.51,
-     "text": "Play Sneaky Deckhand to Amateur Recital"
+     "index": 1,
+     "share": 0.64,
+     "text": "Move Treasure Hunter to Amateur Recital"
     },
     {
-     "index": 8,
-     "share": 0.08666666666666667,
-     "text": "Play Tideturner to base"
+     "index": 2,
+     "share": 0.33,
+     "text": "Move Treasure Hunter to Void Gate"
     },
     {
-     "index": 6,
-     "share": 0.07,
-     "text": "Play Ziggs, Explosive to base"
+     "index": 0,
+     "share": 0.02,
+     "text": "End turn"
     }
    ],
    "turn": 3
@@ -464,7 +430,7 @@
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 3,
-    "share": 0.14333333333333334,
+    "share": 0.05,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
@@ -472,323 +438,85 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.32,
+     "share": 0.52,
      "text": "Play Detonate targeting Gold"
     },
     {
-     "index": 2,
-     "share": 0.23333333333333334,
-     "text": "Use Gold"
-    },
-    {
-     "index": 4,
-     "share": 0.22,
-     "text": "Hide Tideturner"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Hide Tideturner"
-   },
-   "clean_boundary": true,
-   "decision": 25,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.39666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.4,
-     "text": "Hide Tideturner"
-    },
-    {
      "index": 0,
-     "share": 0.39666666666666667,
+     "share": 0.4,
      "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.20333333333333334,
-     "text": "Use Gold"
+     "index": 3,
+     "share": 0.05,
+     "text": "Use Hexplosives Expert"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to base"
+    "index": 14,
+    "text": "Play Detonate targeting Bomb"
    },
    "clean_boundary": true,
    "decision": 57,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 17,
-    "share": 0.02666666666666667,
+    "share": 0.11,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.33666666666666667,
-     "text": "Move Ziggs, Explosive to base"
+     "index": 14,
+     "share": 0.58,
+     "text": "Play Detonate targeting Bomb"
     },
     {
-     "index": 5,
-     "share": 0.23,
-     "text": "Play Sneaky Deckhand to Amateur Recital"
-    },
-    {
-     "index": 8,
-     "share": 0.08,
-     "text": "Play Tideturner to Void Gate"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 61,
-   "event_text": "Played Detonate from hand.",
-   "human": {
-    "index": 14,
-    "share": 0.05333333333333334,
-    "text": "Play Detonate targeting Bomb"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.31666666666666665,
-     "text": "Move Ziggs, Explosive to base"
-    },
-    {
-     "index": 5,
-     "share": 0.26666666666666666,
-     "text": "Play Sneaky Deckhand to Amateur Recital"
-    },
-    {
-     "index": 8,
-     "share": 0.08666666666666667,
-     "text": "Play Tideturner to Void Gate"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 70,
-   "event_text": "Damus played Pack of Wonders from hand to base.",
-   "human": {
-    "index": 8,
-    "share": 0.08333333333333333,
-    "text": "Play Pack of Wonders to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.41333333333333333,
-     "text": "Move Ziggs, Explosive to base"
-    },
-    {
-     "index": 12,
-     "share": 0.13,
-     "text": "Hide Tideturner"
-    },
-    {
-     "index": 4,
+     "index": 13,
      "share": 0.11,
-     "text": "Play Tideturner to base"
+     "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 17,
+     "share": 0.11,
+     "text": "Use Hexplosives Expert"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 73,
-   "event_text": "Damus exhausted Pack of Wonders.",
-   "human": {
-    "index": 5,
-    "share": 0.12666666666666668,
+    "index": 10,
     "text": "Use Pack of Wonders"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5433333333333333,
-     "text": "Move Ziggs, Explosive to base"
-    },
-    {
-     "index": 6,
-     "share": 0.24333333333333335,
-     "text": "Hide Tideturner"
-    },
-    {
-     "index": 5,
-     "share": 0.12666666666666668,
-     "text": "Use Pack of Wonders"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Hide Tideturner"
-   },
-   "clean_boundary": true,
-   "decision": 77,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.28,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.5166666666666667,
-     "text": "Hide Tideturner"
-    },
-    {
-     "index": 0,
-     "share": 0.28,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.20333333333333334,
-     "text": "Move Treasure Hunter to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Tideturner to base"
    },
    "clean_boundary": true,
    "decision": 86,
    "event_text": "Damus played Treasure Trove from hand to base.",
    "human": {
     "index": 8,
-    "share": 0.08,
+    "share": 0.11,
     "text": "Play Treasure Trove to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.19666666666666666,
-     "text": "Play Tideturner to base"
-    },
-    {
-     "index": 1,
-     "share": 0.19,
-     "text": "Move Treasure Hunter to base"
-    },
-    {
-     "index": 4,
-     "share": 0.13666666666666666,
-     "text": "Play Ziggs, Explosive to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Treasure Hunter to base"
-   },
-   "clean_boundary": true,
-   "decision": 89,
-   "event_text": "Damus exhausted Pack of Wonders.",
-   "human": {
-    "index": 9,
-    "share": 0.14333333333333334,
-    "text": "Use Pack of Wonders"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.2633333333333333,
-     "text": "Move Treasure Hunter to base"
-    },
-    {
-     "index": 4,
-     "share": 0.16666666666666666,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 9,
-     "share": 0.14333333333333334,
-     "text": "Use Pack of Wonders"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Move Treasure Hunter to base"
-   },
-   "clean_boundary": true,
-   "decision": 93,
-   "event_text": "Damus moved Ziggs, Explosive to base.",
-   "human": {
-    "index": 4,
-    "share": 0.07666666666666666,
-    "text": "Play Ziggs, Explosive to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.29,
-     "text": "Move Treasure Hunter to base"
-    },
-    {
      "index": 10,
-     "share": 0.16666666666666666,
-     "text": "Use Hexplosives Expert"
+     "share": 0.47,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 0,
+     "share": 0.18,
+     "text": "End turn"
     },
     {
      "index": 8,
-     "share": 0.14333333333333334,
+     "share": 0.11,
      "text": "Play Treasure Trove to base"
     }
    ],
@@ -796,272 +524,68 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Hide Tideturner"
-   },
-   "clean_boundary": true,
-   "decision": 98,
-   "event_text": "Damus ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.23,
     "text": "End turn"
    },
-   "kind": "end_turn",
+   "clean_boundary": true,
+   "decision": 93,
+   "event_text": "Damus moved Ziggs, Explosive to base.",
+   "human": {
+    "index": 4,
+    "share": 0.18,
+    "text": "Play Ziggs, Explosive to base"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.4033333333333333,
-     "text": "Hide Tideturner"
-    },
-    {
-     "index": 1,
-     "share": 0.36666666666666664,
-     "text": "Move Treasure Hunter to base"
-    },
-    {
      "index": 0,
-     "share": 0.23,
+     "share": 0.36,
      "text": "End turn"
+    },
+    {
+     "index": 8,
+     "share": 0.2,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 4,
+     "share": 0.18,
+     "text": "Play Ziggs, Explosive to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": true,
-   "decision": 108,
-   "event_text": "Damus moved Ziggs, Explosive to Void Gate.",
-   "human": {
-    "index": 2,
-    "share": 0.016666666666666666,
-    "text": "Move Ziggs, Explosive to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 10,
-     "share": 0.2,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 1,
-     "share": 0.19,
-     "text": "Move Ziggs, Explosive to Amateur Recital"
-    },
-    {
-     "index": 9,
-     "share": 0.09333333333333334,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 8,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": true,
-   "decision": 109,
-   "event_text": "Damus exhausted Pack of Wonders.",
-   "human": {
-    "index": 9,
-    "share": 0.11,
-    "text": "Use Pack of Wonders"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 8,
-     "share": 0.4066666666666667,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 3,
-     "share": 0.13,
-     "text": "Play Tideturner to Void Gate"
-    },
-    {
-     "index": 9,
-     "share": 0.11,
-     "text": "Use Pack of Wonders"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 10,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": true,
-   "decision": 113,
-   "event_text": "Damus ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.006666666666666667,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 10,
-     "share": 0.45,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 4,
-     "share": 0.17,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 1,
-     "share": 0.08,
-     "text": "Move Treasure Hunter to base"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": false,
-   "decision": 119,
-   "event_text": "Damus ended showdown responses at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.03333333333333333,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.5566666666666666,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 3,
-     "share": 0.2966666666666667,
-     "text": "Play Detonate targeting Pack of Wonders"
-    },
-    {
-     "index": 2,
-     "share": 0.11333333333333333,
-     "text": "Play An Offer You Can't Refuse"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Ziggs, Explosive to base"
+    "index": 5,
+    "text": "Play An Offer You Can't Refuse"
    },
    "clean_boundary": true,
    "decision": 123,
    "event_text": "Damus exhausted Ziggs, Hexplosives Expert.",
    "human": {
     "index": 9,
-    "share": 0.04666666666666667,
+    "share": 0.09,
     "text": "Use Hexplosives Expert"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.5933333333333334,
-     "text": "Play Ziggs, Explosive to base"
+     "index": 5,
+     "share": 0.47,
+     "text": "Play An Offer You Can't Refuse"
     },
     {
      "index": 6,
-     "share": 0.11,
+     "share": 0.33,
      "text": "Play Detonate targeting Pack of Wonders"
     },
     {
-     "index": 7,
-     "share": 0.09666666666666666,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Detonate targeting Bomb"
-   },
-   "clean_boundary": true,
-   "decision": 127,
-   "event_text": "Played An Offer You Can't Refuse from hand.",
-   "human": {
-    "index": 4,
-    "share": 0.03333333333333333,
-    "text": "Play An Offer You Can't Refuse"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.44,
-     "text": "Play Detonate targeting Bomb"
-    },
-    {
-     "index": 1,
-     "share": 0.38333333333333336,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 8,
-     "share": 0.056666666666666664,
-     "text": "Use Pack of Wonders"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Ziggs, Explosive to base"
-   },
-   "clean_boundary": true,
-   "decision": 137,
-   "event_text": "Played Detonate from hand.",
-   "human": {
-    "index": 4,
-    "share": 0.3,
-    "text": "Play Detonate targeting Bomb"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.43666666666666665,
-     "text": "Play Ziggs, Explosive to base"
-    },
-    {
-     "index": 4,
-     "share": 0.3,
-     "text": "Play Detonate targeting Bomb"
-    },
-    {
-     "index": 7,
-     "share": 0.11,
-     "text": "Use Pack of Wonders"
+     "index": 9,
+     "share": 0.09,
+     "text": "Use Hexplosives Expert"
     }
    ],
    "turn": 11
@@ -1373,7 +897,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_ziggs_vs_k_sante_rl2_515006db61136dc8c3223b7edf48908d.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 2.4835311899999994,
-  "seconds": 2.499468176
+  "bot_seconds": 1.118575499,
+  "seconds": 1.132732004
  }
 }

@@ -3,7 +3,7 @@
  "actors_settled": 1,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 6,
+  "agree": 10,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -11,9 +11,9 @@
     "rate": 0.0
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "choice": {
     "agree": 0,
@@ -21,39 +21,39 @@
     "rate": 0.0
    },
    "end_turn": {
-    "agree": 0,
+    "agree": 2,
     "n": 3,
-    "rate": 0.0
+    "rate": 0.6666666666666666
    },
    "move": {
-    "agree": 1,
+    "agree": 2,
     "n": 6,
-    "rate": 0.16666666666666666
+    "rate": 0.3333333333333333
    },
    "pass_focus": {
-    "agree": 1,
+    "agree": 5,
     "n": 5,
-    "rate": 0.2
+    "rate": 1.0
    },
    "play": {
-    "agree": 4,
+    "agree": 0,
     "n": 10,
-    "rate": 0.4
+    "rate": 0.0
    }
   },
   "clean_boundary": {
-   "agree": 3,
+   "agree": 4,
    "n": 19,
-   "rate": 0.15789473684210525
+   "rate": 0.21052631578947367
   },
   "in_flight": {
-   "agree": 3,
+   "agree": 6,
    "n": 9
   },
   "n": 28,
-  "rate": 0.21428571428571427
+  "rate": 0.35714285714285715
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 29,
  "bot_errors": 0,
  "bot_fallbacks": 1,
@@ -62,7 +62,7 @@
  "decisions": 176,
  "decisions_compared": 28,
  "decisions_human_known": 64,
- "decisions_trivial": 3,
+ "decisions_trivial": 9,
  "desync_causes": {
   "equipped: no equip option for 'Last Rites' onto 'Nocturne, Horrifying'": 1,
   "moved: no such unit on board (not played / already gone)": 3,
@@ -465,101 +465,125 @@
  "disagreements": [
   {
    "bot": {
-    "index": 1,
-    "text": "Bring battlefield Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Emp4 locked in a battlefield.",
-   "human": {
     "index": 0,
-    "share": 0.30666666666666664,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.37333333333333335,
-     "text": "Bring battlefield Daughter of the Void"
-    },
-    {
-     "index": 2,
-     "share": 0.32,
-     "text": "Bring battlefield Kai'Sa, Survivor"
-    },
-    {
-     "index": 0,
-     "share": 0.30666666666666664,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Bellows Breath"
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 8,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 2,
-    "share": 0.39,
+    "share": 0.21,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.5233333333333333,
-     "text": "Play Bellows Breath"
+     "index": 0,
+     "share": 0.65,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.39,
+     "share": 0.21,
      "text": "Use Daughter of the Void"
     },
     {
-     "index": 0,
-     "share": 0.08666666666666667,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.14,
+     "text": "Play Bellows Breath"
     }
    ],
    "turn": 1
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 11,
+   "event_text": "Played Bellows Breath from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.18,
+    "text": "Play Bellows Breath"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.82,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Bellows Breath"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 16,
+   "event_text": "Emp4 played Noxus Hopeful from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.47,
+    "text": "Play Noxus Hopeful to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.53,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.47,
+     "text": "Play Noxus Hopeful to base"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Noxus Hopeful to Void Gate"
    },
    "clean_boundary": true,
    "decision": 30,
    "event_text": "Emp4 moved Noxus Hopeful to Zaun Warrens.",
    "human": {
     "index": 1,
-    "share": 0.06,
+    "share": 0.23,
     "text": "Move Noxus Hopeful to Zaun Warrens"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.69,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
      "index": 2,
-     "share": 0.08333333333333333,
+     "share": 0.43,
      "text": "Move Noxus Hopeful to Void Gate"
     },
     {
+     "index": 4,
+     "share": 0.29,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
      "index": 1,
-     "share": 0.06,
+     "share": 0.23,
      "text": "Move Noxus Hopeful to Zaun Warrens"
     }
    ],
@@ -567,105 +591,105 @@
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Choose Thousand-Tailed Watcher"
+    "index": 0,
+    "text": "Choose Falling Star"
    },
    "clean_boundary": false,
    "decision": 36,
    "event_text": "",
    "human": {
     "index": 1,
-    "share": 0.22,
+    "share": 0.37,
     "text": "Choose Hextech Ray"
    },
    "kind": "choice",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.5833333333333334,
-     "text": "Choose Thousand-Tailed Watcher"
+     "index": 0,
+     "share": 0.5,
+     "text": "Choose Falling Star"
     },
     {
      "index": 1,
-     "share": 0.22,
+     "share": 0.37,
      "text": "Choose Hextech Ray"
     },
     {
-     "index": 0,
-     "share": 0.12,
-     "text": "Choose Falling Star"
+     "index": 3,
+     "share": 0.1,
+     "text": "Choose Lecturing Yordle"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 2,
+    "text": "Play Lecturing Yordle to Zaun Warrens"
    },
    "clean_boundary": true,
    "decision": 37,
    "event_text": "Emp4 played Lecturing Yordle from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.038461538461538464,
+    "share": 0.030303030303030304,
     "text": "Play Lecturing Yordle to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.44405594405594406,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
      "index": 2,
-     "share": 0.24475524475524477,
+     "share": 0.797979797979798,
      "text": "Play Lecturing Yordle to Zaun Warrens"
     },
     {
-     "index": 8,
-     "share": 0.06293706293706294,
-     "text": "Use Daughter of the Void"
+     "index": 5,
+     "share": 0.10101010101010101,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 1,
+     "share": 0.030303030303030304,
+     "text": "Play Lecturing Yordle to base"
     }
    ],
    "turn": 3
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 43,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.03333333333333333,
-    "text": "End turn"
+    "text": "Pass focus"
    },
-   "kind": "end_turn",
+   "clean_boundary": false,
+   "decision": 55,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.1,
+    "text": "Play Hextech Ray targeting Trifarian Captain"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.42333333333333334,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 5,
-     "share": 0.24333333333333335,
-     "text": "Play Smoke Screen targeting Trifarian Captain"
+     "index": 0,
+     "share": 0.88,
+     "text": "Pass focus"
     },
     {
      "index": 1,
-     "share": 0.08333333333333333,
-     "text": "Play Noxus Hopeful to base"
+     "share": 0.1,
+     "text": "Play Hextech Ray targeting Trifarian Captain"
+    },
+    {
+     "index": 3,
+     "share": 0.02,
+     "text": "Play Smoke Screen targeting Trifarian Captain"
     }
    ],
-   "turn": 3
+   "turn": 4
   },
   {
    "bot": {
@@ -677,7 +701,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 15,
-    "share": 0.01,
+    "share": 0.02,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -685,17 +709,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.81,
+     "share": 0.37,
      "text": "Move Lecturing Yordle to Zaun Warrens"
     },
     {
-     "index": 9,
-     "share": 0.07666666666666666,
-     "text": "Play Smoke Screen targeting Noxus Hopeful"
+     "index": 3,
+     "share": 0.25,
+     "text": "Move Lecturing Yordle to Void Gate"
     },
     {
      "index": 6,
-     "share": 0.02666666666666667,
+     "share": 0.23,
      "text": "Play Kai'Sa, Survivor to base"
     }
    ],
@@ -703,8 +727,8 @@
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Kai'Sa, Survivor to base"
+    "index": 2,
+    "text": "Move Lecturing Yordle to Zaun Warrens"
    },
    "clean_boundary": true,
    "decision": 66,
@@ -718,18 +742,47 @@
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.5133333333333333,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
      "index": 2,
-     "share": 0.18666666666666668,
+     "share": 0.42,
      "text": "Move Lecturing Yordle to Zaun Warrens"
     },
     {
-     "index": 9,
-     "share": 0.14666666666666667,
+     "index": 6,
+     "share": 0.22,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 3,
+     "share": 0.19,
+     "text": "Move Lecturing Yordle to Void Gate"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 72,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.05,
+    "text": "Play Smoke Screen targeting Noxus Hopeful"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.95,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.05,
      "text": "Play Smoke Screen targeting Noxus Hopeful"
     }
    ],
@@ -737,164 +790,67 @@
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Smoke Screen targeting Lecturing Yordle"
-   },
-   "clean_boundary": true,
-   "decision": 80,
-   "event_text": "Emp4 moved Lecturing Yordle to Void Gate.",
-   "human": {
-    "index": 2,
-    "share": 0.14,
-    "text": "Move Lecturing Yordle to Void Gate"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.37333333333333335,
-     "text": "Play Smoke Screen targeting Lecturing Yordle"
-    },
-    {
-     "index": 3,
-     "share": 0.21,
-     "text": "Play Noxus Hopeful to base"
-    },
-    {
-     "index": 0,
-     "share": 0.17666666666666667,
-     "text": "End turn"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Lecturing Yordle"
-   },
-   "clean_boundary": false,
-   "decision": 81,
-   "event_text": "Emp4 passed focus at Void Gate.",
-   "human": {
     "index": 0,
-    "share": 0.47,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.53,
-     "text": "Play Smoke Screen targeting Lecturing Yordle"
-    },
-    {
-     "index": 0,
-     "share": 0.47,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Smoke Screen targeting Lecturing Yordle"
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 83,
    "event_text": "Emp4 moved Noxus Hopeful to base.",
    "human": {
     "index": 1,
-    "share": 0.17666666666666667,
+    "share": 0.14,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.43333333333333335,
-     "text": "Play Smoke Screen targeting Lecturing Yordle"
-    },
-    {
-     "index": 2,
-     "share": 0.25333333333333335,
-     "text": "Play Noxus Hopeful to Void Gate"
+     "index": 0,
+     "share": 0.81,
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.17666666666666667,
+     "share": 0.14,
      "text": "Play Noxus Hopeful to base"
+    },
+    {
+     "index": 2,
+     "share": 0.04,
+     "text": "Play Noxus Hopeful to Void Gate"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Lecturing Yordle to base"
+    "index": 1,
+    "text": "Move Noxus Hopeful to Zaun Warrens"
    },
    "clean_boundary": true,
    "decision": 94,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 6,
-    "share": 0.01,
+    "share": 0.31,
     "text": "Play Kai'Sa, Survivor to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.81,
-     "text": "Move Lecturing Yordle to base"
-    },
-    {
-     "index": 8,
-     "share": 0.09333333333333334,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-    },
-    {
-     "index": 7,
-     "share": 0.02,
-     "text": "Play Kai'Sa, Survivor to Void Gate"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-   },
-   "clean_boundary": true,
-   "decision": 101,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.013333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.45666666666666667,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-    },
-    {
      "index": 1,
-     "share": 0.30333333333333334,
+     "share": 0.44,
      "text": "Move Noxus Hopeful to Zaun Warrens"
     },
     {
+     "index": 6,
+     "share": 0.31,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
      "index": 2,
-     "share": 0.16666666666666666,
+     "share": 0.08,
      "text": "Move Noxus Hopeful to Void Gate"
     }
    ],
@@ -903,36 +859,75 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Smoke Screen targeting Nocturne, Horrifying"
+    "text": "Move Noxus Hopeful to Zaun Warrens"
    },
-   "clean_boundary": false,
-   "decision": 104,
-   "event_text": "Emp4 ended showdown responses at Zaun Warrens.",
+   "clean_boundary": true,
+   "decision": 100,
+   "event_text": "Emp4 moved Lecturing Yordle to base.",
    "human": {
-    "index": 0,
-    "share": 0.03,
-    "text": "Pass focus"
+    "index": 3,
+    "share": 0.05,
+    "text": "Move Lecturing Yordle to base"
    },
-   "kind": "pass_focus",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.97,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
+     "share": 0.44,
+     "text": "Move Noxus Hopeful to Zaun Warrens"
     },
     {
      "index": 0,
-     "share": 0.03,
-     "text": "Pass focus"
+     "share": 0.37,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.11,
+     "text": "Move Noxus Hopeful to Void Gate"
     }
    ],
-   "turn": 8
+   "turn": 7
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Void Gate"
+    "index": 1,
+    "text": "Move Noxus Hopeful to Zaun Warrens"
+   },
+   "clean_boundary": true,
+   "decision": 101,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.08,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.77,
+     "text": "Move Noxus Hopeful to Zaun Warrens"
+    },
+    {
+     "index": 2,
+     "share": 0.1,
+     "text": "Move Noxus Hopeful to Void Gate"
+    },
+    {
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Noxus Hopeful to Zaun Warrens"
    },
    "clean_boundary": true,
    "decision": 125,
@@ -946,115 +941,18 @@
    "player": 1,
    "top3": [
     {
+     "index": 1,
+     "share": 0.4,
+     "text": "Move Noxus Hopeful to Zaun Warrens"
+    },
+    {
      "index": 2,
-     "share": 0.42333333333333334,
+     "share": 0.23,
      "text": "Move Noxus Hopeful to Void Gate"
     },
     {
-     "index": 17,
-     "share": 0.23,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-    },
-    {
-     "index": 1,
-     "share": 0.17666666666666667,
-     "text": "Move Noxus Hopeful to Zaun Warrens"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-   },
-   "clean_boundary": false,
-   "decision": 126,
-   "event_text": "Emp4 passed focus at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.29333333333333333,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7066666666666667,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-    },
-    {
-     "index": 0,
-     "share": 0.29333333333333333,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 10,
-    "text": "Play Brynhir Thundersong to Void Gate"
-   },
-   "clean_boundary": true,
-   "decision": 131,
-   "event_text": "Emp4 moved Noxus Hopeful to Zaun Warrens.",
-   "human": {
-    "index": 1,
-    "share": 0.03,
-    "text": "Move Noxus Hopeful to Zaun Warrens"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 10,
-     "share": 0.5833333333333334,
-     "text": "Play Brynhir Thundersong to Void Gate"
-    },
-    {
-     "index": 11,
-     "share": 0.14666666666666667,
-     "text": "Play Smoke Screen targeting Nocturne, Horrifying"
-    },
-    {
-     "index": 21,
-     "share": 0.07333333333333333,
-     "text": "Play Stupefy targeting Nocturne, Horrifying"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "clean_boundary": true,
-   "decision": 136,
-   "event_text": "Emp4 moved Lecturing Yordle to Zaun Warrens.",
-   "human": {
-    "index": 1,
-    "share": 0.01,
-    "text": "Move Lecturing Yordle to Zaun Warrens"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.23333333333333334,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 7,
-     "share": 0.20666666666666667,
-     "text": "Play Smoke Screen targeting Lecturing Yordle"
-    },
-    {
-     "index": 3,
-     "share": 0.19333333333333333,
+     "index": 15,
+     "share": 0.18,
      "text": "Play Bilgewater Tracker to base"
     }
    ],
@@ -1062,68 +960,68 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Smoke Screen targeting Lecturing Yordle"
+    "index": 2,
+    "text": "Move Noxus Hopeful to Void Gate"
    },
-   "clean_boundary": false,
-   "decision": 137,
-   "event_text": "Emp4 passed focus at Zaun Warrens.",
+   "clean_boundary": true,
+   "decision": 131,
+   "event_text": "Emp4 moved Noxus Hopeful to Zaun Warrens.",
    "human": {
-    "index": 0,
-    "share": 0.3466666666666667,
-    "text": "Pass focus"
+    "index": 1,
+    "share": 0.25,
+    "text": "Move Noxus Hopeful to Zaun Warrens"
    },
-   "kind": "pass_focus",
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.46,
-     "text": "Play Smoke Screen targeting Lecturing Yordle"
+     "index": 2,
+     "share": 0.39,
+     "text": "Move Noxus Hopeful to Void Gate"
     },
     {
-     "index": 0,
-     "share": 0.3466666666666667,
-     "text": "Pass focus"
+     "index": 1,
+     "share": 0.25,
+     "text": "Move Noxus Hopeful to Zaun Warrens"
     },
     {
      "index": 7,
-     "share": 0.19333333333333333,
-     "text": "Play Stupefy targeting Lecturing Yordle"
+     "share": 0.16,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Brynhir Thundersong to Zaun Warrens"
+    "index": 2,
+    "text": "Play Bilgewater Tracker to Zaun Warrens"
    },
    "clean_boundary": true,
    "decision": 143,
    "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.016666666666666666,
+    "share": 0.11,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.49666666666666665,
-     "text": "Play Brynhir Thundersong to Zaun Warrens"
-    },
-    {
      "index": 2,
-     "share": 0.35,
+     "share": 0.52,
      "text": "Play Bilgewater Tracker to Zaun Warrens"
     },
     {
-     "index": 10,
-     "share": 0.03333333333333333,
-     "text": "Play Stupefy targeting Lecturing Yordle"
+     "index": 1,
+     "share": 0.11,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 5,
+     "share": 0.1,
+     "text": "Play Brynhir Thundersong to Zaun Warrens"
     }
    ],
    "turn": 9
@@ -1138,7 +1036,7 @@
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 1,
-    "share": 0.02,
+    "share": 0.09,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
@@ -1146,52 +1044,18 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.8466666666666667,
+     "share": 0.48,
      "text": "Play Noxus Hopeful to Zaun Warrens"
     },
     {
-     "index": 4,
-     "share": 0.05,
-     "text": "Play Stupefy targeting Lecturing Yordle"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     },
-    {
-     "index": 8,
-     "share": 0.03333333333333333,
-     "text": "Play Hextech Ray targeting Lecturing Yordle"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Noxus Hopeful"
-   },
-   "clean_boundary": true,
-   "decision": 153,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.016666666666666666,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
     {
      "index": 1,
-     "share": 0.33666666666666667,
-     "text": "Play Stupefy targeting Noxus Hopeful"
-    },
-    {
-     "index": 6,
-     "share": 0.31,
-     "text": "Play Hextech Ray targeting Lecturing Yordle"
-    },
-    {
-     "index": 8,
-     "share": 0.29,
-     "text": "Play Lost to the Sands"
+     "share": 0.09,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 9
@@ -1583,7 +1447,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_kennen_rl2_753a21fa008fa2e101750be371655979.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 2.527172994,
-  "seconds": 2.548127272
+  "bot_seconds": 1.007191712,
+  "seconds": 1.026279191
  }
 }

@@ -3,22 +3,22 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 5,
+  "agree": 15,
   "by_kind": {
    "ability": {
-    "agree": 0,
+    "agree": 1,
     "n": 4,
-    "rate": 0.0
+    "rate": 0.25
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 0,
+    "agree": 2,
     "n": 6,
-    "rate": 0.0
+    "rate": 0.3333333333333333
    },
    "move": {
     "agree": 1,
@@ -26,29 +26,29 @@
     "rate": 0.25
    },
    "pass_focus": {
-    "agree": 0,
+    "agree": 4,
     "n": 4,
-    "rate": 0.0
+    "rate": 1.0
    },
    "play": {
-    "agree": 4,
+    "agree": 6,
     "n": 16,
-    "rate": 0.25
+    "rate": 0.375
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 10,
    "n": 30,
-   "rate": 0.16666666666666666
+   "rate": 0.3333333333333333
   },
   "in_flight": {
-   "agree": 0,
+   "agree": 5,
    "n": 5
   },
   "n": 35,
-  "rate": 0.14285714285714285
+  "rate": 0.42857142857142855
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 45,
  "bot_errors": 0,
  "bot_fallbacks": 10,
@@ -320,129 +320,32 @@
   {
    "bot": {
     "index": 1,
-    "text": "Bring battlefield Bloodharbor Ripper"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Tab locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.28,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.4033333333333333,
-     "text": "Bring battlefield Bloodharbor Ripper"
-    },
-    {
-     "index": 2,
-     "share": 0.31666666666666665,
-     "text": "Bring battlefield Pyke, Dockside Butcher"
-    },
-    {
-     "index": 0,
-     "share": 0.28,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Pyke, Dockside Butcher to base"
-   },
-   "clean_boundary": true,
-   "decision": 9,
-   "event_text": "Tab played Treasure Trove from hand to base.",
-   "human": {
-    "index": 6,
-    "share": 0.07,
-    "text": "Play Treasure Trove to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.53,
-     "text": "Play Pyke, Dockside Butcher to base"
-    },
-    {
-     "index": 3,
-     "share": 0.09333333333333334,
-     "text": "Play Sneaky Deckhand to Firelights' Hideout"
-    },
-    {
-     "index": 4,
-     "share": 0.08666666666666667,
-     "text": "Play Sneaky Deckhand to Void Gate"
-    }
-   ],
-   "turn": 1
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Treasure Hunter to base"
+    "text": "Play Shimmering Swimmer to base"
    },
    "clean_boundary": true,
    "decision": 27,
    "event_text": "Tab played Treasure Trove from hand to base.",
    "human": {
     "index": 5,
-    "share": 0.09333333333333334,
+    "share": 0.17,
     "text": "Play Treasure Trove to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.38,
-     "text": "Play Treasure Hunter to base"
-    },
-    {
-     "index": 4,
-     "share": 0.3,
-     "text": "Play Pyke, Dockside Butcher to base"
-    },
-    {
      "index": 1,
-     "share": 0.16,
+     "share": 0.77,
      "text": "Play Shimmering Swimmer to base"
-    }
-   ],
-   "turn": 3
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Gold to base"
-   },
-   "clean_boundary": true,
-   "decision": 41,
-   "event_text": "Tab ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.4,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
+    },
     {
-     "index": 1,
-     "share": 0.6,
-     "text": "Play Gold to base"
+     "index": 5,
+     "share": 0.17,
+     "text": "Play Treasure Trove to base"
     },
     {
      "index": 0,
-     "share": 0.4,
+     "share": 0.05,
      "text": "End turn"
     }
    ],
@@ -458,7 +361,7 @@
    "event_text": "Tab played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.08666666666666667,
+    "share": 0.28,
     "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
@@ -466,85 +369,119 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.2,
+     "share": 0.29,
      "text": "Move Shimmering Swimmer to Firelights' Hideout"
     },
     {
-     "index": 6,
-     "share": 0.15333333333333332,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 4,
+     "share": 0.28,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 3,
-     "share": 0.12333333333333334,
-     "text": "Play Treasure Hunter to base"
+     "index": 7,
+     "share": 0.27,
+     "text": "Play Pack of Wonders to base"
     }
    ],
    "turn": 5
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Shimmering Swimmer to Firelights' Hideout"
-   },
-   "clean_boundary": true,
-   "decision": 59,
-   "event_text": "Tab played Pack of Wonders from hand to base.",
-   "human": {
     "index": 7,
-    "share": 0.10666666666666667,
-    "text": "Play Pack of Wonders to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.22666666666666666,
-     "text": "Move Shimmering Swimmer to Firelights' Hideout"
-    },
-    {
-     "index": 6,
-     "share": 0.14,
-     "text": "Play Pyke, Dockside Butcher to base"
-    },
-    {
-     "index": 3,
-     "share": 0.10666666666666667,
-     "text": "Play Treasure Hunter to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Pyke, Dockside Butcher to base"
+    "text": "Play The List to base"
    },
    "clean_boundary": true,
    "decision": 62,
    "event_text": "Tab exhausted Pack of Wonders.",
    "human": {
     "index": 8,
-    "share": 0.06,
+    "share": 0.12,
     "text": "Use Pack of Wonders"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.26666666666666666,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 7,
+     "share": 0.37,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 0,
+     "share": 0.18,
+     "text": "End turn"
+    },
+    {
+     "index": 8,
+     "share": 0.12,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play The List to base"
+   },
+   "clean_boundary": true,
+   "decision": 66,
+   "event_text": "Tab played Bilgewater Tracker from hand to base.",
+   "human": {
+    "index": 4,
+    "share": 0.14,
+    "text": "Play Bilgewater Tracker to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.41,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.18666666666666668,
+     "share": 0.15,
+     "text": "Move Shimmering Swimmer to Firelights' Hideout"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 73,
+   "event_text": "Tab moved Shimmering Swimmer to Firelights' Hideout.",
+   "human": {
+    "index": 1,
+    "share": 0.23,
+    "text": "Move Shimmering Swimmer to Firelights' Hideout"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.53,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.23,
      "text": "Move Shimmering Swimmer to Firelights' Hideout"
     },
     {
      "index": 2,
-     "share": 0.12333333333333334,
+     "share": 0.23,
      "text": "Move Shimmering Swimmer to Void Gate"
     }
    ],
@@ -552,130 +489,33 @@
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Pyke, Dockside Butcher to base"
-   },
-   "clean_boundary": true,
-   "decision": 66,
-   "event_text": "Tab played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.12,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.4,
-     "text": "Play Pyke, Dockside Butcher to base"
-    },
-    {
-     "index": 1,
-     "share": 0.13,
-     "text": "Move Shimmering Swimmer to Firelights' Hideout"
-    },
-    {
-     "index": 4,
-     "share": 0.12,
-     "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
     "index": 1,
-    "text": "Play Gold to base"
-   },
-   "clean_boundary": true,
-   "decision": 79,
-   "event_text": "Tab ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.36666666666666664,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6333333333333333,
-     "text": "Play Gold to base"
-    },
-    {
-     "index": 0,
-     "share": 0.36666666666666664,
-     "text": "End turn"
-    }
-   ],
-   "turn": 5
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Gold to base"
-   },
-   "clean_boundary": true,
-   "decision": 113,
-   "event_text": "Tab played The List from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.16,
-    "text": "Play The List to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.23666666666666666,
-     "text": "Play Gold to base"
-    },
-    {
-     "index": 1,
-     "share": 0.20666666666666667,
-     "text": "Move Bilgewater Tracker to Firelights' Hideout"
-    },
-    {
-     "index": 7,
-     "share": 0.16,
-     "text": "Play The List to base"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Ride the Wind"
+    "text": "Move Bilgewater Tracker to Firelights' Hideout"
    },
    "clean_boundary": true,
    "decision": 115,
    "event_text": "Tab exhausted The List.",
    "human": {
     "index": 9,
-    "share": 0.08666666666666667,
+    "share": 0.06,
     "text": "Use The List"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.17666666666666667,
-     "text": "Play Ride the Wind"
-    },
-    {
      "index": 1,
-     "share": 0.15,
+     "share": 0.21,
      "text": "Move Bilgewater Tracker to Firelights' Hideout"
     },
     {
+     "index": 4,
+     "share": 0.18,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
      "index": 5,
-     "share": 0.13,
+     "share": 0.18,
      "text": "Play Vex, Apathetic to base"
     }
    ],
@@ -691,7 +531,7 @@
    "event_text": "Tab moved Bilgewater Tracker to Void Gate.",
    "human": {
     "index": 2,
-    "share": 0.11,
+    "share": 0.16,
     "text": "Move Bilgewater Tracker to Void Gate"
    },
    "kind": "move",
@@ -699,279 +539,187 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.3233333333333333,
+     "share": 0.22,
      "text": "Move Bilgewater Tracker to Firelights' Hideout"
     },
     {
-     "index": 7,
-     "share": 0.13333333333333333,
-     "text": "Play Ride the Wind"
+     "index": 4,
+     "share": 0.19,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 6,
-     "share": 0.12666666666666668,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 5,
+     "share": 0.19,
+     "text": "Play Vex, Apathetic to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": false,
-   "decision": 120,
-   "event_text": "Tab passed focus at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.2866666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.7133333333333334,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 0,
-     "share": 0.2866666666666667,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 7
-  },
-  {
-   "bot": {
-    "index": 4,
-    "text": "Play Pyke, Dockside Butcher to base"
+    "index": 2,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 129,
    "event_text": "Tab exhausted Pack of Wonders.",
    "human": {
     "index": 5,
-    "share": 0.08333333333333333,
+    "share": 0.21,
     "text": "Use Pack of Wonders"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.6233333333333333,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 2,
+     "share": 0.33,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 3,
-     "share": 0.09333333333333334,
+     "share": 0.3,
      "text": "Play Vex, Apathetic to base"
     },
     {
-     "index": 1,
-     "share": 0.08333333333333333,
-     "text": "Play Noxus Hopeful to base"
+     "index": 5,
+     "share": 0.21,
+     "text": "Use Pack of Wonders"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Bewitching Spirit to base"
+    "index": 1,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 133,
    "event_text": "Tab played Vex, Apathetic from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.07333333333333333,
+    "share": 0.37,
     "text": "Play Vex, Apathetic to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.6766666666666666,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
      "index": 1,
-     "share": 0.11,
+     "share": 0.42,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 4,
-     "share": 0.09666666666666666,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 2,
+     "share": 0.37,
+     "text": "Play Vex, Apathetic to base"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Ride the Wind"
+    "index": 1,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 138,
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.023333333333333334,
+    "share": 0.34,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.8766666666666667,
-     "text": "Play Ride the Wind"
+     "index": 1,
+     "share": 0.56,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
+     "index": 0,
+     "share": 0.34,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.04,
+     "share": 0.1,
      "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 1,
-     "share": 0.03333333333333333,
-     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 7
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "clean_boundary": true,
-   "decision": 148,
-   "event_text": "Tab moved Vex, Apathetic to Firelights' Hideout.",
-   "human": {
     "index": 1,
-    "share": 0.023333333333333334,
-    "text": "Move Vex, Apathetic to Firelights' Hideout"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 4,
-     "share": 0.7366666666666667,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 6,
-     "share": 0.06,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 3,
-     "share": 0.056666666666666664,
-     "text": "Play Bilgewater Tracker to base"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": false,
-   "decision": 149,
-   "event_text": "Tab passed focus at Firelights' Hideout.",
-   "human": {
-    "index": 0,
-    "share": 0.15666666666666668,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.8433333333333334,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 0,
-     "share": 0.15666666666666668,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Ride the Wind"
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 154,
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.05333333333333334,
+    "share": 0.05,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.3,
-     "text": "Play Ride the Wind"
-    },
-    {
      "index": 1,
-     "share": 0.2833333333333333,
+     "share": 0.43,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 11,
-     "share": 0.09,
-     "text": "Use The List"
+     "index": 9,
+     "share": 0.15,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 10,
+     "share": 0.15,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
     }
    ],
    "turn": 9
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Ride the Wind"
+    "index": 5,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
-   "decision": 163,
-   "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
+   "decision": 166,
+   "event_text": "Tab ended their turn.",
    "human": {
-    "index": 6,
-    "share": 0.061224489795918366,
-    "text": "Use Bloodharbor Ripper on Vex, Apathetic"
+    "index": 0,
+    "share": 0.13,
+    "text": "End turn"
    },
-   "kind": "ability",
+   "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.5306122448979592,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 1,
-     "share": 0.08843537414965986,
-     "text": "Play Pyke, Dockside Butcher to base"
-    },
-    {
      "index": 5,
-     "share": 0.08843537414965986,
+     "share": 0.45,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Play Vex, Apathetic to base"
+    },
+    {
+     "index": 7,
+     "share": 0.14,
      "text": "Use Pack of Wonders"
     }
    ],
@@ -979,135 +727,67 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Bewitching Spirit to base"
+    "index": 4,
+    "text": "Play Vex, Apathetic to base"
    },
    "clean_boundary": true,
-   "decision": 166,
-   "event_text": "Tab ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.023333333333333334,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6333333333333333,
-     "text": "Play Bewitching Spirit to base"
-    },
-    {
-     "index": 4,
-     "share": 0.17666666666666667,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 5,
-     "share": 0.043333333333333335,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 9
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Lost to the Sands"
-   },
-   "clean_boundary": false,
-   "decision": 191,
-   "event_text": "Tab passed focus at Firelights' Hideout.",
-   "human": {
-    "index": 0,
-    "share": 0.07333333333333333,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.7466666666666667,
-     "text": "Play Lost to the Sands"
-    },
-    {
-     "index": 1,
-     "share": 0.18,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 0,
-     "share": 0.07333333333333333,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Bewitching Spirit to base"
-   },
-   "clean_boundary": true,
-   "decision": 199,
-   "event_text": "Played Falling Star from hand.",
+   "decision": 208,
+   "event_text": "Played Lost to the Sands from hand.",
    "human": {
     "index": 7,
-    "share": 0.04,
-    "text": "Play Falling Star"
+    "share": 0.13,
+    "text": "Play Lost to the Sands"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.6666666666666666,
-     "text": "Play Bewitching Spirit to base"
+     "index": 4,
+     "share": 0.22,
+     "text": "Play Vex, Apathetic to base"
     },
     {
-     "index": 6,
-     "share": 0.08666666666666667,
-     "text": "Play Ride the Wind"
+     "index": 10,
+     "share": 0.21,
+     "text": "Use Pack of Wonders"
     },
     {
-     "index": 7,
-     "share": 0.04,
-     "text": "Play Falling Star"
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Bewitching Spirit to Void Gate"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Pyke, Dockside Butcher to base"
+    "index": 4,
+    "text": "Play Vex, Apathetic to base"
    },
    "clean_boundary": true,
    "decision": 217,
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.02666666666666667,
+    "share": 0.04,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.6433333333333333,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 4,
+     "share": 0.27,
+     "text": "Play Vex, Apathetic to base"
     },
     {
-     "index": 6,
-     "share": 0.07333333333333333,
-     "text": "Play Ride the Wind"
+     "index": 9,
+     "share": 0.23,
+     "text": "Use Pack of Wonders"
     },
     {
      "index": 0,
-     "share": 0.05,
+     "share": 0.2,
      "text": "End turn"
     }
    ],
@@ -1115,170 +795,170 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Bewitching Spirit to Firelights' Hideout"
+    "index": 4,
+    "text": "Use Pack of Wonders"
    },
    "clean_boundary": true,
    "decision": 225,
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.05,
+    "share": 0.35,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.6266666666666667,
-     "text": "Move Bewitching Spirit to Firelights' Hideout"
-    },
-    {
      "index": 4,
-     "share": 0.08666666666666667,
+     "share": 0.36,
      "text": "Use Pack of Wonders"
     },
     {
-     "index": 5,
-     "share": 0.08666666666666667,
-     "text": "Use The List"
+     "index": 0,
+     "share": 0.35,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.15,
+     "text": "Move Bewitching Spirit to Void Gate"
     }
    ],
    "turn": 11
   },
   {
    "bot": {
-    "index": 7,
-    "text": "Play Vex, Apathetic to base"
+    "index": 12,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 233,
    "event_text": "Tab moved Bewitching Spirit to Void Gate.",
    "human": {
     "index": 2,
-    "share": 0.14333333333333334,
+    "share": 0.06,
     "text": "Move Bewitching Spirit to Void Gate"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 7,
-     "share": 0.26666666666666666,
-     "text": "Play Vex, Apathetic to base"
-    },
-    {
-     "index": 2,
-     "share": 0.14333333333333334,
-     "text": "Move Bewitching Spirit to Void Gate"
-    },
-    {
-     "index": 8,
-     "share": 0.12,
-     "text": "Play Bewitching Spirit to base"
-    }
-   ],
-   "turn": 13
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Ride the Wind"
-   },
-   "clean_boundary": false,
-   "decision": 234,
-   "event_text": "Tab passed focus at Void Gate.",
-   "human": {
-    "index": 0,
-    "share": 0.06666666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6666666666666666,
-     "text": "Play Ride the Wind"
-    },
-    {
-     "index": 3,
-     "share": 0.26666666666666666,
+     "index": 12,
+     "share": 0.67,
      "text": "Play Falling Star"
     },
     {
-     "index": 0,
-     "share": 0.06666666666666667,
-     "text": "Pass focus"
+     "index": 14,
+     "share": 0.12,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 7,
+     "share": 0.09,
+     "text": "Play Vex, Apathetic to base"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Vex, Apathetic to base"
+    "index": 8,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 238,
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.06,
+    "share": 0.0,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 8,
+     "share": 0.81,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 10,
+     "share": 0.09,
+     "text": "Use Pack of Wonders"
+    },
+    {
      "index": 3,
-     "share": 0.2,
+     "share": 0.06,
      "text": "Play Vex, Apathetic to base"
-    },
-    {
-     "index": 2,
-     "share": 0.14,
-     "text": "Move Bewitching Spirit to Void Gate"
-    },
-    {
-     "index": 6,
-     "share": 0.13333333333333333,
-     "text": "Play Ride the Wind"
     }
    ],
    "turn": 13
   },
   {
    "bot": {
-    "index": 2,
-    "text": "Move Bewitching Spirit to Void Gate"
+    "index": 6,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 246,
+   "event_text": "Played Detonate from hand.",
+   "human": {
+    "index": 7,
+    "share": 0.37,
+    "text": "Play Detonate targeting Gold"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.58,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 7,
+     "share": 0.37,
+     "text": "Play Detonate targeting Gold"
+    },
+    {
+     "index": 11,
+     "share": 0.03,
+     "text": "Use Pack of Wonders"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Falling Star"
    },
    "clean_boundary": true,
    "decision": 251,
    "event_text": "Tab played Bewitching Spirit from hand to base.",
    "human": {
     "index": 4,
-    "share": 0.06,
+    "share": 0.0,
     "text": "Play Bewitching Spirit to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.5066666666666667,
-     "text": "Move Bewitching Spirit to Void Gate"
-    },
-    {
-     "index": 6,
-     "share": 0.1,
-     "text": "Play Ride the Wind"
-    },
-    {
      "index": 7,
-     "share": 0.09,
+     "share": 0.52,
      "text": "Play Falling Star"
+    },
+    {
+     "index": 8,
+     "share": 0.29,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 3,
+     "share": 0.13,
+     "text": "Play Vex, Apathetic to base"
     }
    ],
    "turn": 13
@@ -1293,7 +973,7 @@
    "event_text": "Tab ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.02,
+    "share": 0.01,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1301,17 +981,17 @@
    "top3": [
     {
      "index": 4,
-     "share": 0.6233333333333333,
+     "share": 0.59,
      "text": "Play Falling Star"
     },
     {
-     "index": 3,
-     "share": 0.12666666666666668,
-     "text": "Play Pyke, Dockside Butcher to base"
+     "index": 5,
+     "share": 0.37,
+     "text": "Use Pack of Wonders"
     },
     {
      "index": 2,
-     "share": 0.07,
+     "share": 0.03,
      "text": "Move Bewitching Spirit to Void Gate"
     }
    ],
@@ -1765,7 +1445,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_ekko_rl2_86ffdfd39d3dc89ded84fb7900fb517b.json",
  "stop_reason": "engine game over",
  "timing": {
-  "bot_seconds": 4.5187173839999994,
-  "seconds": 4.548954662
+  "bot_seconds": 1.9743500290000007,
+  "seconds": 2.007062933
  }
 }

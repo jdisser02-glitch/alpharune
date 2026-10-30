@@ -3,12 +3,12 @@
  "actors_settled": 0,
  "actors_uncertain": 3,
  "agreement": {
-  "agree": 8,
+  "agree": 11,
   "by_kind": {
    "ability": {
-    "agree": 2,
+    "agree": 0,
     "n": 4,
-    "rate": 0.5
+    "rate": 0.0
    },
    "battlefield": {
     "agree": 1,
@@ -16,39 +16,39 @@
     "rate": 1.0
    },
    "end_turn": {
-    "agree": 1,
+    "agree": 2,
     "n": 10,
-    "rate": 0.1
-   },
-   "move": {
-    "agree": 1,
-    "n": 5,
     "rate": 0.2
    },
-   "pass_focus": {
+   "move": {
     "agree": 0,
-    "n": 4,
+    "n": 5,
     "rate": 0.0
    },
+   "pass_focus": {
+    "agree": 4,
+    "n": 4,
+    "rate": 1.0
+   },
    "play": {
-    "agree": 3,
+    "agree": 4,
     "n": 12,
-    "rate": 0.25
+    "rate": 0.3333333333333333
    }
   },
   "clean_boundary": {
-   "agree": 3,
+   "agree": 6,
    "n": 25,
-   "rate": 0.12
+   "rate": 0.24
   },
   "in_flight": {
    "agree": 5,
    "n": 11
   },
   "n": 36,
-  "rate": 0.2222222222222222
+  "rate": 0.3055555555555556
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 39,
  "bot_errors": 0,
  "bot_fallbacks": 3,
@@ -582,34 +582,34 @@
  "disagreements": [
   {
    "bot": {
-    "index": 2,
-    "text": "Use Daughter of the Void"
+    "index": 1,
+    "text": "Play Watchful Sentry to base"
    },
    "clean_boundary": true,
    "decision": 7,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.15333333333333332,
+    "share": 0.31,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.46,
-     "text": "Use Daughter of the Void"
-    },
-    {
      "index": 1,
-     "share": 0.38666666666666666,
+     "share": 0.59,
      "text": "Play Watchful Sentry to base"
     },
     {
      "index": 0,
-     "share": 0.15333333333333332,
+     "share": 0.31,
      "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.1,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 0
@@ -624,7 +624,7 @@
    "event_text": "Played Stupefy from hand.",
    "human": {
     "index": 1,
-    "share": 0.23,
+    "share": 0.35,
     "text": "Play Stupefy targeting Gutter Guardian"
    },
    "kind": "play",
@@ -632,17 +632,46 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.6,
+     "share": 0.47,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.23,
+     "share": 0.35,
      "text": "Play Stupefy targeting Gutter Guardian"
     },
     {
      "index": 2,
-     "share": 0.17,
+     "share": 0.18,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 19,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 1,
+    "share": 0.48,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.52,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.48,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -658,7 +687,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.3,
+    "share": 0.12,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -666,85 +695,51 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.49,
+     "share": 0.7,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 0,
-     "share": 0.3,
-     "text": "End turn"
+     "index": 1,
+     "share": 0.18,
+     "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 1,
-     "share": 0.21,
-     "text": "Play Watchful Sentry to base"
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Bellows Breath targeting Tail-Cloaked Matriarch"
-   },
-   "clean_boundary": true,
-   "decision": 43,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.043333333333333335,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.46,
-     "text": "Play Bellows Breath targeting Tail-Cloaked Matriarch"
-    },
-    {
-     "index": 4,
-     "share": 0.4,
-     "text": "Play Stupefy targeting Tail-Cloaked Matriarch"
-    },
-    {
-     "index": 7,
-     "share": 0.09666666666666666,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting Momentary Companion"
+    "text": "Pass"
    },
    "clean_boundary": false,
    "decision": 61,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 3,
-    "share": 0.26,
+    "share": 0.08,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.4,
-     "text": "Play Stupefy targeting Momentary Companion"
-    },
-    {
      "index": 0,
-     "share": 0.34,
+     "share": 0.82,
      "text": "Pass"
     },
     {
+     "index": 1,
+     "share": 0.1,
+     "text": "Play Stupefy targeting Momentary Companion"
+    },
+    {
      "index": 3,
-     "share": 0.26,
+     "share": 0.08,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -752,37 +747,100 @@
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Bellows Breath targeting Momentary Companion"
+    "index": 1,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 66,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.08,
+    "share": 0.02,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.2866666666666667,
-     "text": "Play Bellows Breath targeting Momentary Companion"
+     "index": 1,
+     "share": 0.74,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 3,
-     "share": 0.22666666666666666,
+     "share": 0.19,
      "text": "Play Plundering Poro to base"
     },
     {
-     "index": 6,
-     "share": 0.21666666666666667,
-     "text": "Play Stupefy targeting Momentary Companion"
+     "index": 2,
+     "share": 0.03,
+     "text": "Play Bilgewater Tracker to base"
     }
    ],
    "turn": 6
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 81,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.17,
+    "text": "Play Stupefy targeting Tornado Warrior"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.73,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Play Stupefy targeting Tornado Warrior"
+    },
+    {
+     "index": 5,
+     "share": 0.1,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 83,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 1,
+    "share": 0.48,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.52,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.48,
+     "text": "Use Daughter of the Void"
+    }
+   ],
+   "turn": 8
   },
   {
    "bot": {
@@ -794,7 +852,7 @@
    "event_text": "Played Bellows Breath from hand.",
    "human": {
     "index": 5,
-    "share": 0.32,
+    "share": 0.04,
     "text": "Play Bellows Breath targeting Tornado Warrior"
    },
    "kind": "play",
@@ -802,52 +860,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.47,
+     "share": 0.8,
      "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 5,
-     "share": 0.32,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 2,
+     "share": 0.1,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
      "index": 3,
-     "share": 0.11,
+     "share": 0.04,
      "text": "Play Plundering Poro to base"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Plundering Poro to base"
-   },
-   "clean_boundary": true,
-   "decision": 96,
-   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
-   "human": {
-    "index": 2,
-    "share": 0.07,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.38666666666666666,
-     "text": "Play Plundering Poro to base"
-    },
-    {
-     "index": 5,
-     "share": 0.28,
-     "text": "Play Noxus Hopeful to base"
-    },
-    {
-     "index": 0,
-     "share": 0.13666666666666666,
-     "text": "End turn"
     }
    ],
    "turn": 8
@@ -855,32 +879,32 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Plundering Poro to base"
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
-   "decision": 103,
-   "event_text": "Emp4 played Noxus Hopeful from hand to base.",
+   "decision": 96,
+   "event_text": "Emp4 played Bilgewater Tracker from hand to base.",
    "human": {
     "index": 2,
-    "share": 0.37333333333333335,
-    "text": "Play Noxus Hopeful to base"
+    "share": 0.15,
+    "text": "Play Bilgewater Tracker to base"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
      "index": 1,
-     "share": 0.48333333333333334,
-     "text": "Play Plundering Poro to base"
+     "share": 0.37,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 2,
-     "share": 0.37333333333333335,
+     "index": 5,
+     "share": 0.24,
      "text": "Play Noxus Hopeful to base"
     },
     {
      "index": 0,
-     "share": 0.14333333333333334,
+     "share": 0.18,
      "text": "End turn"
     }
    ],
@@ -896,7 +920,7 @@
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 9,
-    "share": 0.12666666666666668,
+    "share": 0.09,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -904,18 +928,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.2866666666666667,
+     "share": 0.23,
      "text": "Move Noxus Hopeful to Rakelstake"
     },
     {
-     "index": 2,
-     "share": 0.21666666666666667,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 7,
+     "share": 0.2,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 11,
-     "share": 0.16,
-     "text": "Play Plundering Poro to base"
+     "index": 10,
+     "share": 0.17,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 10
@@ -930,7 +954,7 @@
    "event_text": "Emp4 played Noxus Hopeful from hand to base.",
    "human": {
     "index": 9,
-    "share": 0.12333333333333334,
+    "share": 0.2,
     "text": "Play Noxus Hopeful to base"
    },
    "kind": "play",
@@ -938,123 +962,55 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.3433333333333333,
+     "share": 0.22,
      "text": "Move Noxus Hopeful to Rakelstake"
     },
     {
-     "index": 2,
-     "share": 0.23333333333333334,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 7,
+     "share": 0.21,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 7,
-     "share": 0.14666666666666667,
-     "text": "Play Thousand-Tailed Watcher to base"
+     "index": 9,
+     "share": 0.2,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Noxus Hopeful to Rakelstake"
+    "index": 7,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 126,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.03333333333333333,
+    "share": 0.2,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.4033333333333333,
-     "text": "Move Noxus Hopeful to Rakelstake"
-    },
-    {
-     "index": 2,
-     "share": 0.33,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
      "index": 7,
-     "share": 0.12,
+     "share": 0.23,
      "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 0,
+     "share": 0.2,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.18,
+     "text": "Move Noxus Hopeful to Rakelstake"
     }
    ],
    "turn": 10
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 137,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to base.",
-   "human": {
-    "index": 31,
-    "share": 0.01,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.64,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.29333333333333333,
-     "text": "Move Noxus Hopeful to Rakelstake"
-    },
-    {
-     "index": 34,
-     "share": 0.023333333333333334,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
-   },
-   "clean_boundary": true,
-   "decision": 151,
-   "event_text": "Played Falling Star from hand.",
-   "human": {
-    "index": 32,
-    "share": 0.016666666666666666,
-    "text": "Play Falling Star"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.6033333333333334,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
-    },
-    {
-     "index": 1,
-     "share": 0.2966666666666667,
-     "text": "Move Noxus Hopeful to Rakelstake"
-    },
-    {
-     "index": 31,
-     "share": 0.07666666666666666,
-     "text": "Play Lecturing Yordle to base"
-    }
-   ],
-   "turn": 12
   },
   {
    "bot": {
@@ -1066,7 +1022,7 @@
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.0033333333333333335,
+    "share": 0.34,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -1074,26 +1030,26 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.55,
+     "share": 0.35,
      "text": "Move Noxus Hopeful to Rakelstake"
     },
     {
-     "index": 2,
-     "share": 0.44666666666666666,
-     "text": "Move Noxus Hopeful to Frozen Fortress"
+     "index": 0,
+     "share": 0.34,
+     "text": "End turn"
     },
     {
-     "index": 0,
-     "share": 0.0033333333333333335,
-     "text": "End turn"
+     "index": 2,
+     "share": 0.31,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 12
   },
   {
    "bot": {
-    "index": 14,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 171,
@@ -1107,121 +1063,53 @@
    "player": 1,
    "top3": [
     {
-     "index": 14,
-     "share": 0.67,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
     },
     {
      "index": 1,
-     "share": 0.16666666666666666,
+     "share": 0.23,
      "text": "Move Noxus Hopeful to Rakelstake"
     },
     {
-     "index": 15,
-     "share": 0.09,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 2,
+     "share": 0.19,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Bellows Breath targeting Tornado Warrior"
-   },
-   "clean_boundary": false,
-   "decision": 172,
-   "event_text": "Emp4 passed focus at Rakelstake.",
-   "human": {
     "index": 0,
-    "share": 0.38333333333333336,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.5266666666666666,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    },
-    {
-     "index": 0,
-     "share": 0.38333333333333336,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.09,
-     "text": "Play Hextech Ray targeting Thousand-Tailed Watcher"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Frozen Fortress"
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 182,
    "event_text": "Emp4 moved Noxus Hopeful to Rakelstake.",
    "human": {
     "index": 1,
-    "share": 0.20333333333333334,
+    "share": 0.13,
     "text": "Move Noxus Hopeful to Rakelstake"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
+     "index": 0,
+     "share": 0.54,
+     "text": "End turn"
+    },
+    {
      "index": 2,
-     "share": 0.7066666666666667,
+     "share": 0.15,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
      "index": 1,
-     "share": 0.20333333333333334,
+     "share": 0.13,
      "text": "Move Noxus Hopeful to Rakelstake"
-    },
-    {
-     "index": 33,
-     "share": 0.07666666666666666,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play Bellows Breath targeting Tornado Warrior"
-   },
-   "clean_boundary": false,
-   "decision": 183,
-   "event_text": "Emp4 passed focus at Rakelstake.",
-   "human": {
-    "index": 0,
-    "share": 0.04666666666666667,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.9066666666666666,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    },
-    {
-     "index": 0,
-     "share": 0.04666666666666667,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.04666666666666667,
-     "text": "Play Hextech Ray targeting Noxus Hopeful"
     }
    ],
    "turn": 14
@@ -1236,7 +1124,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 30,
-    "share": 0.01,
+    "share": 0.04,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -1244,51 +1132,85 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.8466666666666667,
+     "share": 0.49,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     },
     {
-     "index": 19,
-     "share": 0.09333333333333334,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 16,
+     "share": 0.16,
+     "text": "Play Brynhir Thundersong to base"
     },
     {
-     "index": 1,
-     "share": 0.023333333333333334,
-     "text": "Move Noxus Hopeful to Rakelstake"
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 16,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 201,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 17,
-    "share": 0.006666666666666667,
+    "share": 0.03,
     "text": "Play Hextech Ray targeting Rengar, Trophy Hunter"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 16,
-     "share": 0.86,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 19,
-     "share": 0.06,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 0,
+     "share": 0.29,
+     "text": "End turn"
     },
     {
      "index": 2,
-     "share": 0.043333333333333335,
+     "share": 0.29,
+     "text": "Move Noxus Hopeful to Frozen Fortress"
+    },
+    {
+     "index": 16,
+     "share": 0.2,
+     "text": "Play Brynhir Thundersong to base"
+    }
+   ],
+   "turn": 14
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Noxus Hopeful to Rakelstake"
+   },
+   "clean_boundary": true,
+   "decision": 205,
+   "event_text": "Emp4 moved Noxus Hopeful to Frozen Fortress.",
+   "human": {
+    "index": 2,
+    "share": 0.08,
+    "text": "Move Noxus Hopeful to Frozen Fortress"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.68,
+     "text": "Move Noxus Hopeful to Rakelstake"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.08,
      "text": "Move Noxus Hopeful to Frozen Fortress"
     }
    ],
@@ -1297,36 +1219,7 @@
   {
    "bot": {
     "index": 1,
-    "text": "Play Bellows Breath targeting Tornado Warrior"
-   },
-   "clean_boundary": false,
-   "decision": 206,
-   "event_text": "Emp4 passed focus at Frozen Fortress.",
-   "human": {
-    "index": 0,
-    "share": 0.013333333333333334,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9866666666666667,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    },
-    {
-     "index": 0,
-     "share": 0.013333333333333334,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Play Bellows Breath targeting Tornado Warrior"
+    "text": "Move Bilgewater Tracker to Rakelstake"
    },
    "clean_boundary": true,
    "decision": 208,
@@ -1340,95 +1233,61 @@
    "player": 1,
    "top3": [
     {
-     "index": 11,
-     "share": 0.7733333333333333,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    },
-    {
-     "index": 10,
-     "share": 0.17,
-     "text": "Play Brynhir Thundersong to Frozen Fortress"
-    },
-    {
      "index": 1,
-     "share": 0.013333333333333334,
+     "share": 0.79,
      "text": "Move Bilgewater Tracker to Rakelstake"
-    }
-   ],
-   "turn": 14
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Bellows Breath targeting Tornado Warrior"
-   },
-   "clean_boundary": false,
-   "decision": 209,
-   "event_text": "Emp4 passed focus at Rakelstake.",
-   "human": {
-    "index": 0,
-    "share": 0.016666666666666666,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.9733333333333334,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
     },
     {
      "index": 0,
-     "share": 0.016666666666666666,
-     "text": "Pass focus"
+     "share": 0.07,
+     "text": "End turn"
     },
     {
-     "index": 12,
-     "share": 0.01,
-     "text": "Play Temporal Breach"
+     "index": 2,
+     "share": 0.05,
+     "text": "Move Bilgewater Tracker to Frozen Fortress"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 5,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 4,
+    "text": "Play Lecturing Yordle to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 216,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.006666666666666667,
+    "share": 0.06,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 5,
-     "share": 0.44,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 4,
+     "share": 0.81,
+     "text": "Play Lecturing Yordle to Frozen Fortress"
     },
     {
-     "index": 6,
-     "share": 0.30666666666666664,
-     "text": "Play Brynhir Thundersong to Frozen Fortress"
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
     },
     {
-     "index": 9,
-     "share": 0.16,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 2,
+     "share": 0.04,
+     "text": "Move Bilgewater Tracker to Frozen Fortress"
     }
    ],
    "turn": 14
   },
   {
    "bot": {
-    "index": 23,
-    "text": "Play Smoke Screen targeting Tornado Warrior"
+    "index": 3,
+    "text": "Move Bilgewater Tracker to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 222,
@@ -1442,87 +1301,116 @@
    "player": 1,
    "top3": [
     {
-     "index": 23,
-     "share": 0.35,
-     "text": "Play Smoke Screen targeting Tornado Warrior"
+     "index": 3,
+     "share": 0.68,
+     "text": "Move Bilgewater Tracker to Frozen Fortress"
     },
     {
-     "index": 12,
-     "share": 0.2966666666666667,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
+     "index": 2,
+     "share": 0.1,
+     "text": "Move Bilgewater Tracker to Rakelstake"
     },
     {
-     "index": 22,
-     "share": 0.08666666666666667,
-     "text": "Play Temporal Breach"
+     "index": 0,
+     "share": 0.04,
+     "text": "End turn"
     }
    ],
    "turn": 16
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Bilgewater Tracker to Frozen Fortress"
+    "index": 5,
+    "text": "Play Lecturing Yordle to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 223,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.0033333333333333335,
+    "share": 0.02,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
+     "index": 5,
+     "share": 0.8,
+     "text": "Play Lecturing Yordle to Frozen Fortress"
+    },
+    {
      "index": 3,
-     "share": 0.85,
+     "share": 0.04,
      "text": "Move Bilgewater Tracker to Frozen Fortress"
     },
     {
-     "index": 8,
-     "share": 0.05,
-     "text": "Play Bellows Breath targeting Tornado Warrior"
-    },
-    {
-     "index": 19,
-     "share": 0.04666666666666667,
-     "text": "Play Smoke Screen targeting Tornado Warrior"
+     "index": 0,
+     "share": 0.02,
+     "text": "End turn"
     }
    ],
    "turn": 16
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Move Bilgewater Tracker to Frozen Fortress"
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 230,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.22,
+    "text": "Play Smoke Screen targeting Tornado Warrior"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.78,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.22,
+     "text": "Play Smoke Screen targeting Tornado Warrior"
+    }
+   ],
+   "turn": 17
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Lecturing Yordle to Frozen Fortress"
    },
    "clean_boundary": true,
    "decision": 249,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.013333333333333334,
+    "share": 0.04,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.7666666666666667,
-     "text": "Move Bilgewater Tracker to Frozen Fortress"
+     "index": 7,
+     "share": 0.78,
+     "text": "Play Lecturing Yordle to Frozen Fortress"
     },
     {
-     "index": 1,
-     "share": 0.06666666666666667,
-     "text": "Move Noxus Hopeful to base"
-    },
-    {
-     "index": 12,
+     "index": 0,
      "share": 0.04,
-     "text": "Play Hextech Ray targeting Rengar, Trophy Hunter"
+     "text": "End turn"
+    },
+    {
+     "index": 10,
+     "share": 0.04,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 18
@@ -2015,7 +1903,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_evelynn_rl2_47bf14481a58c8081efdcd52fb250be1.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 4.443812651000001,
-  "seconds": 4.472796844
+  "bot_seconds": 1.629592811,
+  "seconds": 1.657288588
  }
 }

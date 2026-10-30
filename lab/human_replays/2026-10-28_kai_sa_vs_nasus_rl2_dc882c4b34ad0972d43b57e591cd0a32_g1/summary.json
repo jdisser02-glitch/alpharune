@@ -3,7 +3,7 @@
  "actors_settled": 0,
  "actors_uncertain": 2,
  "agreement": {
-  "agree": 9,
+  "agree": 10,
   "by_kind": {
    "ability": {
     "agree": 0,
@@ -11,14 +11,14 @@
     "rate": 0.0
    },
    "battlefield": {
-    "agree": 0,
+    "agree": 1,
     "n": 1,
-    "rate": 0.0
+    "rate": 1.0
    },
    "end_turn": {
-    "agree": 2,
+    "agree": 4,
     "n": 5,
-    "rate": 0.4
+    "rate": 0.8
    },
    "hide": {
     "agree": 0,
@@ -26,34 +26,34 @@
     "rate": 0.0
    },
    "move": {
-    "agree": 2,
+    "agree": 0,
     "n": 7,
-    "rate": 0.2857142857142857
+    "rate": 0.0
    },
    "pass_focus": {
-    "agree": 1,
+    "agree": 2,
     "n": 2,
-    "rate": 0.5
+    "rate": 1.0
    },
    "play": {
-    "agree": 4,
+    "agree": 3,
     "n": 14,
-    "rate": 0.2857142857142857
+    "rate": 0.21428571428571427
    }
   },
   "clean_boundary": {
-   "agree": 5,
+   "agree": 7,
    "n": 25,
-   "rate": 0.2
+   "rate": 0.28
   },
   "in_flight": {
-   "agree": 4,
+   "agree": 3,
    "n": 8
   },
   "n": 33,
-  "rate": 0.2727272727272727
+  "rate": 0.30303030303030304
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6,threads=1",
  "bot_calls": 36,
  "bot_errors": 0,
  "bot_fallbacks": 3,
@@ -455,233 +455,102 @@
  "disagreements": [
   {
    "bot": {
-    "index": 2,
-    "text": "Bring battlefield Kai'Sa, Survivor"
-   },
-   "clean_boundary": false,
-   "decision": 1,
-   "event_text": "Dantelush locked in a battlefield.",
-   "human": {
-    "index": 0,
-    "share": 0.26,
-    "text": "Bring battlefield ?"
-   },
-   "kind": "battlefield",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.41,
-     "text": "Bring battlefield Kai'Sa, Survivor"
-    },
-    {
-     "index": 1,
-     "share": 0.33,
-     "text": "Bring battlefield Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.26,
-     "text": "Bring battlefield ?"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 5,
-   "event_text": "Emp4 played Watchful Sentry from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.29,
-    "text": "Play Watchful Sentry to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.39,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.32,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.29,
-     "text": "Play Watchful Sentry to base"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": true,
-   "decision": 8,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.38333333333333336,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.6166666666666667,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.38333333333333336,
-     "text": "End turn"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Watchful Sentry to Dragon Roost"
+    "index": 3,
+    "text": "Play Kai'Sa, Survivor to base"
    },
    "clean_boundary": true,
    "decision": 18,
    "event_text": "Emp4 moved Watchful Sentry to Rockfall Path.",
    "human": {
     "index": 1,
-    "share": 0.19666666666666666,
+    "share": 0.32,
     "text": "Move Watchful Sentry to Rockfall Path"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.5666666666666667,
-     "text": "Move Watchful Sentry to Dragon Roost"
+     "index": 3,
+     "share": 0.38,
+     "text": "Play Kai'Sa, Survivor to base"
     },
     {
      "index": 1,
-     "share": 0.19666666666666666,
+     "share": 0.32,
      "text": "Move Watchful Sentry to Rockfall Path"
     },
     {
-     "index": 3,
-     "share": 0.09,
-     "text": "Play Kai'Sa, Survivor to base"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Hextech Ray targeting Watchful Sentry"
-   },
-   "clean_boundary": true,
-   "decision": 21,
-   "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
-   "human": {
-    "index": 1,
-    "share": 0.07666666666666666,
-    "text": "Play Kai'Sa, Survivor to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
      "index": 2,
-     "share": 0.43333333333333335,
-     "text": "Play Hextech Ray targeting Watchful Sentry"
-    },
-    {
-     "index": 4,
-     "share": 0.22666666666666666,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 3,
-     "share": 0.20666666666666667,
-     "text": "Play Discipline"
+     "share": 0.25,
+     "text": "Move Watchful Sentry to Dragon Roost"
     }
    ],
    "turn": 2
   },
   {
    "bot": {
-    "index": 3,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 5,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 43,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 8,
-    "share": 0.013333333333333334,
+    "share": 0.07,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 3,
-     "share": 0.8066666666666666,
-     "text": "Play Brynhir Thundersong to base"
+     "index": 5,
+     "share": 0.4,
+     "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 6,
-     "share": 0.06,
-     "text": "Play Hextech Ray targeting Lecturing Yordle"
+     "index": 1,
+     "share": 0.31,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
-     "index": 4,
-     "share": 0.043333333333333335,
-     "text": "Play Ferrous Forerunner to base"
+     "index": 8,
+     "share": 0.07,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    "index": 5,
+    "text": "Play Bilgewater Tracker to base"
    },
    "clean_boundary": true,
    "decision": 46,
    "event_text": "Played Hextech Ray from hand.",
    "human": {
     "index": 6,
-    "share": 0.04,
+    "share": 0.03,
     "text": "Play Hextech Ray targeting Lecturing Yordle"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
+     "index": 5,
+     "share": 0.61,
+     "text": "Play Bilgewater Tracker to base"
+    },
+    {
      "index": 1,
-     "share": 0.44,
+     "share": 0.17,
      "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
-     "index": 3,
-     "share": 0.2733333333333333,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 4,
-     "share": 0.17,
-     "text": "Play Ferrous Forerunner to base"
+     "index": 2,
+     "share": 0.06,
+     "text": "Move Kai'Sa, Survivor to Dragon Roost"
     }
    ],
    "turn": 4
@@ -696,7 +565,7 @@
    "event_text": "Played Discipline from hand.",
    "human": {
     "index": 1,
-    "share": 0.31333333333333335,
+    "share": 0.37,
     "text": "Play Discipline"
    },
    "kind": "play",
@@ -704,12 +573,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.6866666666666666,
+     "share": 0.63,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.31333333333333335,
+     "share": 0.37,
      "text": "Play Discipline"
     }
    ],
@@ -725,7 +594,7 @@
    "event_text": "Emp4 moved Kai'Sa, Survivor to Dragon Roost.",
    "human": {
     "index": 2,
-    "share": 0.18666666666666668,
+    "share": 0.1,
     "text": "Move Kai'Sa, Survivor to Dragon Roost"
    },
    "kind": "move",
@@ -733,18 +602,18 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.43666666666666665,
+     "share": 0.39,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 2,
-     "share": 0.18666666666666668,
-     "text": "Move Kai'Sa, Survivor to Dragon Roost"
+     "index": 1,
+     "share": 0.27,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
     },
     {
-     "index": 1,
-     "share": 0.17333333333333334,
-     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+     "index": 4,
+     "share": 0.12,
+     "text": "Play Watchful Sentry to base"
     }
    ],
    "turn": 4
@@ -759,7 +628,7 @@
    "event_text": "Emp4 played Watchful Sentry from hand to base.",
    "human": {
     "index": 3,
-    "share": 0.06333333333333334,
+    "share": 0.19,
     "text": "Play Watchful Sentry to base"
    },
    "kind": "play",
@@ -767,52 +636,86 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.5666666666666667,
+     "share": 0.26,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 2,
-     "share": 0.11,
-     "text": "Play Bilgewater Tracker to Dragon Roost"
+     "index": 3,
+     "share": 0.19,
+     "text": "Play Watchful Sentry to base"
     },
     {
-     "index": 5,
-     "share": 0.07666666666666666,
-     "text": "Play Forecaster to base"
+     "index": 7,
+     "share": 0.19,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 4
   },
   {
    "bot": {
-    "index": 4,
-    "text": "Play Brynhir Thundersong to base"
+    "index": 8,
+    "text": "Play Thousand-Tailed Watcher to base"
    },
    "clean_boundary": true,
    "decision": 76,
    "event_text": "Emp4 moved Kai'Sa, Survivor to base.",
    "human": {
     "index": 1,
-    "share": 0.03,
+    "share": 0.01,
     "text": "Move Kai'Sa, Survivor to base"
    },
    "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 4,
-     "share": 0.4166666666666667,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 5,
-     "share": 0.10666666666666667,
-     "text": "Play Brynhir Thundersong to Dragon Roost"
+     "index": 8,
+     "share": 0.28,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
      "index": 2,
-     "share": 0.07666666666666666,
+     "share": 0.18,
      "text": "Move Watchful Sentry to Rockfall Path"
+    },
+    {
+     "index": 6,
+     "share": 0.13,
+     "text": "Play The Empyrean to base"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Watchful Sentry to Rockfall Path"
+   },
+   "clean_boundary": true,
+   "decision": 77,
+   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
+   "human": {
+    "index": 3,
+    "share": 0.1,
+    "text": "Play Brynhir Thundersong to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Move Watchful Sentry to Rockfall Path"
+    },
+    {
+     "index": 6,
+     "share": 0.21,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 4,
+     "share": 0.19,
+     "text": "Play The Empyrean to base"
     }
    ],
    "turn": 6
@@ -827,7 +730,7 @@
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 1,
-    "share": 0.3433333333333333,
+    "share": 0.38,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
@@ -835,12 +738,12 @@
    "top3": [
     {
      "index": 0,
-     "share": 0.6566666666666666,
+     "share": 0.62,
      "text": "Pass"
     },
     {
      "index": 1,
-     "share": 0.3433333333333333,
+     "share": 0.38,
      "text": "Use Daughter of the Void"
     }
    ],
@@ -856,7 +759,7 @@
    "event_text": "Played Temporal Breach from hand.",
    "human": {
     "index": 5,
-    "share": 0.18666666666666668,
+    "share": 0.03,
     "text": "Play Temporal Breach"
    },
    "kind": "play",
@@ -864,18 +767,18 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.23,
+     "share": 0.43,
      "text": "Move Watchful Sentry to Rockfall Path"
     },
     {
-     "index": 4,
-     "share": 0.20333333333333334,
-     "text": "Play Noxus Hopeful to base"
+     "index": 0,
+     "share": 0.22,
+     "text": "End turn"
     },
     {
-     "index": 5,
-     "share": 0.18666666666666668,
-     "text": "Play Temporal Breach"
+     "index": 4,
+     "share": 0.14,
+     "text": "Play Noxus Hopeful to base"
     }
    ],
    "turn": 6
@@ -890,7 +793,7 @@
    "event_text": "Emp4 moved Watchful Sentry to Dragon Roost.",
    "human": {
     "index": 2,
-    "share": 0.24333333333333335,
+    "share": 0.31,
     "text": "Move Watchful Sentry to Dragon Roost"
    },
    "kind": "move",
@@ -898,17 +801,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.5733333333333334,
+     "share": 0.44,
      "text": "Move Watchful Sentry to Rockfall Path"
     },
     {
      "index": 2,
-     "share": 0.24333333333333335,
+     "share": 0.31,
      "text": "Move Watchful Sentry to Dragon Roost"
     },
     {
      "index": 0,
-     "share": 0.18333333333333332,
+     "share": 0.25,
      "text": "End turn"
     }
    ],
@@ -916,62 +819,33 @@
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Play Stupefy targeting The Empyrean"
-   },
-   "clean_boundary": false,
-   "decision": 118,
-   "event_text": "Emp4 passed focus at Rockfall Path.",
-   "human": {
-    "index": 0,
-    "share": 0.19,
-    "text": "Pass focus"
-   },
-   "kind": "pass_focus",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.81,
-     "text": "Play Stupefy targeting The Empyrean"
-    },
-    {
-     "index": 0,
-     "share": 0.19,
-     "text": "Pass focus"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 14,
-    "text": "Play Stupefy targeting The Empyrean"
-   },
-   "clean_boundary": true,
-   "decision": 123,
-   "event_text": "Emp4 played The Empyrean from hand to base.",
-   "human": {
-    "index": 4,
-    "share": 0.08,
+    "index": 8,
     "text": "Play The Empyrean to base"
    },
-   "kind": "play",
+   "clean_boundary": true,
+   "decision": 117,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to Rockfall Path.",
+   "human": {
+    "index": 1,
+    "share": 0.13,
+    "text": "Move Kai'Sa, Survivor to Rockfall Path"
+   },
+   "kind": "move",
    "player": 1,
    "top3": [
     {
-     "index": 14,
-     "share": 0.22333333333333333,
-     "text": "Play Stupefy targeting The Empyrean"
+     "index": 8,
+     "share": 0.26,
+     "text": "Play The Empyrean to base"
     },
     {
-     "index": 20,
-     "share": 0.17333333333333334,
-     "text": "Play Bellows Breath targeting The Empyrean"
-    },
-    {
-     "index": 6,
+     "index": 1,
      "share": 0.13,
+     "text": "Move Kai'Sa, Survivor to Rockfall Path"
+    },
+    {
+     "index": 10,
+     "share": 0.11,
      "text": "Play Thousand-Tailed Watcher to base"
     }
    ],
@@ -979,42 +853,42 @@
   },
   {
    "bot": {
-    "index": 10,
-    "text": "Play Stupefy targeting The Empyrean"
-   },
-   "clean_boundary": true,
-   "decision": 135,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
     "index": 0,
-    "share": 0.02666666666666667,
-    "text": "End turn"
+    "text": "Pass focus"
    },
-   "kind": "end_turn",
+   "clean_boundary": false,
+   "decision": 152,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.42,
+    "text": "Play Stupefy targeting Thousand-Tailed Watcher"
+   },
+   "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 10,
-     "share": 0.33666666666666667,
-     "text": "Play Stupefy targeting The Empyrean"
+     "index": 0,
+     "share": 0.52,
+     "text": "Pass focus"
     },
     {
-     "index": 17,
-     "share": 0.18666666666666668,
-     "text": "Play Smoke Screen targeting The Empyrean"
+     "index": 1,
+     "share": 0.42,
+     "text": "Play Stupefy targeting Thousand-Tailed Watcher"
     },
     {
-     "index": 4,
-     "share": 0.11333333333333333,
-     "text": "Play Noxus Hopeful to base"
+     "index": 9,
+     "share": 0.06,
+     "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
     }
    ],
-   "turn": 8
+   "turn": 9
   },
   {
    "bot": {
-    "index": 25,
-    "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 170,
@@ -1028,61 +902,61 @@
    "player": 1,
    "top3": [
     {
-     "index": 25,
-     "share": 0.16,
-     "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
     },
     {
-     "index": 1,
-     "share": 0.11,
-     "text": "Move Kai'Sa, Survivor to base"
+     "index": 9,
+     "share": 0.1,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 19,
-     "share": 0.10666666666666667,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 35,
+     "share": 0.07,
+     "text": "Use Daughter of the Void"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 21,
-    "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
+    "index": 20,
+    "text": "Play Lecturing Yordle to Dragon Roost"
    },
    "clean_boundary": true,
    "decision": 171,
    "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
    "human": {
     "index": 32,
-    "share": 0.02,
+    "share": 0.06,
     "text": "Use Daughter of the Void"
    },
    "kind": "ability",
    "player": 1,
    "top3": [
     {
-     "index": 21,
-     "share": 0.17,
-     "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
-    },
-    {
-     "index": 15,
-     "share": 0.14666666666666667,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 20,
+     "share": 0.39,
+     "text": "Play Lecturing Yordle to Dragon Roost"
     },
     {
      "index": 5,
-     "share": 0.10666666666666667,
+     "share": 0.09,
      "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 21,
-    "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
+    "index": 20,
+    "text": "Play Lecturing Yordle to Dragon Roost"
    },
    "clean_boundary": true,
    "decision": 174,
@@ -1096,27 +970,61 @@
    "player": 1,
    "top3": [
     {
-     "index": 21,
-     "share": 0.18666666666666668,
-     "text": "Play Smoke Screen targeting Thousand-Tailed Watcher"
+     "index": 20,
+     "share": 0.52,
+     "text": "Play Lecturing Yordle to Dragon Roost"
     },
     {
      "index": 15,
-     "share": 0.13,
+     "share": 0.08,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 1,
-     "share": 0.12333333333333334,
-     "text": "Move Kai'Sa, Survivor to base"
+     "index": 0,
+     "share": 0.07,
+     "text": "End turn"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 13,
-    "text": "Play Bilgewater Tracker to base"
+    "index": 20,
+    "text": "Play Lecturing Yordle to Dragon Roost"
+   },
+   "clean_boundary": true,
+   "decision": 179,
+   "event_text": "Emp4 moved Brynhir Thundersong to Rockfall Path.",
+   "human": {
+    "index": 2,
+    "share": 0.06,
+    "text": "Move Brynhir Thundersong to Rockfall Path"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 20,
+     "share": 0.79,
+     "text": "Play Lecturing Yordle to Dragon Roost"
+    },
+    {
+     "index": 2,
+     "share": 0.06,
+     "text": "Move Brynhir Thundersong to Rockfall Path"
+    },
+    {
+     "index": 13,
+     "share": 0.01,
+     "text": "Play Ferrous Forerunner to base"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 18,
+    "text": "Play Lecturing Yordle to Dragon Roost"
    },
    "clean_boundary": true,
    "decision": 180,
@@ -1130,61 +1038,61 @@
    "player": 1,
    "top3": [
     {
-     "index": 13,
-     "share": 0.13666666666666666,
-     "text": "Play Bilgewater Tracker to base"
+     "index": 18,
+     "share": 0.69,
+     "text": "Play Lecturing Yordle to Dragon Roost"
     },
     {
-     "index": 16,
-     "share": 0.13333333333333333,
-     "text": "Play Plundering Poro to Dragon Roost"
+     "index": 3,
+     "share": 0.05,
+     "text": "Play Thousand-Tailed Watcher to base"
     },
     {
-     "index": 5,
-     "share": 0.11,
-     "text": "Play Noxus Hopeful to base"
+     "index": 4,
+     "share": 0.05,
+     "text": "Play Thousand-Tailed Watcher to Dragon Roost"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 8,
-    "text": "Play Bilgewater Tracker to Dragon Roost"
+    "index": 12,
+    "text": "Play Lecturing Yordle to Dragon Roost"
    },
    "clean_boundary": true,
    "decision": 192,
    "event_text": "Emp4 played Noxus Hopeful from hand to Dragon Roost.",
    "human": {
     "index": 4,
-    "share": 0.06,
+    "share": 0.04,
     "text": "Play Noxus Hopeful to Dragon Roost"
    },
    "kind": "play",
    "player": 1,
    "top3": [
     {
-     "index": 8,
-     "share": 0.23,
-     "text": "Play Bilgewater Tracker to Dragon Roost"
+     "index": 12,
+     "share": 0.69,
+     "text": "Play Lecturing Yordle to Dragon Roost"
     },
     {
      "index": 7,
-     "share": 0.16333333333333333,
+     "share": 0.06,
      "text": "Play Bilgewater Tracker to base"
     },
     {
-     "index": 19,
-     "share": 0.15666666666666668,
-     "text": "Hide Temporal Breach"
+     "index": 18,
+     "share": 0.05,
+     "text": "Play Temporal Breach"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to base"
+    "index": 0,
+    "text": "End turn"
    },
    "clean_boundary": true,
    "decision": 195,
@@ -1198,56 +1106,119 @@
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.38666666666666666,
-     "text": "Move Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 3,
-     "share": 0.34,
-     "text": "Play Hextech Ray targeting Noxus Hopeful"
+     "index": 0,
+     "share": 0.45,
+     "text": "End turn"
     },
     {
      "index": 9,
-     "share": 0.24333333333333335,
+     "share": 0.37,
      "text": "Hide Temporal Breach"
+    },
+    {
+     "index": 3,
+     "share": 0.15,
+     "text": "Play Hextech Ray targeting Noxus Hopeful"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 1,
-    "text": "Move Kai'Sa, Survivor to base"
+    "index": 3,
+    "text": "Play Hextech Ray targeting Noxus Hopeful"
    },
    "clean_boundary": true,
    "decision": 196,
    "event_text": "Emp4 ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.046242774566473986,
+    "share": 0.4027777777777778,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 1,
-     "share": 0.6184971098265896,
-     "text": "Move Kai'Sa, Survivor to base"
-    },
-    {
      "index": 3,
-     "share": 0.3352601156069364,
+     "share": 0.5694444444444444,
      "text": "Play Hextech Ray targeting Noxus Hopeful"
     },
     {
      "index": 0,
-     "share": 0.046242774566473986,
+     "share": 0.4027777777777778,
      "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.027777777777777776,
+     "text": "Move Kai'Sa, Survivor to base"
     }
    ],
    "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 208,
+   "event_text": "Played Temporal Breach from Dragon Roost.",
+   "human": {
+    "index": 1,
+    "share": 0.11,
+    "text": "Play Temporal Breach targeting Noxus Hopeful"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.89,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.11,
+     "text": "Play Temporal Breach targeting Noxus Hopeful"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 222,
+   "event_text": "Played Bellows Breath from hand.",
+   "human": {
+    "index": 8,
+    "share": 0.33,
+    "text": "Play Bellows Breath targeting Thousand-Tailed Watcher"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.43,
+     "text": "Pass focus"
+    },
+    {
+     "index": 8,
+     "share": 0.33,
+     "text": "Play Bellows Breath targeting Thousand-Tailed Watcher"
+    },
+    {
+     "index": 1,
+     "share": 0.24,
+     "text": "Play Hextech Ray targeting Scuttle Crab"
+    }
+   ],
+   "turn": 11
   }
  ],
  "exported_records": 0,
@@ -1622,7 +1593,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_nasus_rl2_dc882c4b34ad0972d43b57e591cd0a32.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 4.726780980999999,
-  "seconds": 4.751969562
+  "bot_seconds": 2.0176182280000003,
+  "seconds": 2.046732423
  }
 }
