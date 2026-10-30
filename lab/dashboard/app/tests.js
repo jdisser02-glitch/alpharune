@@ -77,7 +77,7 @@ function renderList(container) {
     </a>`;
   }).join("");
 
-  container.innerHTML = `<div class="v-tests stack loose">
+  container.innerHTML = `<div class="v-tests stack loose">${gatesHtml()}
     ${pageHead({ title: "Tests", eyebrow: "Simulated matches", sub: `Each test plays one or more Riven lists against a set of tournament decks, half the games on the play and half on the draw. A win rate is only as good as the bot playing both sides, so every number carries its 95% interval, the range the true rate most likely sits in, and its game count. Tests marked <span class="badge neutral">plumbing</span> use random players: they check that the engine runs and say nothing about deck strength.` })}
     <div class="kpis">${kpis}</div>
     <section class="section" aria-labelledby="t-list-h">
@@ -209,6 +209,26 @@ function roundsPanel(t) {
   </section>`;
 }
 
+/** The two validation gates every deck result sits behind: the engine must follow real games (median desyncs per game,
+    games followed to the end of their log) and the bot must agree with human players on clean decisions. Until both pass,
+    win rates are internal consistency numbers, not measures of the real metagame. */
+function gatesHtml() {
+  const hg = ((data().human_review || {}).games || []).filter(g => g.decisions);
+  if (!hg.length) return "";
+  const des = hg.map(g => g.desyncs || 0).sort((a, b) => a - b), med = des[Math.floor(des.length / 2)];
+  const followed = hg.filter(g => /log ended|engine game over/.test(g.stop_reason || "")).length;
+  const cn = hg.reduce((a, g) => a + (g.compared_clean || 0), 0), ca = hg.reduce((a, g) => a + (g.compared_clean || 0) * (g.agreement_clean_pct || 0) / 100, 0);
+  const engineOk = med <= 3 && followed / hg.length >= 0.9, botOk = cn > 0 && ca / cn >= 0.4;
+  const row = (ok, label, value, target) => `<div class="gate ${ok ? "ok" : "no"}"><span class="gate-mark">${ok ? "✓" : "✗"}</span><div><b>${label}</b><div class="small">${value} <span class="muted">· target ${target}</span></div></div></div>`;
+  return `<section class="panel t-gates ${engineOk && botOk ? "pass" : "fail"}"><div class="panel-head"><h2>Can these numbers be trusted yet?</h2><a class="more" href="#/replays?test=human">Real games →</a></div>
+    <p class="small">Every win rate below comes from the bot playing both sides inside the engine. It only measures the real game once two gates pass, checked against ${hg.length} real RiftLite games replayed through the engine.</p>
+    <div class="gates">
+      ${row(engineOk, "Engine follows real games", `${med} desyncs per game (median), ${followed} of ${hg.length} games followed to the end of their log`, "≤ 3 and ≥ 90%")}
+      ${row(botOk, "Bot agrees with human players", `${cn ? (100 * ca / cn).toFixed(0) : "—"}% of ${num(cn)} clean decisions`, "≥ 40%")}
+    </div>
+    ${engineOk && botOk ? `<p class="small">Both gates pass: deck results can be read as measurements, within their intervals.</p>` : `<p class="small"><b>Not validated yet.</b> Read the results below as a comparison between lists under the same conditions, not as the lists' true win rates. The engine's divergences from real games are being worked through by volume (showdowns the engine does not open, units it does not have, cards it will not let play when a human did).</p>`}
+  </section>`;
+}
 function renderDetail(container, id) {
   const t = testById(id);
   if (!t) { container.innerHTML = `<div class="v-tests stack">${pageHead({ title: "Test not found", sub: `No test is recorded under <span class="mono">${esc(id)}</span>.` })}${empty("Nothing here", `See <a href="#/tests">all tests</a>.`)}</div>`; return; }
