@@ -3,17 +3,27 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 4,
+  "agree": 7,
   "by_kind": {
+   "ability": {
+    "agree": 0,
+    "n": 1,
+    "rate": 0.0
+   },
    "battlefield": {
     "agree": 0,
     "n": 1,
     "rate": 0.0
    },
-   "end_turn": {
+   "choice": {
     "agree": 1,
+    "n": 2,
+    "rate": 0.5
+   },
+   "end_turn": {
+    "agree": 0,
     "n": 6,
-    "rate": 0.16666666666666666
+    "rate": 0.0
    },
    "hide": {
     "agree": 0,
@@ -25,32 +35,37 @@
     "n": 9,
     "rate": 0.2222222222222222
    },
-   "play": {
+   "pass_focus": {
     "agree": 1,
-    "n": 6,
-    "rate": 0.16666666666666666
+    "n": 3,
+    "rate": 0.3333333333333333
+   },
+   "play": {
+    "agree": 3,
+    "n": 12,
+    "rate": 0.25
    }
   },
   "clean_boundary": {
-   "agree": 4,
+   "agree": 3,
    "n": 22,
-   "rate": 0.18181818181818182
+   "rate": 0.13636363636363635
   },
   "in_flight": {
-   "agree": 0,
-   "n": 1
+   "agree": 4,
+   "n": 13
   },
-  "n": 23,
-  "rate": 0.17391304347826086
+  "n": 35,
+  "rate": 0.2
  },
- "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=2",
+ "bot": "pmcts:sims=300,eval=net:lab/learn/nets/net_004.rbvn,threads=1",
  "bot_calls": 38,
  "bot_errors": 0,
- "bot_fallbacks": 15,
+ "bot_fallbacks": 3,
  "capture_player": "Courage",
  "compare_both": false,
  "decisions": 227,
- "decisions_compared": 23,
+ "decisions_compared": 35,
  "decisions_human_known": 75,
  "decisions_trivial": 8,
  "desync_causes": {
@@ -351,25 +366,25 @@
    "event_text": "Bigfalafel locked in a battlefield.",
    "human": {
     "index": 0,
-    "share": 0.3333333333333333,
+    "share": 0.33666666666666667,
     "text": "Bring battlefield ?"
    },
    "kind": "battlefield",
    "player": 1,
    "top3": [
     {
-     "index": 2,
-     "share": 0.3433333333333333,
-     "text": "Bring battlefield Diana, Lunari"
-    },
-    {
      "index": 0,
-     "share": 0.3333333333333333,
+     "share": 0.33666666666666667,
      "text": "Bring battlefield ?"
     },
     {
+     "index": 2,
+     "share": 0.33666666666666667,
+     "text": "Bring battlefield Diana, Lunari"
+    },
+    {
      "index": 1,
-     "share": 0.3233333333333333,
+     "share": 0.32666666666666666,
      "text": "Bring battlefield Scorn of the Moon"
     }
    ],
@@ -385,7 +400,7 @@
    "event_text": "Courage ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.4166666666666667,
+    "share": 0.42,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -393,12 +408,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.5833333333333334,
+     "share": 0.58,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 0,
-     "share": 0.4166666666666667,
+     "share": 0.42,
      "text": "End turn"
     }
    ],
@@ -414,7 +429,7 @@
    "event_text": "Courage moved Tideturner to Packed Amphitheater.",
    "human": {
     "index": 1,
-    "share": 0.12,
+    "share": 0.18666666666666668,
     "text": "Move Tideturner to Packed Amphitheater"
    },
    "kind": "move",
@@ -422,18 +437,52 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.32666666666666666,
+     "share": 0.2633333333333333,
      "text": "Play Diana, Lunari to base"
     },
     {
      "index": 5,
-     "share": 0.24,
+     "share": 0.20333333333333334,
      "text": "Play Eclipse targeting Reckless Innovator"
     },
     {
      "index": 1,
-     "share": 0.12,
+     "share": 0.18666666666666668,
      "text": "Move Tideturner to Packed Amphitheater"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 17,
+   "event_text": "Played Moonfall from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.2733333333333333,
+    "text": "Play Moonfall"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.43666666666666665,
+     "text": "Pass focus"
+    },
+    {
+     "index": 2,
+     "share": 0.29,
+     "text": "Play Eclipse targeting Reckless Innovator"
+    },
+    {
+     "index": 1,
+     "share": 0.2733333333333333,
+     "text": "Play Moonfall"
     }
    ],
    "turn": 2
@@ -448,7 +497,7 @@
    "event_text": "Courage put a hidden card to Packed Amphitheater.",
    "human": {
     "index": 2,
-    "share": 0.3466666666666667,
+    "share": 0.36,
     "text": "Hide Switcheroo"
    },
    "kind": "hide",
@@ -456,17 +505,46 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.39666666666666667,
+     "share": 0.36666666666666664,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 2,
-     "share": 0.3466666666666667,
+     "share": 0.36,
      "text": "Hide Switcheroo"
     },
     {
      "index": 0,
-     "share": 0.25666666666666665,
+     "share": 0.2733333333333333,
+     "text": "End turn"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Use Scorn of the Moon"
+   },
+   "clean_boundary": true,
+   "decision": 30,
+   "event_text": "Courage ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.47058823529411764,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.5294117647058824,
+     "text": "Use Scorn of the Moon"
+    },
+    {
+     "index": 0,
+     "share": 0.47058823529411764,
      "text": "End turn"
     }
    ],
@@ -482,7 +560,7 @@
    "event_text": "Courage moved Diana, Lunari to base.",
    "human": {
     "index": 2,
-    "share": 0.21,
+    "share": 0.21666666666666667,
     "text": "Play Diana, Lunari to base"
    },
    "kind": "play",
@@ -495,13 +573,13 @@
     },
     {
      "index": 2,
-     "share": 0.21,
+     "share": 0.21666666666666667,
      "text": "Play Diana, Lunari to base"
     },
     {
-     "index": 1,
-     "share": 0.12666666666666668,
-     "text": "Move Tideturner to base"
+     "index": 7,
+     "share": 0.16333333333333333,
+     "text": "Use Scorn of the Moon"
     }
    ],
    "turn": 4
@@ -516,7 +594,7 @@
    "event_text": "Courage ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.15666666666666668,
+    "share": 0.13666666666666666,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -524,17 +602,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.51,
+     "share": 0.5133333333333333,
      "text": "Play Stupefy targeting Diana, Lunari"
     },
     {
      "index": 5,
-     "share": 0.21666666666666667,
+     "share": 0.24666666666666667,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 0,
-     "share": 0.15666666666666668,
+     "share": 0.13666666666666666,
      "text": "End turn"
     }
    ],
@@ -550,7 +628,7 @@
    "event_text": "Courage played Hwei, Brooding Painter from hand to Packed Amphitheater.",
    "human": {
     "index": 5,
-    "share": 0.03333333333333333,
+    "share": 0.016666666666666666,
     "text": "Play Hwei, Brooding Painter to Packed Amphitheater"
    },
    "kind": "play",
@@ -558,17 +636,17 @@
    "top3": [
     {
      "index": 8,
-     "share": 0.37,
+     "share": 0.6933333333333334,
      "text": "Play Ride the Wind"
     },
     {
      "index": 9,
-     "share": 0.13333333333333333,
+     "share": 0.07,
      "text": "Play Acceptable Losses"
     },
     {
      "index": 6,
-     "share": 0.11666666666666667,
+     "share": 0.05333333333333334,
      "text": "Play Tideturner to base"
     }
    ],
@@ -592,17 +670,17 @@
    "top3": [
     {
      "index": 5,
-     "share": 0.7733333333333333,
+     "share": 0.9033333333333333,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 3,
-     "share": 0.11333333333333333,
+     "share": 0.03333333333333333,
      "text": "Move Tideturner to base"
     },
     {
      "index": 4,
-     "share": 0.056666666666666664,
+     "share": 0.023333333333333334,
      "text": "Play Acceptable Losses"
     }
    ],
@@ -618,7 +696,7 @@
    "event_text": "Played Acceptable Losses from hand.",
    "human": {
     "index": 1,
-    "share": 0.07,
+    "share": 0.043333333333333335,
     "text": "Play Acceptable Losses"
    },
    "kind": "play",
@@ -626,17 +704,17 @@
    "top3": [
     {
      "index": 2,
-     "share": 0.8866666666666667,
+     "share": 0.93,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 1,
-     "share": 0.07,
+     "share": 0.043333333333333335,
      "text": "Play Acceptable Losses"
     },
     {
      "index": 0,
-     "share": 0.043333333333333335,
+     "share": 0.02666666666666667,
      "text": "End turn"
     }
    ],
@@ -652,7 +730,7 @@
    "event_text": "Courage ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.38,
+    "share": 0.36333333333333334,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -660,12 +738,12 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.62,
+     "share": 0.6366666666666667,
      "text": "Use Scorn of the Moon"
     },
     {
      "index": 0,
-     "share": 0.38,
+     "share": 0.36333333333333334,
      "text": "End turn"
     }
    ],
@@ -681,7 +759,7 @@
    "event_text": "Played Ride the Wind from hand.",
    "human": {
     "index": 8,
-    "share": 0.13666666666666666,
+    "share": 0.08333333333333333,
     "text": "Play Ride the Wind"
    },
    "kind": "play",
@@ -689,17 +767,17 @@
    "top3": [
     {
      "index": 1,
-     "share": 0.7266666666666667,
+     "share": 0.83,
      "text": "Move Hwei, Brooding Painter to base"
     },
     {
      "index": 8,
-     "share": 0.13666666666666666,
+     "share": 0.08333333333333333,
      "text": "Play Ride the Wind"
     },
     {
      "index": 6,
-     "share": 0.03666666666666667,
+     "share": 0.02,
      "text": "Play Tideturner to base"
     }
    ],
@@ -715,7 +793,7 @@
    "event_text": "Courage moved Hwei, Brooding Painter to Emperor's Dais.",
    "human": {
     "index": 2,
-    "share": 0.03676470588235294,
+    "share": 0.028268551236749116,
     "text": "Move Hwei, Brooding Painter to Emperor's Dais"
    },
    "kind": "move",
@@ -723,18 +801,86 @@
    "top3": [
     {
      "index": 8,
-     "share": 0.6544117647058824,
+     "share": 0.7879858657243817,
      "text": "Play Ride the Wind"
     },
     {
      "index": 0,
-     "share": 0.11397058823529412,
+     "share": 0.0636042402826855,
      "text": "End turn"
     },
     {
      "index": 9,
-     "share": 0.07720588235294118,
+     "share": 0.045936395759717315,
      "text": "Play Moonfall"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 122,
+   "event_text": "Played Hard Bargain from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.01,
+    "text": "Play Hard Bargain"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.94,
+     "text": "Pass"
+    },
+    {
+     "index": 2,
+     "share": 0.03,
+     "text": "Play Abandon"
+    },
+    {
+     "index": 1,
+     "share": 0.01,
+     "text": "Play Hard Bargain"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Choose Abandon"
+   },
+   "clean_boundary": false,
+   "decision": 142,
+   "event_text": "",
+   "human": {
+    "index": 1,
+    "share": 0.17,
+    "text": "Choose Tideturner"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.27666666666666667,
+     "text": "Choose Abandon"
+    },
+    {
+     "index": 1,
+     "share": 0.17,
+     "text": "Choose Tideturner"
+    },
+    {
+     "index": 4,
+     "share": 0.15,
+     "text": "Choose Stupefy"
     }
    ],
    "turn": 8
@@ -749,7 +895,7 @@
    "event_text": "Courage moved Tideturner to Packed Amphitheater.",
    "human": {
     "index": 2,
-    "share": 0.08949416342412451,
+    "share": 0.07509881422924901,
     "text": "Move Tideturner to Packed Amphitheater"
    },
    "kind": "move",
@@ -757,18 +903,18 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.3968871595330739,
+     "share": 0.42292490118577075,
      "text": "Play Stupefy targeting Stellacorn Herder"
     },
     {
      "index": 4,
-     "share": 0.12062256809338522,
+     "share": 0.11462450592885376,
      "text": "Play Seal of Discord to base"
     },
     {
-     "index": 2,
-     "share": 0.08949416342412451,
-     "text": "Move Tideturner to Packed Amphitheater"
+     "index": 5,
+     "share": 0.10276679841897234,
+     "text": "Play Sprite Fountain to base"
     }
    ],
    "turn": 8
@@ -783,7 +929,7 @@
    "event_text": "Courage ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.056666666666666664,
+    "share": 0.05333333333333334,
     "text": "End turn"
    },
    "kind": "end_turn",
@@ -791,21 +937,50 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.4,
+     "share": 0.3566666666666667,
      "text": "Play Stupefy targeting Stellacorn Herder"
     },
     {
      "index": 1,
-     "share": 0.18333333333333332,
+     "share": 0.24333333333333335,
      "text": "Move Diana, Lunari to base"
     },
     {
-     "index": 4,
-     "share": 0.1,
-     "text": "Play Seal of Discord to base"
+     "index": 2,
+     "share": 0.09333333333333334,
+     "text": "Play Tideturner to base"
     }
    ],
    "turn": 8
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Stupefy targeting Stellacorn Herder"
+   },
+   "clean_boundary": false,
+   "decision": 147,
+   "event_text": "Courage ended showdown responses at Emperor's Dais.",
+   "human": {
+    "index": 0,
+    "share": 0.08666666666666667,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.9133333333333333,
+     "text": "Play Stupefy targeting Stellacorn Herder"
+    },
+    {
+     "index": 0,
+     "share": 0.08666666666666667,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 9
   },
   {
    "bot": {
@@ -817,7 +992,7 @@
    "event_text": "Courage played Tideturner from hand to base.",
    "human": {
     "index": 6,
-    "share": 0.03,
+    "share": 0.02666666666666667,
     "text": "Play Tideturner to base"
    },
    "kind": "play",
@@ -825,18 +1000,18 @@
    "top3": [
     {
      "index": 3,
-     "share": 0.29,
+     "share": 0.31666666666666665,
      "text": "Move Diana, Lunari to base"
     },
     {
      "index": 11,
-     "share": 0.23333333333333334,
+     "share": 0.24333333333333335,
      "text": "Play Stupefy targeting Sand Soldier"
     },
     {
-     "index": 8,
-     "share": 0.18666666666666668,
-     "text": "Play Seal of Discord to base"
+     "index": 0,
+     "share": 0.14333333333333334,
+     "text": "End turn"
     }
    ],
    "turn": 10
@@ -851,7 +1026,7 @@
    "event_text": "Courage moved Diana, Lunari to base.",
    "human": {
     "index": 3,
-    "share": 0.11666666666666667,
+    "share": 0.24,
     "text": "Move Diana, Lunari to base"
    },
    "kind": "move",
@@ -859,17 +1034,17 @@
    "top3": [
     {
      "index": 8,
-     "share": 0.33,
+     "share": 0.32,
      "text": "Play Stupefy targeting Sand Soldier"
     },
     {
      "index": 16,
-     "share": 0.33,
+     "share": 0.26,
      "text": "Play Eclipse targeting Sand Soldier"
     },
     {
      "index": 3,
-     "share": 0.11666666666666667,
+     "share": 0.24,
      "text": "Move Diana, Lunari to base"
     }
    ],
@@ -885,7 +1060,7 @@
    "event_text": "Courage moved Hwei, Brooding Painter to Emperor's Dais.",
    "human": {
     "index": 2,
-    "share": 0.043333333333333335,
+    "share": 0.02666666666666667,
     "text": "Move Hwei, Brooding Painter to Emperor's Dais"
    },
    "kind": "move",
@@ -893,18 +1068,154 @@
    "top3": [
     {
      "index": 6,
-     "share": 0.31,
+     "share": 0.4066666666666667,
      "text": "Play Stupefy targeting Sand Soldier"
     },
     {
      "index": 14,
-     "share": 0.28,
+     "share": 0.31666666666666665,
      "text": "Play Eclipse targeting Sand Soldier"
     },
     {
      "index": 0,
-     "share": 0.12333333333333334,
+     "share": 0.1,
      "text": "End turn"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 8,
+    "text": "Play Eclipse targeting Sand Soldier"
+   },
+   "clean_boundary": false,
+   "decision": 173,
+   "event_text": "Courage exhausted Diana, Scorn of the Moon.",
+   "human": {
+    "index": 16,
+    "share": 0.013333333333333334,
+    "text": "Use Scorn of the Moon"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 8,
+     "share": 0.42333333333333334,
+     "text": "Play Eclipse targeting Sand Soldier"
+    },
+    {
+     "index": 1,
+     "share": 0.41333333333333333,
+     "text": "Play Stupefy targeting Sand Soldier"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "Pass"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Stupefy targeting Sand Soldier"
+   },
+   "clean_boundary": false,
+   "decision": 179,
+   "event_text": "Courage passed focus at Emperor's Dais.",
+   "human": {
+    "index": 0,
+    "share": 0.11333333333333333,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.5233333333333333,
+     "text": "Play Stupefy targeting Sand Soldier"
+    },
+    {
+     "index": 9,
+     "share": 0.29333333333333333,
+     "text": "Play Eclipse targeting Sand Soldier"
+    },
+    {
+     "index": 0,
+     "share": 0.11333333333333333,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass"
+   },
+   "clean_boundary": false,
+   "decision": 189,
+   "event_text": "Played Eclipse from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.31,
+    "text": "Play Eclipse targeting Sand Soldier"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.65,
+     "text": "Pass"
+    },
+    {
+     "index": 1,
+     "share": 0.31,
+     "text": "Play Eclipse targeting Sand Soldier"
+    },
+    {
+     "index": 8,
+     "share": 0.02666666666666667,
+     "text": "Play Gust"
+    }
+   ],
+   "turn": 10
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 203,
+   "event_text": "Played Ride the Wind from hand.",
+   "human": {
+    "index": 3,
+    "share": 0.18666666666666668,
+    "text": "Play Ride the Wind"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.31,
+     "text": "Pass focus"
+    },
+    {
+     "index": 2,
+     "share": 0.3,
+     "text": "Play Gust"
+    },
+    {
+     "index": 1,
+     "share": 0.20333333333333334,
+     "text": "Play Moonfall"
     }
    ],
    "turn": 10
@@ -919,7 +1230,7 @@
    "event_text": "Courage moved Hwei, Brooding Painter to Packed Amphitheater.",
    "human": {
     "index": 1,
-    "share": 0.13,
+    "share": 0.09666666666666666,
     "text": "Move Hwei, Brooding Painter to Packed Amphitheater"
    },
    "kind": "move",
@@ -927,57 +1238,58 @@
    "top3": [
     {
      "index": 10,
-     "share": 0.23333333333333334,
+     "share": 0.2833333333333333,
      "text": "Play Gust"
     },
     {
-     "index": 2,
-     "share": 0.18666666666666668,
-     "text": "Move Hwei, Brooding Painter to Emperor's Dais"
+     "index": 9,
+     "share": 0.17,
+     "text": "Play Moonfall"
     },
     {
-     "index": 9,
-     "share": 0.17333333333333334,
-     "text": "Play Moonfall"
+     "index": 2,
+     "share": 0.15,
+     "text": "Move Hwei, Brooding Painter to Emperor's Dais"
     }
    ],
    "turn": 10
   },
   {
    "bot": {
-    "index": 6,
-    "text": "Play Gust"
+    "index": 3,
+    "text": "Move Tideturner to base"
    },
    "clean_boundary": true,
    "decision": 226,
    "event_text": "Courage ended their turn.",
    "human": {
     "index": 0,
-    "share": 0.07333333333333333,
+    "share": 0.05333333333333334,
     "text": "End turn"
    },
    "kind": "end_turn",
    "player": 1,
    "top3": [
     {
-     "index": 6,
-     "share": 0.25,
-     "text": "Play Gust"
-    },
-    {
      "index": 3,
-     "share": 0.22,
+     "share": 0.35333333333333333,
      "text": "Move Tideturner to base"
     },
     {
+     "index": 6,
+     "share": 0.20333333333333334,
+     "text": "Play Gust"
+    },
+    {
      "index": 5,
-     "share": 0.17,
+     "share": 0.14666666666666667,
      "text": "Play Seal of Discord to base"
     }
    ],
    "turn": 10
   }
  ],
+ "exported_records": 0,
  "first_player": "Courage",
  "forced_decisions": 90,
  "game": 1,
@@ -1394,7 +1706,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_diana_vs_riven_rl2_31a3ba0299ea2ea406cc102f38b60b7a.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 5.095279346000001,
-  "seconds": 5.121906822
+  "bot_seconds": 3.545320078000001,
+  "seconds": 3.571129001
  }
 }
