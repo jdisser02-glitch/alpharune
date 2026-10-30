@@ -10,13 +10,22 @@
 ///   • Root determinization reuse. Instead of one resample per simulation,
 ///     each thread samples `worlds` determinizations once at the root and
 ///     cycles through them; a simulation costs one GameState copy plus
-///     GameEngine::resumeFromSnapshot (or an action_history replay when the
-///     decision is in flight: chain priority, showdown, combat, mulligan).
-///   • PUCT selection with a prior hook (uniform by default, a place for a
-///     policy network) and the ISMCTS availability correction: a child's
-///     exploration term counts the simulations in which it was legal.
-///   • Leaf evaluation by ml::ValueNet (`eval=net:<file>`), or the score /
-///     board heuristics, always from the acting player's masked view.
+///     GameEngine::resumeFromSnapshot, which re-enters the engine at the
+///     decision (GameState::decision_site) — also in flight: chain priority,
+///     a resolving card's choice, showdown focus, combat damage, mulligan.
+///     Only a decision inside a card effect or cost payment is rebuilt by
+///     replaying the game. An in-flight resume is checked against the real
+///     decision (same options, same view for the acting player).
+///   • PUCT selection with a prior hook (uniform by default; the policy head
+///     of an ml::PolicyNet with `eval=policy:<file>`) and the ISMCTS
+///     availability correction: a child's exploration term counts the
+///     simulations in which it was legal. `root=gumbel` replaces PUCT at the
+///     root by Gumbel-top-k sampling plus sequential halving over the prior's
+///     candidates (Danihelka et al. 2022), for few-simulation searches.
+///   • Leaf evaluation by ml::ValueNet (`eval=net:<file>`), the value head of
+///     a two-head ml::PolicyNet (`eval=policy:<file>`, whose policy head is
+///     then the PUCT prior), or the score / board heuristics, always from the
+///     acting player's masked view.
 ///   • Root parallelism: `threads` searchers with their own worlds and trees
 ///     (Chaslot et al. 2008); root visits are summed. Visit shares are exported
 ///     through AgentInterface::lastSearch for review and policy targets.
@@ -41,7 +50,7 @@
 #include <utility>
 #include <vector>
 
-namespace riftbound::ml { class ValueNet; }
+namespace riftbound::ml { class ValueNet; class PolicyNet; }
 
 namespace riftbound::search {
 
@@ -59,7 +68,8 @@ struct SearchResult {
     int failed = 0;                               ///< simulations abandoned on an engine error
     int worlds = 0;                               ///< determinizations sampled (all threads)
     bool resumed = true;                          ///< false: the root was rebuilt by replaying the game
-    int replay_rejected = 0;                      ///< rebuilt worlds that did not match the acting player's view
+    bool resumed_inflight = false;                ///< the root is an in-flight decision resumed in place (not a clean main-phase boundary)
+    int replay_rejected = 0;                      ///< rebuilt or resumed worlds that did not match the real decision (options, acting player's view)
 };
 
 class IsMctsSearch {
@@ -77,9 +87,14 @@ public:
                  uint64_t engine_seed, int sims, SearchOptions opts = {});
     ~IsMctsSearch();
 
-    /// Replace the prior (default: uniform, or the action-type heuristic when
-    /// SearchOptions::prior == "heuristic").
+    /// Replace the prior (default: uniform; the action-type heuristic when
+    /// SearchOptions::prior == "heuristic"; the policy head when eval is
+    /// "policy:<file>" and prior is "auto" or "net").
     void setPrior(PriorFn prior);
+    /// True when a prior other than uniform is installed.
+    bool hasPrior() const { return static_cast<bool>(prior_); }
+    /// The two-head network behind eval=policy:<file>, if any.
+    const ml::PolicyNet* policyNet() const { return pnet_.get(); }
 
     /// Run the search for `perspective`, who must decide among `legal` at
     /// `state`. `seed` drives world sampling and tie-breaks: the same inputs
@@ -113,6 +128,7 @@ private:
     SearchOptions opts_;
     PriorFn prior_;
     std::shared_ptr<const ml::ValueNet> net_;
+    std::shared_ptr<const ml::PolicyNet> pnet_;
 };
 
 /// The player who makes a decision: the one the options name, else the
@@ -125,7 +141,8 @@ struct GlobalSearchStats {
     long long simulations = 0;    ///< simulations that reached a value
     long long failed = 0;         ///< simulations abandoned on an engine error
     long long replayed = 0;       ///< decisions rebuilt by replay
-    long long replay_rejected = 0;///< rebuilt worlds discarded (did not match the acting player's view)
+    long long resumed_inflight = 0;  ///< in-flight decisions (chain, showdown, combat, mulligan) resumed in place
+    long long replay_rejected = 0;///< rebuilt or resumed worlds discarded (did not match the real decision)
     double seconds = 0.0;         ///< wall time inside the search
     double seconds_replayed = 0.0;///< part of `seconds` spent on decisions rebuilt by replay
     long long simulations_replayed = 0;  ///< simulations run on rebuilt decisions
@@ -141,6 +158,7 @@ public:
 
     Intent selectAction(const GameState& state, const std::vector<Intent>& legal_actions) override;
     std::vector<std::pair<int, double>> lastSearch() const override { return last_.shares; }
+    int lastSearchSims() const override { return last_.simulations; }
     void setDecisionHistory(const std::vector<int32_t>* history) override { history_ = history; }
 
     const SearchResult& lastResult() const { return last_; }

@@ -4,6 +4,7 @@
 #include "io/decision_log.h"
 #include "ml/feature_extractor.h"
 #include "ml/value_net.h"
+#include "openspiel/action_vocab.h"
 #include "io/replay_writer.h"
 #include "io/state_renderer.h"
 
@@ -176,6 +177,20 @@ GameResult GameRunner::run() {
                 sample.turn = state.turn.turn_number;
                 sample.decision_index = state.decision_index;
                 sample.features = ml::sparsify(ml::extractStateFeatures(state, chosen.player, card_db_));
+                // Policy target (RBV3): the legal options' vocab slots with the
+                // acting agent's visit shares; cheap (one encodeAction per
+                // option) and empty for agents that do not search.
+                const AgentInterface& actor = chosen.player == PlayerId::Player2 ? *agent2 : *agent1;
+                const auto shares = actor.lastSearch();
+                const std::vector<int> slots = ::riftbound::openspiel::encodeActions(actions, state);
+                ml::setPolicyTarget(sample, slots, shares, actor.lastSearchSims());
+                // Clean boundary: nothing in flight (no chain, showdown or combat).
+                bool clean = !state.chain.exists() && state.turn.oc_state == OpenClosedState::Open &&
+                             state.turn.ns_state == NeutralShowdownState::Neutral &&
+                             state.turn.phase != TurnPhase::Mulligan && state.turn.phase != TurnPhase::Setup;
+                for (const auto& bf : state.battlefields)
+                    if (bf.combat_in_progress || bf.showdown_in_progress || bf.combat_staged || bf.showdown_staged) clean = false;
+                if (clean) sample.flags |= ml::kPolicyFlagCleanBoundary;
                 if (slot == static_cast<int>(value_samples.size())) value_samples.push_back(std::move(sample));
                 else value_samples[static_cast<size_t>(slot)] = std::move(sample);
             }

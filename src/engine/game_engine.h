@@ -26,6 +26,7 @@
 #include <boost/signals2/connection.hpp>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <random>
 // <thread> no longer needed — step machine uses a userspace fiber
 // (see step_driver.h). Kept commented for hg-archaeology; remove
@@ -125,11 +126,16 @@ public:
     /// the worker thread which dispatches to the appropriate phase based
     /// on `state_.turn.phase` — no setup, no mulligans, no replay.
     ///
-    /// Currently supports resuming from the post-mulligan phases
-    /// (AwakenPhase through ExpirationStep). Resuming during Setup or
-    /// Mulligan throws — those paths still go through `beginGame` +
-    /// replay (rare in practice — clones during mulligan are at most a
-    /// few per game vs. hundreds during main phases).
+    /// Resumes at the decision the snapshot was taken at when
+    /// `GameState::decision_site` records one this engine can re-enter (a
+    /// main-phase action, a mulligan, chain priority, a resolving card's
+    /// choice, showdown focus, combat damage — search::isResumableSnapshot):
+    /// the fresh engine re-enters the same loops at the same step and asks
+    /// the same decision with the same options, without counting it again.
+    /// A state without a usable record (built by hand) restarts the phase it
+    /// is in. Throws for a decision inside a card effect or cost payment
+    /// (DecisionSiteKind::Other) and for Setup / Mulligan states without a
+    /// record: those are rebuilt by replaying the game.
     StepResult resumeFromSnapshot(GameState snapshot_state,
                                     uint64_t engine_seed);
 
@@ -284,6 +290,12 @@ private:
     GameResult step_result_{};
     std::unique_ptr<StepDriver> step_driver_;
 
+    // Snapshot resume (resumeFromSnapshot): the kind of decision the snapshot
+    // was taken at, and whether the next agent query re-asks it (so it is
+    // not counted twice).
+    DecisionSiteKind resume_kind_ = DecisionSiteKind::None;
+    bool reask_ = false;
+
     /// Internal helper: rebuild current_step_ from the StepDriver's
     /// snapshot. Called after beginGame and after each applyChoice once
     /// the driver has either suspended at a decision or terminated.
@@ -294,7 +306,9 @@ private:
     void setupPlayer(PlayerId player, const DeckSubmission& deck);
     void setupBattlefields(const DeckSubmission& deck1, const DeckSubmission& deck2);
     void drawOpeningHands();
-    void runMulligans();
+    /// `resume`: continue from the mulligan decision a snapshot was taken at
+    /// (GameState::decision_site::mulligan_index).
+    void runMulligans(bool resume = false);
     void determineTurnOrder();
 
     // ── Turn loop ──
@@ -309,7 +323,9 @@ private:
 
     void awakenPhase();
     void beginningStep();
-    void scoringStep();
+    /// `resume`: the Hold of battlefield `decision_site.scoring_bf_index` is
+    /// scored and its chain is at a decision; finish it and go on.
+    void scoringStep(bool resume = false);
     void channelPhase();
     void drawPhase();
     void mainPhase();
@@ -318,10 +334,13 @@ private:
     /// runTurnFromPhase when resuming a snapshot that was already mid-
     /// MainPhase — the snapshot already reflects the entry effects, so
     /// running them again would clobber it.
-    void mainPhaseLoop();
+    /// `resume`: re-enter the loop where a snapshot left it
+    /// (decision_site.main_stage and the frames below it).
+    void mainPhaseLoop(bool resume = false);
     void endingStep();
 
-    void expirationStep();
+    /// `resume`: the chain of pass `decision_site.expiration_pass` is at a decision.
+    void expirationStep(bool resume = false);
 
 public:
     /// Pure helper: clear keywords that a GameObject obtained via a
@@ -364,12 +383,18 @@ private:
     /// either NeedDecision (legal actions ready for the agent) or Done
     /// (main phase exiting — game over, action cap reached, or no
     /// legal actions).
-    MainPhaseAdvance advanceMainPhase(int& action_count);
+    /// `resume`: a showdown / combat at battlefield `decision_site.main_bf_index`
+    /// is in progress (its frames are in the state); finish it, then go on
+    /// with the remaining battlefields.
+    MainPhaseAdvance advanceMainPhase(int& action_count, bool resume = false);
     /// Executes the chosen Intent, runs any resulting chain + cleanup,
     /// processes a second cleanup-trigger chain pass. Returns true if
     /// the main phase loop should continue; false on EndTurn or if the
     /// game ended during resolution.
     bool resolveMainPhaseDecision(const Intent& intent, int& action_count);
+    /// The rest of resolveMainPhaseDecision when a snapshot was taken at a
+    /// chain decision inside it (decision_site.main_stage).
+    bool resumeMainPhaseDecision(int& action_count);
 
     // ── Showdown loop, structured for step-machine resumability (C-1 commit 7) ──
     //
@@ -510,7 +535,8 @@ private:
     void executePlayFromHidden(const Intent& intent);
 
     // ── Chain ──
-    void runChain();
+    /// `resume`: re-enter the chain at the decision a snapshot was taken at.
+    void runChain(ChainResume resume = ChainResume::None);
     void resolveSpell(const ChainItem& item);
     void resolvePermanent(const ChainItem& item);
     Intent queryAgentForChain(PlayerId player,
@@ -536,6 +562,20 @@ private:
 
     // ── Queries ──
     Intent queryAgent(PlayerId player);
+    /// Every agent query goes through here. Records the decision site
+    /// (`kind`, or the one the caller set when nullopt) and the decision it
+    /// belongs to, so a snapshot taken while the agent thinks can be
+    /// resumed (resumeFromSnapshot), then asks the agent.
+    Intent askAgent(PlayerId player, const std::vector<Intent>& legal,
+                    std::optional<DecisionSiteKind> kind);
+    /// Count a decision: bumps decision_index (and the per-turn counter when
+    /// `per_turn`) unless this is the re-ask of the decision a snapshot was
+    /// taken at, which the original engine already counted.
+    void countDecision(PlayerId player, bool per_turn);
+    /// The snapshot's decision is inside a loop this engine re-enters.
+    bool inflightResume() const;
+    /// How the in-flight chain is re-entered for the snapshot's decision.
+    ChainResume chainResume() const;
 
     /// Encode the chosen Intent via action_vocab and append the slot ID
     /// to GameState::action_history. Called from every selectAction
@@ -567,13 +607,16 @@ private:
     void processContestedBattlefields();
 
     // ── Combat ──
-    void runShowdown(BattlefieldId bf);
-    void runShowdownLoop(BattlefieldId bf);
+    // Each takes `resume`: the snapshot was taken at a decision inside this
+    // step; its cursors are in GameState::decision_site (showdown_* /
+    // combat_*), so skip the entry effects and continue from there.
+    void runShowdown(BattlefieldId bf, bool resume = false);
+    void runShowdownLoop(BattlefieldId bf, bool resume = false);
     /// `showdown_already_closed`: the combat was staged while a non-combat
     /// showdown was open there and that showdown has just closed (CR
     /// 323.13); go straight to combat damage instead of a second showdown.
-    void runCombat(BattlefieldId bf, bool showdown_already_closed = false);
-    void combatDamageStep(BattlefieldId bf);
+    void runCombat(BattlefieldId bf, bool showdown_already_closed = false, bool resume = false);
+    void combatDamageStep(BattlefieldId bf, bool resume = false);
     void combatResolutionStep(BattlefieldId bf);
 
     // ── Scoring ──

@@ -6,7 +6,10 @@ Each iteration:
      pool, recording every decision of both players with the result and the
      final score margin (riftbound --value-data, RBV2 records);
   2. training: a new value network is trained on a rolling replay buffer of the
-     last --buffer iterations, recent data weighted more (train_value.py);
+     last --buffer iterations, recent data weighted more (train_value.py) — or,
+     with --policy, a two-head policy + value network (train_policy.py) from the
+     searches' visit distributions and the human imitation set, which the bot
+     then uses as its PUCT prior (pmcts:eval=policy:<file>);
   3. gating: the new bot plays the current one on the Riven mirror, seats
      swapped, in blocks, under a sequential probability ratio test (H0 50% vs
      H1 60%, alpha = beta = 0.05): it stops as soon as the candidate is clearly
@@ -21,6 +24,7 @@ Everything is logged to lab/learn/ladder.json (read by the dashboard); networks
 go to lab/learn/nets/. Iteration 0's data comes from random play.
 
 usage: loop.py [--iterations 3] [--games 200] [--sims 30] [--threads N] [--agent pmcts|ismcts]
+               [--policy [--human data/learn/human.rbv3] [--human-weight 0.3]]
 """
 import argparse
 import datetime as dt
@@ -76,18 +80,22 @@ class Loop:
         self.a = a
 
     def bot(self, net, sims=None):
-        """Agent spec for a network (None = random play)."""
+        """Agent spec for a network (None = random play). A .rbpn (two-head)
+        network is used by pmcts as value head + policy prior; a .rbvn as the
+        value head alone."""
         if not net:
             return "random"
         sims = sims or self.a.sims
-        if self.a.agent == "ismcts":
+        policy = str(net).endswith(".rbpn")
+        if self.a.agent == "ismcts" and not policy:
             return f"ismcts:sims={sims},eval=net:{net}"
-        return f"pmcts:sims={sims},eval=net:{net},worlds={self.a.worlds}"
+        kind = "policy" if policy else "net"
+        return f"pmcts:sims={sims},eval={kind}:{net},worlds={self.a.worlds}"
 
     @staticmethod
     def key(spec):
         """Elo key of an agent spec: the network (or 'random')."""
-        m = re.search(r"eval=net:([^,]+)", spec)
+        m = re.search(r"eval=(?:net|policy):([^,]+)", spec)
         return f"net:{m.group(1)}" if m else spec
 
     def match(self, ladder, it, a1, a2, games, seed, label):
@@ -154,6 +162,13 @@ def main(argv):
     ap.add_argument("--buffer", type=int, default=6, help="iterations of data in the replay buffer")
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
+    ap.add_argument("--policy", action="store_true",
+                    help="train a two-head policy + value net (train_policy.py) and search with it as the prior")
+    ap.add_argument("--human", default=str(ROOT / "data" / "learn" / "human.rbv3"),
+                    help="human imitation set for --policy (lab/tools/build_human_dataset.py); '' for none")
+    ap.add_argument("--human-weight", type=float, default=0.3)
+    ap.add_argument("--entropy", type=float, default=0.01, help="--policy: entropy bonus")
+    ap.add_argument("--prev-weight", type=float, default=0.1, help="--policy: pull toward the previous net's policy")
     ap.add_argument("--threads", type=int, default=os.cpu_count() or 2)
     ap.add_argument("--seed", type=int, default=1)
     a = ap.parse_args(argv)
@@ -176,7 +191,8 @@ def main(argv):
         it = len(ladder["iterations"])
         t0 = time.time()
         row = {"iteration": it, "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-               "player": L.bot(current), "self_play_games": a.games, "sims": a.sims, "agent": a.agent}
+               "player": L.bot(current), "self_play_games": a.games, "sims": a.sims, "agent": a.agent,
+               "trainer": "train_policy" if a.policy else "train_value"}
         data_file = DATA / f"iter_{it:03d}.rbvd"
         if data_file.exists():
             data_file.unlink()
@@ -191,10 +207,20 @@ def main(argv):
         # 2. train on the replay buffer (oldest first; train_value.py weights by recency)
         files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
                  if (DATA / f"iter_{j:03d}.rbvd").exists()]
-        new_net = NETS / f"net_{it:03d}.rbvn"
-        tr = subprocess.run([sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
-                             "--epochs", str(a.epochs), "--recency", str(a.recency)], cwd=ROOT,
-                            capture_output=True, text=True)
+        if a.policy:
+            new_net = NETS / f"net_{it:03d}.rbpn"
+            cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
+                   "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
+                   "--entropy", str(a.entropy)]
+            if a.human and Path(a.human).exists():
+                cmd += ["--human", a.human]
+            if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
+                cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
+        else:
+            new_net = NETS / f"net_{it:03d}.rbvn"
+            cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
+                   "--epochs", str(a.epochs), "--recency", str(a.recency)]
+        tr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
         print(tr.stdout[-1200:], flush=True)
         if tr.returncode != 0:
             raise RuntimeError(tr.stderr[-1500:])
@@ -205,6 +231,11 @@ def main(argv):
         row["val_acc"] = report["best_val_acc"]
         row["val_margin_mse"] = report.get("best_val_margin_mse")
         row["baseline_val_loss"] = report["baseline_val_loss"]
+        if a.policy:
+            row["policy"] = {k: report.get(k) for k in ("search_target_rows", "policy_val_rows", "policy_top1", "policy_top3",
+                                                         "policy_ce", "policy_entropy", "target_entropy",
+                                                         "human_records", "human_val_rows", "human_top1", "human_top3",
+                                                         "human_clean_rows", "human_clean_top1", "human_clean_top3")}
         cand = str(new_net.relative_to(ROOT)) if new_net.is_relative_to(ROOT) else str(new_net)
         # 3. gate: candidate vs current, Riven mirror, seats swapped, SPRT in blocks
         wins = losses = n = 0

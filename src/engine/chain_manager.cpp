@@ -158,36 +158,57 @@ void ChainManager::processFEPR(
     AgentQuery query_agent,
     std::function<void(const ChainItem&)> resolve_permanent,
     std::function<void(const ChainItem&)> resolve_spell,
-    ClosedActionsGen gen_closed_actions) {
+    ClosedActionsGen gen_closed_actions,
+    ChainResume resume) {
+
+    struct DepthGuard {
+        int& d;
+        explicit DepthGuard(int& x) : d(x) { ++d; }
+        ~DepthGuard() { --d; }
+    } depth_guard(depth_);
+
+    auto& site = state_.decision_site;
+    // A resumed round that has nothing to resume (the chain is gone): nothing
+    // to do. ChainChoice holds its item in `resuming`, not in `items`.
+    if (resume == ChainResume::Priority && !state_.chain.exists()) return;
+    if (resume == ChainResume::Choice && !state_.chain.resuming.has_value()) resume = ChainResume::None;
 
     constexpr int kMaxIterations = 100; // safety
-    int iterations = 0;
+    int iterations = resume != ChainResume::None ? site.chain_iterations : 0;
 
-    while (state_.chain.exists() && iterations < kMaxIterations) {
-        iterations++;
+    while ((state_.chain.exists() || resume == ChainResume::Choice) && iterations < kMaxIterations) {
+        if (resume == ChainResume::None) {
+            iterations++;
+            site.chain_iterations = iterations;
 
-        // Step 1: Finalize
-        // Permanents resolve immediately here (CR 337.1.c).
-        // If finalize removed all items, chain is empty → done.
-        bool finalized_something = stepFinalize(resolve_permanent);
-        if (!state_.chain.exists()) {
-            // Chain emptied during finalization
-            state_.turn.oc_state = OpenClosedState::Open;
-            events_.emit(ChainEmptiedEvent{});
-            return;
+            // Step 1: Finalize
+            // Permanents resolve immediately here (CR 337.1.c).
+            // If finalize removed all items, chain is empty → done.
+            stepFinalize(resolve_permanent);
+            if (!state_.chain.exists()) {
+                // Chain emptied during finalization
+                state_.turn.oc_state = OpenClosedState::Open;
+                events_.emit(ChainEmptiedEvent{});
+                return;
+            }
+
+            // If there are still pending items, loop back to finalize
+            if (state_.chain.hasPending()) continue;
         }
 
-        // If there are still pending items, loop back to finalize
-        if (state_.chain.hasPending()) continue;
-
-        // Steps 2-3: Execute and Pass
-        // Controller of newest item gets Priority.
-        // If someone adds an item → restart from Finalize.
-        bool item_added = stepExecuteAndPass(query_agent, gen_closed_actions);
-        if (item_added) continue; // restart FEPR
+        if (resume != ChainResume::Choice) {
+            // Steps 2-3: Execute and Pass
+            // Controller of newest item gets Priority.
+            // If someone adds an item → restart from Finalize.
+            bool item_added = stepExecuteAndPass(query_agent, gen_closed_actions,
+                                                 resume == ChainResume::Priority);
+            resume = ChainResume::None;
+            if (item_added) continue; // restart FEPR
+        }
 
         // Step 4: Resolve top item
-        stepResolve(query_agent, resolve_spell);
+        stepResolve(query_agent, resolve_spell, resume == ChainResume::Choice);
+        resume = ChainResume::None;
 
         // After resolve, check chain state:
         if (!state_.chain.exists()) {
@@ -250,19 +271,27 @@ bool ChainManager::stepFinalize(
 }
 
 bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
-                                      ClosedActionsGen gen_closed_actions) {
+                                      ClosedActionsGen gen_closed_actions,
+                                      bool resume) {
     // Controller of newest finalized item gets Priority first (CR 337.1.b.3)
     auto* top = state_.chain.newest();
     assert(top && "stepExecuteAndPass called with empty chain");
+    auto& site = state_.decision_site;
 
-    PlayerId first_priority = top->controller;
-    state_.turn.players_passed_priority.clear();
-
-    PlayerId current = first_priority;
+    PlayerId current = top->controller;
+    int pass = 0;
+    if (resume) {
+        // The snapshot's round: whoever held priority is asked again, the
+        // passes so far stay (TurnState::players_passed_priority).
+        current = state_.turn.priority_holder.value_or(current);
+        pass = site.chain_passes;
+    } else {
+        state_.turn.players_passed_priority.clear();
+    }
 
     constexpr int kMaxPriorityPasses = 10; // safety (2 players × some margin)
 
-    for (int pass = 0; pass < kMaxPriorityPasses; ++pass) {
+    for (; pass < kMaxPriorityPasses; ++pass) {
         state_.turn.priority_holder = current;
         events_.emit(PriorityGrantedEvent{current, false});
 
@@ -272,7 +301,10 @@ bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
             ? gen_closed_actions(current)
             : generateClosedStateActions(current);
 
-        // Query agent
+        // Query agent. Record the decision site first: a snapshot taken while
+        // the agent thinks resumes here (GameEngine::resumeFromSnapshot).
+        site.chain_passes = pass;
+        site.kind = depth_ > 1 ? DecisionSiteKind::Other : DecisionSiteKind::ChainPriority;
         auto chosen = query_agent(current, actions);
 
         if (chosen.type == IntentType::PassPriority) {
@@ -376,19 +408,26 @@ bool ChainManager::stepExecuteAndPass(AgentQuery query_agent,
 
 void ChainManager::stepResolve(
     AgentQuery query_agent,
-    std::function<void(const ChainItem&)> resolve_spell) {
+    std::function<void(const ChainItem&)> resolve_spell,
+    bool resume) {
 
-    assert(!state_.chain.items.empty() && "stepResolve called with empty chain");
+    auto& site = state_.decision_site;
+    if (!resume) {
+        assert(!state_.chain.items.empty() && "stepResolve called with empty chain");
 
-    // Pop the newest (top) item — LIFO. Counter spells (Abandon, Wind Wall,
-    // Repulse, Not So Fast, Lilting Lullaby) rely on `items.back()` being
-    // the previous item on the chain (their counter target) — keep that
-    // invariant by popping FIRST. The popped item is held in
-    // `state_.chain.resuming` so a resumable Card can read/write its
-    // resume_point across iterations.
-    ChainItem resolved = state_.chain.items.back();
-    state_.chain.items.pop_back();
-    state_.chain.resuming = resolved;
+        // Pop the newest (top) item — LIFO. Counter spells (Abandon, Wind Wall,
+        // Repulse, Not So Fast, Lilting Lullaby) rely on `items.back()` being
+        // the previous item on the chain (their counter target) — keep that
+        // invariant by popping FIRST. The popped item is held in
+        // `state_.chain.resuming` so a resumable Card can read/write its
+        // resume_point across iterations.
+        state_.chain.resuming = state_.chain.items.back();
+        state_.chain.items.pop_back();
+        site.chain_choice_iter = 0;
+    }
+    assert(state_.chain.resuming.has_value() && "stepResolve: no resolving item");
+    // Flags of the resolving item (its resume data may change below).
+    const bool resolves = state_.chain.resuming->is_spell || state_.chain.resuming->is_ability;
 
     // Resumable resolution loop. Single-shot cards (the common case) loop
     // exactly once: resolve_spell -> Card::onResolve returns without a
@@ -398,25 +437,39 @@ void ChainManager::stepResolve(
     // `resuming->resume_point`; we then query the agent, record the choice
     // for the Card to read on re-entry, and re-call resolve_spell.
     constexpr int kMaxResumeIterations = 16;
-    int iter = 0;
+    int& iter = site.chain_choice_iter;
     while (true) {
-        if (++iter > kMaxResumeIterations) {
-            // Safety bound — a Card stuck in a yield loop should never reach
-            // this. We bail out rather than spinning forever.
-            assert(false && "ChainManager::stepResolve: resume loop overflow");
-            break;
+        EffectExecutor::PendingChoice pending;
+        if (resume) {
+            // The snapshot was taken while the agent answered this choice:
+            // ask it again (the card's re-entry then reads the answer).
+            resume = false;
+            pending.active = true;
+            pending.player = site.chain_choice_player;
+            pending.legal = site.chain_choice_legal;
+            pending.label = site.chain_choice_label;
+        } else {
+            if (++iter > kMaxResumeIterations) {
+                // Safety bound — a Card stuck in a yield loop should never reach
+                // this. We bail out rather than spinning forever.
+                assert(false && "ChainManager::stepResolve: resume loop overflow");
+                break;
+            }
+
+            // Re-invoke resolve_spell from `resuming`. The engine's resolveSpell
+            // dispatches through Card::onResolve / onTrigger based on
+            // is_spell / is_ability — both paths are reachable here.
+            if (resolves) {
+                resolve_spell(state_.chain.resuming.value());
+            }
+
+            if (!executor_ || !executor_->hasPendingChoice()) break;
+
+            pending = executor_->consumePendingChoice();
+            site.chain_choice_player = pending.player;
+            site.chain_choice_legal = pending.legal;
+            site.chain_choice_label = pending.label;
         }
-
-        // Re-invoke resolve_spell from `resuming`. The engine's resolveSpell
-        // dispatches through Card::onResolve / onTrigger based on
-        // is_spell / is_ability — both paths are reachable here.
-        if (resolved.is_spell || resolved.is_ability) {
-            resolve_spell(state_.chain.resuming.value());
-        }
-
-        if (!executor_ || !executor_->hasPendingChoice()) break;
-
-        auto pending = executor_->consumePendingChoice();
         // Surface the labeled choice request in the trace BEFORE the
         // agent picks. Pairs with the on_decision-callback-driven CHOSE
         // logging downstream; gives a reader the WHY of a MakeChoice
@@ -428,12 +481,15 @@ void ChainManager::stepResolve(
             (pending.label.empty() ? "MakeChoice" : pending.label) +
             " [" + std::to_string(pending.legal.size()) + " options] (" +
             toString(pending.player) + ")");
+        site.kind = depth_ > 1 ? DecisionSiteKind::Other : DecisionSiteKind::ChainChoice;
         Intent choice = query_agent(pending.player, pending.legal);
         executor_->recordChoice(std::move(choice));
         // Loop back — resolve_spell re-invokes onResolve / onTrigger; the
         // Card reads the recorded choice via `executor.takeChoice()` in its
         // case ≥1 branch and continues past resume_point.
     }
+    site.chain_choice_legal.clear();
+    site.chain_choice_label.clear();
 
     // Repeat (CR 820): if `repeats_paid > 0`, re-run resolve_spell that
     // many extra times. Each re-run reads the same item from
@@ -459,7 +515,7 @@ void ChainManager::stepResolve(
     }
 
     // Read the (possibly-mutated) resolving item back out and dispose.
-    resolved = std::move(state_.chain.resuming.value());
+    ChainItem resolved = std::move(state_.chain.resuming.value());
     state_.chain.resuming.reset();
 
     if (resolved.is_spell) {

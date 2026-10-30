@@ -12,8 +12,10 @@ namespace riftbound {
 
 struct SearchOptions {
     /// Leaf evaluation: "score" (score difference only), "board" (score,
-    /// Might at battlefields, battlefields held, cards and runes) or
-    /// "net:<file>" (a learned ml::ValueNet).
+    /// Might at battlefields, battlefields held, cards and runes),
+    /// "net:<file>" (a learned ml::ValueNet) or "policy:<file>" (the value
+    /// head of a two-head ml::PolicyNet, whose policy head also becomes the
+    /// pmcts prior unless `prior` says otherwise).
     std::string eval = "score";
     /// Exploration constant; <= 0 keeps the agent's default.
     double uct_c = 0.0;
@@ -30,9 +32,22 @@ struct SearchOptions {
     /// Determinizations sampled per thread at the root and reused round-robin
     /// across its simulations. <= 0 means one world per simulation.
     int worlds = 8;
-    /// Prior over root/child actions: "uniform" or "heuristic" (the
-    /// action-type weights the perfect-information MctsAgent uses).
-    std::string prior = "uniform";
+    /// Prior over root/child actions: "auto" (the policy head when eval is
+    /// "policy:<file>", else uniform), "uniform", "heuristic" (the action-type
+    /// weights the perfect-information MctsAgent uses) or "net" (the policy
+    /// head; requires eval=policy:<file>).
+    std::string prior = "auto";
+    /// Softmax temperature applied to the policy head's logits when it is
+    /// the prior (> 1 flattens).
+    double prior_temp = 1.0;
+    /// Root action selection: "puct" (PUCT at every node) or "gumbel"
+    /// (Gumbel-top-k sampling of `gumbel_m` root candidates from the prior,
+    /// then sequential halving over them with the simulation budget —
+    /// Danihelka et al. 2022 — which turns few simulations into a sound
+    /// policy improvement when a policy prior is available; PUCT below the
+    /// root).
+    std::string root = "puct";
+    int gumbel_m = 16;
 };
 
 } // namespace riftbound

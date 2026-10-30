@@ -24,6 +24,14 @@ class EffectExecutor;
 /// Given a player and their legal actions, returns their chosen action.
 using AgentQuery = std::function<Intent(PlayerId, const std::vector<Intent>&)>;
 
+/// Where a fresh engine re-enters processFEPR when it resumes a snapshot
+/// taken at a chain decision (GameState::decision_site).
+enum class ChainResume : uint8_t {
+    None,      // a new chain run
+    Priority,  // at the ChainPriority decision: the priority holder is asked again
+    Choice,    // at the ChainChoice decision: the resolving card's choice is asked again
+};
+
 class ChainManager {
 public:
     ChainManager(GameState& state, EventBus& events, const CardDB& card_db);
@@ -59,11 +67,16 @@ public:
     /// resolve_permanent is called when a permanent finalizes (bypasses chain).
     /// resolve_spell is called when a spell resolves.
     /// gen_closed_actions generates legal actions during Closed State.
+    /// `resume` re-enters the loop at the decision a snapshot was taken at
+    /// (its cursors are in GameState::decision_site) instead of starting a
+    /// new round. Before every agent query the loop records which decision
+    /// it is asking in `decision_site.kind`.
     void processFEPR(
         AgentQuery query_agent,
         std::function<void(const ChainItem&)> resolve_permanent,
         std::function<void(const ChainItem&)> resolve_spell,
-        ClosedActionsGen gen_closed_actions = nullptr
+        ClosedActionsGen gen_closed_actions = nullptr,
+        ChainResume resume = ChainResume::None
     );
 
     /// Check if the chain currently exists.
@@ -115,16 +128,27 @@ private:
 
     /// Steps 2-3: Execute (player acts) and Pass (check all passed).
     /// Returns true if an item was added (restart from Finalize).
+    /// `resume`: continue the round the snapshot was taken in (the priority
+    /// holder and the passes so far are in the state) instead of a new one.
     bool stepExecuteAndPass(AgentQuery query_agent,
-                            ClosedActionsGen gen_closed_actions);
+                            ClosedActionsGen gen_closed_actions,
+                            bool resume = false);
 
     /// Step 4: Resolve the top item on the chain. Drives a resumable loop:
     /// while the resolving Card publishes a pending choice via
     /// `EffectExecutor::requestChoice`, query the agent + record the
     /// choice + re-invoke resolve_spell so the Card's next switch case
     /// runs. Single-shot resolution (the common case) loops once.
+    /// `resume`: the item is already in `chain.resuming` and the card's
+    /// pending choice (GameState::decision_site) is asked first.
     void stepResolve(AgentQuery query_agent,
-                     std::function<void(const ChainItem&)> resolve_spell);
+                     std::function<void(const ChainItem&)> resolve_spell,
+                     bool resume = false);
+
+    /// Nesting depth of processFEPR. A decision asked while another chain run
+    /// is on the stack is recorded as DecisionSiteKind::Other: its progress is
+    /// in C++ frames a resumed engine cannot rebuild.
+    int depth_ = 0;
 };
 
 } // namespace riftbound

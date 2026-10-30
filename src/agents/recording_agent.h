@@ -27,6 +27,7 @@ public:
         return chosen;
     }
     std::vector<std::pair<int, double>> lastSearch() const override { return inner_.lastSearch(); }
+    int lastSearchSims() const override { return inner_.lastSearchSims(); }
     void setDecisionHistory(const std::vector<int32_t>* h) override { inner_.setDecisionHistory(h); }
 
 private:

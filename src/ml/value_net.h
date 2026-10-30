@@ -61,27 +61,79 @@ private:
     std::vector<float> w1t_, b1_eff_;
 };
 
+/// Where a record's policy target comes from (RBV3 `source` byte).
+enum PolicySource : uint8_t {
+    kPolicyNone = 0,     ///< no policy block (the agent did not search)
+    kPolicySearch = 1,   ///< visit shares of a search agent (pmcts / ismcts)
+    kPolicyHuman = 2,    ///< a human's recorded move (one-hot over the legal slots)
+};
+
+/// RBV3 record flags.
+enum PolicyFlags : uint8_t {
+    kPolicyFlagCleanBoundary = 1,   ///< decision at a clean boundary (no chain / showdown in flight)
+    kPolicyFlagFullSims = 2,        ///< searched with the full simulation budget
+};
+
 /// One self-play training record: the perspective player's masked state
-/// features at a decision, kept sparse (index, value) until written.
+/// features at a decision, kept sparse (index, value) until written, plus an
+/// optional policy block: the vocab slot of every legal option (merged when
+/// options alias to one slot) with the target share of each.
 struct ValueSample {
     PlayerId who = PlayerId::None;
     int turn = 0;
     int decision_index = 0;
     std::vector<std::pair<uint16_t, float>> features;
+    uint8_t source = kPolicyNone;
+    uint8_t flags = 0;
+    uint16_t sims = 0;                                   ///< simulations behind a search target
+    std::vector<std::pair<uint16_t, float>> policy;      ///< (vocab slot, target), all legal slots
 };
 
 /// Non-zero (index, value) pairs of a feature vector (indices < 65536).
 std::vector<std::pair<uint16_t, float>> sparsify(const std::vector<float>& x);
 
-/// Appends self-play training records (format "RBV2", version 2 of the value
-/// data). File header: "RBV2", int32 dim. Per record: int8 label (1 the
-/// perspective player won, 0 lost, 2 draw), int8 perspective (1 = P1, 2 = P2),
-/// int8 own final score, int8 opponent final score, int8 victory score,
-/// uint32 game id, int32 turn, int32 decision index, uint16 nnz, then nnz x
-/// (uint16 index, float32 value). lab/learn/train_value.py reads this and the
-/// older "RBVD" files (int8 label, int32 turn, uint16 nnz, pairs).
+/// Policy block of a sample from the legal options' vocab slots and a search's
+/// visit shares (index into `slots`, share; empty = no search). Aliased slots
+/// are merged (shares summed); every legal slot is kept, with 0 when
+/// unvisited, so the trainer knows the legal mask. Sets source/sims/flags.
+void setPolicyTarget(ValueSample& sample, const std::vector<int>& slots,
+                     const std::vector<std::pair<int, double>>& shares, int sims);
+/// Human one-hot: the slot of option `chosen` gets 1.
+void setHumanTarget(ValueSample& sample, const std::vector<int>& slots, int chosen);
+
+/// Appends self-play training records. A fresh file is written as "RBV3"
+/// (version 3): header "RBV3", int32 dim, int32 vocab size. Per record the
+/// RBV2 fields — int8 label (1 the perspective player won, 0 lost, 2 draw),
+/// int8 perspective (1 = P1, 2 = P2), int8 own final score, int8 opponent
+/// final score, int8 victory score, uint32 game id, int32 turn, int32 decision
+/// index, uint16 nnz, nnz x (uint16 index, float32 value) — followed by the
+/// policy block: uint8 source (PolicySource), uint8 flags, uint16 sims, uint16
+/// n_legal, n_legal x (uint16 vocab slot, float32 target). Appending to an
+/// existing "RBV2" file keeps that format (the policy block is dropped).
+/// lab/learn/train_value.py and train_policy.py read RBVD / RBV2 / RBV3.
 void appendValueRecords(const std::string& path, int dim, const std::vector<ValueSample>& samples,
                         PlayerId winner, int score_p1, int score_p2, int victory_score,
                         uint32_t game_id);
+
+/// One record as read back from a data file.
+struct ValueRecord {
+    int8_t label = 0, perspective = 0, own_score = 0, opp_score = 0, victory_score = 0;
+    uint32_t game_id = 0;
+    int32_t turn = 0, decision_index = 0;
+    std::vector<std::pair<uint16_t, float>> features;
+    uint8_t source = kPolicyNone, flags = 0;
+    uint16_t sims = 0;
+    std::vector<std::pair<uint16_t, float>> policy;
+};
+
+struct ValueFile {
+    int version = 0;     ///< 1 (RBVD), 2 (RBV2) or 3 (RBV3)
+    int dim = 0;
+    int vocab = 0;       ///< RBV3 only
+    std::vector<ValueRecord> records;
+};
+
+/// Reads a RBVD / RBV2 / RBV3 file (tests, tools). Throws on a bad file.
+ValueFile readValueRecords(const std::string& path);
 
 }  // namespace riftbound::ml

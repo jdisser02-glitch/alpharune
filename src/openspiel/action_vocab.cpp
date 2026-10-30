@@ -98,12 +98,17 @@ int encodeAction(const Intent& intent, const GameState& state) {
                    + playLocBfSlot(intent.move_destination);
 
         // ── Play-family (collapsed) ──────────────────────────────────────
+        // Slot = (def_id - 1) * kPlayLocations + location (0 base / none,
+        // 1 + battlefield id otherwise), so playing a unit at base and at a
+        // battlefield are distinct policy slots.
         case T::PlayCard:
         case T::PlayActionCard:
         case T::PlayReaction: {
             int s = cardDefSlot(defIdOf(state, intent.card));
             if (s < 0) return verbBase(ActionVerb::Play);  // fallback to slot 0
-            return verbBase(ActionVerb::Play) + s;
+            int loc = playLocBfSlot(intent.play_location);
+            if (loc >= kPlayLocations) loc = 0;
+            return verbBase(ActionVerb::Play) + s * kPlayLocations + loc;
         }
 
         // ── HideCard ─────────────────────────────────────────────────────
@@ -224,6 +229,13 @@ int encodeAction(const Intent& intent, const GameState& state) {
         }
     }
     return -1;
+}
+
+std::vector<int> encodeActions(const std::vector<Intent>& legal, const GameState& state) {
+    std::vector<int> out;
+    out.reserve(legal.size());
+    for (const auto& in : legal) out.push_back(encodeAction(in, state));
+    return out;
 }
 
 const Intent* decodeAction(int slot,

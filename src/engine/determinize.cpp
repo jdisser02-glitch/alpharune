@@ -109,7 +109,95 @@ void applyIdentityOverrides(GameState& gs, const CardDB& db, const IdentityOverr
     }
 }
 
+namespace {
+
+/// The loop frames recorded for an in-flight decision agree with the state
+/// (the phase, the battlefield they name), so the engine can re-enter them.
+bool framesConsistent(const GameState& gs) {
+    using Kind = DecisionSiteKind;
+    using MainStage = DecisionSite::MainStage;
+    const auto& site = gs.decision_site;
+    const bool chain_kind = site.kind == Kind::ChainPriority || site.kind == Kind::ChainChoice;
+    const auto nbf = gs.battlefields.size();
+    switch (gs.turn.phase) {
+        case TurnPhase::BeginningStep:
+        case TurnPhase::EndingStep:
+        case TurnPhase::ExpirationStep:
+            return chain_kind && site.showdown_bf == kInvalidId && site.combat_bf == kInvalidId;
+        case TurnPhase::ScoringStep:
+            return chain_kind && site.showdown_bf == kInvalidId && site.combat_bf == kInvalidId &&
+                   site.scoring_bf_index >= 0 && static_cast<size_t>(site.scoring_bf_index) < nbf;
+        case TurnPhase::MainPhase:
+            if (site.main_stage != MainStage::Advance) {
+                // A chain run by the chosen action, or after it.
+                return chain_kind && site.showdown_bf == kInvalidId && site.combat_bf == kInvalidId;
+            }
+            {
+                // Inside the showdown / combat of battlefield main_bf_index.
+                const BattlefieldId frame_bf = site.combat_bf != kInvalidId ? site.combat_bf : site.showdown_bf;
+                if (frame_bf == kInvalidId) return false;
+                if (site.main_bf_index < 0 || static_cast<size_t>(site.main_bf_index) >= nbf) return false;
+                if (gs.battlefields[static_cast<size_t>(site.main_bf_index)].id != frame_bf) return false;
+                if (site.combat_bf != kInvalidId && site.showdown_bf != kInvalidId &&
+                    site.combat_bf != site.showdown_bf)
+                    return false;
+                if (site.kind == Kind::ShowdownFocus) return site.showdown_bf != kInvalidId && !site.showdown_in_intent;
+                if (site.kind == Kind::CombatDamage)
+                    return site.combat_bf != kInvalidId &&
+                           (site.combat_stage == DecisionSite::CombatStage::DamageAttacker ||
+                            site.combat_stage == DecisionSite::CombatStage::DamageDefender);
+                // A chain: at the start of the combat, or inside a showdown play.
+                if (site.showdown_bf != kInvalidId) return site.showdown_in_intent;
+                return site.combat_stage == DecisionSite::CombatStage::Start;
+            }
+        default:
+            return false;
+    }
+}
+
+}  // namespace
+
 bool isResumableSnapshot(const GameState& gs) {
+    if (gs.game_over) return false;
+    const auto& site = gs.decision_site;
+    const bool stamped = site.kind != DecisionSiteKind::None && site.decision_index == gs.decision_index;
+    if (stamped) {
+        switch (site.kind) {
+            case DecisionSiteKind::Mulligan:
+                return gs.turn.phase == TurnPhase::Mulligan && !gs.cost_cursor.has_value() &&
+                       site.mulligan_index >= 0 && site.mulligan_index < 2;
+            case DecisionSiteKind::ChainPriority:
+                return gs.chain.exists() && gs.turn.priority_holder.has_value() &&
+                       !gs.cost_cursor.has_value() && framesConsistent(gs);
+            case DecisionSiteKind::ChainChoice:
+                return gs.chain.resuming.has_value() && !site.chain_choice_legal.empty() &&
+                       !gs.cost_cursor.has_value() && framesConsistent(gs);
+            case DecisionSiteKind::ShowdownFocus:
+            case DecisionSiteKind::CombatDamage:
+                return gs.turn.phase == TurnPhase::MainPhase && !gs.cost_cursor.has_value() &&
+                       framesConsistent(gs);
+            case DecisionSiteKind::Other:
+                return false;
+            case DecisionSiteKind::MainPhase: {
+                // A main-phase action: the prelude (advanceMainPhase) is re-run,
+                // which is exact as long as it has nothing staged to run first.
+                // The chain may exist (a trigger left over after a combat is
+                // answered in Closed state from this very loop).
+                if (gs.turn.phase != TurnPhase::MainPhase || gs.cost_cursor.has_value()) return false;
+                if (site.main_stage != DecisionSite::MainStage::Advance) return false;
+                for (const auto& bf : gs.battlefields)
+                    if (bf.combat_in_progress || bf.showdown_in_progress || bf.combat_staged || bf.showdown_staged)
+                        return false;
+                return true;
+            }
+            case DecisionSiteKind::None:
+                break;   // the clean-boundary test
+        }
+    }
+    return isCleanMainPhaseSnapshot(gs);
+}
+
+bool isCleanMainPhaseSnapshot(const GameState& gs) {
     if (gs.game_over) return false;
     if (gs.turn.phase == TurnPhase::Setup || gs.turn.phase == TurnPhase::Mulligan) return false;
     if (gs.turn.oc_state != OpenClosedState::Open) return false;

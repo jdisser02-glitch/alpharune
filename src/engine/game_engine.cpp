@@ -56,6 +56,8 @@ void GameEngine::initSubsystems() {
     effect_executor_->setRng(&rng_);
     effect_executor_->setAgentQuery(
         [this](PlayerId p, const std::vector<Intent>& actions) -> Intent {
+            // Asked from inside a card effect: not resumable from the state.
+            state_.decision_site.kind = DecisionSiteKind::Other;
             return queryAgentForChain(p, actions);
         });
     effect_executor_->setAuraRecalc([this]() { recalculateAuras(); });
@@ -208,6 +210,28 @@ StepResult GameEngine::resumeFromSnapshot(GameState snapshot_state,
     state_ = std::move(snapshot_state);
     rng_.seed(engine_seed == 0 ? std::random_device{}() : engine_seed);
 
+    // The decision the snapshot was taken at, when its record is current.
+    // The fresh engine re-enters the loop that asked it and asks it again
+    // without counting it a second time.
+    {
+        const auto& site = state_.decision_site;
+        const bool stamped = site.kind != DecisionSiteKind::None &&
+                             site.decision_index == state_.decision_index;
+        resume_kind_ = stamped ? site.kind : DecisionSiteKind::None;
+        reask_ = stamped;
+    }
+    if (resume_kind_ == DecisionSiteKind::Other) {
+        throw std::logic_error(
+            "GameEngine::resumeFromSnapshot: the snapshot's decision is inside a "
+            "card effect, cost payment or finalization; rebuild it by replay.");
+    }
+    if ((state_.turn.phase == TurnPhase::Setup || state_.turn.phase == TurnPhase::Mulligan) &&
+        resume_kind_ != DecisionSiteKind::Mulligan) {
+        throw std::logic_error(
+            "GameEngine::resumeFromSnapshot: a Setup / Mulligan state without a "
+            "mulligan decision record cannot be resumed; rebuild it by replay.");
+    }
+
     // Initialise subsystems (parallel to runGame's first block). These
     // hold references into `state_` and `events_`, which are now
     // populated from the snapshot.
@@ -229,6 +253,14 @@ StepResult GameEngine::resumeFromSnapshot(GameState snapshot_state,
         // the normal turn loop. Mirrors the body of runTurnLoop minus
         // the first-turn entry.
         try {
+            if (resume_kind_ == DecisionSiteKind::Mulligan) {
+                // Mid-mulligan: finish the mulligans, then the game starts as
+                // in runGame.
+                runMulligans(/*resume=*/true);
+                events_.emit(PhaseChangedEvent{TurnPhase::Setup, TurnPhase::AwakenPhase,
+                                                state_.turn.turn_player});
+                runTurnLoop();
+            } else {
             if (!state_.game_over) {
                 runTurnFromPhase(turn_player, resume_at);
             }
@@ -254,6 +286,7 @@ StepResult GameEngine::resumeFromSnapshot(GameState snapshot_state,
                 }
                 state_.turn.turn_number++;
                 runTurnLoop();
+            }
             }
 
             // Finalise (mirrors runGame's tail).
@@ -401,7 +434,7 @@ void GameEngine::setupBattlefields(const DeckSubmission& deck1,
         events_.logTrace("DECISION #" + std::to_string(state_.decision_index) +
                           " (" + toString(player) + " — battlefield setup): " +
                           std::to_string(choices.size()) + " options");
-        auto chosen = getAgent(player).selectAction(state_, choices);
+        auto chosen = askAgent(player, choices, DecisionSiteKind::Other);
         recordAppliedIntent(chosen);
         state_.turn.turn_player = saved_turn;
 
@@ -511,29 +544,33 @@ void GameEngine::resolveMulliganDecision(const Intent& chosen) {
     }
 }
 
-void GameEngine::runMulligans() {
+void GameEngine::runMulligans(bool resume) {
     // In turn order, each player may mulligan up to 2 cards (CR 118).
     // Bridge: legacy path calls queryAgent between advance + resolve.
     // The step-machine path (C-1 commit 9) will surface advance's legal
     // options out to applyChoice() and feed the chosen Intent back into
     // resolve.
-    events_.logTrace("── Mulligan Phase ──");
-    state_.turn.phase = TurnPhase::Mulligan;
+    auto& site = state_.decision_site;
+    if (!resume) {
+        events_.logTrace("── Mulligan Phase ──");
+        state_.turn.phase = TurnPhase::Mulligan;
+        site.mulligan_index = 0;
+    }
 
-    for (auto player : {state_.turn.turn_player,
-                        opponent(state_.turn.turn_player)}) {
+    const PlayerId order[2] = {state_.turn.turn_player, opponent(state_.turn.turn_player)};
+    for (int i = resume ? site.mulligan_index : 0; i < 2; ++i) {
+        site.mulligan_index = i;
+        const PlayerId player = order[i];
         auto adv = advanceMulligan(player);
         if (adv.kind == MulliganAdvance::Kind::Done) continue;
 
-        state_.decision_index++;
-        if (player == PlayerId::Player1) state_.turn.turn_decisions_p1++;
-        else state_.turn.turn_decisions_p2++;
+        countDecision(player, /*per_turn=*/true);
 
         events_.logTrace("DECISION #" + std::to_string(state_.decision_index) +
                          " (" + toString(player) + "): Mulligan, " +
                          std::to_string(adv.legal.size()) + " options");
 
-        auto chosen = getAgent(player).selectAction(state_, adv.legal);
+        auto chosen = askAgent(player, adv.legal, DecisionSiteKind::Mulligan);
         recordAppliedIntent(chosen);
 
         if (on_decision) {
@@ -646,6 +683,10 @@ void GameEngine::runTurnFromPhase(PlayerId player, TurnPhase resume_at) {
                      std::to_string(state_.players[0].score) + " P2=" +
                      std::to_string(state_.players[1].score));
 
+    // The snapshot's decision is inside a loop of the phase it was taken in:
+    // that phase is re-entered at the decision instead of restarted.
+    const bool inflight = inflightResume();
+
     switch (resume_at) {
         case TurnPhase::AwakenPhase:
             awakenPhase();
@@ -654,8 +695,14 @@ void GameEngine::runTurnFromPhase(PlayerId player, TurnPhase resume_at) {
         case TurnPhase::BeginningStep:
             // Only run beginningStep if we're resuming AT or BEFORE it.
             // (When resume_at is later, we drop through this case.)
-            if (resume_at == TurnPhase::BeginningStep ||
-                resume_at == TurnPhase::AwakenPhase) {
+            if (resume_at == TurnPhase::BeginningStep && inflight) {
+                // The start-of-turn chain is at a decision: finish it, then
+                // the cleanup that ends the step.
+                runChain(chainResume());
+                if (state_.game_over) return;
+                cleanup();
+            } else if (resume_at == TurnPhase::BeginningStep ||
+                       resume_at == TurnPhase::AwakenPhase) {
                 beginningStep();
                 if (state_.game_over) return;
             }
@@ -664,7 +711,7 @@ void GameEngine::runTurnFromPhase(PlayerId player, TurnPhase resume_at) {
             if (resume_at == TurnPhase::ScoringStep ||
                 resume_at == TurnPhase::BeginningStep ||
                 resume_at == TurnPhase::AwakenPhase) {
-                scoringStep();
+                scoringStep(resume_at == TurnPhase::ScoringStep && inflight);
                 if (state_.game_over) return;
             }
             [[fallthrough]];
@@ -692,16 +739,26 @@ void GameEngine::runTurnFromPhase(PlayerId player, TurnPhase resume_at) {
             // (mainPhase() resets ns_state/oc_state/priority_holder
             // and emits PhaseChangedEvent — both clobber the snapshot).
             // Just re-enter the action loop. Once the loop drains, fall
-            // through to endingStep as normal.
-            mainPhaseLoop();
+            // through to endingStep as normal. Coming from an earlier
+            // phase, the main phase starts normally.
+            if (resume_at == TurnPhase::MainPhase) mainPhaseLoop(/*resume=*/true);
+            else mainPhase();
             if (state_.game_over) return;
             [[fallthrough]];
         case TurnPhase::EndingStep:
-            endingStep();
-            if (state_.game_over) return;
+            if (resume_at == TurnPhase::EndingStep && inflight) {
+                // The end-of-turn chain is at a decision: finish it, then
+                // the cleanup that ends the step.
+                runChain(chainResume());
+                if (state_.game_over) return;
+                cleanup();
+            } else {
+                endingStep();
+                if (state_.game_over) return;
+            }
             [[fallthrough]];
         case TurnPhase::ExpirationStep:
-            expirationStep();
+            expirationStep(resume_at == TurnPhase::ExpirationStep && inflight);
             break;
         default:
             // Setup / Mulligan / GameOver — caller shouldn't call us here.
@@ -783,18 +840,33 @@ void GameEngine::beginningStep() {
     cleanup();
 }
 
-void GameEngine::scoringStep() {
-    events_.logTrace("── Scoring Step ──");
-    auto old_phase = state_.turn.phase;
-    state_.turn.phase = TurnPhase::ScoringStep;
-    events_.emit(PhaseChangedEvent{old_phase, TurnPhase::ScoringStep,
-                                    state_.turn.turn_player});
+void GameEngine::scoringStep(bool resume) {
+    auto& site = state_.decision_site;
+    if (!resume) {
+        events_.logTrace("── Scoring Step ──");
+        auto old_phase = state_.turn.phase;
+        state_.turn.phase = TurnPhase::ScoringStep;
+        events_.emit(PhaseChangedEvent{old_phase, TurnPhase::ScoringStep,
+                                        state_.turn.turn_player});
+        site.scoring_bf_index = 0;
+    }
 
     // Turn player Holds all battlefields they control (CR 315.2.b)
     auto player = state_.turn.turn_player;
-    for (auto& bf : state_.battlefields) {
+    for (size_t i = resume ? static_cast<size_t>(site.scoring_bf_index) : 0;
+         i < state_.battlefields.size(); ++i) {
+        site.scoring_bf_index = static_cast<int>(i);
+        if (resume) {
+            // This battlefield's Hold is scored; its triggers are at a decision.
+            resume = false;
+            runChain(chainResume());
+            if (state_.game_over) return;
+            continue;
+        }
+        const auto& bf = state_.battlefields[i];
         if (bf.controller.has_value() && *bf.controller == player) {
-            scoreHold(player, bf.id);
+            const BattlefieldId bf_id = bf.id;
+            scoreHold(player, bf_id);
             if (state_.game_over) return;
             // Process hold/score triggers
             if (chain_manager_->chainExists()) runChain();
@@ -878,39 +950,75 @@ namespace {
 constexpr int kMainPhaseMaxActions = 500;  // safety cap
 }  // namespace
 
-GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count) {
+GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count, bool resume) {
     MainPhaseAdvance adv;
-    if (state_.game_over || action_count >= kMainPhaseMaxActions) {
-        adv.kind = MainPhaseAdvance::Kind::Done;
-        return adv;
-    }
+    auto& site = state_.decision_site;
+    if (!resume) {
+        if (state_.game_over || action_count >= kMainPhaseMaxActions) {
+            adv.kind = MainPhaseAdvance::Kind::Done;
+            return adv;
+        }
 
-    // Check for staged showdowns/combats after cleanup
-    processContestedBattlefields();
-    if (state_.game_over) {
-        adv.kind = MainPhaseAdvance::Kind::Done;
-        return adv;
+        // Check for staged showdowns/combats after cleanup
+        processContestedBattlefields();
+        if (state_.game_over) {
+            adv.kind = MainPhaseAdvance::Kind::Done;
+            return adv;
+        }
+        site.main_bf_index = 0;
     }
 
     // If in showdown, run it. Sub-calls still use the recursive path
     // until C-1 commit 6 converts the chain / combat subsystems.
-    for (auto& bf : state_.battlefields) {
-        if (bf.showdown_staged && !bf.showdown_in_progress &&
-            !bf.combat_staged) {
-            runShowdown(bf.id);
+    // (By index: a showdown or combat may add a token battlefield.)
+    for (size_t i = resume ? static_cast<size_t>(site.main_bf_index) : 0;
+         i < state_.battlefields.size(); ++i) {
+        site.main_bf_index = static_cast<int>(i);
+        const BattlefieldId bf_id = state_.battlefields[i].id;
+        if (resume) {
+            // The snapshot's decision is inside the showdown or combat at
+            // this battlefield: finish it where the frames say it is. A
+            // combat staged here (not one a closing showdown turned into)
+            // runs in the second branch below; everything else began in
+            // runShowdown.
+            resume = false;
+            const bool in_combat_branch = site.combat_bf == bf_id &&
+                                          !site.combat_showdown_already_closed;
+            if (in_combat_branch) {
+                runCombat(bf_id, false, /*resume=*/true);
+                if (state_.game_over) {
+                    adv.kind = MainPhaseAdvance::Kind::Done;
+                    return adv;
+                }
+                state_.battlefields[i].combat_staged = false;
+                continue;
+            }
+            runShowdown(bf_id, /*resume=*/true);
             if (state_.game_over) {
                 adv.kind = MainPhaseAdvance::Kind::Done;
                 return adv;
             }
-            bf.showdown_staged = false;
+            state_.battlefields[i].showdown_staged = false;
+        } else {
+            const auto& bf = state_.battlefields[i];
+            if (bf.showdown_staged && !bf.showdown_in_progress &&
+                !bf.combat_staged) {
+                runShowdown(bf_id);
+                if (state_.game_over) {
+                    adv.kind = MainPhaseAdvance::Kind::Done;
+                    return adv;
+                }
+                state_.battlefields[i].showdown_staged = false;
+            }
         }
+        const auto& bf = state_.battlefields[i];
         if (bf.combat_staged && !bf.combat_in_progress) {
-            runCombat(bf.id);
+            runCombat(bf_id);
             if (state_.game_over) {
                 adv.kind = MainPhaseAdvance::Kind::Done;
                 return adv;
             }
-            bf.combat_staged = false;
+            state_.battlefields[i].combat_staged = false;
         }
     }
 
@@ -928,18 +1036,51 @@ GameEngine::MainPhaseAdvance GameEngine::advanceMainPhase(int& action_count) {
 bool GameEngine::resolveMainPhaseDecision(const Intent& intent,
                                           int& action_count) {
     if (intent.type == IntentType::EndTurn) return false;
+    using MainStage = DecisionSite::MainStage;
+    auto& site = state_.decision_site;
 
+    site.main_stage = MainStage::Intent;
     executeIntent(intent);
 
     // Process any triggered abilities that were queued during execution
     // (play triggers, spell resolution triggers, etc.)
+    site.main_stage = MainStage::AfterIntentChain;
     if (chain_manager_->chainExists()) runChain();
 
     cleanup();
 
     // Process death triggers / cleanup triggers
+    site.main_stage = MainStage::AfterCleanupChain;
     if (chain_manager_->chainExists()) runChain();
 
+    site.main_stage = MainStage::Advance;
+    action_count++;
+    return !state_.game_over;
+}
+
+// The snapshot was taken at a chain decision inside resolveMainPhaseDecision
+// (every chain an action runs ends that action: executeIntent's last step is
+// runChain). Finish that chain, then the rest of the body.
+bool GameEngine::resumeMainPhaseDecision(int& action_count) {
+    using MainStage = DecisionSite::MainStage;
+    auto& site = state_.decision_site;
+    switch (site.main_stage) {
+        case MainStage::Intent:
+        case MainStage::AfterIntentChain:
+            runChain(chainResume());
+            site.main_stage = MainStage::AfterIntentChain;
+            if (chain_manager_->chainExists()) runChain();
+            cleanup();
+            site.main_stage = MainStage::AfterCleanupChain;
+            if (chain_manager_->chainExists()) runChain();
+            break;
+        case MainStage::AfterCleanupChain:
+            runChain(chainResume());
+            break;
+        case MainStage::Advance:
+            break;
+    }
+    site.main_stage = MainStage::Advance;
     action_count++;
     return !state_.game_over;
 }
@@ -962,10 +1103,29 @@ void GameEngine::mainPhase() {
 // the action loop without firing the entry side effects (which reset
 // ns_state/oc_state/priority_holder and re-emit PhaseChangedEvent).
 // Those resets would corrupt a snapshot taken mid-chain or mid-showdown.
-void GameEngine::mainPhaseLoop() {
-    int action_count = 0;
+void GameEngine::mainPhaseLoop(bool resume) {
+    using MainStage = DecisionSite::MainStage;
+    auto& site = state_.decision_site;
+    // The snapshot's decision is inside this loop's body (a showdown, a
+    // combat, a chain): re-enter where its frames say. A main-phase action
+    // decision, or a state built by hand, restarts the body from the top.
+    const bool inflight = resume && inflightResume() &&
+                          (site.main_stage != MainStage::Advance ||
+                           site.showdown_bf != kInvalidId || site.combat_bf != kInvalidId);
+    if (!resume) {
+        site.main_action_count = 0;
+        site.main_bf_index = 0;
+    }
+    if (!inflight) site.main_stage = MainStage::Advance;
+    int& action_count = site.main_action_count;
     while (true) {
-        auto adv = advanceMainPhase(action_count);
+        if (site.main_stage != MainStage::Advance) {
+            if (!resumeMainPhaseDecision(action_count)) return;
+            resume = false;
+            continue;
+        }
+        auto adv = advanceMainPhase(action_count, inflight && resume);
+        resume = false;
         if (adv.kind == MainPhaseAdvance::Kind::Done) return;
 
         auto intent = queryAgent(state_.turn.turn_player);
@@ -1021,12 +1181,16 @@ void GameEngine::expireTemporaryKeywords(GameObject& obj, const CardDB& db) {
     obj.temp_keywords.reset();
 }
 
-void GameEngine::expirationStep() {
-    events_.logTrace("── Expiration Step ──");
-    auto old_phase = state_.turn.phase;
-    state_.turn.phase = TurnPhase::ExpirationStep;
-    events_.emit(PhaseChangedEvent{old_phase, TurnPhase::ExpirationStep,
-                                    state_.turn.turn_player});
+void GameEngine::expirationStep(bool resume) {
+    auto& site = state_.decision_site;
+    if (!resume) {
+        events_.logTrace("── Expiration Step ──");
+        auto old_phase = state_.turn.phase;
+        state_.turn.phase = TurnPhase::ExpirationStep;
+        events_.emit(PhaseChangedEvent{old_phase, TurnPhase::ExpirationStep,
+                                        state_.turn.turn_player});
+        site.expiration_pass = 0;
+    }
 
     // CR 317.2.f.1 — "If any items underwent the FEPR process, return to
     // the start of the Expiration Step." Loop the body + chain drain
@@ -1035,7 +1199,15 @@ void GameEngine::expirationStep() {
     // by healAllUnits / clearStun / emptyRunePools would sit on the chain
     // unresolved or resolve without re-running expiration.
     constexpr int kMaxExpirationPasses = 8;
-    for (int pass = 0; pass < kMaxExpirationPasses; ++pass) {
+    for (int pass = resume ? site.expiration_pass : 0; pass < kMaxExpirationPasses; ++pass) {
+        site.expiration_pass = pass;
+        if (resume) {
+            // This pass's chain is at a decision: finish it.
+            resume = false;
+            runChain(chainResume());
+            if (!chain_manager_->chainExists()) break;
+            continue;
+        }
         doExpirationBody();
         if (!chain_manager_->chainExists()) break;
         runChain();
@@ -1239,7 +1411,7 @@ void GameEngine::chooseTargetsAtFinalize(ChainItem& item) {
                      " [" + std::to_string(options.size()) + " options]");
     const PlayerId chooser = item.controller;
     const ChainItemId item_id = item.id;
-    auto chosen = getAgent(chooser).selectAction(state_, options);
+    auto chosen = askAgent(chooser, options, DecisionSiteKind::Other);
     recordAppliedIntent(chosen);
     if (on_decision) on_decision(state_, options, chosen);
     GameObjectId t = legal.front();
@@ -1282,7 +1454,7 @@ Intent GameEngine::decideNow(PlayerId player, const std::vector<Intent>& options
     events_.logTrace("DECISION #" + std::to_string(state_.decision_index) + " (" +
                      toString(player) + "): " + what + " [" +
                      std::to_string(options.size()) + " options]");
-    auto chosen = getAgent(player).selectAction(state_, options);
+    auto chosen = askAgent(player, options, DecisionSiteKind::Other);
     recordAppliedIntent(chosen);
     if (on_decision) on_decision(state_, options, chosen);
     return chosen;
@@ -1370,6 +1542,9 @@ void GameEngine::runFinalizePass(ChainItem& item) {
                          (pending.label.empty() ? "MakeChoice" : pending.label) + " [" +
                          std::to_string(pending.legal.size()) + " options] (" +
                          toString(pending.player) + ")");
+        // Asked while the item is being finalized (inside stepFinalize):
+        // not resumable from the state.
+        state_.decision_site.kind = DecisionSiteKind::Other;
         Intent choice = queryAgentForChain(pending.player, pending.legal);
         effect_executor_->recordChoice(std::move(choice));
     }
@@ -1635,7 +1810,7 @@ void GameEngine::executePlayCard(const Intent& intent) {
                 " (" + toString(intent.player) + "): discard " +
                 std::to_string(oac.discard_cards) + " to reduce " + card.name +
                 " by " + std::to_string(oac.reduce_energy) + "? [decline|discard]");
-            auto chosen = getAgent(intent.player).selectAction(state_, opts);
+            auto chosen = askAgent(intent.player, opts, DecisionSiteKind::Other);
             recordAppliedIntent(chosen);
             if (on_decision) on_decision(state_, opts, chosen);
             if (chosen.chosen_value.value_or(0) == 1) {
@@ -1915,7 +2090,7 @@ void GameEngine::executePlaySpell(const Intent& intent) {
                              " (" + toString(intent.player) + "): "
                              "pay Repeat tranche " + std::to_string(repeats + 1) +
                              " for " + card.name + "? [decline|pay] [2 options]");
-            auto chosen = getAgent(intent.player).selectAction(state_, opts);
+            auto chosen = askAgent(intent.player, opts, DecisionSiteKind::Other);
             recordAppliedIntent(chosen);
             if (on_decision) on_decision(state_, opts, chosen);
             bool wants_pay = chosen.chosen_value.value_or(0) == 1;
@@ -1976,7 +2151,7 @@ void GameEngine::executePlaySpell(const Intent& intent) {
     runChain();
 }
 
-void GameEngine::runChain() {
+void GameEngine::runChain(ChainResume resume) {
     chain_manager_->processFEPR(
         // Agent query callback
         [this](PlayerId player, const std::vector<Intent>& actions) -> Intent {
@@ -1993,7 +2168,8 @@ void GameEngine::runChain() {
         // Closed State action generator (handles targeting + affordability)
         [this](PlayerId player) -> std::vector<Intent> {
             return generateClosedStateActions(player);
-        }
+        },
+        resume
     );
 }
 
@@ -2185,7 +2361,7 @@ void GameEngine::resolvePermanent(const ChainItem& item) {
                                  "] for Accelerate on " + card.name +
                                  "? [decline|pay] [2 options]");
 
-                auto chosen = getAgent(item.controller).selectAction(state_, opts);
+                auto chosen = askAgent(item.controller, opts, DecisionSiteKind::Other);
                 recordAppliedIntent(chosen);
                 if (on_decision) on_decision(state_, opts, chosen);
 
@@ -2281,8 +2457,10 @@ void GameEngine::resolvePermanent(const ChainItem& item) {
 
 Intent GameEngine::queryAgentForChain(PlayerId player,
                                        const std::vector<Intent>& actions) {
-    state_.decision_index++;
-    auto chosen = getAgent(player).selectAction(state_, actions);
+    countDecision(player, /*per_turn=*/false);
+    // The caller (ChainManager, or a site that is not resumable) has set
+    // decision_site.kind.
+    auto chosen = askAgent(player, actions, std::nullopt);
     recordAppliedIntent(chosen);
     // Surface the chain-priority decision in the trace so V&V can
     // confirm priority is being passed correctly between players in
@@ -3813,20 +3991,29 @@ std::vector<Intent> GameEngine::generateCombatDamageActions(
 // Combat and Showdown
 // ═══════════════════════════════════════════════════════════════════════════════
 
-void GameEngine::runShowdown(BattlefieldId bf_id) {
+void GameEngine::runShowdown(BattlefieldId bf_id, bool resume) {
+    const auto& site = state_.decision_site;
+    if (resume && site.combat_bf == bf_id && site.combat_showdown_already_closed) {
+        // This showdown has closed and turned into the combat below (CR
+        // 323.13); the snapshot's decision is inside that combat.
+        runCombat(bf_id, /*showdown_already_closed=*/true, /*resume=*/true);
+        return;
+    }
     auto& bf = getBattlefield(bf_id);
-    events_.logTrace("SHOWDOWN: BF#" + std::to_string(bf_id) +
-                     (bf.combat_staged ? " (combat)" : " (non-combat)"));
+    if (!resume) {
+        events_.logTrace("SHOWDOWN: BF#" + std::to_string(bf_id) +
+                         (bf.combat_staged ? " (combat)" : " (non-combat)"));
 
-    bf.showdown_in_progress = true;
-    state_.turn.ns_state = NeutralShowdownState::Showdown;
-    state_.turn.oc_state = OpenClosedState::Open;
+        bf.showdown_in_progress = true;
+        state_.turn.ns_state = NeutralShowdownState::Showdown;
+        state_.turn.oc_state = OpenClosedState::Open;
 
-    events_.emit(ShowdownStartedEvent{bf_id, bf.combat_staged});
+        events_.emit(ShowdownStartedEvent{bf_id, bf.combat_staged});
+    }
 
     // Showdown loop: players alternate focus, playing Action/Reaction spells.
     // Showdown closes when all players pass focus consecutively (CR 348.1).
-    runShowdownLoop(bf_id);
+    runShowdownLoop(bf_id, resume);
 
     bf.showdown_in_progress = false;
     state_.turn.ns_state = NeutralShowdownState::Neutral;
@@ -3945,7 +4132,10 @@ std::optional<PlayerId> GameEngine::resolveShowdownDecision(
         case IntentType::ActivateReactionAbility: // [Reaction] [E]: abilities
         case IntentType::ActivateAbility: {  // generic activate (safety)
             state_.turn.players_passed_focus.clear();  // reset passes
+            // A chain decision inside this play resumes in runShowdownLoop.
+            state_.decision_site.showdown_in_intent = true;
             executeIntent(chosen);
+            state_.decision_site.showdown_in_intent = false;
             cleanup();
             // After chain resolves, focus passes to opponent
             return opponent(current_focus);
@@ -3958,7 +4148,7 @@ std::optional<PlayerId> GameEngine::resolveShowdownDecision(
     }
 }
 
-void GameEngine::runShowdownLoop(BattlefieldId bf_id) {
+void GameEngine::runShowdownLoop(BattlefieldId bf_id, bool resume) {
     // Focus passing loop (CR 313, CR 348.1).
     // Turn player gets focus first. Players alternate.
     // When both pass focus consecutively without adding chain items, showdown closes.
@@ -3967,28 +4157,68 @@ void GameEngine::runShowdownLoop(BattlefieldId bf_id) {
     // The step-machine path (C-1 commit 9) will surface advance's legal
     // actions out to applyChoice() and feed the chosen intent back into
     // resolve — no thread, no condvar.
-    state_.turn.players_passed_focus.clear();
-    PlayerId current_focus = state_.turn.turn_player;
+    //
+    // The loop's cursors live in GameState::decision_site so a snapshot
+    // taken at a focus decision, or at a chain decision inside a play made
+    // here, resumes in this loop.
+    auto& site = state_.decision_site;
+    if (!resume) {
+        state_.turn.players_passed_focus.clear();
+        site.showdown_bf = bf_id;
+        site.showdown_focus = state_.turn.turn_player;
+        site.showdown_action_count = 0;
+        site.showdown_in_intent = false;
+    }
 
-    int action_count = 0;
+    int& action_count = site.showdown_action_count;
     while (action_count < kMaxShowdownActions && !state_.game_over) {
+        if (resume && site.showdown_in_intent) {
+            // The chain of the play being resolved is at a decision: finish
+            // it and the rest of resolveShowdownDecision's play branch.
+            resume = false;
+            runChain(chainResume());
+            site.showdown_in_intent = false;
+            cleanup();
+            site.showdown_focus = opponent(site.showdown_focus);
+            continue;
+        }
+        resume = false;
+        const PlayerId current_focus = site.showdown_focus;
         auto adv = advanceShowdown(bf_id, current_focus, action_count);
-        if (adv.kind == ShowdownAdvance::Kind::Done) return;
+        if (adv.kind == ShowdownAdvance::Kind::Done) break;
 
-        state_.decision_index++;
-        auto chosen = getAgent(current_focus).selectAction(state_, adv.legal);
+        countDecision(current_focus, /*per_turn=*/false);
+        auto chosen = askAgent(current_focus, adv.legal, DecisionSiteKind::ShowdownFocus);
         recordAppliedIntent(chosen);
         if (on_decision) {
             on_decision(state_, adv.legal, chosen);
         }
 
         auto next = resolveShowdownDecision(bf_id, chosen, current_focus, action_count);
-        if (!next.has_value()) return;
-        current_focus = *next;
+        if (!next.has_value()) break;
+        site.showdown_focus = *next;
     }
+    site.showdown_bf = kInvalidId;
 }
 
-void GameEngine::runCombat(BattlefieldId bf_id, bool showdown_already_closed) {
+void GameEngine::runCombat(BattlefieldId bf_id, bool showdown_already_closed, bool resume) {
+    using CombatStage = DecisionSite::CombatStage;
+    auto& site = state_.decision_site;
+    if (resume) {
+        // The frames say where in this combat the snapshot's decision is.
+        showdown_already_closed = site.combat_showdown_already_closed;
+        if (site.combat_stage == CombatStage::Start) {
+            runChain(chainResume());
+        } else if (site.combat_stage == CombatStage::Showdown) {
+            runShowdownLoop(bf_id, /*resume=*/true);
+        } else if (site.combat_stage == CombatStage::DamageAttacker ||
+                   site.combat_stage == CombatStage::DamageDefender) {
+            combatDamageStep(bf_id, /*resume=*/true);
+        }
+    } else {
+    site.combat_bf = bf_id;
+    site.combat_showdown_already_closed = showdown_already_closed;
+    site.combat_stage = CombatStage::Start;
     auto& bf = getBattlefield(bf_id);
     bf.combat_in_progress = true;
 
@@ -4041,47 +4271,85 @@ void GameEngine::runCombat(BattlefieldId bf_id, bool showdown_already_closed) {
     if (!state_.chain.items.empty()) {
         runChain();
     }
+    }   // !resume
 
-    // Re-check combat viability AFTER triggers resolve — kills or
-    // bounces in trigger resolution may have emptied one side.
-    {
+    // Resolution ends the combat and drops its frame.
+    auto finish = [&]() {
+        getBattlefield(bf_id).combat_phase = CombatPhase::ResolutionStep;
+        site.combat_stage = CombatStage::Resolution;
+        combatResolutionStep(bf_id);
+        site.combat_bf = kInvalidId;
+    };
+
+    if (site.combat_stage == CombatStage::Start) {
+        auto& bf = getBattlefield(bf_id);
+        // Re-check combat viability AFTER triggers resolve — kills or
+        // bounces in trigger resolution may have emptied one side.
         auto att_after_trig = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.attacker);
         auto def_after_trig = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.defender);
         if (att_after_trig.empty() || def_after_trig.empty()) {
-            bf.combat_phase = CombatPhase::ResolutionStep;
-            combatResolutionStep(bf_id);
+            finish();
             return;
         }
+
+        // Step 1: Combat Showdown — players can play Action/Reaction spells
+        // (already held when a non-combat showdown turned into this combat).
+        bf.combat_phase = CombatPhase::ShowdownStep;
+        site.combat_stage = CombatStage::Showdown;
+        if (!showdown_already_closed) runShowdownLoop(bf_id);
     }
 
-    // Step 1: Combat Showdown — players can play Action/Reaction spells
-    // (already held when a non-combat showdown turned into this combat).
-    bf.combat_phase = CombatPhase::ShowdownStep;
-    if (!showdown_already_closed) runShowdownLoop(bf_id);
+    if (site.combat_stage == CombatStage::Showdown) {
+        auto& bf = getBattlefield(bf_id);
+        // After showdown: check if combat can continue (CR 460.1)
+        // Damage step only occurs if both sides still have units
+        auto att_check = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.attacker);
+        auto def_check = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.defender);
 
-    // After showdown: check if combat can continue (CR 460.1)
-    // Damage step only occurs if both sides still have units
-    auto att_check = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.attacker);
-    auto def_check = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.defender);
+        if (att_check.empty() || def_check.empty()) {
+            // One side was eliminated during showdown — skip damage, go to resolution
+            finish();
+            return;
+        }
 
-    if (att_check.empty() || def_check.empty()) {
-        // One side was eliminated during showdown — skip damage, go to resolution
-        bf.combat_phase = CombatPhase::ResolutionStep;
-        combatResolutionStep(bf_id);
-        return;
+        // Step 2: Combat Damage
+        bf.combat_phase = CombatPhase::DamageStep;
+        combatDamageStep(bf_id);
     }
-
-    // Step 2: Combat Damage
-    bf.combat_phase = CombatPhase::DamageStep;
-    combatDamageStep(bf_id);
 
     // Step 3: Resolution
-    bf.combat_phase = CombatPhase::ResolutionStep;
-    combatResolutionStep(bf_id);
+    finish();
 }
 
-void GameEngine::combatDamageStep(BattlefieldId bf_id) {
+void GameEngine::combatDamageStep(BattlefieldId bf_id, bool resume) {
+    using CombatStage = DecisionSite::CombatStage;
     auto& bf = getBattlefield(bf_id);
+    auto& site = state_.decision_site;
+
+    // Each side assigns its damage in turn. The totals and target orders are
+    // kept in the decision site, so a snapshot taken at either assignment
+    // resumes with the same options.
+    auto runOneSide = [&](PlayerId assigner, int total_damage,
+                          const std::vector<GameObjectId> targets) {
+        auto adv = advanceCombatDamage(assigner, total_damage, targets);
+        if (adv.kind == CombatDamageAdvance::Kind::Skip) return;
+        countDecision(assigner, /*per_turn=*/false);
+        auto chosen = askAgent(assigner, adv.legal, DecisionSiteKind::CombatDamage);
+        recordAppliedIntent(chosen);
+        if (on_decision) {
+            on_decision(state_, adv.legal, chosen);
+        }
+        resolveCombatDamageDecision(chosen);
+    };
+    if (resume) {
+        if (site.combat_stage == CombatStage::DamageAttacker) {
+            runOneSide(*bf.attacker, site.combat_attacker_might, site.combat_defenders);
+            site.combat_stage = CombatStage::DamageDefender;
+        }
+        if (site.combat_stage == CombatStage::DamageDefender)
+            runOneSide(*bf.defender, site.combat_defender_might, site.combat_attackers);
+        return;
+    }
 
     auto att_units = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.attacker);
     auto def_units = state_.unitsAt(BattlefieldLocation{bf_id}, *bf.defender);
@@ -4147,21 +4415,15 @@ void GameEngine::combatDamageStep(BattlefieldId bf_id) {
     // The step-machine path (C-1 commit 9) will surface advance's legal
     // options out to applyChoice() and feed the chosen Intent back into
     // resolve.
-    auto runOneSide = [&](PlayerId assigner, int total_damage,
-                          const std::vector<GameObjectId>& targets) {
-        auto adv = advanceCombatDamage(assigner, total_damage, targets);
-        if (adv.kind == CombatDamageAdvance::Kind::Skip) return;
-        state_.decision_index++;
-        auto chosen = getAgent(assigner).selectAction(state_, adv.legal);
-        recordAppliedIntent(chosen);
-        if (on_decision) {
-            on_decision(state_, adv.legal, chosen);
-        }
-        resolveCombatDamageDecision(chosen);
-    };
+    site.combat_attackers = att_units;
+    site.combat_defenders = def_units;
+    site.combat_attacker_might = att_might;
+    site.combat_defender_might = def_might;
 
     // Attacker assigns damage to defender's units, defender assigns to attacker's
+    site.combat_stage = CombatStage::DamageAttacker;
     runOneSide(*bf.attacker, att_might, def_units);
+    site.combat_stage = CombatStage::DamageDefender;
     runOneSide(*bf.defender, def_might, att_units);
 }
 
@@ -5720,7 +5982,7 @@ void GameEngine::maybePayOptionalAdditionalCost(PlayerId player, GameObjectId ca
                          toString(player) + "): discard " +
                          std::to_string(cost.discard_cards) + " as additional cost for " +
                          card.name + "? [decline|pay] [2 options]");
-        auto dchosen = getAgent(player).selectAction(state_, dopts);
+        auto dchosen = askAgent(player, dopts, DecisionSiteKind::Other);
         recordAppliedIntent(dchosen);
         if (on_decision) on_decision(state_, dopts, dchosen);
         if (dchosen.chosen_value.value_or(0) == 1) {
@@ -5755,7 +6017,7 @@ void GameEngine::maybePayOptionalAdditionalCost(PlayerId player, GameObjectId ca
     events_.logTrace("DECISION #" + std::to_string(state_.decision_index) + " (" +
                      toString(player) + "): pay additional cost for " + card.name +
                      "? [decline|pay] [2 options]");
-    auto chosen = getAgent(player).selectAction(state_, opts);
+    auto chosen = askAgent(player, opts, DecisionSiteKind::Other);
     recordAppliedIntent(chosen);
     if (on_decision) on_decision(state_, opts, chosen);
 
@@ -6475,7 +6737,7 @@ bool GameEngine::payCardCost(PlayerId player, GameObjectId card_obj) {
         // returns the only option for trivial cases; HumanAgent
         // auto-passes without surfacing UI, so the player UX is
         // unchanged. The win is training fidelity.
-        auto chosen = getAgent(player).selectAction(state_, adv.legal);
+        auto chosen = askAgent(player, adv.legal, DecisionSiteKind::Other);
         recordAppliedIntent(chosen);
         if (on_decision) on_decision(state_, adv.legal, chosen);
         adv = resolveCostPaymentDecision(chosen);
@@ -6571,7 +6833,7 @@ void GameEngine::killUnit(GameObjectId unit_id) {
                 accept.player = controller; accept.chosen_value = 1;
                 std::vector<Intent> opts = {decline, accept};
                 state_.decision_index++;
-                auto chosen = getAgent(controller).selectAction(state_, opts);
+                auto chosen = askAgent(controller, opts, DecisionSiteKind::Other);
                 recordAppliedIntent(chosen);
                 if (on_decision) on_decision(state_, opts, chosen);
                 if (chosen.chosen_value.value_or(0) == 1) {
@@ -6691,15 +6953,13 @@ void GameEngine::recordAppliedIntent(const Intent& chosen) {
 
 Intent GameEngine::queryAgent(PlayerId player) {
     auto actions = generateLegalActions();
-    state_.decision_index++;
-    if (player == PlayerId::Player1) state_.turn.turn_decisions_p1++;
-    else state_.turn.turn_decisions_p2++;
+    countDecision(player, /*per_turn=*/true);
 
     events_.logTrace("DECISION #" + std::to_string(state_.decision_index) +
                      " (" + toString(player) + "): " +
                      std::to_string(actions.size()) + " legal actions");
 
-    auto chosen = getAgent(player).selectAction(state_, actions);
+    auto chosen = askAgent(player, actions, DecisionSiteKind::MainPhase);
     recordAppliedIntent(chosen);
 
     {
@@ -6760,6 +7020,44 @@ Intent GameEngine::queryAgent(PlayerId player) {
         on_decision(state_, actions, chosen);
     }
     return chosen;
+}
+
+Intent GameEngine::askAgent(PlayerId player, const std::vector<Intent>& legal,
+                            std::optional<DecisionSiteKind> kind) {
+    auto& site = state_.decision_site;
+    if (kind.has_value()) site.kind = *kind;
+    site.decision_index = state_.decision_index;
+    return getAgent(player).selectAction(state_, legal);
+}
+
+void GameEngine::countDecision(PlayerId player, bool per_turn) {
+    if (reask_) {
+        // The decision a snapshot was taken at, asked again by a resumed
+        // engine: the original engine already counted it.
+        reask_ = false;
+        return;
+    }
+    state_.decision_index++;
+    if (!per_turn) return;
+    if (player == PlayerId::Player1) state_.turn.turn_decisions_p1++;
+    else state_.turn.turn_decisions_p2++;
+}
+
+bool GameEngine::inflightResume() const {
+    switch (resume_kind_) {
+        case DecisionSiteKind::ChainPriority:
+        case DecisionSiteKind::ChainChoice:
+        case DecisionSiteKind::ShowdownFocus:
+        case DecisionSiteKind::CombatDamage:
+            return true;
+        default:
+            return false;
+    }
+}
+
+ChainResume GameEngine::chainResume() const {
+    return resume_kind_ == DecisionSiteKind::ChainChoice ? ChainResume::Choice
+                                                          : ChainResume::Priority;
 }
 
 AgentInterface& GameEngine::getAgent(PlayerId player) {

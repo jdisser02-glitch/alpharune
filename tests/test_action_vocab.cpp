@@ -21,6 +21,7 @@
 #include "core/intent.h"
 #include "openspiel/action_vocab.h"
 
+#include <variant>
 #include <vector>
 
 using namespace riftbound;
@@ -377,6 +378,73 @@ TEST(ActionVocab, CollapsingPlayVariantsAliasIntentionally) {
     reaction.card = card;
 
     EXPECT_EQ(encodeAction(play, ms.state), encodeAction(reaction, ms.state));
+}
+
+// ── Play location (policy targets) ─────────────────────────────────────────
+
+TEST(ActionVocab, PlayLocationGivesDistinctSlotsAndRoundTrips) {
+    MiniState ms;
+    auto card = ms.addObject(/*def_id=*/100);
+    auto bf0 = ms.addBattlefield();
+    auto bf1 = ms.addBattlefield();
+    Intent base, at0, at1, none;
+    for (Intent* i : {&base, &at0, &at1, &none}) {
+        i->type = IntentType::PlayCard;
+        i->player = PlayerId::Player1;
+        i->card = card;
+    }
+    base.play_location = BaseLocation{PlayerId::Player1};
+    at0.play_location = BattlefieldLocation{bf0};
+    at1.play_location = BattlefieldLocation{bf1};
+    const int s_base = encodeAction(base, ms.state), s_0 = encodeAction(at0, ms.state),
+              s_1 = encodeAction(at1, ms.state), s_none = encodeAction(none, ms.state);
+    EXPECT_EQ(s_base, s_none);           // base and "no location" (spells) share slot 0 of the card
+    EXPECT_NE(s_base, s_0);
+    EXPECT_NE(s_base, s_1);
+    EXPECT_NE(s_0, s_1);
+    EXPECT_EQ(s_0 - s_base, 1 + static_cast<int>(bf0));
+    EXPECT_EQ(s_1 - s_base, 1 + static_cast<int>(bf1));
+    // The card's slots stay inside the Play bucket and never reach the next card.
+    const int play_base = verbOffset(ActionVerb::Play);
+    EXPECT_EQ(s_base, play_base + (100 - 1) * kPlayLocations);
+    EXPECT_LT(s_1, play_base + 100 * kPlayLocations);
+    EXPECT_LT(play_base + kNumCardDefIds * kPlayLocations, kVocabSize);
+    // Decoding picks the option at the requested location, not the first Play of the card.
+    std::vector<Intent> legal = {base, at0, at1};
+    const Intent* d = decodeAction(s_1, legal, ms.state);
+    ASSERT_NE(d, nullptr);
+    EXPECT_TRUE(d->play_location.has_value());
+    EXPECT_TRUE(std::holds_alternative<BattlefieldLocation>(*d->play_location));
+    EXPECT_EQ(std::get<BattlefieldLocation>(*d->play_location).id, bf1);
+    d = decodeAction(s_0, legal, ms.state);
+    ASSERT_NE(d, nullptr);
+    EXPECT_EQ(std::get<BattlefieldLocation>(*d->play_location).id, bf0);
+    d = decodeAction(s_base, legal, ms.state);
+    ASSERT_NE(d, nullptr);
+    EXPECT_TRUE(std::holds_alternative<BaseLocation>(*d->play_location));
+    // Reactions / action spells at a location encode the same way.
+    at1.type = IntentType::PlayReaction;
+    EXPECT_EQ(encodeAction(at1, ms.state), s_1);
+    // encodeActions is encodeAction over the list.
+    const auto slots = encodeActions(legal, ms.state);
+    ASSERT_EQ(slots.size(), 3u);
+    EXPECT_EQ(slots[0], s_base);
+    EXPECT_EQ(slots[1], s_0);
+    EXPECT_EQ(slots[2], s_1);
+}
+
+TEST(ActionVocab, PlayLocationBeyondTheRangeFallsBackToBase) {
+    MiniState ms;
+    auto card = ms.addObject(/*def_id=*/7);
+    Intent i;
+    i.type = IntentType::PlayCard;
+    i.player = PlayerId::Player1;
+    i.card = card;
+    i.play_location = BattlefieldLocation{static_cast<BattlefieldId>(kPlayLocations + 3)};
+    Intent base = i;
+    base.play_location = BaseLocation{PlayerId::Player1};
+    EXPECT_EQ(encodeAction(i, ms.state), encodeAction(base, ms.state));
+    EXPECT_LT(encodeAction(i, ms.state), kVocabSize);
 }
 
 TEST(ActionVocab, VocabSizeIsReasonable) {

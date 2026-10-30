@@ -1,5 +1,6 @@
 #include "ml/value_net.h"
 #include "ml/feature_extractor.h"
+#include "openspiel/action_vocab.h"
 
 #include <algorithm>
 #include <cmath>
@@ -10,6 +11,7 @@
 #include <streambuf>
 #include <map>
 #include <mutex>
+#include <iterator>
 #include <stdexcept>
 
 namespace riftbound::ml {
@@ -155,19 +157,73 @@ std::vector<std::pair<uint16_t, float>> sparsify(const std::vector<float>& x) {
     return nz;
 }
 
+namespace {
+/// Distinct legal slots in legal order, each with target 0.
+std::vector<std::pair<uint16_t, float>> legalSlots(const std::vector<int>& slots) {
+    std::vector<std::pair<uint16_t, float>> out;
+    for (int slot : slots) {
+        if (slot < 0 || slot > 65535) continue;
+        bool seen = false;
+        for (const auto& [s, v] : out) if (s == slot) { seen = true; break; }
+        if (!seen) out.emplace_back(static_cast<uint16_t>(slot), 0.0f);
+    }
+    return out;
+}
+}  // namespace
+
+void setPolicyTarget(ValueSample& sample, const std::vector<int>& slots,
+                     const std::vector<std::pair<int, double>>& shares, int sims) {
+    sample.policy = legalSlots(slots);
+    double total = 0.0;
+    for (const auto& [idx, share] : shares) {
+        if (idx < 0 || idx >= static_cast<int>(slots.size()) || share <= 0) continue;
+        for (auto& [s, v] : sample.policy)
+            if (s == slots[static_cast<size_t>(idx)]) { v += static_cast<float>(share); total += share; break; }
+    }
+    if (total > 0) for (auto& [s, v] : sample.policy) v = static_cast<float>(v / total);
+    sample.source = total > 0 ? kPolicySearch : kPolicyNone;
+    sample.sims = static_cast<uint16_t>(std::max(0, std::min(65535, sims)));
+    if (total <= 0) sample.policy.clear();
+}
+
+void setHumanTarget(ValueSample& sample, const std::vector<int>& slots, int chosen) {
+    sample.policy = legalSlots(slots);
+    sample.source = kPolicyNone;
+    sample.sims = 0;
+    if (chosen >= 0 && chosen < static_cast<int>(slots.size()))
+        for (auto& [s, v] : sample.policy)
+            if (s == slots[static_cast<size_t>(chosen)]) { v = 1.0f; sample.source = kPolicyHuman; break; }
+    if (sample.source != kPolicyHuman) sample.policy.clear();
+}
+
 void appendValueRecords(const std::string& path, int dim, const std::vector<ValueSample>& samples,
                         PlayerId winner, int score_p1, int score_p2, int victory_score,
                         uint32_t game_id) {
     static std::mutex mu;
     std::lock_guard<std::mutex> lock(mu);
-    const bool fresh = !std::ifstream(path).good();
-    std::ofstream f(path, std::ios::binary | std::ios::app);
-    if (fresh) {
-        f.write("RBV2", 4);
-        int32_t d = dim;
-        f.write(reinterpret_cast<const char*>(&d), 4);
+    int version = 3;
+    {
+        std::ifstream probe(path, std::ios::binary);
+        char magic[4] = {0, 0, 0, 0};
+        if (probe && probe.read(magic, 4)) {
+            if (std::memcmp(magic, "RBV2", 4) == 0) version = 2;
+            else if (std::memcmp(magic, "RBVD", 4) == 0)
+                throw std::runtime_error("value data: cannot append to a v1 file " + path);
+            else if (std::memcmp(magic, "RBV3", 4) != 0)
+                throw std::runtime_error("value data: " + path + " is not a value-data file");
+        } else {
+            version = -3;   // fresh file: write the header
+        }
     }
+    std::ofstream f(path, std::ios::binary | std::ios::app);
     auto put = [&](const void* p, size_t n) { f.write(reinterpret_cast<const char*>(p), static_cast<std::streamsize>(n)); };
+    if (version == -3) {
+        version = 3;
+        f.write("RBV3", 4);
+        int32_t d = dim, vocab = ::riftbound::openspiel::kVocabSize;
+        put(&d, 4);
+        put(&vocab, 4);
+    }
     auto clamp8 = [](int v) { return static_cast<int8_t>(std::max(-127, std::min(127, v))); };
     for (const auto& s : samples) {
         if (s.who != PlayerId::Player1 && s.who != PlayerId::Player2) continue;
@@ -182,7 +238,51 @@ void appendValueRecords(const std::string& path, int dim, const std::vector<Valu
         put(&label, 1); put(&persp, 1); put(&own, 1); put(&opp, 1); put(&victory, 1);
         put(&gid, 4); put(&turn, 4); put(&decision, 4); put(&nnz, 2);
         for (size_t j = 0; j < nnz; ++j) { put(&s.features[j].first, 2); put(&s.features[j].second, 4); }
+        if (version < 3) continue;
+        const uint8_t source = s.policy.empty() ? static_cast<uint8_t>(kPolicyNone) : s.source;
+        const uint16_t n_legal = static_cast<uint16_t>(std::min<size_t>(s.policy.size(), 65535));
+        put(&source, 1); put(&s.flags, 1); put(&s.sims, 2); put(&n_legal, 2);
+        for (size_t j = 0; j < n_legal; ++j) { put(&s.policy[j].first, 2); put(&s.policy[j].second, 4); }
     }
+}
+
+ValueFile readValueRecords(const std::string& path) {
+    std::ifstream f(path, std::ios::binary);
+    if (!f) throw std::runtime_error("value data: cannot open " + path);
+    std::vector<unsigned char> b((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+    ValueFile out;
+    if (b.size() < 8) throw std::runtime_error("value data: truncated header in " + path);
+    if (std::memcmp(b.data(), "RBVD", 4) == 0) out.version = 1;
+    else if (std::memcmp(b.data(), "RBV2", 4) == 0) out.version = 2;
+    else if (std::memcmp(b.data(), "RBV3", 4) == 0) out.version = 3;
+    else throw std::runtime_error("value data: bad magic in " + path);
+    size_t pos = 4;
+    auto need = [&](size_t n) { if (pos + n > b.size()) throw std::runtime_error("value data: truncated record in " + path); };
+    auto rd = [&](void* dst, size_t n) { need(n); std::memcpy(dst, &b[pos], n); pos += n; };
+    int32_t dim = 0;
+    rd(&dim, 4);
+    out.dim = dim;
+    if (out.version == 3) { int32_t vocab = 0; rd(&vocab, 4); out.vocab = vocab; }
+    while (pos < b.size()) {
+        ValueRecord r;
+        uint16_t nnz = 0;
+        if (out.version == 1) {
+            rd(&r.label, 1); rd(&r.turn, 4); rd(&nnz, 2);
+        } else {
+            rd(&r.label, 1); rd(&r.perspective, 1); rd(&r.own_score, 1); rd(&r.opp_score, 1); rd(&r.victory_score, 1);
+            rd(&r.game_id, 4); rd(&r.turn, 4); rd(&r.decision_index, 4); rd(&nnz, 2);
+        }
+        r.features.resize(nnz);
+        for (auto& [i, v] : r.features) { rd(&i, 2); rd(&v, 4); }
+        if (out.version == 3) {
+            uint16_t n_legal = 0;
+            rd(&r.source, 1); rd(&r.flags, 1); rd(&r.sims, 2); rd(&n_legal, 2);
+            r.policy.resize(n_legal);
+            for (auto& [s, v] : r.policy) { rd(&s, 2); rd(&v, 4); }
+        }
+        out.records.push_back(std::move(r));
+    }
+    return out;
 }
 
 }  // namespace riftbound::ml

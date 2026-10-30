@@ -121,6 +121,11 @@ struct GuidedOptions {
     std::string deck1_label;      // recorded in the output header
     std::string deck2_label;
     bool verbose = false;
+    /// When set, every decision whose human move is known (and that has more
+    /// than one option) appends an RBV3 record: the deciding player's masked
+    /// features, the legal vocab slots and the human's move as a one-hot
+    /// target (ml::kPolicyHuman). The label is the log's final result.
+    std::string export_features_path;
 };
 
 struct GuidedResult {

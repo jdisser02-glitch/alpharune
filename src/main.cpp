@@ -199,6 +199,9 @@ AgentSpec parseAgentSpec(const std::string& s) {
                 else if (key == "threads") out.search.threads = std::stoi(val);
                 else if (key == "worlds") out.search.worlds = std::stoi(val);
                 else if (key == "prior") out.search.prior = val;
+                else if (key == "prior_temp") out.search.prior_temp = std::stod(val);
+                else if (key == "root") out.search.root = val;
+                else if (key == "gumbel_m") out.search.gumbel_m = std::stoi(val);
             }
             i = comma + 1;
         }
@@ -305,6 +308,16 @@ int main(int argc, char* argv[]) {
         "                    StateEditor god-mode edits do not participate\n"
         "                    in MCTS planning; the bot sees the state\n"
         "                    implied by action_history alone.\n"
+        "\n"
+        "  pmcts:sims=N      The engine's own ISMCTS (agents/ismcts_search.h):\n"
+        "                    root determinizations reused across simulations,\n"
+        "                    PUCT with a prior. Options: eval=score|board|\n"
+        "                    net:FILE.rbvn|policy:FILE.rbpn (a two-head net:\n"
+        "                    value head as leaf evaluation, policy head as the\n"
+        "                    prior), prior=auto|uniform|heuristic|net,\n"
+        "                    prior_temp=T, root=puct|gumbel (Gumbel sequential\n"
+        "                    halving at the root, gumbel_m=M candidates), worlds=W,\n"
+        "                    threads=T, c=X, final=max|sample.\n"
         "\n"
         "Common invocations:\n"
         "  ./riftbound --deck1 D1.txt --deck2 D2.txt\n"
@@ -612,8 +625,9 @@ int main(int argc, char* argv[]) {
             std::cout << "\npmcts: " << st.simulations << " simulations over " << st.decisions
                       << " searched decisions in " << std::fixed << std::setprecision(1) << st.seconds
                       << " s of search (" << (st.seconds > 0 ? st.simulations / st.seconds : 0.0)
-                      << " sims/s summed over threads; " << st.replayed << " decisions rebuilt by replay, "
-                      << st.replay_rejected << " rebuilt worlds rejected, " << st.failed << " failed simulations)\n"
+                      << " sims/s summed over threads; " << st.resumed_inflight << " in-flight decisions resumed in place, "
+                      << st.replayed << " decisions rebuilt by replay, "
+                      << st.replay_rejected << " resumed/rebuilt worlds rejected, " << st.failed << " failed simulations)\n"
                       << "       resumed decisions: " << (st.simulations - st.simulations_replayed) << " sims in "
                       << (st.seconds - st.seconds_replayed) << " s ("
                       << ((st.seconds - st.seconds_replayed) > 0 ? (st.simulations - st.simulations_replayed) / (st.seconds - st.seconds_replayed) : 0.0)

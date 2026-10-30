@@ -6,6 +6,7 @@
 ///   ./build/riftbound_guided --game lab/human_games/<file>.json [--index 1]
 ///        [--agent ismcts:sims=40,eval=net:lab/learn/nets/net_004.rbvn]
 ///        [--out lab/human_replays/<stem>_g1] [--both] [--no-bot] [--verbose]
+///        [--export-features data/learn/human.rbv3]   (lab/tools/build_human_dataset.py)
 
 #include "agents/ismcts_search.h"
 #include "agents/mcts_agent.h"
@@ -62,6 +63,9 @@ GuidedAgentSpec parseGuidedAgentSpec(const std::string& s) {
                 else if (key == "threads") out.search.threads = std::stoi(val);
                 else if (key == "worlds") out.search.worlds = std::stoi(val);
                 else if (key == "prior") out.search.prior = val;
+                else if (key == "prior_temp") out.search.prior_temp = std::stod(val);
+                else if (key == "root") out.search.root = val;
+                else if (key == "gumbel_m") out.search.gumbel_m = std::stoi(val);
             }
             i = comma + 1;
         }
@@ -88,7 +92,10 @@ int main(int argc, char* argv[]) {
         ("seed", po::value<uint64_t>()->default_value(1), "engine seed (coin toss is matched to the log)")
         ("max-desyncs", po::value<int>()->default_value(25), "stop the game after this many desyncs")
         ("max-decisions", po::value<int>()->default_value(400), "stop the game after this many decisions")
-        ("verbose,v", po::bool_switch()->default_value(false), "print every decision");
+        ("verbose,v", po::bool_switch()->default_value(false), "print every decision")
+        ("export-features", po::value<std::string>()->default_value(""),
+         "append an RBV3 training record (the deciding player's masked features, the legal vocab slots,\n"
+         "the human's move as a one-hot target, source=human) for every decision whose human move is known");
     po::variables_map vm;
     try {
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -131,6 +138,7 @@ int main(int argc, char* argv[]) {
         opts.max_desyncs = vm["max-desyncs"].as<int>();
         opts.max_decisions = vm["max-decisions"].as<int>();
         opts.verbose = vm["verbose"].as<bool>();
+        opts.export_features_path = vm["export-features"].as<std::string>();
         std::error_code ec;
         opts.deck1_label = fs::relative(deck1_path, root, ec).string();
         opts.deck2_label = fs::relative(deck2_path, root, ec).string();

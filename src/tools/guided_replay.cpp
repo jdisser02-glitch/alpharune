@@ -4,6 +4,9 @@
 #include "core/game_object.h"
 #include "engine/game_engine.h"
 #include "io/decision_log.h"
+#include "ml/feature_extractor.h"
+#include "ml/value_net.h"
+#include "openspiel/action_vocab.h"
 
 #include <algorithm>
 #include <chrono>
@@ -821,6 +824,7 @@ private:
     std::map<std::string, int> desync_causes_;
     std::string stop_reason_;
     const GameState* state_for_scores_ = nullptr;
+    std::vector<ml::ValueSample> export_samples_;   // GuidedOptions::export_features_path
 };
 
 bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal, const GameState& s) const {
@@ -1630,6 +1634,18 @@ GuidedResult Driver::run() {
         }
         const bool is_compared = asked && !fallback && bot_idx >= 0;
         const std::string kind = kindLabel(legal[choice]);
+        // ── Imitation record (RBV3, source = human) ──
+        if (!opts_.export_features_path.empty() && known && legal.size() > 1 && !st.cost_cursor.has_value() &&
+            (P == PlayerId::Player1 || P == PlayerId::Player2)) {
+            ml::ValueSample sample;
+            sample.who = P;
+            sample.turn = st.turn.turn_number;
+            sample.decision_index = st.decision_index;
+            sample.features = ml::sparsify(ml::extractStateFeatures(st, P, db_));
+            ml::setHumanTarget(sample, ::riftbound::openspiel::encodeActions(legal, st), choice);
+            if (clean) sample.flags |= ml::kPolicyFlagCleanBoundary;
+            if (sample.source == ml::kPolicyHuman) export_samples_.push_back(std::move(sample));
+        }
         if (known) ++known_total;
         if (known && legal.size() <= 1) ++trivial;
         if (is_compared) {
@@ -1688,6 +1704,20 @@ GuidedResult Driver::run() {
         ms.game_over_reason = reason;
     }
     const double seconds = std::chrono::duration<double>(std::chrono::steady_clock::now() - t_start).count();
+
+    if (!opts_.export_features_path.empty() && !export_samples_.empty()) {
+        // The label is the log's result (the engine's when the log has no
+        // scores); the game id hashes the source file and game number.
+        int l1 = 0, l2 = 0;
+        if (game_.players.size() > 0 && game_.score_from_log.count(game_.players[0])) l1 = game_.score_from_log.at(game_.players[0]);
+        if (game_.players.size() > 1 && game_.score_from_log.count(game_.players[1])) l2 = game_.score_from_log.at(game_.players[1]);
+        if (l1 == 0 && l2 == 0) { l1 = fs.players[0].score; l2 = fs.players[1].score; }
+        uint32_t gid = 2166136261u;
+        for (unsigned char c : game_.stem) { gid ^= c; gid *= 16777619u; }
+        gid ^= static_cast<uint32_t>(game_.game_number) * 0x9E3779B1u;
+        ml::appendValueRecords(opts_.export_features_path, ml::kStateFeatureDim, export_samples_,
+                               fs.winner, l1, l2, fs.mode.victory_score, gid);
+    }
 
     GuidedResult out;
     out.header = {
@@ -1755,6 +1785,7 @@ GuidedResult Driver::run() {
         {"actors_reattributed", actors_reattributed}, {"actors_settled", actors_settled_},
         {"actors_uncertain", actors_uncertain},
         {"forced_decisions", forced_}, {"score_mismatches", score_mismatches_},
+        {"exported_records", static_cast<int>(export_samples_.size())},
         {"score_mismatch_examples", score_mismatch_list_},
         {"hand_fixes", {{"pulled_from_deck", pulled_}, {"created", created_}, {"list", hand_fixes_}}},
         {"log_events", static_cast<int>(game_.events.size())},

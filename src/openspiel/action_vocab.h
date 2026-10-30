@@ -13,7 +13,8 @@
 ///   ActivateAbility / *ReactionAbility / *ActionAbility → ActivateAbility
 ///
 /// And maps each remaining bucket to a primary key:
-///   Play / HideCard / ActivateAbility   → card_def_id (1..787)
+///   Play                                → (card_def_id, play location: base or battlefield index)
+///   HideCard / ActivateAbility          → card_def_id (1..787)
 ///   MakeChoice                          → first chosen def_id (0 = none)
 ///   StandardMove / ChooseBattlefield    → battlefield slot (0..7)
 ///   AssignCombatDamage                  → distribution kind (0..3)
@@ -66,6 +67,15 @@ constexpr int kNumIntChoices = 16;
 /// future card ever has > 4 activated abilities.
 constexpr int kMaxAbilitiesPerCard = 4;
 
+/// Phase 2 (policy targets) — Play slots carry the play location. Slot =
+/// verbBase + (def_id - 1) * kPlayLocations + loc, where loc is 0 for base
+/// (or no location: spells, gear) and 1 + battlefield id for battlefield ids
+/// 0..kPlayLocations-2 (bfSlot in action_vocab.cpp). Before this, playing a
+/// unit at base and at a battlefield aliased to one slot and the policy head
+/// could not tell the two apart (ismcts_search.cpp's moveKey refined the
+/// search tree with the location, but the recorded targets lost it).
+constexpr int kPlayLocations = 8;
+
 /// Verb categories. Each verb owns a contiguous range of slot ids.
 ///
 /// Phase 6t — Slot 0 is reserved (Reserved verb, arity 1, never
@@ -103,7 +113,7 @@ enum class ActionVerb : uint8_t {
                                // spread-even / focus-all /
                                // lethal-first) at natural hash points.
     StandardMove,              // arity 8 (destination bf slot)
-    Play,                      // arity kNumCardDefIds
+    Play,                      // arity kNumCardDefIds * kPlayLocations
     HideCard,                  // arity kNumCardDefIds
     ActivateAbility,           // arity kNumCardDefIds * kMaxAbilitiesPerCard
                                // Phase 6r — multi-ability per Card. Slot =
@@ -141,7 +151,7 @@ constexpr int verbArity(ActionVerb v) {
         case ActionVerb::ChooseBattlefield:       return 8;
         case ActionVerb::AssignCombatDamage:      return 128;
         case ActionVerb::StandardMove:            return 8;
-        case ActionVerb::Play:                    return kNumCardDefIds;
+        case ActionVerb::Play:                    return kNumCardDefIds * kPlayLocations;
         case ActionVerb::HideCard:                return kNumCardDefIds;
         case ActionVerb::ActivateAbility:         return kNumCardDefIds * kMaxAbilitiesPerCard;
         case ActionVerb::MakeChoice:              return kNumCardDefIds + 1 + kNumIntChoices;
@@ -170,6 +180,9 @@ constexpr int kVocabSize = verbOffset(ActionVerb::Count);
 /// Compute the dense vocab slot for an Intent. Returns -1 if the Intent is
 /// unknown / cannot be represented (should not happen for legal actions).
 int encodeAction(const Intent& intent, const GameState& state);
+
+/// Vocab slot of every entry of `legal` (encodeAction on each).
+std::vector<int> encodeActions(const std::vector<Intent>& legal, const GameState& state);
 
 /// Find the first Intent in `legal_actions` whose dense slot equals `slot`.
 /// Returns nullptr if none match.

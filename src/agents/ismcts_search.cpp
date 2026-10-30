@@ -5,6 +5,7 @@
 #include "engine/determinize.h"
 #include "engine/game_engine.h"
 #include "ml/feature_extractor.h"
+#include "ml/policy_net.h"
 #include "ml/value_net.h"
 #include "openspiel/action_vocab.h"
 
@@ -16,6 +17,7 @@
 #include <cstdlib>
 #include <exception>
 #include <map>
+#include <stdexcept>
 #include <thread>
 #include <unordered_map>
 #include <variant>
@@ -58,9 +60,9 @@ double boardValue(const GameState& s, PlayerId me, double score_term) {
 }
 
 /// Key of a move in the tree: its encoded action slot (openspiel/action_vocab.h)
-/// refined by the play location, which the Play slot does not carry — playing
-/// a unit at base and at a battlefield are different moves to the search even
-/// though they are one policy slot today.
+/// refined by the play location. The Play slot carries the location itself
+/// since the policy-target work; the refinement still separates hiding a card
+/// at different battlefields, which share one HideCard slot.
 int moveKey(const Intent& in, const GameState& gs) {
     int loc = 0;
     if (in.play_location.has_value())
@@ -107,7 +109,7 @@ struct RootStat {
 }  // namespace
 
 namespace {
-std::atomic<long long> g_decisions{0}, g_sims{0}, g_failed{0}, g_replayed{0}, g_rejected{0};
+std::atomic<long long> g_decisions{0}, g_sims{0}, g_failed{0}, g_replayed{0}, g_rejected{0}, g_inflight{0};
 std::atomic<long long> g_micros{0}, g_micros_replayed{0}, g_sims_replayed{0};
 }  // namespace
 
@@ -117,6 +119,7 @@ GlobalSearchStats globalSearchStats() {
     st.simulations = g_sims.load();
     st.failed = g_failed.load();
     st.replayed = g_replayed.load();
+    st.resumed_inflight = g_inflight.load();
     st.replay_rejected = g_rejected.load();
     st.seconds = g_micros.load() / 1e6;
     st.seconds_replayed = g_micros_replayed.load() / 1e6;
@@ -139,7 +142,16 @@ IsMctsSearch::IsMctsSearch(const CardDB& db, const CardRegistry& registry,
       deck1_(std::move(deck1)), deck2_(std::move(deck2)),
       engine_seed_(engine_seed), sims_(std::max(1, sims)), opts_(std::move(opts)) {
     if (opts_.eval.rfind("net:", 0) == 0) net_ = ml::ValueNet::shared(opts_.eval.substr(4));
-    if (opts_.prior == "heuristic") prior_ = &IsMctsSearch::heuristicPrior;
+    if (opts_.eval.rfind("policy:", 0) == 0) pnet_ = ml::PolicyNet::shared(opts_.eval.substr(7));
+    if (opts_.prior == "heuristic") {
+        prior_ = &IsMctsSearch::heuristicPrior;
+    } else if (opts_.prior == "net" || (opts_.prior == "auto" && pnet_)) {
+        if (!pnet_) throw std::runtime_error("pmcts: prior=net needs eval=policy:<file>");
+        // The policy head from the deciding player's masked view.
+        prior_ = [net = pnet_, &db = db_, temp = opts_.prior_temp](const GameState& gs, const std::vector<Intent>& legal) {
+            return net->prior(gs, legal, decidingPlayerOf(gs, legal), db, temp);
+        };
+    }
 }
 
 IsMctsSearch::~IsMctsSearch() = default;
@@ -152,6 +164,7 @@ double IsMctsSearch::evaluate(const GameState& s, PlayerId me) const {
         return s.winner == me ? 1.0 : -1.0;
     }
     if (net_) return 2.0 * net_->winProbability(s, me, db_) - 1.0;
+    if (pnet_) return 2.0 * pnet_->winProbability(s, me, db_) - 1.0;
     const double victory = std::max(1, s.mode.victory_score);
     double v = static_cast<double>(s.player(me).score - s.player(opponent(me)).score) / victory;
     if (opts_.eval == "board") v = boardValue(s, me, v);
@@ -215,23 +228,30 @@ public:
            const DeckSubmission& d1, const DeckSubmission& d2, uint64_t engine_seed,
            const GameState& state, PlayerId root_player, const PriorFn& prior,
            int sims, int n_worlds, double c_puct, bool determinize, uint64_t seed,
-           const std::vector<int32_t>* history)
+           const std::vector<int32_t>* history, const std::vector<Intent>& root_legal,
+           bool gumbel, int gumbel_m)
         : search_(search), db_(db), registry_(registry), deck1_(d1), deck2_(d2),
           engine_seed_(engine_seed), state_(state), root_player_(root_player), prior_(prior),
-          sims_(sims), c_puct_(c_puct), determinize_(determinize), rng_(seed), history_(history) {
+          sims_(sims), c_puct_(c_puct), determinize_(determinize), rng_(seed), history_(history),
+          gumbel_(gumbel), gumbel_m_(gumbel_m) {
+        root_legal_ = &root_legal;
+        state_legal_size_ = root_legal.size();
         resumable_ = isResumableSnapshot(state_);
+        // An in-flight decision resumed in place is checked against the real
+        // decision, as a replayed one is.
+        inflight_ = resumable_ && !isCleanMainPhaseSnapshot(state_);
         can_replay_ = !deck1_.main_deck.empty() && !deck2_.main_deck.empty();
         root_.expanded = true;
         sampleWorlds(std::max(1, n_worlds));
-        if (!resumable_ && can_replay_) root_view_ = ml::extractStateFeatures(state_, root_player_, db_);
+        if (inflight_ || (!resumable_ && can_replay_)) root_view_ = ml::extractStateFeatures(state_, root_player_, db_);
     }
 
     void run() {
         static const bool dbg = std::getenv("RIFTBOUND_PMCTS_DEBUG") != nullptr;
         if (!resumable_ && !can_replay_) return;
-        for (int s = 0; s < sims_; ++s) {
+        auto one = [&](int s, int forced_root) {
             try {
-                simulate(worlds_[static_cast<size_t>(s) % worlds_.size()]);
+                simulate(worlds_[static_cast<size_t>(s) % worlds_.size()], forced_root);
             } catch (const std::exception& e) {
                 ++failed_;
                 if (dbg) std::fprintf(stderr, "[pmcts] decision %d: simulation threw: %s\n",
@@ -240,16 +260,86 @@ public:
                 ++failed_;
                 if (dbg) std::fprintf(stderr, "[pmcts] decision %d: simulation threw (unknown)\n", state_.decision_index);
             }
+        };
+        if (!gumbel_ || !runGumbel(one)) {
+            for (int s = 0; s < sims_; ++s) one(s, -1);
         }
     }
 
+    /// Gumbel sequential halving at the root (Danihelka et al. 2022): sample
+    /// the top-m root candidates by prior logit + Gumbel noise, then spend the
+    /// budget in log2(m) phases, halving the candidate set by
+    /// g + logit + sigma(q) after each. Returns false when the root cannot
+    /// be prepared (no prior, too few options); the PUCT loop then runs.
+    template <typename Sim>
+    bool runGumbel(Sim& one) {
+        // Distinct root moves and their prior weights (options sharing a key pool).
+        if (!root_legal_) return false;
+        std::vector<int> keys(root_legal_->size());
+        std::vector<int> first;
+        std::unordered_map<int, size_t> pos;
+        for (size_t i = 0; i < root_legal_->size(); ++i) {
+            keys[i] = moveKey((*root_legal_)[i], state_);
+            if (pos.emplace(keys[i], first.size()).second) first.push_back(static_cast<int>(i));
+        }
+        if (first.size() < 2) return false;
+        std::vector<double> pw;
+        if (prior_) pw = prior_(state_, *root_legal_);
+        if (pw.size() != root_legal_->size()) pw.assign(root_legal_->size(), 1.0);
+        std::vector<double> weight(first.size(), 0.0);
+        double total = 0.0;
+        for (size_t i = 0; i < root_legal_->size(); ++i) weight[pos[keys[i]]] += std::max(0.0, pw[i]);
+        for (double w : weight) total += w;
+        if (total <= 0) return false;
+        struct Cand { int legal; double logit, g; };
+        std::vector<Cand> cands;
+        std::uniform_real_distribution<double> uni(1e-12, 1.0);
+        for (size_t k = 0; k < first.size(); ++k) {
+            const double pr = std::max(weight[k] / total, 1e-9);
+            const double g = -std::log(-std::log(uni(rng_)));
+            cands.push_back(Cand{first[k], std::log(pr), g});
+        }
+        const int m = std::max(2, std::min<int>(gumbel_m_, static_cast<int>(cands.size())));
+        std::partial_sort(cands.begin(), cands.begin() + m, cands.end(),
+                          [](const Cand& a, const Cand& b) { return a.g + a.logit > b.g + b.logit; });
+        cands.resize(static_cast<size_t>(m));
+        int phases = 0;
+        for (int n = m; n > 1; n = (n + 1) / 2) ++phases;
+        int used = 0;
+        std::vector<Cand> alive = cands;
+        auto q_of = [&](const Cand& c) {
+            const Edge* e = root_.find(keys[static_cast<size_t>(c.legal)]);
+            return (e && e->visits > 0) ? e->sum / e->visits : 0.0;
+        };
+        int max_visits = 0;
+        for (int ph = 0; ph < phases; ++ph) {
+            const int per = std::max(1, (sims_ - used) / ((phases - ph) * static_cast<int>(alive.size())));
+            for (const Cand& c : alive)
+                for (int k = 0; k < per && used < sims_; ++k) one(used++, c.legal);
+            for (const Cand& c : alive) {
+                const Edge* e = root_.find(keys[static_cast<size_t>(c.legal)]);
+                if (e) max_visits = std::max(max_visits, e->visits);
+            }
+            // sigma(q) = (c_visit + max_n) * c_scale * q, root-perspective q in [-1, 1].
+            const double scale = (50.0 + max_visits) * 1.0;
+            std::sort(alive.begin(), alive.end(), [&](const Cand& a, const Cand& b) {
+                return a.g + a.logit + scale * q_of(a) > b.g + b.logit + scale * q_of(b);
+            });
+            if (alive.size() > 1) alive.resize((alive.size() + 1) / 2);
+        }
+        while (used < sims_ && !alive.empty()) one(used++, alive.front().legal);
+        gumbel_winner_ = alive.empty() ? -1 : keys[static_cast<size_t>(alive.front().legal)];
+        return true;
+    }
+
     Node& root() { return root_; }
-    void setRootLegalSize(size_t n) { state_legal_size_ = n; }
+    bool inflight() const { return inflight_; }
     int completed() const { return completed_; }
     int failed() const { return failed_; }
     int rejected() const { return rejected_; }
     int worlds() const { return static_cast<int>(worlds_.size()); }
     bool resumable() const { return resumable_; }
+    int gumbelWinner() const { return gumbel_winner_; }   ///< move key, -1 without Gumbel
 
 private:
     void sampleWorlds(int n) {
@@ -269,18 +359,34 @@ private:
 
     /// A fresh engine at the world's decision point, or nullptr.
     std::unique_ptr<GameEngine> enter(const World& w, EventBus& bus) {
+        static const bool dbg = std::getenv("RIFTBOUND_PMCTS_DEBUG") != nullptr;
         auto engine = std::make_unique<GameEngine>(db_, bus, registry_);
         if (resumable_) {
-            engine->resumeFromSnapshot(GameState(w.state), w.seed);
-            return engine;
+            StepResult sr = engine->resumeFromSnapshot(GameState(w.state), w.seed);
+            if (!inflight_) return engine;
+            // Resumed in the middle of a chain, showdown, combat or mulligan:
+            // the engine must have come back to the real decision — the same
+            // step, the same options, the same view for the acting player.
+            const bool same = sr.kind == StepKind::NeedDecision &&
+                              engine->state().decision_index == state_.decision_index &&
+                              root_legal_ && sr.legal == *root_legal_ &&
+                              ml::extractStateFeatures(engine->state(), root_player_, db_) == root_view_;
+            if (same) return engine;
+            ++rejected_;
+            if (dbg) std::fprintf(stderr, "[pmcts] decision %d: resumed world differs from the real decision (kind %d, decision %d, %zu options, want %zu)\n",
+                                  state_.decision_index, static_cast<int>(sr.kind), engine->state().decision_index,
+                                  sr.legal.size(), state_legal_size_);
+            if (!can_replay_) return nullptr;
+            // Rebuild it by replay instead.
+            engine = std::make_unique<GameEngine>(db_, bus, registry_);
         }
-        // In-flight decision: rebuild the real game from the start. With the
-        // driver's decision history the replay is exact (legal indices);
-        // without it, encoded action slots are replayed, which is lossy (one
-        // slot may stand for several options) — either way the result is
-        // checked against the acting player's view below. Then the sampled
-        // identities and RNG take over (as RiftboundState::ensureLive).
-        static const bool dbg = std::getenv("RIFTBOUND_PMCTS_DEBUG") != nullptr;
+        // In-flight decision the engine cannot resume: rebuild the real game
+        // from the start. With the driver's decision history the replay is
+        // exact (legal indices); without it, encoded action slots are
+        // replayed, which is lossy (one slot may stand for several options) —
+        // either way the result is checked against the acting player's view
+        // below. Then the sampled identities and RNG take over (as
+        // RiftboundState::ensureLive).
         StepResult sr = engine->beginGame(deck1_, deck2_, engine_seed_);
         size_t replayed = 0;
         if (history_) {
@@ -333,12 +439,13 @@ private:
         return engine;
     }
 
-    void simulate(const World& w) {
+    void simulate(const World& w, int forced_root = -1) {
         EventBus bus;
         auto engine = enter(w, bus);
         if (!engine) { ++failed_; return; }
         if (!resumable_ && dbg_once_++ == 0 && std::getenv("RIFTBOUND_PMCTS_DEBUG"))
-            std::fprintf(stderr, "[pmcts] decision %d: in-flight decision rebuilt by replay\n", state_.decision_index);
+            std::fprintf(stderr, "[pmcts] decision %d: in-flight decision rebuilt by replay (site kind %d)\n",
+                         state_.decision_index, static_cast<int>(state_.decision_site.kind));
 
         Node* node = &root_;
         std::vector<Edge*> path;
@@ -367,7 +474,8 @@ private:
                 break;
             }
             const PlayerId actor = decidingPlayerOf(gs, step.legal);
-            const int idx = select(*node, gs, step.legal, actor, path);
+            const int idx = select(*node, gs, step.legal, actor, path,
+                                   depth == 0 && forced_root >= 0 ? forcedIndex(forced_root, step.legal, gs) : -1);
             node = path.back()->child.get();
             step = engine->applyChoice(idx);
             ++depth;
@@ -383,10 +491,23 @@ private:
         ++completed_;
     }
 
+    /// The index in this world's `legal` of the root option `root_idx` (same
+    /// decision, so normally the same list; matched by move key to be safe).
+    int forcedIndex(int root_idx, const std::vector<Intent>& legal, const GameState& gs) const {
+        if (!root_legal_ || root_idx < 0 || root_idx >= static_cast<int>(root_legal_->size())) return -1;
+        const int key = moveKey((*root_legal_)[static_cast<size_t>(root_idx)], state_);
+        if (root_idx < static_cast<int>(legal.size()) && moveKey(legal[static_cast<size_t>(root_idx)], gs) == key)
+            return root_idx;
+        for (size_t i = 0; i < legal.size(); ++i)
+            if (moveKey(legal[i], gs) == key) return static_cast<int>(i);
+        return -1;
+    }
+
     /// PUCT over the options legal in this world; returns the legal index to
-    /// apply and pushes the chosen edge on `path`.
+    /// apply and pushes the chosen edge on `path`. `forced` >= 0 takes that
+    /// option instead of the PUCT argmax (Gumbel root scheduling).
     int select(Node& node, const GameState& gs, const std::vector<Intent>& legal,
-               PlayerId actor, std::vector<Edge*>& path) {
+               PlayerId actor, std::vector<Edge*>& path, int forced = -1) {
         // Slot per option; the first option with a slot represents it.
         std::vector<int> slots(legal.size());
         std::vector<int> first;        // legal indices that own a slot
@@ -429,6 +550,10 @@ private:
         for (int i : first) {
             Edge* e = node.find(slots[i]);
             e->avail++;
+            if (forced >= 0) {
+                if (slots[i] == slots[static_cast<size_t>(forced)]) { best_idx = i; best_edge = e; }
+                continue;
+            }
             const double p = prior_total > 0 ? e->prior / prior_total : 1.0 / static_cast<double>(first.size());
             const double q = e->visits > 0 ? sign * e->sum / e->visits : fpu;
             const double u = c_puct_ * p * std::sqrt(static_cast<double>(e->avail)) / (1.0 + e->visits);
@@ -437,6 +562,7 @@ private:
             score += 1e-9 * std::uniform_real_distribution<double>(0.0, 1.0)(rng_);
             if (score > best) { best = score; best_idx = i; best_edge = e; }
         }
+        if (!best_edge) best_edge = node.find(slots[static_cast<size_t>(best_idx)]);
         if (!best_edge->child) best_edge->child = std::make_unique<Node>();
         path.push_back(best_edge);
         return best_idx;
@@ -456,8 +582,13 @@ private:
     bool determinize_;
     std::mt19937_64 rng_;
     const std::vector<int32_t>* history_ = nullptr;
+    bool gumbel_ = false;
+    int gumbel_m_ = 16;
+    int gumbel_winner_ = -1;
     bool resumable_ = false;
+    bool inflight_ = false;             // resumed in place at an in-flight decision (verified per world)
     bool can_replay_ = false;
+    const std::vector<Intent>* root_legal_ = nullptr;
     std::vector<float> root_view_;      // the acting player's masked view (replay check)
     size_t state_legal_size_ = 0;
     std::vector<World> worlds_;
@@ -490,8 +621,8 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
         const uint64_t s = seed ^ (0x9E3779B97F4A7C15ull * static_cast<uint64_t>(t + 1));
         workers.push_back(std::make_unique<Worker>(*this, db_, registry_, deck1_, deck2_, engine_seed_,
                                                    state, perspective, prior_, per_thread, n_worlds,
-                                                   c, opts_.determinize, s, history));
-        workers.back()->setRootLegalSize(legal.size());
+                                                   c, opts_.determinize, s, history, legal,
+                                                   opts_.root == "gumbel", opts_.gumbel_m));
     }
     if (threads == 1) {
         workers[0]->run();
@@ -504,14 +635,17 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
 
     // Merge root statistics by slot.
     std::map<int, RootStat> stats;
+    std::map<int, int> gumbel_votes;      // Gumbel: each thread's halving winner
     double root_sum = 0.0;
     int root_visits = 0;
     for (auto& w : workers) {
+        if (w->gumbelWinner() >= 0) gumbel_votes[w->gumbelWinner()] += 1;
         out.simulations += w->completed();
         out.failed += w->failed();
         out.replay_rejected += w->rejected();
         out.worlds += w->worlds();
         out.resumed = w->resumable();
+        out.resumed_inflight = w->inflight();
         root_sum += w->root().sum;
         root_visits += w->root().visits;
         for (const auto& e : w->root().edges) {
@@ -538,13 +672,16 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
     for (size_t i = 0; i < legal.size(); ++i)
         if (out.visits[i] > 0) out.shares.emplace_back(static_cast<int>(i), out.visits[i] / static_cast<double>(total));
 
-    // Most visited; ties go to the higher mean value.
+    // Most visited; ties go to the higher mean value. With Gumbel root
+    // selection, the threads' halving winners decide first (votes, then visits).
     int best = -1;
     double best_key = -1e300;
     for (size_t i = 0; i < legal.size(); ++i) {
         if (out.visits[i] <= 0) continue;
         const auto& st = stats[slot_of[i]];
-        const double key = out.visits[i] + 0.5 * (st.sum / st.visits);
+        double key = out.visits[i] + 0.5 * (st.sum / st.visits);
+        auto gv = gumbel_votes.find(slot_of[i]);
+        if (gv != gumbel_votes.end()) key += 1e6 * gv->second;
         if (key > best_key) { best_key = key; best = static_cast<int>(i); }
     }
     out.chosen = best < 0 ? 0 : best;
@@ -577,6 +714,7 @@ Intent PuctAgent::selectAction(const GameState& state, const std::vector<Intent>
     g_sims.fetch_add(last_.simulations);
     g_failed.fetch_add(last_.failed);
     g_replayed.fetch_add(last_.resumed ? 0 : 1);
+    g_inflight.fetch_add(last_.resumed_inflight ? 1 : 0);
     g_rejected.fetch_add(last_.replay_rejected);
     g_micros.fetch_add(static_cast<long long>(secs * 1e6));
     if (!last_.resumed) {

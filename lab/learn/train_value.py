@@ -5,12 +5,14 @@ records written by `riftbound --value-data FILE`.
 usage: train_value.py OUT.rbvn DATA.rbvd [DATA2.rbvd ...] [--hidden 64] [--epochs 12]
                       [--recency 0.7] [--margin-weight 0.5]
 
-Data files come in two formats (both read here):
+Data files come in three formats (all read here):
   RBVD (v1): int8 label, int32 turn, uint16 nnz, nnz x (uint16 index, float32 value);
              12 reservoir-sampled decisions per game, the result as the only target.
   RBV2 (v2): int8 label (1 won / 0 lost / 2 draw), int8 perspective, int8 own score,
              int8 opponent score, int8 victory score, uint32 game id, int32 turn,
              int32 decision index, uint16 nnz, pairs; every decision of both players.
+  RBV3 (v3): v2 plus a policy block per record (legal vocab slots and the search's
+             visit shares, or a human's move) — ignored here, used by train_policy.py.
 
 Model: standardised features, one ReLU hidden layer, two heads — sigmoid
 P(the player whose view the features are from wins) and tanh of the final
@@ -36,18 +38,30 @@ PAIR = np.dtype([("i", "<u2"), ("v", "<f4")])
 
 
 def read_records(path):
-    """-> dict(dim, y, margin (nan when unknown), turns, game, idx (list), val (list), version)"""
+    """-> dict(dim, vocab, y, margin (nan when unknown), turns, game, idx (list), val (list),
+    source, flags, sims, pol_idx (list of slot arrays), pol_val (list of target arrays), version)
+
+    Formats: RBVD (v1), RBV2 (v2) and RBV3 (v3: v2 plus a policy block per record —
+    uint8 source (0 none / 1 search / 2 human), uint8 flags (bit 0 clean boundary,
+    bit 1 full simulations), uint16 sims, uint16 n_legal, n_legal x (uint16 vocab
+    slot, float32 target share)). See src/ml/value_net.h."""
     data = Path(path).read_bytes()
     magic = data[:4]
-    if magic not in (b"RBVD", b"RBV2"):
+    if magic not in (b"RBVD", b"RBV2", b"RBV3"):
         raise SystemExit(f"{path}: not a value-data file")
-    v2 = magic == b"RBV2"
+    version = {b"RBVD": 1, b"RBV2": 2, b"RBV3": 3}[magic]
     dim = struct.unpack_from("<i", data, 4)[0]
+    vocab = 0
     pos, n = 8, len(data)
+    if version == 3:
+        vocab = struct.unpack_from("<i", data, 8)[0]
+        pos = 12
     labels, margins, turns, games, idx, val = [], [], [], [], [], []
+    sources, flags, sims, pol_idx, pol_val = [], [], [], [], []
     rec = 0
+    empty_i, empty_v = np.zeros(0, np.int32), np.zeros(0, np.float32)
     while True:
-        if v2:
+        if version >= 2:
             if pos + 19 > n:
                 break
             label, persp, own, opp, victory, gid, turn, decision, nnz = struct.unpack_from("<bbbbbIiiH", data, pos)
@@ -66,14 +80,30 @@ def read_records(path):
             break
         pairs = np.frombuffer(data, dtype=PAIR, count=nnz, offset=pos)
         pos += 6 * nnz
+        if version == 3:
+            if pos + 6 > n:
+                break
+            src, fl, sm, n_legal = struct.unpack_from("<BBHH", data, pos)
+            pos += 6
+            if pos + 6 * n_legal > n:
+                break
+            pp = np.frombuffer(data, dtype=PAIR, count=n_legal, offset=pos)
+            pos += 6 * n_legal
+            sources.append(src); flags.append(fl); sims.append(sm)
+            pol_idx.append(pp["i"].astype(np.int32)); pol_val.append(pp["v"].astype(np.float32))
+        else:
+            sources.append(0); flags.append(0); sims.append(0)
+            pol_idx.append(empty_i); pol_val.append(empty_v)
         labels.append(0.5 if label == 2 else float(label))
         turns.append(turn)
         idx.append(pairs["i"].astype(np.int32))
         val.append(pairs["v"].astype(np.float32))
         rec += 1
-    return {"dim": dim, "y": np.array(labels, np.float32), "margin": np.array(margins, np.float32),
+    return {"dim": dim, "vocab": vocab, "y": np.array(labels, np.float32), "margin": np.array(margins, np.float32),
             "turns": np.array(turns, np.int32), "game": np.array(games, np.uint32),
-            "idx": idx, "val": val, "version": 2 if v2 else 1}
+            "idx": idx, "val": val, "version": version,
+            "source": np.array(sources, np.uint8), "flags": np.array(flags, np.uint8), "sims": np.array(sims, np.int32),
+            "pol_idx": pol_idx, "pol_val": pol_val}
 
 
 class SparseRows:

@@ -16,6 +16,7 @@
 #include <map>
 #include <optional>
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -607,6 +608,71 @@ struct DelayedAbility {
     GameObjectId target_filter = kInvalidId;
 };
 
+// ─── Decision site ───────────────────────────────────────────────────────────
+
+/// Which engine loop asked the pending decision (GameState::decision_site).
+enum class DecisionSiteKind : uint8_t {
+    None,           // not recorded (a state built by hand, or no decision yet)
+    MainPhase,      // mainPhaseLoop: the turn player's main-phase action
+    Mulligan,       // runMulligans
+    ChainPriority,  // ChainManager::stepExecuteAndPass: priority on a chain
+    ChainChoice,    // ChainManager::stepResolve: a choice a resolving card asked for
+    ShowdownFocus,  // runShowdownLoop: the focus holder's showdown action
+    CombatDamage,   // combatDamageStep: a side's damage assignment
+    Other,          // inside a card effect, cost payment, finalization, setup:
+                    // the progress lives in C++ frames; rebuilt by replay only
+};
+
+struct DecisionSite {
+    DecisionSiteKind kind = DecisionSiteKind::None;
+    int decision_index = -1;   // GameState::decision_index this record is for
+
+    // ── Mulligan: position in turn order of the player deciding (0 = turn player).
+    int mulligan_index = 0;
+
+    // ── Scoring step: index of the battlefield whose Hold triggers are resolving.
+    int scoring_bf_index = 0;
+
+    // ── Expiration step: pass of the CR 317.2.f.1 loop.
+    int expiration_pass = 0;
+
+    // ── Main phase loop (mainPhaseLoop / advanceMainPhase / resolveMainPhaseDecision).
+    enum class MainStage : uint8_t {
+        Advance,            // between actions: staged showdowns / combats run here
+        Intent,             // executing the chosen action (its chain included)
+        AfterIntentChain,   // the chain run after the action
+        AfterCleanupChain,  // the chain run after the cleanup that follows
+    };
+    MainStage main_stage = MainStage::Advance;
+    int main_action_count = 0;
+    int main_bf_index = 0;   // Advance: battlefield whose staged showdown / combat is running
+
+    // ── Showdown focus loop (live while showdown_bf != kInvalidId).
+    BattlefieldId showdown_bf = kInvalidId;
+    PlayerId showdown_focus = PlayerId::None;
+    int showdown_action_count = 0;
+    bool showdown_in_intent = false;   // resolveShowdownDecision is executing a play
+
+    // ── Combat (live while combat_bf != kInvalidId).
+    enum class CombatStage : uint8_t { Start, Showdown, DamageAttacker, DamageDefender, Resolution };
+    BattlefieldId combat_bf = kInvalidId;
+    CombatStage combat_stage = CombatStage::Start;
+    bool combat_showdown_already_closed = false;   // runCombat entered from a closing showdown (CR 323.13)
+    int combat_attacker_might = 0;                 // damage step: the totals and target orders
+    int combat_defender_might = 0;                 //   (Tank first, Backline last) it computed
+    std::vector<GameObjectId> combat_attackers;
+    std::vector<GameObjectId> combat_defenders;
+
+    // ── Chain (ChainManager::processFEPR).
+    int chain_iterations = 0;   // FEPR rounds so far (safety cap)
+    int chain_passes = 0;       // priority passes in the current Execute / Pass round
+    int chain_choice_iter = 0;  // re-entries of the resolving card so far
+    // ChainChoice: the choice the resolving card published (EffectExecutor::requestChoice).
+    PlayerId chain_choice_player = PlayerId::None;
+    std::vector<Intent> chain_choice_legal;
+    std::string chain_choice_label;
+};
+
 // ─── Complete Game State ─────────────────────────────────────────────────────
 
 struct GameState {
@@ -665,6 +731,16 @@ struct GameState {
         Phase phase = Phase::Done;
     };
     std::optional<CostPaymentCursor> cost_cursor;
+
+    // ── Decision site (resume from any decision) ──
+    // Where the engine is paused while an agent decides, written right before
+    // every agent query, plus the cursors of the engine loops around that
+    // decision. GameEngine::resumeFromSnapshot re-enters those loops at the
+    // same step from a copy of the state, so a search clone never replays the
+    // game (search::isResumableSnapshot says which sites it supports).
+    // `decision_index` stamps the decision the record was written for; a
+    // record whose stamp differs from GameState::decision_index is stale.
+    DecisionSite decision_site;
 
     // ── Object management ──
 

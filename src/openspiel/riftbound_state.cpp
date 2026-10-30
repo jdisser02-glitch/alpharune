@@ -76,25 +76,15 @@ RiftboundState::RiftboundState(std::shared_ptr<const ::open_spiel::Game> game,
 void RiftboundState::ensureLive() const {
     if (!is_lazy_) return;
 
-    // Phase 6c: Use resumeFromSnapshot to skip the replay path when the
-    // snapshot is at a "clean" decision boundary — Neutral / Open state
-    // with no in-flight chain, no mid-combat BF, no cost-payment cursor.
-    // For these states, the fresh engine can call mainPhaseLoop and the
-    // side-effectful re-entries (processContestedBattlefields, etc.) are
-    // idempotent against the snapshot.
+    // Use resumeFromSnapshot to skip the replay path whenever the engine
+    // can re-enter the snapshot's decision from the state: a clean
+    // main-phase boundary, or an in-flight decision whose site the engine
+    // recorded (GameState::decision_site: chain priority, a resolving
+    // card's choice, showdown focus, combat damage, mulligan).
     //
-    // Falls back to the legacy replay path for snapshots taken mid-chain
-    // / mid-showdown / mid-combat / mid-cost-payment, where the resume
-    // would race against side effects already captured in the snapshot
-    // and produce a divergent state. Those are rarer than open-state
-    // main-phase clones (which dominate MCTS expansion).
-    //
-    // The trade-off: open-state clones get the ~33x speedup from
-    // resumeFromSnapshot; in-flight clones pay the legacy 5ms replay.
-    // This is the safest landing — full correctness, partial wins. The
-    // full memcpy refactor (no replay anywhere) requires extracting the
-    // entry-side-effects from EVERY phase function + ChainManager
-    // processFEPR, which is multi-day work; queued in CLAUDE.md.
+    // Falls back to the legacy replay path for the decisions whose
+    // progress lives in C++ frames (inside a card effect, a cost payment,
+    // a finalization) and for Setup.
     // The same predicate the engine's own searcher uses (engine/determinize.h).
     const bool snapshot_is_clean_boundary = ::riftbound::search::isResumableSnapshot(lazy_state_);
     bool snapshot_is_resumable = snapshot_is_clean_boundary;

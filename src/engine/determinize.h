@@ -35,10 +35,19 @@ IdentityOverrides sampleHiddenIdentities(const GameState& gs, PlayerId observer,
 void applyIdentityOverrides(GameState& gs, const CardDB& db, const IdentityOverrides& overrides);
 
 /// True when GameEngine::resumeFromSnapshot can restart a fresh engine from
-/// this state: a decision in the Open / Neutral main phase with no chain, no
-/// cost payment in progress and no combat or showdown at any battlefield.
-/// Other decision points are rebuilt by replaying `action_history` from the
-/// start of the game.
+/// this state at the decision it was taken at: a clean main-phase boundary
+/// (isCleanMainPhaseSnapshot), or a decision whose record in
+/// `GameState::decision_site` is current and names a site the engine
+/// re-enters from the state (mulligan, chain priority, a resolving card's
+/// choice, showdown focus, combat damage) with consistent loop frames.
+/// Other decision points (inside a card effect, a cost payment, a
+/// finalization) are rebuilt by replaying the game.
 bool isResumableSnapshot(const GameState& gs);
+
+/// The clean boundary: a decision in the Open / Neutral main phase with no
+/// chain, no cost payment in progress and no combat or showdown at any
+/// battlefield. Resuming here re-runs the main-phase prelude, which is
+/// idempotent; no decision record is needed.
+bool isCleanMainPhaseSnapshot(const GameState& gs);
 
 }  // namespace riftbound::search

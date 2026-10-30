@@ -43,7 +43,9 @@ struct GameConfig {
 
     /// Self-play training data: when set, every non-trivial decision of both
     /// players appends the acting player's masked state features, the game's
-    /// result and the final scores to this file (ml::appendValueRecords, RBV2).
+    /// result, the final scores and — for search agents — the legal options'
+    /// vocab slots with the search's visit shares (the policy target) to this
+    /// file (ml::appendValueRecords, RBV3).
     /// `value_samples_per_game` > 0 keeps only that many decisions per game
     /// (uniform reservoir sample), the pre-v2 behaviour.
     std::string value_data_path;

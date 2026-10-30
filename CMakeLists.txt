@@ -415,6 +415,7 @@ add_library(riftbound_core
     src/engine/step_driver.cpp
     src/ml/feature_extractor.cpp
     src/ml/value_net.cpp
+    src/ml/policy_net.cpp
     src/ml/cfr_util.cpp
     src/openspiel/action_vocab.cpp
 )

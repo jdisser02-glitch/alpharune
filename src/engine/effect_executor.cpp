@@ -906,6 +906,21 @@ void EffectExecutor::recycleCards(PlayerId /*effect_controller*/,
     }
     auto recycle_one = [&](GameObjectId cid) {
         auto& obj = state_.getObject(cid);
+        // Leave whatever zone vector still lists the card (trash for a
+        // "recycle a card from your trash" effect, the deck for Predict, the
+        // hand). A card listed in two zones is re-dealt by determinization as
+        // a deck card while its owner's trash still shows it.
+        {
+            auto& owner_ps = state_.player(obj.owner);
+            auto drop = [cid](std::vector<GameObjectId>& v) {
+                v.erase(std::remove(v.begin(), v.end(), cid), v.end());
+            };
+            drop(owner_ps.hand);
+            drop(owner_ps.main_deck);
+            drop(owner_ps.rune_deck);
+            drop(owner_ps.trash);
+            drop(owner_ps.banishment);
+        }
         obj.zone = ZoneType::MainDeck;
         obj.location = std::nullopt;
         if (obj.card_type == CardType::Rune) {

@@ -31,6 +31,10 @@ public:
     /// for agents that do not search. Used for game review.
     virtual std::vector<std::pair<int, double>> lastSearch() const { return {}; }
 
+    /// After selectAction: simulations behind lastSearch() (0 = no search).
+    /// Recorded with the policy targets (ml::ValueSample::sims).
+    virtual int lastSearchSims() const { return 0; }
+
     /// The game driver may hand the agent the running record of every
     /// decision so far (both players): the index chosen in each decision's
     /// legal list, in order. A search agent replays it from the start of the
