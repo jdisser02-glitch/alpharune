@@ -10,7 +10,7 @@ import { runtime, data, esc, $, $$, store, sleep, card, cardByName, cardImg, por
          empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural } from "./lib.js";
 
 const CSS = new URL("./play.css", import.meta.url).href;
-const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "quick", autopay: true };
+const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "search", autopay: true };
 /* Bot presets: what rb_new_game's bot spec accepts is "greedy[:det=<redeals>,budget=<ms>,steps=<n>,wide=<n>]" or "random". */
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
