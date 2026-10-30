@@ -1500,7 +1500,7 @@ void Driver::desync(const LogLine& e, const std::vector<Intent>& legal, const Ga
     const std::string cause = e.kind + ": " + reason;
     desync_causes_[cause]++;
     nlohmann::json opts = nlohmann::json::array();
-    for (size_t i = 0; i < legal.size() && i < 40; ++i) opts.push_back(describeIntent(legal[i], s));
+    for (size_t i = 0; i < legal.size() && i < 40; ++i) opts.push_back(describeIntent(legal[i], s, &db_));
     desync_list_.push_back({{"decision", decisions_}, {"turn", s.turn.turn_number},
                             {"phase", toString(s.turn.phase)}, {"player", seatIndex(legal.empty() ? PlayerId::None : legal[0].player)},
                             {"event_index", e.index}, {"event_text", e.text}, {"event_kind", e.kind},
@@ -1655,9 +1655,9 @@ GuidedResult Driver::run() {
             if (agree) bk.second++;
             if (clean) { ++compared_clean; if (agree) ++agree_clean; }
             Compared c{st.decision_index, st.turn.turn_number, seatIndex(P), choice, bot_idx, kind,
-                       ev ? ev->text : "", describeIntent(legal[choice], st), describeIntent(legal[bot_idx], st),
+                       ev ? ev->text : "", describeIntent(legal[choice], st, &db_), describeIntent(legal[bot_idx], st, &db_),
                        agree, clean, shares, {}};
-            if (!agree) for (const auto& in : legal) c.options.push_back(describeIntent(in, st));
+            if (!agree) for (const auto& in : legal) c.options.push_back(describeIntent(in, st, &db_));
             compared.push_back(std::move(c));
         }
 
@@ -1674,9 +1674,9 @@ GuidedResult Driver::run() {
         review.annotateLast(extra);
         if (opts_.verbose)
             std::cerr << "#" << st.decision_index << " T" << st.turn.turn_number << " P" << seatIndex(P) << " "
-                      << toString(st.turn.phase) << " | " << describeIntent(legal[choice], st)
+                      << toString(st.turn.phase) << " | " << describeIntent(legal[choice], st, &db_)
                       << (ev ? " <= \"" + ev->text + "\"" : "")
-                      << (is_compared ? (bot_idx == choice ? " | bot agrees" : " | bot: " + describeIntent(legal[bot_idx], st)) : "")
+                      << (is_compared ? (bot_idx == choice ? " | bot agrees" : " | bot: " + describeIntent(legal[bot_idx], st, &db_)) : "")
                       << "\n";
 
         ++decisions_;

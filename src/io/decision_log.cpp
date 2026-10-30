@@ -50,7 +50,7 @@ nlohmann::json objJson(const GameState& s, const GameObject& o) {
 
 }  // namespace
 
-std::string describeIntent(const Intent& i, const GameState& s) {
+std::string describeIntent(const Intent& i, const GameState& s, const CardDB* db) {
     std::ostringstream o;
     switch (i.type) {
     case IntentType::PlayCard:
@@ -99,9 +99,20 @@ std::string describeIntent(const Intent& i, const GameState& s) {
         o << (i.cards_to_mulligan.empty() ? std::string("Keep hand")
                                           : "Mulligan " + names(s, i.cards_to_mulligan));
         break;
-    case IntentType::ChooseBattlefield:
-        o << "Bring battlefield " << objName(s, i.chosen_battlefield);
+    case IntentType::ChooseBattlefield: {
+        // At setup the choice is an index into the player's battlefield pool
+        // (no battlefield object exists yet); card effects reuse the intent
+        // for an existing battlefield object.
+        const auto& pool = s.player(i.player).battlefield_pool;
+        const auto idx = static_cast<size_t>(i.chosen_battlefield);
+        if (idx < pool.size() && db)
+            o << "Bring battlefield " << db->get(pool[idx]).name;
+        else if (i.chosen_battlefield != kInvalidId && s.objectExists(i.chosen_battlefield))
+            o << "Bring battlefield " << s.getObject(i.chosen_battlefield).name;
+        else
+            o << "Bring battlefield #" << (i.chosen_battlefield == kInvalidId ? 0 : i.chosen_battlefield + 1);
         break;
+    }
     case IntentType::PlayFirstDecision:
         o << (i.choose_first ? "Go first" : "Go second");
         break;

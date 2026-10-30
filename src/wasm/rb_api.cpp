@@ -211,7 +211,7 @@ json stateJson(const Session& ses, int perspective) {
     json legal = json::array();
     if (step.kind == StepKind::NeedDecision) {
         for (size_t i = 0; i < step.legal.size(); ++i)
-            legal.push_back({{"index", i}, {"text", describeIntent(step.legal[i], s)},
+            legal.push_back({{"index", i}, {"text", describeIntent(step.legal[i], s, &cards().db)},
                              {"type", toString(step.legal[i].type)}});
     }
     out["legal"] = legal;

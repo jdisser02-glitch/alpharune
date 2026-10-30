@@ -175,8 +175,8 @@ TEST_F(CombatShowdownDispatchTest, ShowdownActions_AbilityNeedsItsCostPaid) {
     }
     EXPECT_EQ(activations(), 1);
 
-    // Exhausted: [E] cannot be paid either.
-    s.getObject(ekko).is_exhausted = true;
+    // The hand emptied again (the ability has no [E], so exhaustion does not gate it): back to no discard to pay.
+    s.player(P1).hand.clear();
     EXPECT_EQ(activations(), 0);
 }
 

@@ -18,7 +18,11 @@
 namespace riftbound {
 
 /// Human-readable text for an option, with card names resolved from `state`.
-std::string describeIntent(const Intent& intent, const GameState& state);
+/// One line of text for an intent ("Play X to Y", "Bring battlefield Z"). `db`
+/// names cards that are not objects yet, such as the battlefields offered at
+/// setup (Intent::chosen_battlefield is then an index into
+/// PlayerState::battlefield_pool); without it those read "battlefield #N".
+std::string describeIntent(const Intent& intent, const GameState& state, const CardDB* db = nullptr);
 
 /// Board summary: scores, resources, hands (both, marked by owner), units and
 /// gear per location, battlefields and their controllers, the chain.
