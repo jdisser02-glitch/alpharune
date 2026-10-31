@@ -34,13 +34,15 @@ export async function render(container) {
   const metaDates = (D.decks || []).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
   const newest = metaDates[metaDates.length - 1], metaN = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).length;
   const age = newest ? Math.max(0, (Date.now() - Date.parse(newest)) / 864e5) : null;
-  const p3 = age == null ? 0 : age <= 14 ? 1 : clamp(1 - (age - 14) / 28);
+  const events = new Set((D.decks || []).map(d => (/^lab\/decks\/meta\/([^/]+)\//.exec(d.path) || [])[1]).filter(Boolean));
+  const missing = ((S.meta || {}).missing || []).length;
+  const p3 = age == null ? 0 : clamp((age <= 14 ? 1 : 1 - (age - 14) / 28) * events.size / Math.max(1, events.size + missing));
   // 4. The best Riven list: waits for steps 1 and 2.
   const p4 = 0;
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1, line: `${fmt1(eNow)} errors per real game · target ${eT}`, href: "#/replays" },
     { n: 2, title: "Bot plays like a good player", pct: p2, line: `${aNow == null ? "—" : fmt1(aNow)}% same moves as humans · target ${aT}%`, sub: `Training paused · ${esc(netName)}${st.rate != null ? ` · combat look-ahead ${pct0(st.rate)} wins, ${esc(st.state || "to confirm")}` : ""}`, href: "#/bot" },
-    { n: 3, title: "Opponents are today's meta", pct: p3, line: `${metaN} tournament decks · newest ${newest ? esc(fmtDate(newest)) : "—"}`, href: "#/decks" },
+    { n: 3, title: "Opponents are today's meta", pct: p3, line: `${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
     { n: 4, title: "Best Riven list found", pct: p4, line: "Starts when steps 1 and 2 reach 100%", href: "#/decks" },
   ];
   const overall = steps.reduce((a, s) => a + s.pct, 0) / steps.length;
