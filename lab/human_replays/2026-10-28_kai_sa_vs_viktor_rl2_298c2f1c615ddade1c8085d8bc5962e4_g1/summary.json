@@ -3,65 +3,37 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 25,
-  "by_kind": {
-   "ability": {
-    "agree": 1,
-    "n": 4,
-    "rate": 0.25
-   },
-   "battlefield": {
-    "agree": 1,
-    "n": 1,
-    "rate": 1.0
-   },
-   "end_turn": {
-    "agree": 6,
-    "n": 7,
-    "rate": 0.8571428571428571
-   },
-   "move": {
-    "agree": 0,
-    "n": 8,
-    "rate": 0.0
-   },
-   "pass_focus": {
-    "agree": 12,
-    "n": 12,
-    "rate": 1.0
-   },
-   "play": {
-    "agree": 5,
-    "n": 17,
-    "rate": 0.29411764705882354
-   }
-  },
+  "agree": 0,
+  "by_kind": {},
   "clean_boundary": {
-   "agree": 11,
-   "n": 31,
-   "rate": 0.3548387096774194
+   "agree": 0,
+   "n": 0,
+   "rate": 0.0
   },
   "in_flight": {
-   "agree": 14,
-   "n": 18
+   "agree": 0,
+   "n": 0
   },
-  "n": 49,
-  "rate": 0.5102040816326531
+  "n": 0,
+  "rate": 0.0
  },
- "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_032.rbpn,worlds=6,threads=1",
- "bot_calls": 53,
+ "bot": "none",
+ "bot_calls": 0,
  "bot_errors": 0,
- "bot_fallbacks": 4,
+ "bot_fallbacks": 0,
  "capture_player": "Emp4",
  "compare_both": false,
- "decisions": 317,
- "decisions_compared": 49,
- "decisions_human_known": 126,
- "decisions_trivial": 12,
+ "decisions": 304,
+ "decisions_compared": 0,
+ "decisions_human_known": 120,
+ "decisions_trivial": 10,
  "deck_tops": 0,
  "desync_causes": {
   "moved: no such unit on board (not played / already gone)": 2,
-  "played: card in trash but not replayable now": 1
+  "passed_focus: no Pass focus option (no showdown in the engine)": 2,
+  "played: card in trash but not replayable now": 1,
+  "played: card playable but not to 'Forbidding Waste'": 1,
+  "showdown: engine asks P1 but the log's next action is by P2 (showdown)": 2
  },
  "desync_list": [
   {
@@ -86,23 +58,106 @@
    "turn": 5
   },
   {
-   "decision": 299,
+   "decision": 132,
+   "event_index": 165,
+   "event_kind": "passed_focus",
+   "event_text": "Emp4 passed focus at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Play The Empyrean to base",
+    "Play The Empyrean to Forbidding Waste",
+    "Play Ferrous Forerunner to base",
+    "Play Ferrous Forerunner to Forbidding Waste",
+    "Play Hextech Ray targeting Noxus Hopeful",
+    "Play Hextech Ray targeting Forecaster",
+    "Play Hextech Ray targeting Brynhir Thundersong"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 8
+  },
+  {
+   "decision": 144,
+   "event_index": 166,
+   "event_kind": "showdown",
+   "event_text": "W ended showdown responses at Rockfall Path.",
+   "options": [
+    "End turn"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 8
+  },
+  {
+   "decision": 265,
+   "event_index": 302,
+   "event_kind": "passed_focus",
+   "event_text": "Emp4 passed focus at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Forecaster to base",
+    "Play Thousand-Tailed Watcher to base",
+    "Play Falling Star",
+    "Play Temporal Breach",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "no Pass focus option (no showdown in the engine)",
+   "turn": 12
+  },
+  {
+   "decision": 265,
+   "event_index": 303,
+   "event_kind": "showdown",
+   "event_text": "W ended showdown responses at Rockfall Path.",
+   "options": [
+    "End turn",
+    "Move Forecaster to base",
+    "Play Thousand-Tailed Watcher to base",
+    "Play Falling Star",
+    "Play Temporal Breach",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "engine asks P1 but the log's next action is by P2 (showdown)",
+   "turn": 12
+  },
+  {
+   "decision": 265,
+   "event_index": 313,
+   "event_kind": "played",
+   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to Forbidding Waste.",
+   "options": [
+    "End turn",
+    "Move Forecaster to base",
+    "Play Thousand-Tailed Watcher to base",
+    "Play Falling Star",
+    "Play Temporal Breach",
+    "Hide Temporal Breach"
+   ],
+   "phase": "MainPhase",
+   "player": 1,
+   "reason": "card playable but not to 'Forbidding Waste'",
+   "turn": 12
+  },
+  {
+   "decision": 286,
    "event_index": 353,
    "event_kind": "moved",
    "event_text": "Emp4 moved Mech to base.",
    "options": [
     "End turn",
-    "Move Thousand-Tailed Watcher to base",
     "Move Watchful Sentry to base",
-    "Move Thousand-Tailed Watcher, Watchful Sentry to base",
+    "Play Thousand-Tailed Watcher to base",
     "Play Brynhir Thundersong to base",
-    "Play Brynhir Thundersong to Forbidding Waste",
-    "Play Hextech Ray targeting Thousand-Tailed Watcher",
-    "Play Hextech Ray targeting Watchful Sentry",
     "Play Falling Star",
     "Play Temporal Breach",
+    "Play Time Warp",
     "Use Daughter of the Void",
-    "Hide Temporal Breach",
     "Hide Temporal Breach"
    ],
    "phase": "MainPhase",
@@ -111,16 +166,13 @@
    "turn": 14
   },
   {
-   "decision": 316,
+   "decision": 303,
    "event_index": 370,
    "event_kind": "played",
    "event_text": "Played Time Warp from trash.",
    "options": [
     "End turn",
-    "Move Thousand-Tailed Watcher to base",
     "Move Watchful Sentry to base",
-    "Move Thousand-Tailed Watcher, Watchful Sentry to base",
-    "Hide Temporal Breach",
     "Hide Temporal Breach"
    ],
    "phase": "MainPhase",
@@ -129,815 +181,13 @@
    "turn": 14
   }
  ],
- "desyncs": 3,
- "desyncs_engine": 3,
- "disagreements": [
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Forecaster to base"
-   },
-   "clean_boundary": true,
-   "decision": 5,
-   "event_text": "Emp4 played Plundering Poro from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.28,
-    "text": "Play Plundering Poro to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.38,
-     "text": "Play Forecaster to base"
-    },
-    {
-     "index": 1,
-     "share": 0.28,
-     "text": "Play Plundering Poro to base"
-    },
-    {
-     "index": 3,
-     "share": 0.19,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 0
-  },
-  {
-   "bot": {
-    "index": 5,
-    "text": "Play Kai'Sa, Survivor to base"
-   },
-   "clean_boundary": true,
-   "decision": 13,
-   "event_text": "Emp4 moved Plundering Poro to Rockfall Path.",
-   "human": {
-    "index": 1,
-    "share": 0.15,
-    "text": "Move Plundering Poro to Rockfall Path"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 5,
-     "share": 0.34,
-     "text": "Play Kai'Sa, Survivor to base"
-    },
-    {
-     "index": 8,
-     "share": 0.32,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 1,
-     "share": 0.15,
-     "text": "Move Plundering Poro to Rockfall Path"
-    }
-   ],
-   "turn": 2
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "clean_boundary": true,
-   "decision": 42,
-   "event_text": "Emp4 played Forecaster from hand to base.",
-   "human": {
-    "index": 2,
-    "share": 0.12,
-    "text": "Play Forecaster to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.4,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 3,
-     "share": 0.14,
-     "text": "Play Watchful Sentry to base"
-    },
-    {
-     "index": 0,
-     "share": 0.13,
-     "text": "End turn"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 1,
-    "text": "Play Noxus Hopeful to base"
-   },
-   "clean_boundary": true,
-   "decision": 45,
-   "event_text": "Played Stupefy from hand.",
-   "human": {
-    "index": 2,
-    "share": 0.19,
-    "text": "Play Stupefy targeting Recruit"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 1,
-     "share": 0.33,
-     "text": "Play Noxus Hopeful to base"
-    },
-    {
-     "index": 0,
-     "share": 0.3,
-     "text": "End turn"
-    },
-    {
-     "index": 2,
-     "share": 0.19,
-     "text": "Play Stupefy targeting Recruit"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Play Bilgewater Tracker to base"
-   },
-   "clean_boundary": true,
-   "decision": 49,
-   "event_text": "Emp4 played Noxus Hopeful from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.2,
-    "text": "Play Noxus Hopeful to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.42,
-     "text": "Play Bilgewater Tracker to base"
-    },
-    {
-     "index": 0,
-     "share": 0.22,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Play Noxus Hopeful to base"
-    }
-   ],
-   "turn": 4
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Forbidding Waste"
-   },
-   "clean_boundary": true,
-   "decision": 70,
-   "event_text": "Emp4 played Brynhir Thundersong from hand to base.",
-   "human": {
-    "index": 7,
-    "share": 0.18,
-    "text": "Play Brynhir Thundersong to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.33,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    },
-    {
-     "index": 1,
-     "share": 0.22,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 7,
-     "share": 0.18,
-     "text": "Play Brynhir Thundersong to base"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Forbidding Waste"
-   },
-   "clean_boundary": true,
-   "decision": 84,
-   "event_text": "Played Temporal Breach from hand.",
-   "human": {
-    "index": 7,
-    "share": 0.11,
-    "text": "Play Temporal Breach"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.28,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    },
-    {
-     "index": 1,
-     "share": 0.21,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 0,
-     "share": 0.18,
-     "text": "End turn"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Forbidding Waste"
-   },
-   "clean_boundary": true,
-   "decision": 91,
-   "event_text": "Emp4 ended their turn.",
-   "human": {
-    "index": 0,
-    "share": 0.24,
-    "text": "End turn"
-   },
-   "kind": "end_turn",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.37,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    },
-    {
-     "index": 0,
-     "share": 0.24,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.24,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    }
-   ],
-   "turn": 6
-  },
-  {
-   "bot": {
-    "index": 2,
-    "text": "Move Noxus Hopeful to Forbidding Waste"
-   },
-   "clean_boundary": true,
-   "decision": 107,
-   "event_text": "Played Bellows Breath from hand.",
-   "human": {
-    "index": 16,
-    "share": 0.04,
-    "text": "Play Bellows Breath targeting Recruit"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 2,
-     "share": 0.35,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    },
-    {
-     "index": 15,
-     "share": 0.28,
-     "text": "Play The Empyrean to base"
-    },
-    {
-     "index": 1,
-     "share": 0.2,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 111,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 1,
-    "share": 0.3,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.7,
-     "text": "Pass"
-    },
-    {
-     "index": 1,
-     "share": 0.3,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 15,
-    "text": "Play The Empyrean to base"
-   },
-   "clean_boundary": true,
-   "decision": 114,
-   "event_text": "Emp4 moved Forecaster to Rockfall Path.",
-   "human": {
-    "index": 3,
-    "share": 0.0,
-    "text": "Move Forecaster to Rockfall Path"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 15,
-     "share": 0.36,
-     "text": "Play The Empyrean to base"
-    },
-    {
-     "index": 1,
-     "share": 0.25,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 2,
-     "share": 0.22,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play The Empyrean to base"
-   },
-   "clean_boundary": true,
-   "decision": 124,
-   "event_text": "Emp4 moved Noxus Hopeful to Forbidding Waste.",
-   "human": {
-    "index": 2,
-    "share": 0.17,
-    "text": "Move Noxus Hopeful to Forbidding Waste"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.54,
-     "text": "Play The Empyrean to base"
-    },
-    {
-     "index": 1,
-     "share": 0.18,
-     "text": "Move Noxus Hopeful to Rockfall Path"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move Noxus Hopeful to Forbidding Waste"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 3,
-    "text": "Play The Empyrean to base"
-   },
-   "clean_boundary": true,
-   "decision": 132,
-   "event_text": "Emp4 moved Brynhir Thundersong to Rockfall Path.",
-   "human": {
-    "index": 1,
-    "share": 0.13,
-    "text": "Move Brynhir Thundersong to Rockfall Path"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 3,
-     "share": 0.51,
-     "text": "Play The Empyrean to base"
-    },
-    {
-     "index": 6,
-     "share": 0.15,
-     "text": "Play Ferrous Forerunner to Forbidding Waste"
-    },
-    {
-     "index": 1,
-     "share": 0.13,
-     "text": "Move Brynhir Thundersong to Rockfall Path"
-    }
-   ],
-   "turn": 8
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 178,
-   "event_text": "Emp4 moved The Empyrean to Forbidding Waste.",
-   "human": {
-    "index": 2,
-    "share": 0.08,
-    "text": "Move The Empyrean to Forbidding Waste"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.66,
-     "text": "End turn"
-    },
-    {
-     "index": 1,
-     "share": 0.1,
-     "text": "Move The Empyrean to Rockfall Path"
-    },
-    {
-     "index": 2,
-     "share": 0.08,
-     "text": "Move The Empyrean to Forbidding Waste"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 191,
-   "event_text": "Emp4 played Watchful Sentry from hand to base.",
-   "human": {
-    "index": 1,
-    "share": 0.01,
-    "text": "Play Watchful Sentry to base"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.63,
-     "text": "End turn"
-    },
-    {
-     "index": 8,
-     "share": 0.1,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 12,
-     "share": 0.1,
-     "text": "Play Stupefy targeting Sprite"
-    }
-   ],
-   "turn": 10
-  },
-  {
-   "bot": {
-    "index": 11,
-    "text": "Use Daughter of the Void"
-   },
-   "clean_boundary": false,
-   "decision": 208,
-   "event_text": "Played Stupefy from hand.",
-   "human": {
-    "index": 5,
-    "share": 0.15,
-    "text": "Play Stupefy targeting Sprite"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 11,
-     "share": 0.59,
-     "text": "Use Daughter of the Void"
-    },
-    {
-     "index": 0,
-     "share": 0.24,
-     "text": "Pass focus"
-    },
-    {
-     "index": 5,
-     "share": 0.15,
-     "text": "Play Stupefy targeting Sprite"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass focus"
-   },
-   "clean_boundary": false,
-   "decision": 213,
-   "event_text": "Played Hextech Ray from hand.",
-   "human": {
-    "index": 1,
-    "share": 0.1,
-    "text": "Play Hextech Ray targeting Sprite"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.9,
-     "text": "Pass focus"
-    },
-    {
-     "index": 1,
-     "share": 0.1,
-     "text": "Play Hextech Ray targeting Sprite"
-    }
-   ],
-   "turn": 11
-  },
-  {
-   "bot": {
-    "index": 17,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 235,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 27,
-    "share": 0.16,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 17,
-     "share": 0.23,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 1,
-     "share": 0.18,
-     "text": "Move Mech to Rockfall Path"
-    },
-    {
-     "index": 27,
-     "share": 0.16,
-     "text": "Use Daughter of the Void"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 16,
-    "text": "Play Thousand-Tailed Watcher to base"
-   },
-   "clean_boundary": true,
-   "decision": 244,
-   "event_text": "Emp4 moved Mech to Forbidding Waste.",
-   "human": {
-    "index": 2,
-    "share": 0.1,
-    "text": "Move Mech to Forbidding Waste"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 16,
-     "share": 0.26,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 18,
-     "share": 0.18,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Move Mech to Rockfall Path"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "Pass"
-   },
-   "clean_boundary": false,
-   "decision": 251,
-   "event_text": "Played Smoke Screen from hand.",
-   "human": {
-    "index": 4,
-    "share": 0.0,
-    "text": "Play Smoke Screen targeting Sprite"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.86,
-     "text": "Pass"
-    },
-    {
-     "index": 1,
-     "share": 0.14,
-     "text": "Play Smoke Screen targeting Mech"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 9,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 261,
-   "event_text": "Emp4 moved Mech to Forbidding Waste.",
-   "human": {
-    "index": 2,
-    "share": 0.12,
-    "text": "Move Mech to Forbidding Waste"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 9,
-     "share": 0.27,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 7,
-     "share": 0.2,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 1,
-     "share": 0.17,
-     "text": "Move Mech to Rockfall Path"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 7,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 266,
-   "event_text": "Emp4 moved Watchful Sentry to Rockfall Path.",
-   "human": {
-    "index": 2,
-    "share": 0.17,
-    "text": "Move Watchful Sentry to Rockfall Path"
-   },
-   "kind": "move",
-   "player": 1,
-   "top3": [
-    {
-     "index": 7,
-     "share": 0.23,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 2,
-     "share": 0.17,
-     "text": "Move Watchful Sentry to Rockfall Path"
-    },
-    {
-     "index": 4,
-     "share": 0.16,
-     "text": "Play Thousand-Tailed Watcher to base"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 6,
-    "text": "Play Falling Star"
-   },
-   "clean_boundary": true,
-   "decision": 269,
-   "event_text": "Emp4 played Thousand-Tailed Watcher from hand to Forbidding Waste.",
-   "human": {
-    "index": 3,
-    "share": 0.15,
-    "text": "Play Thousand-Tailed Watcher to Forbidding Waste"
-   },
-   "kind": "play",
-   "player": 1,
-   "top3": [
-    {
-     "index": 6,
-     "share": 0.3,
-     "text": "Play Falling Star"
-    },
-    {
-     "index": 2,
-     "share": 0.21,
-     "text": "Play Thousand-Tailed Watcher to base"
-    },
-    {
-     "index": 3,
-     "share": 0.15,
-     "text": "Play Thousand-Tailed Watcher to Forbidding Waste"
-    }
-   ],
-   "turn": 12
-  },
-  {
-   "bot": {
-    "index": 0,
-    "text": "End turn"
-   },
-   "clean_boundary": true,
-   "decision": 300,
-   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
-   "human": {
-    "index": 10,
-    "share": 0.06,
-    "text": "Use Daughter of the Void"
-   },
-   "kind": "ability",
-   "player": 1,
-   "top3": [
-    {
-     "index": 0,
-     "share": 0.28,
-     "text": "End turn"
-    },
-    {
-     "index": 4,
-     "share": 0.24,
-     "text": "Play Brynhir Thundersong to base"
-    },
-    {
-     "index": 8,
-     "share": 0.21,
-     "text": "Play Falling Star"
-    }
-   ],
-   "turn": 14
-  }
- ],
+ "desyncs": 8,
+ "desyncs_engine": 8,
+ "disagreements": [],
  "effect_lines": 1,
  "exported_records": 0,
  "first_player": "Emp4",
- "forced_decisions": 122,
+ "forced_decisions": 115,
  "game": 1,
  "hand_fixes": {
   "created": 1,
@@ -1039,6 +289,14 @@
     "zone": "hand"
    },
    {
+    "card": "Sprite Fountain",
+    "for": "W played Sprite Fountain from hand to base.",
+    "how": "pulled",
+    "player": 2,
+    "turn": 8,
+    "zone": "hand"
+   },
+   {
     "card": "Watchful Sentry",
     "for": "Emp4 played Watchful Sentry from hand to base.",
     "how": "pulled",
@@ -1051,14 +309,6 @@
     "for": "",
     "how": "pulled",
     "player": 1,
-    "turn": 8,
-    "zone": "hand"
-   },
-   {
-    "card": "Sprite Fountain",
-    "for": "W played Sprite Fountain from hand to base.",
-    "how": "pulled",
-    "player": 2,
     "turn": 9,
     "zone": "hand"
    },
@@ -1115,7 +365,7 @@
     "for": "Played Time Warp from trash.",
     "how": "created",
     "player": 1,
-    "turn": 12,
+    "turn": 13,
     "zone": "trash"
    },
    {
@@ -1343,53 +593,53 @@
  },
  "log_artefacts": 0,
  "log_events": 369,
- "log_events_consumed": 368,
- "out_of_order_matches": 5,
+ "log_events_consumed": 369,
+ "out_of_order_matches": 6,
  "players": [
   "Emp4",
   "W"
  ],
- "readiness_fixes": 3,
+ "readiness_fixes": 4,
  "result": {
   "engine_scores": [
-   8,
-   7
+   7,
+   6
   ],
   "engine_winner": 1,
   "log_scores": [
    7,
    7
   ],
-  "reason": "P1 reached 8 points",
+  "reason": "log ended (log score 7-7)",
   "turns": 15
  },
  "rewinds_applied": 0,
  "rewinds_ignored": 0,
- "rune_swaps": 9,
+ "rune_swaps": 11,
  "score_mismatch_examples": [
   {
-   "engine_score": 7,
+   "engine_score": 6,
    "event_index": 315,
    "log_score": 4,
    "text": "W set score to 4. (-3)",
    "turn": 12
   },
   {
-   "engine_score": 7,
-   "event_index": 350,
-   "log_score": 6,
-   "text": "Emp4 scored 1 at turn start. Score: 5 → 6.",
-   "turn": 14
+   "engine_score": 6,
+   "event_index": 316,
+   "log_score": 7,
+   "text": "W set score to 7. (+3)",
+   "turn": 12
   }
  ],
  "score_mismatches": 2,
  "seed": 1,
- "silent_passes": 86,
+ "silent_passes": 85,
  "soft_dropped": 0,
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_viktor_rl2_298c2f1c615ddade1c8085d8bc5962e4.json",
- "stop_reason": "engine game over",
+ "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 1.8479422859999999,
-  "seconds": 1.890859288
+  "bot_seconds": 0.0,
+  "seconds": 0.04863654
  }
 }
