@@ -217,3 +217,35 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-2); }
 .v-play .vp-tale li.play i, .v-play .vp-tale li.move i, .v-play .vp-tale li.score i { color: var(--gold); } .v-play .vp-tale li.kill i { color: var(--loss); }
 .v-play .vp-feed .pl-arrow { color: var(--gold); font-weight: 700; }
 .v-play .vp-feed .pl-turn { font: 600 10px/1 var(--display); color: var(--ink-dim); padding: 0 2px; }
+
+/* the pace of the bot's moves (Fast / Normal / Slow / Step) and Step's Next button, in the turn bar */
+.v-play .vp-bar .vp-pace { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.v-play .vp-bar .vp-pace .lbl { font: 600 10.5px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); }
+.v-play .vp-bar .vp-pace .segmented > button { padding: 4px 9px; font-size: 12px; min-height: 28px; }
+.v-play .vp-bar .vp-pace #vp-next { min-height: 28px; gap: 6px; }
+.v-play .vp-bar .vp-pace #vp-next .kbd { font-size: 10px; padding: 0 4px; }
+.v-play .vp-bar .vp-pace #vp-next.primary { animation: vp-pulse-btn 1.2s ease-in-out infinite; }
+@keyframes vp-pulse-btn { 50% { box-shadow: 0 0 0 4px rgba(214, 178, 94, .25); } }
+@media (prefers-reduced-motion: reduce) { .v-play .vp-bar .vp-pace #vp-next.primary { animation: none; } }
+
+/* the bot's last significant action in the side panel */
+.v-play .lb-act { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: start; }
+.v-play .lb-act .card-img { --w: 44px; }
+.v-play .lb-act .lb-back { width: 44px; aspect-ratio: 744 / 1039; border-radius: 4px; border: 1px solid var(--gold-dim); background: radial-gradient(circle, rgba(214, 178, 94, .4) 0 12%, transparent 13%), linear-gradient(135deg, #2b2446, #15122a 60%, #221c3a); }
+.v-play .lb-act .lb-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--gold-dim); color: var(--gold); font-size: 18px; }
+.v-play .lb-act .lb-body { min-width: 0; }
+.v-play .lb-move .lb-ic { color: var(--p2); }
+
+/* the line of who played what, under the table */
+.v-play .vp-feed .fi.pl { gap: 5px; padding: 3px 9px 3px 3px; border-left: 3px solid var(--p1); }
+.v-play .vp-feed .fi.pl.p2 { border-left-color: var(--p2); }
+.v-play .vp-feed .pl-who { font: 700 9.5px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; padding: 4px 6px; border-radius: 999px; color: #0a0e1a; background: var(--p1); }
+.v-play .vp-feed .pl-who.p2 { background: var(--p2); }
+.v-play .vp-feed .pl-ic { width: 16px; text-align: center; color: var(--gold); font-size: 13px; }
+.v-play .vp-feed .fi.attack .pl-ic { color: var(--loss); }
+.v-play .vp-feed .pl-back { width: 14px; height: 19px; border-radius: 2px; border: 1px solid var(--gold-dim); background: linear-gradient(135deg, #2b2446, #15122a); }
+
+/* an equip's ways to pay, grouped under its target */
+.v-play .po-opt.grp:not(.first) { margin-top: -4px; margin-left: 18px; min-height: 36px; border-top-left-radius: 0; }
+.v-play .po-opt.grp.first { border-bottom-left-radius: 0; }
+.v-play .vp-feed .pl-turn { letter-spacing: .1em; text-transform: uppercase; color: var(--gold-dim); margin-left: 4px; }

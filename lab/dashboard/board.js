@@ -1,5 +1,6 @@
 /* RiftBoard — draws one Riftbound game state like the physical table.
-   window.RiftBoard = { mount(el, opts), render(frame, opts), destroy(), cardImage(url, w), situation(frame), parseOption(text), concerns(entry, sit) }
+   window.RiftBoard = { mount(el, opts), render(frame, opts), destroy(), cardImage(url, w), situation(frame), parseOption(text), concerns(entry, sit),
+                        present(action | null) (one action held on the table: card, caption, arrows, rings), equipCost(card), names(text) }
 
    frame: one replay frame from the engine ({board:{players, battlefields, chain, phase, turn, turn_player}, ...});
           an optional frame.legal = [{index, text, type?, card?, battlefield?}] highlights playable cards / destinations
@@ -7,6 +8,7 @@
           an optional frame.options = ["Move X to Y", …] (a replay's recorded options) tells where the decision is, without a list;
           an optional frame.focus = [{card?, battlefield?}] marks cards / battlefields with a soft ring (the move being
           looked at in a replay) — no list, no click, independent of frame.legal;
+          an optional frame.targets = [{source, target, player}] rings each unit a spell or ability on the chain aims at, named on it;
           optional frame.decision_player (1 | 2), frame.passes ([1, 2]: who passed focus since the last play in the showdown) and
           frame.log (engine lines: "SHOWDOWN: BF#0 …", "COMBAT: BF#0 attacker=P1 …") refine the combat panel.
    opts:  cards      array (or Map) of card records {id, name, image_url, type, energy, power, might, domains, super, tags, text}
@@ -23,6 +25,7 @@
       nav / navPos          {prevTurn, prev, next, nextTurn} callbacks: step buttons in the top bar; navPos = "12/80" shown between them
       story / slow          story: true (tell frame.log over the table) or an array from RiftBoard.story(frame); slow: longer animations
       stage                 false hides the played card shown large at the centre of the table after a play
+      viewInsets            function → {top, bottom}: the part of the viewport not covered by the page's own bars (where present() may go)
       onBlocked  function(cardName): a click on a card of yours in hand or the champion zone that is not playable now
           legalLabel / legalDisabled   caption of the options bar; disabled greys the buttons (while the bot moves)
    Plain DOM, no dependencies. Styles in board.css. */
@@ -130,7 +133,11 @@
     const t = String(text || ""), e = { text: t, type: type || "", kind: "other" }; let m;
     if ((m = /^(Play|Hide) (.+?)(?: (?:to|at) (.+?))?(?: targeting (.+?))?(?: \(alternative cost\))?$/.exec(t))) { e.kind = m[1] === "Hide" ? "hide" : "play"; e.card = m[2]; if (m[3] && m[3] !== "base") e.battlefield = m[3]; if (m[4]) e.target = m[4]; if (/\(alternative cost\)$/.test(t)) e.alt = true; }
     else if ((m = /^Move (.+?) to (.+)$/.exec(t))) { e.kind = "move"; e.card = m[1]; e.units = splitNames(m[1]); if (m[2] !== "base") e.battlefield = m[2]; }
-    else if ((m = /^(?:Use|Equip) (.+?)(?: ability \d+)?(?: (?:on|to) (.+))?$/.exec(t))) { e.kind = "use"; e.card = m[1]; if (m[2]) e.target = m[2]; }
+    else if ((m = /^(Use|Equip) (.+?)(?: ability (\d+))?(?: (?:on|to) (.+?))?(?: \(exhaust (.+)\))?$/.exec(t))) {
+      // "Equip Blade of the Exile to Riven, Broken Blade (exhaust Astral Heron)": the parenthesis is how the cost is paid, not the target
+      e.kind = "use"; e.card = m[2]; if (m[1] === "Equip") e.equip = true; if (m[3]) e.ability = +m[3]; if (m[4]) e.target = m[4];
+      if (m[5]) e.pay = { exhaust: m[5] };
+    }
     else if ((m = /^Bring battlefield (.+)$/.exec(t))) { e.kind = "bring"; e.card = m[1]; }
     else if (/^Pass focus$/.test(t) || type === "PassFocus") e.kind = "focus";
     else if (/^Pass$/.test(t) || type === "PassPriority") e.kind = "priority";
@@ -277,8 +284,11 @@
     if (u.stunned) tags.push(`<span class="rb-tag stun">STUN</span>`);
     const chips = kws.map(x => `<span class="rb-tag kw ${x.combat ? "cb " + x.key : ""} ${x.combat && role ? "on" : ""}" title="${esc(x.label + (x.value > 1 ? " " + x.value : "") + (x.note ? ": " + x.note : ""))}">${esc(x.combat ? x.label : String(x.label).slice(0, 10))}${x.combat && x.value > 1 ? ` ${x.value}` : ""}</span>`);
     const gear = (u.gear || []).map(g => { const gc = card(g); const gk = zoomKey({ card: gc, name: g, kind: "gear", state: `equipped to ${name}` }); return `<span class="rb-geq" data-z="${gk}" tabindex="0" role="img" aria-label="${esc(g)}, equipped" title="${esc(g)}">${pic(gc, g, 120) || `<i></i>`}</span>`; }).join("");
+    const tg = !u.facedown && S.tgt ? S.tgt.get(String(name).toLowerCase()) : null;   // a spell or ability on the chain aims at this unit
+    if (tg) states.push("targeted by " + tg.map(t => t.source).join(", "));
     const aria = `${name}${!isGear && u.might != null ? ", " + u.might + " might" : ""}${states.length ? ", " + states.join(", ") : ""}`;
-    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${role || ""} ${legal ? "rb-legal-hl" : ""} ${canMove ? "rb-can-move" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""}" data-z="${k}" data-name="${esc(String(name).toLowerCase())}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
+    return `<div class="rb-unit p${p} ${isGear ? "gear" : ""} ${u.exhausted ? "ex" : ""} ${u.stunned ? "stunned" : ""} ${champion ? "champion" : ""} ${role || ""} ${legal ? "rb-legal-hl" : ""} ${canMove ? "rb-can-move" : ""} ${inFocus(L, name, c, u) ? "rb-focus-hl" : ""} ${tg ? "rb-tgt p" + tg[tg.length - 1].player : ""}" data-z="${k}" data-name="${esc(String(name).toLowerCase())}"${u.id != null ? ` data-oid="${u.id}"` : ""}${pickAttr(legal)} tabindex="0" role="img" aria-label="${esc(aria)}">
+      ${tg ? `<span class="rb-tgtlab p${tg[tg.length - 1].player}" title="${esc("targeted by " + tg.map(t => t.source).join(", "))}">◎ ${esc(tg[tg.length - 1].source)}</span>` : ""}
       <div class="rb-art">${pic(c, name, 240) || fallback(c, name, null, isGear ? "gear" : "unit token")}</div>
       ${tags.length ? `<div class="rb-tags">${tags.join("")}</div>` : ""}${gear ? `<div class="rb-gearline">${gear}</div>` : ""}
       ${canMove ? `<span class="rb-mv" aria-hidden="true" title="can move now"></span>` : ""}
@@ -485,6 +495,139 @@
     S.stageTimer = setTimeout(() => { S.stageTimer = 0; el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 * k }).onfinish = () => { el.remove(); if (S.stageEl === el) S.stageEl = null; }; }, 1300 * k);
   }
 
+  // ── presentation: one action held on the table until the caller clears it ─────────────────────────────────────
+  // present({key, player, kind, icon, cards:[name|null], caption, to:[{card, side?} | {battlefield} | {base: seat}]}) shows the
+  // card(s) large over the battlefields with a caption ("Bot casts Charm → Riven, Broken Blade"), draws an arrow from the card
+  // to each target and rings the targets. It survives repaints (the arrows are redrawn to where the targets now are) and stays
+  // until present(null) or the next present(). A null card is a card back (a hidden card). Under reduced motion nothing moves.
+  const still = () => matchMedia("(prefers-reduced-motion: reduce)").matches || !("animate" in Element.prototype);
+  function presentTargets(list) {
+    const out = [];
+    for (const t of list || []) {
+      let els = [];
+      if (t.battlefield != null) { const b = S.el.querySelector(`.rb-bf[data-bf="${CSS.escape(norm(t.battlefield))}"]`) || (typeof t.battlefield === "number" ? S.el.querySelector(`.rb-bf[data-bfi="${t.battlefield}"]`) : null); if (b) els = [b]; }
+      else if (t.base) { const side = S.el.querySelector(`.rb-rail .rb-side.p${t.base}`), b = side && side.closest(".rb-rail").querySelector(".rb-base"); if (b) els = [b]; }
+      else if (t.card) {
+        els = [...S.el.querySelectorAll(`.rb-unit[data-name="${CSS.escape(norm(t.card))}"]`)];
+        if (t.side) { const own = els.filter(e => e.classList.contains("p" + t.side)); if (own.length) els = own; }
+      }
+      out.push(...els);
+    }
+    return [...new Set(out)];
+  }
+  function present(p) {
+    const prev = S.present;
+    S.present = p || null;
+    if (!S.el) return;
+    if (!p) {
+      const el = S.pEl, svg = S.pSvg; S.pEl = S.pSvg = null; S.pKey = null;
+      S.el.querySelectorAll(".rb-pring").forEach(e => e.classList.remove("rb-pring", "p1", "p2"));
+      for (const x of [el, svg]) if (x) { if (still()) x.remove(); else x.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220 }).onfinish = () => x.remove(); }
+      return;
+    }
+    if (!prev || prev.key !== p.key) { if (S.pEl) S.pEl.remove(); if (S.pSvg) S.pSvg.remove(); S.pEl = S.pSvg = null; }
+    applyPresent();
+  }
+  function applyPresent() {
+    const p = S.present; if (!p || !S.el || !S.frame) return;
+    const fresh = S.pKey !== p.key; S.pKey = p.key;
+    if (!S.pEl) {
+      const el = document.createElement("div"); el.className = `rb-pstage p${p.player || 0} ${esc(p.kind || "")}`; el.setAttribute("aria-hidden", "true");
+      const cards = (p.cards && p.cards.length ? p.cards : [undefined]).slice(0, 2);
+      el.innerHTML = `<div class="rb-pcards">${cards.map(n => n === undefined ? "" : n === null ? `<div class="rb-ppic back"></div>`
+        : `<div class="rb-ppic">${pic(card(n), n, 480) || fallback(card(n), n, null, "card")}</div>`).join("")}</div>
+        <div class="rb-pcap p${p.player || 0}">${p.icon ? `<i>${esc(p.icon)}</i>` : ""}<span>${esc(p.caption || "")}</span></div>`;
+      S.pEl = el;
+    }
+    if (S.pEl.parentNode !== S.el) S.el.append(S.pEl);
+    // place the stage over the battlefields, inside the part of the table on screen, where it covers the targets (and the
+    // units) least: the middle, else a quarter to a side, above or below
+    const R = S.el.getBoundingClientRect(), F = (S.el.querySelector(".rb-field") || S.el).getBoundingClientRect();
+    const vi = typeof S.opts.viewInsets === "function" ? S.opts.viewInsets() || {} : {};   // a sticky header, a bottom sheet over the table
+    const w = S.pEl.offsetWidth || 160, h = S.pEl.offsetHeight || 200, top = Math.max(R.top, vi.top ?? 8), bottom = Math.min(R.bottom, vi.bottom ?? innerHeight);
+    const targets = presentTargets(p.to), tr = targets.map(t => t.getBoundingClientRect()), ur = [...S.el.querySelectorAll(".rb-field .rb-unit")].map(u => u.getBoundingClientRect());
+    const overlap = (x, y, r) => Math.max(0, Math.min(x + w / 2, r.right) - Math.max(x - w / 2, r.left)) * Math.max(0, Math.min(y + h / 2, r.bottom) - Math.max(y - h / 2, r.top));
+    const clampY = y => bottom - top > h + 16 ? Math.max(top + h / 2 + 8, Math.min(bottom - h / 2 - 8, y)) : y;
+    const clampX = x => Math.max(F.left + w / 2 + 4, Math.min(F.right - w / 2 - 4, x));
+    let best = null;
+    const spots = S.pSpot && S.pSpot.key === p.key ? [S.pSpot.at] : [[.5, .5, 0], [.25, .5, 1], [.75, .5, 1], [.5, .3, 2], [.5, .7, 2], [.25, .3, 3], [.75, .3, 3], [.25, .7, 3], [.75, .7, 3]];
+    for (const at of spots) {
+      const [fx, fy, pen] = at;
+      const x = clampX(F.left + F.width * fx), y = clampY(F.top + F.height * fy);
+      // a big target (a battlefield) may be covered in part; a unit target should stay in view
+      const score = tr.reduce((a, r, i) => a + overlap(x, y, r) * (targets[i].classList.contains("rb-bf") ? .2 : 12), 0) + ur.reduce((a, r) => a + overlap(x, y, r), 0) + pen * 400;
+      if (!best || score < best.score) best = { x, y, score, at };
+    }
+    S.pSpot = { key: p.key, at: best.at };   // a repaint of the same action keeps the stage where it is
+    S.pEl.style.left = (best.x - R.left).toFixed(0) + "px"; S.pEl.style.top = (best.y - R.top).toFixed(0) + "px";
+    if (fresh && !still()) S.pEl.animate([{ opacity: 0, transform: "translate(-50%, -50%) scale(.82)" }, { opacity: 1, transform: "translate(-50%, -50%) scale(1)" }], { duration: 240, easing: "cubic-bezier(.2,.8,.2,1)" });
+    // the rings and the arrows
+    S.el.querySelectorAll(".rb-pring").forEach(e => e.classList.remove("rb-pring", "p1", "p2"));
+    for (const t of targets) t.classList.add("rb-pring", "p" + (p.player || 1));
+    const src = S.pEl.querySelector(".rb-ppic") || S.pEl.querySelector(".rb-pcap");
+    if (!targets.length || !src) { if (S.pSvg) S.pSvg.remove(); S.pSvg = null; return; }
+    const a = src.getBoundingClientRect(), x1 = a.left + a.width / 2 - R.left, y1 = a.top + a.height / 2 - R.top;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("class", `rb-parrows p${p.player || 0}`); svg.setAttribute("width", R.width); svg.setAttribute("height", R.height); svg.setAttribute("aria-hidden", "true");
+    const parts = targets.slice(0, 6).map(t => {
+      const b = t.getBoundingClientRect(), big = t.classList.contains("rb-bf") || t.classList.contains("rb-base");
+      const x2 = b.left + b.width / 2 - R.left, y2 = (big ? b.top + Math.min(b.height / 2, 60) : b.top + b.height / 2) - R.top;
+      const len = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / len, uy = (y2 - y1) / len, cut = big ? 10 : Math.min(26, len / 4);
+      const ex = x2 - ux * cut, ey = y2 - uy * cut, bend = Math.min(80, len * .18);
+      const cx = (x1 + ex) / 2 - uy * bend, cy2 = (y1 + ey) / 2 + ux * bend;
+      // the arrowhead points along the curve's last tangent
+      const tx = ex - cx, ty = ey - cy2, tl = Math.hypot(tx, ty) || 1, hx = tx / tl, hy = ty / tl, s1 = 15, s2 = 8;
+      const head = `${ex.toFixed(1)},${ey.toFixed(1)} ${(ex - hx * s1 - hy * s2).toFixed(1)},${(ey - hy * s1 + hx * s2).toFixed(1)} ${(ex - hx * s1 + hy * s2).toFixed(1)},${(ey - hy * s1 - hx * s2).toFixed(1)}`;
+      return { d: `M${x1.toFixed(1)},${y1.toFixed(1)} Q${cx.toFixed(1)},${cy2.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, head };
+    });
+    // a repaint of the same action: the same arrows (their animation goes on), redrawn to where the targets now are
+    const old = S.pSvg;
+    if (old && !fresh && old.querySelectorAll(".rb-pline").length === parts.length) {
+      old.setAttribute("width", R.width); old.setAttribute("height", R.height);
+      old.querySelectorAll(".rb-pline").forEach((l, i) => l.setAttribute("d", parts[i].d));
+      old.querySelectorAll(".rb-phead").forEach((h2, i) => h2.setAttribute("points", parts[i].head));
+      S.el.insertBefore(old, S.pEl); return;
+    }
+    if (old) old.remove();
+    svg.innerHTML = parts.map(q => `<path class="rb-pline" d="${q.d}"/><polygon class="rb-phead" points="${q.head}"/>`).join("");
+    S.el.insertBefore(svg, S.pEl); S.pSvg = svg;
+    if (!S.pDrawn || S.pDrawn !== p.key) { S.pDrawn = p.key; if (still()) return;
+      svg.querySelectorAll(".rb-pline").forEach(l => { const n = l.getTotalLength(); l.style.strokeDasharray = n; l.animate([{ strokeDashoffset: n }, { strokeDashoffset: 0 }], { duration: 520, delay: 140, easing: "ease-out", fill: "backwards" }).onfinish = () => { l.style.strokeDasharray = ""; }; });
+      svg.querySelectorAll(".rb-phead").forEach(h2 => h2.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: 600, fill: "backwards" }));
+    }
+  }
+
+  /** The cost an equip prints, readable: "[A]" → "1 power", "[1][R]" → "1 energy and 1 power". "" when the text says nothing. */
+  function equipCost(c) {
+    const m = /\[Equip\]\s*(?:—\s*)?((?:\[[^\]]+\])+)/.exec(String((c && (c.text || c.ability_text)) || "")); if (!m) return "";
+    let energy = 0, power = 0;
+    for (const t of m[1].matchAll(/\[([^\]]+)\]/g)) { if (/^\d+$/.test(t[1])) energy += +t[1]; else power++; }
+    return [energy ? `${energy} energy` : "", power ? `${power} power` : ""].filter(Boolean).join(" and ");
+  }
+  /** Several ways to pay one equip (the printed cost, or exhausting a friendly unit): a small chooser at the drop point. */
+  function closeChooser() { if (D.chooser) { D.chooser.remove(); D.chooser = null; } }
+  function payChooser(hits, x, y) {
+    closeChooser(); hideZoom();
+    const seen = new Set(), list = [...hits.filter(h => !h.pay), ...hits.filter(h => h.pay)].filter(h => !seen.has(h.text) && seen.add(h.text)), g = list[0], cost = equipCost(card(g.card));
+    const el = document.createElement("div"); el.className = "rb-chooser"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", `How to pay for equipping ${g.card}`);
+    el.innerHTML = `<div class="rb-ch-h">Equip ${esc(g.card)} → ${esc(g.target || "")}</div><div class="rb-ch-q">How do you pay?</div>
+      ${list.map((h, i) => `<button type="button" data-i="${i}" class="${i === 0 ? "def" : ""}">${h.pay ? `Exhaust ${esc(h.pay.exhaust)}` : `Pay ${esc(cost || "the equip cost")}`}</button>`).join("")}
+      <div class="rb-ch-k">Esc cancels</div>`;
+    document.body.append(el); D.chooser = el;
+    const w = el.offsetWidth, h = el.offsetHeight;
+    el.style.left = Math.max(8, Math.min(innerWidth - w - 8, x - w / 2)) + "px"; el.style.top = Math.max(8, Math.min(innerHeight - h - 8, y + 12)) + "px";
+    el.addEventListener("click", ev => { const b = ev.target.closest("button[data-i]"); if (!b) return; const pick = list[+b.dataset.i]; closeChooser(); if (typeof S.opts.onPick === "function") S.opts.onPick(pick.index, pick); });
+    el.addEventListener("keydown", ev => { if (ev.key === "Escape") { ev.stopPropagation(); closeChooser(); } });
+    const first = el.querySelector("button"); if (first) first.focus();
+  }
+  /** What a drop (or an aimed click) on one destination picks: the option itself, or the payment chooser when it has several. */
+  function pickHits(hits, x, y) {
+    if (!hits.length || typeof S.opts.onPick !== "function") return;
+    const equips = hits.filter(h => h.equip);
+    if (new Set(equips.map(h => h.text)).size > 1) { payChooser(equips, x, y); return; }
+    const pick = hits.find(h => !h.alt) || hits[0]; S.opts.onPick(pick.index, pick);
+  }
+
   // ── the story of a frame: the engine's log since the previous decision, told as sentences ──────────────────────
   // Each entry: {icon, text, cards:[names], kind}. The caption over the table shows the last few; the Replays panel
   // the whole list. Patterns follow src/engine trace lines (PLAY, MOVE, EXHAUST_RUNE, ATTACH, KILL, SCORE, …).
@@ -558,7 +701,7 @@
       <div class="rb-zinfo"><b>${esc(d.name)}</b>${line ? `<div>${esc(line)}</div>` : ""}${dom ? `<div>${dom}</div>` : ""}${d.state ? `<div class="rb-zstate">${esc(d.state)}${d.might != null && c && c.might != null && d.might !== c.might ? ` — might now ${d.might}` : ""}</div>` : ""}</div>`;
   }
   function showZoom(key, modal, x, y) {
-    const d = S.z[key]; if (!d) return; ensureZoom();
+    const d = S.z[key]; if (!d || (D.chooser && !modal)) return; ensureZoom();
     if (S.hoverKey !== key || modal) { S.zoom.innerHTML = zoomHtml(d); S.hoverKey = key; }
     S.zoom.classList.toggle("modal", !!modal); S.backdrop.classList.toggle("on", !!modal);
     S.zoom.classList.add("on"); S.zoom.setAttribute("aria-hidden", "false");
@@ -583,10 +726,13 @@
   // Pointer events, so it works with a mouse and with touch (the legal cards set touch-action: none).
   const D = { down: null, active: false, ghost: null, entries: [], over: null };
   const norm = v => String(v == null ? "" : v).toLowerCase();
-  function entriesFor(name) {
+  /** The options a card on the table can be dragged for. el: the card's element — a card in hand (or the champion zone) is
+      played or hidden, one on the board is moved or used (a second copy of a gear in hand is not the gear at base). */
+  function entriesFor(name, el) {
     if (!S.frame || !Array.isArray(S.frame.legal) || S.opts.legalDisabled) return [];
-    const n = norm(name);
-    return optionsOf(S.frame).filter(e => norm(e.card) === n || norm(typeof e.card === "object" && e.card ? e.card.name : "") === n || (e.units || []).some(u => norm(u) === n));
+    const n = norm(name), inHand = !!(el && el.closest(".rb-hand, .rb-champ")), onBoard = !!(el && el.closest(".rb-unit"));
+    return optionsOf(S.frame).filter(e => (norm(e.card) === n || norm(typeof e.card === "object" && e.card ? e.card.name : "") === n || (e.units || []).some(u => norm(u) === n))
+      && !(inHand && (e.kind === "move" || e.kind === "use")) && !(onBoard && (e.kind === "play" || e.kind === "hide")));
   }
   function dropTargets(entries) {
     const out = [];
@@ -618,8 +764,7 @@
     S.el.classList.remove("rb-dragging");
     const was = D.active; D.down = null; D.active = false; D.ghost = null; D.over = null; D.targets = [];
     if (!was || cancel || !over) return;
-    const hits = targets.filter(([t]) => t === over).map(([, en]) => en), pick = hits.find(x => !x.alt) || hits[0];
-    if (pick && typeof S.opts.onPick === "function") S.opts.onPick(pick.index, pick);
+    pickHits(targets.filter(([t]) => t === over).map(([, en]) => en), e.clientX, e.clientY);
   }
   // Aim mode: a tap or click on a card with several destinations (gear, a targeted spell, an Ambush unit) lights the
   // destinations up; the next click on one of them picks that option, anywhere else cancels.
@@ -641,20 +786,28 @@
       if (D.swallow) return;
       if (D.aim) {   // second click: a lit destination picks, anything else cancels
         const t = e.target.closest(".rb-drop"), aim = D.aim; aimEnd();
-        if (t && root.contains(t)) { const hits = aim.targets.filter(([x]) => x === t).map(([, en]) => en), pick = hits.find(x => !x.alt) || hits[0]; if (pick && typeof S.opts.onPick === "function") S.opts.onPick(pick.index, pick); }
+        if (t && root.contains(t)) pickHits(aim.targets.filter(([x]) => x === t).map(([, en]) => en), e.clientX, e.clientY);
         e.stopPropagation(); e.preventDefault(); return;
       }
       const el = e.target.closest(".rb-legal-hl[data-name]"); if (!el || !root.contains(el) || S.opts.legalDisabled) return;
-      const entries = entriesFor(el.dataset.name); if (entries.length < 2) return;   // one option: the plain click picks it
-      const targets = dropTargets(entries); if (targets.length < 2) return;
+      const entries = entriesFor(el.dataset.name, el);
+      if (entries.length === 1 && +el.dataset.pick !== entries[0].index && typeof S.opts.onPick === "function") {   // the card's own option, not a namesake's
+        S.opts.onPick(entries[0].index, entries[0]); e.stopPropagation(); e.preventDefault(); return; }
+      if (entries.length < 2) return;   // one option: the plain click picks it
+      const targets = dropTargets(entries), places = new Set(targets.map(([t]) => t));
+      if (places.size === 1 && new Set(entries.filter(x => x.equip).map(x => x.text)).size > 1) {   // one unit to equip, several ways to pay: ask how
+        const r = el.getBoundingClientRect(); pickHits(targets.map(([, en]) => en), r.left + r.width / 2, r.bottom); e.stopPropagation(); e.preventDefault(); return; }
+      if (places.size < 2) return;
       aimStart(el, targets); e.stopPropagation(); e.preventDefault();
     }, true);
-    on(document, "keydown", e => { if (e.key === "Escape") aimEnd(); });
+    on(document, "keydown", e => { if (e.key === "Escape") { aimEnd(); closeChooser(); } });
+    on(document, "pointerdown", e => { if (D.chooser && !D.chooser.contains(e.target)) closeChooser(); }, true);
     on(root, "pointerdown", e => {
       if (e.button !== 0 && e.pointerType === "mouse") return;
+      if (D.aim && e.target.closest(".rb-drop")) return;   // aiming: the click on a lit destination picks it (see the click handler)
       const el = e.target.closest(".rb-legal-hl[data-name]"); if (!el || !root.contains(el)) return;
       aimEnd();
-      const entries = entriesFor(el.dataset.name); const targets = dropTargets(entries); if (!targets.length) return;
+      const entries = entriesFor(el.dataset.name, el); const targets = dropTargets(entries); if (!targets.length) return;
       D.down = { el, x: e.clientX, y: e.clientY, id: e.pointerId }; D.targets = targets; D.active = false;
     });
     on(root, "pointermove", e => {
@@ -712,7 +865,9 @@
   function render(frame, opts) {
     if (!S.el) throw new Error("RiftBoard.render before mount");
     if (opts) { const had = S.opts.cards; Object.assign(S.opts, opts); if (opts.cards && opts.cards !== had) indexCards(opts.cards); }
-    S.frame = frame; S.z = []; hideZoom(); if (D.aim) aimEnd();
+    S.frame = frame; S.z = []; hideZoom(); if (D.aim) aimEnd(); closeChooser();
+    // the targets of what waits on the chain: frame.targets = [{source, target, player}] rings each target until it resolves
+    S.tgt = new Map(); for (const t of (frame && Array.isArray(frame.targets) ? frame.targets : [])) { const k = String(t.target || "").toLowerCase(); if (!k) continue; if (!S.tgt.has(k)) S.tgt.set(k, []); S.tgt.get(k).push(t); }
     const board = frame && frame.board; if (!board) { S.el.innerHTML = `<div class="rb-top"><span class="rb-turn">No game state</span></div>`; return; }
     const viewer = S.opts.viewer === 2 ? 2 : 1, me = viewer - 1, opp = 1 - me;
     const L = legalIndex(frame), sit = situation(frame);
@@ -728,14 +883,16 @@
       + rail(board, me, L.any ? L : null, true, sit) + legalBar(frame);
     if (S.opts.nav) S.el.querySelectorAll("[data-nav]").forEach(b => { b.onclick = () => { const fn = S.opts.nav[b.dataset.nav]; if (fn) fn(); }; });
     if (keepStage) S.el.append(keepStage);
+    if (S.present) applyPresent();     // before the transitions: the arrows aim at where the targets end up
     animate(prev);
     if (prev.size) showStage(frame);
   }
   function destroy() {
     for (const [t, ty, fn, o] of S.handlers) t.removeEventListener(ty, fn, o);
-    S.handlers = []; if (S.zoom) S.zoom.remove(); if (S.backdrop) S.backdrop.remove(); S.zoom = S.backdrop = null;
+    S.handlers = []; if (S.zoom) S.zoom.remove(); if (S.backdrop) S.backdrop.remove(); S.zoom = S.backdrop = null; closeChooser();
+    S.present = null; S.pEl = S.pSvg = null; S.pKey = null;
     if (S.el) { S.el.classList.remove("rb", "rb-in-combat"); S.el.innerHTML = ""; } S.el = null; S.frame = null; S.z = [];
   }
-  const API = { mount, render, destroy, cardImage, sprite, card, situation, parseOption, concerns, story, keywords: unitKeywords, DOMAINS };
+  const API = { mount, render, destroy, cardImage, sprite, card, situation, parseOption, concerns, story, present, equipCost, names: splitNames, keywords: unitKeywords, DOMAINS };
   window.RiftBoard = API;
 })();

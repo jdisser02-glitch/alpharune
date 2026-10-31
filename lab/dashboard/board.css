@@ -454,3 +454,47 @@ img.rb-pic { object-fit: cover; }
 .rb-unit.facedown .rb-name { font-weight: 600; }
 .rb-stage-pic.back { background: radial-gradient(circle at 50% 50%, rgba(214, 178, 94, .45) 0 12%, transparent 13%), linear-gradient(135deg, #2b2446, #15122a 60%, #221c3a); position: relative; }
 .rb-stage-pic.back::after { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; transform: translate(-50%, -50%) rotate(45deg); border: 2px solid var(--rb-gold); }
+
+/* The action being shown (RiftBoard.present): the card large over the battlefields, a caption saying who did what to whom,
+   an arrow in the player's colour from the card to each target, and the targets ringed. */
+.rb-pstage { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 9; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+.rb-pcards { display: flex; gap: 12px; }
+.rb-ppic { width: clamp(92px, 13cqi, 168px); aspect-ratio: 744 / 1039; border-radius: 10px; overflow: hidden; background: #1b1a24; box-shadow: 0 0 0 2px var(--rb-gold), 0 0 34px rgba(214, 178, 94, .45), 0 22px 46px rgba(0, 0, 0, .8); }
+.rb-pstage.p1 .rb-ppic { box-shadow: 0 0 0 3px var(--rb-p1), 0 0 34px color-mix(in srgb, var(--rb-p1) 55%, transparent), 0 22px 46px rgba(0, 0, 0, .8); }
+.rb-pstage.p2 .rb-ppic { box-shadow: 0 0 0 3px var(--rb-p2), 0 0 34px color-mix(in srgb, var(--rb-p2) 55%, transparent), 0 22px 46px rgba(0, 0, 0, .8); }
+.rb-ppic .rb-pic { width: 100%; height: 100%; }
+.rb-ppic.back { position: relative; background: radial-gradient(circle at 50% 50%, rgba(214, 178, 94, .45) 0 12%, transparent 13%), linear-gradient(135deg, #2b2446, #15122a 60%, #221c3a); }
+.rb-ppic.back::after { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; transform: translate(-50%, -50%) rotate(45deg); border: 2px solid var(--rb-gold); }
+.rb-pcap { display: flex; align-items: baseline; gap: 7px; max-width: min(440px, 86cqi); padding: 7px 14px; border-radius: 999px; background: rgba(10, 14, 26, .94); border: 1px solid var(--rb-chrome); box-shadow: 0 10px 26px rgba(0, 0, 0, .6); font: 600 14px/1.3 var(--rb-display); color: #fff; text-align: center; text-shadow: 0 1px 3px #000; }
+.rb-pcap.p1 { border-color: var(--rb-p1); } .rb-pcap.p2 { border-color: var(--rb-p2); }
+.rb-pcap i { font-style: normal; flex: 0 0 auto; }
+.rb-pcap.p1 i { color: var(--rb-p1); } .rb-pcap.p2 i { color: var(--rb-p2); }
+.rb-parrows { position: absolute; left: 0; top: 0; z-index: 8; pointer-events: none; overflow: visible; }
+.rb-pline { fill: none; stroke: var(--rb-gold); stroke-width: 4; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(0, 0, 0, .9)); }
+.rb-phead { fill: var(--rb-gold); filter: drop-shadow(0 0 4px rgba(0, 0, 0, .9)); }
+.rb-parrows.p1 .rb-pline { stroke: var(--rb-p1); } .rb-parrows.p1 .rb-phead { fill: var(--rb-p1); }
+.rb-parrows.p2 .rb-pline { stroke: var(--rb-p2); } .rb-parrows.p2 .rb-phead { fill: var(--rb-p2); }
+.rb-unit.rb-pring, .rb-base.rb-pring { outline: 3px solid var(--rb-gold); outline-offset: 3px; border-radius: 8px; animation: rb-pring 1s ease-in-out infinite; }
+.rb-unit.rb-pring.p1, .rb-base.rb-pring.p1 { outline-color: var(--rb-p1); } .rb-unit.rb-pring.p2, .rb-base.rb-pring.p2 { outline-color: var(--rb-p2); }
+.rb-bf.rb-pring { box-shadow: inset 0 0 0 3px var(--rb-gold), inset 0 0 50px rgba(0, 0, 0, .5), 0 0 26px rgba(214, 178, 94, .45); }
+.rb-bf.rb-pring.p1 { box-shadow: inset 0 0 0 3px var(--rb-p1), inset 0 0 50px rgba(0, 0, 0, .5), 0 0 26px color-mix(in srgb, var(--rb-p1) 45%, transparent); }
+.rb-bf.rb-pring.p2 { box-shadow: inset 0 0 0 3px var(--rb-p2), inset 0 0 50px rgba(0, 0, 0, .5), 0 0 26px color-mix(in srgb, var(--rb-p2) 45%, transparent); }
+@keyframes rb-pring { 50% { outline-offset: 6px; } }
+@container (max-width: 560px) { .rb-ppic { width: 84px; } .rb-pcap { font-size: 12.5px; padding: 6px 11px; } }
+
+/* A unit that a spell or ability on the chain aims at: ringed in the caster's colour, the spell named on it, until it resolves. */
+.rb-unit.rb-tgt .rb-art { box-shadow: 0 0 0 2px var(--rb-gold), 0 0 14px rgba(214, 178, 94, .55); }
+.rb-unit.rb-tgt.p1 .rb-art { box-shadow: 0 0 0 2px var(--rb-p1), 0 0 14px color-mix(in srgb, var(--rb-p1) 60%, transparent); }
+.rb-unit.rb-tgt.p2 .rb-art { box-shadow: 0 0 0 2px var(--rb-p2), 0 0 14px color-mix(in srgb, var(--rb-p2) 60%, transparent); }
+.rb-tgtlab { position: absolute; left: 50%; top: -9px; transform: translateX(-50%); z-index: 3; max-width: calc(100% + 16px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 6px; border-radius: 999px; font: 700 9.5px/1.2 var(--rb-display); letter-spacing: .02em; color: #0a0e1a; background: var(--rb-gold); pointer-events: none; }
+.rb-tgtlab.p1 { background: var(--rb-p1); } .rb-tgtlab.p2 { background: var(--rb-p2); }
+
+/* How to pay for an equip with several ways to pay (outside .rb: fixed over the page) */
+.rb-chooser { position: fixed; z-index: 1300; min-width: 210px; max-width: min(320px, calc(100vw - 16px)); padding: 10px; border-radius: 10px; background: #11162a; border: 1px solid rgba(214, 178, 94, .5); box-shadow: 0 18px 40px rgba(0, 0, 0, .7); color: #efe6cf; font: 400 13px/1.35 "Source Sans 3", system-ui, sans-serif; display: flex; flex-direction: column; gap: 6px; }
+.rb-chooser .rb-ch-h { font: 600 13px/1.25 "Chakra Petch", system-ui, sans-serif; color: #e9dcb8; }
+.rb-chooser .rb-ch-q { font-size: 12px; color: #a9a394; }
+.rb-chooser button { text-align: left; padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, .16); background: #181e34; color: #efe6cf; font: 600 13px/1.2 "Chakra Petch", system-ui, sans-serif; cursor: pointer; min-height: 36px; }
+.rb-chooser button:hover, .rb-chooser button:focus-visible { border-color: #d6b25e; background: #212842; outline: none; }
+.rb-chooser button.def { border-color: #d6b25e; background: rgba(214, 178, 94, .14); }
+.rb-chooser .rb-ch-k { font-size: 11px; color: #8a8576; text-align: right; }
+@media (prefers-reduced-motion: reduce) { .rb-pring { animation: none !important; } }

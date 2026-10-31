@@ -37,7 +37,22 @@ function stateFor(perspective) {
   const p = perspective != null ? perspective : over ? 0 : humanSeat;
   // never hand the page a perspective that reveals the bot's hand during play
   const safe = over || humanSeat === 0 ? p : humanSeat;
-  return parse(api.stateJson(safe));
+  const st = parse(api.stateJson(safe));
+  if (!over && humanSeat && Array.isArray(st.log)) st.log = maskDraws(st.log, 3 - humanSeat);
+  return st;
+}
+/* The engine's log names every card drawn, the bot's too: during play the page gets "DREW: a card" for the bot's draws and
+   for the cards it set aside or drew at the mulligan, so its hand stays secret. */
+let botDrawsLeft = 0;
+function maskDraws(log, bot) {
+  return log.map(raw => {
+    const l = String(raw);
+    let m = /\bP([12]) draws (\d+)\b/.exec(l);
+    if (m && /(EFFECT|DRAW_HAND):/.test(l)) { botDrawsLeft = +m[1] === bot ? +m[2] : 0; return l; }
+    if (/DREW: /.test(l) && botDrawsLeft > 0) { botDrawsLeft--; return l.replace(/DREW: .+?( \(id=\d+\))?$/, "DREW: a card (id=0)"); }
+    if ((m = /MULLIGAN: P([12]) (set aside|drew replacement) /.exec(l)) && +m[1] === bot) return l.replace(/(set aside|drew replacement) .+$/, "$1 a card");
+    return l;
+  });
 }
 
 const CMDS = {

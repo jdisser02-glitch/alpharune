@@ -15,8 +15,8 @@ const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacram
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
-  search:  { label: "Search",  spec: "search:sims=50,worlds=6",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move." },
-  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8",  help: "The same search with 150 simulations and 8 redeals. The strongest the browser can run; expect 5 to 15 s per move." },
+  search:  { label: "Search",  spec: "search:sims=50,worlds=6,settle=60",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move. It plays combats out before judging a move." },
+  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals. The strongest the browser can run; expect 5 to 15 s per move. It plays combats out before judging a move." },
 };
 const SEATS = { "1": "Player 1, on the play", "2": "Player 2, on the draw", random: "Random" };
 const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100, focus: 1100 }, LOG_MAX = 400;
@@ -47,6 +47,7 @@ const G = {
   feed: [],                        // what happened since your last real decision: the bot's moves, your automatic passes, points scored
   rec: null, saved: null,          // the game record (every decision, for review) and where it was saved
   played: [], savedAt: 0,          // the cards played this game (the line under the table); decisions already saved
+  chainTargets: [], lastSig: null, // what the chain's spells aim at (ringed until they resolve); the bot's last significant action
 };
 let keysBound = false;
 
@@ -124,7 +125,171 @@ function notePass(text, type, player) {
 /** The engine lines that name the current showdown or combat ("SHOWDOWN: BF#1 (non-combat)", "COMBAT: BF#0 attacker=P1 …"). */
 const showdownLog = () => { for (let i = G.log.length - 1, n = 0; i >= 0 && n < 160; i--, n++) if (/(SHOWDOWN|COMBAT): BF#/.test(G.log[i])) return [G.log[i]]; return []; };
 /** The frame the table draws: the board plus what tells the renderer where the action is. */
-function frameOf(st, legal) { return { board: st.board, legal, log: showdownLog(), events: st.log || [], decision_player: st.decision_player, passes: G.passes }; }
+function frameOf(st, legal) { return { board: st.board, legal, log: showdownLog(), events: st.log || [], decision_player: st.decision_player, passes: G.passes, targets: G.chainTargets }; }
+
+// ── pacing: every significant action is shown before the bot moves on ─────────────────────────────────────
+/* A significant action (a card played or cast, a unit moved, an ability used, a gear equipped, a card hidden, a target chosen,
+   combat damage, points scored) is held on the table: the card large over the battlefields, a caption saying who did what to
+   whom, an arrow to the target, the target ringed (RiftBoard.present). The bot thinks about its next move meanwhile, but its
+   next move is shown only once the hold is over. Rune payments, passes and single-option steps go straight through.
+   Step: each of the bot's significant actions waits for Next (or the space bar). The speed is kept in localStorage. */
+const SPEEDS = {
+  fast:   { label: "Fast",   hold: 750,  trivial: 40,  help: "Each action of the bot is shown for about 0.75 s." },
+  normal: { label: "Normal", hold: 1600, trivial: 140, help: "Each action of the bot is shown for about 1.6 s." },
+  slow:   { label: "Slow",   hold: 3000, trivial: 280, help: "Each action of the bot is shown for about 3 s." },
+  step:   { label: "Step",   hold: 1600, trivial: 140, step: true, help: "The bot waits after each action: press Next or the space bar." },
+};
+const SPEED_KEY = "rl.play.speed";
+function loadSpeed() { try { const v = localStorage.getItem(SPEED_KEY); return SPEEDS[v] ? v : "normal"; } catch (e) { return "normal"; } }
+function saveSpeed(v) { try { localStorage.setItem(SPEED_KEY, v); } catch (e) { /* private window: the choice lasts this visit */ } }
+G.speed = loadSpeed();
+const ICON = { spell: "✦", unit: "▲", gear: "⚙", equip: "⚙", move: "➜", attack: "⚔", ability: "⚡", hide: "◧", target: "◎", choice: "?", damage: "⚔", score: "★" };
+/* The show queue: P.cur is on the table; P.idle are the waiters for "nothing left to show". */
+const P = { q: [], cur: null, timer: 0, waiting: false, idle: [], until: 0 };
+function showActions(list) {
+  if (!list || !list.length) return;
+  for (const p of list) P.q.push(p);
+  if (!P.cur) nextShow();
+}
+function nextShow() {
+  clearTimeout(P.timer); P.timer = 0; P.waiting = false;
+  const p = P.q.shift() || null; P.cur = p;
+  if (G.boardEl && document.contains(G.boardEl)) RiftBoard.present(p);
+  if (!p) { P.until = 0; for (const f of P.idle.splice(0)) f(); paintPace(); return; }
+  const sp = SPEEDS[G.speed] || SPEEDS.normal;
+  // Step: the bot's action waits for Next (a spell whose target comes next does not wait)
+  if (sp.step && p.player !== G.seat && p.kind !== "score" && !p.short) { P.waiting = true; P.until = 0; paintPace(); return; }
+  const ms = p.short ? Math.round(sp.hold * .35) : sp.hold;
+  P.until = performance.now() + ms; P.timer = setTimeout(nextShow, ms);
+  paintPace();
+}
+/** Resolves when everything queued has been shown. */
+const shown = () => P.cur ? new Promise(r => P.idle.push(r)) : Promise.resolve();
+/** Drop what is on show (you acted, the game ended, a new game). */
+function clearShow() { P.q = []; if (P.cur || P.timer) nextShow(); }
+function stepNext() { if (P.cur) nextShow(); }
+function paintPace() {
+  const el = G.host && $("#vp-pace", G.host); if (el) el.outerHTML = paceHtml();
+  paintWho();
+}
+/** The turn bar's pill while the bot's last action is on show (its next move is already chosen). */
+const whoShow = () => P.waiting ? "Bot waits: press Next" : "Bot's move";
+function paintWho() { const el = G.showing && G.host && $("#vp-bar .who.bot", G.host); if (el) el.textContent = whoShow(); }
+function paceHtml() {
+  const sp = SPEEDS[G.speed] || SPEEDS.normal;
+  return `<span class="vp-pace" id="vp-pace" role="group" aria-label="pace of the bot's moves"><span class="lbl">Bot pace</span><span class="segmented">${Object.entries(SPEEDS).map(([k, v]) => `<button type="button" data-speed="${k}" aria-pressed="${k === G.speed}" title="${esc(v.help)}">${esc(v.label)}</button>`).join("")}</span>${sp.step ? `<button type="button" class="btn-sm ${P.waiting ? "primary" : ""}" id="vp-next" ${P.waiting ? "" : "disabled"} title="Show the bot's next action (space bar)">Next <span class="kbd">Space</span></button>` : ""}</span>`;
+}
+function setSpeed(v) {
+  if (!SPEEDS[v]) return; G.speed = v; saveSpeed(v);
+  if (P.waiting && !SPEEDS[v].step) nextShow(); else paintPace();
+}
+/* The chain's targets, ringed on the table until the spell or ability resolves: [{source, target, player, seen, age}]. */
+function trackTargets(st, add) {
+  const chain = ((st && st.board && st.board.chain) || []).map(c => c.source), log = (st && st.log) || [];
+  for (const t of add || []) if (!G.chainTargets.some(x => x.source === t.source && x.target === t.target)) G.chainTargets.push({ ...t, seen: false, age: 0 });
+  G.chainTargets = G.chainTargets.filter(t => {
+    t.age++;
+    if (log.some(l => String(l).includes(`RESOLVE: ${t.source} (`) || String(l).includes(`COUNTER`) && String(l).includes(t.source))) return false;
+    if (chain.includes(t.source)) { t.seen = true; return true; }
+    return !t.seen && t.age < 10;          // a spell whose cost is still being paid is not on the chain yet
+  });
+}
+const cleanLog = st => ((st && st.log) || []).map(l => String(l).replace(/^\[D:[\d.]+\]\s*/, "").trim());
+const bfAt = (st, i) => (((st && st.board && st.board.battlefields) || [])[i] || {}).name || `battlefield ${i + 1}`;
+const cardType = n => ((cardByName(n) || {}).type || "").toLowerCase();
+const names = s => window.RiftBoard && RiftBoard.names ? RiftBoard.names(s) : [s];
+/** What a decision did, as actions to show: [{key, player, kind, icon, cards, caption, to, chain?, short?}] (the move itself, then
+    the points it scored). m = {text, type, player, options}; prev = the state the decision was taken in; ns = the state after it,
+    whose log says what happened (PLAY, SPELL, TARGET, MOVE, COMBAT, EQUIP, SCORE…). An empty list: nothing worth holding. */
+function describe(m, prev, ns) {
+  const out = [], who = m.player, me = who === G.seat, Who = me ? "You" : "Bot", v = (a, b) => me ? a : b;
+  const log = cleanLog(ns), text = String(m.text || ""), type = String(m.type || ""), e = RiftBoard.parseOption(text, type);
+  const key = `${ns.n}:${who}:${text}`;
+  const targetIn = src => {
+    for (const l of log) {
+      let x = /^TARGET \((?:finalize|play)\): (.+?) -> (.+)$/.exec(l);
+      if (x && (!src || x[1] === src)) return { source: x[1], target: x[2] };
+      x = /^TGT_PICKED: (.+?)(?: \(([^)]*)\))? = (.+?)(?: \(id=\d+\))?$/.exec(l);
+      if (x && (!src || x[1] === src)) return { source: x[1], target: x[3], why: x[2] };
+    }
+    return null;
+  };
+  const last = log[log.length - 1] || "";
+  const pendingTarget = src => last.includes(`choose a target for ${src}`);
+  const chainTop = st => { const c = (st && st.board && st.board.chain) || []; return c.length ? c[c.length - 1].source : ""; };
+  const toCards = (t, side) => names(t).map(n => ({ card: n, side }));
+  let p = null;
+  if (/^(PlayCard|PlayReaction|PlayActionCard)$/.test(type) && e.card) {
+    const ty = cardType(e.card), kind = ty === "spell" || log.some(l => l.startsWith(`SPELL: ${e.card}`)) ? "spell" : ty === "gear" ? "gear" : "unit";
+    const t = e.target || (targetIn(e.card) || {}).target;
+    p = { kind, cards: [e.card], target: t, caption: `${Who} ${kind === "spell" ? v("cast", "casts") : v("play", "plays")} ${e.card}${t ? " → " + t : e.battlefield ? " → " + e.battlefield : ""}`,
+          to: t ? toCards(t) : e.battlefield ? [{ battlefield: e.battlefield }] : kind === "spell" ? [] : [{ base: who }], short: !t && pendingTarget(e.card) };
+    if (t) p.chain = { source: e.card, target: t };
+  } else if (type === "HideCard") {
+    const hidden = !me || !e.card || e.card === "a card", at = log.map(l => /^HIDE: .+? at BF#(\d+)/.exec(l)).find(Boolean);
+    if (!e.battlefield && at) e.battlefield = bfAt(ns, +at[1]);
+    p = { kind: "hide", cards: [hidden ? null : e.card], caption: `${Who} ${v("hide", "hides")} ${hidden ? "a card" : e.card}${e.battlefield ? " at " + e.battlefield : ""}`, to: e.battlefield ? [{ battlefield: e.battlefield }] : [] };
+  } else if (type === "StandardMove" && e.card) {
+    const units = e.units && e.units.length ? e.units : [e.card], list = units.join(", ");
+    const combat = log.some(l => /^COMBAT: BF#/.test(l)), showdown = !combat && log.some(l => /^SHOWDOWN: BF#/.test(l));
+    const dest = e.battlefield || "";
+    p = { kind: combat ? "attack" : "move", cards: units.slice(0, 2), to: dest ? [{ battlefield: dest }] : [{ base: who }],
+          caption: combat ? `${Who} ${v("attack", "attacks")} ${dest} with ${list}` : `${Who} ${v("move", "moves")} ${list} → ${dest || (me ? "your base" : "its base")}${showdown ? " · showdown" : ""}` };
+  } else if (/^Activate/.test(type) && e.card) {
+    if (e.equip && e.target) p = { kind: "equip", cards: [e.card], to: [{ card: e.target, side: who }], caption: `${Who} ${v("equip", "equips")} ${e.card} → ${e.target}${e.pay ? ` · ${v("exhaust", "exhausts")} ${e.pay.exhaust}` : ""}` };
+    else {
+      const t = e.target || (targetIn(e.card) || {}).target;
+      p = { kind: "ability", cards: [e.card], to: t ? toCards(t) : [], caption: `${Who} ${v("use", "uses")} ${e.card}${t ? " → " + t : ""}`, short: !t && pendingTarget(e.card) };
+      if (t) p.chain = { source: e.card, target: t };
+    }
+  } else if (type === "MakeChoice" && !(prev && prev.paying_cost) && !/\bRune$/.test(text)) {
+    const tg = targetIn(null); let x;
+    if (tg) {
+      const spell = cardType(tg.source) === "spell";
+      p = { kind: "target", cards: [tg.source], to: toCards(tg.target), chain: { source: tg.source, target: tg.target },
+            caption: spell ? `${Who} ${v("cast", "casts")} ${tg.source} → ${tg.target}` : `${tg.source}: ${Who.toLowerCase() === "you" ? "you choose" : "bot chooses"} ${tg.target}${tg.why ? ` (${tg.why})` : ""}` };
+    } else if ((m.options || 0) > 1) {
+      const src = chainTop(prev);
+      if ((x = /^Battlefield #(\d+)$/.exec(text))) { const bf = bfAt(ns, +x[1]); p = { kind: "choice", cards: src ? [src] : [], to: [{ battlefield: bf }], caption: `${Who} ${v("choose", "chooses")} ${bf}${src ? " for " + src : ""}` }; }
+      else if ((x = /^Yes — (.+?):/.exec(text))) p = { kind: "choice", cards: [x[1]], to: [], caption: `${Who}: yes — ${text.slice(6)}` };
+      else if (/^No —/.test(text)) p = null;
+      else if ((x = /^Choose (.+)$/.exec(text))) p = { kind: "choice", cards: src ? [src] : [], to: toCards(x[1]), caption: `${Who} ${v("choose", "chooses")} ${x[1]}${src ? " for " + src : ""}` };
+      else p = { kind: "choice", cards: src ? [src] : [], to: [], caption: `${Who} ${v("choose", "chooses")}: ${text}` };
+    }
+  } else if (type === "AssignCombatDamage") {
+    const hits = [...text.matchAll(/ (\d+) to (.+?);/g)].map(x => ({ n: +x[1], unit: x[2] })).filter(h => h.n > 0);
+    if (hits.length) p = { kind: "damage", cards: [], to: hits.map(h => ({ card: h.unit, side: 3 - who })), caption: `${Who} ${v("deal", "deals")} combat damage: ${hits.map(h => `${h.n} to ${h.unit}`).join(", ")}` };
+  }
+  if (p) out.push({ key, player: who, icon: ICON[p.kind], ...p });
+  // points scored, told from the log
+  let conq = null;
+  log.forEach((l, i) => {
+    let x = /^CONQUER: P([12]) conquers BF#(\d+)/.exec(l); if (x) { conq = bfAt(ns, +x[2]); return; }
+    x = /^SCORE: P([12]) \+(\d+) via (\w+)(?: BF#(\d+))?(?: -> (\d+))?/.exec(l); if (!x) return;
+    const s = +x[1], mine = s === G.seat, n = +x[2], via = x[3], bf = via === "Hold" && x[4] != null ? bfAt(ns, +x[4]) : via === "Conquer" ? conq : null;
+    out.push({ key: `${ns.n}:score:${i}:${l}`, player: s, kind: "score", icon: ICON.score, cards: [], to: bf ? [{ battlefield: bf }] : [],
+               caption: `${mine ? "You score" : "Bot scores"} ${n} point${n > 1 ? "s" : ""}${via === "Conquer" ? ` · ${mine ? "you conquer" : "it conquers"} ${bf || "a battlefield"}` : via === "Hold" ? ` · ${mine ? "you hold" : "it holds"} ${bf || "a battlefield"}` : " · card effect"}${x[5] ? ` (${x[5]} of 8)` : ""}` });
+  });
+  return out;
+}
+/** A decision taken (by you or the bot): its actions go on show, into the line of cards played and, for the bot, into the side panel. */
+function noteActions(acts, mv) {
+  const turn = ((G.st || {}).board || {}).turn;
+  trackTargets(G.st, acts.filter(a => a.chain).map(a => ({ ...a.chain, player: a.player })));
+  for (const a of acts) {
+    if (a.kind === "score") continue;
+    if (a.player !== G.seat) G.lastSig = { act: a, mv };
+    if (a.kind === "target") {   // the target of a card just played: completes its line
+      const prev = [...G.played].reverse().slice(0, 4).find(x => x.card === a.cards[0] && !x.target && x.who === a.player);
+      if (prev) { prev.target = a.chain.target; continue; }
+    }
+    if (!/^(spell|unit|gear|move|attack|ability|equip|hide|target)$/.test(a.kind)) continue;
+    const to = a.kind === "move" || a.kind === "attack" ? ((a.to[0] || {}).battlefield || "base") : a.kind === "target" ? a.chain.target : a.target || (a.kind === "equip" ? (a.to[0] || {}).card : (a.to[0] || {}).battlefield || "");
+    G.played.push({ who: a.player, kind: a.kind === "target" ? (cardType(a.cards[0]) === "spell" ? "spell" : "ability") : a.kind, card: a.cards[0] || null, cards: a.cards, hidden: a.kind === "hide" && !a.cards[0], target: to, turn, t: Date.now() });
+  }
+  if (G.played.length > 60) G.played.splice(0, G.played.length - 60);
+  showActions(acts);
+}
 
 // ── game flow ───────────────────────────────────────────────────────────────
 function noteLog(st) {
@@ -149,7 +314,7 @@ async function start() {
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
     G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [] };
-    G.saved = null; G.played = []; G.savedAt = 0; G.botStory = [];
+    G.saved = null; G.played = []; G.savedAt = 0; G.botStory = []; G.chainTargets = []; G.lastSig = null; clearShow();
     Object.assign(G, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null,
                        tally: { 1: { conquer: 0, hold: 0, effect: 0 }, 2: { conquer: 0, hold: 0, effect: 0 } } });
     G.ui.sheet = true; draw(); advance();
@@ -171,26 +336,38 @@ async function advance() {
     const lonePass = st.legal.length === 1 && /^Pass/.test(st.legal[0].type || "");
     if ((st.paying_cost && G.autopay && st.legal.length) || lonePass) {
       // a lone "Pass focus" in a showdown or combat is held a beat longer, so the combat panel can be read
-      G.busy = true; paint(); await sleep(lonePass ? (st.legal[0].type === "PassFocus" ? AUTO_PAUSE.focus : AUTO_PAUSE.pass) : AUTO_PAUSE.pay);
-      try { notePass(st.legal[0].text, st.legal[0].type, G.seat); if (lonePass) G.feed.push({ kind: "me", text: st.legal[0].text, t: Date.now() }); record(st, st.legal[0].index, "auto"); G.st = await call("apply", { index: st.legal[0].index }); G.myMoves++; } catch (e) { G.error = e.message; }
+      const fast = G.speed === "fast";
+      G.busy = true; paint(); await sleep(lonePass ? (st.legal[0].type === "PassFocus" ? (fast ? 300 : AUTO_PAUSE.focus) : (fast ? 60 : AUTO_PAUSE.pass)) : (fast ? 30 : AUTO_PAUSE.pay));
+      await shown();                                // what is on show (the bot's spell, say) is seen before it resolves
+      if (G.stage !== "playing" || G.st !== st) { G.busy = false; return advance(); }
+      try { const o = st.legal[0]; notePass(o.text, o.type, G.seat); if (lonePass) G.feed.push({ kind: "me", text: o.text, t: Date.now() }); record(st, o.index, "auto"); G.st = await call("apply", { index: o.index }); G.myMoves++;
+        noteActions(describe({ text: o.text, type: o.type, player: G.seat, options: st.legal.length }, st, G.st)); } catch (e) { G.error = e.message; }
       G.busy = false; return advance();
     }
     paint(); return;
   }
   G.busy = true; G.thinking = true; G.thinkStart = performance.now(); paint();
   try {
-    const mv = await call("botMove");
+    // the bot thinks while its previous action is on show; its move is shown once that hold is over
+    const mvP = call("botMove").then(m => { if (P.cur && G.thinking) { G.thinking = false; G.showing = true; stopTimer(); paintWho(); } return m; });
+    const [mv] = await Promise.all([mvP, shown()]);
+    G.showing = false;
+    if (G.stage !== "playing") return;
     notePass(mv.text, mv.type, mv.player || 3 - G.seat);
     G.lastBot = mv; G.botMoves.push(mv.ms); G.st = mv.state; G.thinking = false; stopTimer();
     G.feed.push({ kind: "bot", text: mv.text || "option " + mv.index, type: mv.type, t: Date.now() });
     // what the move did, told from the engine's log: the spell cast, the units moved, what resolved, what died
     try { G.lastBotStory = window.RiftBoard ? RiftBoard.story({ log: (mv.state && mv.state.log) || [], board: mv.state && mv.state.board, player: mv.player }) : []; } catch (e) { G.lastBotStory = []; }
     if (G.lastBotStory.length) G.botStory = [...(G.botStory || []), ...G.lastBotStory.map(l => ({ ...l, t: Date.now() }))].slice(-40);
-    notePlays(G.lastBotStory, 3 - G.seat, mv.state);
+    const acts = describe({ text: mv.text, type: mv.type, player: mv.player || 3 - G.seat, options: mv.options }, st, mv.state);
     if (G.rec) G.rec.decisions.push({ n: st.n, player: 3 - G.seat, turn: (st.board || {}).turn, phase: (st.board || {}).phase, who: "bot", chosen: mv.index, text: mv.text || "", options: (mv.search && mv.search.options || []).map(o => [o.index, +(+o.score).toFixed(4)]), ms: Math.round(mv.ms || 0) });
     paint();
-    const inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
-    await sleep(mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : inShowdown ? AUTO_PAUSE.focus : BOT_PAUSE.forced);
+    noteActions(acts, mv);                          // after the repaint: the arrows aim at the table as it now is
+    if (acts.length) paintSide();
+    else {                                          // a step not worth holding: a short beat, longer in a showdown
+      const sp = SPEEDS[G.speed] || SPEEDS.normal, inShowdown = (mv.state.board.battlefields || []).some(b => b.combat) || (mv.state.legal || []).some(l => l.type === "PassFocus");
+      await sleep(G.speed === "fast" ? sp.trivial : mv.search && mv.search.options && mv.search.options.length > 1 ? BOT_PAUSE.undecided : inShowdown ? AUTO_PAUSE.focus : sp.trivial);
+    }
   } catch (e) { G.error = e.message; G.thinking = false; G.busy = false; stopTimer(); paint(); return; }
   G.busy = false; advance();
 }
@@ -200,14 +377,16 @@ async function pick(index) {
   const chosen = G.st.legal.find(l => l.index === index) || {};
   if (!G.st.paying_cost) { G.feed = []; G.botStory = []; }        // a real decision of yours: the feed and the story restart from here
   record(G.st, index, G.st.paying_cost ? "pay" : "me");
+  if (!G.st.paying_cost) clearShow();                                // you acted: what the bot did has been seen
+  const before = G.st; let acts = [];
   try { notePass(chosen.text, chosen.type, G.seat); G.st = await call("apply", { index }); G.myMoves++; G.error = null;
-    try { notePlays(window.RiftBoard ? RiftBoard.story({ log: G.st.log || [], board: G.st.board, player: G.seat }) : [], G.seat, G.st); } catch (e) { /* the line is a convenience */ } } catch (e) { G.error = e.message; }
+    try { acts = describe({ text: chosen.text, type: chosen.type, player: G.seat, options: before.legal.length }, before, G.st); } catch (e) { acts = []; /* the show is a convenience */ } } catch (e) { G.error = e.message; }
   if (G.rec && G.rec.decisions.length - (G.savedAt || 0) >= 8) saveGame(true);    // keep the record safe as the game goes
-  G.busy = false; advance();
+  G.busy = false; paint(); noteActions(acts); advance();
 }
 async function endGame(again) {
   try { await call("end"); } catch (e) { /* no game to end */ }
-  stopTimer(); G.stage = "setup"; G.st = null; G.busy = false; G.thinking = false;
+  stopTimer(); clearShow(); G.stage = "setup"; G.st = null; G.busy = false; G.thinking = false;
   if (again) start(); else draw();
 }
 function stopTimer() { if (G.timer) clearInterval(G.timer); G.timer = 0; }
@@ -357,10 +536,12 @@ function drawGame() {
       </div>
     </div>`;
   G.boardEl = $("#vp-board", G.root);
-  RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", onPick: idx => pick(idx), onBlocked: name => toast(whyNotPlayable(name), ""), players: players() });
+  RiftBoard.mount(G.boardEl, { cards: data().cards, art: data().art, viewer: G.seat, hands: "viewer", stage: false, viewInsets, onPick: idx => pick(idx), onBlocked: name => toast(whyNotPlayable(name), ""), players: players() });
   G.root.addEventListener("click", e => {
     const opt = e.target.closest(".po-opt[data-pick]");
     if (opt) { e.stopPropagation(); /* the chip inside must not open the card preview on tap */ pick(+opt.dataset.pick); return; }
+    const sp = e.target.closest("[data-speed], #vp-next");
+    if (sp) { if (sp.id === "vp-next") stepNext(); else setSpeed(sp.dataset.speed); return; }
     const t = e.target.closest("#vp-sheet, #vp-concede, #vp-again, #vp-new, #vp-log-sum"); if (!t) return;
     if (t.id === "vp-sheet") { G.ui.sheet = !G.ui.sheet; $("#vp-game", G.root).classList.toggle("sheet-closed", !G.ui.sheet); t.textContent = G.ui.sheet ? "Hide" : "Show"; t.setAttribute("aria-expanded", G.ui.sheet); }
     else if (t.id === "vp-concede") concede();
@@ -373,6 +554,13 @@ function drawGame() {
     else if (e.target.id === "vp-phasehelp") { G.ui.phaseHelp = e.target.checked; store("rl.play.phaseHelp", G.ui.phaseHelp ? "on" : "off"); paint(); }
   });
   paint();
+  if (P.cur) RiftBoard.present(P.cur);              // back on the screen: what was on show still is
+}
+/** Where the shown action may go: under the sticky header, above the options when they are a bottom sheet (phone). */
+function viewInsets() {
+  const hd = document.querySelector("header.top"), o = G.host && $("#vp-opts", G.host);
+  const sheet = o && !o.hidden && getComputedStyle(o).position === "fixed";
+  return { top: hd ? Math.max(0, hd.getBoundingClientRect().bottom) + 6 : 8, bottom: sheet ? o.getBoundingClientRect().top - 6 : innerHeight };
 }
 async function concede() {
   const v = await modal({ title: "Concede this game?", body: `<p>The game ends and counts as a loss for you. The table is cleared and you are back at the setup.</p>`, actions: [{ label: "Keep playing", value: null }, { label: "Concede", value: true, primary: true }] });
@@ -394,9 +582,9 @@ function paint() {
   const legal = !over && st.decision_is_human ? legalHints(st.legal) : [];
   const banner = over ? "Game over" : G.thinking ? "Bot is thinking…" : G.busy ? (st.paying_cost ? "Paying…" : st.decision_is_human ? "Passing…" : "…") : human ? (st.paying_cost ? "Pay the cost" : "Your move") : "";
   const frame = frameOf(st, legal), sit = RiftBoard.situation(frame);
-  // Ring the card the bot just played or moved, so its move can be found on the table.
-  const lastBotEntry = [...G.feed].reverse().find(e => e.kind === "bot");
-  if (lastBotEntry && !over) { const e = RiftBoard.parseOption(lastBotEntry.text); if (e.card || e.battlefield) frame.focus = [{ card: e.card, battlefield: e.battlefield }]; }
+  // Ring the card the bot last played or moved, so its move can be found on the table once the show is over.
+  const ls = G.lastSig && G.lastSig.act;
+  if (ls && !over && /^(unit|gear|move|attack|equip)$/.test(ls.kind)) frame.focus = (ls.kind === "equip" ? [ls.to[0]] : ls.cards.filter(Boolean).map(n => ({ card: n }))).filter(Boolean);
   const key = sit && sit.index >= 0 && sit.mode ? `${sit.index}:${sit.mode === "contested" ? "showdown" : sit.mode}` : "";   // a showdown that became a combat keeps its passes
   if (key.split(":")[0] !== G.sitKey.split(":")[0] || !key) { G.passes = []; frame.passes = G.passes; } G.sitKey = key;
   if (G.boardEl && document.contains(G.boardEl)) RiftBoard.render(frame, { viewer: G.seat, hands: over ? "both" : "viewer", banner, bannerKind: over ? "over" : human ? "me" : "bot", legalDisabled: !human, legalLabel: st.paying_cost ? "Pay with" : "Your options", players: players() });
@@ -410,10 +598,15 @@ function paint() {
   const side = $("#vp-side", game);
   if (side && human && !G.ui.wasHuman) side.scrollTop = 0;
   G.ui.wasHuman = human;
-  $("#vp-aside", game).innerHTML = asideHtml(st, over);
-  const feed = $("#vp-feed", game); if (feed) feed.innerHTML = playedHtml();
+  paintSide();
   hidePreview();                                   // a hovered chip may have gone with the repaint
   if (G.thinking) tickTimer();
+}
+/** The side panel and the line of cards played, without repainting the table. */
+function paintSide() {
+  const game = G.root && $("#vp-game", G.root); if (!game || !G.st) return;
+  $("#vp-aside", game).innerHTML = asideHtml(G.st, G.stage === "over");
+  const feed = $("#vp-feed", game); if (feed) feed.innerHTML = playedHtml();
 }
 const phaseName = p => String(p || "").replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
 /** The sentence under the turn bar: what this phase is, and what the showdown or combat at hand means. */
@@ -431,11 +624,12 @@ function barHtml(st, over, human, sit) {
   const who = over ? `<span class="who over">Game over</span>`
     : human ? `<span class="who me">${st.paying_cost ? "Pay the cost" : "Your move"}</span>`
     : G.thinking ? `<span class="who bot">Bot is thinking <span class="mono" id="vp-think">${((performance.now() - G.thinkStart) / 1000).toFixed(1)} s</span></span>`
+    : G.showing ? `<span class="who bot">${whoShow()}</span>`
     : `<span class="who wait">${st.paying_cost ? "Paying" : "One moment"}</span>`;
   const sitPill = sit && sit.index >= 0 && sit.mode ? `<span class="who sit ${sit.mode}">${sit.mode === "combat" ? "Combat" : sit.mode === "showdown" ? "Showdown" : "Contested"} at ${esc(sit.name)}</span>` : "";
   const chain = b.chain || [], chainLine = chain.length ? `<span class="chainline"><span class="lbl">Chain</span>${chain.map((ci, i) => `<span class="ci p${ci.player} ${i === chain.length - 1 ? "top" : ""}">${chipText(ci.source || "?", "sm")}${i === chain.length - 1 ? `<em>${ci.resolving ? "resolving" : "resolves next"}</em>` : ""}</span>`).join(`<span class="arr">›</span>`)}</span>` : "";
   return `<span class="turn"><b>Turn ${b.turn ?? "–"}</b><span>${esc(phaseName(b.phase))}${b.turn_player ? ` · ${b.turn_player === me ? "your" : "the bot's"} turn` : ""}</span></span>${who}${sitPill}
-    <span class="seats">${faceMe ? portrait(faceMe, { size: "sm" }) : ""}<span class="lbl"><b>You</b> P${me}</span><span class="sc p${me}">${sc[me - 1] ?? 0}</span><span class="dash">–</span><span class="sc p${opp}">${sc[opp - 1] ?? 0}</span><span class="lbl">P${opp} <b>Bot</b></span>${faceBot ? portrait(faceBot, { size: "sm" }) : ""}</span>
+    <span class="seats">${faceMe ? portrait(faceMe, { size: "sm" }) : ""}<span class="lbl"><b>You</b> P${me}</span><span class="sc p${me}">${sc[me - 1] ?? 0}</span><span class="dash">–</span><span class="sc p${opp}">${sc[opp - 1] ?? 0}</span><span class="lbl">P${opp} <b>Bot</b></span>${faceBot ? portrait(faceBot, { size: "sm" }) : ""}</span>${over ? "" : paceHtml()}
     ${G.ui.phaseHelp && !over ? `<span class="phase ${sit && sit.index >= 0 && sit.mode ? sit.mode : ""}">${esc(phaseLine(st, sit))}</span>` : ""}${chainLine}`;
 }
 function optionsHtml(st, legal, human, sit) {
@@ -443,34 +637,47 @@ function optionsHtml(st, legal, human, sit) {
   const autoPay = st.decision_is_human && st.paying_cost && G.autopay;
   const state = human ? (st.paying_cost ? "pick the rune to exhaust" : plural(legal.length, "option")) : G.thinking ? "the bot is choosing" : autoPay ? "paying the cost for you" : st.paying_cost ? "the bot is paying" : G.busy ? "one moment" : "waiting for the engine";
   const mark = e => sit && sit.index >= 0 && sit.mode && RiftBoard.concerns(e, sit) ? `<span class="po-mark ${sit.mode}" title="this option concerns the ${sit.mode === "combat" ? "combat" : "showdown"} at ${esc(sit.name)}">this ${sit.mode === "combat" ? "combat" : "showdown"}</span>` : "";
-  const list = legal.length && !autoPay ? `<div class="po-list">${legal.map((e, i) => `<button type="button" class="po-opt ${e.card || e.battlefield ? "hot" : ""}" data-pick="${e.index}" ${human ? "" : "disabled"}>${i < 9 ? `<kbd class="kbd">${i + 1}</kbd>` : `<kbd class="kbd blank">·</kbd>`}<span class="po-text">${chipText(e.text || "option " + e.index)}</span>${mark(e)}</button>`).join("")}</div>`
+  const rows = optionRows(legal); G.ui.order = rows.map(r => r.l.index);   // the keys 1–9 follow the order shown
+  const list = legal.length && !autoPay ? `<div class="po-list">${rows.map(({ l: e, label, cls }, i) => `<button type="button" class="po-opt ${e.card || e.battlefield ? "hot" : ""} ${cls}" data-pick="${e.index}" ${human ? "" : "disabled"} title="${esc(e.text || "")}">${i < 9 ? `<kbd class="kbd">${i + 1}</kbd>` : `<kbd class="kbd blank">·</kbd>`}<span class="po-text">${chipText(label || "option " + e.index)}</span>${mark(e)}</button>`).join("")}</div>`
     : `<div class="po-none">${G.thinking ? "The bot is thinking. Your options appear here when it is your move." : autoPay ? "Rune costs are paid for you; turn that off in the side panel to pick the runes yourself." : "Nothing to choose right now."}</div>`;
   return `<header class="po-head"><h3>${title}</h3><span class="state">${esc(state)}</span><span class="keys"><span class="kbd">1</span>–<span class="kbd">9</span> pick · <span class="kbd">Enter</span> first</span><button type="button" class="btn-sm po-toggle" id="vp-sheet" aria-expanded="${G.ui.sheet}">${G.ui.sheet ? "Hide" : "Show"}</button></header>${list}
     ${human && st.paying_cost ? `<p class="hint" style="margin-top:8px">The engine pays costs rune by rune. Turn automatic payment on in the side panel to skip these steps.</p>` : ""}`;
 }
+/** The options in the order shown: an equip's ways to pay grouped under its target, the payment spelled out
+    ("Equip Blade of the Exile → Riven, Broken Blade · pay 1 power", "… · exhaust Astral Heron"); the rest as the engine lists them.
+    → [{l: legal entry, label, cls}] */
+function optionRows(legal) {
+  const parsed = legal.map(l => ({ l, e: RiftBoard.parseOption(l.text, l.type) })), groups = new Map();
+  const gk = x => x.e.equip && x.e.target ? `${x.e.card}|${x.e.target}` : "";
+  for (const x of parsed) { const k = gk(x); if (!k) continue; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); }
+  const out = [], done = new Set();
+  for (const x of parsed) {
+    if (done.has(x)) continue;
+    const k = gk(x);
+    if (!k) { done.add(x); out.push({ l: x.l, label: x.l.text, cls: "" }); continue; }
+    // the same text twice (two copies of the gear, two units of the same name) is one choice for the reader: shown once
+    const g = groups.get(k), seen = new Set(), all = [...g.filter(y => !y.e.pay), ...g.filter(y => y.e.pay)];
+    for (const y of all) done.add(y);
+    const list = all.filter(y => !seen.has(y.l.text) && seen.add(y.l.text)), cost = RiftBoard.equipCost(RiftBoard.card(x.e.card));
+    list.forEach((y, i) => { out.push({ l: y.l, cls: list.length > 1 ? (i ? "grp" : "grp first") : "",
+      label: `${i ? "…" : `Equip ${y.e.card} → ${y.e.target}`} · ${y.e.pay ? `exhaust ${y.e.pay.exhaust}` : `pay ${cost || "the equip cost"}`}` }); });
+  }
+  return out;
+}
 /** The feed over the table: everything since your last real decision, newest at the bottom. The bot's plays, your automatic
     passes and the points scored, so a combat that ran by itself can be read back move by move. */
 /** The line of cards played this game: who played what, and on which unit when the engine names a target. */
-function notePlays(tale, who, st) {
-  if (!Array.isArray(tale)) return;
-  const turn = ((st || {}).board || {}).turn;
-  for (const l of tale) {
-    if (l.kind === "play" && l.cards && l.cards[0]) G.played.push({ who, card: l.cards[0], turn, t: Date.now() });
-    else if (l.kind === "hide") G.played.push({ who, card: null, hidden: true, turn, t: Date.now() });
-    else if (l.kind === "target" && l.cards && l.cards.length >= 2) {
-      for (let i = G.played.length - 1; i >= 0 && i >= G.played.length - 4; i--) if (G.played[i].card === l.cards[0] && !G.played[i].target) { G.played[i].target = l.cards[1]; break; }
-    }
-  }
-  if (G.played.length > 60) G.played.splice(0, G.played.length - 60);
-}
 function playedHtml() {
-  const items = G.played.slice(-10); if (!items.length) return "";
+  const items = G.played.slice(-12); if (!items.length) return "";
   const now = Date.now(); let lastTurn = null;
-  return `<span class="fd-head">Cards played</span>${items.map(e => {
-    const sep = e.turn != null && e.turn !== lastTurn && lastTurn !== null ? `<span class="pl-turn">T${e.turn}</span>` : ""; lastTurn = e.turn;
-    const whoB = `<span class="badge p${e.who}">${e.who === G.seat ? "You" : "Bot"}</span>`;
-    const what = e.hidden ? `<span class="muted">a hidden card</span>` : chipText(e.card, "sm");
-    return `${sep}<span class="fi play ${now - e.t < 2500 ? "new" : ""}">${whoB}${what}${e.target ? `<span class="pl-arrow">→</span>${chipText(e.target, "sm")}` : ""}</span>`;
+  const LABEL = { spell: "spell", unit: "unit", gear: "gear", equip: "equip", move: "move", attack: "attack", ability: "ability", hide: "hidden card" };
+  return `<span class="fd-head">Who played what</span>${items.map(e => {
+    const sep = e.turn != null && e.turn !== lastTurn ? `<span class="pl-turn" title="turn ${e.turn}">Turn ${e.turn}</span>` : ""; lastTurn = e.turn;
+    const mine = e.who === G.seat;
+    const what = e.hidden ? `<span class="pl-back" aria-hidden="true"></span><span class="muted">a card</span>`
+      : (e.kind === "move" || e.kind === "attack") && e.cards && e.cards.length > 1 ? e.cards.map(n => chipText(n, "sm")).join("") : e.card ? chipText(e.card, "sm") : "";
+    const to = e.target ? `<span class="pl-arrow">→</span>${/^(base)$/.test(e.target) ? `<span class="muted">base</span>` : chipText(e.target, "sm")}` : "";
+    return `${sep}<span class="fi pl p${e.who} ${esc(e.kind)} ${now - e.t < 2500 ? "new" : ""}" title="${esc(`${mine ? "You" : "Bot"} · ${LABEL[e.kind] || e.kind}`)}"><span class="pl-who p${e.who}">${mine ? "You" : "Bot"}</span><span class="pl-ic" aria-label="${esc(LABEL[e.kind] || e.kind)}">${esc(ICON[e.kind] || "·")}</span>${what}${to}</span>`;
   }).join("")}`;
 }
 /** Why a card of yours is not playable right now, in one sentence (a click on it says so instead of doing nothing). */
@@ -546,13 +753,16 @@ function savedHtml() {
                     : notice(`Not saved: ${esc(G.saved.why)}.`, "");
 }
 function asideHtml(st, over) {
-  const lb = G.lastBot, sh = lb && lb.search, shares = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score), max = Math.max(1e-9, ...shares.map(o => o.score));
+  // the bot's last significant action (never a rune payment or a pass), with the win chance it gave each option of that decision
+  const sig = G.lastSig, lb = sig && sig.mv, sh = lb && lb.search, shares = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score), max = Math.max(1e-9, ...shares.map(o => o.score));
   const ms = G.botMoves, avg = ms.length ? ms.reduce((a, b) => a + b, 0) / ms.length : 0, mx = ms.length ? Math.max(...ms) : 0;
-  const last = lb ? `<div class="lb-move">${chipText(lb.text || "option " + lb.index)}</div>
-      <div class="lb-meta">${lb.ms.toFixed(0)} ms${sh && sh.worlds ? ` · ${plural(sh.worlds, "redeal")}` : ""}${lb.options > 1 ? ` · chose among ${lb.options}` : " · the only option"}</div>
+  const act = sig && sig.act, face = act && act.cards && act.cards.length ? act.cards[0] : undefined;
+  const thumb = face === undefined ? `<span class="lb-icon">${esc(act ? act.icon : "")}</span>` : face === null ? `<span class="lb-back" aria-label="a hidden card"></span>` : cardImg(face, { size: "xs", w: 200 });
+  const last = act ? `<div class="lb-act">${thumb}<div class="lb-body"><div class="lb-move"><span class="lb-ic">${esc(act.icon || "")}</span>${chipText(act.caption)}</div>
+      ${lb ? `<div class="lb-meta">${lb.ms.toFixed(0)} ms${sh && sh.worlds ? ` · ${plural(sh.worlds, "redeal")}` : ""}${lb.options > 1 ? ` · chose among ${lb.options}` : " · the only option"}</div>` : ""}</div></div>
       ${shares.length > 1 ? `<div class="shares">${shares.slice(0, 8).map(o => `<div class="share ${o.index === lb.index ? "chosen" : ""}"><span class="txt">${chipText(o.text || "option " + o.index, "sm")}</span><span class="bar"><i style="width:${(100 * o.score / max).toFixed(0)}%"></i></span><span class="pc">${(100 * o.score).toFixed(0)}%</span></div>`).join("")}</div><p class="hint" style="margin-top:8px">Estimated win chance of each move; cards the bot kept in hand are not named.</p>` : ""}`
-    : `<p class="hint">${over ? "The bot did not move." : G.seat === 1 ? "You start. The bot's moves are explained here." : "The bot starts. Its moves are explained here."}</p>`;
-  const tale = (G.botStory || []).filter(l => l.kind !== "rune" && l.kind !== "cost");
+    : `<p class="hint">${over ? "The bot did not play a card or move a unit." : G.botMoves.length ? "The bot has only passed or paid costs so far." : G.seat === 1 ? "You start. The bot's moves are explained here." : "The bot starts. Its moves are explained here."}</p>`;
+  const tale = (G.botStory || []).filter(l => l.kind !== "rune" && l.kind !== "cost" && !(l.kind === "card" && /^(Pay_add|Hide_cost|Equip_cost|Tgt_prompt|Tgt_picked|May_not_offered|Token ceases)/i.test(l.text)));
   const taleHtml = tale.length ? `<div class="vp-tale"><div class="vp-tale-h">What the bot did since your last move</div><ol>${tale.slice(-14).map(l => `<li class="${esc(l.kind)}"><i>${l.icon}</i><span>${chipText(l.text, "sm")}</span></li>`).join("")}</ol></div>` : "";
   return `<section class="panel"><h3>Bot's last move</h3>${last}${taleHtml}</section>
     <section class="panel"><h3>This game</h3>
@@ -606,10 +816,13 @@ function resultHtml() {
 function bindKeys() {
   if (keysBound) return; keysBound = true;
   document.addEventListener("keydown", e => {
-    if (!G.host || G.stage !== "playing" || G.busy || !G.st || !G.st.decision_is_human || e.altKey || e.ctrlKey || e.metaKey) return;
-    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable || $(".modal-backdrop")) return;
-    const L = G.st.legal; let k = -1;
+    if (!G.host || G.stage !== "playing" || !G.st || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable || $(".modal-backdrop") || document.querySelector(".rb-chooser")) return;
+    // Step mode: the space bar shows the bot's next action
+    if (e.key === " " && P.waiting && !e.target.closest("button, a, [data-card], [data-z], [data-pick]")) { e.preventDefault(); stepNext(); return; }
+    if (G.busy || !G.st.decision_is_human) return;
+    const order = (G.ui.order || []).filter(i => G.st.legal.some(l => l.index === i)), L = order.length ? order : G.st.legal.map(l => l.index); let k = -1;
     if (/^[1-9]$/.test(e.key)) k = +e.key - 1; else if (e.key === "Enter" && !e.target.closest("button, a, [data-card], [data-z]")) k = 0;
-    if (k >= 0 && L[k]) { e.preventDefault(); pick(L[k].index); }
+    if (k >= 0 && L[k] != null) { e.preventDefault(); pick(L[k]); }
   });
 }
