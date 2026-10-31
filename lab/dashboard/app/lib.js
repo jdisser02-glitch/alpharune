@@ -204,14 +204,39 @@ export function botBadge(raw, cls = "") {
   return `<span class="badge ${kind} ${cls}" title="${esc(b.raw)}">${esc(b.label)}</span>`;
 }
 export function groupDecks(decks = allDecks()) {
-  const g = { "Riven lists": [], "Variants": [], "Meta (tournaments)": [], "Engine test decks": [] };
+  // Three groups only: every Riven list (the reference first, then the tournament Rivens, then the optimiser's best),
+  // the tournament decks to play against, and the optimiser's ten best-measured variants. Engine test decks are left out.
+  const isRiven = d => /Riven/.test(String(d.legend || "") + " " + String(d.champion || ""));
+  const rank = variantRank();
+  const g = { "Riven": [], "Meta opponents": [], "Optimiser · top 10": [] };
+  const top = decks.filter(d => d.path.startsWith("lab/variants/") && rank.has(d.path)).sort((a, b) => rank.get(b.path) - rank.get(a.path)).slice(0, 10);
+  const best = top[0];
   decks.forEach(d => {
-    if (d.path.startsWith("lab/variants/")) g["Variants"].push(d);
-    else if (d.path.startsWith("lab/decks/meta/")) g["Meta (tournaments)"].push(d);
-    else if (/riven_/.test(d.path)) g["Riven lists"].push(d);
-    else g["Engine test decks"].push(d);
+    if (d.path === "decks/riven_sacramento.txt") g["Riven"].unshift(d);
+    else if (d.path.startsWith("lab/decks/meta/")) {
+      const ref = decks.find(x => x.path === "decks/riven_sacramento.txt");
+      if (ref && ref.list && sameMain(ref.list, d.list)) return;   // the reference list is this tournament list: shown once
+      (isRiven(d) ? g["Riven"] : g["Meta opponents"]).push(d);
+    }
   });
+  if (best) g["Riven"].push(best);
+  g["Optimiser · top 10"] = top;
   return g;
+}
+/** Two lists with the same legend, champion, main deck, battlefields and runes (the sideboard is ignored). */
+const sortedJson = v => JSON.stringify(v && typeof v === "object" && !Array.isArray(v) ? Object.keys(v).sort().map(k => [k, v[k]]) : v ?? null);
+const sameMain = (a, b) => ["legend", "champion", "maindeck", "battlefields", "runes"].every(k => sortedJson((a || {})[k]) === sortedJson((b || {})[k]));
+/** Variant path → the best lower bound of its 95% interval over the tests that played it with a thinking bot. */
+let _rank = null;
+function variantRank() {
+  if (_rank) return _rank;
+  _rank = new Map();
+  for (const t of D.tests || []) if (!isPlumbing(t)) for (const d of t.decks || []) {
+    if (!d.path || !d.path.startsWith("lab/variants/") || d.weighted_win_rate == null) continue;
+    const p = pooled(d), lo = p.ci ? p.ci[0] : d.weighted_win_rate - 0.5;
+    if (!_rank.has(d.path) || lo > _rank.get(d.path)) _rank.set(d.path, lo);
+  }
+  return _rank;
 }
 /** Does a card have a picture (a sprite cell, else an image url)? */
 export const hasArt = c => !!(c && (sprite(c) || c.image_url));

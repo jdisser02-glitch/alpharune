@@ -14,3 +14,19 @@ next:
     text: "Rerun the one-for-one swaps of the Sacramento list with enough games per matchup to separate the candidates, then promote the winners into a new reference list."
   - title: "More human games"
     text: "Replay more RiftLite games through the engine so the agreement figure rests on hundreds of compared decisions rather than a handful."
+
+# Status page (Home). Hand-kept history of the measurements that are not in data.json; newest last.
+status:
+  engine:            # median engine-side desyncs per replayed RiftLite game (random agent); the live value comes from data.json
+    target: 3
+    history: [{label: "start", value: 17}, {label: "pass 2", value: 9}, {label: "pass 3", value: 6.5}, {label: "pass 4", value: 5.0}]
+  agreement:         # bot's first choice = the human's move, clean decisions only
+    target: 40
+    history: [{label: "net 22", value: 41}, {label: "net 27", value: 34}, {label: "net 32", value: 36}]
+  settle:            # search plays combats out before judging a position
+    rate: 0.585
+    ci: [0.516, 0.651]
+    games: 200
+    state: "to confirm"
+  decks:
+    state: "on hold"

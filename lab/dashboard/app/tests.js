@@ -60,7 +60,7 @@ function renderList(container) {
     kpi({ label: "Latest test", value: latest ? ago(latest.started_utc) : "—", tone: "neutral", sub: latest ? `${esc(fmtDate(latest.started_utc))} · ${esc(latest.name)}` : "Set one up in Launch", href: latest ? `#/tests/${encodeURIComponent(latest.id)}` : "" }),
   ].join("");
 
-  const rows = tests.map(t => {
+  const rows = real.map(t => {   // plumbing checks (random players) are left out of the list
     const faces = testFaces(t), plumb = isPlumbing(t), opt = isOptimize(t), rk = ranked(t), shown = rk.slice(0, 3), g = testGames(t);
     const per = t.games_per_matchup ? `${num(t.games_per_matchup)} per matchup` : "";
     const results = plumb

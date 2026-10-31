@@ -1,0 +1,46 @@
+/* Riven Lab — Home (status) styles, loaded by app/home.js. Prefix .v-home. */
+.v-home { display: flex; flex-direction: column; gap: var(--sp-3); max-width: 980px; margin: 0 auto; }
+.v-home .h-top { display: flex; align-items: baseline; gap: 14px; margin: var(--sp-3) 0 var(--sp-2); }
+.v-home .h-top h1 { margin: 0; font: 700 30px/1.1 var(--display); letter-spacing: .02em; color: var(--parch); }
+.v-home .h-row { margin: var(--sp-4) 0 0; font: 600 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.v-home .h-grid { display: grid; gap: var(--sp-3); grid-template-columns: minmax(0, 1fr); }
+.v-home .h-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.v-home .h-card { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; background: var(--s1); border: 1px solid var(--chrome); border-radius: var(--r-2); color: var(--ink); box-shadow: var(--sh-1); min-width: 0; }
+.v-home a.h-card:hover { border-color: var(--gold-dim); }
+.v-home .h-head { display: flex; align-items: center; gap: 10px; font: 600 13px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2, var(--ink)); }
+.v-home .h-head > span:first-child { flex: 1; min-width: 0; }
+.v-home .h-state { font: 700 10.5px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.v-home .h-state.ok { color: var(--win); } .v-home .h-state.no { color: var(--warn); } .v-home .h-state.wait { color: var(--ink-dim); }
+.v-home .h-big { font: 700 44px/1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.v-home .h-big.h-mid { font-size: 26px; line-height: 1.15; }
+.v-home .h-big small { font: 500 14px/1 var(--sans, inherit); color: var(--ink-dim); letter-spacing: 0; }
+.v-home .h-goal { font-size: 13px; color: var(--ink-dim); }
+.v-home .h-bar { height: 6px; border-radius: 6px; background: var(--s2); overflow: hidden; }
+.v-home .h-bar i { display: block; height: 100%; background: var(--gold); border-radius: 6px; }
+.v-home .h-hist { display: flex; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; flex-wrap: wrap; }
+.v-home .h-hist li { display: flex; flex-direction: column; align-items: center; min-width: 52px; padding: 6px 8px; border-radius: var(--r-1); background: var(--s2); border: 1px solid var(--line); }
+.v-home .h-hist li b { font: 600 15px/1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.v-home .h-hist li span { font-size: 11px; color: var(--ink-dim); margin-top: 4px; white-space: nowrap; }
+.v-home .h-hist li.now { border-color: var(--gold); } .v-home .h-hist li.now b { color: var(--gold-2); }
+.v-home .h-foot { font-size: 12px; color: var(--ink-faint, var(--ink-dim)); }
+.v-home .h-spark { display: block; margin-top: 4px; }
+@media (max-width: 760px) { .v-home .h-grid.two { grid-template-columns: minmax(0, 1fr); } .v-home .h-big { font-size: 36px; } }
+.v-home .h-top { justify-content: space-between; align-items: flex-end; flex-wrap: wrap; }
+.v-home .h-goal-l { font: 600 11px/1 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 8px; }
+.v-home .h-all { display: flex; flex-direction: column; gap: 6px; min-width: 160px; text-align: right; }
+.v-home .h-all b { font: 700 40px/1 var(--display); color: var(--gold-2); }
+.v-home .h-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.v-home .h-step { display: grid; grid-template-columns: 40px minmax(0, 1fr) 150px; gap: 16px; align-items: center; padding: 16px 18px; background: var(--s1); border: 1px solid var(--chrome); border-radius: var(--r-2); color: var(--ink); }
+.v-home .h-step:hover { border-color: var(--gold-dim); }
+.v-home .h-n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font: 700 16px/1 var(--display); border: 2px solid var(--gold-dim); color: var(--gold-2); }
+.v-home .h-step.done .h-n { background: var(--win); border-color: var(--win); color: #0a0e1a; }
+.v-home .h-step.todo { opacity: .75; }
+.v-home .h-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.v-home .h-t { font: 600 17px/1.2 var(--display); color: var(--parch); }
+.v-home .h-l { font-size: 13.5px; color: var(--ink-dim); }
+.v-home .h-s { font-size: 12px; color: var(--ink-faint, var(--ink-dim)); }
+.v-home .h-pct { display: flex; flex-direction: column; gap: 6px; text-align: right; }
+.v-home .h-pct b { font: 700 24px/1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.v-home .h-step.done .h-pct i { background: var(--win); }
+.v-home .h-date { margin-top: 4px; }
+@media (max-width: 760px) { .v-home .h-step { grid-template-columns: 32px minmax(0, 1fr); } .v-home .h-pct { grid-column: 1 / -1; text-align: left; } .v-home .h-all { text-align: left; } .v-home .h-top h1 { font-size: 24px; } }
