@@ -67,6 +67,7 @@ def game_facts(path: Path, seat: int) -> dict | None:
     hand: set[str] = set()
     set_aside: collections.Counter = collections.Counter()
     played: set[str] = set()
+    pending = False
     for fr in g.get("frames", []):
         for raw in fr.get("log", []):
             t = LINE.sub("", str(raw)).strip()
@@ -79,9 +80,14 @@ def game_facts(path: Path, seat: int) -> dict | None:
             m = re.match(r"MULLIGAN: P([12]) set aside (.+?) \(id=\d+\)", t)
             if m and int(m.group(1)) == seat:
                 set_aside[m.group(2)] += 1; continue
-            m = re.match(r"CHOSE: \[P([12])\] (?:PlayCard|PlayActionCard|PlayReaction) (.+?)(?: to | targeting |$)", t)
+            m = re.match(r"CHOSE: \[P([12])\] (?:PlayCard|PlayActionCard|PlayReaction)(?: (.+?))?(?: to | targeting |$)", t)
             if m and int(m.group(1)) == seat:
-                played.add(m.group(2).strip())
+                if m.group(2): played.add(m.group(2).strip())
+                else: pending = True   # the log names a reaction only on the payment line that follows
+                continue
+            if pending:
+                m = re.match(r"(?:PAY_COST|SPELL|PLAY): (.+?)(?: E=| \(|$)", t)
+                if m: played.add(m.group(1).strip()); pending = False
     # a card set aside at the mulligan counts as seen only if it came back later (drawn again)
     return {"won": g.get("winner") == seat, "hand": hand | played, "played": played}
 
