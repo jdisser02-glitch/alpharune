@@ -72,6 +72,8 @@ jobs:
             [ -f "$r" ] || continue
             if grep -q '"population"' "$r"; then
               python3 lab/ga.py "$r" | tee -a lab/.run.log           # genetic list search spec
+            elif grep -q '"kind": *"card_impact"' "$r"; then
+              python3 lab/card_impact.py "$r" | tee -a lab/.run.log      # improvement-when-drawn of each card
             elif grep -q '"rounds"' "$r"; then
               python3 lab/optimize.py "$r" | tee -a lab/.run.log     # list search spec
             else
