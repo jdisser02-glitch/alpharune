@@ -98,10 +98,11 @@ class Loop:
             return "random"
         sims = sims or self.a.sims
         policy = str(net).endswith(".rbpn")
+        settle = f",settle={self.a.settle}" if self.a.settle > 0 else ""
         if self.a.agent == "ismcts" and not policy:
-            return f"ismcts:sims={sims},eval=net:{net}"
+            return f"ismcts:sims={sims},eval=net:{net}{settle}"
         kind = "policy" if policy else "net"
-        return f"pmcts:sims={sims},eval={kind}:{net},worlds={self.a.worlds}"
+        return f"pmcts:sims={sims},eval={kind}:{net},worlds={self.a.worlds}{settle}"
 
     @staticmethod
     def key(spec):
@@ -165,6 +166,7 @@ def main(argv):
     ap.add_argument("--sims", type=int, default=30)
     ap.add_argument("--agent", choices=["pmcts", "ismcts"], default="pmcts")
     ap.add_argument("--worlds", type=int, default=8, help="pmcts determinizations per decision")
+    ap.add_argument("--settle", type=int, default=0, help="play a leaf in a chain, showdown or combat on for up to N decisions before evaluating it (0 = off)")
     ap.add_argument("--gate-min", type=int, default=200, help="games before the plain win rate may decide")
     ap.add_argument("--gate-max", type=int, default=400)
     ap.add_argument("--gate-block", type=int, default=40, help="games per gate block (half per seat order)")
