@@ -1,0 +1,123 @@
+# Self-play training of the Riven Lab bot on GitHub Actions.
+#
+# One job runs lab/learn/loop.py until its time budget (default 300 min of the 350-min job limit): self-play with the
+# current net, training on the replay buffer (the last iterations' data, carried between jobs in the Actions cache),
+# then a gate match against the current net. It commits lab/learn/ladder.json and the nets that were adopted; a
+# rejected net is not kept in the tree (its ladder row stays). With chain > 0 the job dispatches the next one, so
+# training goes on for (chain + 1) jobs without anyone at the keyboard.
+name: train
+
+on:
+  workflow_dispatch:
+    inputs:
+      chain:
+        description: "Jobs to chain after this one (0 = this job only)"
+        default: "3"
+      minutes:
+        description: "Time budget of this job for the loop, in minutes"
+        default: "300"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: train-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
+          python3 -m pip install --quiet numpy
+
+      - name: Restore build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .ccache
+            build/_deps
+          key: riftlab-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+          restore-keys: riftlab-${{ runner.os }}-
+
+      - name: Build engine
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          CCACHE_BASEDIR: ${{ github.workspace }}
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
+          cmake --build build --target riftbound -j4
+
+      - name: Restore the replay buffer
+        uses: actions/cache/restore@v4
+        with:
+          path: data/learn
+          key: learn-buffer-${{ github.run_id }}
+          restore-keys: learn-buffer-
+
+      - name: Train
+        id: train
+        run: |
+          mkdir -p data/learn
+          ls -la data/learn || true
+          RIFTBOUND_ROOT=. python3 -u lab/learn/loop.py --iterations 20 --games 200 --sims 50 --agent pmcts --settle 60 \
+            --policy --human lab/learn/human.rbv3 --threads 4 --accept 0.5 --gate-min 80 --gate-max 240 \
+            --max-minutes "${{ github.event.inputs.minutes || '300' }}" 2>&1 | tee train.log
+          # keep only the last 6 iterations' data in the buffer
+          ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -6 | xargs -r rm -f
+
+      - name: Save the replay buffer
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/learn
+          key: learn-buffer-${{ github.run_id }}
+
+      - name: Keep the log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: train-log-${{ github.run_id }}
+          path: train.log
+          if-no-files-found: ignore
+
+      - name: Commit the ladder and the adopted nets
+        if: always()
+        run: |
+          git config user.name "riftlab-bot"
+          git config user.email "riftlab-bot@users.noreply.github.com"
+          # a net the gate rejected is not kept in the tree (its ladder row is)
+          python3 - <<'PY'
+          import glob, json, os, subprocess
+          L = json.load(open("lab/learn/ladder.json"))
+          keep = {os.path.basename(r["net"]).split(".")[0] for r in L["iterations"] if r.get("accepted") and r.get("net")}
+          keep |= {os.path.basename(L[k]).split(".")[0] for k in ("current_net", "reference_net") if L.get(k)}
+          for f in glob.glob("lab/learn/nets/net_*"):
+              tracked = subprocess.run(["git", "ls-files", "--error-unmatch", f], capture_output=True).returncode == 0
+              if not tracked and os.path.basename(f).split(".")[0] not in keep:
+                  os.remove(f)
+          PY
+          git add lab/learn/ladder.json lab/learn/nets
+          last=$(python3 -c "import json; r=json.load(open('lab/learn/ladder.json'))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))")
+          git commit -m "train: iterations up to ${last} (Actions run ${{ github.run_id }})" || exit 0
+          for i in 1 2 3 4; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+
+      - name: Chain the next job
+        if: success() && github.event.inputs.chain != '0' && github.event.inputs.chain != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          left=$(( ${{ github.event.inputs.chain }} - 1 ))
+          gh workflow run train.yml --ref "${GITHUB_REF_NAME}" -f chain="${left}" -f minutes="${{ github.event.inputs.minutes || '300' }}"

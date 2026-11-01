@@ -166,6 +166,7 @@ def main(argv):
     ap.add_argument("--sims", type=int, default=30)
     ap.add_argument("--agent", choices=["pmcts", "ismcts"], default="pmcts")
     ap.add_argument("--worlds", type=int, default=8, help="pmcts determinizations per decision")
+    ap.add_argument("--max-minutes", type=float, default=0, help="stop before an iteration that would end past this many minutes (0 = no limit)")
     ap.add_argument("--settle", type=int, default=0, help="play a leaf in a chain, showdown or combat on for up to N decisions before evaluating it (0 = off)")
     ap.add_argument("--gate-min", type=int, default=200, help="games before the plain win rate may decide")
     ap.add_argument("--gate-max", type=int, default=400)
@@ -200,7 +201,12 @@ def main(argv):
     if reference and not (ROOT / reference).exists():
         reference = None
     _OUT.mkdir(parents=True, exist_ok=True)
+    t_start, last_minutes = time.time(), 0.0
     for _ in range(a.iterations):
+        # A time budget (a CI job has a hard limit): stop before an iteration that would not finish in it.
+        if a.max_minutes and (time.time() - t_start) / 60 + 1.15 * last_minutes > a.max_minutes:
+            print(f"time budget: {a.max_minutes} min reached, stopping before the next iteration", flush=True)
+            break
         it = len(ladder["iterations"])
         t0 = time.time()
         row = {"iteration": it, "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -295,6 +301,7 @@ def main(argv):
         row["elo"] = elo.get(f"net:{cand}")
         row["elo_current"] = elo.get(f"net:{current}") if current else 0.0
         row["minutes"] = round((time.time() - t0) / 60, 1)
+        last_minutes = row["minutes"]
         ladder["iterations"].append(row)
         LADDER.write_text(json.dumps(ladder, indent=1))
         print(json.dumps(row), flush=True)
