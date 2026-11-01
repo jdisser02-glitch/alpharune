@@ -52,12 +52,20 @@ def main() -> int:
         if name not in names:
             alt = [name.split(", ", 1)[1]] if ", " in name else []
             alt += [x for x in names if x.lower() == name.lower()]
+            alt += [x for x in names for a in list(alt) if x.startswith(a + " - ")]   # e.g. "Wuju Bladesman - Starter"
             hit = next((x for x in alt if x in names), None)
             if hit:
                 name = hit
             elif sec != "Sideboard":
                 problems.append(f"unknown card in {sec}: {name}")
         out[sec].append((n, name))
+    main_total = sum(n for n, _ in out.get("MainDeck", []))
+    if main_total != 39:
+        problems.append(f"main deck has {main_total} cards, expected 39 (the chosen champion is listed apart)")
+    for s, want in (("Legend", 1), ("Champion", 1), ("Battlefields", 3), ("Runes", 12)):
+        got = sum(n for n, _ in out.get(s, []))
+        if got != want:
+            problems.append(f"{s} has {got} cards, expected {want}")
     if problems:
         print("\n".join(problems), file=sys.stderr)
         return 1
