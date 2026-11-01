@@ -1,7 +1,809 @@
 {
-"generated_utc": "2026-10-30T18:33:53+00:00",
-"engine_commit": "86c0d58",
+"generated_utc": "2026-11-01T18:06:25+00:00",
+"engine_commit": "2cf96ff",
 "tests": [
+{
+"id": "20261101-160255-ga-confirm-3",
+"file": "lab/results/20261101-160255-ga-confirm-3.json",
+"name": "ga-confirm-3",
+"description": "Decisive head-to-head: the confirmation's leader (+3.4 points over 300 games, not significant) against the unchanged Sacramento list, same jury and bot, 300 games per opponent per list (1500 each, seats swapped), new seed.",
+"started_utc": "2026-11-01T16:02:55+00:00",
+"finished_utc": "2026-11-01T17:05:58+00:00",
+"engine_commit": "b39a82e",
+"agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"opp_agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"games_per_matchup": 300,
+"decks": [
+{
+"label": "base (Nam Dang)",
+"path": "decks/riven_sacramento.txt",
+"weighted_win_rate": 0.6417,
+"games": 1500,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Gust, -1 Star-Crossed, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Vilema",
+"path": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+"weighted_win_rate": 0.7346,
+"games": 1500,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (IcrazyFool)",
+"Kennen (Dylan Sumner)",
+"Kennen (Simple)",
+"Kennen (zombro)",
+"Riven mirror (Nam Dang)"
+]
+},
+{
+"id": "20261101-143253-ga-confirm-2",
+"file": "lab/results/20261101-143253-ga-confirm-2.json",
+"name": "ga-confirm-2",
+"description": "Confirmation of the provisional genetic search riven-multistart-ga-2 (net_038, combat settling): its five best lists against the unchanged Sacramento list, same jury, 60 games per opponent per list (300 per list, seats swapped). A list counts as better only if its 95% interval lower bound clears the base list's.",
+"started_utc": "2026-11-01T14:32:53+00:00",
+"finished_utc": "2026-11-01T15:12:12+00:00",
+"engine_commit": "8fb2340",
+"agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"opp_agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"games_per_matchup": 60,
+"decks": [
+{
+"label": "base (Nam Dang)",
+"path": "decks/riven_sacramento.txt",
+"weighted_win_rate": 0.7167,
+"games": 300,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Not So F",
+"path": "lab/variants/riven-multistart-ga-2--9e9521e24d.txt",
+"weighted_win_rate": 0.6979,
+"games": 300,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +",
+"path": "lab/variants/riven-multistart-ga-2--26ed327a1c.txt",
+"weighted_win_rate": 0.7167,
+"games": 300,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Str",
+"path": "lab/variants/riven-multistart-ga-2--696aec7297.txt",
+"weighted_win_rate": 0.725,
+"games": 300,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Gust, -1 Star-Crossed, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Vilema",
+"path": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+"weighted_win_rate": 0.7458,
+"games": 300,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, -1 Star-Crossed, +1",
+"path": "lab/variants/riven-multistart-ga-2--033d9ced0d.txt",
+"weighted_win_rate": 0.6854,
+"games": 300,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (IcrazyFool)",
+"Kennen (Dylan Sumner)",
+"Kennen (Simple)",
+"Kennen (zombro)",
+"Riven mirror (Nam Dang)"
+]
+},
+{
+"id": "20261101-121706-riven-multistart-ga-2",
+"file": "lab/results/20261101-121706-riven-multistart-ga-2.json",
+"name": "riven-multistart-ga-2",
+"description": "Genetic search seeded with every Riven list of the current meta (Sacramento, RRO 25, Radiance release) so crossover can mix them; pool = all cards those lists play plus a few named ones; jury weighted toward the mirror and Kai'Sa while the engine's Kennen is under review.",
+"started_utc": "2026-11-01T12:17:06+00:00",
+"finished_utc": "2026-11-01T13:14:20+00:00",
+"engine_commit": "5f08449",
+"agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"opp_agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
+"games_per_matchup": 8,
+"decks": [
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Not So Fast, +1 Vex, Apathetic, +1 Abandon",
+"path": "lab/variants/riven-multistart-ga-2--9e9521e24d.txt",
+"weighted_win_rate": 0.7734,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--26ed327a1c.txt",
+"weighted_win_rate": 0.7656,
+"games": 120,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--696aec7297.txt",
+"weighted_win_rate": 0.7594,
+"games": 200,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Gust, -1 Star-Crossed, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+"weighted_win_rate": 0.7578,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +1 Vilemaw, +1 Baron Nashor, +1 Charm, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--033d9ced0d.txt",
+"weighted_win_rate": 0.75,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, +1 Reckless Innovator, +1 Rebuke, +1 Vilemaw, +1 Battle Preparations, +1 Baron Nashor, +1 Siren's Song",
+"path": "lab/variants/riven-multistart-ga-2--160b89c414.txt",
+"weighted_win_rate": 0.75,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -2 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--9854745521.txt",
+"weighted_win_rate": 0.7344,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--6e0ba2664c.txt",
+"weighted_win_rate": 0.7305,
+"games": 160,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Defy, +1 Bedeviling Stranger, +1 Vex, Apathetic, +1 Vilemaw, +1 Meditation",
+"path": "lab/variants/riven-multistart-ga-2--4a661267da.txt",
+"weighted_win_rate": 0.7266,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Stellacorn Herder, +1 Bedeviling Stranger, +1 Reckless Innovator, +1 Vex, Apathetic, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--479fb04e2c.txt",
+"weighted_win_rate": 0.724,
+"games": 120,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Rebuke, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw, +1 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--2d66a0339d.txt",
+"weighted_win_rate": 0.7188,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Not So Fast, +1 Battle Preparations, +2 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--34aa601410.txt",
+"weighted_win_rate": 0.7188,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Vilemaw, +1 Battle Preparations, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--e412ed4487.txt",
+"weighted_win_rate": 0.7188,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Gust, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--0be81135dd.txt",
+"weighted_win_rate": 0.7109,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--57cdf17561.txt",
+"weighted_win_rate": 0.707,
+"games": 160,
+"errors": []
+},
+{
+"label": "05_alex_shans_riven: -1 Zhonya's Hourglass, -2 Scuttle Crab, -2 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing",
+"path": "lab/variants/riven-multistart-ga-2--df1f1c53d6.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Scuttle Crab, -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Blitzcrank, Impassive, +2 Not So Fast, +1 Rebuke, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--4a5fcb77fe.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--cda87d8c8b.txt",
+"weighted_win_rate": 0.7031,
+"games": 120,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Gust, +2 Vilemaw, +1 Not So Fast, +1 Switcheroo, +1 Charm",
+"path": "lab/variants/riven-multistart-ga-2--594825f995.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor, +1 Siren's Song",
+"path": "lab/variants/riven-multistart-ga-2--2ec52c916b.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -3 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +2 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +2 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--27630f7d87.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Gust, +1 Vilemaw, +1 Star-Crossed, +2 Not So Fast, +1 Blitzcrank, Impassive, +1 Baron Nashor, +1 Twilight Shroud",
+"path": "lab/variants/riven-multistart-ga-2--c94af7b18c.txt",
+"weighted_win_rate": 0.7031,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, +1 Switcheroo, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--89fd828fcf.txt",
+"weighted_win_rate": 0.6927,
+"games": 120,
+"errors": []
+},
+{
+"label": "-1 Blitzcrank, Impassive, +1 Rebuke",
+"path": "lab/variants/riven-multistart-ga-2--c7582ec87f.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Switcheroo, -1 Star-Crossed, +1 Abandon, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--94eb362aea.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +1 Vex, Apathetic, +1 Edge of Night",
+"path": "lab/variants/riven-multistart-ga-2--64e3cde9c8.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Scuttle Crab, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Battle Preparations, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--9e2c2cdfb5.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Gust, -1 Star-Crossed, +2 Vilemaw, +1 Switcheroo, +1 Bedeviling Stranger, +2 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--03210d3098.txt",
+"weighted_win_rate": 0.6875,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Blade of the Exile, -2 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Meditation, +1 Gust, +2 Vilemaw, +1 Not So Fast, +1 Battle Preparations, +1 Vex, Apathetic, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--78c8cad574.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Blade of the Exile, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Vilemaw, +1 Not So Fast, +1 Blitzcrank, Impassive, +1 Vex, Apathetic, +1 Abandon, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--f0c309b99e.txt",
+"weighted_win_rate": 0.6875,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Bedeviling Stranger, -1 Gust, +2 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--a291e31111.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Reckless Innovator, +1 Switcheroo, +1 Bedeviling Stranger, +1 Twilight Shroud",
+"path": "lab/variants/riven-multistart-ga-2--6b6a4e93f9.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Discipline, -1 Star-Crossed, +1 Reckless Innovator, +1 Ki Burst, +1 Bedeviling Stranger, +1 Gust, +2 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--01e752e67f.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Reckless Innovator, -2 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor, +1 Edge of Night, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--9639033de3.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, +1 Meditation, +2 Vilemaw, +1 Switcheroo, +2 Baron Nashor, +1 Evelynn, Entrancing",
+"path": "lab/variants/riven-multistart-ga-2--27819fe420.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Bedeviling Stranger, +1 Not So Fast, +1 Vex, Apathetic, +1 Vilemaw, +1 Meditation",
+"path": "lab/variants/riven-multistart-ga-2--3bd198aeaa.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, +1 Meditation, +2 Vilemaw, +1 Star-Crossed, +1 Not So Fast, +1 Baron Nashor, +1 Abandon",
+"path": "lab/variants/riven-multistart-ga-2--2d24a46ddb.txt",
+"weighted_win_rate": 0.6719,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, -1 Gust, -1 Star-Crossed, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Traveling Merchant, +1 Baron Nashor, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--5c5a175f3b.txt",
+"weighted_win_rate": 0.6719,
+"games": 40,
+"errors": []
+},
+{
+"label": "05_dgmanisch_riven: -1 Tideturner, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Rebuke, +1 Star-Crossed, +2 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--a0a69d9c6c.txt",
+"weighted_win_rate": 0.6667,
+"games": 120,
+"errors": []
+},
+{
+"label": "07_newrof_riven: -3 Scuttle Crab, -1 Tideturner, -3 Stellacorn Herder, -1 Blitzcrank, Impassive, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +3 Traveling Merchant, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +2 Ride the Wind, +1 Edge of Night, +2 Vex, Apathetic, +1 Fizz, Trickster",
+"path": "lab/variants/riven-multistart-ga-2--4a03a936c4.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--bc254fd422.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Defy, -2 Battle Preparations, +1 Reckless Innovator, +1 Rebuke, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--7b8d936d1a.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, +1 Bedeviling Stranger, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--a899e9cbb2.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Vex, Apathetic, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--2f75f0c6b9.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Blitzcrank, Impassive, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Gust, +1 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--89cb7db4f2.txt",
+"weighted_win_rate": 0.6562,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Ki Burst, +2 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--0c09f9ee0c.txt",
+"weighted_win_rate": 0.6484,
+"games": 80,
+"errors": []
+},
+{
+"label": "base (control)",
+"path": "lab/variants/riven-multistart-ga-2--6bf6c35cb1.txt",
+"weighted_win_rate": 0.6406,
+"games": 320,
+"errors": []
+},
+{
+"label": "-1 Reckless Innovator, +1 Switcheroo",
+"path": "lab/variants/riven-multistart-ga-2--b1e92397bb.txt",
+"weighted_win_rate": 0.6406,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Switcheroo, -1 Star-Crossed, +1 Ki Burst, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Edge of Night, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--53be2d070e.txt",
+"weighted_win_rate": 0.6406,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--53a18a6865.txt",
+"weighted_win_rate": 0.6406,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Switcheroo, -1 Star-Crossed, +1 Ki Burst, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Edge of Night, +1 En Garde, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--dbb90fa955.txt",
+"weighted_win_rate": 0.6406,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Scuttle Crab, -2 Tideturner, -2 Stellacorn Herder, -2 Defy, +1 Abandon, +3 Meditation, +1 Vilemaw, +1 Not So Fast, +1 Blitzcrank, Impassive",
+"path": "lab/variants/riven-multistart-ga-2--bdaaad5a32.txt",
+"weighted_win_rate": 0.6406,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Battle Preparations, +1 Gust, +1 Switcheroo, +1 Vilemaw, +1 Abandon",
+"path": "lab/variants/riven-multistart-ga-2--09680c8943.txt",
+"weighted_win_rate": 0.625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Reckless Innovator, -1 Discipline, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Ki Burst, +1 Vilemaw, +1 Twilight Shroud",
+"path": "lab/variants/riven-multistart-ga-2--f8e81a34a0.txt",
+"weighted_win_rate": 0.625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, -1 Star-Crossed, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--573c3a0518.txt",
+"weighted_win_rate": 0.625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -2 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--2647bc5661.txt",
+"weighted_win_rate": 0.625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -2 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 Traveling Merchant, +1 Charm",
+"path": "lab/variants/riven-multistart-ga-2--de4fe4f780.txt",
+"weighted_win_rate": 0.625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--02e632db33.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Reckless Innovator, -1 Gust, +1 Siren's Song, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--256237afa7.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Gust, -1 Switcheroo, +1 Vilemaw, +1 Reckless Innovator, +1 Star-Crossed, +1 Bedeviling Stranger, +1 Fizz, Trickster",
+"path": "lab/variants/riven-multistart-ga-2--61e5fe5da1.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -2 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +3 Traveling Merchant, +1 Gust, +2 Evelynn, Entrancing, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--e68718ae9e.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -2 Zhonya's Hourglass, -1 Scuttle Crab, -1 Stellacorn Herder, -1 Gust, +1 Vilemaw, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Battle Preparations, +1 Vex, Apathetic, +1 Meditation",
+"path": "lab/variants/riven-multistart-ga-2--93b82d534d.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Reckless Innovator, -1 Gust, +1 Bedeviling Stranger, +1 Siren's Song, +1 Baron Nashor, +1 Ki Burst, +1 Evelynn, Entrancing",
+"path": "lab/variants/riven-multistart-ga-2--4edbc01bd8.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Blitzcrank, Impassive, -1 Defy, -1 Gust, -1 Rebuke, -1 Star-Crossed, +1 Ki Burst, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Meditation, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--601fe4ec93.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--aa5bcfeda1.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, +1 Ki Burst, +1 Rebuke, +1 Gust, +1 Vilemaw, +1 Abandon",
+"path": "lab/variants/riven-multistart-ga-2--3b057f65b1.txt",
+"weighted_win_rate": 0.6094,
+"games": 40,
+"errors": []
+},
+{
+"label": "04_bo_su_riven: -3 Scuttle Crab, -2 Battle Preparations, -2 Switcheroo, -1 Not So Fast, +1 Baron Nashor, +1 Bedeviling Stranger, +2 Evelynn, Entrancing, +1 Ki Burst, +1 Rebuke, +1 Reckless Innovator, +1 Star-Crossed",
+"path": "lab/variants/riven-multistart-ga-2--f0ad6243f9.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Discipline, +1 Switcheroo, +1 Vilemaw, +1 Battle Preparations, +1 Edge of Night",
+"path": "lab/variants/riven-multistart-ga-2--9eb81d394b.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Gust, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--f61f0ff5c0.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Switcheroo, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Gust, +1 Ki Burst, +2 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--efb12e1258.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Reckless Innovator, -1 Gust, +1 Siren's Song, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--713c2317a3.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--90cc5b0cb4.txt",
+"weighted_win_rate": 0.5938,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -2 Scuttle Crab, -3 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing, +1 Vex, Apathetic",
+"path": "lab/variants/riven-multistart-ga-2--3bbe883d58.txt",
+"weighted_win_rate": 0.5781,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Tideturner, -1 Discipline, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +2 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--86e813f2e9.txt",
+"weighted_win_rate": 0.5781,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Defy, -1 Battle Preparations, -1 Not So Fast, +1 Ki Burst, +1 Switcheroo, +2 Vilemaw, +1 Meditation",
+"path": "lab/variants/riven-multistart-ga-2--337ee73c0e.txt",
+"weighted_win_rate": 0.5781,
+"games": 40,
+"errors": []
+},
+{
+"label": "05_capt_dewgong_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Battle Preparations, +1 Baron Nashor, +1 Bedeviling Stranger, +1 Charm, +1 Ride the Wind, +1 Twilight Shroud, +1 Vex, Apathetic, +1 Vilemaw",
+"path": "lab/variants/riven-multistart-ga-2--7856b08c78.txt",
+"weighted_win_rate": 0.5625,
+"games": 80,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Defy, +1 Not So Fast, +1 Abandon",
+"path": "lab/variants/riven-multistart-ga-2--0f42ca7d3f.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Gust, +2 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--bae5f82ee8.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Blitzcrank, Impassive, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, +1 Rebuke, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--7bdd95cbe6.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -2 Bedeviling Stranger, -1 Gust, +1 Switcheroo, +2 Baron Nashor, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--5edac5b7b3.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Blade of the Exile, -2 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Blitzcrank, Impassive, -1 Star-Crossed, +1 Gust, +1 Vilemaw, +3 Traveling Merchant, +1 Battle Preparations, +1 Twilight Shroud",
+"path": "lab/variants/riven-multistart-ga-2--061e9a5c48.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Blitzcrank, Impassive, -1 Defy, -1 Gust, +1 Ki Burst, +2 Rebuke, +1 Vilemaw, +1 Battle Preparations",
+"path": "lab/variants/riven-multistart-ga-2--653c056fe4.txt",
+"weighted_win_rate": 0.5625,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Tideturner, -1 Star-Crossed, +1 Gust, +1 Vilemaw, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--7d523c40b9.txt",
+"weighted_win_rate": 0.5469,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw, +1 Siren's Song",
+"path": "lab/variants/riven-multistart-ga-2--cf70b640ba.txt",
+"weighted_win_rate": 0.5469,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Defy, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, +1 Gust, +1 Vilemaw, +1 Vex, Apathetic, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--b5722af2e2.txt",
+"weighted_win_rate": 0.5469,
+"games": 40,
+"errors": []
+},
+{
+"label": "08_aa_matmatu_riven: -1 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Gust, -1 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst",
+"path": "lab/variants/riven-multistart-ga-2--c0e4dcef8a.txt",
+"weighted_win_rate": 0.5312,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Battle Preparations, -1 Switcheroo, -1 Star-Crossed, +1 Gust, +1 Ki Burst, +1 Vilemaw, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--fc24f0b3bd.txt",
+"weighted_win_rate": 0.5312,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -2 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Baron Nashor",
+"path": "lab/variants/riven-multistart-ga-2--220377514c.txt",
+"weighted_win_rate": 0.5312,
+"games": 40,
+"errors": []
+},
+{
+"label": "03_aa_romomo_riven: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst, +1 Siren's Song",
+"path": "lab/variants/riven-multistart-ga-2--4a13a5a51a.txt",
+"weighted_win_rate": 0.5156,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Discipline, +1 Battle Preparations, +1 Edge of Night, +1 Ki Burst, +1 Traveling Merchant",
+"path": "lab/variants/riven-multistart-ga-2--756b6f9000.txt",
+"weighted_win_rate": 0.5,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Astral Heron, -1 Blade of the Exile, -3 Scuttle Crab, -1 Reckless Innovator, -1 Not So Fast, +1 Ki Burst, +1 Gust, +2 Vilemaw, +2 Evelynn, Entrancing, +1 Ride the Wind",
+"path": "lab/variants/riven-multistart-ga-2--d2840d2899.txt",
+"weighted_win_rate": 0.5,
+"games": 40,
+"errors": []
+},
+{
+"label": "-2 Zhonya's Hourglass, -2 Tideturner, -1 Rebuke, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde",
+"path": "lab/variants/riven-multistart-ga-2--a6a381fb5c.txt",
+"weighted_win_rate": 0.5,
+"games": 40,
+"errors": []
+},
+{
+"label": "-1 Tideturner, -1 Star-Crossed, +1 Vilemaw, +1 Siren's Song",
+"path": "lab/variants/riven-multistart-ga-2--96b1f39863.txt",
+"weighted_win_rate": 0.4531,
+"games": 40,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (IcrazyFool)",
+"Kennen (Dylan Sumner)",
+"Kennen (Simple)",
+"Kennen (zombro)",
+"Riven mirror (Nam Dang)"
+]
+},
+{
+"id": "20261101-094807-settle-ab",
+"file": "lab/results/20261101-094807-settle-ab.json",
+"name": "settle-ab",
+"description": "A/B of leaf settling in the search: pmcts with settle=60 (a leaf in the middle of a chain, showdown or combat is played on with passes / first options until a quiet main-phase decision before the value net sees it) against the same bot without it. Each deck is played by the settle bot against both decks played by the plain bot (Riven and Kennen mirrors, Riven vs Kennen both ways), seats swapped, 500 games per pairing (2000 in all), so deck strength cancels: the A/B result is the average of the two rows' weighted win rates. Local pilot (240 games, sims=50, worlds=8, net_034): settle won 57.5%, about 7% more time per move.",
+"started_utc": "2026-11-01T09:48:07+00:00",
+"finished_utc": "2026-11-01T10:54:26+00:00",
+"engine_commit": "94c0e80",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Riven (settle=60)",
+"path": "decks/riven_sacramento.txt",
+"weighted_win_rate": 0.748,
+"games": 1000,
+"errors": []
+},
+{
+"label": "Kennen (settle=60)",
+"path": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+"weighted_win_rate": 0.445,
+"games": 1000,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (no settle)",
+"Riven (no settle)"
+]
+},
 {
 "id": "20261030-130422-riven-multistart-ga-1",
 "file": "lab/results/20261030-130422-riven-multistart-ga-1.json",
@@ -21746,6 +22548,6866 @@
 }
 },
 {
+"path": "lab/variants/riven-multistart-ga-2--01e752e67f.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--01e752e67f \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Bedeviling Stranger, +1 Gust, +2 Vilemaw, -1 Discipline, -1 Defy",
+"ga riven-multistart-ga-2 generation 3: -2 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Discipline, -1 Star-Crossed, +1 Reckless Innovator, +1 Ki Burst, +1 Bedeviling Stranger, +1 Gust, +2 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.02,
+"curve": {
+"1": 6,
+"2": 17,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 22,
+"gear": 4,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 2,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--02e632db33.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--02e632db33 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +2 Vilemaw, +1 Traveling Merchant, -1 Battle Preparations, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 1: -1 Astral Heron, -1 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 2
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 1,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"Traveling Merchant": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--03210d3098.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--03210d3098 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, -1 Gust, +2 Vilemaw, -1 Stellacorn Herder, +2 Baron Nashor, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 4: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Gust, -1 Star-Crossed, +2 Vilemaw, +1 Switcheroo, +1 Bedeviling Stranger, +2 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.27,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 5,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 2,
+"10": 2
+},
+"types": {
+"unit": 22,
+"gear": 4,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Baron Nashor": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--033d9ced0d.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--033d9ced0d \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Gust, +1 Vilemaw, -1 Stellacorn Herder, +1 Baron Nashor, +1 Charm, -1 Discipline, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +1 Vilemaw, +1 Baron Nashor, +1 Charm, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 7,
+"2": 18,
+"3": 5,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 2,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Baron Nashor": 1,
+"Charm": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--061e9a5c48.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--061e9a5c48 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, -1 Blade of the Exile, -2 Scuttle Crab, -1 Blitzcrank, Impassive, +1 Gust, +1 Vilemaw, +3 Traveling Merchant, -1 Stellacorn Herder, +1 Battle Preparations, +1 Twilight Shroud",
+"ga riven-multistart-ga-2 generation 3: -1 Blade of the Exile, -2 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Blitzcrank, Impassive, -1 Star-Crossed, +1 Gust, +1 Vilemaw, +3 Traveling Merchant, +1 Battle Preparations, +1 Twilight Shroud"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.67,
+"curve": {
+"1": 7,
+"2": 21,
+"3": 4,
+"4": 3,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 28
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 1,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Traveling Merchant": 3,
+"Twilight Shroud": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--09680c8943.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--09680c8943 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, +1 Switcheroo, -1 Bedeviling Stranger, +1 Gust, +1 Vilemaw, -1 Stellacorn Herder, -1 Battle Preparations, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 1: -1 Astral Heron, -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Battle Preparations, +1 Gust, +1 Switcheroo, +1 Vilemaw, +1 Abandon"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.7,
+"curve": {
+"1": 6,
+"2": 20,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 17,
+"gear": 6,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 1,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--0be81135dd.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--0be81135dd \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Tideturner, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Blitzcrank, Impassive, -1 Gust, +2 Vilemaw, -2 Stellacorn Herder, +1 Baron Nashor, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Gust, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.27,
+"curve": {
+"1": 3,
+"2": 20,
+"3": 6,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--0c09f9ee0c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--0c09f9ee0c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Blitzcrank, Impassive, +2 Vilemaw, -1 Stellacorn Herder",
+"ga riven-multistart-ga-2 generation 2: -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Ki Burst, +2 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.02,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--0f42ca7d3f.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--0f42ca7d3f \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, -1 Zhonya's Hourglass, +1 Not So Fast, -1 Defy",
+"ga riven-multistart-ga-2 generation 0: -1 Zhonya's Hourglass, -1 Defy, +1 Not So Fast, +1 Abandon"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Abandon": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--160b89c414.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--160b89c414 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Reckless Innovator, -1 Tideturner, +1 Rebuke, +1 Vilemaw, +1 Siren's Song, -2 Stellacorn Herder, +1 Battle Preparations, +1 Baron Nashor, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 7: -1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, +1 Reckless Innovator, +1 Rebuke, +1 Vilemaw, +1 Battle Preparations, +1 Baron Nashor, +1 Siren's Song"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 7,
+"4": 2,
+"5": 2,
+"7": 2,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--220377514c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--220377514c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -2 Tideturner, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, -1 Battle Preparations, +1 Baron Nashor, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 7: -2 Zhonya's Hourglass, -2 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.15,
+"curve": {
+"1": 5,
+"2": 17,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 4,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 1,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Baron Nashor": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--256237afa7.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--256237afa7 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Gust, +1 Vilemaw, +1 Siren's Song",
+"ga riven-multistart-ga-2 generation 2: -1 Reckless Innovator, -1 Gust, +1 Siren's Song, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.9,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Siren's Song": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--2647bc5661.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--2647bc5661 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -2 Tideturner, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Gust, +2 Vilemaw, +1 Ride the Wind, -1 Stellacorn Herder, +1 Baron Nashor, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Scuttle Crab, -2 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.17,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 5,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 1,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Ride the Wind": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--26ed327a1c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--26ed327a1c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Gust, +2 Vilemaw, -1 Stellacorn Herder, +1 Baron Nashor, -1 Defy",
+"ga riven-multistart-ga-2 generation 5: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.17,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 5,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--27630f7d87.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--27630f7d87 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -3 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, -1 Blade of the Exile, +2 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +2 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 7: -1 Blade of the Exile, -3 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +2 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +2 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.0,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 5,
+"4": 6,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 23,
+"gear": 2,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 3,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--27819fe420.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--27819fe420 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Meditation, +2 Vilemaw, -1 Stellacorn Herder, -1 Defy, -1 Astral Heron, -2 Zhonya's Hourglass, -1 Tideturner, +1 Switcheroo, +1 Evelynn, Entrancing, +2 Baron Nashor, -1 Discipline",
+"ga riven-multistart-ga-2 generation 5: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, +1 Meditation, +2 Vilemaw, +1 Switcheroo, +2 Baron Nashor, +1 Evelynn, Entrancing"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.3,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 2,
+"10": 2
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 2,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Meditation": 1,
+"Vilemaw": 2,
+"Evelynn, Entrancing": 1,
+"Baron Nashor": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--2d24a46ddb.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--2d24a46ddb \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, +1 Meditation, +2 Vilemaw, -2 Stellacorn Herder, -1 Defy, -1 Astral Heron, -1 Zhonya's Hourglass, +1 Star-Crossed, -1 Tideturner, +1 Not So Fast, -1 Scuttle Crab, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 6: -1 Astral Heron, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, +1 Meditation, +2 Vilemaw, +1 Star-Crossed, +1 Not So Fast, +1 Baron Nashor, +1 Abandon"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 7,
+"4": 2,
+"5": 2,
+"7": 2,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 17,
+"gear": 5,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 2,
+"Abandon": 1,
+"Meditation": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--2d66a0339d.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--2d66a0339d \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Rebuke, +1 Vilemaw, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 3: -1 Tideturner, -1 Rebuke, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw, +1 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.9,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 5,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--2ec52c916b.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--2ec52c916b \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Gust, +2 Vilemaw, +1 Siren's Song, -1 Stellacorn Herder, +1 Baron Nashor, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 6: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Switcheroo, +1 Gust, +2 Vilemaw, +1 Baron Nashor, +1 Siren's Song"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 4,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--2f75f0c6b9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--2f75f0c6b9 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, -1 Tideturner, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, -2 Stellacorn Herder, +1 En Garde, +1 Vex, Apathetic, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 4: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Vex, Apathetic, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 6,
+"4": 3,
+"5": 3,
+"7": 2,
+"8": 2
+},
+"types": {
+"unit": 19,
+"gear": 4,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 2,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--337ee73c0e.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--337ee73c0e \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Ki Burst, -1 Not So Fast, +1 Switcheroo, -1 Bedeviling Stranger, +1 Meditation, +2 Vilemaw, -1 Stellacorn Herder, -1 Battle Preparations, -1 Defy",
+"ga riven-multistart-ga-2 generation 3: -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Defy, -1 Battle Preparations, -1 Not So Fast, +1 Ki Burst, +1 Switcheroo, +2 Vilemaw, +1 Meditation"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.0,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 1,
+"Switcheroo": 3,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Meditation": 1,
+"Vilemaw": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--34aa601410.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--34aa601410 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Tideturner, +1 Not So Fast, +1 Rebuke, -1 Stellacorn Herder, +1 Battle Preparations, +2 Vex, Apathetic, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 5: -1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Not So Fast, +1 Battle Preparations, +2 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.7,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 2
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--3b057f65b1.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--3b057f65b1 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, -1 Zhonya's Hourglass, -1 Tideturner, +1 Ki Burst, +1 Rebuke, +1 Gust, +1 Vilemaw, -1 Stellacorn Herder, -1 Discipline, -1 Defy",
+"ga riven-multistart-ga-2 generation 7: -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, +1 Ki Burst, +1 Rebuke, +1 Gust, +1 Vilemaw, +1 Abandon"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 2,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Ki Burst": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--3bbe883d58.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--3bbe883d58 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Star-Crossed, -3 Tideturner, +1 Ki Burst, -2 Scuttle Crab, -1 Blitzcrank, Impassive, +3 Traveling Merchant, +2 Evelynn, Entrancing, -2 Battle Preparations, +1 En Garde, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 1: -1 Zhonya's Hourglass, -2 Scuttle Crab, -3 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing, +1 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.7,
+"curve": {
+"1": 7,
+"2": 17,
+"3": 7,
+"4": 5,
+"5": 1,
+"7": 3
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 2,
+"Ki Burst": 1,
+"Traveling Merchant": 3,
+"Evelynn, Entrancing": 2,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--3bd198aeaa.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--3bd198aeaa \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Not So Fast, +1 Bedeviling Stranger, +1 Meditation, +1 Vilemaw, -2 Stellacorn Herder, +1 Vex, Apathetic, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 5: -1 Astral Heron, -1 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Bedeviling Stranger, +1 Not So Fast, +1 Vex, Apathetic, +1 Vilemaw, +1 Meditation"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 4,
+"2": 22,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--479fb04e2c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--479fb04e2c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Vilemaw, -1 Stellacorn Herder, +1 Vex, Apathetic, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 1: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Stellacorn Herder, +1 Bedeviling Stranger, +1 Reckless Innovator, +1 Vex, Apathetic, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 7,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--4a03a936c4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--4a03a936c4 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Reckless Innovator, -1 Tideturner, -1 Not So Fast, +1 Bedeviling Stranger, +2 Meditation, -3 Scuttle Crab, -1 Blitzcrank, Impassive, +1 Fizz, Trickster, +3 Traveling Merchant, -2 Gust, +2 Ride the Wind, -3 Stellacorn Herder, -2 Battle Preparations, +2 Vex, Apathetic, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 0: -3 Scuttle Crab, -1 Tideturner, -3 Stellacorn Herder, -1 Blitzcrank, Impassive, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +3 Traveling Merchant, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +2 Ride the Wind, +1 Edge of Night, +2 Vex, Apathetic, +1 Fizz, Trickster"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 3,
+"2": 21,
+"3": 9,
+"4": 3,
+"5": 1,
+"7": 3
+},
+"types": {
+"unit": 19,
+"gear": 7,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Tideturner": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Switcheroo": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Meditation": 2,
+"Fizz, Trickster": 1,
+"Traveling Merchant": 3,
+"Ride the Wind": 2,
+"Vex, Apathetic": 2,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--4a13a5a51a.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--4a13a5a51a \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, +1 Reckless Innovator, -1 Tideturner, +1 Ki Burst, -1 Not So Fast, -2 Switcheroo, +1 Bedeviling Stranger, +2 Meditation, -1 Scuttle Crab, -2 Blitzcrank, Impassive, -1 Gust, +1 Siren's Song, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 0: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +2 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst, +1 Siren's Song"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 7,
+"4": 4,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Ki Burst": 1,
+"Meditation": 2,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--4a5fcb77fe.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--4a5fcb77fe \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +2 Not So Fast, -1 Bedeviling Stranger, +1 Rebuke, -1 Scuttle Crab, -1 Blitzcrank, Impassive, +1 Vilemaw, -1 Stellacorn Herder",
+"ga riven-multistart-ga-2 generation 2: -1 Scuttle Crab, -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Blitzcrank, Impassive, +2 Not So Fast, +1 Rebuke, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 6,
+"4": 3,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 16,
+"gear": 6,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 3,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--4a661267da.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--4a661267da \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Meditation, +1 Vilemaw, -1 Stellacorn Herder, +1 Vex, Apathetic, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 3: -1 Astral Heron, -1 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Defy, +1 Bedeviling Stranger, +1 Vex, Apathetic, +1 Vilemaw, +1 Meditation"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--4edbc01bd8.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--4edbc01bd8 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Ki Burst, -1 Gust, -1 Stellacorn Herder, -2 Zhonya's Hourglass, -1 Reckless Innovator, +1 Bedeviling Stranger, +1 Siren's Song, +1 Evelynn, Entrancing, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 4: -2 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Reckless Innovator, -1 Gust, +1 Bedeviling Stranger, +1 Siren's Song, +1 Baron Nashor, +1 Ki Burst, +1 Evelynn, Entrancing"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 5,
+"4": 3,
+"5": 2,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 20,
+"gear": 4,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Siren's Song": 1,
+"Evelynn, Entrancing": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--53a18a6865.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--53a18a6865 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, -2 Stellacorn Herder, +1 Baron Nashor, +1 En Garde, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 5: -1 Astral Heron, -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 5,
+"4": 2,
+"5": 3,
+"7": 2,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1,
+"En Garde": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--53be2d070e.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--53be2d070e \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Blade of the Exile, +1 Not So Fast, -1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, -1 Stellacorn Herder, +1 En Garde, -1 Defy, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 4: -1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Switcheroo, -1 Star-Crossed, +1 Ki Burst, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Edge of Night, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.02,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"En Garde": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--573c3a0518.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--573c3a0518 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Star-Crossed, -1 Scuttle Crab, -1 Gust, +1 Vilemaw, +1 Siren's Song, +1 Ride the Wind, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 5: -1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, -1 Star-Crossed, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 4,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Siren's Song": 1,
+"Ride the Wind": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--57cdf17561.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--57cdf17561 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Vilemaw",
+"ga riven-multistart-ga-2 generation 0: -1 Tideturner, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--594825f995.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--594825f995 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, -1 Scuttle Crab, +1 Gust, +2 Vilemaw, -2 Stellacorn Herder, +1 Charm, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Scuttle Crab, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Gust, +2 Vilemaw, +1 Not So Fast, +1 Switcheroo, +1 Charm"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.9,
+"curve": {
+"1": 6,
+"2": 20,
+"3": 5,
+"4": 2,
+"5": 2,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Charm": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--5c5a175f3b.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--5c5a175f3b \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Switcheroo, +1 Blitzcrank, Impassive, -1 Gust, +2 Vilemaw, +1 Traveling Merchant, +1 Ride the Wind, -1 Stellacorn Herder, +1 Baron Nashor, -1 Discipline, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Discipline, -1 Gust, -1 Star-Crossed, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Traveling Merchant, +1 Baron Nashor, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.3,
+"curve": {
+"1": 3,
+"2": 20,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 5,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 2,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Traveling Merchant": 1,
+"Ride the Wind": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--5edac5b7b3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--5edac5b7b3 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Tideturner, +1 Ki Burst, +1 Switcheroo, -2 Bedeviling Stranger, -1 Gust, +2 Baron Nashor",
+"ga riven-multistart-ga-2 generation 1: -1 Tideturner, -2 Bedeviling Stranger, -1 Gust, +1 Switcheroo, +2 Baron Nashor, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.15,
+"curve": {
+"1": 5,
+"2": 18,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"10": 2
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Baron Nashor": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--601fe4ec93.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--601fe4ec93 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Bedeviling Stranger, -1 Rebuke, +1 Meditation, -1 Blitzcrank, Impassive, -1 Gust, +1 Vilemaw, +1 Traveling Merchant, +1 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 4: -1 Tideturner, -1 Blitzcrank, Impassive, -1 Defy, -1 Gust, -1 Rebuke, -1 Star-Crossed, +1 Ki Burst, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Meditation, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 5,
+"4": 5,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 6,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Ki Burst": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Traveling Merchant": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--61e5fe5da1.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--61e5fe5da1 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Reckless Innovator, +1 Star-Crossed, -1 Blade of the Exile, -1 Switcheroo, +1 Bedeviling Stranger, -1 Scuttle Crab, +1 Fizz, Trickster, -1 Gust, +1 Vilemaw",
+"ga riven-multistart-ga-2 generation 2: -1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Gust, -1 Switcheroo, +1 Vilemaw, +1 Reckless Innovator, +1 Star-Crossed, +1 Bedeviling Stranger, +1 Fizz, Trickster"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 18,
+"3": 8,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 22,
+"gear": 4,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 2,
+"Fizz, Trickster": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--64e3cde9c8.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--64e3cde9c8 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Scuttle Crab, +2 Vilemaw, -1 Stellacorn Herder, +1 Vex, Apathetic, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 3: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -1 Stellacorn Herder, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +1 Vex, Apathetic, +1 Edge of Night"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.02,
+"curve": {
+"1": 6,
+"2": 17,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"Vex, Apathetic": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--653c056fe4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--653c056fe4 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Ki Burst, +2 Rebuke, -1 Blitzcrank, Impassive, -1 Gust, +1 Vilemaw, -1 Stellacorn Herder, +1 Battle Preparations, -1 Defy",
+"ga riven-multistart-ga-2 generation 7: -1 Zhonya's Hourglass, -1 Stellacorn Herder, -1 Blitzcrank, Impassive, -1 Defy, -1 Gust, +1 Ki Burst, +2 Rebuke, +1 Vilemaw, +1 Battle Preparations"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 4,
+"2": 22,
+"3": 6,
+"4": 3,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 3,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--696aec7297.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--696aec7297 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 2: -2 Zhonya's Hourglass, -1 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 22,
+"gear": 4,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--6b6a4e93f9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--6b6a4e93f9 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Reckless Innovator, -1 Tideturner, +1 Switcheroo, +1 Bedeviling Stranger, +1 Twilight Shroud",
+"ga riven-multistart-ga-2 generation 1: -1 Zhonya's Hourglass, -1 Tideturner, -1 Reckless Innovator, +1 Switcheroo, +1 Bedeviling Stranger, +1 Twilight Shroud"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.7,
+"curve": {
+"1": 6,
+"2": 20,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Twilight Shroud": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--6bf6c35cb1.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--6bf6c35cb1 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck:",
+"ga riven-multistart-ga-2 generation 0: base (control)"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--6e0ba2664c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--6e0ba2664c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, -2 Stellacorn Herder, +1 Baron Nashor, -1 Defy",
+"ga riven-multistart-ga-2 generation 3: -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Switcheroo, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.23,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 5,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--713c2317a3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--713c2317a3 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Gust, +1 Siren's Song, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 4: -1 Reckless Innovator, -1 Gust, +1 Siren's Song, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.95,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--756b6f9000.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--756b6f9000 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, +1 Ki Burst, -1 Bedeviling Stranger, +1 Traveling Merchant, -1 Stellacorn Herder, +1 Battle Preparations, -1 Discipline, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 2: -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Discipline, +1 Battle Preparations, +1 Edge of Night, +1 Ki Burst, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.67,
+"curve": {
+"1": 6,
+"2": 20,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 17,
+"gear": 7,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 2,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Traveling Merchant": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--7856b08c78.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--7856b08c78 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Gust, +1 Vilemaw, +1 Ride the Wind, +1 Charm, -1 Tideturner, +1 Bedeviling Stranger, -1 Scuttle Crab, -2 Blitzcrank, Impassive, +1 Baron Nashor, +1 Twilight Shroud, -2 Battle Preparations, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 0: -1 Scuttle Crab, -1 Tideturner, -2 Blitzcrank, Impassive, -1 Gust, -2 Battle Preparations, +1 Baron Nashor, +1 Bedeviling Stranger, +1 Charm, +1 Ride the Wind, +1 Twilight Shroud, +1 Vex, Apathetic, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 6,
+"4": 5,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Ride the Wind": 1,
+"Charm": 1,
+"Baron Nashor": 1,
+"Twilight Shroud": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--78c8cad574.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--78c8cad574 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, -1 Blade of the Exile, +1 Not So Fast, +1 Meditation, +1 Gust, +2 Vilemaw, +1 Ride the Wind, -1 Stellacorn Herder, +1 Battle Preparations, +1 Vex, Apathetic, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 7: -1 Astral Heron, -1 Blade of the Exile, -2 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Meditation, +1 Gust, +2 Vilemaw, +1 Not So Fast, +1 Battle Preparations, +1 Vex, Apathetic, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 4,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 2
+},
+"types": {
+"unit": 19,
+"gear": 3,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Meditation": 1,
+"Vilemaw": 2,
+"Ride the Wind": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--7b8d936d1a.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--7b8d936d1a \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Reckless Innovator, +1 Rebuke, +1 Vilemaw, -2 Battle Preparations, -1 Defy",
+"ga riven-multistart-ga-2 generation 2: -1 Defy, -2 Battle Preparations, +1 Reckless Innovator, +1 Rebuke, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.95,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 7,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 6,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--7bdd95cbe6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--7bdd95cbe6 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, +1 Rebuke, -1 Scuttle Crab, -1 Blitzcrank, Impassive, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 1: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Blitzcrank, Impassive, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, +1 Rebuke, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--7d523c40b9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--7d523c40b9 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -2 Tideturner, +1 Ki Burst, +1 Gust, +1 Vilemaw",
+"ga riven-multistart-ga-2 generation 1: -2 Tideturner, -1 Star-Crossed, +1 Gust, +1 Vilemaw, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 7,
+"2": 18,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--86e813f2e9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--86e813f2e9 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +2 Vilemaw, +2 Traveling Merchant, -1 Battle Preparations, -1 Discipline, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 2: -1 Astral Heron, -1 Tideturner, -1 Discipline, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +2 Vilemaw, +2 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 2
+},
+"types": {
+"unit": 21,
+"gear": 6,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 2,
+"Gust": 2,
+"Battle Preparations": 1,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"Traveling Merchant": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--89cb7db4f2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--89cb7db4f2 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, +1 Not So Fast, +1 Bedeviling Stranger, -1 Blitzcrank, Impassive, +1 Gust, +1 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 5: -2 Zhonya's Hourglass, -1 Blitzcrank, Impassive, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Gust, +1 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.73,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 5,
+"5": 1,
+"7": 3
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 1,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--89fd828fcf.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--89fd828fcf \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Switcheroo, -1 Bedeviling Stranger, +1 Vilemaw, -1 Stellacorn Herder",
+"ga riven-multistart-ga-2 generation 0: -1 Stellacorn Herder, -1 Bedeviling Stranger, +1 Switcheroo, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--90cc5b0cb4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--90cc5b0cb4 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Bedeviling Stranger, -1 Blitzcrank, Impassive, +1 Vilemaw, +1 En Garde, +1 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 7: -2 Zhonya's Hourglass, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 6,
+"4": 5,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 1,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 1,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--93b82d534d.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--93b82d534d \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Meditation, -1 Scuttle Crab, -1 Gust, +1 Vilemaw, -1 Stellacorn Herder, +1 Battle Preparations, +1 Vex, Apathetic, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 3: -1 Astral Heron, -2 Zhonya's Hourglass, -1 Scuttle Crab, -1 Stellacorn Herder, -1 Gust, +1 Vilemaw, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Battle Preparations, +1 Vex, Apathetic, +1 Meditation"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 7,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 20,
+"gear": 4,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--94eb362aea.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--94eb362aea \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, -1 Star-Crossed, -1 Switcheroo, +1 Traveling Merchant",
+"ga riven-multistart-ga-2 generation 0: -1 Switcheroo, -1 Star-Crossed, +1 Abandon, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.73,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Abandon": 1,
+"Traveling Merchant": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--9639033de3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--9639033de3 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Ki Burst, -2 Gust, +1 Vilemaw, -1 Zhonya's Hourglass, -1 Reckless Innovator, -1 Scuttle Crab, +1 Siren's Song, +1 Baron Nashor, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 4: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Reckless Innovator, -2 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor, +1 Edge of Night, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.12,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Siren's Song": 1,
+"Baron Nashor": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--96b1f39863.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--96b1f39863 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Vilemaw, +1 Siren's Song",
+"ga riven-multistart-ga-2 generation 1: -1 Tideturner, -1 Star-Crossed, +1 Vilemaw, +1 Siren's Song"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Siren's Song": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--9854745521.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--9854745521 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -2 Tideturner, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 En Garde, +1 Vex, Apathetic, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -2 Zhonya's Hourglass, -2 Tideturner, -1 Defy, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.95,
+"curve": {
+"1": 5,
+"2": 18,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 1,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--9e2c2cdfb5.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--9e2c2cdfb5 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Bedeviling Stranger, +1 Rebuke, +1 Meditation, -1 Scuttle Crab, +1 Vilemaw, +1 Battle Preparations, +1 Baron Nashor, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 4: -1 Astral Heron, -1 Scuttle Crab, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Battle Preparations, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 17,
+"gear": 6,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--9e9521e24d.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--9e9521e24d \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, +1 Rebuke, +1 Meditation, +1 Vilemaw, -2 Stellacorn Herder, -1 Defy, -1 Astral Heron, -2 Zhonya's Hourglass, +1 Not So Fast, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 6: -1 Astral Heron, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Not So Fast, +1 Vex, Apathetic, +1 Abandon"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 4,
+"2": 22,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 4,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--9eb81d394b.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--9eb81d394b \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, +1 Switcheroo, -1 Bedeviling Stranger, +1 Vilemaw, -1 Stellacorn Herder, +1 Battle Preparations, -1 Discipline, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 1: -1 Stellacorn Herder, -1 Bedeviling Stranger, -1 Reckless Innovator, -1 Discipline, +1 Switcheroo, +1 Vilemaw, +1 Battle Preparations, +1 Edge of Night"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 17,
+"gear": 7,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 2,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--a0a69d9c6c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--a0a69d9c6c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +2 Ki Burst, +1 Rebuke, -2 Gust, +1 Reckless Innovator, +1 Star-Crossed, -1 Tideturner, -1 Not So Fast, +1 Bedeviling Stranger, -2 Battle Preparations",
+"ga riven-multistart-ga-2 generation 0: -1 Tideturner, -2 Gust, -2 Battle Preparations, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Rebuke, +1 Star-Crossed, +2 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 5,
+"2": 18,
+"3": 8,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Switcheroo": 2,
+"Rebuke": 2,
+"Star-Crossed": 2,
+"Ki Burst": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--a291e31111.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--a291e31111 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Bedeviling Stranger, -1 Gust, +2 Baron Nashor",
+"ga riven-multistart-ga-2 generation 0: -1 Bedeviling Stranger, -1 Gust, +2 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.17,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"10": 2
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 1,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Baron Nashor": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--a6a381fb5c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--a6a381fb5c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -2 Tideturner, +1 Not So Fast, +1 Bedeviling Stranger, -1 Rebuke, +1 Vilemaw, +1 En Garde, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 7: -2 Zhonya's Hourglass, -2 Tideturner, -1 Rebuke, -1 Star-Crossed, +1 Reckless Innovator, +1 Not So Fast, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 17,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 4,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Vilemaw": 1,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--a899e9cbb2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--a899e9cbb2 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, +1 Bedeviling Stranger, -1 Scuttle Crab, -1 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 4: -1 Astral Heron, -1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, +1 Bedeviling Stranger, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--aa5bcfeda1.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--aa5bcfeda1 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, -2 Stellacorn Herder, +1 Baron Nashor, +1 En Garde, -1 Defy",
+"ga riven-multistart-ga-2 generation 5: -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.2,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 5,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Baron Nashor": 1,
+"En Garde": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--b1e92397bb.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--b1e92397bb \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, +1 Switcheroo",
+"ga riven-multistart-ga-2 generation 0: -1 Reckless Innovator, +1 Switcheroo"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.73,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--b5722af2e2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--b5722af2e2 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, +1 Ki Burst, -1 Blade of the Exile, +1 Switcheroo, +1 Bedeviling Stranger, -1 Scuttle Crab, +1 Gust, +1 Vilemaw, +1 Vex, Apathetic, -1 Defy, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 5: -1 Astral Heron, -1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Defy, -1 Star-Crossed, +1 Switcheroo, +1 Bedeviling Stranger, +1 Gust, +1 Vilemaw, +1 Vex, Apathetic, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 6,
+"2": 20,
+"3": 4,
+"4": 5,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 20,
+"gear": 4,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 3,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--bae5f82ee8.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--bae5f82ee8 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Gust, +2 Baron Nashor",
+"ga riven-multistart-ga-2 generation 1: -1 Zhonya's Hourglass, -1 Gust, +2 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.17,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3,
+"10": 2
+},
+"types": {
+"unit": 21,
+"gear": 5,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Baron Nashor": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--bc254fd422.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--bc254fd422 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Vex, Apathetic, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 0: -1 Astral Heron, -1 Zhonya's Hourglass, +1 Bedeviling Stranger, +1 Vex, Apathetic"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.67,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 2
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--bdaaad5a32.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--bdaaad5a32 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, -2 Tideturner, +1 Not So Fast, +3 Meditation, -1 Scuttle Crab, +1 Blitzcrank, Impassive, +1 Vilemaw, -2 Stellacorn Herder, -2 Defy",
+"ga riven-multistart-ga-2 generation 7: -1 Scuttle Crab, -2 Tideturner, -2 Stellacorn Herder, -2 Defy, +1 Abandon, +3 Meditation, +1 Vilemaw, +1 Not So Fast, +1 Blitzcrank, Impassive"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 3,
+"2": 22,
+"3": 6,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 16,
+"gear": 6,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 1,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 1,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Meditation": 3,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--c0e4dcef8a.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--c0e4dcef8a \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, +1 Reckless Innovator, -1 Tideturner, +1 Ki Burst, -1 Not So Fast, -1 Switcheroo, +1 Bedeviling Stranger, +1 Meditation, -1 Scuttle Crab, -1 Blitzcrank, Impassive, -1 Gust, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 0: -1 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -1 Gust, -1 Switcheroo, -1 Not So Fast, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Meditation, +1 Abandon, +1 Baron Nashor, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.9,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 7,
+"4": 4,
+"5": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Ki Burst": 1,
+"Meditation": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--c7582ec87f.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--c7582ec87f \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Rebuke, -1 Blitzcrank, Impassive",
+"ga riven-multistart-ga-2 generation 0: -1 Blitzcrank, Impassive, +1 Rebuke"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.67,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 6,
+"4": 4,
+"5": 1,
+"7": 3
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--c94af7b18c.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--c94af7b18c \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Star-Crossed, -1 Tideturner, +2 Not So Fast, -1 Scuttle Crab, +1 Blitzcrank, Impassive, -1 Gust, +1 Vilemaw, -2 Stellacorn Herder, +1 Baron Nashor, +1 Twilight Shroud, -1 Defy",
+"ga riven-multistart-ga-2 generation 7: -1 Zhonya's Hourglass, -1 Scuttle Crab, -1 Tideturner, -2 Stellacorn Herder, -1 Defy, -1 Gust, +1 Vilemaw, +1 Star-Crossed, +2 Not So Fast, +1 Blitzcrank, Impassive, +1 Baron Nashor, +1 Twilight Shroud"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.12,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 7,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 2,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 3,
+"Rebuke": 1,
+"Star-Crossed": 2,
+"Vilemaw": 1,
+"Baron Nashor": 1,
+"Twilight Shroud": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--cda87d8c8b.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--cda87d8c8b \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Scuttle Crab, -1 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor",
+"ga riven-multistart-ga-2 generation 3: -1 Scuttle Crab, -1 Reckless Innovator, -1 Gust, +1 Vilemaw, +1 Siren's Song, +1 Baron Nashor"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.1,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 2,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Vilemaw": 1,
+"Siren's Song": 1,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--cef30c16fe \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -2 Zhonya's Hourglass, +1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Bedeviling Stranger, -1 Gust, +1 Vilemaw, +1 Traveling Merchant, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 5: -2 Zhonya's Hourglass, -1 Tideturner, -1 Gust, -1 Star-Crossed, +1 Reckless Innovator, +1 Bedeviling Stranger, +1 Vilemaw, +1 Vex, Apathetic, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 6,
+"4": 5,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 23,
+"gear": 4,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Vilemaw": 1,
+"Traveling Merchant": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--cf70b640ba.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--cf70b640ba \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Vilemaw, +1 Siren's Song, -1 Battle Preparations",
+"ga riven-multistart-ga-2 generation 2: -1 Tideturner, -1 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +1 Vilemaw, +1 Siren's Song"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 1,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Siren's Song": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--d2840d2899.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--d2840d2899 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, +1 Ki Burst, -1 Blade of the Exile, -1 Not So Fast, -3 Scuttle Crab, +1 Gust, +2 Vilemaw, +2 Evelynn, Entrancing, +1 Ride the Wind, -1 Astral Heron",
+"ga riven-multistart-ga-2 generation 3: -1 Astral Heron, -1 Blade of the Exile, -3 Scuttle Crab, -1 Reckless Innovator, -1 Not So Fast, +1 Ki Burst, +1 Gust, +2 Vilemaw, +2 Evelynn, Entrancing, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 7,
+"2": 19,
+"3": 4,
+"4": 4,
+"5": 2,
+"7": 2,
+"8": 2
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"Evelynn, Entrancing": 2,
+"Ride the Wind": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--dbb90fa955.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--dbb90fa955 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Ki Burst, -1 Blade of the Exile, +2 Vilemaw, +1 Ride the Wind, -1 Stellacorn Herder, -1 Defy, -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, -1 Switcheroo, +1 Blitzcrank, Impassive, +1 En Garde, +1 Edge of Night",
+"ga riven-multistart-ga-2 generation 5: -1 Blade of the Exile, -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, -1 Switcheroo, -1 Star-Crossed, +1 Ki Burst, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Edge of Night, +1 En Garde, +1 Ride the Wind"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.02,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2,
+"Ride the Wind": 1,
+"En Garde": 1,
+"Edge of Night": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--de4fe4f780.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--de4fe4f780 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Traveling Merchant, -2 Stellacorn Herder, +1 Baron Nashor, +1 Charm, -2 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Tideturner, -2 Stellacorn Herder, -2 Defy, -1 Star-Crossed, +1 Not So Fast, +1 Blitzcrank, Impassive, +2 Vilemaw, +1 Baron Nashor, +1 Traveling Merchant, +1 Charm"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.23,
+"curve": {
+"1": 4,
+"2": 20,
+"3": 5,
+"4": 2,
+"5": 3,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 21,
+"gear": 5,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 1,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 1,
+"Vilemaw": 2,
+"Traveling Merchant": 1,
+"Baron Nashor": 1,
+"Charm": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--df1f1c53d6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--df1f1c53d6 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, +1 Star-Crossed, -2 Tideturner, +1 Ki Burst, -2 Scuttle Crab, -1 Blitzcrank, Impassive, +3 Traveling Merchant, +2 Evelynn, Entrancing, -2 Battle Preparations, +1 En Garde",
+"ga riven-multistart-ga-2 generation 0: -1 Zhonya's Hourglass, -2 Scuttle Crab, -2 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, +3 Traveling Merchant, +1 Star-Crossed, +1 En Garde, +1 Ki Burst, +2 Evelynn, Entrancing"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.65,
+"curve": {
+"1": 7,
+"2": 18,
+"3": 7,
+"4": 4,
+"5": 1,
+"7": 3
+},
+"types": {
+"unit": 19,
+"gear": 5,
+"spell": 16
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 1,
+"Tideturner": 1,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 2,
+"Ki Burst": 1,
+"Traveling Merchant": 3,
+"Evelynn, Entrancing": 2,
+"En Garde": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--e412ed4487.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--e412ed4487 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Tideturner, +1 Ki Burst, +1 Rebuke, +1 Vilemaw, -1 Stellacorn Herder, +1 Battle Preparations, -1 Defy",
+"ga riven-multistart-ga-2 generation 6: -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Vilemaw, +1 Battle Preparations, +1 Ki Burst"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.85,
+"curve": {
+"1": 5,
+"2": 20,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 5,
+"spell": 17
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Ki Burst": 1,
+"Vilemaw": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--e68718ae9e.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--e68718ae9e \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Blade of the Exile, -2 Scuttle Crab, -1 Blitzcrank, Impassive, +3 Traveling Merchant, +1 Gust, +1 Vilemaw, +2 Evelynn, Entrancing, -2 Battle Preparations",
+"ga riven-multistart-ga-2 generation 2: -1 Blade of the Exile, -2 Scuttle Crab, -1 Tideturner, -1 Blitzcrank, Impassive, -2 Battle Preparations, -1 Star-Crossed, +1 Ki Burst, +3 Traveling Merchant, +1 Gust, +2 Evelynn, Entrancing, +1 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.73,
+"curve": {
+"1": 7,
+"2": 20,
+"3": 4,
+"4": 4,
+"5": 1,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 21,
+"gear": 5,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 27
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 1,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Traveling Merchant": 3,
+"Vilemaw": 1,
+"Evelynn, Entrancing": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--efb12e1258.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--efb12e1258 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Zhonya's Hourglass, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Switcheroo, +1 Blitzcrank, Impassive, +1 Gust, +2 Vilemaw, -1 Stellacorn Herder",
+"ga riven-multistart-ga-2 generation 3: -1 Zhonya's Hourglass, -1 Tideturner, -1 Stellacorn Herder, -1 Switcheroo, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Gust, +1 Ki Burst, +2 Vilemaw"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.0,
+"curve": {
+"1": 7,
+"2": 17,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 3,
+"8": 2
+},
+"types": {
+"unit": 20,
+"gear": 5,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 2,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 2,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 2,
+"Switcheroo": 1,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 2
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--f0ad6243f9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--f0ad6243f9 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Star-Crossed, +1 Reckless Innovator, +1 Ki Burst, -1 Not So Fast, -2 Switcheroo, +1 Bedeviling Stranger, +1 Rebuke, -3 Scuttle Crab, +2 Evelynn, Entrancing, +1 Baron Nashor, -2 Battle Preparations",
+"ga riven-multistart-ga-2 generation 0: -3 Scuttle Crab, -2 Battle Preparations, -2 Switcheroo, -1 Not So Fast, +1 Baron Nashor, +1 Bedeviling Stranger, +2 Evelynn, Entrancing, +1 Ki Burst, +1 Rebuke, +1 Reckless Innovator, +1 Star-Crossed"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 6,
+"2": 16,
+"3": 8,
+"4": 4,
+"5": 2,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 21,
+"gear": 6,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 3,
+"Reckless Innovator": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Rebuke": 2,
+"Star-Crossed": 2,
+"Ki Burst": 1,
+"Evelynn, Entrancing": 2,
+"Baron Nashor": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--f0c309b99e.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--f0c309b99e \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: +1 Abandon, -1 Blade of the Exile, +1 Rebuke, +1 Vilemaw, -2 Stellacorn Herder, -1 Defy, -1 Astral Heron, -2 Zhonya's Hourglass, +1 Not So Fast, +1 Blitzcrank, Impassive, +1 En Garde, +1 Vex, Apathetic",
+"ga riven-multistart-ga-2 generation 7: -1 Astral Heron, -1 Blade of the Exile, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Vilemaw, +1 Not So Fast, +1 Blitzcrank, Impassive, +1 Vex, Apathetic, +1 Abandon, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 5,
+"4": 3,
+"5": 3,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 3,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 2,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 3,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Vilemaw": 1,
+"En Garde": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--f61f0ff5c0.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--f61f0ff5c0 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Gust, +1 Traveling Merchant",
+"ga riven-multistart-ga-2 generation 2: -1 Gust, +1 Traveling Merchant"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 4,
+"2": 21,
+"3": 6,
+"4": 4,
+"5": 2,
+"7": 3
+},
+"types": {
+"unit": 20,
+"gear": 6,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 1,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Traveling Merchant": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--f8e81a34a0.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--f8e81a34a0 \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Reckless Innovator, -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, +1 Blitzcrank, Impassive, +1 Vilemaw, +1 Twilight Shroud, -1 Discipline",
+"ga riven-multistart-ga-2 generation 4: -1 Tideturner, -1 Reckless Innovator, -1 Discipline, -1 Star-Crossed, +1 Blitzcrank, Impassive, +1 Ki Burst, +1 Vilemaw, +1 Twilight Shroud"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 7,
+"2": 18,
+"3": 4,
+"4": 4,
+"5": 3,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 1,
+"Blitzcrank, Impassive": 3,
+"Defy": 3,
+"Discipline": 2,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"Twilight Shroud": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2--fc24f0b3bd.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Variant riven-multistart-ga-2--fc24f0b3bd \u2014 generated by lab/riftlab.py, do not edit by hand.",
+"Base: decks/riven_sacramento.txt",
+"maindeck: -1 Star-Crossed, -1 Tideturner, +1 Ki Burst, -1 Switcheroo, +1 Gust, +1 Vilemaw, -1 Battle Preparations, +1 En Garde",
+"ga riven-multistart-ga-2 generation 4: -1 Tideturner, -1 Battle Preparations, -1 Switcheroo, -1 Star-Crossed, +1 Gust, +1 Ki Burst, +1 Vilemaw, +1 En Garde"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 8,
+"2": 17,
+"3": 5,
+"4": 4,
+"5": 2,
+"7": 3,
+"8": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 3,
+"Scuttle Crab": 3,
+"Tideturner": 2,
+"Stellacorn Herder": 3,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Battle Preparations": 1,
+"Switcheroo": 1,
+"Not So Fast": 1,
+"Rebuke": 1,
+"Ki Burst": 1,
+"Vilemaw": 1,
+"En Garde": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-multistart-ga-2-best.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Broken Blade",
+"comments": [
+"Best list of riven-multistart-ga-2 so far (77.3% over 80 games): -1 Astral Heron, -2 Zhonya's Hourglass, -2 Stellacorn Herder, -1 Defy, +1 Rebuke, +1 Meditation, +1 Vilemaw, +1 Not So Fast, +1 Vex, Apathetic, +1 Abandon",
+"Base: decks/riven_sacramento.txt \u2014 generated by lab/ga.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.75,
+"curve": {
+"1": 4,
+"2": 22,
+"3": 6,
+"4": 3,
+"5": 2,
+"7": 2,
+"8": 1
+},
+"types": {
+"unit": 18,
+"gear": 4,
+"spell": 18
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Broken Blade": 1
+},
+"maindeck": {
+"Astral Heron": 2,
+"Blade of the Exile": 3,
+"Zhonya's Hourglass": 1,
+"Scuttle Crab": 3,
+"Tideturner": 3,
+"Stellacorn Herder": 1,
+"Bedeviling Stranger": 2,
+"Reckless Innovator": 2,
+"Blitzcrank, Impassive": 2,
+"Defy": 2,
+"Discipline": 3,
+"Gust": 2,
+"Battle Preparations": 2,
+"Switcheroo": 2,
+"Not So Fast": 2,
+"Rebuke": 2,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Meditation": 1,
+"Vilemaw": 1,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Emperor's Dais": 1,
+"Rakelstake": 1,
+"Star Spring": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
 "path": "lab/variants/sacramento-heronless.txt",
 "legend": "Riven, The Exile",
 "champion": "Riven, Broken Blade",
@@ -21875,10 +29537,10 @@
 },
 {
 "spec": "lab/specs/ga/riven_multistart.json",
-"name": "riven-multistart-ga-1",
+"name": "riven-multistart-ga-2",
 "description": "Genetic search seeded with every Riven list of the current meta (Sacramento, RRO 25, Radiance release) so crossover can mix them; pool = all cards those lists play plus a few named ones; jury weighted toward the mirror and Kai'Sa while the engine's Kennen is under review.",
 "base": "decks/riven_sacramento.txt",
-"agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
+"agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,settle=60",
 "opponents": [
 {
 "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/01_nam_dang_riven.txt",

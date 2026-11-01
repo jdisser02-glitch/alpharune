@@ -429,6 +429,8 @@ def write_index(reg: Registry) -> Path:
             r = json.loads(f.read_text())
         except json.JSONDecodeError:
             continue
+        if "decks" not in r:   # card impact and other non-match results have their own shape
+            continue
         tests.append({
             "id": r["id"], "file": str(f.relative_to(ROOT)), "name": r["name"],
             "description": r.get("description", ""), "started_utc": r.get("started_utc"),

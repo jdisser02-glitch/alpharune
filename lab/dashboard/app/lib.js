@@ -170,9 +170,12 @@ export function deckShort(p) {
   const d = deckByPath(p); if (!d) return String(p || "?").split("/").pop().replace(/\.txt$/, "");
   const m = deckPilot(d);
   if (m) return `${m.name} (${m.pilot})`;
+  if (d.path === bestVariantPath()) return "Best list (provisional)";
   if (d.path.startsWith("lab/variants/")) return d.path.split("/").pop().replace(/\.txt$/, "");
   return deckHero(d);
 }
+/** The optimiser's best-measured list: the variant whose 95% interval has the highest lower bound in any test. */
+export function bestVariantPath() { const r = variantRank(); let best = null, lo = -1; for (const [p, v] of r) if (v > lo) { lo = v; best = p; } return best; }
 /** Set codes → names (UNL stays a code: the engine's unlisted cards). */
 export const SETS = { OGN: "Origins", OGS: "Origins starter", SFD: "Spiritforged", VEN: "Vendetta", RAD: "Radiance" };
 export const setName = code => SETS[code] ? `${SETS[code]} (${code})` : String(code || "");
@@ -204,7 +207,7 @@ export function botBadge(raw, cls = "") {
   return `<span class="badge ${kind} ${cls}" title="${esc(b.raw)}">${esc(b.label)}</span>`;
 }
 export function groupDecks(decks = allDecks()) {
-  // Three groups only: every Riven list (the reference first, then the tournament Rivens, then the optimiser's best),
+  // Three groups only: every Riven list (the optimiser's best first, then the reference and the tournament Rivens),
   // the tournament decks to play against, and the optimiser's ten best-measured variants. Engine test decks are left out.
   const isRiven = d => /Riven/.test(String(d.legend || "") + " " + String(d.champion || ""));
   const rank = variantRank();
@@ -212,14 +215,14 @@ export function groupDecks(decks = allDecks()) {
   const top = decks.filter(d => d.path.startsWith("lab/variants/") && rank.has(d.path)).sort((a, b) => rank.get(b.path) - rank.get(a.path)).slice(0, 10);
   const best = top[0];
   decks.forEach(d => {
-    if (d.path === "decks/riven_sacramento.txt") g["Riven"].unshift(d);
+    if (d.path === "decks/riven_sacramento.txt") g["Riven"].push(d);
     else if (d.path.startsWith("lab/decks/meta/")) {
       const ref = decks.find(x => x.path === "decks/riven_sacramento.txt");
       if (ref && ref.list && sameMain(ref.list, d.list)) return;   // the reference list is this tournament list: shown once
       (isRiven(d) ? g["Riven"] : g["Meta opponents"]).push(d);
     }
   });
-  if (best) g["Riven"].push(best);
+  if (best) g["Riven"].unshift(best);   // the best-measured list first, then the reference and the tournament lists
   g["Optimiser · top 10"] = top;
   return g;
 }

@@ -7,7 +7,7 @@
    Screen styles are in decks.css (injected once). */
 import { data, esc, num, fmtDate, plural, store, navigate, badge, chip, pageHead, empty, notice, toast, cssOnce,
          cardByName, card, cardImg, cardChip, portrait, domainDots, rate, table, enhance, wilson, pooled,
-         deckByPath, allDecks, groupDecks, deckFace, deckPilot, deckEvent, deckHero, deckShort, eventLabel, isPlumbing, testsByDate, $ } from "./lib.js";
+         deckByPath, allDecks, groupDecks, bestVariantPath, deckFace, deckPilot, deckEvent, deckHero, deckShort, eventLabel, isPlumbing, testsByDate, $ } from "./lib.js";
 
 const DEFAULT = "decks/riven_sacramento.txt";
 const LAUNCH_DEFAULT = { name: "", decks: [DEFAULT], variants: [], opponents: [], agent: "standard", games: 100 };
@@ -36,6 +36,7 @@ const name = d => variantChanges(d).length ? stem(d.path) : title(d);
 const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
 /** Short title for a tile or a heading: "Kennen (Dylan Sumner)", the changes of a generated variant, else "Ahri · ahri test". */
 function title(d) {
+  if (d.path === bestVariantPath()) return "Best list (provisional)";
   if (pilotOf(d)) return deckShort(d.path);
   const ch = variantChanges(d); if (ch.length) return ch.map(([n, k]) => `${k > 0 ? "+" : "−"}${Math.abs(k)} ${n}`).join(", ");
   return `${heroName(d)} · ${stem(d.path).replace(/_/g, " ")}`;

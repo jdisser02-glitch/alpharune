@@ -7,7 +7,7 @@
    the board's gold highlights plus the list under the table. The game lives in module scope: leaving the screen and coming back
    finds it where it was. Router contract: render(container) / destroy(); no params. Styles: app/play.css (prefix .v-play). */
 import { runtime, data, esc, $, $$, store, sleep, card, cardByName, cardImg, portrait, domainDots, pageHead, chip, cssOnce, chipText as libChipText,
-         empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural } from "./lib.js";
+         empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural, bestVariantPath } from "./lib.js";
 
 const CSS = new URL("./play.css", import.meta.url).href;
 const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "search", autopay: true };
@@ -89,6 +89,7 @@ function deckMeta(d) {
   const cs = d.comments || [], head = cs[0] || "", p = deckPilot(d);
   const ev = (cs.find(c => /^Event:/.test(c)) || "").replace(/^Event:\s*/, "");
   if (p && ev) return { name: deckShort(d.path), sub: `#${p.place} · ${eventLabel(ev)}` };
+  if (d.path === bestVariantPath()) return { name: "Best list (provisional)", sub: "the optimiser's best-measured list" };
   if (d.path.startsWith("lab/variants/")) return { name: deckShort(d.path), sub: "variant of the reference list" };
   if (head.includes(" — ")) return { name: deckShort(d.path), sub: head.split(" — ").slice(1).join(" — ").replace(/[.\s]+$/, "") };
   return { name: deckShort(d.path), sub: "engine test deck" };
