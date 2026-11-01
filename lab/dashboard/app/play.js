@@ -138,12 +138,15 @@ const SPEEDS = {
   fast:   { label: "Fast",   hold: 750,  trivial: 40,  help: "Each action of the bot is shown for about 0.75 s." },
   normal: { label: "Normal", hold: 1600, trivial: 140, help: "Each action of the bot is shown for about 1.6 s." },
   slow:   { label: "Slow",   hold: 3000, trivial: 280, help: "Each action of the bot is shown for about 3 s." },
-  step:   { label: "Step",   hold: 1600, trivial: 140, step: true, help: "The bot waits after each action: press Next or the space bar." },
 };
-const SPEED_KEY = "rl.play.speed";
+const SPEED_KEY = "rl.play.speed", AUTO_KEY = "rl.play.auto";
 function loadSpeed() { try { const v = localStorage.getItem(SPEED_KEY); return SPEEDS[v] ? v : "normal"; } catch (e) { return "normal"; } }
 function saveSpeed(v) { try { localStorage.setItem(SPEED_KEY, v); } catch (e) { /* private window: the choice lasts this visit */ } }
+/* Auto off (the default): each significant action of the bot waits on the table until you click it, Next or the space bar. */
+function loadAuto() { try { return localStorage.getItem(AUTO_KEY) === "on"; } catch (e) { return false; } }
+function saveAuto(v) { try { localStorage.setItem(AUTO_KEY, v ? "on" : "off"); } catch (e) { /* private window */ } }
 G.speed = loadSpeed();
+G.auto = loadAuto();
 const ICON = { spell: "✦", unit: "▲", gear: "⚙", equip: "⚙", move: "➜", attack: "⚔", ability: "⚡", hide: "◧", target: "◎", choice: "?", damage: "⚔", score: "★" };
 /* The show queue: P.cur is on the table; P.idle are the waiters for "nothing left to show". */
 const P = { q: [], cur: null, timer: 0, waiting: false, idle: [], until: 0 };
@@ -159,7 +162,7 @@ function nextShow() {
   if (!p) { P.until = 0; for (const f of P.idle.splice(0)) f(); paintPace(); return; }
   const sp = SPEEDS[G.speed] || SPEEDS.normal;
   // Step: the bot's action waits for Next (a spell whose target comes next does not wait)
-  if (sp.step && p.player !== G.seat && p.kind !== "score" && !p.short) { P.waiting = true; P.until = 0; paintPace(); return; }
+  if (!G.auto && p.player !== G.seat && p.kind !== "score" && !p.short) { P.waiting = true; P.until = 0; paintPace(); return; }
   const ms = p.short ? Math.round(sp.hold * .35) : sp.hold;
   P.until = performance.now() + ms; P.timer = setTimeout(nextShow, ms);
   paintPace();
@@ -174,15 +177,20 @@ function paintPace() {
   paintWho();
 }
 /** The turn bar's pill while the bot's last action is on show (its next move is already chosen). */
-const whoShow = () => P.waiting ? "Bot waits: press Next" : "Bot's move";
+const whoShow = () => P.waiting ? "Bot waits: click its card or Next" : "Bot's move";
 function paintWho() { const el = G.showing && G.host && $("#vp-bar .who.bot", G.host); if (el) el.textContent = whoShow(); }
 function paceHtml() {
-  const sp = SPEEDS[G.speed] || SPEEDS.normal;
-  return `<span class="vp-pace" id="vp-pace" role="group" aria-label="pace of the bot's moves"><span class="lbl">Bot pace</span><span class="segmented">${Object.entries(SPEEDS).map(([k, v]) => `<button type="button" data-speed="${k}" aria-pressed="${k === G.speed}" title="${esc(v.help)}">${esc(v.label)}</button>`).join("")}</span>${sp.step ? `<button type="button" class="btn-sm ${P.waiting ? "primary" : ""}" id="vp-next" ${P.waiting ? "" : "disabled"} title="Show the bot's next action (space bar)">Next <span class="kbd">Space</span></button>` : ""}</span>`;
+  const game = G.host && $("#vp-game", G.host); if (game) game.classList.toggle("stepwait", !!P.waiting);
+  const speeds = G.auto ? `<span class="segmented">${Object.entries(SPEEDS).map(([k, v]) => `<button type="button" data-speed="${k}" aria-pressed="${k === G.speed}" title="${esc(v.help)}">${esc(v.label)}</button>`).join("")}</span>`
+    : `<button type="button" class="btn-sm ${P.waiting ? "primary" : ""}" id="vp-next" ${P.waiting ? "" : "disabled"} title="Show the bot's next action: click its card on the table, this button or the space bar">Next <span class="kbd">Space</span></button>`;
+  return `<span class="vp-pace" id="vp-pace" role="group" aria-label="pace of the bot's moves"><label class="switch" style="margin:0"><input type="checkbox" id="vp-auto" ${G.auto ? "checked" : ""}><span>Bot plays on its own</span></label>${speeds}</span>`;
 }
 function setSpeed(v) {
-  if (!SPEEDS[v]) return; G.speed = v; saveSpeed(v);
-  if (P.waiting && !SPEEDS[v].step) nextShow(); else paintPace();
+  if (!SPEEDS[v]) return; G.speed = v; saveSpeed(v); paintPace();
+}
+function setAuto(on) {
+  G.auto = !!on; saveAuto(G.auto);
+  if (P.waiting && G.auto) nextShow(); else paintPace();
 }
 /* The chain's targets, ringed on the table until the spell or ability resolves: [{source, target, player, seen, age}]. */
 function trackTargets(st, add) {
@@ -546,6 +554,7 @@ function drawGame() {
   G.root.addEventListener("click", e => {
     const opt = e.target.closest(".po-opt[data-pick]");
     if (opt) { e.stopPropagation(); /* the chip inside must not open the card preview on tap */ pick(+opt.dataset.pick); return; }
+    if (P.waiting && e.target.closest(".rb-pstage")) { e.stopPropagation(); stepNext(); return; }   // click the bot's card to go on
     const sp = e.target.closest("[data-speed], #vp-next");
     if (sp) { if (sp.id === "vp-next") stepNext(); else setSpeed(sp.dataset.speed); return; }
     if (e.target.closest("#vp-note-save")) { saveNote(); return; }
@@ -558,6 +567,7 @@ function drawGame() {
     else if (t.id === "vp-log-sum") setTimeout(() => { G.ui.logOpen = t.parentNode.open; }, 0);
   });
   G.root.addEventListener("change", e => {
+    if (e.target.id === "vp-auto") { setAuto(e.target.checked); return; }
     if (e.target.id === "vp-autopay2") { G.autopay = e.target.checked; G.cfg.autopay = G.autopay; store("rl.play", G.cfg); if (G.autopay) advance(); }
     else if (e.target.id === "vp-phasehelp") { G.ui.phaseHelp = e.target.checked; store("rl.play.phaseHelp", G.ui.phaseHelp ? "on" : "off"); paint(); }
   });
@@ -640,15 +650,31 @@ function barHtml(st, over, human, sit) {
     <span class="seats">${faceMe ? portrait(faceMe, { size: "sm" }) : ""}<span class="lbl"><b>You</b> P${me}</span><span class="sc p${me}">${sc[me - 1] ?? 0}</span><span class="dash">–</span><span class="sc p${opp}">${sc[opp - 1] ?? 0}</span><span class="lbl">P${opp} <b>Bot</b></span>${faceBot ? portrait(faceBot, { size: "sm" }) : ""}</span>${over ? "" : paceHtml()}
     ${G.ui.phaseHelp && !over ? `<span class="phase ${sit && sit.index >= 0 && sit.mode ? sit.mode : ""}">${esc(phaseLine(st, sit))}</span>` : ""}${chainLine}`;
 }
+/** What a card is asking you to choose, from the engine's last CHOICE-REQUEST line: "Switcheroo: choose the second unit". */
+function choicePrompt(st) {
+  const legal = st.legal || [];
+  if (!st.decision_is_human || st.paying_cost || !legal.length || !legal.every(l => l.type === "MakeChoice")) return "";
+  const lines = [...(st.log || []), ...(G.log || []).slice(-40)].reverse();
+  const raw = lines.map(l => String(l)).find(l => /CHOICE-REQUEST/.test(l)); if (!raw) return "";
+  let t = raw.replace(/^.*?CHOICE-REQUEST(?: \(finalize\))?: /, "").replace(/ \[\d+ options?\].*$/, "").trim();
+  let m;
+  if ((m = /^target A: (.+)$/.exec(t))) return `${m[1]}: choose the first card`;
+  if ((m = /^target B: (.+)$/.exec(t))) return `${m[1]}: choose the second card`;
+  if ((m = /^target: (.+?): (.+)$/.exec(t))) return `${m[1]}: ${m[2]}`;
+  if ((m = /^target: (.+)$/.exec(t))) return `${m[1]}: choose a target`;
+  if ((m = /^may: (.+)$/.exec(t))) return m[1];
+  return t;
+}
 function optionsHtml(st, legal, human, sit) {
-  const title = human && st.paying_cost ? "Pay with" : "Your options";
+  const ask = human ? choicePrompt(st) : "";
+  const title = human && st.paying_cost ? "Pay with" : ask ? esc(ask) : "Your options";
   const autoPay = st.decision_is_human && st.paying_cost && G.autopay;
   const state = human ? (st.paying_cost ? "pick the rune to exhaust" : plural(legal.length, "option")) : G.thinking ? "the bot is choosing" : autoPay ? "paying the cost for you" : st.paying_cost ? "the bot is paying" : G.busy ? "one moment" : "waiting for the engine";
   const mark = e => sit && sit.index >= 0 && sit.mode && RiftBoard.concerns(e, sit) ? `<span class="po-mark ${sit.mode}" title="this option concerns the ${sit.mode === "combat" ? "combat" : "showdown"} at ${esc(sit.name)}">this ${sit.mode === "combat" ? "combat" : "showdown"}</span>` : "";
   const rows = optionRows(legal); G.ui.order = rows.map(r => r.l.index);   // the keys 1–9 follow the order shown
   const list = legal.length && !autoPay ? `<div class="po-list">${rows.map(({ l: e, label, cls }, i) => `<button type="button" class="po-opt ${e.card || e.battlefield ? "hot" : ""} ${cls}" data-pick="${e.index}" ${human ? "" : "disabled"} title="${esc(e.text || "")}">${i < 9 ? `<kbd class="kbd">${i + 1}</kbd>` : `<kbd class="kbd blank">·</kbd>`}<span class="po-text">${chipText(label || "option " + e.index)}</span>${mark(e)}</button>`).join("")}</div>`
     : `<div class="po-none">${G.thinking ? "The bot is thinking. Your options appear here when it is your move." : autoPay ? "Rune costs are paid for you; turn that off in the side panel to pick the runes yourself." : "Nothing to choose right now."}</div>`;
-  return `<header class="po-head"><h3>${title}</h3><span class="state">${esc(state)}</span><span class="keys"><span class="kbd">1</span>–<span class="kbd">9</span> pick · <span class="kbd">Enter</span> first</span><button type="button" class="btn-sm po-toggle" id="vp-sheet" aria-expanded="${G.ui.sheet}">${G.ui.sheet ? "Hide" : "Show"}</button></header>${list}
+  return `<header class="po-head"><h3 class="${ask ? "po-ask" : ""}">${title}</h3><span class="state">${esc(state)}</span><span class="keys"><span class="kbd">1</span>–<span class="kbd">9</span> pick · <span class="kbd">Enter</span> first</span><button type="button" class="btn-sm po-toggle" id="vp-sheet" aria-expanded="${G.ui.sheet}">${G.ui.sheet ? "Hide" : "Show"}</button></header>${list}
     ${human && st.paying_cost ? `<p class="hint" style="margin-top:8px">The engine pays costs rune by rune. Turn automatic payment on in the side panel to skip these steps.</p>` : ""}`;
 }
 /** The options in the order shown: an equip's ways to pay grouped under its target, the payment spelled out
