@@ -313,7 +313,7 @@ async function start() {
     const me = deckByPath(c.me), bot = deckByPath(c.bot);
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
-    G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [] };
+    G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [], notes: [] };
     G.saved = null; G.played = []; G.savedAt = 0; G.botStory = []; G.chainTargets = []; G.lastSig = null; clearShow();
     Object.assign(G, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null,
                        tally: { 1: { conquer: 0, hold: 0, effect: 0 }, 2: { conquer: 0, hold: 0, effect: 0 } } });
@@ -532,6 +532,11 @@ function drawGame() {
       </div>
       <div class="vp-side" id="vp-side">
         <section class="panel vp-opts" id="vp-opts" aria-label="your options"></section>
+        <section class="panel vp-note" id="vp-note" aria-label="note for Claude">
+          <h3>Note for Claude</h3>
+          <textarea id="vp-note-text" rows="3" placeholder="What looks wrong or strange right now? Saved with this exact moment of the game."></textarea>
+          <div class="vp-note-row"><button type="button" class="btn-sm primary" id="vp-note-save">Save note</button><span class="hint" id="vp-note-n"></span></div>
+        </section>
         <aside class="vp-aside" id="vp-aside" aria-label="game panel"></aside>
       </div>
     </div>`;
@@ -542,6 +547,7 @@ function drawGame() {
     if (opt) { e.stopPropagation(); /* the chip inside must not open the card preview on tap */ pick(+opt.dataset.pick); return; }
     const sp = e.target.closest("[data-speed], #vp-next");
     if (sp) { if (sp.id === "vp-next") stepNext(); else setSpeed(sp.dataset.speed); return; }
+    if (e.target.closest("#vp-note-save")) { saveNote(); return; }
     const t = e.target.closest("#vp-sheet, #vp-concede, #vp-again, #vp-new, #vp-log-sum"); if (!t) return;
     if (t.id === "vp-sheet") { G.ui.sheet = !G.ui.sheet; $("#vp-game", G.root).classList.toggle("sheet-closed", !G.ui.sheet); t.textContent = G.ui.sheet ? "Hide" : "Show"; t.setAttribute("aria-expanded", G.ui.sheet); }
     else if (t.id === "vp-concede") concede();
@@ -730,6 +736,22 @@ function record(st, index, who) {
 }
 /** Save the finished game to the lab's database (when the page runs on claude.ai), so it can be replayed with the strong
     bot and annotated like the human games. */
+/** A note the player leaves for review, pinned to the decision on screen: the decision number, turn and phase, the
+    bot's last move, the options offered and the board, so the reviewer can find the exact moment in the record. */
+function saveNote() {
+  const ta = G.root && $("#vp-note-text", G.root), text = ta ? ta.value.trim() : "";
+  if (!text) { toast("Write the note first.", ""); return; }
+  if (!G.rec) { toast("Start a game first: a note is saved with the game.", ""); return; }
+  const st = G.st || {}, b = st.board || {};
+  G.rec.notes = G.rec.notes || [];
+  G.rec.notes.push({ text, at: new Date().toISOString(), decision: G.rec.decisions.length, n: st.n, turn: b.turn, phase: b.phase,
+    to_act: st.decision_is_human ? "you" : "bot", last_bot_move: (G.lastBot && G.lastBot.text) || "",
+    options: (st.legal || []).slice(0, 40).map(l => l.text), board: b });
+  ta.value = "";
+  paintNoteCount();
+  saveGame(G.stage !== "over").then(() => toast(`Note saved (turn ${b.turn ?? "?"}). Claude reads them when reviewing this game.`, "ok"));
+}
+function paintNoteCount() { const el = G.root && $("#vp-note-n", G.root), k = ((G.rec || {}).notes || []).length; if (el) el.textContent = k ? `${k} note${k > 1 ? "s" : ""} in this game` : ""; }
 async function saveGame(partial = false) {
   if (!G.rec || (!partial && !G.result)) return;
   if (G.saving) { G.saveAgain = G.saveAgain || !partial; return; }
