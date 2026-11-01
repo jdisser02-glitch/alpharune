@@ -548,6 +548,7 @@ function drawGame() {
     const sp = e.target.closest("[data-speed], #vp-next");
     if (sp) { if (sp.id === "vp-next") stepNext(); else setSpeed(sp.dataset.speed); return; }
     if (e.target.closest("#vp-note-save")) { saveNote(); return; }
+    if (e.target.closest("#vp-tale-sum")) { setTimeout(() => { const d = $(".vp-tale", G.root); G.ui.taleOpen = !!(d && d.open); }, 0); }
     const t = e.target.closest("#vp-sheet, #vp-concede, #vp-again, #vp-new, #vp-log-sum"); if (!t) return;
     if (t.id === "vp-sheet") { G.ui.sheet = !G.ui.sheet; $("#vp-game", G.root).classList.toggle("sheet-closed", !G.ui.sheet); t.textContent = G.ui.sheet ? "Hide" : "Show"; t.setAttribute("aria-expanded", G.ui.sheet); }
     else if (t.id === "vp-concede") concede();
@@ -774,6 +775,28 @@ function savedHtml() {
   return G.saved.ok ? notice(`Saved for review as <b class="mono">${esc(G.saved.id)}</b>: it can be replayed with the strong bot and annotated in Replays.`, "ok")
                     : notice(`Not saved: ${esc(G.saved.why)}.`, "");
 }
+/** The bot's moves since your last decision, one short line each: "Charm → Scuttle Crab", "Sprite → Seat of Power",
+    "Blade of the Exile equipped to Riven", "Sprite dies", "+1 point". Runes, costs, triggers, resolutions and engine
+    bookkeeping are left out; a spell and the target it chose become one line. */
+function simpleTale(lines) {
+  const out = [];
+  for (const l of lines) {
+    const c = l.cards || [], last = out[out.length - 1];
+    if (l.kind === "play") {
+      const spell = /\bcasts\b/.test(l.text);
+      out.push({ kind: "play", icon: spell ? "✦" : "▲", card: c[0], text: spell ? `${c[0]}` : `plays ${c[0]}` });
+    } else if (l.kind === "target" && c.length === 2) {
+      if (last && last.card === c[0] && !last.target) { last.target = c[1]; last.text = `${last.text} → ${c[1]}`; }
+      else out.push({ kind: "play", icon: "✦", card: c[0], target: c[1], text: `${c[0]} → ${c[1]}` });
+    } else if (l.kind === "move") {
+      const to = (/ moves to (.+)$/.exec(l.text) || [])[1]; out.push({ kind: "move", icon: "➜", text: `${c[0]} → ${/^Base\(P\d\)$/.test(to || "") ? "base" : (to || "?")}` });
+    } else if (l.kind === "hide") out.push({ kind: "hide", icon: "◧", text: l.text.replace(/^P\d hides /, "hides ") });
+    else if (l.kind === "equip" && c.length === 2) out.push({ kind: "equip", icon: "⚔", text: `${c[0]} equipped to ${c[1]}` });
+    else if (l.kind === "kill") out.push({ kind: "kill", icon: "✖", text: `${c[0]} dies` });
+    else if (l.kind === "score") { const m = /scores (\d+) via (\w+)/.exec(l.text); if (m) out.push({ kind: "score", icon: "★", text: `+${m[1]} point${+m[1] > 1 ? "s" : ""} (${m[2].toLowerCase()})` }); }
+  }
+  return out;
+}
 function asideHtml(st, over) {
   // the bot's last significant action (never a rune payment or a pass), with the win chance it gave each option of that decision
   const sig = G.lastSig, lb = sig && sig.mv, sh = lb && lb.search, shares = (sh && sh.options || []).slice().sort((a, b) => b.score - a.score), max = Math.max(1e-9, ...shares.map(o => o.score));
@@ -782,10 +805,10 @@ function asideHtml(st, over) {
   const thumb = face === undefined ? `<span class="lb-icon">${esc(act ? act.icon : "")}</span>` : face === null ? `<span class="lb-back" aria-label="a hidden card"></span>` : cardImg(face, { size: "xs", w: 200 });
   const last = act ? `<div class="lb-act">${thumb}<div class="lb-body"><div class="lb-move"><span class="lb-ic">${esc(act.icon || "")}</span>${chipText(act.caption)}</div>
       ${lb ? `<div class="lb-meta">${lb.ms.toFixed(0)} ms${sh && sh.worlds ? ` · ${plural(sh.worlds, "redeal")}` : ""}${lb.options > 1 ? ` · chose among ${lb.options}` : " · the only option"}</div>` : ""}</div></div>
-      ${shares.length > 1 ? `<div class="shares">${shares.slice(0, 8).map(o => `<div class="share ${o.index === lb.index ? "chosen" : ""}"><span class="txt">${chipText(o.text || "option " + o.index, "sm")}</span><span class="bar"><i style="width:${(100 * o.score / max).toFixed(0)}%"></i></span><span class="pc">${(100 * o.score).toFixed(0)}%</span></div>`).join("")}</div><p class="hint" style="margin-top:8px">Estimated win chance of each move; cards the bot kept in hand are not named.</p>` : ""}`
+      ${shares.length > 1 ? `<details class="vp-why"><summary>Why this move</summary><div class="shares">${shares.slice(0, 8).map(o => `<div class="share ${o.index === lb.index ? "chosen" : ""}"><span class="txt">${chipText(o.text || "option " + o.index, "sm")}</span><span class="bar"><i style="width:${(100 * o.score / max).toFixed(0)}%"></i></span><span class="pc">${(100 * o.score).toFixed(0)}%</span></div>`).join("")}</div><p class="hint" style="margin-top:8px">Estimated win chance of each move; cards the bot kept in hand are not named.</p></details>` : ""}`
     : `<p class="hint">${over ? "The bot did not play a card or move a unit." : G.botMoves.length ? "The bot has only passed or paid costs so far." : G.seat === 1 ? "You start. The bot's moves are explained here." : "The bot starts. Its moves are explained here."}</p>`;
-  const tale = (G.botStory || []).filter(l => l.kind !== "rune" && l.kind !== "cost" && !(l.kind === "card" && /^(Pay_add|Hide_cost|Equip_cost|Tgt_prompt|Tgt_picked|May_not_offered|Token ceases)/i.test(l.text)));
-  const taleHtml = tale.length ? `<div class="vp-tale"><div class="vp-tale-h">What the bot did since your last move</div><ol>${tale.slice(-14).map(l => `<li class="${esc(l.kind)}"><i>${l.icon}</i><span>${chipText(l.text, "sm")}</span></li>`).join("")}</ol></div>` : "";
+  const tale = simpleTale(G.botStory || []);
+  const taleHtml = tale.length ? `<details class="vp-tale" ${G.ui.taleOpen ? "open" : ""}><summary id="vp-tale-sum"><span class="vp-tale-h">What the bot did</span><span class="n">${tale.length}</span></summary><ol>${tale.slice(-12).map(l => `<li class="${esc(l.kind)}"><i>${l.icon}</i><span>${chipText(l.text, "sm")}</span></li>`).join("")}</ol></details>` : "";
   return `<section class="panel"><h3>Bot's last move</h3>${last}${taleHtml}</section>
     <section class="panel"><h3>This game</h3>
       <div class="counters">${chip(`your moves <b>${G.myMoves}</b>`)}${chip(`bot moves <b>${ms.length}</b>`)}${ms.length ? chip(`bot avg <b>${avg.toFixed(0)} ms</b> · max <b>${mx.toFixed(0)} ms</b>`, "mono") : ""}${chip(`you are <b>P${G.seat}</b>`)}${chip(`bot <b>${esc(LEVELS[G.level].label.toLowerCase())}</b>`)}${chip(`seed ${G.seed}`, "mono")}</div>

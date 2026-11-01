@@ -256,3 +256,12 @@ body[data-view="play"] main#view:has(.vp-game) { padding-top: var(--sp-2); }
 .v-play .vp-note textarea { width: 100%; box-sizing: border-box; resize: vertical; min-height: 64px; padding: 8px 10px; border-radius: var(--r-1); border: 1px solid var(--line-strong, var(--line)); background: var(--s2); color: var(--ink); font: inherit; font-size: 13.5px; }
 .v-play .vp-note textarea:focus { outline: none; border-color: var(--gold); }
 .v-play .vp-note-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* "What the bot did": a collapsed list of short lines. */
+.v-play details.vp-tale > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; padding: 6px 0; }
+.v-play details.vp-tale > summary::-webkit-details-marker { display: none; }
+.v-play details.vp-tale > summary::before { content: "▸"; color: var(--gold-dim); transition: transform .15s; }
+.v-play details.vp-tale[open] > summary::before { transform: rotate(90deg); }
+.v-play details.vp-tale > summary .n { margin-left: auto; font-size: 12px; color: var(--ink-dim); }
+.v-play details.vp-why > summary { cursor: pointer; font-size: 12.5px; color: var(--ink-dim); margin-top: 6px; }
+.v-play details.vp-why[open] > summary { margin-bottom: 6px; }
