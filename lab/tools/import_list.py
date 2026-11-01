@@ -63,7 +63,9 @@ def main() -> int:
         return 1
     head = [f"# {a.title}"] + ([f"# Event: {a.event}"] if a.event else []) + [f"# Source: {a.source}"]
     body = []
-    for s in ("Legend", "Champion", "MainDeck", "Battlefields", "Runes", "Sideboard"):
+    if out.get("Sideboard"):   # the simulator plays no sideboard, and the engine's validator rejects off-domain ones
+        head.append("# Sideboard (not played): " + ", ".join(f"{n} {x}" for n, x in out["Sideboard"]))
+    for s in ("Legend", "Champion", "MainDeck", "Battlefields", "Runes"):
         if s in out:
             body += [f"{s}:"] + [f"{n} {x}" for n, x in out[s]] + [""]
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
