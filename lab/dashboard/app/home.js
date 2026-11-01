@@ -38,12 +38,12 @@ export async function render(container) {
   const missing = ((S.meta || {}).missing || []).length;
   const p3 = age == null ? 0 : clamp((age <= 14 ? 1 : 1 - (age - 14) / 28) * events.size / Math.max(1, events.size + missing));
   // 4. The best Riven list: waits for steps 1 and 2.
-  const p4 = 0;
+  const Dk = S.decks || {}, p4 = typeof Dk.pct === "number" ? Dk.pct : 0;
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1, line: `${fmt1(eNow)} errors per real game · target ${eT}`, href: "#/replays" },
     { n: 2, title: "Bot plays like a good player", pct: p2, line: `${aNow == null ? "—" : fmt1(aNow)}% same moves as humans · target ${aT}%`, sub: `Training paused · ${esc(netName)}${st.rate != null ? ` · combat look-ahead ${pct0(st.rate)} wins, ${esc(st.state || "to confirm")}` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3, line: `${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
-    { n: 4, title: "Best Riven list found", pct: p4, line: "Starts when steps 1 and 2 reach 100%", href: "#/decks" },
+    { n: 4, title: "Best Riven list found", pct: p4, line: esc(Dk.line || "Starts when steps 1 and 2 reach 100%"), href: "#/decks" },
   ];
   const overall = steps.reduce((a, s) => a + s.pct, 0) / steps.length;
   const bar = f => `<div class="h-bar" role="img" aria-label="${Math.round(f * 100)}%"><i style="width:${(f * 100).toFixed(0)}%"></i></div>`;
