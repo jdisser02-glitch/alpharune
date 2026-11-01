@@ -1,8 +1,8 @@
 /* Riven Lab — Play: a full game against the bot, in the browser.
    The WebAssembly engine runs in engine.worker.js (rb_bot_move blocks, so never on the page thread). Worker protocol, unchanged:
-     init {base, net} → {version, cards, net} · newGame {deck1, deck2, humanSeat, seed, bot} → state · state {perspective} → state
+     init {base, net, pnet} → {version, cards, net, pnet} · newGame {deck1, deck2, humanSeat, seed, bot} → state · state {perspective} → state
      apply {index} → state · botMove → {index, text, type, player, options, search, ms, state} · result → {winner, scores, turns,
-     decisions, reason} · end → true; while downloading, {type:"progress", what:"wasm"|"net", loaded, total} events.
+     decisions, reason} · end → true; while downloading, {type:"progress", what:"wasm"|"net"|"pnet", loaded, total} events.
    The table is RiftBoard (board.js, a global) with the human's seat at the bottom and the bot's hand face down; the options are
    the board's gold highlights plus the list under the table. The game lives in module scope: leaving the screen and coming back
    finds it where it was. Router contract: render(container) / destroy(); no params. Styles: app/play.css (prefix .v-play). */
@@ -16,7 +16,7 @@ const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
   search:  { label: "Search",  spec: "search:sims=50,worlds=6,settle=60",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move. It plays combats out before judging a move." },
-  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals. The strongest the browser can run; expect 5 to 15 s per move. It plays combats out before judging a move." },
+  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals, steered like the training games by the current policy net (its move preferences pick what to look at, its value head judges the outcome). The strongest the browser can run; expect 5 to 15 s per move. It plays combats out before judging a move." },
 };
 const SEATS = { "1": "Player 1, on the play", "2": "Player 2, on the draw", random: "Random" };
 const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100, focus: 1100 }, LOG_MAX = 400;
@@ -73,7 +73,7 @@ function call(cmd, args) {
 function engineReady() {
   if (!G.ready) {
     const E = data().engine, base = new URL(E.js, location.href).href.replace(/riftbound\.js$/, "");
-    G.ready = call("init", { base, net: E.net ? new URL(E.net, location.href).href : "" })
+    G.ready = call("init", { base, net: E.net ? new URL(E.net, location.href).href : "", pnet: E.policy_net ? new URL(E.policy_net, location.href).href : "" })
       .then(i => { G.info = i; store("rl.play.engineSeen", true); return i; }).catch(e => { G.ready = null; throw e; });
   }
   return G.ready;
@@ -492,15 +492,15 @@ function tilesHtml(side) {
 }
 function engineLine() {
   const E = data().engine;
-  if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards · ${G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
-  return E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
+  if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards · ${G.info.pnet ? "policy net loaded (the search bot plays as in training)" : G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
+  return E.policy_net_source ? `Bot policy net: ${esc(E.policy_net_source.split("/").pop())}` : E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
 }
 function progressHtml() {
   if (G.stage !== "loading") return "";
   const E = data().engine, mb = x => (x / 1e6).toFixed(1);
   const row = (what, label) => { const p = G.progress[what]; const pct = p ? (p.total ? p.loaded / p.total : 1) : 0;
     return `<div class="lbl"><span>${label}</span><span class="mono">${p ? `${mb(p.loaded)}${p.total ? " / " + mb(p.total) : ""} MB` : "waiting…"}</span></div><div class="prog" role="progressbar" aria-valuenow="${Math.round(100 * pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="${label}"><i style="width:${(100 * pct).toFixed(0)}%"></i></div>`; };
-  return `<div class="vp-prog">${row("wasm", "Engine")}${E.net ? row("net", "Bot value net") : ""}<div class="hint">${G.info ? "Shuffling the decks…" : "Downloaded once and kept by your browser."}</div></div>`;
+  return `<div class="vp-prog">${row("wasm", "Engine")}${E.net ? row("net", "Bot value net") : ""}${E.policy_net ? row("pnet", "Bot policy net") : ""}<div class="hint">${G.info ? "Shuffling the decks…" : "Downloaded once and kept by your browser."}</div></div>`;
 }
 function paintProgress() { const p = G.host && $("#vp-prog", G.host); if (p) p.innerHTML = progressHtml(); }
 function wireSetup() {
@@ -787,7 +787,7 @@ async function saveGame(partial = false) {
   const { db, meId } = await runtime();
   const id = `${G.rec.started.slice(0, 19).replace(/[-:T]/g, "")}_${G.seed}`;
   const doc = { ...G.rec, id, finished: partial ? null : new Date().toISOString(), in_progress: partial, result: partial ? null : G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
-    engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "" };
+    engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "", pnet: (G.info || {}).pnet ? ((data().engine || {}).policy_net_source || "") : "" };
   window.__lastGameRecord = doc;                  // reachable from the console (copy(__lastGameRecord)) when there is no database
   if (!db) { G.saving = false; if (!partial) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); } return; }
   try { await db.collection("games").doc(id).set(doc); if (!partial) G.saved = { ok: true, id }; }

@@ -176,18 +176,31 @@ IsMctsSearch::IsMctsSearch(const CardDB& db, const CardRegistry& registry,
       engine_seed_(engine_seed), sims_(std::max(1, sims)), opts_(std::move(opts)) {
     if (opts_.eval.rfind("net:", 0) == 0) net_ = ml::ValueNet::shared(opts_.eval.substr(4));
     if (opts_.eval.rfind("policy:", 0) == 0) pnet_ = ml::PolicyNet::shared(opts_.eval.substr(7));
-    if (opts_.prior == "heuristic") {
-        prior_ = &IsMctsSearch::heuristicPrior;
-    } else if (opts_.prior == "net" || (opts_.prior == "auto" && pnet_)) {
-        if (!pnet_) throw std::runtime_error("pmcts: prior=net needs eval=policy:<file>");
-        // The policy head from the deciding player's masked view.
-        prior_ = [net = pnet_, &db = db_, temp = opts_.prior_temp](const GameState& gs, const std::vector<Intent>& legal) {
-            return net->prior(gs, legal, decidingPlayerOf(gs, legal), db, temp);
-        };
-    }
+    if (opts_.prior == "net" && !pnet_) throw std::runtime_error("pmcts: prior=net needs eval=policy:<file>");
+    installOptionPrior();
 }
 
 IsMctsSearch::~IsMctsSearch() = default;
+
+PriorFn IsMctsSearch::netPrior(std::shared_ptr<const ml::PolicyNet> net) const {
+    // The policy head from the deciding player's masked view.
+    return [net = std::move(net), &db = db_, temp = opts_.prior_temp](const GameState& gs, const std::vector<Intent>& legal) {
+        return net->prior(gs, legal, decidingPlayerOf(gs, legal), db, temp);
+    };
+}
+
+void IsMctsSearch::installOptionPrior() {
+    prior_ = nullptr;
+    if (opts_.prior == "heuristic") prior_ = &IsMctsSearch::heuristicPrior;
+    else if (pnet_ && (opts_.prior == "net" || opts_.prior == "auto")) prior_ = netPrior(pnet_);
+}
+
+void IsMctsSearch::setPolicyNet(std::shared_ptr<const ml::PolicyNet> net, bool as_prior) {
+    pnet_ = std::move(net);
+    if (!pnet_) { installOptionPrior(); return; }
+    net_.reset();   // the value head evaluates from now on
+    if (as_prior) prior_ = netPrior(pnet_);
+}
 
 void IsMctsSearch::setPrior(PriorFn prior) { prior_ = std::move(prior); }
 
@@ -683,6 +696,7 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
                                   const std::vector<int32_t>* history) const {
     SearchResult out;
     out.visits.assign(legal.size(), 0);
+    out.values.assign(legal.size(), 0.0);
     if (legal.empty()) return out;
     out.chosen = 0;
     if (legal.size() == 1) { out.shares = {{0, 1.0}}; out.visits[0] = 1; return out; }
@@ -746,6 +760,7 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
         auto it = stats.find(slot_of[i]);
         if (it == stats.end()) continue;
         out.visits[i] = it->second.visits;
+        if (it->second.visits > 0) out.values[i] = it->second.sum / it->second.visits;
         total += it->second.visits;
     }
     if (total <= 0) return out;   // nothing searched: chosen stays 0, shares empty

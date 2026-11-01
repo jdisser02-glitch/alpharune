@@ -143,8 +143,10 @@ def main(argv):
     engine = {}
     net_rel = ladder.get("current_net")
     net_path = ROOT / net_rel if net_rel and (ROOT / net_rel).exists() else DEFAULT_NET
-    # The browser engine evaluates with the value head only (RBVN); the loop
-    # writes one next to every two-head policy net (.rbpn).
+    # Two nets ride along: the value net (RBVN; the loop writes one next to every two-head .rbpn) and the two-head
+    # policy net itself. The worker loads both; with the policy net the search bot plays as training does
+    # (pmcts:eval=policy:<file>: value head as leaf eval, policy head as prior), else it falls back to the value net.
+    pnet_path = net_path if net_path.suffix == ".rbpn" else net_path.with_suffix(".rbpn")
     if net_path.suffix == ".rbpn" and net_path.with_suffix(".rbvn").exists():
         net_path = net_path.with_suffix(".rbvn")
     if all(p.exists() for p in ENGINE_FILES.values()):
@@ -152,16 +154,30 @@ def main(argv):
         for rel, src in ENGINE_FILES.items():
             shutil.copy(src, DIST / rel)
             print(f"  {rel:<24} {src.stat().st_size / 1e6:.2f} MB  (from {src.relative_to(ROOT)})")
+        import base64, gzip
         net_rel_out = ""
         if net_path.exists():
             # The hosting serves only known file types, so the binary net travels base64-encoded in a JSON file.
-            import base64
             net_rel_out = "engine/value_net.json"
             (DIST / net_rel_out).write_text(json.dumps({"source": str(net_path.relative_to(ROOT)),
                                                         "base64": base64.b64encode(net_path.read_bytes()).decode()}))
             print(f"  {net_rel_out:<24} {(DIST / net_rel_out).stat().st_size / 1e6:.2f} MB  (from {net_path.relative_to(ROOT)})")
+        pnet_rel_out = ""
+        if pnet_path.exists():
+            # ~7.7 MB raw: gzipped (~5.9 MB) then base64 (~7.9 MB), under the 16 MB a hosted file may hold; the
+            # worker inflates it with DecompressionStream.
+            pnet_rel_out = "engine/policy_net.json"
+            (DIST / pnet_rel_out).write_text(json.dumps({"source": str(pnet_path.relative_to(ROOT)), "encoding": "gzip",
+                                                         "base64": base64.b64encode(gzip.compress(pnet_path.read_bytes(), 9, mtime=0)).decode()}))
+            size = (DIST / pnet_rel_out).stat().st_size
+            print(f"  {pnet_rel_out:<24} {size / 1e6:.2f} MB  (from {pnet_path.relative_to(ROOT)})")
+            if size > 16_000_000:
+                print(f"  {pnet_rel_out} is over 16 MB: not shipped, the bot will use the value net")
+                (DIST / pnet_rel_out).unlink()
+                pnet_rel_out = ""
         engine = {"js": "engine/riftbound.js", "wasm": "engine/riftbound.wasm",
-                  "net": net_rel_out, "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else ""}
+                  "net": net_rel_out, "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else "",
+                  "policy_net": pnet_rel_out, "policy_net_source": str(pnet_path.relative_to(ROOT)) if pnet_rel_out else ""}
     else:
         print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
 

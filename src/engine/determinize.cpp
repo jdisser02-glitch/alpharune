@@ -28,6 +28,30 @@ IdentityOverrides sampleHiddenIdentities(const GameState& gs, PlayerId observer,
     };
     for (const auto& it : gs.chain.items) pinItem(it);
     if (gs.chain.resuming.has_value()) pinItem(*gs.chain.resuming);
+    // The cards a resolving card shows its chooser to pick from are known to
+    // that player: the top cards of its deck it looks at (Lightning Rush's
+    // "draw one of the top 3"), a revealed hand. Re-dealing them would give
+    // every world different cards behind the same options, and the search
+    // would value "draw this card" as a random card (its tree keys options by
+    // card identity, so most of those visits would not even reach the
+    // option). A facedown card of the opponent's stays hidden.
+    if (gs.decision_site.kind == DecisionSiteKind::ChainChoice && gs.chain.resuming.has_value() &&
+        gs.decision_site.chain_choice_player == observer) {
+        auto facedownOfOpponent = [&](GameObjectId oid) {
+            if (!gs.objectExists(oid) || gs.getObject(oid).controller == observer) return false;
+            for (const auto& bf : gs.battlefields)
+                if (std::find(bf.facedown.begin(), bf.facedown.end(), oid) != bf.facedown.end()) return true;
+            return false;
+        };
+        auto pinShown = [&](GameObjectId oid) {
+            if (oid != kInvalidId && !facedownOfOpponent(oid)) pinned.insert(oid);
+        };
+        for (const auto& in : gs.decision_site.chain_choice_legal) {
+            for (auto oid : in.chosen_objects) pinShown(oid);
+            for (auto oid : in.targets) pinShown(oid);
+            pinShown(in.card);
+        }
+    }
     auto free = [&](GameObjectId oid) {
         return gs.objectExists(oid) && !pinned.count(oid) &&
                gs.getObject(oid).card_def_id != kInvalidId;

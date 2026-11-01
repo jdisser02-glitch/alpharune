@@ -1,9 +1,11 @@
 /* Web Worker around the WebAssembly engine (engine/riftbound.js + riftbound.wasm).
    The page posts {id, cmd, ...} and gets {id, ok:true, result} or {id, ok:false, error};
-   while downloading it also gets {type:"progress", what:"wasm"|"net", loaded, total}.
+   while downloading it also gets {type:"progress", what:"wasm"|"net"|"pnet", loaded, total}.
 
-   cmd init     {base, net}            base = URL prefix of riftbound.js/.wasm, net = URL of the value net (optional)
-                                       → {version, cards, net: true|false}
+   cmd init     {base, net, pnet}      base = URL prefix of riftbound.js/.wasm, net = URL of the value net (optional),
+                                       pnet = URL of the two-head policy net (optional; loaded after the value net: with it
+                                       the search bot evaluates with its value head and uses its policy head as prior)
+                                       → {version, cards, net: true|false, pnet: true|false}
    cmd newGame  {deck1, deck2, humanSeat, seed, bot}   deck texts (Piltover Archive format), seat 1|2 (0 = bot vs bot)
                                        → state (see below)
    cmd state    {perspective?}         → state as rb_state_json sees it: the human's perspective by default,
@@ -56,7 +58,7 @@ function maskDraws(log, bot) {
 }
 
 const CMDS = {
-  async init({ base, net }) {
+  async init({ base, net, pnet }) {
     const wasm = await fetchBytes(base + "riftbound.wasm", "wasm");
     importScripts(base + "riftbound.js");
     M = await createRiftbound({ wasmBinary: wasm, locateFile: f => base + f, print: () => {}, printErr: s => console.warn("[engine] " + s) });
@@ -66,20 +68,27 @@ const CMDS = {
             decisionPlayer: c("rb_decision_player", "number", []), stateJson: c("rb_state_json", "string", ["number"]), apply: c("rb_apply", "number", ["number"]),
             botMove: c("rb_bot_move", "number", []), searchJson: c("rb_bot_last_search_json", "string", []), resultJson: c("rb_result_json", "string", []),
             loadNet: c("rb_load_value_net", "number", ["number", "number"]), endGame: c("rb_end_game", null, []) };
-    let netOk = false;
-    if (net) {
+    // An older engine build has no rb_load_policy_net: the bot then stays on the value net.
+    if (M._rb_load_policy_net) api.loadPolicyNet = c("rb_load_policy_net", "number", ["number", "number"]);
+    const loadInto = async (url, what, load, label) => {
+      if (!url || !load) return false;
       try {
-        let bytes = await fetchBytes(net, "net");
-        if (/\.json$/i.test(net)) {           // base64 inside JSON (the hosting serves no raw binaries)
-          const b64 = JSON.parse(new TextDecoder().decode(bytes)).base64, bin = atob(b64);
+        let bytes = await fetchBytes(url, what);
+        if (/\.json$/i.test(url)) {           // base64 inside JSON (the hosting serves no raw binaries)
+          const doc = JSON.parse(new TextDecoder().decode(bytes)), bin = atob(doc.base64);
           bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+          if (doc.encoding === "gzip")          // the policy net: gzipped before base64
+            bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
         }
         const ptr = M._malloc(bytes.length); M.HEAPU8.set(bytes, ptr);
-        const rc = api.loadNet(ptr, bytes.length); M._free(ptr);
-        if (rc !== 0) console.warn("[engine] value net rejected: " + api.lastError()); else netOk = true;
-      } catch (e) { console.warn("[engine] value net not loaded: " + e.message); }
-    }
-    return { version: api.version(), cards: api.cardCount(), net: netOk };
+        const rc = load(ptr, bytes.length); M._free(ptr);
+        if (rc !== 0) { console.warn(`[engine] ${label} rejected: ` + api.lastError()); return false; }
+        return true;
+      } catch (e) { console.warn(`[engine] ${label} not loaded: ` + e.message); return false; }
+    };
+    const netOk = await loadInto(net, "net", api.loadNet, "value net");
+    const pnetOk = await loadInto(pnet, "pnet", api.loadPolicyNet, "policy net");
+    return { version: api.version(), cards: api.cardCount(), net: netOk, pnet: pnetOk };
   },
   async newGame({ deck1, deck2, humanSeat: seat, seed, bot }) {
     if (!api) throw new Error("engine not initialised");

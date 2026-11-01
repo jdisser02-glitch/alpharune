@@ -65,6 +65,7 @@ struct SearchResult {
     int chosen = -1;                              ///< index into the root's legal list
     std::vector<std::pair<int, double>> shares;   ///< (legal index, visit share), AgentInterface::lastSearch
     std::vector<int> visits;                      ///< root visits per legal index (0 for options sharing a slot)
+    std::vector<double> values;                   ///< mean backed-up value per legal index for the acting player (0 when unvisited)
     double root_value = 0.0;                      ///< mean backed-up value for the acting player, [-1, 1]
     int simulations = 0;                          ///< simulations that reached a value
     int failed = 0;                               ///< simulations abandoned on an engine error
@@ -116,6 +117,12 @@ public:
     /// Use an already loaded value net as the leaf evaluation (the browser
     /// engine has no file to name in SearchOptions::eval).
     void setValueNet(std::shared_ptr<const ml::ValueNet> net) { net_ = std::move(net); }
+    /// Use an already loaded two-head network as eval=policy:<file> would:
+    /// its value head becomes the leaf evaluation (in place of a value net
+    /// set before) and, with `as_prior`, its policy head the PUCT prior (as
+    /// prior=auto / net), whatever SearchOptions::prior says. nullptr drops
+    /// it and restores the prior SearchOptions::prior names.
+    void setPolicyNet(std::shared_ptr<const ml::PolicyNet> net, bool as_prior = true);
     /// Replace the leaf evaluation of a non-terminal state by `fn` (value
     /// for the player given, in [-1, 1]); an empty function restores
     /// SearchOptions::eval. For custom heuristics and tests.
@@ -145,6 +152,11 @@ public:
     static std::vector<double> heuristicPrior(const GameState& state, const std::vector<Intent>& legal);
 
 private:
+    /// The prior SearchOptions::prior names (the policy head of pnet_ for
+    /// "auto" / "net"); none for "uniform".
+    void installOptionPrior();
+    PriorFn netPrior(std::shared_ptr<const ml::PolicyNet> net) const;
+
     const CardDB& db_;
     const CardRegistry& registry_;
     DeckSubmission deck1_, deck2_;

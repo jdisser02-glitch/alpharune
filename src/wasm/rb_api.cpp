@@ -20,9 +20,19 @@
 ///                                     applies it, returns the legal index
 ///                                     (negative = error).
 ///   rb_bot_last_search_json()         {chosen, ms, worlds, options:[{index,
-///                                     score}]} of that search.
+///                                     score}], net, stats} of that search;
+///                                     the search bot's stats = {sims,
+///                                     failed, rejected, settled, values (the
+///                                     mean value of each option listed)}.
 ///   rb_is_terminal() / rb_result_json() / rb_decision_player() /
 ///   rb_legal_count() / rb_load_value_net(bytes, len) / rb_end_game()
+///   rb_load_policy_net(bytes, len)    a two-head .rbpn: the search bot then
+///                                     evaluates with its value head and
+///                                     takes its policy head as the PUCT
+///                                     prior, as training's
+///                                     pmcts:eval=policy:<file> does; without
+///                                     it the bot uses the value net and the
+///                                     heuristic prior. rb_has_policy_net().
 ///
 /// Every function catches C++ exceptions and reports them through
 /// rb_last_error(); returned strings stay valid until the next call of the
@@ -34,6 +44,7 @@
 #include "core/version.h"
 #include "engine/game_engine.h"
 #include "io/decision_log.h"
+#include "ml/policy_net.h"
 #include "ml/value_net.h"
 #include "rules/deck_validator.h"
 #include "wasm/greedy_bot.h"
@@ -109,6 +120,18 @@ struct Session {
 
 std::unique_ptr<Session> g_session;
 std::shared_ptr<const ml::ValueNet> g_net;
+std::shared_ptr<const ml::PolicyNet> g_pnet;   // when loaded, the search bot's eval and prior
+
+/// The search bot's networks: the policy net (value head + prior) when one is
+/// loaded, else the value net with the heuristic prior.
+void wireSearchNets(search::IsMctsSearch& s) {
+    if (g_pnet) {
+        s.setPolicyNet(g_pnet, /*as_prior=*/true);
+    } else {
+        s.setPolicyNet(nullptr);
+        s.setValueNet(g_net);
+    }
+}
 std::string g_last_error;
 std::string g_state_buf, g_result_buf, g_search_buf;
 
@@ -322,13 +345,13 @@ RB_EXPORT int rb_new_game(const char* deck1_txt, const char* deck2_txt, int huma
             opts.eval = "score";            // replaced by the loaded net below
             opts.worlds = ss.worlds;
             opts.threads = 1;
-            opts.prior = "heuristic";
+            opts.prior = "heuristic";       // without a policy net (wireSearchNets)
             opts.settle = ss.settle;
             for (int k = 0; k < 2; ++k) {
                 ses->search[k] = std::make_unique<search::PuctAgent>(
                     c.db, c.registry, ses->deck1, ses->deck2, ses->seed,
                     ses->seed * 7919u + 17u + static_cast<uint64_t>(k), ss.sims, opts);
-                if (g_net) ses->search[k]->searcher().setValueNet(g_net);
+                wireSearchNets(ses->search[k]->searcher());
                 ses->search[k]->setDecisionHistory(&ses->history);
             }
             ses->search_worlds = ss.worlds;
@@ -412,6 +435,7 @@ RB_EXPORT int rb_bot_move() {
         int idx = 0;
         json arr = json::array();
         double ms = 0; int worlds = 0; bool replayed = false;
+        json stats = nullptr;
         if (ses.search[0]) {
             auto& agent = *ses.search[who == PlayerId::Player2 ? 1 : 0];
             const auto t0 = std::chrono::steady_clock::now();
@@ -420,6 +444,11 @@ RB_EXPORT int rb_bot_move() {
             for (size_t i = 0; i < step.legal.size(); ++i) if (step.legal[i] == chosen) { idx = static_cast<int>(i); break; }
             for (const auto& [i, v] : agent.lastSearch()) arr.push_back({{"index", i}, {"score", v}});
             worlds = ses.search_worlds; replayed = !agent.lastResult().resumed;
+            const auto& r = agent.lastResult();
+            json values = json::array();
+            for (const auto& [i, v] : agent.lastSearch()) values.push_back(r.values[static_cast<size_t>(i)]);
+            stats = {{"sims", r.simulations}, {"failed", r.failed}, {"rejected", r.replay_rejected},
+                     {"settled", r.settled}, {"values", values}};
         } else {
             auto& bot = botFor(ses, who);
             idx = bot.choose(*ses.engine, who, ses.history);
@@ -434,7 +463,9 @@ RB_EXPORT int rb_bot_move() {
         // Search record for rb_bot_last_search_json.
         g_search_buf = json{{"player", playerToSeat(who)}, {"chosen", idx},
                             {"ms", ms}, {"worlds", worlds},
-                            {"replayed", replayed}, {"options", arr}}.dump();
+                            {"replayed", replayed}, {"options", arr},
+                            {"net", ses.search[0] && g_pnet ? "policy" : g_net ? "value" : "none"},
+                            {"stats", stats}}.dump();
         return idx;
     } catch (const std::exception& e) {
         return -fail(kEngineError, e.what());
@@ -481,13 +512,30 @@ RB_EXPORT int rb_load_value_net(const uint8_t* data, int len) {
         g_net = net;
         if (g_session) {
             for (auto& b : g_session->bots) if (b) b->setValueNet(g_net);
-            for (auto& a : g_session->search) if (a) a->searcher().setValueNet(g_net);
+            for (auto& a : g_session->search) if (a) wireSearchNets(a->searcher());
         }
         return kOk;
     } catch (const std::exception& e) {
         return fail(kBadNet, e.what());
     }
 }
+
+RB_EXPORT int rb_load_policy_net(const uint8_t* data, int len) {
+    g_last_error.clear();
+    if (!data || len <= 0) return fail(kBadArgument, "empty policy net buffer");
+    try {
+        auto net = std::make_shared<const ml::PolicyNet>(data, static_cast<size_t>(len), "policy net");
+        g_pnet = net;
+        if (g_session)
+            for (auto& a : g_session->search) if (a) wireSearchNets(a->searcher());
+        return kOk;
+    } catch (const std::exception& e) {
+        return fail(kBadNet, e.what());
+    }
+}
+
+/// 1 when a policy net is loaded (the search bot uses it), else 0.
+RB_EXPORT int rb_has_policy_net() { return g_pnet ? 1 : 0; }
 
 /// Drop the current game (frees the engine and its fiber).
 RB_EXPORT void rb_end_game() { g_session.reset(); }

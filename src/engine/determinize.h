@@ -22,7 +22,9 @@ using IdentityOverrides = std::vector<std::pair<GameObjectId, CardDefId>>;
 /// opponent's hand, Main Deck and facedown cards share one pool (facedown
 /// slots only take cards with [Hidden]); the observer's own Main Deck and both
 /// Rune Decks are shuffled. Objects the chain refers to are known and never
-/// re-dealt. `rng` returns uniform doubles in [0, 1). Public zones and the
+/// re-dealt, nor are the cards a resolving card's pending choice offers the
+/// observer (the top cards it looked at, say), except an opponent's facedown
+/// card. `rng` returns uniform doubles in [0, 1). Public zones and the
 /// observer's hand are untouched, so the observer's view of the result is the
 /// same as of `gs`.
 IdentityOverrides sampleHiddenIdentities(const GameState& gs, PlayerId observer,

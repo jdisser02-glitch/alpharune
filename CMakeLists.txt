@@ -448,7 +448,7 @@ if(RIFTBOUND_WASM)
         _rb_version _rb_last_error _rb_card_count _rb_new_game _rb_end_game
         _rb_is_terminal _rb_decision_player _rb_legal_count _rb_state_json
         _rb_apply _rb_bot_move _rb_bot_last_search_json _rb_result_json
-        _rb_load_value_net _malloc _free)
+        _rb_load_value_net _rb_load_policy_net _rb_has_policy_net _malloc _free)
     list(JOIN RIFTBOUND_WASM_EXPORTS "," _wasm_exports)
     target_link_options(riftbound_wasm PRIVATE
         # The engine's step machine runs in an Asyncify fiber (step_driver.cpp).
