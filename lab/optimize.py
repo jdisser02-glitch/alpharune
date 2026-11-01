@@ -73,8 +73,8 @@ def main(argv: list[str]) -> int:
     a = ap.parse_args(argv)
     spec = json.loads(Path(a.spec).read_text())
     reg = riftlab.Registry.load()
-    agent = spec.get("agent", "random")
-    opp_agent = spec.get("opp_agent", agent)
+    agent = riftlab.resolve_agent(spec.get("agent", "random"))
+    opp_agent = riftlab.resolve_agent(spec.get("opp_agent", agent))
     threads = int(spec.get("threads", os.cpu_count() or 1))
     seed = int(spec.get("seed", 1))
     rounds = [int(g) for g in spec.get("rounds", [4, 8, 16])]

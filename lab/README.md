@@ -72,6 +72,10 @@ of a chain, showdown or combat is played on with passes / first options for
 at most N decisions before it is evaluated; off by default). `pmcts:sims=N`
 (the engine's own search, used by the learning loop) takes the same options
 plus `eval=policy:FILE`, `worlds=W`, `threads=T`, `prior=`, `root=`.
+In any spec, `@current` stands for the training ladder's current network
+(`lab/learn/ladder.json` → `current_net`), so a test always runs the best
+adopted bot: use `pmcts:sims=50,eval=policy:@current,worlds=8,settle=60`, the
+setting the training loop itself plays with.
 `lab/specs/settle_ab.json` is an A/B of two agents (`agent` against
 `opp_agent`) on two decks played by both.
 

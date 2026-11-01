@@ -353,8 +353,8 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
     """spec = {"name", "agent": "ismcts:sims=50", "opp_agent": (default agent),
                "games": N per matchup (split across seats), "threads", "seed",
                "decks": [entry...], "opponents": [{"deck": path, "weight": w, "label"}...]}"""
-    agent = spec.get("agent", "random")
-    opp_agent = spec.get("opp_agent", agent)
+    agent = resolve_agent(spec.get("agent", "random"))
+    opp_agent = resolve_agent(spec.get("opp_agent", agent))
     games = int(spec.get("games", 100))
     review_games = int(spec.get("review_games", 1))
     threads = int(spec.get("threads", os.cpu_count() or 1))
@@ -416,6 +416,18 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
     path = out_dir / f"{result['id']}.json"
     path.write_text(json.dumps(result, indent=1))
     return path
+
+
+def resolve_agent(spec_str):
+    """An agent spec with "@current" names the training ladder's current network (lab/learn/ladder.json
+    current_net), so a test always runs the best adopted bot: "pmcts:sims=50,eval=policy:@current,settle=60"."""
+    if not spec_str or "@current" not in spec_str:
+        return spec_str
+    ladder = json.loads((ROOT / "lab" / "learn" / "ladder.json").read_text())
+    net = ladder.get("current_net")
+    if not net:
+        raise ValueError("@current: lab/learn/ladder.json has no current_net")
+    return spec_str.replace("@current", net)
 
 
 # ─── Index for the dashboard ─────────────────────────────────────────────────

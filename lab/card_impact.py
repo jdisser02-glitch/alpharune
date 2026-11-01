@@ -100,7 +100,7 @@ def main(argv):
     spec = json.loads(Path(a.spec).read_text())
     reg = riftlab.Registry.load()
     deck = spec["deck"]
-    agent = spec.get("agent", "random")
+    agent = riftlab.resolve_agent(spec.get("agent", "random"))
     games = int(spec.get("games", 40))
     threads = int(spec.get("threads", 4))
     seed = int(spec.get("seed", 7))

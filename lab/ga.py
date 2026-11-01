@@ -96,8 +96,8 @@ class GA:
         self.pool = build_pool(spec, self.base, reg)
         self.rng = random.Random(int(spec.get("seed", 1)))
         self.max_copies = int(spec.get("max_copies", 3))
-        self.agent = spec.get("agent", "random")
-        self.opp_agent = spec.get("opp_agent", self.agent)
+        self.agent = riftlab.resolve_agent(spec.get("agent", "random"))
+        self.opp_agent = riftlab.resolve_agent(spec.get("opp_agent", self.agent))
         self.threads = int(spec.get("threads", os.cpu_count() or 1))
         self.opponents = []
         for o in spec["opponents"]:
