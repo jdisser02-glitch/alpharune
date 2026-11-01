@@ -3,28 +3,59 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 21,
+  "by_kind": {
+   "ability": {
+    "agree": 3,
+    "n": 5,
+    "rate": 0.6
+   },
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 2,
+    "n": 3,
+    "rate": 0.6666666666666666
+   },
+   "move": {
+    "agree": 3,
+    "n": 5,
+    "rate": 0.6
+   },
+   "pass_focus": {
+    "agree": 6,
+    "n": 7,
+    "rate": 0.8571428571428571
+   },
+   "play": {
+    "agree": 6,
+    "n": 14,
+    "rate": 0.42857142857142855
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 13,
+   "n": 25,
+   "rate": 0.52
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 8,
+   "n": 10
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 35,
+  "rate": 0.6
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 47,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 12,
  "capture_player": "Tab",
  "compare_both": false,
  "decisions": 282,
- "decisions_compared": 0,
+ "decisions_compared": 35,
  "decisions_human_known": 109,
  "decisions_trivial": 17,
  "deck_tops": 0,
@@ -313,7 +344,479 @@
  ],
  "desyncs": 12,
  "desyncs_engine": 12,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Pyke, Dockside Butcher to base"
+   },
+   "clean_boundary": true,
+   "decision": 6,
+   "event_text": "Tab played Bewitching Spirit from hand to base.",
+   "human": {
+    "index": 5,
+    "share": 0.23,
+    "text": "Play Bewitching Spirit to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.38,
+     "text": "Play Pyke, Dockside Butcher to base"
+    },
+    {
+     "index": 5,
+     "share": 0.23,
+     "text": "Play Bewitching Spirit to base"
+    },
+    {
+     "index": 7,
+     "share": 0.2,
+     "text": "Play Treasure Trove to base"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 27,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.09,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 11,
+     "share": 0.22,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 6,
+     "share": 0.18,
+     "text": "Play Treasure Hunter to base"
+    },
+    {
+     "index": 8,
+     "share": 0.18,
+     "text": "Play Pyke, Dockside Butcher to base"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 12,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 52,
+   "event_text": "Played Lost to the Sands from hand.",
+   "human": {
+    "index": 11,
+    "share": 0.15,
+    "text": "Play Lost to the Sands"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 12,
+     "share": 0.21,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 6,
+     "share": 0.18,
+     "text": "Play Treasure Hunter to base"
+    },
+    {
+     "index": 9,
+     "share": 0.18,
+     "text": "Play Pyke, Dockside Butcher to base"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play Pyke, Dockside Butcher to base"
+   },
+   "clean_boundary": true,
+   "decision": 60,
+   "event_text": "Tab played Bewitching Spirit from hand to base.",
+   "human": {
+    "index": 5,
+    "share": 0.13,
+    "text": "Play Bewitching Spirit to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.25,
+     "text": "Play Pyke, Dockside Butcher to base"
+    },
+    {
+     "index": 10,
+     "share": 0.22,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 6,
+     "share": 0.21,
+     "text": "Play Treasure Hunter to base"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 90,
+   "event_text": "Played Cleave from hand.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Play Cleave targeting Bewitching Spirit"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.91,
+     "text": "Pass focus"
+    },
+    {
+     "index": 1,
+     "share": 0.07,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.02,
+     "text": "Play Cleave targeting Vex, Apathetic"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": false,
+   "decision": 103,
+   "event_text": "Tab passed focus at Vilemaw's Lair.",
+   "human": {
+    "index": 0,
+    "share": 0.19,
+    "text": "Pass focus"
+   },
+   "kind": "pass_focus",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.81,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.19,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 6,
+    "text": "Play Falling Star"
+   },
+   "clean_boundary": true,
+   "decision": 126,
+   "event_text": "Tab played Vex, Apathetic from hand to base.",
+   "human": {
+    "index": 4,
+    "share": 0.2,
+    "text": "Play Vex, Apathetic to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 6,
+     "share": 0.42,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 4,
+     "share": 0.2,
+     "text": "Play Vex, Apathetic to base"
+    },
+    {
+     "index": 1,
+     "share": 0.14,
+     "text": "Play Treasure Hunter to base"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Fizz, Trickster to Vilemaw's Lair"
+   },
+   "clean_boundary": true,
+   "decision": 154,
+   "event_text": "Tab moved Vex, Apathetic to Vilemaw's Lair.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Move Vex, Apathetic to Vilemaw's Lair"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.47,
+     "text": "Move Fizz, Trickster to Vilemaw's Lair"
+    },
+    {
+     "index": 12,
+     "share": 0.21,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Fizz, Trickster to Star Spring"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Shimmering Swimmer to base"
+   },
+   "clean_boundary": true,
+   "decision": 199,
+   "event_text": "Tab exhausted Gold. (named by the payment)",
+   "human": {
+    "index": 11,
+    "share": 0.1,
+    "text": "Use Gold"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.36,
+     "text": "Play Shimmering Swimmer to base"
+    },
+    {
+     "index": 0,
+     "share": 0.15,
+     "text": "End turn"
+    },
+    {
+     "index": 12,
+     "share": 0.13,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Pack of Wonders to base"
+   },
+   "clean_boundary": true,
+   "decision": 225,
+   "event_text": "Tab moved Pyke, Dockside Butcher to base.",
+   "human": {
+    "index": 3,
+    "share": 0.03,
+    "text": "Play Pyke, Dockside Butcher to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.36,
+     "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
+    },
+    {
+     "index": 7,
+     "share": 0.15,
+     "text": "Use Bloodharbor Ripper on Vex, Apathetic"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 231,
+   "event_text": "Tab moved Pyke, Dockside Butcher to Star Spring.",
+   "human": {
+    "index": 2,
+    "share": 0.14,
+    "text": "Move Pyke, Dockside Butcher to Star Spring"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.46,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.4,
+     "text": "Move Pyke, Dockside Butcher to Vilemaw's Lair"
+    },
+    {
+     "index": 2,
+     "share": 0.14,
+     "text": "Move Pyke, Dockside Butcher to Star Spring"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Detonate targeting Blade of the Exile"
+   },
+   "clean_boundary": true,
+   "decision": 244,
+   "event_text": "Tab played Pack of Wonders from hand to base.",
+   "human": {
+    "index": 9,
+    "share": 0.18,
+    "text": "Play Pack of Wonders to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 11,
+     "share": 0.22,
+     "text": "Play Detonate targeting Blade of the Exile"
+    },
+    {
+     "index": 9,
+     "share": 0.18,
+     "text": "Play Pack of Wonders to base"
+    },
+    {
+     "index": 0,
+     "share": 0.14,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 13,
+    "text": "Play Detonate targeting Blade of the Exile"
+   },
+   "clean_boundary": true,
+   "decision": 247,
+   "event_text": "Played Detonate from hand.",
+   "human": {
+    "index": 14,
+    "share": 0.0,
+    "text": "Play Detonate targeting Pack of Wonders"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 13,
+     "share": 0.2,
+     "text": "Play Detonate targeting Blade of the Exile"
+    },
+    {
+     "index": 16,
+     "share": 0.15,
+     "text": "Use Pack of Wonders"
+    },
+    {
+     "index": 0,
+     "share": 0.12,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 252,
+   "event_text": "Tab exhausted Pyke, Bloodharbor Ripper.",
+   "human": {
+    "index": 12,
+    "share": 0.23,
+    "text": "Use Bloodharbor Ripper on Pyke, Dockside Butcher"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.25,
+     "text": "End turn"
+    },
+    {
+     "index": 12,
+     "share": 0.23,
+     "text": "Use Bloodharbor Ripper on Pyke, Dockside Butcher"
+    },
+    {
+     "index": 1,
+     "share": 0.13,
+     "text": "Move Shimmering Swimmer to Vilemaw's Lair"
+    }
+   ],
+   "turn": 13
+  }
+ ],
  "effect_lines": 4,
  "exported_records": 0,
  "first_player": "I hate herons",
@@ -773,7 +1276,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_riven_rl2_a651e33ceef73404914a91aef60e9520.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.019629106
+  "bot_seconds": 1.9436825419999997,
+  "seconds": 1.981357163
  }
 }

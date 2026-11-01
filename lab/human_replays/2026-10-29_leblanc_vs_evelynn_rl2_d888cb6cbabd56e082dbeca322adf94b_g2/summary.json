@@ -3,28 +3,64 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 20,
+  "by_kind": {
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "choice": {
+    "agree": 5,
+    "n": 5,
+    "rate": 1.0
+   },
+   "combat_damage": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 4,
+    "n": 4,
+    "rate": 1.0
+   },
+   "move": {
+    "agree": 0,
+    "n": 5,
+    "rate": 0.0
+   },
+   "pass_focus": {
+    "agree": 3,
+    "n": 3,
+    "rate": 1.0
+   },
+   "play": {
+    "agree": 6,
+    "n": 6,
+    "rate": 1.0
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 10,
+   "n": 15,
+   "rate": 0.6666666666666666
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 10,
+   "n": 10
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 25,
+  "rate": 0.8
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 29,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 4,
  "capture_player": "c",
  "compare_both": false,
  "decisions": 163,
- "decisions_compared": 0,
+ "decisions_compared": 25,
  "decisions_human_known": 58,
  "decisions_trivial": 7,
  "deck_tops": 0,
@@ -189,7 +225,168 @@
  ],
  "desyncs": 7,
  "desyncs_engine": 5,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Lillia, Fae Fawn to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 26,
+   "event_text": "c moved Lillia, Fae Fawn to Packed Amphitheater.",
+   "human": {
+    "index": 2,
+    "share": 0.35,
+    "text": "Move Lillia, Fae Fawn to Packed Amphitheater"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.46,
+     "text": "Move Lillia, Fae Fawn to Startipped Peak"
+    },
+    {
+     "index": 2,
+     "share": 0.35,
+     "text": "Move Lillia, Fae Fawn to Packed Amphitheater"
+    },
+    {
+     "index": 4,
+     "share": 0.09,
+     "text": "Play Azir, Sovereign to base"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 73,
+   "event_text": "c moved Lillia, Fae Fawn to base.",
+   "human": {
+    "index": 2,
+    "share": 0.0,
+    "text": "Move Lillia, Fae Fawn to base"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.51,
+     "text": "End turn"
+    },
+    {
+     "index": 4,
+     "share": 0.18,
+     "text": "Move Azir, Sovereign to Startipped Peak"
+    },
+    {
+     "index": 14,
+     "share": 0.11,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 76,
+   "event_text": "c moved Azir, Sovereign to Startipped Peak.",
+   "human": {
+    "index": 3,
+    "share": 0.17,
+    "text": "Move Azir, Sovereign to Startipped Peak"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.52,
+     "text": "End turn"
+    },
+    {
+     "index": 3,
+     "share": 0.17,
+     "text": "Move Azir, Sovereign to Startipped Peak"
+    },
+    {
+     "index": 10,
+     "share": 0.11,
+     "text": "Play Dredge Up"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Lillia, Fae Fawn to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 151,
+   "event_text": "c moved Hwei, Brooding Painter to Startipped Peak.",
+   "human": {
+    "index": 3,
+    "share": 0.0,
+    "text": "Move Hwei, Brooding Painter to Startipped Peak"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.55,
+     "text": "Move Lillia, Fae Fawn to Startipped Peak"
+    },
+    {
+     "index": 0,
+     "share": 0.4,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.04,
+     "text": "Move Lillia, Fae Fawn to Packed Amphitheater"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Lillia, Fae Fawn to Startipped Peak"
+   },
+   "clean_boundary": true,
+   "decision": 159,
+   "event_text": "c moved Lillia, Fae Fawn to Startipped Peak.",
+   "human": {
+    "index": 2,
+    "share": 0.0,
+    "text": "Move Lillia, Fae Fawn to Packed Amphitheater"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 1.0,
+     "text": "Move Lillia, Fae Fawn to Startipped Peak"
+    }
+   ],
+   "turn": 9
+  }
+ ],
  "effect_lines": 1,
  "exported_records": 0,
  "first_player": "Hob",
@@ -521,7 +718,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_leblanc_vs_evelynn_rl2_d888cb6cbabd56e082dbeca322adf94b.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.014293173
+  "bot_seconds": 2.234961238,
+  "seconds": 2.260511946
  }
 }

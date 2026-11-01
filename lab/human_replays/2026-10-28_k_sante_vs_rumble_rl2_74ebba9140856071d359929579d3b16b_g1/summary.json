@@ -3,28 +3,74 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 16,
+  "by_kind": {
+   "ability": {
+    "agree": 2,
+    "n": 2,
+    "rate": 1.0
+   },
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "choice": {
+    "agree": 2,
+    "n": 3,
+    "rate": 0.6666666666666666
+   },
+   "combat_damage": {
+    "agree": 0,
+    "n": 1,
+    "rate": 0.0
+   },
+   "end_turn": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "hide": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "move": {
+    "agree": 2,
+    "n": 3,
+    "rate": 0.6666666666666666
+   },
+   "pass_focus": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "play": {
+    "agree": 6,
+    "n": 11,
+    "rate": 0.5454545454545454
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 10,
+   "n": 15,
+   "rate": 0.6666666666666666
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 6,
+   "n": 9
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 24,
+  "rate": 0.6666666666666666
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 29,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 5,
  "capture_player": "Damus",
  "compare_both": false,
  "decisions": 139,
- "decisions_compared": 0,
+ "decisions_compared": 24,
  "decisions_human_known": 53,
  "decisions_trivial": 9,
  "deck_tops": 0,
@@ -32,7 +78,255 @@
  "desync_list": [],
  "desyncs": 0,
  "desyncs_engine": 0,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Consult the Heavens"
+   },
+   "clean_boundary": true,
+   "decision": 12,
+   "event_text": "Damus played Stoic Ferryman from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.41,
+    "text": "Play Stoic Ferryman to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 7,
+     "share": 0.56,
+     "text": "Play Consult the Heavens"
+    },
+    {
+     "index": 1,
+     "share": 0.41,
+     "text": "Play Stoic Ferryman to base"
+    },
+    {
+     "index": 3,
+     "share": 0.03,
+     "text": "Play Stoic Ferryman to Minefield"
+    }
+   ],
+   "turn": 2
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Assign damage: 4 to Gem Jammer; 5 to Rumble, Scrapper;"
+   },
+   "clean_boundary": false,
+   "decision": 52,
+   "event_text": "",
+   "human": {
+    "index": 1,
+    "share": 0.0,
+    "text": "Assign damage: 8 to Rumble, Scrapper; 1 to Gem Jammer;"
+   },
+   "kind": "combat_damage",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 1.0,
+     "text": "Assign damage: 4 to Gem Jammer; 5 to Rumble, Scrapper;"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 54,
+   "event_text": "Damus played Scuttle Crab from hand to base.",
+   "human": {
+    "index": 1,
+    "share": 0.37,
+    "text": "Play Scuttle Crab to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.63,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.37,
+     "text": "Play Scuttle Crab to base"
+    }
+   ],
+   "turn": 4
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Stoic Ferryman to Minefield"
+   },
+   "clean_boundary": true,
+   "decision": 69,
+   "event_text": "Damus moved Scuttle Crab to Minefield.",
+   "human": {
+    "index": 2,
+    "share": 0.05,
+    "text": "Move Scuttle Crab to Minefield"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.53,
+     "text": "Play Stoic Ferryman to Minefield"
+    },
+    {
+     "index": 9,
+     "share": 0.28,
+     "text": "Use Pride of Nazumah"
+    },
+    {
+     "index": 1,
+     "share": 0.08,
+     "text": "Move Scuttle Crab to Fortified Position"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 7,
+    "text": "Play Emperor's Divide targeting Scuttle Crab"
+   },
+   "clean_boundary": true,
+   "decision": 83,
+   "event_text": "Damus moved K'Sante, Dauntless to base.",
+   "human": {
+    "index": 6,
+    "share": 0.03,
+    "text": "Play K'Sante, Dauntless to Minefield"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 7,
+     "share": 0.62,
+     "text": "Play Emperor's Divide targeting Scuttle Crab"
+    },
+    {
+     "index": 9,
+     "share": 0.14,
+     "text": "Use Pride of Nazumah"
+    },
+    {
+     "index": 10,
+     "share": 0.12,
+     "text": "Hide Emperor's Divide"
+    }
+   ],
+   "turn": 6
+  },
+  {
+   "bot": {
+    "index": 11,
+    "text": "Play Consult the Heavens"
+   },
+   "clean_boundary": true,
+   "decision": 103,
+   "event_text": "Played Emperor's Divide from Minefield.",
+   "human": {
+    "index": 15,
+    "share": 0.0,
+    "text": "Play Emperor's Divide targeting K'Sante, Dauntless"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 11,
+     "share": 0.62,
+     "text": "Play Consult the Heavens"
+    },
+    {
+     "index": 12,
+     "share": 0.34,
+     "text": "Play Emperor's Divide targeting K'Sante, Dauntless"
+    },
+    {
+     "index": 18,
+     "share": 0.02,
+     "text": "Use Pride of Nazumah"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Choose Stoic Ferryman"
+   },
+   "clean_boundary": false,
+   "decision": 107,
+   "event_text": "",
+   "human": {
+    "index": 0,
+    "share": 0.16,
+    "text": "Choose Scuttle Crab"
+   },
+   "kind": "choice",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.79,
+     "text": "Choose Stoic Ferryman"
+    },
+    {
+     "index": 0,
+     "share": 0.16,
+     "text": "Choose Scuttle Crab"
+    },
+    {
+     "index": 2,
+     "share": 0.05,
+     "text": "Choose"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 128,
+   "event_text": "Played Ntofo Strikes from hand.",
+   "human": {
+    "index": 1,
+    "share": 0.0,
+    "text": "Play Ntofo Strikes"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 1.0,
+     "text": "Pass focus"
+    }
+   ],
+   "turn": 8
+  }
+ ],
  "effect_lines": 4,
  "exported_records": 0,
  "first_player": "Damus",
@@ -317,7 +611,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_k_sante_vs_rumble_rl2_74ebba9140856071d359929579d3b16b.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.01123714
+  "bot_seconds": 2.139468958,
+  "seconds": 2.164730198
  }
 }

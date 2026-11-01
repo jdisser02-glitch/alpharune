@@ -3,28 +3,49 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 12,
+  "by_kind": {
+   "ability": {
+    "agree": 1,
+    "n": 2,
+    "rate": 0.5
+   },
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 2,
+    "n": 4,
+    "rate": 0.5
+   },
+   "play": {
+    "agree": 8,
+    "n": 9,
+    "rate": 0.8888888888888888
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 11,
+   "n": 15,
+   "rate": 0.7333333333333333
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 1,
+   "n": 1
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 16,
+  "rate": 0.75
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 19,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 3,
  "capture_player": "Tab",
  "compare_both": false,
  "decisions": 132,
- "decisions_compared": 0,
+ "decisions_compared": 16,
  "decisions_human_known": 53,
  "decisions_trivial": 8,
  "deck_tops": 9,
@@ -146,7 +167,139 @@
  ],
  "desyncs": 5,
  "desyncs_engine": 2,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 3,
+    "text": "Play Detonate targeting Concert Poster"
+   },
+   "clean_boundary": true,
+   "decision": 17,
+   "event_text": "Played Detonate from hand.",
+   "human": {
+    "index": 4,
+    "share": 0.0,
+    "text": "Play Detonate targeting The List"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 3,
+     "share": 0.58,
+     "text": "Play Detonate targeting Concert Poster"
+    },
+    {
+     "index": 5,
+     "share": 0.36,
+     "text": "Use The List"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Play The List to base"
+   },
+   "clean_boundary": true,
+   "decision": 22,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.1,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.9,
+     "text": "Play The List to base"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
+    }
+   ],
+   "turn": 1
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Runeblade Anvil to base"
+   },
+   "clean_boundary": true,
+   "decision": 71,
+   "event_text": "Tab ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.02,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.8,
+     "text": "Play Runeblade Anvil to base"
+    },
+    {
+     "index": 4,
+     "share": 0.12,
+     "text": "Play Treasure Trove to base"
+    },
+    {
+     "index": 6,
+     "share": 0.05,
+     "text": "Play Pack of Wonders to base"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 5,
+    "text": "Play Runeblade Anvil to base"
+   },
+   "clean_boundary": true,
+   "decision": 116,
+   "event_text": "Played Detonate from banished.",
+   "human": {
+    "index": 12,
+    "share": 0.32,
+    "text": "Use Bloodharbor Ripper ability 2"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 5,
+     "share": 0.45,
+     "text": "Play Runeblade Anvil to base"
+    },
+    {
+     "index": 12,
+     "share": 0.32,
+     "text": "Use Bloodharbor Ripper ability 2"
+    },
+    {
+     "index": 4,
+     "share": 0.1,
+     "text": "Play Treasure Trove to base"
+    }
+   ],
+   "turn": 7
+  }
+ ],
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "etrnal",
@@ -452,7 +605,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-29_pyke_vs_viktor_rl2_23a77ca3b2bbde524d9e3934f0587918.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.011502851
+  "bot_seconds": 1.0411290169999998,
+  "seconds": 1.056859645
  }
 }

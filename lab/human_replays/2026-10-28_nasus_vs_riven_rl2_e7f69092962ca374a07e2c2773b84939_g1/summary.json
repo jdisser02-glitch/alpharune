@@ -3,28 +3,59 @@
  "actors_settled": 0,
  "actors_uncertain": 0,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 16,
+  "by_kind": {
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "choice": {
+    "agree": 2,
+    "n": 2,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 1,
+    "n": 2,
+    "rate": 0.5
+   },
+   "move": {
+    "agree": 1,
+    "n": 2,
+    "rate": 0.5
+   },
+   "pass_focus": {
+    "agree": 5,
+    "n": 5,
+    "rate": 1.0
+   },
+   "play": {
+    "agree": 6,
+    "n": 6,
+    "rate": 1.0
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 7,
+   "n": 9,
+   "rate": 0.7777777777777778
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 9,
+   "n": 9
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 18,
+  "rate": 0.8888888888888888
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 19,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 1,
  "capture_player": "ComboMAN",
  "compare_both": false,
  "decisions": 148,
- "decisions_compared": 0,
+ "decisions_compared": 18,
  "decisions_human_known": 49,
  "decisions_trivial": 8,
  "deck_tops": 0,
@@ -32,7 +63,76 @@
  "desync_list": [],
  "desyncs": 0,
  "desyncs_engine": 0,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 2,
+    "text": "Move Scuttle Crab to Rockfall Path"
+   },
+   "clean_boundary": true,
+   "decision": 95,
+   "event_text": "ComboMAN ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.34,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.45,
+     "text": "Move Scuttle Crab to Rockfall Path"
+    },
+    {
+     "index": 0,
+     "share": 0.34,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.19,
+     "text": "Move Scuttle Crab to Rakelstake"
+    }
+   ],
+   "turn": 5
+  },
+  {
+   "bot": {
+    "index": 9,
+    "text": "Play The Empyrean to base"
+   },
+   "clean_boundary": true,
+   "decision": 128,
+   "event_text": "ComboMAN moved The Empyrean to Rockfall Path.",
+   "human": {
+    "index": 4,
+    "share": 0.0,
+    "text": "Move The Empyrean to Rockfall Path"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 9,
+     "share": 0.96,
+     "text": "Play The Empyrean to base"
+    },
+    {
+     "index": 18,
+     "share": 0.02,
+     "text": "Play Unchecked Power"
+    },
+    {
+     "index": 2,
+     "share": 0.01,
+     "text": "Move Scuttle Crab to Rockfall Path"
+    }
+   ],
+   "turn": 7
+  }
+ ],
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Sziszu",
@@ -269,7 +369,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_nasus_vs_riven_rl2_e7f69092962ca374a07e2c2773b84939.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.010933288
+  "bot_seconds": 0.864756167,
+  "seconds": 0.879485118
  }
 }

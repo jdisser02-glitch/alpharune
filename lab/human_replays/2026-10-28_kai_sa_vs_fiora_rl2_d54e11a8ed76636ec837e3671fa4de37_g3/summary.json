@@ -3,28 +3,59 @@
  "actors_settled": 0,
  "actors_uncertain": 1,
  "agreement": {
-  "agree": 0,
-  "by_kind": {},
+  "agree": 20,
+  "by_kind": {
+   "ability": {
+    "agree": 3,
+    "n": 4,
+    "rate": 0.75
+   },
+   "battlefield": {
+    "agree": 1,
+    "n": 1,
+    "rate": 1.0
+   },
+   "end_turn": {
+    "agree": 5,
+    "n": 7,
+    "rate": 0.7142857142857143
+   },
+   "move": {
+    "agree": 0,
+    "n": 2,
+    "rate": 0.0
+   },
+   "pass_focus": {
+    "agree": 5,
+    "n": 5,
+    "rate": 1.0
+   },
+   "play": {
+    "agree": 6,
+    "n": 12,
+    "rate": 0.5
+   }
+  },
   "clean_boundary": {
-   "agree": 0,
-   "n": 0,
-   "rate": 0.0
+   "agree": 12,
+   "n": 22,
+   "rate": 0.5454545454545454
   },
   "in_flight": {
-   "agree": 0,
-   "n": 0
+   "agree": 8,
+   "n": 9
   },
-  "n": 0,
-  "rate": 0.0
+  "n": 31,
+  "rate": 0.6451612903225806
  },
- "bot": "none",
- "bot_calls": 0,
+ "bot": "pmcts:sims=100,eval=policy:lab/learn/nets/net_038.rbpn,worlds=6,threads=1",
+ "bot_calls": 37,
  "bot_errors": 0,
- "bot_fallbacks": 0,
+ "bot_fallbacks": 6,
  "capture_player": "Emp4",
  "compare_both": false,
  "decisions": 220,
- "decisions_compared": 0,
+ "decisions_compared": 31,
  "decisions_human_known": 70,
  "decisions_trivial": 10,
  "deck_tops": 0,
@@ -366,7 +397,382 @@
  ],
  "desyncs": 17,
  "desyncs_engine": 17,
- "disagreements": [],
+ "disagreements": [
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "clean_boundary": true,
+   "decision": 13,
+   "event_text": "Emp4 exhausted Kai'Sa, Daughter of the Void.",
+   "human": {
+    "index": 5,
+    "share": 0.02,
+    "text": "Use Daughter of the Void"
+   },
+   "kind": "ability",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.83,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 4,
+     "share": 0.1,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.04,
+     "text": "End turn"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Kai'Sa, Survivor to base"
+   },
+   "clean_boundary": true,
+   "decision": 14,
+   "event_text": "Played Falling Star from hand.",
+   "human": {
+    "index": 4,
+    "share": 0.09,
+    "text": "Play Falling Star"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.88,
+     "text": "Play Kai'Sa, Survivor to base"
+    },
+    {
+     "index": 4,
+     "share": 0.09,
+     "text": "Play Falling Star"
+    },
+    {
+     "index": 0,
+     "share": 0.02,
+     "text": "End turn"
+    }
+   ],
+   "turn": 3
+  },
+  {
+   "bot": {
+    "index": 4,
+    "text": "Play Thousand-Tailed Watcher to base"
+   },
+   "clean_boundary": true,
+   "decision": 49,
+   "event_text": "Emp4 moved Kai'Sa, Survivor to Void Gate.",
+   "human": {
+    "index": 2,
+    "share": 0.09,
+    "text": "Move Kai'Sa, Survivor to Void Gate"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 4,
+     "share": 0.72,
+     "text": "Play Thousand-Tailed Watcher to base"
+    },
+    {
+     "index": 0,
+     "share": 0.1,
+     "text": "End turn"
+    },
+    {
+     "index": 2,
+     "share": 0.09,
+     "text": "Move Kai'Sa, Survivor to Void Gate"
+    }
+   ],
+   "turn": 7
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "Pass focus"
+   },
+   "clean_boundary": false,
+   "decision": 87,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 11,
+    "share": 0.05,
+    "text": "Play Stupefy targeting Rengar, Trophy Hunter"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.78,
+     "text": "Pass focus"
+    },
+    {
+     "index": 16,
+     "share": 0.17,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 11,
+     "share": 0.05,
+     "text": "Play Stupefy targeting Rengar, Trophy Hunter"
+    }
+   ],
+   "turn": 8
+  },
+  {
+   "bot": {
+    "index": 2,
+    "text": "Play Stupefy targeting Kinkou Initiate"
+   },
+   "clean_boundary": true,
+   "decision": 112,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.38,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 2,
+     "share": 0.49,
+     "text": "Play Stupefy targeting Kinkou Initiate"
+    },
+    {
+     "index": 0,
+     "share": 0.38,
+     "text": "End turn"
+    },
+    {
+     "index": 1,
+     "share": 0.13,
+     "text": "Move Ferrous Forerunner to base"
+    }
+   ],
+   "turn": 9
+  },
+  {
+   "bot": {
+    "index": 30,
+    "text": "Play Singularity"
+   },
+   "clean_boundary": true,
+   "decision": 131,
+   "event_text": "Played Stupefy from hand.",
+   "human": {
+    "index": 24,
+    "share": 0.01,
+    "text": "Play Stupefy targeting Rift Herald"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 30,
+     "share": 0.87,
+     "text": "Play Singularity"
+    },
+    {
+     "index": 33,
+     "share": 0.05,
+     "text": "Use Daughter of the Void"
+    },
+    {
+     "index": 1,
+     "share": 0.02,
+     "text": "Move Brynhir Thundersong to Sunken Temple"
+    }
+   ],
+   "turn": 11
+  },
+  {
+   "bot": {
+    "index": 0,
+    "text": "End turn"
+   },
+   "clean_boundary": true,
+   "decision": 179,
+   "event_text": "Played Smoke Screen from hand.",
+   "human": {
+    "index": 9,
+    "share": 0.18,
+    "text": "Play Smoke Screen targeting Mech"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 0,
+     "share": 0.42,
+     "text": "End turn"
+    },
+    {
+     "index": 9,
+     "share": 0.18,
+     "text": "Play Smoke Screen targeting Mech"
+    },
+    {
+     "index": 1,
+     "share": 0.11,
+     "text": "Move Mech to Sunken Temple"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 21,
+    "text": "Play Perfect Execution"
+   },
+   "clean_boundary": true,
+   "decision": 184,
+   "event_text": "Emp4 played Noxus Hopeful from hand to base.",
+   "human": {
+    "index": 7,
+    "share": 0.16,
+    "text": "Play Noxus Hopeful to base"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 21,
+     "share": 0.35,
+     "text": "Play Perfect Execution"
+    },
+    {
+     "index": 0,
+     "share": 0.17,
+     "text": "End turn"
+    },
+    {
+     "index": 7,
+     "share": 0.16,
+     "text": "Play Noxus Hopeful to base"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Mech to Sunken Temple"
+   },
+   "clean_boundary": true,
+   "decision": 195,
+   "event_text": "Emp4 moved Noxus Hopeful to Sunken Temple.",
+   "human": {
+    "index": 5,
+    "share": 0.0,
+    "text": "Move Noxus Hopeful to Sunken Temple"
+   },
+   "kind": "move",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.62,
+     "text": "Move Mech to Sunken Temple"
+    },
+    {
+     "index": 23,
+     "share": 0.21,
+     "text": "Play Hextech Ray targeting Kinkou Initiate"
+    },
+    {
+     "index": 0,
+     "share": 0.09,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Mech to Sunken Temple"
+   },
+   "clean_boundary": true,
+   "decision": 200,
+   "event_text": "Played Hextech Ray from hand.",
+   "human": {
+    "index": 16,
+    "share": 0.0,
+    "text": "Play Hextech Ray targeting Elder Dragon"
+   },
+   "kind": "play",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.65,
+     "text": "Move Mech to Sunken Temple"
+    },
+    {
+     "index": 14,
+     "share": 0.19,
+     "text": "Play Hextech Ray targeting Kinkou Initiate"
+    },
+    {
+     "index": 0,
+     "share": 0.08,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  },
+  {
+   "bot": {
+    "index": 1,
+    "text": "Move Mech to Sunken Temple"
+   },
+   "clean_boundary": true,
+   "decision": 205,
+   "event_text": "Emp4 ended their turn.",
+   "human": {
+    "index": 0,
+    "share": 0.06,
+    "text": "End turn"
+   },
+   "kind": "end_turn",
+   "player": 1,
+   "top3": [
+    {
+     "index": 1,
+     "share": 0.72,
+     "text": "Move Mech to Sunken Temple"
+    },
+    {
+     "index": 14,
+     "share": 0.14,
+     "text": "Play Hextech Ray targeting Kinkou Initiate"
+    },
+    {
+     "index": 0,
+     "share": 0.06,
+     "text": "End turn"
+    }
+   ],
+   "turn": 13
+  }
+ ],
  "effect_lines": 0,
  "exported_records": 0,
  "first_player": "Billie",
@@ -728,7 +1134,7 @@
  "source": "/home/user/alpharune/lab/human_games/2026-10-28_kai_sa_vs_fiora_rl2_d54e11a8ed76636ec837e3671fa4de37.json",
  "stop_reason": "log ended",
  "timing": {
-  "bot_seconds": 0.0,
-  "seconds": 0.020638573
+  "bot_seconds": 2.164318576,
+  "seconds": 2.19813719
  }
 }
