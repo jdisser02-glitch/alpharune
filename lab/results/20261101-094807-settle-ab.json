@@ -1,0 +1,673 @@
+{
+ "id": "20261101-094807-settle-ab",
+ "name": "settle-ab",
+ "description": "A/B of leaf settling in the search: pmcts with settle=60 (a leaf in the middle of a chain, showdown or combat is played on with passes / first options until a quiet main-phase decision before the value net sees it) against the same bot without it. Each deck is played by the settle bot against both decks played by the plain bot (Riven and Kennen mirrors, Riven vs Kennen both ways), seats swapped, 500 games per pairing (2000 in all), so deck strength cancels: the A/B result is the average of the two rows' weighted win rates. Local pilot (240 games, sims=50, worlds=8, net_034): settle won 57.5%, about 7% more time per move.",
+ "started_utc": "2026-11-01T09:48:07+00:00",
+ "engine_commit": "94c0e80",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8",
+ "games_per_matchup": 500,
+ "threads": 4,
+ "seed": 9100,
+ "spec": {
+  "name": "settle-ab",
+  "description": "A/B of leaf settling in the search: pmcts with settle=60 (a leaf in the middle of a chain, showdown or combat is played on with passes / first options until a quiet main-phase decision before the value net sees it) against the same bot without it. Each deck is played by the settle bot against both decks played by the plain bot (Riven and Kennen mirrors, Riven vs Kennen both ways), seats swapped, 500 games per pairing (2000 in all), so deck strength cancels: the A/B result is the average of the two rows' weighted win rates. Local pilot (240 games, sims=50, worlds=8, net_034): settle won 57.5%, about 7% more time per move.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8",
+  "games": 500,
+  "review_games": 0,
+  "seed": 9100,
+  "decks": [
+   {
+    "deck": "decks/riven_sacramento.txt",
+    "label": "Riven (settle=60)"
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (settle=60)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "decks/riven_sacramento.txt",
+    "label": "Riven (no settle)",
+    "weight": 1
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (no settle)",
+    "weight": 1
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "Riven (settle=60)",
+   "path": "decks/riven_sacramento.txt",
+   "hash": "77ae76d0c1",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.75,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 6,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (no settle)",
+     "opponent_deck": "decks/riven_sacramento.txt",
+     "weight": 1,
+     "games": 500,
+     "wins": 303,
+     "win_rate": 0.606,
+     "ci95": [
+      0.5625,
+      0.6479
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 153
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 150
+     },
+     "avg_turns": 13,
+     "wall_s": 677.5,
+     "replays": "lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__riven-no-settle",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --games 250 --threads 4 --seed 9100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__riven-no-settle/seat1 --review-games 0",
+      "--deck1 decks/riven_sacramento.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --games 250 --threads 4 --seed 59100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__riven-no-settle/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (no settle)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 500,
+     "wins": 445,
+     "win_rate": 0.89,
+     "ci95": [
+      0.8595,
+      0.9145
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 223
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 222
+     },
+     "avg_turns": 14,
+     "wall_s": 912.4,
+     "replays": "lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__kennen-no-settle",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --games 250 --threads 4 --seed 109100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__kennen-no-settle/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --games 250 --threads 4 --seed 159100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/riven-settle-60__vs__kennen-no-settle/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.748
+  },
+  {
+   "label": "Kennen (settle=60)",
+   "path": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+   "hash": "02bc6eca81",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.75,
+    "curve": {
+     "0": 3,
+     "1": 5,
+     "2": 17,
+     "3": 7,
+     "4": 5,
+     "10": 3
+    },
+    "types": {
+     "unit": 19,
+     "spell": 16,
+     "gear": 5
+    },
+    "power_symbols": {
+     "chaos": 22
+    },
+    "rune_split": {
+     "chaos": 9,
+     "order": 3
+    },
+    "keywords": {
+     "Action": 7,
+     "Reaction": 10,
+     "Hidden": 5,
+     "Ganking": 3
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Seal of Discord",
+      "count": 3,
+      "type": "gear",
+      "energy": 0,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Lightning Rush",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "An Offer You Can't Refuse",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Flash",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hard Bargain",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ride the Wind",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kennen, Storm of Shuriken",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Last Rites",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Nocturne, Horrifying",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rhasa the Sunderer",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 6
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (no settle)",
+     "opponent_deck": "decks/riven_sacramento.txt",
+     "weight": 1,
+     "games": 500,
+     "wins": 141,
+     "win_rate": 0.282,
+     "ci95": [
+      0.2443,
+      0.323
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 74
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 67
+     },
+     "avg_turns": 13,
+     "wall_s": 979.6,
+     "replays": "lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__riven-no-settle",
+     "commands": [
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --games 250 --threads 4 --seed 9100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__riven-no-settle/seat1 --review-games 0",
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --games 250 --threads 4 --seed 59100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__riven-no-settle/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (no settle)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 500,
+     "wins": 304,
+     "win_rate": 0.608,
+     "ci95": [
+      0.5645,
+      0.6498
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 150
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 154
+     },
+     "avg_turns": 15,
+     "wall_s": 1409.1,
+     "replays": "lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__kennen-no-settle",
+     "commands": [
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --games 250 --threads 4 --seed 109100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__kennen-no-settle/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_038.rbpn,worlds=8,settle=60 --games 250 --threads 4 --seed 159100 --render-html off --web off --review-dir lab/replays/20261101-094807-settle-ab/kennen-settle-60__vs__kennen-no-settle/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.445
+  }
+ ],
+ "finished_utc": "2026-11-01T10:54:26+00:00"
+}
