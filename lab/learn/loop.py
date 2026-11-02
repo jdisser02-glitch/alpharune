@@ -76,8 +76,8 @@ PANEL = [
 # SEED_BLOCK blocks. Seeds stay below 2^31 (the engine masks to 31 bits).
 SEED_IT_STRIDE = 1_000_000
 SEED_BLOCK = 1_000
-SEED_SLOT = {"selfplay": 0, "gate": 300_000, "panel": 500_000, "anchor": 700_000,
-             "vs_random": 800_000, "vs_reference": 900_000}
+SEED_SLOT = {"selfplay": 0, "gate": 500_000, "panel": 650_000, "anchor": 800_000,
+             "vs_random": 900_000, "vs_reference": 950_000}
 
 
 def seed_base(it, label, block=0):
@@ -286,7 +286,46 @@ def pick_anchors(ladder, n=2):
     return picks
 
 
-def main(argv):
+def train_candidate(a, it, current, row):
+    """Trains net_<it> on the replay buffer (oldest first; recency-weighted by
+    file, so one file per iteration), fills the training fields of `row` and
+    returns the candidate's path."""
+    files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
+             if (DATA / f"iter_{j:03d}.rbvd").exists()]
+    if a.policy:
+        new_net = NETS / f"net_{it:03d}.rbpn"
+        cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
+               "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
+               "--entropy", str(a.entropy)]
+        if a.human and Path(a.human).exists():
+            cmd += ["--human", a.human]
+        if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
+            cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
+    else:
+        new_net = NETS / f"net_{it:03d}.rbvn"
+        cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
+               "--epochs", str(a.epochs), "--recency", str(a.recency)]
+    tr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    print(tr.stdout[-1200:], flush=True)
+    if tr.returncode != 0:
+        raise RuntimeError(tr.stderr[-1500:])
+    report = json.loads(new_net.with_suffix(".json").read_text())
+    row["records"] = report["records"]
+    row["games_in_buffer"] = report.get("games")
+    row["val_loss"] = report["best_val_loss"]
+    row["val_acc"] = report["best_val_acc"]
+    row["val_margin_mse"] = report.get("best_val_margin_mse")
+    row["baseline_val_loss"] = report["baseline_val_loss"]
+    if a.policy:
+        row["policy"] = {k: report.get(k) for k in ("search_target_rows", "policy_val_rows", "policy_top1", "policy_top3",
+                                                     "policy_ce", "policy_entropy", "target_entropy",
+                                                     "human_records", "human_val_rows", "human_top1", "human_top3",
+                                                     "human_clean_rows", "human_clean_top1", "human_clean_top3")}
+    cand = str(new_net.relative_to(ROOT)) if new_net.is_relative_to(ROOT) else str(new_net)
+    return cand
+
+
+def make_parser():
     ap = argparse.ArgumentParser()
     ap.add_argument("--iterations", type=int, default=3)
     ap.add_argument("--games", type=int, default=200, help="self-play games per iteration")
@@ -315,6 +354,11 @@ def main(argv):
     ap.add_argument("--prev-weight", type=float, default=0.1, help="--policy: pull toward the previous net's policy")
     ap.add_argument("--threads", type=int, default=os.cpu_count() or 2)
     ap.add_argument("--seed", type=int, default=1)
+    return ap
+
+
+def main(argv):
+    ap = make_parser()
     a = ap.parse_args(argv)
     DATA.mkdir(parents=True, exist_ok=True)
     NETS.mkdir(parents=True, exist_ok=True)
@@ -352,38 +396,7 @@ def main(argv):
             L.batch(d1, d2, L.bot(current), L.bot(current), per_pair, seed_base(it, "selfplay", k), data_file)
         row["self_play_minutes"] = round((time.time() - t0) / 60, 1)
         # 2. train on the replay buffer (oldest first; train_value.py weights by recency)
-        files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
-                 if (DATA / f"iter_{j:03d}.rbvd").exists()]
-        if a.policy:
-            new_net = NETS / f"net_{it:03d}.rbpn"
-            cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
-                   "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
-                   "--entropy", str(a.entropy)]
-            if a.human and Path(a.human).exists():
-                cmd += ["--human", a.human]
-            if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
-                cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
-        else:
-            new_net = NETS / f"net_{it:03d}.rbvn"
-            cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
-                   "--epochs", str(a.epochs), "--recency", str(a.recency)]
-        tr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
-        print(tr.stdout[-1200:], flush=True)
-        if tr.returncode != 0:
-            raise RuntimeError(tr.stderr[-1500:])
-        report = json.loads(new_net.with_suffix(".json").read_text())
-        row["records"] = report["records"]
-        row["games_in_buffer"] = report.get("games")
-        row["val_loss"] = report["best_val_loss"]
-        row["val_acc"] = report["best_val_acc"]
-        row["val_margin_mse"] = report.get("best_val_margin_mse")
-        row["baseline_val_loss"] = report["baseline_val_loss"]
-        if a.policy:
-            row["policy"] = {k: report.get(k) for k in ("search_target_rows", "policy_val_rows", "policy_top1", "policy_top3",
-                                                         "policy_ce", "policy_entropy", "target_entropy",
-                                                         "human_records", "human_val_rows", "human_top1", "human_top3",
-                                                         "human_clean_rows", "human_clean_top1", "human_clean_top3")}
-        cand = str(new_net.relative_to(ROOT)) if new_net.is_relative_to(ROOT) else str(new_net)
+        cand = train_candidate(a, it, current, row)
         # 3. gate: candidate vs current, Riven mirror, seats swapped, SPRT in blocks; then the panel guard
         row["vs_current"] = L.gate(ladder, it, cand, current)
         decision, score = row["vs_current"]["sprt"], row["vs_current"]["rate"]

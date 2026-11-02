@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""The parallel iteration (stages.py): shards merge into one data file per
+iteration, and the decision follows loop.py's rules on the summed results.
+
+    python3 lab/learn/test_stages.py
+"""
+import json
+import os
+import struct
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import loop  # noqa: E402
+import stages  # noqa: E402
+
+ARGS = ["--games", "200", "--sims", "50", "--policy", "--accept", "0.55", "--gate-min", "80", "--gate-max", "240",
+        "--gate-block", "40", "--panel-games", "16", "--panel-floor", "0.45"]
+
+
+def plan(current="lab/learn/nets/net_a.rbpn"):
+    a = loop.make_parser().parse_args(ARGS)
+    return {"it": 7, "current": current, "reference": "lab/learn/nets/net_r.rbpn", "anchors": [], "args": ARGS,
+            "tasks": stages.tasks_for(a), "started_utc": "x", "t0": 0}
+
+
+def results(gate_wins_per_block, panel_wins_per_matchup=8):
+    out = [{"task": f"gate:{b}", "kind": "gate", "wins": w, "losses": 40 - w, "games": 40}
+           for b, w in enumerate(gate_wins_per_block)]
+    out += [{"task": f"panel:{m}", "kind": "panel", "name": name, "wins": panel_wins_per_matchup,
+             "losses": 16 - panel_wins_per_matchup, "games": 16} for m, (name, _, _) in enumerate(loop.PANEL)]
+    out.append({"task": "yard:random", "kind": "yard", "vs_random": {"games": 60, "wins": 58, "rate": 0.967}})
+    out += [{"task": "yard:reference", "kind": "yard"}, {"task": "yard:anchors", "kind": "yard"}]
+    return out
+
+
+CAND = {"cand": "lab/learn/nets/net_007.rbpn", "row": {"iteration": 7}}
+
+
+class Decide(unittest.TestCase):
+    def run_decide(self, res, p=None):
+        ladder = {"iterations": [], "matches": []}
+        return stages.decide(p or plan(), CAND, res, ladder), ladder
+
+    def test_the_tasks_cover_six_gate_blocks_five_matchups_and_three_yardsticks(self):
+        self.assertEqual(plan()["tasks"], [f"gate:{b}" for b in range(6)] + [f"panel:{m}" for m in range(5)]
+                         + ["yard:random", "yard:reference", "yard:anchors"])
+
+    def test_a_clear_win_is_adopted(self):
+        row, ladder = self.run_decide(results([26] * 6))           # 156/240 = 65%
+        self.assertEqual(row["vs_current"]["sprt"], "better")
+        self.assertTrue(row["accepted"])
+        self.assertEqual(ladder["current_net"], CAND["cand"])
+
+    def test_an_undecided_gate_needs_the_accept_rate(self):
+        row, _ = self.run_decide(results([22] * 6))                # 132/240 = 55.0%
+        self.assertEqual(row["vs_current"]["sprt"], "rate")
+        self.assertTrue(row["accepted"])
+        row, ladder = self.run_decide(results([21] * 6))           # 126/240 = 52.5%
+        self.assertFalse(row["accepted"])
+        self.assertNotIn("current_net", ladder)
+
+    def test_the_panel_floor_refuses_a_mirror_winner(self):
+        row, _ = self.run_decide(results([26] * 6, panel_wins_per_matchup=6))   # 37.5% on the panel
+        self.assertEqual(row["vs_current"]["sprt"], "better")
+        self.assertFalse(row["panel"]["ok"])
+        self.assertFalse(row["accepted"])
+
+    def test_a_missing_task_stops_the_decision(self):
+        with self.assertRaises(SystemExit):
+            self.run_decide(results([26] * 6)[1:])
+
+    def test_the_gate_blocks_are_recorded_for_elo(self):
+        res = results([26] * 6)
+        for r in res:
+            if r["kind"] == "gate":
+                r["matches"] = [{"iteration": 7, "label": "gate", "a": "net:c", "b": "net:a", "games": 40,
+                                 "wins_a": r["wins"], "wins_b": r["losses"]}]
+        _, ladder = self.run_decide(res)
+        self.assertEqual(sum(m["games"] for m in ladder["matches"] if m["label"] == "gate"), 240)
+        self.assertEqual(sum(1 for m in ladder["matches"] if m["label"] == "panel"), 1)
+
+
+class Merge(unittest.TestCase):
+    def test_shards_merge_into_one_file_with_one_header(self):
+        with tempfile.TemporaryDirectory() as d:
+            old = loop.DATA
+            loop.DATA = Path(d)
+            try:
+                head = b"RBV3" + struct.pack("<ii", 6688, 1234)
+                for k, body in enumerate([b"aaaa", b"bb", b"cccccc"]):
+                    (Path(d) / f"iter_007_s{k}.rbvd").write_bytes(head + body)
+                out = stages.merge_shards(7)
+                self.assertEqual(out.read_bytes(), head + b"aaaabbcccccc")
+                self.assertEqual(sorted(os.listdir(d)), ["iter_007.rbvd"])
+            finally:
+                loop.DATA = old
+
+    def test_a_shard_with_another_header_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            old = loop.DATA
+            loop.DATA = Path(d)
+            try:
+                (Path(d) / "iter_007_s0.rbvd").write_bytes(b"RBV3" + struct.pack("<ii", 6688, 1234))
+                (Path(d) / "iter_007_s1.rbvd").write_bytes(b"RBV3" + struct.pack("<ii", 9999, 1234))
+                with self.assertRaises(SystemExit):
+                    stages.merge_shards(7)
+            finally:
+                loop.DATA = old
+
+
+if __name__ == "__main__":
+    unittest.main()

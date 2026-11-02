@@ -7,7 +7,9 @@
 # engine, runs every request added by the push, writes the results to
 # lab/results/, moves the request to lab/requests/done/ and pushes both.
 #
-# Bot training runs here too (the "train" job), dispatched with request=lab/specs/train.json: see that job below.
+# Bot training runs here too: request=lab/specs/train_parallel.json runs one iteration of the learning loop per
+# workflow run spread over many machines (the p_* jobs below, lab/learn/stages.py) and chains the next run;
+# request=lab/specs/train.json runs the older one-machine loop (the "train" job).
 name: riftlab
 
 on:
@@ -20,7 +22,7 @@ on:
         description: "Path of a test spec to run (e.g. lab/specs/smoke_random.json), or lab/specs/train.json for training"
         required: true
       chain:
-        description: "Training only: jobs to chain after this one (0 = this job only)"
+        description: "Training only: jobs (train.json) or iterations (train_parallel.json) to chain after this one (0 = none)"
         default: "0"
       minutes:
         description: "Training only: time budget of the loop, in minutes"
@@ -32,7 +34,7 @@ permissions:
 
 jobs:
   run:
-    if: github.event_name != 'workflow_dispatch' || !endsWith(github.event.inputs.request, 'train.json')
+    if: github.event_name != 'workflow_dispatch' || (!endsWith(github.event.inputs.request, 'train.json') && !endsWith(github.event.inputs.request, 'train_parallel.json'))
     concurrency:
       group: riftlab-${{ github.ref }}
       cancel-in-progress: false
@@ -224,3 +226,220 @@ jobs:
         run: |
           left=$(( ${{ github.event.inputs.chain }} - 1 ))
           gh workflow run riftlab.yml --ref "${GITHUB_REF_NAME}" -f request=lab/specs/train.json -f chain="${left}" -f minutes="${{ github.event.inputs.minutes || '300' }}"
+
+  # ── Parallel training: one iteration per workflow run ─────────────────────────────────────────────────────────
+  # p_plan builds the engine (cached by source hash) and reads the ladder; 8 p_selfplay machines play the
+  # self-play games; p_train merges them and trains the candidate; one p_gate machine per evaluation task (mirror
+  # gate blocks, panel matchups, yardsticks); p_decide applies loop.py's rules, commits the ladder and the net if
+  # adopted, and dispatches the next iteration. The loop settings are the plan's "args" (below).
+  p_plan:
+    if: github.event_name == 'workflow_dispatch' && endsWith(github.event.inputs.request, 'train_parallel.json')
+    concurrency:
+      group: train-${{ github.ref }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      tasks: ${{ steps.plan.outputs.tasks }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore the engine binary
+        id: bin
+        uses: actions/cache@v4
+        with:
+          path: stage/riftbound
+          key: rb-bin-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+      - name: Install build dependencies
+        if: steps.bin.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
+      - name: Restore build cache
+        if: steps.bin.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            .ccache
+            build/_deps
+          key: riftlab-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+          restore-keys: riftlab-${{ runner.os }}-
+      - name: Build engine
+        if: steps.bin.outputs.cache-hit != 'true'
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          CCACHE_BASEDIR: ${{ github.workspace }}
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
+          cmake --build build --target riftbound -j4
+          mkdir -p stage && cp build/riftbound stage/riftbound
+      - name: Plan the iteration
+        id: plan
+        run: |
+          python3 lab/learn/stages.py plan --out stage/plan.json -- \
+            --games 1600 --sims 50 --agent pmcts --settle 60 --policy --human lab/learn/human.rbv3 --threads 4 \
+            --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 40 --buffer 3 --epochs 6
+          echo "tasks=$(python3 -c 'import json; print(json.dumps(json.load(open("stage/plan.json"))["tasks"]))')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plan
+          path: stage/
+          retention-days: 3
+
+  p_selfplay:
+    needs: p_plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Engine runtime libraries
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - name: Self-play
+        env:
+          RIFTBOUND_BIN: stage/riftbound
+          RIFTBOUND_ROOT: .
+        run: |
+          chmod +x stage/riftbound
+          python3 -u lab/learn/stages.py selfplay --plan stage/plan.json --shard ${{ matrix.shard }} --shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: selfplay-${{ matrix.shard }}
+          path: data/learn/iter_*_s*
+          retention-days: 3
+
+  p_train:
+    needs: [p_plan, p_selfplay]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --quiet numpy
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - name: Restore the replay buffer
+        uses: actions/cache/restore@v4
+        with:
+          path: data/learn
+          key: learn-buffer-${{ github.run_id }}
+          restore-keys: learn-buffer-
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: selfplay-*
+          path: data/learn
+          merge-multiple: true
+      - name: Train the candidate
+        env:
+          RIFTBOUND_ROOT: .
+        run: |
+          ls -la data/learn
+          python3 -u lab/learn/stages.py train --plan stage/plan.json --out stage/cand.json
+          mkdir -p stage/nets && cp "$(python3 -c 'import json; print(json.load(open("stage/cand.json"))["cand"])' | sed 's/\.rbpn$//')".* stage/nets/
+          # keep the last 3 iterations of data in the buffer
+          ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -3 | xargs -r rm -f
+      - name: Save the replay buffer
+        uses: actions/cache/save@v4
+        with:
+          path: data/learn
+          key: learn-buffer-${{ github.run_id }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cand
+          path: |
+            stage/cand.json
+            stage/nets/
+          retention-days: 3
+
+  p_gate:
+    needs: [p_plan, p_train]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      matrix:
+        task: ${{ fromJSON(needs.p_plan.outputs.tasks) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Engine runtime libraries
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - uses: actions/download-artifact@v4
+        with:
+          name: cand
+          path: stage
+      - name: Evaluate
+        env:
+          RIFTBOUND_BIN: stage/riftbound
+          RIFTBOUND_ROOT: .
+        run: |
+          chmod +x stage/riftbound
+          cp stage/nets/* lab/learn/nets/
+          python3 -u lab/learn/stages.py gate --plan stage/plan.json --cand stage/cand.json --task "${{ matrix.task }}" --out stage/result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ strategy.job-index }}
+          path: stage/result.json
+          retention-days: 3
+
+  p_decide:
+    needs: [p_plan, p_train, p_gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - uses: actions/download-artifact@v4
+        with:
+          name: cand
+          path: stage
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: result-*
+          path: results
+      - name: Decide and commit
+        run: |
+          git config user.name "riftlab-bot"
+          git config user.email "riftlab-bot@users.noreply.github.com"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          cp stage/nets/* lab/learn/nets/
+          python3 lab/learn/stages.py decide --plan stage/plan.json --cand stage/cand.json results/*/result.json | tee decide.log
+          python3 - <<'PY'
+          import glob, json, os, subprocess
+          L = json.load(open("lab/learn/ladder.json"))
+          keep = {os.path.basename(r["net"]).split(".")[0] for r in L["iterations"] if r.get("accepted") and r.get("net")}
+          keep |= {os.path.basename(L[k]).split(".")[0] for k in ("current_net", "reference_net") if L.get(k)}
+          for f in glob.glob("lab/learn/nets/net_*"):
+              tracked = subprocess.run(["git", "ls-files", "--error-unmatch", f], capture_output=True).returncode == 0
+              if not tracked and os.path.basename(f).split(".")[0] not in keep:
+                  os.remove(f)
+          PY
+          git add lab/learn/ladder.json lab/learn/nets
+          last=$(python3 -c "import json; r=json.load(open('lab/learn/ladder.json'))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))")
+          git commit -m "train (parallel): iteration ${last} (Actions run ${{ github.run_id }})"
+          for i in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: Chain the next iteration
+        if: success() && github.event.inputs.chain != '0' && github.event.inputs.chain != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          left=$(( ${{ github.event.inputs.chain }} - 1 ))
+          gh workflow run riftlab.yml --ref "${GITHUB_REF_NAME}" -f request=lab/specs/train_parallel.json -f chain="${left}"
