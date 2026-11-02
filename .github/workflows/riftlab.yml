@@ -172,7 +172,7 @@ jobs:
           mkdir -p data/learn
           ls -la data/learn || true
           RIFTBOUND_ROOT=. python3 -u lab/learn/loop.py --iterations 20 --games 200 --sims 50 --agent pmcts --settle 60 \
-            --policy --human lab/learn/human.rbv3 --threads 4 --accept 0.5 --gate-min 80 --gate-max 240 \
+            --policy --human lab/learn/human.rbv3 --threads 4 --accept 0.55 --gate-min 80 --gate-max 240 \
             --max-minutes "${{ github.event.inputs.minutes || '300' }}" 2>&1 | tee train.log
           # keep only the last 6 iterations' data in the buffer
           ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -6 | xargs -r rm -f
