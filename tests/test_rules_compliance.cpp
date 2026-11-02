@@ -1470,6 +1470,101 @@ TEST_F(RulesComplianceTest, FlameChompersTriggersWhenItIsDiscarded) {
 }
 
 // ─── The last Vendetta cards ────────────────────────────────────────────────
+// ── Equip offers (2026-11-02: a bot equipped Last Rites 1,350 times in a row) ──
+// An equip whose cost cannot be paid must not be offered: its onEquip refuses
+// without changing anything, the same equip is offered again, and a bot that
+// picks it never ends its turn.
+class EquipOfferTest : public CostPaymentRulesTest {
+protected:
+    GameObjectId gearAtBase(PlayerId p, CardDefId def) {
+        auto id = s().createObject();
+        auto& g = s().getObject(id);
+        g.owner = g.controller = p;
+        g.card_type = CardType::Gear;
+        g.card_def_id = def;
+        g.name = card_db.get(def).name;
+        g.might_bonus = card_db.get(def).might_bonus;
+        g.zone = ZoneType::Base;
+        g.location = BaseLocation{p};
+        return id;
+    }
+    void trashCards(PlayerId p, int n) {
+        for (int i = 0; i < n; ++i) {
+            auto c = s().createObject();
+            auto& o = s().getObject(c);
+            o.owner = o.controller = p;
+            o.card_type = CardType::Spell;
+            o.name = "Trashed";
+            o.zone = ZoneType::Trash;
+            s().player(p).trash.push_back(c);
+        }
+    }
+    int equipOffers(GameObjectId gear) {
+        int n = 0;
+        for (const auto& a : engine_->generateLegalActions())
+            if (a.type == IntentType::ActivateAbility && a.ability_source == gear) ++n;
+        return n;
+    }
+    const Intent* firstEquip(const std::vector<Intent>& actions, GameObjectId gear) {
+        for (const auto& a : actions)
+            if (a.type == IntentType::ActivateAbility && a.ability_source == gear) return &a;
+        return nullptr;
+    }
+    void setUp() {
+        makeEngine();
+        setLegend(P1); setLegend(P2);
+        s().turn.ns_state = NeutralShowdownState::Neutral;
+        s().turn.oc_state = OpenClosedState::Open;
+    }
+};
+
+TEST_F(EquipOfferTest, LastRitesIsOfferedOnlyWithTwoCardsInTheTrashAndAChaosPower) {
+    constexpr CardDefId kLastRites = 471;   // "[Equip] — [P], Recycle 2 cards from your trash"
+    setUp();
+    auto unit = engineUnit(P1, 2);
+    auto gear = gearAtBase(P1, kLastRites);
+    rune(P1, Domain::Chaos);
+    trashCards(P1, 1);
+    EXPECT_EQ(equipOffers(gear), 0) << "one card in the trash cannot pay \"recycle 2\"";
+    trashCards(P1, 1);
+    const auto actions = engine_->generateLegalActions();
+    const Intent* offer = firstEquip(actions, gear);
+    ASSERT_NE(offer, nullptr) << "two cards and a Chaos rune pay it";
+    engine_->testHook_executeIntent(*offer);
+    EXPECT_EQ(s().getObject(gear).attached_to.value_or(kInvalidId), unit);
+    EXPECT_TRUE(s().player(P1).trash.empty()) << "both trash cards recycled";
+}
+
+TEST_F(EquipOfferTest, LastRitesWithoutChaosPowerIsNotOfferedAndPaysNothing) {
+    constexpr CardDefId kLastRites = 471;
+    setUp();
+    engineUnit(P1, 2);
+    auto gear = gearAtBase(P1, kLastRites);
+    rune(P1, Domain::Order);
+    trashCards(P1, 2);
+    EXPECT_EQ(equipOffers(gear), 0);
+    EXPECT_EQ(s().player(P1).trash.size(), 2u);
+}
+
+TEST_F(EquipOfferTest, AnEquipThatFailsIsNotOfferedAgainThisTurn) {
+    // Soul Sword checks nothing before it is offered: without a Calm power its
+    // onEquip refuses. The engine then stops offering it for the turn.
+    constexpr CardDefId kSoulSword = 601;
+    setUp();
+    auto unit = engineUnit(P1, 2);
+    auto gear = gearAtBase(P1, kSoulSword);
+    const auto actions = engine_->generateLegalActions();
+    const Intent* offer = firstEquip(actions, gear);
+    ASSERT_NE(offer, nullptr);
+    engine_->testHook_executeIntent(*offer);
+    EXPECT_FALSE(s().getObject(gear).attached_to.has_value());
+    EXPECT_EQ(equipOffers(gear), 0) << "the failed equip is not offered again this turn";
+    s().turn.turn_number += 2;
+    rune(P1, Domain::Calm);
+    EXPECT_GT(equipOffers(gear), 0) << "a later turn offers it again";
+    (void)unit;
+}
+
 class VendettaLastCardsTest : public TriggerFinalizationTest {
 protected:
     GameObjectId setBattlefieldCard(int bf, CardDefId def, std::optional<PlayerId> controller) {

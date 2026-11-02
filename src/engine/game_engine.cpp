@@ -13,6 +13,13 @@
 
 namespace riftbound {
 
+namespace {
+/// GameObject::card_counters key: turn number + 1 of the turn in which the
+/// gear's equip failed (see payAndQueueAbility / generateMainPhaseActions).
+constexpr const char* kEquipFailedTurnKey = "__equip_failed_turn";
+}  // namespace
+
+
 GameEngine::GameEngine(const CardDB& card_db, EventBus& event_bus,
                        const CardRegistry& card_registry)
     : card_db_(card_db), events_(event_bus), card_registry_(card_registry) {
@@ -1642,6 +1649,10 @@ bool GameEngine::payAndQueueAbility(const Intent& intent) {
                     : gear_card->onEquip(equip_ctx, kInvalidId);
                 if (done) {
                     cleanup();
+                } else {
+                    // Nothing paid, nothing attached: do not offer it again this turn.
+                    source.card_counters[kEquipFailedTurnKey] = state_.turn.turn_number + 1;
+                    events_.logTrace("EQUIP_FAILED: " + source.name + " could not pay its equip cost");
                 }
                 return false;
             }
@@ -3282,6 +3293,11 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
 
         Card* gear_card = card_registry_.get(obj.card_def_id);
         if (!gear_card || !gear_card->hasEquipAbility()) continue;
+        if (!gear_card->canEquip(state_, player, id)) continue;
+        // An equip that failed this turn without changing anything is not
+        // offered again: a bot would otherwise pick it forever.
+        if (auto f = obj.card_counters.find(kEquipFailedTurnKey);
+            f != obj.card_counters.end() && f->second == state_.turn.turn_number + 1) continue;
 
         // Alternative equip costs (Card::equipOptions): one intent per
         // (unit, way to pay) the gear lists.

@@ -17,22 +17,14 @@ public:
     const CardDef& def() const override { return def_; }
 
     bool hasEquipAbility() const override { return true; }
+    // "[Equip] — [P], Recycle 2 cards from your trash": both parts payable.
+    bool canEquip(const GameState& state, PlayerId player, GameObjectId) const override {
+        return state.player(player).trash.size() >= 2 && payableOnePower(state, player, Domain::Chaos);
+    }
     bool onEquip(CardContext& ctx, GameObjectId unit) override {
         auto& ps = ctx.state.player(ctx.controller);
-        if (ps.trash.size() < 2) return false;
-
-        // Pre-check a Chaos power rune is available before committing.
-        bool has_chaos = false;
-        auto base_loc = BaseLocation{ctx.controller};
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isRune() || obj.controller != ctx.controller) continue;
-            if (!obj.location.has_value() || *obj.location != LocationId{base_loc}) continue;
-            for (auto d : obj.domains) {
-                if (d == Domain::Chaos) { has_chaos = true; break; }
-            }
-            if (has_chaos) break;
-        }
-        if (!has_chaos) return false;
+        if (!canEquip(ctx.state, ctx.controller, ctx.source)) return false;
+        if (!ctx.state.objectExists(unit)) return false;
 
         // Pay the additional cost: recycle 2 cards from trash (back-of-trash;
         // which-2 is auto, an agent-choice refinement for later).
@@ -44,7 +36,8 @@ public:
             ctx.state.getObject(card_id).zone = ZoneType::MainDeck;
             ps.main_deck.insert(ps.main_deck.begin(), card_id);
         }
-        return standardEquip(ctx, ctx.source, unit, /*energy=*/0, Domain::Chaos);
+        // One Chaos power the way canEquip counted it (floating power or a rune).
+        return standardEquip(ctx, ctx.source, unit, std::optional<Domain>{Domain::Chaos});
     }
 
     TriggerType equippedTriggerType() const override { return TriggerType::WhenIConquerOrHold; }

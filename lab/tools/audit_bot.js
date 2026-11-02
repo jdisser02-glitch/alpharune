@@ -19,7 +19,10 @@
 //   losing_attack   the bot moved units into a fight that killed them all,
 //                   killed nothing and conquered nothing;
 //   idle_turn       the bot ended its turn with 4+ ready runes, cards it could
-//                   play and no unit on the board.
+//                   play and no unit on the board;
+//   loop            the same action chosen 12+ times in a row, or a bot-vs-bot
+//                   game cut at the decision cap: an action that changes
+//                   nothing is being offered (an engine bug, not a bot one).
 // Needs the built dashboard (lab/dashboard/build.py -> dist) for the engine,
 // the decks and the nets; --dist overrides the location.
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
@@ -70,8 +73,9 @@ function startGame(api, rec, spec) {
 function selfPlay(api, deckA, deckB, seed, spec) {
   const rec = { me: deckA, opponent: deckB, seat: 1, seed, bot_spec: spec, decisions: [], selfplay: true };
   startGame(api, rec, spec);
-  for (let n = 0; n < 1500; n++) {
+  for (let n = 0; ; n++) {
     const st = JSON.parse(api.stateJson(0)); if (st.game_over || !st.legal.length) break;
+    if (n >= 1500) { rec.capped = true; break; }
     let idx = 0;
     if (st.legal.length > 1) { api.botMove(); idx = JSON.parse(api.searchJson()).chosen; }
     else api.apply(0);
@@ -109,10 +113,18 @@ async function audit(api, rec) {
     const after = JSON.parse(api.stateJson(0));
     steps.push({ i, st, d, log: after.log || [], text: text(st, d.chosen), seat: seatOf(d) });
   }
+  // loops: a run of the same action (probing each repeat would only cost time)
+  const repeated = new Set();
+  for (let k = 0, run = 1; k < steps.length; k++) {
+    run = k > 0 && steps[k].text === steps[k - 1].text && steps[k].seat === steps[k - 1].seat ? run + 1 : 1;
+    if (run >= 3) repeated.add(k);
+    if (run === 12) flags.push({ kind: 'loop', i: steps[k].i, turn: steps[k].st.board.turn, move: steps[k].text });
+  }
+  if (rec.selfplay && rec.capped) flags.push({ kind: 'loop', i: steps.length - 1, turn: steps[steps.length - 1].st.board.turn, move: 'decision cap reached' });
   // 2. probes with the stronger search
   const t0 = Date.now();
-  for (const s of steps) {
-    if (isTrivial(s.st)) continue;
+  for (const [k, s] of steps.entries()) {
+    if (isTrivial(s.st) || repeated.has(k)) continue;
     const p = probe(api, rec, s.i);
     const b = p.st.board, me = b.players[s.seat - 1], op = b.players[2 - s.seat];
     const row = { i: s.i, turn: b.turn, seat: s.seat, bot: isBot(s.d), move: s.text, root: +p.root.toFixed(3), score: [me.score, op.score] };
@@ -165,15 +177,17 @@ async function audit(api, rec) {
            flags, probes, summary: summarize(flags, probes, rec) };
 }
 
-const LABEL = { second_opinion: 'meilleur coup ignoré', saturated: 'évaluation saturée', incoherent: 'évaluations incohérentes', losing_attack: 'attaque perdante', idle_turn: 'tour passé sans jouer' };
+const LABEL = { loop: 'boucle (bug moteur)', second_opinion: 'meilleur coup ignoré', saturated: 'évaluation saturée', incoherent: 'évaluations incohérentes', losing_attack: 'attaque perdante', idle_turn: 'tour passé sans jouer' };
 function summarize(flags, probes, rec) {
   const count = {}; for (const f of flags) count[f.kind] = (count[f.kind] || 0) + 1;
   const sat = probes.filter(p => p.bot && Math.abs(p.root) >= 0.9).length, botProbes = probes.filter(p => p.bot).length;
-  const lines = flags.slice(0, 12).map(f => {
+  const ordered = [...flags.filter(f => f.kind === "loop"), ...flags.filter(f => f.kind !== "loop")];
+  const lines = ordered.slice(0, 12).map(f => {
     const where = `T${f.turn} #${f.i}`;
     if (f.kind === 'second_opinion') return `${where} ${LABEL[f.kind]} : « ${f.move} » au lieu de « ${f.better} » (écart ${f.gap})`;
     if (f.kind === 'saturated') return `${where} ${LABEL[f.kind]} : ${f.value} à ${f.score.join('-')} (« ${f.move} »)`;
     if (f.kind === 'incoherent') return `${where} ${LABEL[f.kind]} : P${f.seats[0]} ${f.values[0]}, P${f.seats[1]} ${f.values[1]}`;
+    if (f.kind === 'loop') return `${where} ${LABEL[f.kind]} : « ${f.move} » répété`;
     if (f.kind === 'losing_attack') return `${where} ${LABEL[f.kind]} : « ${f.move} »${f.desperate ? ' (désespérée, adversaire à 6+)' : ''}`;
     return `${where} ${LABEL[f.kind]} : ${f.ready_runes} runes prêtes, ${f.playable} cartes jouables`;
   });

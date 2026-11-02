@@ -588,6 +588,15 @@ public:
     /// Whether this gear has an equip ability.
     virtual bool hasEquipAbility() const { return false; }
 
+    /// Whether the equip cost can be paid now, before any target is chosen.
+    /// The action generator offers the gear's equip only when this holds, so
+    /// a gear whose onEquip refuses for want of its cost (Last Rites without
+    /// two cards in the trash) is not offered. Default: true (the engine also
+    /// stops offering, for the rest of the turn, an equip whose onEquip just
+    /// failed without a change).
+    virtual bool canEquip(const GameState& /*state*/, PlayerId /*player*/,
+                          GameObjectId /*gear*/) const { return true; }
+
     /// Pay the equip cost and attach to unit. Card handles its own cost logic.
     /// Returns true if equip succeeded (cost paid, attached).
     virtual bool onEquip(CardContext& ctx, GameObjectId unit) { return false; }
