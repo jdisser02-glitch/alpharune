@@ -10,10 +10,15 @@ hand or drawn, after the mulligan) with the games where it never did:
   IWD   GIH - GNS, the "improvement when drawn", with a 95% interval
   played  share of the games in hand where it was also played
 
-Read IWD as a ranking signal, not a verdict: a card drawn in long games looks
-better than it is, a card whose job is to stabilise a lost board worse. The
-point is to rank the cards worth questioning and the pool cards worth trying
-in a list search (lab/ga.py), on the same engine and bot as the search itself.
+Read IWD as a ranking signal, not a verdict: it is a correlation, not the
+effect of the card. A card drawn in long games looks better than it is, a card
+whose job is to stabilise a lost board worse. The result is marked
+"exploratory", and for the "ab_candidates" cards with the lowest IWD (default
+3) it writes a direct A/B spec, lab/specs/ab/<name>-ab-<card>.json: the list
+against the same list with one copy swapped for one more copy of its best-IWD
+card, same opponents, same seeds ("ab_games" per opponent, default 200). Only
+that comparison (riftlab.py run <spec>; each deck's "vs_first" gives the
+difference with its 95% interval) decides a change.
 
 usage: card_impact.py SPEC.json [--games-dir DIR]
 
@@ -23,7 +28,8 @@ spec = {
   "agent": "pmcts:sims=30,eval=policy:lab/learn/nets/net_027.rbpn,worlds=6",
   "opponents": [{"deck": "...", "label": "...", "weight": 1}, ...],
   "games": 40,               # per opponent, half per seat
-  "threads": 4, "seed": 7
+  "threads": 4, "seed": 7,
+  "ab_candidates": 3, "ab_games": 200
 }
 Writes lab/results/<id>.json (kind "card_impact") and prints the table.
 """
@@ -92,6 +98,41 @@ def game_facts(path: Path, seat: int) -> dict | None:
     return {"won": g.get("winner") == seat, "hand": hand | played, "played": played}
 
 
+def ab_specs(spec: dict, deck: str, rows: list[dict], reg) -> list[str]:
+    """Direct A/B specs for the lowest-IWD cards: one copy out, one more copy of
+    the best-IWD card that is under 3 copies in. Returns the spec paths."""
+    k = int(spec.get("ab_candidates", 3))
+    if k <= 0:
+        return []
+    base = riftlab.parse_deck(ROOT / deck)
+    ranked = [r for r in rows if r["iwd"] is not None]
+    adds = sorted(ranked, key=lambda r: -r["iwd"])
+    out = []
+    for r in sorted(ranked, key=lambda r: r["iwd"])[:k]:
+        x = r["card"]
+        for a in adds:
+            y = a["card"]
+            if y == x or base["maindeck"].get(y, 0) >= 3:
+                continue
+            changes = {"maindeck": {x: -1, y: 1}}
+            if riftlab.validate(riftlab.apply_changes(base, changes), reg):
+                continue
+            name = f"{spec['name']}-ab-{re.sub(r'[^a-z0-9]+', '-', x.lower()).strip('-')}"
+            ab = {"name": name, "kind": "test",
+                  "description": f"Direct A/B: {deck} with vs without one {x} (one more {y} instead). card_impact only "
+                                 f"suggested it (IWD {100 * r['iwd']:+.1f}, correlation); this test measures the change itself.",
+                  "agent": spec.get("agent", "random"), "games": int(spec.get("ab_games", 200)), "review_games": 0,
+                  "threads": int(spec.get("threads", 4)), "seed": int(spec.get("seed", 7)) + 101,
+                  "decks": [deck, {"name": name, "base": deck, "changes": changes}],
+                  "opponents": spec["opponents"]}
+            path = LAB / "specs" / "ab" / f"{name}.json"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps(ab, indent=2) + "\n")
+            out.append(str(path.relative_to(ROOT)))
+            break
+    return out
+
+
 def main(argv):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("spec")
@@ -152,7 +193,11 @@ def main(argv):
               "finished_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
               "engine_commit": riftlab.git_commit(), "spec": spec,
               "games": total[1], "win_rate": round(total[0] / total[1], 4) if total[1] else None,
-              "by_opponent": {k: {"games": v[1], "wins": v[0]} for k, v in per_opp.items()}, "cards": rows}
+              "by_opponent": {k: {"games": v[1], "wins": v[0]} for k, v in per_opp.items()}, "cards": rows,
+              "exploratory": True,
+              "note": "IWD is a correlation between drawing a card and winning, not the card's effect. "
+                      "Decide a change only from a direct A/B test (ab_specs)."}
+    result["ab_specs"] = ab_specs(spec, deck, rows, reg)
     out = LAB / "results" / f"{test_id}.json"
     out.write_text(json.dumps(result, indent=1))
     print(f"{total[1]} games, list win rate {100 * total[0] / max(1, total[1]):.1f}%")
@@ -163,6 +208,9 @@ def main(argv):
         print(f"{r['card'][:28]:<28} {r['copies']:>2} {r['games_in_hand']:>8} {100 * r['gih']:6.1f} {100 * r['gns']:6.1f} {100 * r['iwd']:+7.1f}  "
               f"[{100 * r['iwd_ci95'][0]:+5.1f}, {100 * r['iwd_ci95'][1]:+5.1f}]  {100 * r['played_share']:5.0f}%")
     print(out.relative_to(ROOT))
+    print("exploratory ranking (correlation): decide only from the direct A/B tests:")
+    for sp in result["ab_specs"]:
+        print(f"  python3 lab/riftlab.py run {sp}")
     if not a.games_dir:
         shutil.rmtree(out_dir, ignore_errors=True)
     return 0

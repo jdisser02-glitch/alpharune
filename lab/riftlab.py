@@ -411,6 +411,26 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
                   flush=True)
         drec["weighted_win_rate"] = round(wwin / wsum, 4) if wsum else None
         result["decks"].append(drec)
+    # Each deck against the first (the reference): weighted difference of win
+    # rates with a 95% interval (normal approximation, matchups independent).
+    ref = result["decks"][0] if result["decks"] and result["decks"][0]["matchups"] else None
+    for drec in result["decks"][1:]:
+        if not ref or not drec["matchups"]:
+            continue
+        ws = sum(m["weight"] for m in drec["matchups"])
+        d = var = 0.0
+        for m in drec["matchups"]:
+            r = next((x for x in ref["matchups"] if x["opponent"] == m["opponent"]), None)
+            if not r or not m["games"] or not r["games"]:
+                continue
+            p1, p2 = m["wins"] / m["games"], r["wins"] / r["games"]
+            d += m["weight"] / ws * (p1 - p2)
+            var += (m["weight"] / ws) ** 2 * (p1 * (1 - p1) / m["games"] + p2 * (1 - p2) / r["games"])
+        h = 1.96 * math.sqrt(var)
+        drec["vs_first"] = {"reference": ref["label"], "diff": round(d, 4), "ci95": [round(d - h, 4), round(d + h, 4)],
+                            "verdict": "better" if d - h > 0 else ("worse" if d + h < 0 else "tie")}
+        print(f"  {drec['label']} vs {ref['label']}: {100 * d:+.1f} [{100 * (d - h):+.1f}, {100 * (d + h):+.1f}] "
+              f"{drec['vs_first']['verdict']}", flush=True)
     result["finished_utc"] = _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds")
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{result['id']}.json"
