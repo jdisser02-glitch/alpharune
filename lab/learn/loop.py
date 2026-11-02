@@ -14,11 +14,20 @@ Each iteration:
      swapped, in blocks, under a sequential probability ratio test (H0 50% vs
      H1 60%, alpha = beta = 0.05): it stops as soon as the candidate is clearly
      better or clearly worse, otherwise after --gate-max games, when the plain
-     win rate decides (>= --accept);
-  4. yardsticks: the candidate also plays random and the fixed reference net
-     (net_000, kept forever) so iterations stay comparable, and a Bradley-Terry
-     Elo over every match ever recorded (random anchored at 0) is written per
-     net into ladder.json.
+     win rate decides (>= --accept). A fixed panel of matchups (PANEL: Riven
+     against Kennen, Kai'Sa, Akali, Orianna, and a non-Riven pairing) guards
+     the mirror: the candidate plays both decks of each, and is refused when it
+     scores below --panel-floor there, so a net that only learns the mirror is
+     not adopted;
+  4. yardsticks: the candidate also plays random, the fixed reference net and
+     a few frozen older nets (ladder "anchor_nets") so iterations stay
+     comparable, and a Bradley-Terry Elo over every match ever recorded (random
+     anchored at 0) is written per net into ladder.json.
+
+Seeds: every batch takes its own range of game seeds (seed_base: one slice per
+iteration, per kind of match and per block), so no two blocks replay the same
+deals; the two seat orders of one block share a range on purpose (the same
+deals with the agents swapped, a paired comparison).
 
 Everything is logged to lab/learn/ladder.json (read by the dashboard); networks
 go to lab/learn/nets/. Iteration 0's data comes from random play.
@@ -50,6 +59,38 @@ sys.path.insert(0, str(ROOT / "lab"))
 import riftlab  # noqa: E402
 
 GATE_DECK = "decks/riven_sacramento.txt"
+_META = "lab/decks/meta/"
+# Fixed matchups that guard the mirror gate (decks the jury uses). Changing the
+# list changes what "panel" means in ladder.json: append, don't reorder.
+PANEL = [
+    ("riven-kennen", GATE_DECK, _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt"),
+    ("riven-kaisa", GATE_DECK, _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt"),
+    ("riven-akali", GATE_DECK, _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt"),
+    ("riven-orianna", GATE_DECK, _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"),
+    ("kennen-kaisa", _META + "rro25_2026-10-17/01_simple_kennen.txt", _META + "rro25_2026-10-17/02_art3mis_kai_sa.txt"),
+]
+
+# Seed plan. The engine plays game N of a batch with seed base+N, so a batch
+# owns [base, base + SEED_BLOCK). Each iteration owns SEED_IT_STRIDE seeds,
+# split into one slot per kind of match; a slot holds (next slot - slot) /
+# SEED_BLOCK blocks. Seeds stay below 2^31 (the engine masks to 31 bits).
+SEED_IT_STRIDE = 1_000_000
+SEED_BLOCK = 1_000
+SEED_SLOT = {"selfplay": 0, "gate": 300_000, "panel": 500_000, "anchor": 700_000,
+             "vs_random": 800_000, "vs_reference": 900_000}
+
+
+def seed_base(it, label, block=0):
+    """First seed of batch `block` of kind `label` in iteration `it`."""
+    slots = sorted(SEED_SLOT.values()) + [SEED_IT_STRIDE]
+    start = SEED_SLOT[label]
+    room = (slots[slots.index(start) + 1] - start) // SEED_BLOCK
+    if not 0 <= block < room:
+        raise ValueError(f"seed plan: block {block} of {label} exceeds its {room} blocks")
+    base = 1 + it * SEED_IT_STRIDE + start + block * SEED_BLOCK
+    if base + SEED_BLOCK >= 2 ** 31:
+        raise ValueError(f"seed plan: iteration {it} runs past 31-bit seeds")
+    return base
 
 
 def deck_pool():
@@ -65,6 +106,8 @@ BATCH_TIMEOUT_S = int(os.environ.get("RIFTBOUND_BATCH_TIMEOUT", 20 * 60))
 
 
 def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None):
+    if max(2, games) >= SEED_BLOCK:
+        raise ValueError(f"{games} games do not fit one seed block of {SEED_BLOCK}")
     cmd = [str(ENGINE), "--deck1", deck1, "--deck2", deck2, "--agent1", a1, "--agent2", a2,
            "--games", str(max(2, games)), "--threads", str(threads), "--seed", str(seed),
            "--render-html", "off", "--web", "off"]
@@ -89,6 +132,11 @@ def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None):
 class Loop:
     def __init__(self, a):
         self.a = a
+        self.batches = []     # (seed, games, deck1, deck2, agent1, agent2) of every batch run, for the seed tests
+
+    def batch(self, deck1, deck2, a1, a2, games, seed, value_data=None):
+        self.batches.append((seed, max(2, games), deck1, deck2, a1, a2))
+        return run_batch(deck1, deck2, a1, a2, games, self.a.threads, seed, value_data)
 
     def bot(self, net, sims=None):
         """Agent spec for a network (None = random play). A .rbpn (two-head)
@@ -110,17 +158,81 @@ class Loop:
         m = re.search(r"eval=(?:net|policy):([^,]+)", spec)
         return f"net:{m.group(1)}" if m else spec
 
-    def match(self, ladder, it, a1, a2, games, seed, label):
-        """`games` games split over both seat orders. Records the pairing for Elo."""
+    def match(self, ladder, it, a1, a2, games, seed, label, deck1=GATE_DECK, deck2=GATE_DECK, record=True):
+        """`games` games split over both seat orders on the same seeds (the
+        same deals, agents swapped): a1 plays deck1 then deck2. Records the
+        pairing for Elo."""
         half = max(1, games // 2)
-        w1, l1 = run_batch(GATE_DECK, GATE_DECK, a1, a2, half, self.a.threads, seed)
-        l2, w2 = run_batch(GATE_DECK, GATE_DECK, a2, a1, half, self.a.threads, seed + 1)
+        w1, l1 = self.batch(deck1, deck2, a1, a2, half, seed)
+        l2, w2 = self.batch(deck1, deck2, a2, a1, half, seed)
         n = 2 * max(2, half)
         wins = w1 + w2
         losses = l1 + l2
-        ladder.setdefault("matches", []).append({"iteration": it, "label": label, "a": self.key(a1), "b": self.key(a2),
-                                                 "games": n, "wins_a": wins, "wins_b": losses})
+        if record:
+            ladder.setdefault("matches", []).append({"iteration": it, "label": label, "a": self.key(a1), "b": self.key(a2),
+                                                     "games": n, "wins_a": wins, "wins_b": losses})
         return wins, losses, n
+
+    def panel(self, ladder, it, cand, current):
+        """Candidate vs current on every PANEL matchup: each deck on each seat,
+        the candidate on both decks. Returns (wins, games, per-matchup rows)."""
+        per = max(4, self.a.panel_games // 2)     # games per seat order of the decks
+        wins = losses = n = 0
+        rows = {}
+        for m, (name, d_a, d_b) in enumerate(PANEL):
+            w1, l1, g1 = self.match(ladder, it, cand, current, per, seed_base(it, "panel", 2 * m), "panel:" + name,
+                                    d_a, d_b, record=False)
+            w2, l2, g2 = self.match(ladder, it, cand, current, per, seed_base(it, "panel", 2 * m + 1), "panel:" + name,
+                                    d_b, d_a, record=False)
+            rows[name] = {"games": g1 + g2, "wins": w1 + w2, "rate": round((w1 + w2) / (g1 + g2), 4)}
+            wins += w1 + w2
+            losses += l1 + l2
+            n += g1 + g2
+        ladder.setdefault("matches", []).append({"iteration": it, "label": "panel", "a": self.key(cand),
+                                                 "b": self.key(current), "games": n, "wins_a": wins,
+                                                 "wins_b": losses})
+        return wins, n, rows
+
+    def gate(self, ladder, it, cand, current):
+        """Mirror SPRT in blocks, each block on its own seeds. Returns the
+        vs_current row."""
+        a = self.a
+        wins = losses = n = 0
+        llr, decision = 0.0, None
+        upper, lower = math.log((1 - 0.05) / 0.05), math.log(0.05 / (1 - 0.05))
+        blocks = 0
+        while n < a.gate_max:
+            w, l, g = self.match(ladder, it, self.bot(cand), self.bot(current), a.gate_block,
+                                 seed_base(it, "gate", blocks), "gate")
+            wins += w; losses += l; n += g; blocks += 1
+            llr = sprt_llr(wins, losses)
+            if blocks >= 2 and llr >= upper:
+                decision = "better"
+                break
+            if blocks >= 2 and llr <= lower:
+                decision = "worse"
+                break
+            if current is None and n >= a.gate_block:
+                break           # the first net replaces random play without a contest
+        score = wins / n
+        lo, hi = riftlab.wilson(wins, n)
+        if decision is None:
+            decision = "rate" if n >= a.gate_min else "short"
+        return {"opponent": self.bot(current), "games": n, "wins": wins, "rate": round(score, 4),
+                "ci95": [round(lo, 4), round(hi, 4)], "llr": round(llr, 3), "sprt": decision}
+
+    def self_play_pairs(self, rng, pool, count):
+        """Deck pairs for self-play: half from the panel (the decks the jury and
+        the gate use, so the value head knows them), half from the whole pool."""
+        focus = [(d_a, d_b) for _, d_a, d_b in PANEL] + [(GATE_DECK, GATE_DECK)]
+        out = []
+        for k in range(count):
+            if k % 2 == 0:
+                d1, d2 = rng.choice(focus)
+                out.append((d1, d2) if rng.random() < 0.5 else (d2, d1))
+            else:
+                out.append((rng.choice(pool), rng.choice(pool)))
+        return out
 
 
 def sprt_llr(wins, losses, p0=0.5, p1=0.6):
@@ -159,6 +271,21 @@ def load_ladder():
     return {"description": "Self-play learning ladder: each row is one iteration.", "iterations": []}
 
 
+def pick_anchors(ladder, n=2):
+    """Frozen older nets the candidate is measured against every iteration:
+    adopted nets at even spacing through the history (not the reference, which
+    has its own yardstick). Chosen once, then kept in ladder["anchor_nets"]."""
+    if ladder.get("anchor_nets"):
+        return [p for p in ladder["anchor_nets"] if (ROOT / p).exists()]
+    adopted = [r["net"] for r in ladder.get("iterations", []) if r.get("accepted") and r.get("net")]
+    adopted = [p for p in adopted if p != ladder.get("reference_net") and (ROOT / p).exists()]
+    if len(adopted) < n + 1:
+        return []
+    picks = sorted({adopted[(len(adopted) * (k + 1)) // (n + 1) - 1] for k in range(n)})
+    ladder["anchor_nets"] = picks
+    return picks
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("--iterations", type=int, default=3)
@@ -172,7 +299,10 @@ def main(argv):
     ap.add_argument("--gate-max", type=int, default=400)
     ap.add_argument("--gate-block", type=int, default=40, help="games per gate block (half per seat order)")
     ap.add_argument("--accept", type=float, default=0.55)
-    ap.add_argument("--yardstick-games", type=int, default=100, help="games vs random and vs the reference net")
+    ap.add_argument("--yardstick-games", type=int, default=60, help="games vs random and vs the reference net")
+    ap.add_argument("--panel-games", type=int, default=16, help="games per PANEL matchup (both decks, both seats)")
+    ap.add_argument("--panel-floor", type=float, default=0.45, help="refuse a candidate scoring below this on the panel")
+    ap.add_argument("--anchor-games", type=int, default=20, help="games vs each frozen older net (ladder anchor_nets)")
     ap.add_argument("--buffer", type=int, default=6, help="iterations of data in the replay buffer")
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
@@ -218,10 +348,8 @@ def main(argv):
         # 1. self-play over random deck pairs, a few games per pair
         per_pair = 4
         games = a.games * 3 if current is None else a.games   # random play is cheap
-        for k in range(max(1, games // per_pair)):
-            d1, d2 = rng.choice(pool), rng.choice(pool)
-            run_batch(d1, d2, L.bot(current), L.bot(current), per_pair, a.threads,
-                      a.seed * 1000003 + it * 10007 + k, data_file)
+        for k, (d1, d2) in enumerate(L.self_play_pairs(rng, pool, max(1, games // per_pair))):
+            L.batch(d1, d2, L.bot(current), L.bot(current), per_pair, seed_base(it, "selfplay", k), data_file)
         row["self_play_minutes"] = round((time.time() - t0) / 60, 1)
         # 2. train on the replay buffer (oldest first; train_value.py weights by recency)
         files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
@@ -256,38 +384,34 @@ def main(argv):
                                                          "human_records", "human_val_rows", "human_top1", "human_top3",
                                                          "human_clean_rows", "human_clean_top1", "human_clean_top3")}
         cand = str(new_net.relative_to(ROOT)) if new_net.is_relative_to(ROOT) else str(new_net)
-        # 3. gate: candidate vs current, Riven mirror, seats swapped, SPRT in blocks
-        wins = losses = n = 0
-        llr, decision = 0.0, None
-        upper, lower = math.log((1 - 0.05) / 0.05), math.log(0.05 / (1 - 0.05))
-        blocks = 0
-        while n < a.gate_max:
-            w, l, g = L.match(ladder, it, L.bot(cand), L.bot(current), a.gate_block,
-                              77 + it * 1000 + 2 * blocks, "gate")
-            wins += w; losses += l; n += g; blocks += 1
-            llr = sprt_llr(wins, losses)
-            if blocks >= 2 and llr >= upper:
-                decision = "better"
-                break
-            if blocks >= 2 and llr <= lower:
-                decision = "worse"
-                break
-            if current is None and n >= a.gate_block:
-                break           # the first net replaces random play without a contest
-        score = wins / n
-        lo, hi = riftlab.wilson(wins, n)
-        if decision is None:
-            decision = "rate" if n >= a.gate_min else "short"
-        row["vs_current"] = {"opponent": L.bot(current), "games": n, "wins": wins, "rate": round(score, 4),
-                             "ci95": [round(lo, 4), round(hi, 4)], "llr": round(llr, 3), "sprt": decision}
-        # 4. yardsticks: random, and the fixed reference net
-        r_w, _, r_n = L.match(ladder, it, L.bot(cand), "random", a.yardstick_games, 123 + it * 1000, "vs_random")
+        # 3. gate: candidate vs current, Riven mirror, seats swapped, SPRT in blocks; then the panel guard
+        row["vs_current"] = L.gate(ladder, it, cand, current)
+        decision, score = row["vs_current"]["sprt"], row["vs_current"]["rate"]
+        mirror_ok = current is None or decision == "better" or (decision == "rate" and score >= a.accept)
+        panel_ok = True
+        if current is not None and mirror_ok and a.panel_games > 0:
+            p_w, p_n, p_rows = L.panel(ladder, it, L.bot(cand), L.bot(current))
+            p_lo, p_hi = riftlab.wilson(p_w, p_n)
+            panel_ok = p_w / p_n >= a.panel_floor
+            row["panel"] = {"games": p_n, "wins": p_w, "rate": round(p_w / p_n, 4),
+                            "ci95": [round(p_lo, 4), round(p_hi, 4)], "floor": a.panel_floor,
+                            "ok": panel_ok, "matchups": p_rows}
+        # 4. yardsticks: random, the fixed reference net and the frozen older nets
+        r_w, _, r_n = L.match(ladder, it, L.bot(cand), "random", a.yardstick_games, seed_base(it, "vs_random"), "vs_random")
         row["vs_random"] = {"games": r_n, "wins": r_w, "rate": round(r_w / r_n, 4)}
         if reference and reference != cand:
             f_w, _, f_n = L.match(ladder, it, L.bot(cand), L.bot(reference), a.yardstick_games,
-                                  321 + it * 1000, "vs_reference")
+                                  seed_base(it, "vs_reference"), "vs_reference")
             row["vs_reference"] = {"opponent": L.bot(reference), "games": f_n, "wins": f_w, "rate": round(f_w / f_n, 4)}
-        accepted = current is None or decision == "better" or (decision == "rate" and score >= a.accept)
+        if a.anchor_games > 0:
+            anchors = {}
+            for j, anc in enumerate(x for x in pick_anchors(ladder) if x != cand):
+                g_w, _, g_n = L.match(ladder, it, L.bot(cand), L.bot(anc), a.anchor_games,
+                                      seed_base(it, "anchor", j), "vs_anchor")
+                anchors[anc] = {"games": g_n, "wins": g_w, "rate": round(g_w / g_n, 4)}
+            if anchors:
+                row["vs_anchors"] = anchors
+        accepted = mirror_ok and panel_ok
         row["net"] = cand
         row["accepted"] = accepted
         if accepted:
