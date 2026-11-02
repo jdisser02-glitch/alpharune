@@ -260,6 +260,7 @@ export const testById = id => (D.tests || []).find(t => t.id === id) || null;
 export function bestList() {
   let best = null, bestLo = -1;
   for (const t of D.tests || []) if (!isPlumbing(t) && !/random/.test(t.opp_agent || "")) for (const d of t.decks || []) {
+    if (t.kind === "ga" || t.ga) continue; // Search scores are not confirmation evidence.
     if (d.weighted_win_rate == null) continue;
     const p = pooled(d), lo = p.ci ? p.ci[0] : -1;
     if (!best || lo > bestLo || (lo === bestLo && d.weighted_win_rate > best.deck.weighted_win_rate)) { best = { test: t, deck: d, pooled: p }; bestLo = lo; }
@@ -268,6 +269,13 @@ export function bestList() {
 }
 /** A one-line conclusion for a test, written for a player. */
 export function testConclusion(t) {
+  if (t.kind === "ga" || t.ga) {
+    const c = t.ga && t.ga.confirmation;
+    if (!c) return "Exploratory search: no independent confirmation. No deck improvement established.";
+    if (!c.recommended) return "Independent confirmation: no improvement over the base list demonstrated.";
+    const r = c.comparisons[c.recommended];
+    return `Independent confirmation: improvement over the base in simulation; difference interval ${interval(r.delta_interval)}. Engine and bot validity still matter.`;
+  }
   const decks = t.decks || [], n = decks.length, games = decks.reduce((a, d) => a + pooled(d).games, 0);
   if (isPlumbing(t)) return `Plumbing check: ${num(games)} games with random players ran through the engine without error. Says nothing about deck strength.`;
   const ranked = decks.filter(d => d.weighted_win_rate != null).sort((a, b) => b.weighted_win_rate - a.weighted_win_rate);

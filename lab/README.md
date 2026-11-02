@@ -111,3 +111,45 @@ must beat the current one to replace it). Each iteration is a row in
 Commit a test spec to `lab/requests/` on the work branch. The workflow
 `.github/workflows/riftlab.yml` builds the engine, runs it on a GitHub
 runner (4 cores, up to ~6 h), and commits the result JSON to `lab/results/`.
+
+## Confirming genetic-search results
+
+GA search scores are exploratory. At the end, the top **surviving** candidates
+(default 3) and the unchanged base play a separate confirmation batch:
+300 games per opponent per list by default, equally split between seats.
+Set `"confirmation": {"finalists": 3, "games": 1000}` in the GA spec to
+choose the budget **before** running. This is additional to the search budget;
+confirmation runs sequentially and can be expensive with a strong bot.
+
+Confirmation uses fresh seed ranges and never feeds its scores back into the
+search. Opponent weights apply to both seats equally. It records a simultaneous
+95% Hoeffding interval for each candidate's win-rate difference from the base,
+with a union bound across all tested lists and opponent/seat strata.
+These bounds are conservative, account for testing several finalists, and do
+not require independence between candidates sharing seeds. They assume independent
+games within each stratum. Draws count as non-wins, as in existing lab reports.
+Do not repeatedly extend the budget until an interval passes: that invalidates
+the fixed-budget guarantee.
+
+Only a strictly positive lower bound produces
+`lab/variants/<name>-confirmed.txt`. Otherwise the result is `inconclusive`;
+the base has not been shown inferior. Old `-best.txt` files are historical
+exploration outputs, not recommendations. The dashboard excludes GA search
+scores from its global best-list widget and shows confirmation status in the
+test conclusion. Confirmation details live in the result's `ga.confirmation`.
+A gain in simulation still requires a faithful engine and a competent bot;
+this does not automatically pass the separate human-game validation gates.
+
+Resume checkpoints now contain SHA-256 fingerprints of the executable, resolved
+network files, decks, search code and full specification. Legacy or incompatible
+checkpoints are rejected. The exact random-generator state and the next generation
+are saved, so interruption does not silently restart from a different population.
+Changing the configuration requires a new search; modifying inputs during a run
+also causes rejection before saving the next checkpoint.
+
+Card-impact IWD remains an **observational association**, useful for proposing
+swaps, not estimating their causal benefit. Compare a frozen base and proposed
+swap directly on independent games before making a recommendation.
+
+Run the Python regression suite (no C++ build or training required):
+`python3 -m unittest discover -s lab/tests -v`.

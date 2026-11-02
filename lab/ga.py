@@ -30,8 +30,8 @@ spec = {
   "threads": 4, "seed": 11
 }
 The result is a lab test file (lab/results/<id>.json, kind "ga") with every
-list evaluated and a "ga" block with the generations; the best list is also
-written to lab/variants/<name>-best.txt.
+list evaluated and a "ga" block with the generations; an independently confirmed improvement is written to
+lab/variants/<name>-confirmed.txt. An inconclusive search exports no recommendation.
 """
 from __future__ import annotations
 
@@ -49,6 +49,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import riftlab  # noqa: E402
+import validation
 from riftlab import LAB, ROOT  # noqa: E402
 
 
@@ -105,6 +106,9 @@ class GA:
             o.setdefault("label", Path(o["deck"]).stem)
             o.setdefault("weight", 1.0)
             self.opponents.append(o)
+        validation.check_opponents(self.opponents)
+        self.provenance = None
+        self.confirmation = None
         self.archive: dict[str, dict] = {}     # key -> {main, label, path, results{label:{games,wins}}, born}
         self.log: list[dict] = []
         self.started = dt.datetime.now(dt.timezone.utc)
@@ -141,7 +145,7 @@ class GA:
         return n
 
     def crossover(self, a: dict, b: dict) -> dict:
-        names = set(a) | set(b)
+        names = sorted(set(a) | set(b))
         child = {}
         for n in names:
             child[n] = self.rng.choice([a.get(n, 0), b.get(n, 0)])
@@ -196,6 +200,8 @@ class GA:
         return sum(v["games"] for v in self.archive[k]["results"].values())
 
     def evaluate(self, keys: list[str], gen: int, games: int):
+        if validation.fingerprint(self.spec, self.agent, self.opp_agent, self.opponents) != self.provenance:
+            raise ValueError("Inputs changed during search; start a new search")
         seed = int(self.spec.get("seed", 1))
         jobs = []
         for k in keys:
@@ -213,18 +219,29 @@ class GA:
                 res = self.archive[k]["results"][o["label"]]
                 res["games"] += x["p1"] + x["p2"] + x["draws"]
                 res["wins"] += x["p1"] if seat == 1 else x["p2"]
+        if validation.fingerprint(self.spec, self.agent, self.opp_agent, self.opponents) != self.provenance:
+            raise ValueError("Inputs changed during evaluation; checkpoint not saved")
         for k in keys:
             self.archive[k]["generations"].append(gen)
 
     # ── the loop ─────────────────────────────────────────────────────────────
     def run(self, state: dict | None = None):
         P = int(self.spec.get("population", 16)); G = int(self.spec.get("generations", 8))
-        E = int(self.spec.get("elite", max(2, P // 4))); games = int(self.spec.get("games", 6))
+        E = int(self.spec.get("elite", min(P - 1, max(2, P // 4)))); games = int(self.spec.get("games", 6))
         px = float(self.spec.get("crossover", 0.6))
+        if P < 2 or G < 1 or not 1 <= E < P or games < 4 or games % 2:
+            raise ValueError("Require population >= 2, generations >= 1, 1 <= elite < population and even games >= 4")
+        self.provenance = validation.fingerprint(self.spec, self.agent, self.opp_agent, self.opponents)
         if state:
+            if state.get("provenance") != self.provenance:
+                raise ValueError("Resume rejected: missing or changed engine, network, decks, code or spec fingerprint. Start a new search.")
             self.archive = state["archive"]; self.log = state["log"]; self.test_id = state["test_id"]
             self.started = dt.datetime.fromisoformat(state["started"]); population = state["population"]
-            self.rng = random.Random(int(self.spec.get("seed", 1)) + 7919 * len(self.log))
+            self.rng.setstate(validation.as_tuple(state["rng"]))
+            self.confirmation = state.get("confirmation")
+            for c in self.archive.values():
+                if riftlab.parse_deck(ROOT / c["path"])["maindeck"] != c["main"]:
+                    raise ValueError("Resume rejected: generated candidate changed")
             start = len(self.log)
             print(f"resuming {self.test_id} at generation {start + 1}", flush=True)
         else:
@@ -242,7 +259,11 @@ class GA:
                     k = self.register(m, 0)
                     if k not in population and len(population) < P:
                         population.append(k); self.archive[k]["label"] = f"{Path(f).stem}: " + self.archive[k]["label"]
+            attempts = 0
             while len(population) < P:
+                attempts += 1
+                if attempts > 2000:
+                    raise ValueError("Not enough distinct legal candidates for the requested population")
                 m = self.mutate(self.base["maindeck"])
                 k = self.register(m, 0)
                 if k not in population:
@@ -265,8 +286,8 @@ class GA:
             self.log.append({"generation": gen + 1, "games_per_opponent": games,
                              "standings": [{"key": k, "label": self.archive[k]["label"], "rate": round(self.rate(k), 4),
                                             "games": self.games_of(k)} for k in ranked]})
-            self.write(population, complete=gen + 1 == G)
             if gen + 1 == G:
+                self.write(population, complete=False)
                 break
             # next generation: elites stay, children replace the rest; the base list stays as the control
             # whatever its rank, so its evidence keeps growing alongside the survivors'
@@ -286,6 +307,11 @@ class GA:
                 if k not in nxt:
                     nxt.append(k)
             population = nxt
+            self.write(population, complete=False)
+        if not self.dry:
+            if self.confirmation is None:
+                self.confirmation = validation.confirm(self, population)
+            self.write(population, complete=True)
 
     def tournament(self, ranked: list[str], size: int = 3) -> str:
         picks = self.rng.sample(ranked, min(size, len(ranked)))
@@ -300,7 +326,7 @@ class GA:
                   "engine_commit": riftlab.git_commit(), "agent": self.agent, "opp_agent": self.opp_agent,
                   "games_per_matchup": int(self.spec.get("games", 6)), "threads": self.threads, "seed": int(self.spec.get("seed", 1)),
                   "spec": self.spec, "ga": {"generations": self.log, "complete": complete, "population": population,
-                                             "pool": self.pool}, "decks": []}
+                                             "pool": self.pool, "confirmation": self.confirmation}, "provenance": self.provenance, "decks": []}
         keys = sorted(self.archive, key=lambda k: (self.games_of(k) > 0, self.rate(k)), reverse=True)
         for k in keys:
             c = self.archive[k]
@@ -322,14 +348,18 @@ class GA:
         out = LAB / "results" / f"{self.test_id}.json"
         out.write_text(json.dumps(result, indent=1))
         state = {"test_id": self.test_id, "started": self.started.isoformat(), "archive": self.archive, "log": self.log,
-                 "population": population, "rng": None}
+                 "population": population, "rng": self.rng.getstate(), "provenance": self.provenance, "confirmation": self.confirmation}
         (LAB / ".cache" / "ga").mkdir(parents=True, exist_ok=True)
         (LAB / ".cache" / "ga" / f"{self.test_id}.json").write_text(json.dumps(state))   # for --resume
-        best = keys[0] if keys else None
+        best = self.confirmation.get("recommended") if self.confirmation else None
+        # Remove an obsolete recommendation from an earlier run of this spec.
+        best_path = LAB / "variants" / f"{self.spec['name']}-confirmed.txt"
+        if not best and best_path.exists():
+            best_path.unlink()
         if best:
             d = riftlab.parse_deck(ROOT / self.archive[best]["path"])
-            riftlab.write_deck(d, LAB / "variants" / f"{self.spec['name']}-best.txt",
-                               [f"Best list of {self.spec['name']} so far ({100 * self.rate(best):.1f}% over {self.games_of(best)} games): {self.archive[best]['label']}",
+            riftlab.write_deck(d, LAB / "variants" / f"{self.spec['name']}-confirmed.txt",
+                               [f"Confirmed improvement in simulation for {self.spec['name']}: {self.archive[best]['label']}",
                                 f"Base: {self.spec['base']} — generated by lab/ga.py"])
         riftlab.write_index(self.reg)
         print(out.relative_to(ROOT), flush=True)

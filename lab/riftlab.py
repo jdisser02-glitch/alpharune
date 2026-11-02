@@ -297,6 +297,10 @@ def play_batch(deck1: str, deck2: str, agent1: str, agent2: str, games: int,
         raise RuntimeError(f"engine failed ({p.returncode}): {' '.join(cmd)}\n{p.stderr[-2000:]}")
     out = p.stdout
     r = {k: int(m.group(1)) if (m := rx.search(out)) else 0 for k, rx in RESULT_RE.items()}
+    if any(not rx.search(out) for rx in RESULT_RE.values()):
+        raise RuntimeError("Engine output is missing batch result counters")
+    if sum(r.values()) != max(games, 2):
+        raise RuntimeError("Engine returned an unexpected number of completed games")
     a = {k: int(m.group(1)) if (m := rx.search(out)) else None for k, rx in AVG_RE.items()}
     return {"p1": r["P1 wins"], "p2": r["P2 wins"], "draws": r["Draws"],
             "avg_turns": a["turns"], "avg_decisions": a["decisions"], "wall_s": round(wall, 2),

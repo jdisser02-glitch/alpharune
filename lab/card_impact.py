@@ -147,7 +147,7 @@ def main(argv):
                      "iwd_ci95": [round(lo, 4), round(hi, 4)] if d is not None else None,
                      "played_share": round(s["played"] / s["gih"][1], 3) if s["gih"][1] else None})
     rows.sort(key=lambda r: -(r["iwd"] if r["iwd"] is not None else -9))
-    result = {"id": test_id, "name": spec["name"], "kind": "card_impact", "deck": deck, "agent": agent,
+    result = {"id": test_id, "name": spec["name"], "kind": "card_impact", "evidence": "observational", "recommendation": "Use independent deck-swap tests before adding or removing a card.", "deck": deck, "agent": agent,
               "started_utc": started.isoformat(timespec="seconds"),
               "finished_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
               "engine_commit": riftlab.git_commit(), "spec": spec,
@@ -155,6 +155,7 @@ def main(argv):
               "by_opponent": {k: {"games": v[1], "wins": v[0]} for k, v in per_opp.items()}, "cards": rows}
     out = LAB / "results" / f"{test_id}.json"
     out.write_text(json.dumps(result, indent=1))
+    print("Observed association only: IWD does not estimate the effect of replacing a card.")
     print(f"{total[1]} games, list win rate {100 * total[0] / max(1, total[1]):.1f}%")
     print(f"{'card':<28} {'n':>2} {'in hand':>8} {'GIH':>6} {'GNS':>6} {'IWD':>7}  95% interval     played")
     for r in rows:
