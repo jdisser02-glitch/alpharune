@@ -38,10 +38,13 @@ def run(args: list[str], out: Path) -> dict | None:
     return json.loads(out.read_text())
 
 
-def slim(rep: dict, kind: str, path: Path) -> dict:
+def slim(rep: dict, kind: str, path: Path, game_net: str | None = None) -> dict:
+    """`net` is the net that played the game (a user game may predate the
+    current net); `probe_net` the one that re-searched it."""
     bot = [p for p in rep.get("probes", []) if p.get("bot")]
     return {"kind": kind, "report": str(path.relative_to(ROOT)), "game": rep.get("game"), "me": rep.get("me"),
-            "opponent": rep.get("opponent"), "net": rep.get("net"), "bot_decisions": len(bot),
+            "opponent": rep.get("opponent"), "net": game_net or rep.get("net"), "probe_net": rep.get("net"),
+            "bot_decisions": len(bot),
             "flags": rep["summary"]["counts"], "saturated_share": rep["summary"]["saturated_share"],
             "lines": rep["summary"]["lines"][:6],
             "audited_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
@@ -54,6 +57,9 @@ def write_summary(new: list[dict]) -> dict:
     s["reports"] += [r for r in new if r["report"] not in seen]
     by_net: dict[str, dict] = {}
     for r in s["reports"]:
+        # a game played by an older net and re-searched by a newer one says little about either
+        if r.get("probe_net") and r.get("net") != r.get("probe_net"):
+            continue
         t = by_net.setdefault(r.get("net") or "?", {"bot_decisions": 0, "flags": {}, "reports": 0})
         t["reports"] += 1
         t["bot_decisions"] += r["bot_decisions"]
@@ -87,7 +93,7 @@ def main(argv: list[str]) -> int:
                 continue
             rep = run(["--game", str(f)], out)
             if rep:
-                new.append(slim(rep, "game", out))
+                new.append(slim(rep, "game", out, rec.get("pnet") or rec.get("net")))
     if a.selfplay:
         stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M")
         seed = a.seed or int(dt.datetime.now(dt.timezone.utc).strftime("%y%m%d%H")) % 100000 * 10
