@@ -1,0 +1,17 @@
+{
+  "name": "riven-credible-ga-1",
+  "description": "EXPLORATORY genetic search on the matchups where the bot already agrees with real players (lab/meta/compare_meta-2026-11-03-net128.json): the Riven mirror, Orianna and Evelynn. Kennen and Akali are left out while the bot misplays them (simulated Riven wins far above the real rates), so a list cannot win here by exploiting those mistakes. Seeded with the meta Rivens and the provisional best list; finalists confirmed on fresh games against the Sacramento/Orlando reference. Results to be re-checked once the bot plays Kennen and Akali realistically.",
+  "base": "decks/riven_sacramento.txt",
+  "agent": "pmcts:sims=50,eval=policy:@current,worlds=8,settle=60",
+  "opponents": [
+    {"deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt", "label": "Riven mirror (Orlando 1st)", "weight": 2},
+    {"deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt", "label": "Orianna (Xi'an 7th)", "weight": 1},
+    {"deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt", "label": "Evelynn (Vegas)", "weight": 1}
+  ],
+  "seeds": ["lab/variants/riven-multistart-ga-2--cef30c16fe.txt", "lab/decks/meta/*/*riven*.txt"],
+  "pool": {"from_decks": ["lab/decks/meta/*/*riven*.txt"], "extra": ["Baron Nashor", "Ki Burst", "Meditation"], "exclude": []},
+  "population": 16, "generations": 8, "elite": 5, "games": 8,
+  "swaps": [1, 2], "crossover": 0.6, "max_copies": 3,
+  "finalists": 4, "confirm_games": 40,
+  "threads": 4, "seed": 31
+}
