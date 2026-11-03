@@ -111,5 +111,35 @@ class Merge(unittest.TestCase):
                 loop.DATA = old
 
 
+
+class Population(unittest.TestCase):
+    def cands(self):
+        return {k: {"cand": f"lab/learn/nets/net_007_v{k}.rbpn", "row": {"iteration": 7, "variant": {"index": k}}}
+                for k in range(len(stages.VARIANTS))}
+
+    def test_pick_takes_the_best_screen_rate_and_records_every_variant(self):
+        rates = [9, 12, 10, 11]            # wins per 20-game block
+        screens = [{"variant": k, "block": b, "wins": w, "losses": 20 - w, "games": 20}
+                   for k, w in enumerate(rates) for b in range(stages.SCREEN_BLOCKS)]
+        out = stages.pick(plan(), self.cands(), screens)
+        self.assertEqual(out["cand"], "lab/learn/nets/net_007_v1.rbpn")
+        self.assertEqual(out["row"]["screen_pick"], 1)
+        self.assertEqual(set(out["row"]["screen"]), {str(k) for k in range(len(stages.VARIANTS))})
+        self.assertAlmostEqual(out["row"]["screen"]["1"]["rate"], 0.6)
+
+    def test_pick_refuses_a_variant_without_screen(self):
+        screens = [{"variant": 0, "block": 0, "wins": 10, "losses": 10, "games": 20}]
+        with self.assertRaises(SystemExit):
+            stages.pick(plan(), self.cands(), screens)
+
+    def test_screen_seeds_never_meet_the_gate_or_each_other(self):
+        starts = [loop.seed_base(7, "screen", k * stages.SCREEN_BLOCKS + b)
+                  for k in range(len(stages.VARIANTS)) for b in range(stages.SCREEN_BLOCKS)]
+        starts += [loop.seed_base(7, "gate", b) for b in range(12)] + [loop.seed_base(7, "selfplay", k) for k in range(400)]
+        spans = sorted((s, s + loop.SEED_BLOCK) for s in starts)
+        for (s1, e1), (s2, e2) in zip(spans, spans[1:]):
+            self.assertLessEqual(e1, s2)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -8,6 +8,13 @@ several machines at once (riftlab.yml, the "p_*" training jobs):
             data/learn/iter_<it>_s<k>.rbvd;
   train     merges the shards into iter_<it>.rbvd (one file per iteration:
             the trainer weights recency per file) and trains the candidate;
+            with --variant K, a population member: the loop settings with
+            VARIANTS[K]'s training overrides, written as net_<it>_vK;
+  screen    one block of SCREEN_GAMES mirror games of variant K against the
+            current net (seeds of their own);
+  pick      the variant with the best screen rate: its candidate goes on to
+            the gate, the panel and the yardsticks on fresh seeds, so having
+            picked the best of several does not inflate its gate rate;
   gate      one evaluation task: a mirror gate block, one panel matchup, or
             one yardstick (random, the reference net, the anchor nets);
   decide    adds the task results up, applies the same rules as loop.py
@@ -21,7 +28,9 @@ tasks replay the same deals.
 usage:
   stages.py plan --out plan.json -- [loop.py options]
   stages.py selfplay --plan plan.json --shard K --shards S
-  stages.py train --plan plan.json --out cand.json
+  stages.py train --plan plan.json --out cand.json [--variant K]
+  stages.py screen --plan plan.json --cand cand_K.json --variant K --block B --out screen.json
+  stages.py pick --plan plan.json --out cand.json --cands cand_*.json --screens screen_*.json
   stages.py gate --plan plan.json --cand cand.json --task gate:0 --out result.json
   stages.py decide --plan plan.json --cand cand.json RESULT.json [...]
 """
@@ -41,6 +50,16 @@ import loop  # noqa: E402
 from loop import seed_base  # noqa: E402
 
 PER_PAIR = 4
+# Training settings tried side by side every iteration (population). Each is a
+# set of loop.py option overrides; the screen keeps the best for the gate.
+VARIANTS = [
+    {},                                                   # the loop's own settings
+    {"human_weight": 0.0},                                # no human imitation
+    {"epochs": 2, "lr": 3e-4},                            # gentle fine-tune
+    {"epochs": 3, "lr": 5e-4, "human_weight": 0.1, "prev_weight": 0.3},   # gentle, close to the current net
+]
+SCREEN_BLOCKS = 6       # screen blocks per variant
+SCREEN_GAMES = 20       # games per screen block (both seat orders)
 
 
 def settings(plan: dict):
@@ -67,6 +86,7 @@ def cmd_plan(args, rest):
         reference = None
     plan = {"it": len(ladder["iterations"]), "current": current, "reference": reference,
             "anchors": loop.pick_anchors(ladder), "args": rest, "tasks": tasks_for(a),
+            "variants": VARIANTS, "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
     Path(args.out).write_text(json.dumps(plan, indent=1))
     print(json.dumps({k: plan[k] for k in ("it", "current", "tasks")}))
@@ -128,9 +148,61 @@ def cmd_train(args, _):
            "self_play_games": a.games, "sims": a.sims, "agent": a.agent,
            "trainer": "train_policy" if a.policy else "train_value",
            "self_play_minutes": max((m["minutes"] for m in sp), default=None), "shards": len(sp)}
-    cand = loop.train_candidate(a, it, plan["current"], row)
+    suffix = ""
+    if args.variant is not None:
+        over = plan.get("variants", VARIANTS)[args.variant]
+        for k, v in over.items():
+            setattr(a, k, v)
+        row["variant"] = {"index": args.variant, "overrides": over}
+        suffix = f"_v{args.variant}"
+    cand = loop.train_candidate(a, it, plan["current"], row, suffix)
     Path(args.out).write_text(json.dumps({"cand": cand, "row": row}, indent=1))
     print(cand)
+
+
+def cmd_screen(args, _):
+    """Block `block` of variant `variant`: SCREEN_GAMES mirror games against the current net."""
+    plan = json.loads(Path(args.plan).read_text())
+    a = settings(plan)
+    it = plan["it"]
+    cand = json.loads(Path(args.cand).read_text())["cand"]
+    L = loop.Loop(a)
+    w, l, g = L.match({"matches": []}, it, L.bot(cand), L.bot(plan["current"]), SCREEN_GAMES,
+                      seed_base(it, "screen", args.variant * SCREEN_BLOCKS + args.block), "screen", record=False)
+    res = {"variant": args.variant, "block": args.block, "wins": w, "losses": l, "games": g,
+           "batches": [list(b) for b in L.batches]}
+    Path(args.out).write_text(json.dumps(res))
+    print(json.dumps({k: v for k, v in res.items() if k != "batches"}))
+
+
+def pick(plan: dict, cands: dict, screens: list[dict]) -> dict:
+    """The candidate of the variant with the best screen rate (ties: lower index),
+    with every variant's screen in its row."""
+    tot = {}
+    for r in screens:
+        t = tot.setdefault(r["variant"], [0, 0])
+        t[0] += r["wins"]; t[1] += r["games"]
+    missing = [k for k in cands if k not in tot] + [k for k in tot if k not in cands]
+    if missing:
+        raise SystemExit(f"screen and candidates do not match: {missing}")
+    best = max(sorted(tot), key=lambda k: tot[k][0] / tot[k][1])
+    out = json.loads(json.dumps(cands[best]))
+    out["row"]["screen"] = {str(k): {"games": n, "wins": w, "rate": round(w / n, 4),
+                                     "overrides": plan.get("variants", VARIANTS)[k]} for k, (w, n) in sorted(tot.items())}
+    out["row"]["screen_pick"] = best
+    return out
+
+
+def cmd_pick(args, _):
+    plan = json.loads(Path(args.plan).read_text())
+    cands = {}
+    for f in args.cands:
+        c = json.loads(Path(f).read_text())
+        cands[c["row"]["variant"]["index"]] = c
+    screens = [json.loads(Path(f).read_text()) for f in args.screens]
+    out = pick(plan, cands, screens)
+    Path(args.out).write_text(json.dumps(out, indent=1))
+    print(out["cand"], json.dumps(out["row"]["screen"]))
 
 
 def cmd_gate(args, _):
@@ -257,12 +329,19 @@ def main(argv):
     p = sub.add_parser("selfplay"); p.add_argument("--plan", required=True)
     p.add_argument("--shard", type=int, required=True); p.add_argument("--shards", type=int, required=True)
     p = sub.add_parser("train"); p.add_argument("--plan", required=True); p.add_argument("--out", required=True)
+    p.add_argument("--variant", type=int, default=None)
+    p = sub.add_parser("screen"); p.add_argument("--plan", required=True); p.add_argument("--cand", required=True)
+    p.add_argument("--variant", type=int, required=True); p.add_argument("--block", type=int, required=True)
+    p.add_argument("--out", required=True)
+    p = sub.add_parser("pick"); p.add_argument("--plan", required=True); p.add_argument("--out", required=True)
+    p.add_argument("--cands", nargs="+", required=True); p.add_argument("--screens", nargs="+", required=True)
     p = sub.add_parser("gate"); p.add_argument("--plan", required=True); p.add_argument("--cand", required=True)
     p.add_argument("--task", required=True); p.add_argument("--out", required=True)
     p = sub.add_parser("decide"); p.add_argument("--plan", required=True); p.add_argument("--cand", required=True)
     p.add_argument("results", nargs="+")
     args = ap.parse_args(argv)
-    {"plan": cmd_plan, "selfplay": cmd_selfplay, "train": cmd_train, "gate": cmd_gate, "decide": cmd_decide}[args.cmd](args, rest)
+    {"plan": cmd_plan, "selfplay": cmd_selfplay, "train": cmd_train, "screen": cmd_screen, "pick": cmd_pick,
+     "gate": cmd_gate, "decide": cmd_decide}[args.cmd](args, rest)
 
 
 if __name__ == "__main__":

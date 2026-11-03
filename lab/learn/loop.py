@@ -76,7 +76,7 @@ PANEL = [
 # SEED_BLOCK blocks. Seeds stay below 2^31 (the engine masks to 31 bits).
 SEED_IT_STRIDE = 1_000_000
 SEED_BLOCK = 1_000
-SEED_SLOT = {"selfplay": 0, "gate": 500_000, "panel": 650_000, "anchor": 800_000,
+SEED_SLOT = {"selfplay": 0, "screen": 450_000, "gate": 500_000, "panel": 650_000, "anchor": 800_000,
              "vs_random": 900_000, "vs_reference": 950_000}
 
 
@@ -296,16 +296,17 @@ def rbpn_hidden(path) -> int:
     return struct.unpack("<iii", head[4:16])[2] if head[:4] == b"RBPN" else -1
 
 
-def train_candidate(a, it, current, row):
+def train_candidate(a, it, current, row, suffix=""):
     """Trains net_<it> on the replay buffer (oldest first; recency-weighted by
     file, so one file per iteration), fills the training fields of `row` and
     returns the candidate's path."""
     files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
              if (DATA / f"iter_{j:03d}.rbvd").exists()]
     if a.policy:
-        new_net = NETS / f"net_{it:03d}.rbpn"
+        new_net = NETS / f"net_{it:03d}{suffix}.rbpn"
         cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
+               "--lr", str(a.lr),
                "--hidden", str(a.hidden),
                "--entropy", str(a.entropy)]
         if a.human and Path(a.human).exists():
@@ -317,7 +318,7 @@ def train_candidate(a, it, current, row):
             cmd += ["--init-value", str(ROOT / current)]
             row["warm_start"] = current
     else:
-        new_net = NETS / f"net_{it:03d}.rbvn"
+        new_net = NETS / f"net_{it:03d}{suffix}.rbvn"
         cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency)]
     tr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
@@ -360,6 +361,7 @@ def make_parser():
     ap.add_argument("--buffer", type=int, default=6, help="iterations of data in the replay buffer")
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
+    ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
     ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")
     ap.add_argument("--warm", action="store_true", help="--policy: start each candidate from the current net (same width) instead of from scratch")
     ap.add_argument("--vtemp", type=float, default=1.0, help="value temperature of the search (pmcts vtemp=; 1 = off)")

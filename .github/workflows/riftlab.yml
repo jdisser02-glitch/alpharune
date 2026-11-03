@@ -229,7 +229,8 @@ jobs:
 
   # ── Parallel training: one iteration per workflow run ─────────────────────────────────────────────────────────
   # p_plan builds the engine (cached by source hash) and reads the ladder; 20 p_selfplay machines play the
-  # self-play games; p_train merges them and trains the candidate; one p_gate machine per evaluation task (mirror
+  # self-play games; 4 p_train machines each train a candidate with other settings (stages.py VARIANTS); 24
+  # p_screen jobs play 120 mirror games per candidate; p_pick keeps the best; one p_gate machine per evaluation task (mirror
   # gate blocks, panel matchups, yardsticks); p_decide applies loop.py's rules, commits the ladder and the net if
   # adopted, and dispatches the next iteration. The loop settings are the plan's "args" (below).
   p_plan:
@@ -319,6 +320,10 @@ jobs:
     needs: [p_plan, p_selfplay]
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      matrix:
+        variant: [0, 1, 2, 3]     # lab/learn/stages.py VARIANTS: a population of training settings
     steps:
       - uses: actions/checkout@v4
       - run: python3 -m pip install --quiet numpy
@@ -342,25 +347,95 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           ls -la data/learn
-          python3 -u lab/learn/stages.py train --plan stage/plan.json --out stage/cand.json
-          mkdir -p stage/nets && cp "$(python3 -c 'import json; print(json.load(open("stage/cand.json"))["cand"])' | sed 's/\.rbpn$//')".* stage/nets/
+          python3 -u lab/learn/stages.py train --plan stage/plan.json --out stage/cand_${{ matrix.variant }}.json --variant ${{ matrix.variant }}
+          mkdir -p stage/nets && cp "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cand"])' stage/cand_${{ matrix.variant }}.json | sed 's/\.rbpn$//')".* stage/nets/
           # keep the last 3 iterations of data in the buffer
           ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -3 | xargs -r rm -f
       - name: Save the replay buffer
+        if: matrix.variant == 0
         uses: actions/cache/save@v4
         with:
           path: data/learn
           key: learn-buffer-${{ github.run_id }}
       - uses: actions/upload-artifact@v4
         with:
-          name: cand
+          name: cand-${{ matrix.variant }}
           path: |
-            stage/cand.json
+            stage/cand_*.json
             stage/nets/
           retention-days: 3
 
-  p_gate:
+  p_screen:
     needs: [p_plan, p_train]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: true
+      matrix:
+        variant: [0, 1, 2, 3]
+        block: [0, 1, 2, 3, 4, 5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Engine runtime libraries
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - uses: actions/download-artifact@v4
+        with:
+          name: cand-${{ matrix.variant }}
+          path: stage
+      - name: Screen
+        env:
+          RIFTBOUND_BIN: stage/riftbound
+          RIFTBOUND_ROOT: .
+        run: |
+          chmod +x stage/riftbound
+          cp stage/nets/* lab/learn/nets/
+          python3 -u lab/learn/stages.py screen --plan stage/plan.json --cand stage/cand_${{ matrix.variant }}.json \
+            --variant ${{ matrix.variant }} --block ${{ matrix.block }} --out stage/screen.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screen-${{ matrix.variant }}-${{ matrix.block }}
+          path: stage/screen.json
+          retention-days: 3
+
+  p_pick:
+    needs: [p_plan, p_screen]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: stage
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cand-*
+          path: cands
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: screen-*
+          path: screens
+      - name: Pick the best variant
+        run: |
+          mkdir -p pick/nets
+          python3 lab/learn/stages.py pick --plan stage/plan.json --out pick/cand.json --cands cands/*/cand_*.json --screens screens/*/screen.json
+          net="$(python3 -c 'import json; print(json.load(open("pick/cand.json"))["cand"])')"
+          cp cands/*/nets/"$(basename "${net%.rbpn}")".* pick/nets/
+          ls pick/nets
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cand
+          path: |
+            pick/cand.json
+            pick/nets/
+          retention-days: 3
+
+  p_gate:
+    needs: [p_plan, p_pick]
     runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
@@ -394,7 +469,7 @@ jobs:
           retention-days: 3
 
   p_decide:
-    needs: [p_plan, p_train, p_gate]
+    needs: [p_plan, p_pick, p_gate]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
