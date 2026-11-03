@@ -296,6 +296,7 @@ def train_candidate(a, it, current, row):
         new_net = NETS / f"net_{it:03d}.rbpn"
         cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
+               "--hidden", str(a.hidden),
                "--entropy", str(a.entropy)]
         if a.human and Path(a.human).exists():
             cmd += ["--human", a.human]
@@ -345,6 +346,7 @@ def make_parser():
     ap.add_argument("--buffer", type=int, default=6, help="iterations of data in the replay buffer")
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
+    ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")
     ap.add_argument("--policy", action="store_true",
                     help="train a two-head policy + value net (train_policy.py) and search with it as the prior")
     ap.add_argument("--human", default=str(ROOT / "data" / "learn" / "human.rbv3"),
