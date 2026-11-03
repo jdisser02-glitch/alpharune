@@ -53,11 +53,15 @@ PER_PAIR = 4
 # Training settings tried side by side every iteration (population). Each is a
 # set of loop.py option overrides; the screen keeps the best for the gate.
 VARIANTS = [
-    {},                                                   # the loop's own settings
-    {"human_weight": 0.0},                                # no human imitation
-    {"epochs": 2, "lr": 3e-4},                            # gentle fine-tune
-    {"epochs": 3, "lr": 5e-4, "human_weight": 0.1, "prev_weight": 0.3},   # gentle, close to the current net
+    {},                                                   # the loop's own settings (6 epochs, lr 1e-3)
+    {"epochs": 1, "lr": 2e-4},                            # gentler still
+    {"epochs": 2, "lr": 3e-4},                            # gentle fine-tune: won the 4 screens of 156-159
+    {"epochs": 3, "lr": 3e-4},                            # a little more of the gentle one
 ]
+# History: from 156 to 159 the screens (120 games each vs net_128) gave
+#   loop's own 47.9%, no human imitation 47.1%, gentle (2 ep, 3e-4) 54.8%
+#   (won all four), gentle + human 0.1 + prev 0.3 (3 ep, 5e-4) 51.5%;
+# the gentle winner then scored 49.0% on the fresh-seed gate (winner's curse).
 SCREEN_BLOCKS = 6       # screen blocks per variant
 SCREEN_GAMES = 20       # games per screen block (both seat orders)
 

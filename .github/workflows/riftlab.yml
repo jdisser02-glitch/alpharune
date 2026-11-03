@@ -278,7 +278,7 @@ jobs:
         id: plan
         run: |
           python3 lab/learn/stages.py plan --out stage/plan.json -- \
-            --games 1600 --sims 50 --agent pmcts --settle 60 --policy --hidden 64 --warm --human lab/learn/human.rbv3 --threads 4 \
+            --games 1600 --sims 100 --agent pmcts --settle 60 --policy --hidden 64 --warm --human lab/learn/human.rbv3 --threads 4 \
             --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 20 --buffer 3 --epochs 6
           echo "tasks=$(python3 -c 'import json; print(json.dumps(json.load(open("stage/plan.json"))["tasks"]))')" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
