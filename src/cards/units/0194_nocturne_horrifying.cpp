@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "cards/card_helpers.h"
 
 namespace riftbound {
 namespace {
@@ -18,9 +19,9 @@ public:
     // "As you look at or reveal me from the top of your deck, you may banish
     // me. If you do, you may play me for [A]." [Ganking] engine-handled.
     // The two nested "may"s are collapsed into one decision (the resume-slot
-    // helpers run once per resolution). The [A] cost is approximated as
-    // ignoring-cost — there's no clean cost-payment cursor in a reveal-trigger
-    // context (TODO).
+    // helpers run once per resolution), offered only when the [A] can be paid
+    // (banishing without playing gains nothing). [A] is one Power of any domain,
+    // paid as the play happens.
     // CR 359 example (Nocturne): the replacement applies as the look/reveal
     // happens. The engine puts this ability on the chain instead, so it is
     // decided and resolved right after the looking effect, which may already
@@ -37,14 +38,18 @@ public:
             return zone == ZoneType::MainDeck || zone == ZoneType::Trash;
         };
         if (!reachable()) return;  // already left the deck top for good
-        int conf = confirmOptional(ctx, "Nocturne: banish from deck and play for [A]?",
-                                    reachable);
+        auto offer = [&] { return reachable() && payableOnePower(ctx.state, owner, std::nullopt); };
+        int conf = confirmOptional(ctx, "Nocturne: banish from deck and play for [A]?", offer);
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (conf != 1) return;
         // banishObject drops me from the deck / trash list I am in.
         ctx.executor.banishObject(ctx.source);
         auto& bz = ctx.state.player(owner).banishment;
         bz.erase(std::remove(bz.begin(), bz.end(), ctx.source), bz.end());
+        if (!payOnePower(ctx, owner, std::nullopt)) {
+            ctx.events.logTrace("NOCTURNE: banished, but the [A] could not be paid: not played");
+            return;
+        }
         ctx.executor.playIgnoringCost(owner, ctx.source,
                                       LocationId{BaseLocation{owner}});
         ctx.events.logTrace("NOCTURNE: banished from deck top and played for [A]");

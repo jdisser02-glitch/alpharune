@@ -179,8 +179,10 @@ TEST_F(KennenAuditTest, LightningRush_LookLetsNocturneBePlayedFromTheTrash) {
     EXPECT_TRUE(inDeck(P1, bottom));
     ASSERT_TRUE(chainHasAbilityFrom(noct)) << "the look wakes Nocturne";
 
-    // Nocturne's ability: banish him (from where the look left him) and play him.
+    // Nocturne's ability: banish him (from where the look left him) and play him for [A].
+    auto rune = addRune(P1, Domain::Chaos);
     driveResumableTrigger(kNocturne, P1, noct, pickYes, exec);
+    EXPECT_FALSE(state.getObject(rune).location.has_value()) << "the [A] recycled the rune";
     EXPECT_FALSE(inTrash(P1, noct));
     EXPECT_TRUE(state.getObject(noct).isAtBase());
     EXPECT_EQ(state.getObject(noct).zone, ZoneType::Base);
@@ -227,6 +229,7 @@ TEST_F(KennenAuditTest, TrifarianCaptain_LookLetsNocturneBePlayedFromTheDeckBott
     EXPECT_TRUE(inDeck(P1, noct));
     ASSERT_TRUE(chainHasAbilityFrom(noct)) << "the look wakes Nocturne";
 
+    addRune(P1, Domain::Order);
     driveResumableTrigger(kNocturne, P1, noct, pickYes, exec);
     EXPECT_FALSE(inDeck(P1, noct));
     EXPECT_EQ(deckSize(P1), 4);
@@ -375,6 +378,28 @@ TEST_F(KennenAuditTest, Fizz_PlayerChoosesWhichSpellToReplay) {
     EXPECT_FALSE(inTrash(P1, gust)) << "the chosen spell was played (then recycled)";
     EXPECT_TRUE(inDeck(P1, gust));
     EXPECT_TRUE(inTrash(P1, flash));
+}
+
+TEST_F(KennenAuditTest, Nocturne_WithoutAPowerToPayIsNotPlayedNorBanished) {
+    // "you may play me for [A]": with no rune and no floating power, the
+    // offer is not made and Nocturne stays where the look left him.
+    ChainManager cm(state, events, card_db);
+    TriggerManager tm(state, events, card_db, cm, card_registry);
+    tm.subscribe();
+    EffectExecutor exec(state, events, card_db, &card_registry);
+    addToDeck(P1, kOnslaught);
+    auto noct = addToDeck(P1, kNocturne);
+    addToDeck(P1, kOnslaught);
+    auto rush = addToHand(P1, kLightningRush);
+    driveResumable(kLightningRush, P1, rush,
+        [](const std::vector<Intent>& legal) {
+            for (const auto& i : legal) if (i.chosen_objects.empty()) return i;
+            return legal.front();
+        }, exec);
+    ASSERT_TRUE(inTrash(P1, noct));
+    ASSERT_TRUE(chainHasAbilityFrom(noct));
+    driveResumableTrigger(kNocturne, P1, noct, pickYes, exec);
+    EXPECT_TRUE(inTrash(P1, noct)) << "no [A] to pay: not banished, not played";
 }
 
 }  // namespace
