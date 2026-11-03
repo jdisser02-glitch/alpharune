@@ -288,6 +288,14 @@ def pick_anchors(ladder, n=2):
     return picks
 
 
+def rbpn_hidden(path) -> int:
+    """Hidden-layer width of an RBPN file (header: magic, version, input dim, hidden)."""
+    import struct
+    with open(path, "rb") as f:
+        head = f.read(16)
+    return struct.unpack("<iii", head[4:16])[2] if head[:4] == b"RBPN" else -1
+
+
 def train_candidate(a, it, current, row):
     """Trains net_<it> on the replay buffer (oldest first; recency-weighted by
     file, so one file per iteration), fills the training fields of `row` and
@@ -304,6 +312,10 @@ def train_candidate(a, it, current, row):
             cmd += ["--human", a.human]
         if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
             cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
+        # Continuous training: start from the current net instead of from scratch, when it has this width.
+        if a.warm and current and str(current).endswith(".rbpn") and rbpn_hidden(ROOT / current) == a.hidden:
+            cmd += ["--init-value", str(ROOT / current)]
+            row["warm_start"] = current
     else:
         new_net = NETS / f"net_{it:03d}.rbvn"
         cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
@@ -349,6 +361,7 @@ def make_parser():
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")
+    ap.add_argument("--warm", action="store_true", help="--policy: start each candidate from the current net (same width) instead of from scratch")
     ap.add_argument("--vtemp", type=float, default=1.0, help="value temperature of the search (pmcts vtemp=; 1 = off)")
     ap.add_argument("--policy", action="store_true",
                     help="train a two-head policy + value net (train_policy.py) and search with it as the prior")

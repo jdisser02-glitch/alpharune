@@ -192,9 +192,14 @@ def main(argv):
             raise SystemExit("--init-value takes an RBPN file")
         init = read_rbpn(a.init_value)
         if init["W1"].shape == (H, dim):
-            # Re-fold the stored raw-scale layer into this run's standardisation.
-            W1f = np.where(inv_std[:, None] > 0, init["W1"].T / np.maximum(inv_std[:, None], 1e-12), 0).astype(np.float32)
-            b1f = (init["b1"] - (W1f * mz[:, None]).sum(0)).astype(np.float32)
+            # The file's layer reads standardised inputs with its own scale:
+            #   h = b1 + W1 . ((x - mean0) * inv0).
+            # This run computes h = b1f + W1f . (x * inv) (inv = this run's
+            # inv_std), so W1f = W1^T * inv0 / inv and b1f = b1 - W1 . (mean0 * inv0).
+            inv0, mean0 = init["inv_std"], init["mean"]
+            ratio = np.where(inv_std > 0, inv0 / np.maximum(inv_std, 1e-12), 0.0).astype(np.float32)
+            W1f = (init["W1"].T * ratio[:, None]).astype(np.float32)
+            b1f = (init["b1"] - init["W1"] @ (mean0 * inv0)).astype(np.float32)
             w2, b2, w3, b3 = init["w2"].copy(), init["b2"].copy(), init["wm"].copy(), init["bm"].copy()
             if init["Wp"].shape == (V, H):
                 Wp, bp = init["Wp"].copy(), init["bp"].copy()
