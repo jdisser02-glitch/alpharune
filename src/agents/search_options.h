@@ -35,6 +35,12 @@ struct SearchOptions {
     /// in the middle of its showdown. Used by pmcts and by the OpenSpiel
     /// ismcts agent's leaf evaluator.
     int settle = 0;
+    /// Value temperature for a learned evaluation (pmcts): a net value v in
+    /// (-1, 1) is searched as tanh(atanh(v) / value_temp). 1 = as is; > 1
+    /// spreads values the net has saturated near +-1 (-0.99 vs -0.95 become
+    /// -0.86 vs -0.69 at 3), so a side the net thinks lost still tells its
+    /// moves apart. Terminal values stay +-1.
+    double value_temp = 1.0;
 
     // ── pmcts (agents/ismcts_search.h) only ──
     /// Root-parallel search threads; each owns its worlds and tree, visits
@@ -69,6 +75,7 @@ inline bool applySearchOption(SearchOptions& opts, const std::string& key, const
     else if (key == "det") opts.determinize = val != "0";
     else if (key == "final") opts.final_policy = val;
     else if (key == "settle") opts.settle = std::stoi(val);
+    else if (key == "vtemp") opts.value_temp = std::stod(val);
     else if (key == "threads") opts.threads = std::stoi(val);
     else if (key == "worlds") opts.worlds = std::stoi(val);
     else if (key == "prior") opts.prior = val;

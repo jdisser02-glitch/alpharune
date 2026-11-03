@@ -91,6 +91,10 @@ bool isQuietDecision(const GameState& state);
 /// payment, a card's choice).
 int settleChoice(const std::vector<Intent>& legal);
 
+/// A learned value v in [-1, 1] searched at temperature t: tanh(atanh(v) / t)
+/// (SearchOptions::value_temp). Identity at t = 1; t > 1 spreads values near +-1.
+double temperValue(double v, double t);
+
 class IsMctsSearch {
 public:
     /// `deck1` / `deck2` and `engine_seed` MUST match the live game: a decision
@@ -138,6 +142,8 @@ public:
 
     /// Leaf value for `perspective` in [-1, 1] under SearchOptions::eval.
     double evaluate(const GameState& state, PlayerId perspective) const;
+    /// A learned value after SearchOptions::value_temp (identity at 1).
+    double tempered(double v) const;
 
     /// Sample `n` determinizations of `state` from `perspective`'s view, as
     /// the search does at the root (exposed for tests).

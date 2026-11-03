@@ -147,6 +147,8 @@ class Loop:
         sims = sims or self.a.sims
         policy = str(net).endswith(".rbpn")
         settle = f",settle={self.a.settle}" if self.a.settle > 0 else ""
+        if getattr(self.a, "vtemp", 1.0) != 1.0:
+            settle += f",vtemp={self.a.vtemp}"
         if self.a.agent == "ismcts" and not policy:
             return f"ismcts:sims={sims},eval=net:{net}{settle}"
         kind = "policy" if policy else "net"
@@ -347,6 +349,7 @@ def make_parser():
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")
+    ap.add_argument("--vtemp", type=float, default=1.0, help="value temperature of the search (pmcts vtemp=; 1 = off)")
     ap.add_argument("--policy", action="store_true",
                     help="train a two-head policy + value net (train_policy.py) and search with it as the prior")
     ap.add_argument("--human", default=str(ROOT / "data" / "learn" / "human.rbv3"),

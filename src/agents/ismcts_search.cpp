@@ -204,14 +204,22 @@ void IsMctsSearch::setPolicyNet(std::shared_ptr<const ml::PolicyNet> net, bool a
 
 void IsMctsSearch::setPrior(PriorFn prior) { prior_ = std::move(prior); }
 
+double temperValue(double v, double t) {
+    if (!(t > 0.0) || t == 1.0) return v;
+    const double c = std::clamp(v, -0.999999, 0.999999);
+    return std::tanh(std::atanh(c) / t);
+}
+
+double IsMctsSearch::tempered(double v) const { return temperValue(v, opts_.value_temp); }
+
 double IsMctsSearch::evaluate(const GameState& s, PlayerId me) const {
     if (s.game_over) {
         if (s.winner == PlayerId::None) return 0.0;
         return s.winner == me ? 1.0 : -1.0;
     }
     if (eval_fn_) return std::clamp(eval_fn_(s, me), -1.0, 1.0);
-    if (net_) return 2.0 * net_->winProbability(s, me, db_) - 1.0;
-    if (pnet_) return 2.0 * pnet_->winProbability(s, me, db_) - 1.0;
+    if (net_) return tempered(2.0 * net_->winProbability(s, me, db_) - 1.0);
+    if (pnet_) return tempered(2.0 * pnet_->winProbability(s, me, db_) - 1.0);
     const double victory = std::max(1, s.mode.victory_score);
     double v = static_cast<double>(s.player(me).score - s.player(opponent(me)).score) / victory;
     if (opts_.eval == "board") v = boardValue(s, me, v);

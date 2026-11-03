@@ -376,3 +376,15 @@ TEST_F(SearchChoicesTest, DiagnoseNetValueOfACardInHand) {
 
 }  // namespace
 }  // namespace riftbound
+
+TEST(ValueTemperature, IdentityAtOneAndSpreadsSaturatedValuesAbove) {
+    using riftbound::search::temperValue;
+    EXPECT_DOUBLE_EQ(temperValue(-0.97, 1.0), -0.97);
+    EXPECT_DOUBLE_EQ(temperValue(0.3, 0.0), 0.3) << "a non-positive temperature is off";
+    const double a = temperValue(-0.99, 3.0), b = temperValue(-0.95, 3.0);
+    EXPECT_GT(b - a, 0.10) << "-0.99 and -0.95 are told apart: " << a << " vs " << b;
+    EXPECT_LT(a, b) << "the order is kept";
+    EXPECT_NEAR(temperValue(0.0, 3.0), 0.0, 1e-12);
+    EXPECT_NEAR(temperValue(0.5, 3.0), -temperValue(-0.5, 3.0), 1e-12) << "symmetric";
+    EXPECT_LT(std::abs(temperValue(1.0, 3.0)), 1.0) << "clamped: no infinity";
+}
