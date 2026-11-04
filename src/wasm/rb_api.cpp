@@ -163,6 +163,7 @@ json objBrief(const GameState& s, GameObjectId id) {
         if (o.damage_marked) j["damage"] = o.damage_marked;
     }
     if (o.is_exhausted) j["exhausted"] = true;
+    if (o.empowered > 0) j["empowered"] = o.empowered;   // Vendetta Empowered status (legends such as Heart of the Tempest)
     return j;
 }
 

@@ -352,7 +352,8 @@
       ? `<div class="rb-backs" role="img" aria-label="${handCount} cards in hand">${Array.from({ length: Math.min(handCount, 10) }, () => `<div class="rb-back"></div>`).join("")}</div>`
       : `<div class="rb-cards ${hand.length > 7 ? "fan" : ""}" style="--n:${hand.length}">${hand.map(h => `<div class="rb-hc">${cardEl(h, p, mine ? "" : "sm", mine ? L : focusOnly(L))}</div>`).join("")}</div>`;
     const nLegal = mine && L ? hand.filter(h => { const c = card(h), n = nameOf(h).toLowerCase(); return L.cards.get(n) || (c && L.cards.get(String(c.id))) || (h && typeof h === "object" && h.card != null && L.cards.get(String(h.card))); }).length : 0;
-    const legend = pl.legend ? cardEl(pl.legend, p, "legend", null, "legend" + (pl.legend.exhausted ? ", exhausted" : "")) : "";
+    const legend = pl.legend ? cardEl(pl.legend, p, "legend", null, "legend" + (pl.legend.exhausted ? ", exhausted" : "") + (pl.legend.empowered ? ", empowered" : "")) : "";
+    const legendBox = legend && pl.legend.empowered ? `<span class="rb-empowered" title="Empowered">${legend}<b class="rb-emp-tag">EMPOWERED</b></span>` : legend;
     const units = [...(pl.base_units || []).map(u => unitEl(u, p, L, "in base", false, "")), ...(pl.base_gear || []).map(g => unitEl(g, p, L, "in base", true, ""))];
     const pips = Array.from({ length: target }, (_, k) => `<i class="${k < (pl.score || 0) ? "on" : ""}"></i>`).join("");
     const active = board.turn_player === p;
@@ -363,7 +364,7 @@
       <div class="rb-side p${p}">${active ? `<span class="rb-active">turn</span>` : ""}${acting ? `<span class="rb-now">to act</span>` : ""}<span class="rb-who"><b>P${p}</b> ${esc(info.label || (bottom ? "viewer" : "opponent"))}</span><div class="rb-sc">${pl.score || 0}<small>/${target}</small></div><div class="rb-pips" aria-hidden="true">${pips}</div>${pl.energy_pool ? `<span class="rb-energy">energy <b>${pl.energy_pool}</b></span>` : ""}${info.deck ? `<span class="rb-deck" title="${esc(info.deck)}">${esc(info.deck)}</span>` : ""}</div>
       <div class="rb-hand ${ring === "hand" ? "rb-ring" : ""}"><span class="rb-hcount">Hand · <b>${handCount}</b>${nLegal ? `<span class="rb-hplay">· ${nLegal} playable</span>` : ""}</span>${handHtml}</div>
       <div class="rb-zone">
-        <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info, mine ? L : focusOnly(L))}</div>
+        <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legendBox}</div>` : ""}${championStatus(board, i, info, mine ? L : focusOnly(L))}</div>
         <div class="rb-base ${ring === "base" ? "rb-ring" : ""}"><span class="rb-zlabel">Base</span><div class="rb-units">${units.join("") || `<span class="rb-none">no units in base</span>`}</div></div>
         ${runeStrip(pl, info)}
         <div class="rb-piles"><div class="rb-pile deck" title="cards left in the main deck"><b>${pl.deck ?? "?"}</b><span>deck</span></div>${pileBtn(p, "trash", pl.trash ?? (pl.trash_cards || []).length, "show the cards in the trash")}${pl.banish != null || (pl.banish_cards || []).length ? pileBtn(p, "banish", pl.banish ?? (pl.banish_cards || []).length, "show the banished cards") : ""}</div>
