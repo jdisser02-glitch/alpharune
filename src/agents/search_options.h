@@ -41,6 +41,14 @@ struct SearchOptions {
     /// -0.86 vs -0.69 at 3), so a side the net thinks lost still tells its
     /// moves apart. Terminal values stay +-1.
     double value_temp = 1.0;
+    /// Material blend (pmcts): a learned value
+    /// v is searched as (1 - blend) * v + blend * materialValue, a hand-tuned
+    /// symmetric count of points, units and their Might, battlefields held,
+    /// cards and runes (search::materialValue). 0 = the net alone. The net's
+    /// values sit near +-1 for most positions, so moves that lose a unit or
+    /// waste a turn looked like the rest; the material term tells them apart
+    /// and does not depend on the decks the net was trained on.
+    double blend = 0.0;
 
     // ── pmcts (agents/ismcts_search.h) only ──
     /// Root-parallel search threads; each owns its worlds and tree, visits
@@ -76,6 +84,7 @@ inline bool applySearchOption(SearchOptions& opts, const std::string& key, const
     else if (key == "final") opts.final_policy = val;
     else if (key == "settle") opts.settle = std::stoi(val);
     else if (key == "vtemp") opts.value_temp = std::stod(val);
+    else if (key == "blend") opts.blend = std::stod(val);
     else if (key == "threads") opts.threads = std::stoi(val);
     else if (key == "worlds") opts.worlds = std::stoi(val);
     else if (key == "prior") opts.prior = val;

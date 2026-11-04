@@ -269,6 +269,7 @@ struct SearchSpec {
     int worlds = 6;
     int settle = 0;   // SearchOptions::settle (0 = off)
     double vtemp = 1.0;   // SearchOptions::value_temp (1 = off)
+    double blend = 0.0;   // SearchOptions::blend (0 = the net alone)
 };
 
 /// "search:sims=50,worlds=6,settle=60" -> {50, 6, 60}; defaults 50, 6 and 0.
@@ -286,6 +287,8 @@ SearchSpec parseSearchSpec(const std::string& spec) {
         const double t = std::atof(spec.c_str() + k + 6);
         if (t > 0.0) out.vtemp = std::min(t, 10.0);
     }
+    if (const auto k = spec.find("blend="); k != std::string::npos)
+        out.blend = std::clamp(std::atof(spec.c_str() + k + 6), 0.0, 1.0);
     return out;
 }
 
@@ -353,6 +356,7 @@ RB_EXPORT int rb_new_game(const char* deck1_txt, const char* deck2_txt, int huma
             opts.prior = "heuristic";       // without a policy net (wireSearchNets)
             opts.settle = ss.settle;
             opts.value_temp = ss.vtemp;
+            opts.blend = ss.blend;
             for (int k = 0; k < 2; ++k) {
                 ses->search[k] = std::make_unique<search::PuctAgent>(
                     c.db, c.registry, ses->deck1, ses->deck2, ses->seed,

@@ -94,6 +94,12 @@ int settleChoice(const std::vector<Intent>& legal);
 /// A learned value v in [-1, 1] searched at temperature t: tanh(atanh(v) / t)
 /// (SearchOptions::value_temp). Identity at t = 1; t > 1 spreads values near +-1.
 double temperValue(double v, double t);
+/// Hand-tuned material value of `s` for `me` in (-1, 1): points (the last
+/// ones before victory weigh more), units and their lasting Might, gear,
+/// runes, battlefields held with units there, cards in hand; symmetric, so
+/// materialValue(s, opp) == -materialValue(s, me). eval=material, and the
+/// blend= term mixed into a learned value.
+double materialValue(const GameState& s, PlayerId me);
 
 class IsMctsSearch {
 public:

@@ -60,6 +60,50 @@ double boardValue(const GameState& s, PlayerId me, double score_term) {
          + 0.05 * std::tanh((runes[0] - runes[1]) / 4.0);
 }
 
+}  // namespace
+
+double materialValue(const GameState& s, PlayerId me) {
+    // Weights in victory points, after the hand-tuned evaluations of the
+    // open-source Riftbound bots (local-rift, buddy, riftbound-duel-lab): a
+    // 3-Might ready unit is worth about a third of a point, a battlefield
+    // held with units there 0.4, the last points before victory more than
+    // the first. Temporary Might counts for little: it expires at end of turn
+    // unless it won a fight, and a settled leaf has already played that out.
+    const PlayerId opp = opponent(me);
+    const int victory = std::max(1, s.mode.victory_score);
+    double side[2] = {0, 0};
+    int units_at[2][16] = {};
+    for (const auto& [id, o] : s.objects) {
+        if (!o.location.has_value()) continue;
+        if (o.controller != me && o.controller != opp) continue;
+        const int p = o.controller == me ? 0 : 1;
+        if (o.isUnit() && (o.isAtBase() || o.isAtBattlefield())) {
+            const double lasting = o.current_might - 0.8 * std::max(0, o.temp_might_bonus);
+            side[p] += 0.10 + 0.06 * lasting + (o.isReady() ? 0.03 : 0.0) - 0.01 * o.damage_marked;
+            if (auto bf = o.battlefieldId(); bf && static_cast<int>(*bf) >= 0 && static_cast<int>(*bf) < 16)
+                ++units_at[p][static_cast<int>(*bf)];
+        } else if (o.isGear() && (o.isAtBase() || o.isAtBattlefield())) {
+            side[p] += 0.10;
+        } else if (o.isRune()) {
+            side[p] += 0.06;
+        }
+    }
+    for (const auto& bf : s.battlefields) {
+        if (!bf.controller.has_value()) continue;
+        const int p = *bf.controller == me ? 0 : 1;
+        const int i = static_cast<int>(bf.id);
+        if (i >= 0 && i < 16 && units_at[p][i] > 0) side[p] += 0.4;
+    }
+    for (int p = 0; p < 2; ++p) {
+        const auto& ps = s.player(p == 0 ? me : opp);
+        const double near = std::max(0, ps.score - (victory - 3));
+        side[p] += ps.score + 0.3 * near * near + 0.06 * std::min<size_t>(ps.hand.size(), 9);
+    }
+    return std::tanh((side[0] - side[1]) / 4.0);
+}
+
+namespace {
+
 /// Key of a move in the tree: its encoded action slot (openspiel/action_vocab.h)
 /// refined by the play location. The Play slot carries the location itself
 /// since the policy-target work; the refinement still separates hiding a card
@@ -218,11 +262,16 @@ double IsMctsSearch::evaluate(const GameState& s, PlayerId me) const {
         return s.winner == me ? 1.0 : -1.0;
     }
     if (eval_fn_) return std::clamp(eval_fn_(s, me), -1.0, 1.0);
-    if (net_) return tempered(2.0 * net_->winProbability(s, me, db_) - 1.0);
-    if (pnet_) return tempered(2.0 * pnet_->winProbability(s, me, db_) - 1.0);
+    if (net_ || pnet_) {
+        const double v = tempered(2.0 * (net_ ? net_->winProbability(s, me, db_) : pnet_->winProbability(s, me, db_)) - 1.0);
+        if (!(opts_.blend > 0.0)) return v;
+        const double b = std::min(1.0, opts_.blend);
+        return (1.0 - b) * v + b * materialValue(s, me);
+    }
     const double victory = std::max(1, s.mode.victory_score);
     double v = static_cast<double>(s.player(me).score - s.player(opponent(me)).score) / victory;
     if (opts_.eval == "board") v = boardValue(s, me, v);
+    else if (opts_.eval == "material") v = materialValue(s, me);
     return std::clamp(v, -1.0, 1.0);
 }
 

@@ -374,6 +374,47 @@ TEST_F(SearchChoicesTest, DiagnoseNetValueOfACardInHand) {
             std::cout << "    hand " << h << " -> " << h + 1 << ": " << d_by_hand[h].size() << " positions, mean dP " << mean(d_by_hand[h]) << "\n";
 }
 
+TEST_F(SearchChoicesTest, MaterialValueIsSymmetricAndCountsPointsUnitsAndHeldBattlefields) {
+    if (!deck_) GTEST_SKIP() << "needs " << kKennen;
+    EventBus bus;
+    GameEngine engine(*db_, bus, *registry_);
+    std::mt19937_64 rng(11);
+    StepResult sr = engine.beginGame(*deck_, *deck_, 11);
+    int checked = 0;
+    for (int n = 0; n < 400 && sr.kind == StepKind::NeedDecision; ++n) {
+        const GameState& s = engine.state();
+        const double a = search::materialValue(s, PlayerId::Player1), b = search::materialValue(s, PlayerId::Player2);
+        EXPECT_NEAR(a, -b, 1e-12) << "symmetric at decision " << n;
+        EXPECT_LT(std::abs(a), 1.0);
+        if (n % 40 == 0) {
+            GameState more = s;
+            more.player(PlayerId::Player1).score += 1;
+            EXPECT_GT(search::materialValue(more, PlayerId::Player1), a) << "a point is worth something";
+            for (auto& [id, o] : more.objects)
+                if (o.isUnit() && o.controller == PlayerId::Player1 && (o.isAtBase() || o.isAtBattlefield())) {
+                    const double before = search::materialValue(more, PlayerId::Player1);
+                    o.location.reset();   // the unit is gone
+                    EXPECT_LT(search::materialValue(more, PlayerId::Player1), before) << "losing a unit costs";
+                    break;
+                }
+            ++checked;
+        }
+        auto w = search::IsMctsSearch::heuristicPrior(s, sr.legal);
+        for (size_t i = 0; i < w.size(); ++i)
+            if (sr.legal[i].type == IntentType::Concede) w[i] = 0;
+        std::discrete_distribution<int> pick(w.begin(), w.end());
+        sr = engine.applyChoice(pick(rng));
+    }
+    EXPECT_GT(checked, 3);
+}
+
+TEST(SearchOptionsSpec, BlendIsParsed) {
+    SearchOptions o;
+    parseSearchSpecOptions("sims=50,eval=policy:x.rbpn,blend=0.3,settle=60", o);
+    EXPECT_DOUBLE_EQ(o.blend, 0.3);
+    EXPECT_EQ(o.settle, 60);
+}
+
 }  // namespace
 }  // namespace riftbound
 
