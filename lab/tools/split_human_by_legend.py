@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "lab"))
 try:
     import riftlab  # noqa: E402
-except Exception:  # noqa: BLE001
+except BaseException:  # noqa: BLE001 - riftlab exits (SystemExit) when the engine binary is not built
     riftlab = None
 
 
@@ -71,8 +71,10 @@ def main(argv):
     # The legend -> champion map: from the card registry when it loads (it needs the built engine), else from the
     # committed lab/learn/legend_champions.json (the training machines have no engine build in that job).
     try:
+        if riftlab is None:
+            raise RuntimeError("no riftlab")
         champ = champion_of_legend(riftlab.Registry.load())
-    except Exception:  # noqa: BLE001 - any registry failure falls back to the committed map
+    except BaseException:  # noqa: BLE001 - any registry failure (incl. SystemExit) falls back to the committed map
         champ = json.loads((ROOT / "lab/learn/legend_champions.json").read_text())
     recs = list(records(b))
     if sum(g["rows"] for g in games) != len(recs):
