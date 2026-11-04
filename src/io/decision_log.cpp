@@ -45,6 +45,7 @@ nlohmann::json objJson(const GameState& s, const GameObject& o) {
     }
     if (o.is_exhausted) j["exhausted"] = true;
     if (o.is_hidden) j["facedown"] = true;
+    if (o.empowered > 0) j["empowered"] = o.empowered;   // Vendetta Empowered status (e.g. Heart of the Tempest)
     return j;
 }
 
