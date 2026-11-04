@@ -1,4 +1,6 @@
 #pragma once
+
+#include <limits>
 /// @file agent_interface.h
 /// Abstract interface for game-playing agents.
 ///
@@ -34,6 +36,12 @@ public:
     /// After selectAction: simulations behind lastSearch() (0 = no search).
     /// Recorded with the policy targets (ml::ValueSample::sims).
     virtual int lastSearchSims() const { return 0; }
+
+    /// After selectAction: the search's value of the position for the acting
+    /// player, in [-1, 1] (NaN = no search). Recorded as the RBV4 search value
+    /// (ml::ValueSample::search_value), a less noisy value target than the
+    /// game's result alone.
+    virtual double lastSearchValue() const { return std::numeric_limits<double>::quiet_NaN(); }
 
     /// The game driver may hand the agent the running record of every
     /// decision so far (both players): the index chosen in each decision's

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Train the two-head (policy + value) network used by `pmcts:eval=policy:<file>`
-from self-play RBV3 records (riftbound --value-data with a searching agent) and,
+from self-play RBV3/RBV4 records (riftbound --value-data with a searching agent) and,
 optionally, the human imitation set (lab/tools/build_human_dataset.py).
 
 usage: train_policy.py OUT.rbpn DATA.rbvd [DATA2.rbvd ...] [--human HUMAN.rbv3 ...]
@@ -84,7 +84,7 @@ def main(argv):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("out", help="OUT.rbpn (OUT.rbvn and OUT.json are written beside it)")
     ap.add_argument("data", nargs="+", help="self-play data files, oldest first")
-    ap.add_argument("--human", nargs="*", default=[], help="human imitation files (RBV3, source = human)")
+    ap.add_argument("--human", nargs="*", default=[], help="human imitation files (RBV3/RBV4, source = human)")
     ap.add_argument("--hidden", type=int, default=64)
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-3)
@@ -100,6 +100,9 @@ def main(argv):
     ap.add_argument("--entropy", type=float, default=0.01, help="entropy bonus on the legal softmax")
     ap.add_argument("--prev", default="", help="previous RBPN: mix its policy into the targets")
     ap.add_argument("--prev-weight", type=float, default=0.1)
+    ap.add_argument("--q-weight", type=float, default=0.0,
+                    help="value target = (1 - w) * result + w * (search value + 1) / 2 on rows with a search value "
+                         "(RBV4); validation still scores the result alone")
     ap.add_argument("--min-sims", type=int, default=0, help="ignore search targets from fewer simulations")
     ap.add_argument("--val-frac", type=float, default=0.1, help="share of self-play games held out")
     ap.add_argument("--human-val-frac", type=float, default=0.5, help="share of human games held out")
@@ -133,6 +136,13 @@ def main(argv):
     cat = lambda key: np.concatenate([d[key] for d in parts])  # noqa: E731
     y, margin, turns, w = cat("y"), cat("margin"), cat("turns"), cat("w")
     source, flags, sims, is_human = cat("source"), cat("flags"), cat("sims"), cat("human")
+    q = cat("q")
+    # Training value target: the result, mixed with the search's value of the position when asked (less noisy
+    # than one game's result: the search saw where the position was heading). Metrics keep the result alone.
+    has_q = ~np.isnan(q) & ~is_human
+    y_fit = y.copy()
+    if a.q_weight > 0:
+        y_fit[has_q] = (1 - a.q_weight) * y[has_q] + a.q_weight * np.clip((q[has_q] + 1) / 2, 0, 1)
     games = np.concatenate([d["game"].astype(np.uint64) + (np.uint64(d["file"]) << np.uint64(32)) for d in parts])
     X = SparseRows(dim, sum((d["idx"] for d in parts), []), sum((d["val"] for d in parts), []))
     P = PolicyRows(sum((d["pol_idx"] for d in parts), []), sum((d["pol_val"] for d in parts), []))
@@ -333,7 +343,7 @@ def main(argv):
             ww = wn[rr]
             vm = value_rows[rr].astype(np.float32)
             p = 1 / (1 + np.exp(-np.clip(logit, -30, 30)))
-            g = ww * vm * (p - y[rr]) / B
+            g = ww * vm * (p - y_fit[rr]) / B
             hm = has_margin[rr].astype(np.float32) * vm
             gm = ww * hm * a.margin_weight * 2 * (mpred - margin[rr]) * (1 - mpred ** 2) / B
             gh = np.outer(g, params[2]) + np.outer(gm, params[4])
@@ -401,6 +411,8 @@ def main(argv):
               "train": int(len(tr)), "validation": int(len(va_sp)), "human_validation": int(len(va_hu)),
               "games": int(len(np.unique(games[~is_human]))), "human_games": int(len(np.unique(games[is_human]))),
               "search_target_rows": int((has_policy & ~is_human).sum()),
+              "search_value_rows": int(has_q.sum()), "q_weight": a.q_weight,
+              "search_value_vs_result": (float(np.corrcoef(q[has_q], y[has_q])[0, 1]) if has_q.sum() > 10 else None),
               "dim": dim, "vocab": V, "hidden": H, "best_epoch": best[2],
               "best_val_loss": best_row["val"].get("val_loss"), "best_val_acc": best_row["val"].get("val_acc"),
               "best_val_margin_mse": best_row["val"].get("val_margin_mse"), "baseline_val_loss": base_loss,

@@ -98,6 +98,18 @@ class Merge(unittest.TestCase):
             finally:
                 loop.DATA = old
 
+    def test_rbv4_shards_merge_too(self):
+        with tempfile.TemporaryDirectory() as d:
+            old = loop.DATA
+            loop.DATA = Path(d)
+            try:
+                head = b"RBV4" + struct.pack("<ii", 6688, 1234)
+                for k, body in enumerate([b"xx", b"yyy"]):
+                    (Path(d) / f"iter_007_s{k}.rbvd").write_bytes(head + body)
+                self.assertEqual(stages.merge_shards(7).read_bytes(), head + b"xxyyy")
+            finally:
+                loop.DATA = old
+
     def test_a_shard_with_another_header_is_refused(self):
         with tempfile.TemporaryDirectory() as d:
             old = loop.DATA

@@ -53,7 +53,7 @@ PER_PAIR = 4
 # Training settings tried side by side every iteration (population). Each is a
 # set of loop.py option overrides; the screen keeps the best for the gate.
 VARIANTS = [
-    {},                                                   # the loop's own settings (6 epochs, lr 1e-3)
+    {"epochs": 2, "lr": 3e-4, "q_weight": 0.5},           # variant 2 with half the value target from the search (RBV4)
     {"epochs": 1, "lr": 2e-4},                            # gentler still
     {"epochs": 2, "lr": 3e-4},                            # gentle fine-tune: won the 4 screens of 156-159
     {"epochs": 3, "lr": 3e-4},                            # a little more of the gentle one
@@ -62,6 +62,9 @@ VARIANTS = [
 #   loop's own 47.9%, no human imitation 47.1%, gentle (2 ep, 3e-4) 54.8%
 #   (won all four), gentle + human 0.1 + prev 0.3 (3 ep, 5e-4) 51.5%;
 # the gentle winner then scored 49.0% on the fresh-seed gate (winner's curse).
+# From 161 to 183 the screen picked variant 0 (the loop's own settings) 2 times in 23, the gentle ones the
+# rest; from 184 variant 0 is the gentle one with half its value target from the search (q_weight 0.5): its
+# screen rates against variant 2's, on the same data, say whether that target helps.
 SCREEN_BLOCKS = 6       # screen blocks per variant
 SCREEN_GAMES = 20       # games per screen block (both seat orders)
 
@@ -118,7 +121,8 @@ def cmd_selfplay(args, _):
 
 def merge_shards(it: int) -> Path:
     """iter_<it>_s*.rbvd -> iter_<it>.rbvd: the first file whole, the others
-    without their 12-byte header (RBV3 magic, feature dim, vocab size)."""
+    without their 12-byte header (RBV3/RBV4 magic, feature dim, vocab size); every shard must
+    carry the same header."""
     shards = sorted(loop.DATA.glob(f"iter_{it:03d}_s*.rbvd"))
     if not shards:
         raise SystemExit(f"no self-play shard for iteration {it} in {loop.DATA}")
@@ -127,8 +131,8 @@ def merge_shards(it: int) -> Path:
     with open(out, "wb") as f:
         for i, s in enumerate(shards):
             b = s.read_bytes()
-            if len(b) < 12 or b[:4] != b"RBV3":
-                raise SystemExit(f"{s}: not an RBV3 file")
+            if len(b) < 12 or b[:4] not in (b"RBV3", b"RBV4"):
+                raise SystemExit(f"{s}: not an RBV3/RBV4 file")
             if head is None:
                 head = b[:12]
             elif b[:12] != head:

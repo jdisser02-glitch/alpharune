@@ -1,4 +1,6 @@
 #pragma once
+
+#include <limits>
 /// @file value_net.h
 /// Learned position evaluator: a one-hidden-layer network over the masked
 /// state features (ml::extractStateFeatures) that predicts the probability the
@@ -87,6 +89,7 @@ struct ValueSample {
     uint8_t flags = 0;
     uint16_t sims = 0;                                   ///< simulations behind a search target
     std::vector<std::pair<uint16_t, float>> policy;      ///< (vocab slot, target), all legal slots
+    float search_value = std::numeric_limits<float>::quiet_NaN();   ///< RBV4: the search's root value for `who` in [-1, 1]; NaN without a search
 };
 
 /// Non-zero (index, value) pairs of a feature vector (indices < 65536).
@@ -124,16 +127,17 @@ struct ValueRecord {
     uint8_t source = kPolicyNone, flags = 0;
     uint16_t sims = 0;
     std::vector<std::pair<uint16_t, float>> policy;
+    float search_value = std::numeric_limits<float>::quiet_NaN();   ///< RBV4 only
 };
 
 struct ValueFile {
-    int version = 0;     ///< 1 (RBVD), 2 (RBV2) or 3 (RBV3)
+    int version = 0;     ///< 1 (RBVD), 2 (RBV2), 3 (RBV3) or 4 (RBV4)
     int dim = 0;
-    int vocab = 0;       ///< RBV3 only
+    int vocab = 0;       ///< RBV3 / RBV4
     std::vector<ValueRecord> records;
 };
 
-/// Reads a RBVD / RBV2 / RBV3 file (tests, tools). Throws on a bad file.
+/// Reads a RBVD / RBV2 / RBV3 / RBV4 file (tests, tools). Throws on a bad file.
 ValueFile readValueRecords(const std::string& path);
 
 }  // namespace riftbound::ml

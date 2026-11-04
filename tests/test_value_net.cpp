@@ -5,6 +5,8 @@
 
 #include <gtest/gtest.h>
 
+#include <cmath>
+
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
@@ -63,8 +65,8 @@ TEST(ValueNet, SparseInferenceMatchesTheDensePass) {
 }
 
 TEST(ValueData, RecordsRoundTripWithResultAndScores) {
-    // A fresh file is RBV3: the RBV2 record layout plus a policy block
-    // (empty here: no policy target was set).
+    // A fresh file is RBV4: the RBV2 record layout plus a policy block
+    // (empty here: no policy target was set) and the search value (NaN here).
     const auto path = (std::filesystem::temp_directory_path() / "riftbound_value_test.rbv3").string();
     std::remove(path.c_str());
     std::vector<ValueSample> samples(2);
@@ -78,7 +80,7 @@ TEST(ValueData, RecordsRoundTripWithResultAndScores) {
     std::ifstream f(path, std::ios::binary);
     std::vector<unsigned char> b((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
     ASSERT_GE(b.size(), 12u);
-    EXPECT_EQ(std::memcmp(b.data(), "RBV3", 4), 0);
+    EXPECT_EQ(std::memcmp(b.data(), "RBV4", 4), 0);
     int32_t dim; std::memcpy(&dim, &b[4], 4);
     EXPECT_EQ(dim, kStateFeatureDim);
     int32_t vocab; std::memcpy(&vocab, &b[8], 4);
@@ -88,7 +90,10 @@ TEST(ValueData, RecordsRoundTripWithResultAndScores) {
     auto rd32 = [&]() { int32_t v; std::memcpy(&v, &b[pos], 4); pos += 4; return v; };
     auto rdu32 = [&]() { uint32_t v; std::memcpy(&v, &b[pos], 4); pos += 4; return v; };
     auto rd16 = [&]() { uint16_t v; std::memcpy(&v, &b[pos], 2); pos += 2; return v; };
-    auto policy_block = [&]() { EXPECT_EQ(rd8(), 0); EXPECT_EQ(rd8(), 0); EXPECT_EQ(rd16(), 0); EXPECT_EQ(rd16(), 0); };
+    auto policy_block = [&]() {
+        EXPECT_EQ(rd8(), 0); EXPECT_EQ(rd8(), 0); EXPECT_EQ(rd16(), 0); EXPECT_EQ(rd16(), 0);
+        float q; std::memcpy(&q, &b[pos], 4); pos += 4; EXPECT_TRUE(std::isnan(q)) << "no search: NaN";
+    };
     // Record 1: P1 lost 5-8.
     EXPECT_EQ(rd8(), 0); EXPECT_EQ(rd8(), 1); EXPECT_EQ(rd8(), 5); EXPECT_EQ(rd8(), 8); EXPECT_EQ(rd8(), 8);
     EXPECT_EQ(rdu32(), 0xABCDEF01u); EXPECT_EQ(rd32(), 3); EXPECT_EQ(rd32(), 17);
@@ -107,7 +112,7 @@ TEST(ValueData, RecordsRoundTripWithResultAndScores) {
     EXPECT_EQ(rdu32(), 7u);
     // The reader agrees.
     const ValueFile vf = readValueRecords(path);
-    EXPECT_EQ(vf.version, 3);
+    EXPECT_EQ(vf.version, 4);
     ASSERT_EQ(vf.records.size(), 3u);
     EXPECT_EQ(vf.records[2].label, 2);
     EXPECT_TRUE(vf.records[0].policy.empty());
@@ -125,6 +130,7 @@ TEST(ValueData, PolicyRecordsRoundTripThroughTheReader) {
     a.features = {{3, 1.0f}, {600, 2.0f}};
     setPolicyTarget(a, slots, {{0, 0.25}, {1, 0.25}, {2, 0.5}}, 30);
     a.flags |= kPolicyFlagCleanBoundary;
+    a.search_value = 0.25f;
     ASSERT_EQ(a.source, kPolicySearch);
     ASSERT_EQ(a.policy.size(), 2u);
     EXPECT_EQ(a.policy[0].first, 1200); EXPECT_FLOAT_EQ(a.policy[0].second, 0.5f);
@@ -142,10 +148,10 @@ TEST(ValueData, PolicyRecordsRoundTripThroughTheReader) {
     EXPECT_TRUE(none.policy.empty());
 
     appendValueRecords(path, kStateFeatureDim, {a, h, none}, PlayerId::Player1, 8, 3, 8, 42u);
-    appendValueRecords(path, kStateFeatureDim, {h}, PlayerId::Player2, 1, 8, 8, 43u);   // appends in v3
+    appendValueRecords(path, kStateFeatureDim, {h}, PlayerId::Player2, 1, 8, 8, 43u);   // appends in v4
 
     const ValueFile f = readValueRecords(path);
-    EXPECT_EQ(f.version, 3);
+    EXPECT_EQ(f.version, 4);
     EXPECT_EQ(f.dim, kStateFeatureDim);
     EXPECT_GT(f.vocab, 1200);
     ASSERT_EQ(f.records.size(), 4u);
@@ -156,7 +162,9 @@ TEST(ValueData, PolicyRecordsRoundTripThroughTheReader) {
     EXPECT_EQ(r0.source, kPolicySearch); EXPECT_EQ(r0.flags, kPolicyFlagCleanBoundary); EXPECT_EQ(r0.sims, 30);
     ASSERT_EQ(r0.policy.size(), 2u);
     EXPECT_EQ(r0.policy[0].first, 1200); EXPECT_FLOAT_EQ(r0.policy[0].second, 0.5f);
+    EXPECT_FLOAT_EQ(r0.search_value, 0.25f);
     const auto& r1 = f.records[1];
+    EXPECT_TRUE(std::isnan(r1.search_value)) << "a human decision has no search value";
     EXPECT_EQ(r1.label, 0); EXPECT_EQ(r1.perspective, 2); EXPECT_EQ(r1.own_score, 3);
     EXPECT_EQ(r1.source, kPolicyHuman);
     ASSERT_EQ(r1.policy.size(), 2u);
@@ -177,6 +185,20 @@ TEST(ValueData, PolicyRecordsRoundTripThroughTheReader) {
     EXPECT_TRUE(f2.records[0].policy.empty());
     EXPECT_EQ(f2.records[0].features.size(), 2u);
     std::remove(path2.c_str());
+
+    // An existing v3 file keeps its format too: policy block, no search value.
+    const auto path3 = (std::filesystem::temp_directory_path() / "riftbound_policy_test.rbv3").string();
+    std::remove(path3.c_str());
+    { std::ofstream o(path3, std::ios::binary); o.write("RBV3", 4); int32_t d = kStateFeatureDim, voc = 2000;
+      o.write(reinterpret_cast<const char*>(&d), 4); o.write(reinterpret_cast<const char*>(&voc), 4); }
+    appendValueRecords(path3, kStateFeatureDim, {a, h}, PlayerId::Player1, 8, 3, 8, 2u);
+    const ValueFile f3 = readValueRecords(path3);
+    EXPECT_EQ(f3.version, 3);
+    ASSERT_EQ(f3.records.size(), 2u);
+    EXPECT_EQ(f3.records[0].policy.size(), 2u);
+    EXPECT_TRUE(std::isnan(f3.records[0].search_value));
+    EXPECT_EQ(f3.records[1].source, kPolicyHuman);
+    std::remove(path3.c_str());
 }
 
 }  // namespace

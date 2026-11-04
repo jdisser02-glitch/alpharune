@@ -307,6 +307,7 @@ def train_candidate(a, it, current, row, suffix=""):
         cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
                "--lr", str(a.lr),
+               "--q-weight", str(getattr(a, "q_weight", 0.0)),
                "--hidden", str(a.hidden),
                "--entropy", str(a.entropy)]
         if a.human and Path(a.human).exists():
@@ -362,6 +363,8 @@ def make_parser():
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
+    ap.add_argument("--q-weight", type=float, default=0.0,
+                    help="--policy: mix the search's value of each position into the value target (train_policy.py --q-weight)")
     ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")
     ap.add_argument("--warm", action="store_true", help="--policy: start each candidate from the current net (same width) instead of from scratch")
     ap.add_argument("--vtemp", type=float, default=1.0, help="value temperature of the search (pmcts vtemp=; 1 = off)")

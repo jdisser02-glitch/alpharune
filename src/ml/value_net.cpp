@@ -201,25 +201,26 @@ void appendValueRecords(const std::string& path, int dim, const std::vector<Valu
                         uint32_t game_id) {
     static std::mutex mu;
     std::lock_guard<std::mutex> lock(mu);
-    int version = 3;
+    int version = 4;
     {
         std::ifstream probe(path, std::ios::binary);
         char magic[4] = {0, 0, 0, 0};
         if (probe && probe.read(magic, 4)) {
             if (std::memcmp(magic, "RBV2", 4) == 0) version = 2;
+            else if (std::memcmp(magic, "RBV3", 4) == 0) version = 3;
             else if (std::memcmp(magic, "RBVD", 4) == 0)
                 throw std::runtime_error("value data: cannot append to a v1 file " + path);
-            else if (std::memcmp(magic, "RBV3", 4) != 0)
+            else if (std::memcmp(magic, "RBV4", 4) != 0)
                 throw std::runtime_error("value data: " + path + " is not a value-data file");
         } else {
-            version = -3;   // fresh file: write the header
+            version = -4;   // fresh file: write the header
         }
     }
     std::ofstream f(path, std::ios::binary | std::ios::app);
     auto put = [&](const void* p, size_t n) { f.write(reinterpret_cast<const char*>(p), static_cast<std::streamsize>(n)); };
-    if (version == -3) {
-        version = 3;
-        f.write("RBV3", 4);
+    if (version == -4) {
+        version = 4;
+        f.write("RBV4", 4);
         int32_t d = dim, vocab = ::riftbound::openspiel::kVocabSize;
         put(&d, 4);
         put(&vocab, 4);
@@ -243,6 +244,7 @@ void appendValueRecords(const std::string& path, int dim, const std::vector<Valu
         const uint16_t n_legal = static_cast<uint16_t>(std::min<size_t>(s.policy.size(), 65535));
         put(&source, 1); put(&s.flags, 1); put(&s.sims, 2); put(&n_legal, 2);
         for (size_t j = 0; j < n_legal; ++j) { put(&s.policy[j].first, 2); put(&s.policy[j].second, 4); }
+        if (version >= 4) put(&s.search_value, 4);
     }
 }
 
@@ -255,6 +257,7 @@ ValueFile readValueRecords(const std::string& path) {
     if (std::memcmp(b.data(), "RBVD", 4) == 0) out.version = 1;
     else if (std::memcmp(b.data(), "RBV2", 4) == 0) out.version = 2;
     else if (std::memcmp(b.data(), "RBV3", 4) == 0) out.version = 3;
+    else if (std::memcmp(b.data(), "RBV4", 4) == 0) out.version = 4;
     else throw std::runtime_error("value data: bad magic in " + path);
     size_t pos = 4;
     auto need = [&](size_t n) { if (pos + n > b.size()) throw std::runtime_error("value data: truncated record in " + path); };
@@ -262,7 +265,7 @@ ValueFile readValueRecords(const std::string& path) {
     int32_t dim = 0;
     rd(&dim, 4);
     out.dim = dim;
-    if (out.version == 3) { int32_t vocab = 0; rd(&vocab, 4); out.vocab = vocab; }
+    if (out.version >= 3) { int32_t vocab = 0; rd(&vocab, 4); out.vocab = vocab; }
     while (pos < b.size()) {
         ValueRecord r;
         uint16_t nnz = 0;
@@ -274,12 +277,13 @@ ValueFile readValueRecords(const std::string& path) {
         }
         r.features.resize(nnz);
         for (auto& [i, v] : r.features) { rd(&i, 2); rd(&v, 4); }
-        if (out.version == 3) {
+        if (out.version >= 3) {
             uint16_t n_legal = 0;
             rd(&r.source, 1); rd(&r.flags, 1); rd(&r.sims, 2); rd(&n_legal, 2);
             r.policy.resize(n_legal);
             for (auto& [s, v] : r.policy) { rd(&s, 2); rd(&v, 4); }
         }
+        if (out.version >= 4) rd(&r.search_value, 4);
         out.records.push_back(std::move(r));
     }
     return out;

@@ -195,6 +195,7 @@ GameResult GameRunner::run() {
                 const auto shares = actor.lastSearch();
                 const std::vector<int> slots = ::riftbound::openspiel::encodeActions(actions, state);
                 ml::setPolicyTarget(sample, slots, shares, actor.lastSearchSims());
+                sample.search_value = static_cast<float>(actor.lastSearchValue());
                 // Clean boundary: nothing in flight (no chain, showdown or combat).
                 bool clean = !state.chain.exists() && state.turn.oc_state == OpenClosedState::Open &&
                              state.turn.ns_state == NeutralShowdownState::Neutral &&

@@ -212,6 +212,9 @@ public:
     Intent selectAction(const GameState& state, const std::vector<Intent>& legal_actions) override;
     std::vector<std::pair<int, double>> lastSearch() const override { return last_.shares; }
     int lastSearchSims() const override { return last_.simulations; }
+    double lastSearchValue() const override {
+        return last_.simulations > 0 ? last_.root_value : std::numeric_limits<double>::quiet_NaN();
+    }
     void setDecisionHistory(const std::vector<int32_t>* history) override { history_ = history; }
 
     const SearchResult& lastResult() const { return last_; }

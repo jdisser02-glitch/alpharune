@@ -11,6 +11,8 @@ Data files come in three formats (all read here):
   RBV2 (v2): int8 label (1 won / 0 lost / 2 draw), int8 perspective, int8 own score,
              int8 opponent score, int8 victory score, uint32 game id, int32 turn,
              int32 decision index, uint16 nnz, pairs; every decision of both players.
+  RBV4 (v4): v3 plus float32 search value (the search's root value for the
+             perspective player in [-1, 1], NaN without a search).
   RBV3 (v3): v2 plus a policy block per record (legal vocab slots and the search's
              visit shares, or a human's move) — ignored here, used by train_policy.py.
 
@@ -39,7 +41,8 @@ PAIR = np.dtype([("i", "<u2"), ("v", "<f4")])
 
 def read_records(path):
     """-> dict(dim, vocab, y, margin (nan when unknown), turns, game, idx (list), val (list),
-    source, flags, sims, pol_idx (list of slot arrays), pol_val (list of target arrays), version)
+    source, flags, sims, pol_idx (list of slot arrays), pol_val (list of target arrays), q (search value,
+    NaN when unknown), version)
 
     Formats: RBVD (v1), RBV2 (v2) and RBV3 (v3: v2 plus a policy block per record —
     uint8 source (0 none / 1 search / 2 human), uint8 flags (bit 0 clean boundary,
@@ -47,17 +50,17 @@ def read_records(path):
     slot, float32 target share)). See src/ml/value_net.h."""
     data = Path(path).read_bytes()
     magic = data[:4]
-    if magic not in (b"RBVD", b"RBV2", b"RBV3"):
+    if magic not in (b"RBVD", b"RBV2", b"RBV3", b"RBV4"):
         raise SystemExit(f"{path}: not a value-data file")
-    version = {b"RBVD": 1, b"RBV2": 2, b"RBV3": 3}[magic]
+    version = {b"RBVD": 1, b"RBV2": 2, b"RBV3": 3, b"RBV4": 4}[magic]
     dim = struct.unpack_from("<i", data, 4)[0]
     vocab = 0
     pos, n = 8, len(data)
-    if version == 3:
+    if version >= 3:
         vocab = struct.unpack_from("<i", data, 8)[0]
         pos = 12
     labels, margins, turns, games, idx, val = [], [], [], [], [], []
-    sources, flags, sims, pol_idx, pol_val = [], [], [], [], []
+    sources, flags, sims, pol_idx, pol_val, qs = [], [], [], [], [], []
     rec = 0
     empty_i, empty_v = np.zeros(0, np.int32), np.zeros(0, np.float32)
     while True:
@@ -80,7 +83,7 @@ def read_records(path):
             break
         pairs = np.frombuffer(data, dtype=PAIR, count=nnz, offset=pos)
         pos += 6 * nnz
-        if version == 3:
+        if version >= 3:
             if pos + 6 > n:
                 break
             src, fl, sm, n_legal = struct.unpack_from("<BBHH", data, pos)
@@ -89,10 +92,17 @@ def read_records(path):
                 break
             pp = np.frombuffer(data, dtype=PAIR, count=n_legal, offset=pos)
             pos += 6 * n_legal
+            if version >= 4:
+                if pos + 4 > n:
+                    break
+                qs.append(struct.unpack_from("<f", data, pos)[0])
+                pos += 4
+            else:
+                qs.append(np.nan)
             sources.append(src); flags.append(fl); sims.append(sm)
             pol_idx.append(pp["i"].astype(np.int32)); pol_val.append(pp["v"].astype(np.float32))
         else:
-            sources.append(0); flags.append(0); sims.append(0)
+            sources.append(0); flags.append(0); sims.append(0); qs.append(np.nan)
             pol_idx.append(empty_i); pol_val.append(empty_v)
         labels.append(0.5 if label == 2 else float(label))
         turns.append(turn)
@@ -103,7 +113,7 @@ def read_records(path):
             "turns": np.array(turns, np.int32), "game": np.array(games, np.uint32),
             "idx": idx, "val": val, "version": version,
             "source": np.array(sources, np.uint8), "flags": np.array(flags, np.uint8), "sims": np.array(sims, np.int32),
-            "pol_idx": pol_idx, "pol_val": pol_val}
+            "pol_idx": pol_idx, "pol_val": pol_val, "q": np.array(qs, np.float32)}
 
 
 class SparseRows:
