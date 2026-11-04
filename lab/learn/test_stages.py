@@ -124,6 +124,39 @@ class Merge(unittest.TestCase):
 
 
 
+class Specialist(unittest.TestCase):
+    def setUp(self):
+        self.old = (loop.LADDER, loop.NET_PREFIX, loop.TRACK)
+
+    def tearDown(self):
+        loop.LADDER, loop.NET_PREFIX, loop.TRACK = self.old
+
+    def test_a_specialist_has_its_own_ladder_net_names_and_tasks(self):
+        a = loop.make_parser().parse_args(ARGS + ["--specialist", "kennen"])
+        plan = {"args": ARGS + ["--specialist", "kennen"]}
+        stages.settings(plan)
+        self.assertEqual(loop.NET_PREFIX, "spec_kennen_")
+        self.assertEqual(loop.LADDER.parent.name, "kennen")
+        tasks = stages.tasks_for(a)
+        self.assertEqual(sum(t.startswith("panel:") for t in tasks), len(loop.SPECIALISTS["kennen"]["jury"]))
+        self.assertNotIn("yard:anchors", tasks)
+        self.assertEqual(stages.mirror_decks(a), (loop.SPECIALISTS["kennen"]["mirror"],) * 2)
+        stages.settings({"args": ARGS})
+        self.assertEqual(loop.NET_PREFIX, "net_")
+        self.assertEqual(loop.LADDER, loop.MAIN_LADDER)
+
+    def test_a_jury_deck_is_piloted_by_its_legends_specialist_when_there_is_one(self):
+        plan = {"general": "g.rbpn", "pilots": {"kennen": "k.rbpn"}}
+        kennen = loop.SPECIALISTS["kennen"]["decks"][0]
+        self.assertEqual(stages.pilot(plan, kennen), "k.rbpn")
+        self.assertEqual(stages.pilot(plan, loop.SPECIALISTS["kennen"]["jury"][2]), "g.rbpn")   # Kai'Sa
+
+    def test_every_specialist_deck_exists(self):
+        for s in loop.SPECIALISTS.values():
+            for d in s["decks"] + s["jury"]:
+                self.assertTrue((loop.ROOT / d).exists(), d)
+
+
 class League(unittest.TestCase):
     def test_the_schedule_is_shared_by_every_shard_and_alternates_seats(self):
         lg = ["lab/learn/nets/net_128.rbpn", loop.MATERIAL]

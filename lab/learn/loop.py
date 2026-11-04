@@ -70,6 +70,81 @@ PANEL = [
     ("kennen-kaisa", _META + "rro25_2026-10-17/01_simple_kennen.txt", _META + "rro25_2026-10-17/02_art3mis_kai_sa.txt"),
 ]
 
+# Specialists (stages.py --specialist NAME): one net per legend, trained on its
+# own decisions with that legend against a jury of meta decks and judged in its
+# legend's mirror against its previous version. The jury is piloted by the
+# general net (ladder.json) or, for a legend that has its own specialist, by
+# that specialist's current net. Own ladder: lab/learn/specialists/NAME/.
+_RIVEN_BEST = "lab/variants/riven-multistart-ga-2--cef30c16fe.txt"
+SPECIALISTS = {
+    "kennen": {"legend": "Kennen",
+               "decks": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                         _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                         _META + "sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
+                         _META + "rro25_2026-10-17/01_simple_kennen.txt"],
+               "jury": [_RIVEN_BEST,
+                        _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                        _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                        _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+                        _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
+    "akali": {"legend": "Akali",
+              "decks": [_META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+                        _META + "sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt"],
+              "jury": [_RIVEN_BEST,
+                       _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                       _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                       _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                       _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
+    "riven": {"legend": "Riven",
+              "decks": [GATE_DECK, _RIVEN_BEST,
+                        _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                        _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt"],
+              "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                       _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                       _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+                       _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                       _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+                       _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]},
+}
+for _s in SPECIALISTS.values():
+    _s.setdefault("mirror", _s["decks"][0])
+MAIN_LADDER = LADDER
+NET_PREFIX = "net_"
+TRACK = None
+
+
+def use_track(name):
+    """Points the ladder and the net names at specialist `name` (None: the general net)."""
+    global LADDER, NET_PREFIX, TRACK
+    if not name:
+        LADDER, NET_PREFIX, TRACK = MAIN_LADDER, "net_", None
+        return
+    if name not in SPECIALISTS:
+        raise SystemExit(f"unknown specialist {name}: {sorted(SPECIALISTS)}")
+    LADDER, NET_PREFIX, TRACK = _OUT / "specialists" / name / "ladder.json", f"spec_{name}_", name
+
+
+def specialist_of_deck(path):
+    """The specialist whose legend plays `path` (by its deck lists, else by the file name), or None."""
+    p = str(path)
+    for name, s in SPECIALISTS.items():
+        if p in s["decks"] or name in Path(p).name.lower():
+            return name
+    return None
+
+
+def specialist_pilots():
+    """Current net of every specialist that adopted one: {name: net}."""
+    out = {}
+    for name in SPECIALISTS:
+        f = _OUT / "specialists" / name / "ladder.json"
+        if f.exists():
+            net = json.loads(f.read_text()).get("current_net")
+            if net and (ROOT / net).exists():
+                out[name] = net
+    return out
+
+
 # Seed plan. The engine plays game N of a batch with seed base+N, so a batch
 # owns [base, base + SEED_BLOCK). Each iteration owns SEED_IT_STRIDE seeds,
 # split into one slot per kind of match; a slot holds (next slot - slot) /
@@ -341,7 +416,7 @@ def train_candidate(a, it, current, row, suffix=""):
     files = [str(DATA / f"iter_{j:03d}.rbvd") for j in range(max(0, it - a.buffer + 1), it + 1)
              if (DATA / f"iter_{j:03d}.rbvd").exists()]
     if a.policy:
-        new_net = NETS / f"net_{it:03d}{suffix}.rbpn"
+        new_net = NETS / f"{NET_PREFIX}{it:03d}{suffix}.rbpn"
         cmd = [sys.executable, str(LEARN / "train_policy.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency), "--human-weight", str(a.human_weight),
                "--lr", str(a.lr),
@@ -357,7 +432,7 @@ def train_candidate(a, it, current, row, suffix=""):
             cmd += ["--init-value", str(ROOT / current)]
             row["warm_start"] = current
     else:
-        new_net = NETS / f"net_{it:03d}{suffix}.rbvn"
+        new_net = NETS / f"{NET_PREFIX}{it:03d}{suffix}.rbvn"
         cmd = [sys.executable, str(LEARN / "train_value.py"), str(new_net), *files,
                "--epochs", str(a.epochs), "--recency", str(a.recency)]
     tr = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
@@ -401,6 +476,12 @@ def make_parser():
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
+    ap.add_argument("--specialist", default="", help="stages.py: train the specialist net of this legend "
+                    f"({', '.join(SPECIALISTS)}) on its own ladder instead of the general net")
+    ap.add_argument("--spec-panel-margin", type=float, default=0.03,
+                    help="--specialist: the candidate may trail the current specialist against the jury by this much")
+    ap.add_argument("--spec-mirror", type=float, default=0.2,
+                    help="--specialist: share of self-play pairs played in the legend's mirror (both seats recorded)")
     ap.add_argument("--league", type=float, default=0.0,
                     help="stages.py (parallel training): share of self-play pairs played against a league opponent (older adopted nets, the anchors, "
                          "the material bot); only the current net's decisions are recorded in those")

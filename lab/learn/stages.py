@@ -40,6 +40,7 @@ import argparse
 import datetime as dt
 import json
 import math
+import os
 import random
 import sys
 import time
@@ -70,12 +71,42 @@ SCREEN_GAMES = 20       # games per screen block (both seat orders)
 
 
 def settings(plan: dict):
-    return loop.make_parser().parse_args(plan["args"])
+    a = loop.make_parser().parse_args(plan["args"])
+    loop.use_track(a.specialist or None)
+    return a
+
+
+def spec(a):
+    """The specialist's table (loop.SPECIALISTS), or None for the general net."""
+    return loop.SPECIALISTS[a.specialist] if a.specialist else None
+
+
+def mirror_decks(a):
+    """Decks of the mirror games (screen, gate): the legend's own mirror for a specialist."""
+    s = spec(a)
+    return (s["mirror"], s["mirror"]) if s else (loop.GATE_DECK, loop.GATE_DECK)
+
+
+def pilot(plan, deck):
+    """Net that plays a jury deck: its legend's specialist when it has one, else the general net."""
+    other = loop.specialist_of_deck(deck)
+    return (plan.get("pilots") or {}).get(other) or plan["general"]
+
+
+def spec_vs(L, it, me, opp, legend_deck, opp_deck, games, seed):
+    """`games` games of `me` on legend_deck against `opp` on opp_deck, half with the legend on each seat
+    (the same deals). Returns (wins of me, games)."""
+    half = max(1, games // 2)
+    w1, _ = L.batch(legend_deck, opp_deck, me, opp, half, seed)
+    _, w2 = L.batch(opp_deck, legend_deck, opp, me, half, seed)
+    return w1 + w2, 2 * max(2, half)
 
 
 def tasks_for(a) -> list[str]:
     blocks = max(1, a.gate_max // a.gate_block)
     out = [f"gate:{b}" for b in range(blocks)]
+    if a.specialist:
+        return out + [f"panel:{m}" for m in range(len(spec(a)["jury"]))] + ["yard:random"]
     if a.panel_games > 0:
         out += [f"panel:{m}" for m in range(len(loop.PANEL))]
     out += ["yard:random", "yard:reference", "yard:anchors"]
@@ -84,6 +115,9 @@ def tasks_for(a) -> list[str]:
 
 def cmd_plan(args, rest):
     a = loop.make_parser().parse_args(rest)
+    loop.use_track(None)
+    general = loop.load_ladder().get("current_net")
+    loop.use_track(a.specialist or None)
     ladder = loop.load_ladder()
     current = ladder.get("current_net")
     if current and not (loop.ROOT / current).exists():
@@ -91,9 +125,16 @@ def cmd_plan(args, rest):
     reference = ladder.get("reference_net")
     if reference and not (loop.ROOT / reference).exists():
         reference = None
+    if a.specialist:
+        # A specialist starts as the general net and keeps it as its reference until it adopts one of its own.
+        current = current or general
+        reference = reference or general
     plan = {"it": len(ladder["iterations"]), "current": current, "reference": reference,
-            "anchors": loop.pick_anchors(ladder), "args": rest, "tasks": tasks_for(a),
-            "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current else [],
+            "anchors": [] if a.specialist else loop.pick_anchors(ladder), "args": rest, "tasks": tasks_for(a),
+            "specialist": a.specialist or None, "general": general,
+            "pilots": {k: v for k, v in loop.specialist_pilots().items() if k != a.specialist} if a.specialist else {},
+            "ladder": os.path.relpath(loop.LADDER, loop.ROOT), "net_prefix": loop.NET_PREFIX,
+            "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current and not a.specialist else [],
             "variants": VARIANTS, "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
     Path(args.out).write_text(json.dumps(plan, indent=1))
@@ -109,6 +150,8 @@ def cmd_selfplay(args, _):
     out = loop.DATA / f"iter_{it:03d}_s{args.shard}.rbvd"
     out.unlink(missing_ok=True)
     games = a.games * 3 if current is None else a.games
+    if a.specialist:
+        return selfplay_specialist(args, plan, a, L, out, games)
     pairs = L.self_play_pairs(random.Random(a.seed + it), loop.deck_pool(), max(1, games // PER_PAIR))
     league = loop.league_schedule(a.seed, it, len(pairs), a.league, plan.get("league") or [])
     t0 = time.time()
@@ -128,6 +171,33 @@ def cmd_selfplay(args, _):
         m["games"] += w1 + w2
         m["wins"] += w1 if seat == 1 else w2
     meta = {"shard": args.shard, "minutes": round((time.time() - t0) / 60, 1), "batches": len(L.batches), "league": met}
+    out.with_suffix(".json").write_text(json.dumps(meta))
+    print(json.dumps(meta))
+
+
+def selfplay_specialist(args, plan, a, L, out, games):
+    """A specialist's self-play: the current specialist on one of its legend's decks against a jury deck
+    piloted by pilot() (only the specialist's decisions recorded), and --spec-mirror of the pairs in the
+    legend's mirror against itself (both seats recorded)."""
+    s, it, me = spec(a), plan["it"], L.bot(plan["current"])
+    rng = random.Random(a.seed * 31 + it)
+    t0, met = time.time(), {}
+    for k in range(max(1, games // PER_PAIR)):
+        legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choice(s["jury"]), rng.random() < a.spec_mirror
+        if k % args.shards != args.shard:
+            continue
+        seed = seed_base(it, "selfplay", k)
+        if mirror:
+            L.batch(legend_deck, s["mirror"], me, me, PER_PAIR, seed, out)
+            continue
+        opp = L.bot(pilot(plan, opp_deck))
+        seat = 1 + (k // args.shards) % 2
+        d1, d2, a1, a2 = (legend_deck, opp_deck, me, opp) if seat == 1 else (opp_deck, legend_deck, opp, me)
+        w1, w2 = L.batch(d1, d2, a1, a2, PER_PAIR, seed, out, value_player=seat)
+        m = met.setdefault(opp_deck, {"games": 0, "wins": 0})
+        m["games"] += w1 + w2
+        m["wins"] += w1 if seat == 1 else w2
+    meta = {"shard": args.shard, "minutes": round((time.time() - t0) / 60, 1), "batches": len(L.batches), "jury": met}
     out.with_suffix(".json").write_text(json.dumps(meta))
     print(json.dumps(meta))
 
@@ -176,6 +246,15 @@ def cmd_train(args, _):
             agg["games"] += r["games"]; agg["wins"] += r["wins"]
     if league:
         row["league"] = {opp: dict(r, rate=round(r["wins"] / max(1, r["games"]), 3)) for opp, r in league.items()}
+    jury = {}
+    for m in sp:
+        for opp, r in (m.get("jury") or {}).items():
+            agg = jury.setdefault(opp, {"games": 0, "wins": 0})
+            agg["games"] += r["games"]; agg["wins"] += r["wins"]
+    if jury:
+        row["self_play_jury"] = {opp: dict(r, rate=round(r["wins"] / max(1, r["games"]), 3)) for opp, r in jury.items()}
+    if a.specialist:
+        row["specialist"] = a.specialist
     suffix = ""
     if args.variant is not None:
         over = plan.get("variants", VARIANTS)[args.variant]
@@ -195,8 +274,9 @@ def cmd_screen(args, _):
     it = plan["it"]
     cand = json.loads(Path(args.cand).read_text())["cand"]
     L = loop.Loop(a)
+    d1, d2 = mirror_decks(a)
     w, l, g = L.match({"matches": []}, it, L.bot(cand), L.bot(plan["current"]), SCREEN_GAMES,
-                      seed_base(it, "screen", args.variant * SCREEN_BLOCKS + args.block), "screen", record=False)
+                      seed_base(it, "screen", args.variant * SCREEN_BLOCKS + args.block), "screen", d1, d2, record=False)
     res = {"variant": args.variant, "block": args.block, "wins": w, "losses": l, "games": g,
            "batches": [list(b) for b in L.batches]}
     Path(args.out).write_text(json.dumps(res))
@@ -242,9 +322,25 @@ def cmd_gate(args, _):
     ladder = {"matches": []}
     kind, _, idx = args.task.partition(":")
     res = {"task": args.task, "kind": kind}
+    d1, d2 = mirror_decks(a)
     if kind == "gate":
-        w, l, g = L.match(ladder, it, L.bot(cand), L.bot(current), a.gate_block, seed_base(it, "gate", int(idx)), "gate")
+        w, l, g = L.match(ladder, it, L.bot(cand), L.bot(current), a.gate_block, seed_base(it, "gate", int(idx)), "gate", d1, d2)
         res.update(wins=w, losses=l, games=g)
+    elif kind == "panel" and a.specialist:
+        # Paired: the candidate and the current specialist each play the legend against this jury deck on the
+        # same deals; the candidate must not do worse than the net it would replace.
+        s, m = spec(a), int(idx)
+        opp_deck = s["jury"][m]
+        opp = L.bot(pilot(plan, opp_deck))
+        per = max(4, a.panel_games)
+        cw = cn = bw = bn = 0
+        for j, legend_deck in enumerate(s["decks"][:2]):
+            seed = seed_base(it, "panel", 2 * m + j)
+            w, n = spec_vs(L, it, L.bot(cand), opp, legend_deck, opp_deck, per // 2, seed)
+            cw += w; cn += n
+            w, n = spec_vs(L, it, L.bot(current), opp, legend_deck, opp_deck, per // 2, seed)
+            bw += w; bn += n
+        res.update(name=Path(opp_deck).stem, deck=opp_deck, wins=cw, losses=cn - cw, games=cn, base_wins=bw, base_games=bn)
     elif kind == "panel":
         m = int(idx)
         name, d_a, d_b = loop.PANEL[m]
@@ -255,7 +351,7 @@ def cmd_gate(args, _):
                              "panel:" + name, d_b, d_a, record=False)
         res.update(name=name, wins=w1 + w2, losses=l1 + l2, games=g1 + g2)
     elif kind == "yard" and idx == "random":
-        r_w, _, r_n = L.match(ladder, it, L.bot(cand), "random", a.yardstick_games, seed_base(it, "vs_random"), "vs_random")
+        r_w, _, r_n = L.match(ladder, it, L.bot(cand), "random", a.yardstick_games, seed_base(it, "vs_random"), "vs_random", d1, d2)
         res["vs_random"] = {"games": r_n, "wins": r_w, "rate": round(r_w / r_n, 4)}
     elif kind == "yard" and idx == "reference":
         if reference and reference != cand:
@@ -300,7 +396,16 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
     mirror_ok = current is None or decision == "better" or (decision == "rate" and wins / n >= a.accept)
     panel = [r for r in results if r["kind"] == "panel"]
     panel_ok = True
-    if panel and current is not None:
+    if panel and a.specialist:
+        c_w, c_n = sum(r["wins"] for r in panel), sum(r["games"] for r in panel)
+        b_w, b_n = sum(r["base_wins"] for r in panel), sum(r["base_games"] for r in panel)
+        diff = c_w / c_n - b_w / b_n
+        panel_ok = diff >= -a.spec_panel_margin
+        row["panel"] = {"games": c_n, "wins": c_w, "rate": round(c_w / c_n, 4), "base_rate": round(b_w / b_n, 4),
+                        "diff": round(diff, 4), "margin": a.spec_panel_margin, "ok": panel_ok,
+                        "matchups": {r["name"]: {"deck": r["deck"], "games": r["games"], "rate": round(r["wins"] / r["games"], 4),
+                                                 "base_rate": round(r["base_wins"] / r["base_games"], 4)} for r in panel}}
+    elif panel and current is not None:
         p_w, p_l, p_n = (sum(r[k] for r in panel) for k in ("wins", "losses", "games"))
         p_lo, p_hi = loop.riftlab.wilson(p_w, p_n)
         panel_ok = p_w / p_n >= a.panel_floor
@@ -337,11 +442,13 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
 
 def cmd_decide(args, _):
     plan = json.loads(Path(args.plan).read_text())
+    settings(plan)
     ladder = loop.load_ladder()
     if len(ladder["iterations"]) != plan["it"]:
         raise SystemExit(f"the ladder moved on: {len(ladder['iterations'])} iterations, the plan is for {plan['it']}")
     results = [json.loads(Path(p).read_text()) for p in args.results]
     row = decide(plan, json.loads(Path(args.cand).read_text()), results, ladder)
+    loop.LADDER.parent.mkdir(parents=True, exist_ok=True)
     loop.LADDER.write_text(json.dumps(ladder, indent=1))
     print(json.dumps(row))
 

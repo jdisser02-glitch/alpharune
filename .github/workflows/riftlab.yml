@@ -34,7 +34,7 @@ permissions:
 
 jobs:
   run:
-    if: github.event_name != 'workflow_dispatch' || (!endsWith(github.event.inputs.request, 'train.json') && !endsWith(github.event.inputs.request, 'train_parallel.json'))
+    if: github.event_name != 'workflow_dispatch' || (!endsWith(github.event.inputs.request, 'train.json') && !endsWith(github.event.inputs.request, 'train_parallel.json') && !contains(github.event.inputs.request, 'train_spec_'))
     concurrency:
       group: riftlab-${{ github.ref }}
       cancel-in-progress: false
@@ -234,14 +234,15 @@ jobs:
   # gate blocks, panel matchups, yardsticks); p_decide applies loop.py's rules, commits the ladder and the net if
   # adopted, and dispatches the next iteration. The loop settings are the plan's "args" (below).
   p_plan:
-    if: github.event_name == 'workflow_dispatch' && endsWith(github.event.inputs.request, 'train_parallel.json')
+    if: github.event_name == 'workflow_dispatch' && (endsWith(github.event.inputs.request, 'train_parallel.json') || contains(github.event.inputs.request, 'train_spec_'))
     concurrency:
-      group: train-${{ github.ref }}
+      group: train-${{ github.ref }}-${{ github.event.inputs.request }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 60
     outputs:
       tasks: ${{ steps.plan.outputs.tasks }}
+      track: ${{ steps.plan.outputs.track }}
     steps:
       - uses: actions/checkout@v4
       - name: Restore the engine binary
@@ -277,9 +278,13 @@ jobs:
       - name: Plan the iteration
         id: plan
         run: |
+          # The general net (train_parallel.json) or one legend's specialist (train_spec_<name>.json, field "specialist").
+          spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
+          if [ -n "$spec" ]; then extra="--specialist $spec"; track="spec-$spec"; else extra="--league 0.3"; track="main"; fi
           python3 lab/learn/stages.py plan --out stage/plan.json -- \
-            --games 1600 --sims 100 --agent pmcts --settle 60 --policy --hidden 64 --warm --human lab/learn/human.rbv3 --threads 4 --league 0.3 \
+            --games 1600 --sims 100 --agent pmcts --settle 60 --policy --hidden 64 --warm --human lab/learn/human.rbv3 --threads 4 $extra \
             --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 20 --buffer 3 --epochs 6
+          echo "track=$track" >> "$GITHUB_OUTPUT"
           echo "tasks=$(python3 -c 'import json; print(json.dumps(json.load(open("stage/plan.json"))["tasks"]))')" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
@@ -336,8 +341,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: data/learn
-          key: learn-buffer-${{ github.run_id }}
-          restore-keys: learn-buffer-
+          key: learn-buffer-${{ needs.p_plan.outputs.track }}-${{ github.run_id }}
+          restore-keys: learn-buffer-${{ needs.p_plan.outputs.track }}-
       - uses: actions/download-artifact@v4
         with:
           pattern: selfplay-*
@@ -357,7 +362,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: data/learn
-          key: learn-buffer-${{ github.run_id }}
+          key: learn-buffer-${{ needs.p_plan.outputs.track }}-${{ github.run_id }}
       - uses: actions/upload-artifact@v4
         with:
           name: cand-${{ matrix.variant }}
@@ -498,17 +503,19 @@ jobs:
           python3 lab/learn/stages.py decide --plan stage/plan.json --cand stage/cand.json results/*/result.json | tee decide.log
           python3 - <<'PY'
           import glob, json, os, subprocess
-          L = json.load(open("lab/learn/ladder.json"))
+          plan = json.load(open("stage/plan.json"))
+          L = json.load(open(plan.get("ladder", "lab/learn/ladder.json")))
           keep = {os.path.basename(r["net"]).split(".")[0] for r in L["iterations"] if r.get("accepted") and r.get("net")}
           keep |= {os.path.basename(L[k]).split(".")[0] for k in ("current_net", "reference_net") if L.get(k)}
-          for f in glob.glob("lab/learn/nets/net_*"):
+          for f in glob.glob("lab/learn/nets/" + plan.get("net_prefix", "net_") + "*"):
               tracked = subprocess.run(["git", "ls-files", "--error-unmatch", f], capture_output=True).returncode == 0
               if not tracked and os.path.basename(f).split(".")[0] not in keep:
                   os.remove(f)
           PY
-          git add lab/learn/ladder.json lab/learn/nets
-          last=$(python3 -c "import json; r=json.load(open('lab/learn/ladder.json'))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))")
-          git commit -m "train (parallel): iteration ${last} (Actions run ${{ github.run_id }})"
+          ladder=$(python3 -c "import json; print(json.load(open('stage/plan.json')).get('ladder', 'lab/learn/ladder.json'))")
+          git add "$ladder" lab/learn/nets
+          last=$(python3 -c "import json,sys; r=json.load(open(sys.argv[1]))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))" "$ladder")
+          git commit -m "train (${{ needs.p_plan.outputs.track }}): iteration ${last} (Actions run ${{ github.run_id }})"
           for i in 1 2 3 4 5 6 7 8 9 10; do   # GitHub answers some pushes with a 500 for minutes
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
             sleep $((i * 15))
@@ -520,4 +527,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           left=$(( ${{ github.event.inputs.chain }} - 1 ))
-          gh workflow run riftlab.yml --ref "${GITHUB_REF_NAME}" -f request=lab/specs/train_parallel.json -f chain="${left}"
+          gh workflow run riftlab.yml --ref "${GITHUB_REF_NAME}" -f request="${{ github.event.inputs.request }}" -f chain="${left}"
