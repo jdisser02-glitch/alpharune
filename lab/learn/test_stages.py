@@ -157,6 +157,25 @@ class Specialist(unittest.TestCase):
                 self.assertTrue((loop.ROOT / d).exists(), d)
 
 
+class Evolution(unittest.TestCase):
+    def test_the_first_iteration_tries_the_seed_settings_never_narrower_than_the_current_net(self):
+        v = stages.spec_variants({"iterations": []}, 0, 1, 64, 64)
+        self.assertEqual(len(v), 4)
+        self.assertEqual([x["hidden"] for x in v], [64, 128, 128, 64])
+        self.assertTrue(all(x["hidden"] == 128 for x in stages.spec_variants({"iterations": []}, 0, 1, 128, 64)))
+
+    def test_later_iterations_keep_the_screen_winner_and_mutate_it(self):
+        win = {"epochs": 3, "lr": 3e-4, "hidden": 128, "q_weight": 0.5}
+        ladder = {"iterations": [{"screen": {"2": {"overrides": win}}, "screen_pick": 2}]}
+        v = stages.spec_variants(ladder, 1, 1, 128, 64)
+        self.assertEqual(v[0], win)
+        self.assertEqual(len({json.dumps(x, sort_keys=True) for x in v}), 4)
+        for x in v[1:]:
+            self.assertGreaterEqual(x["hidden"], 128)
+            self.assertTrue(5e-5 <= x["lr"] <= 2e-3 and 1 <= x["epochs"] <= 8)
+        self.assertEqual(v, stages.spec_variants(ladder, 1, 1, 128, 64), "every shard plans the same")
+
+
 class League(unittest.TestCase):
     def test_the_schedule_is_shared_by_every_shard_and_alternates_seats(self):
         lg = ["lab/learn/nets/net_128.rbpn", loop.MATERIAL]

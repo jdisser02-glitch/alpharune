@@ -201,18 +201,28 @@ def main(argv):
         if not a.init_value.endswith(".rbpn"):
             raise SystemExit("--init-value takes an RBPN file")
         init = read_rbpn(a.init_value)
-        if init["W1"].shape == (H, dim):
+        H0 = init["W1"].shape[0]
+        if init["W1"].shape[1] == dim and H0 <= H:
             # The file's layer reads standardised inputs with its own scale:
             #   h = b1 + W1 . ((x - mean0) * inv0).
             # This run computes h = b1f + W1f . (x * inv) (inv = this run's
             # inv_std), so W1f = W1^T * inv0 / inv and b1f = b1 - W1 . (mean0 * inv0).
             inv0, mean0 = init["inv_std"], init["mean"]
             ratio = np.where(inv_std > 0, inv0 / np.maximum(inv_std, 1e-12), 0.0).astype(np.float32)
-            W1f = (init["W1"].T * ratio[:, None]).astype(np.float32)
-            b1f = (init["b1"] - init["W1"] @ (mean0 * inv0)).astype(np.float32)
-            w2, b2, w3, b3 = init["w2"].copy(), init["b2"].copy(), init["wm"].copy(), init["bm"].copy()
-            if init["Wp"].shape == (V, H):
-                Wp, bp = init["Wp"].copy(), init["bp"].copy()
+            W1k = (init["W1"].T * ratio[:, None]).astype(np.float32)
+            b1k = (init["b1"] - init["W1"] @ (mean0 * inv0)).astype(np.float32)
+            # Widening (net2net) when the file has fewer units: its H0 units come first, the H - H0 new ones keep
+            # a fresh (halved) first layer and start with zero output weights, so the wider net computes the
+            # file's outputs exactly and its new units learn what the file's could not.
+            z = np.zeros(H - H0, np.float32)
+            W1f = np.concatenate([W1k, W1f[:, H0:] * 0.5], 1).astype(np.float32)
+            b1f = np.concatenate([b1k, b1f[H0:] * 0.5]).astype(np.float32)
+            w2, w3 = np.concatenate([init["w2"], z]), np.concatenate([init["wm"], z])
+            b2, b3 = init["b2"].copy(), init["bm"].copy()
+            if init["Wp"].shape == (V, H0):
+                Wp, bp = np.concatenate([init["Wp"], np.zeros((V, H - H0), np.float32)], 1), init["bp"].copy()
+            if H0 < H:
+                print(f"widening {a.init_value}: {H0} -> {H} hidden units (new units silent at the start)")
     params = [W1f, b1f, w2, b2, w3, b3, Wp, bp]
     m = [np.zeros_like(p) for p in params]
     v = [np.zeros_like(p) for p in params]

@@ -428,7 +428,7 @@ def train_candidate(a, it, current, row, suffix=""):
         if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
             cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
         # Continuous training: start from the current net instead of from scratch, when it has this width.
-        if a.warm and current and str(current).endswith(".rbpn") and rbpn_hidden(ROOT / current) == a.hidden:
+        if a.warm and current and str(current).endswith(".rbpn") and rbpn_hidden(ROOT / current) <= a.hidden:   # equal, or widened (net2net)
             cmd += ["--init-value", str(ROOT / current)]
             row["warm_start"] = current
     else:

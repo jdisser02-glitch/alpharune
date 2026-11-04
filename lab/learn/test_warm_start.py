@@ -55,6 +55,35 @@ class WarmStart(unittest.TestCase):
         self.assertLess(float(np.abs(hidden(a) - hidden(b)).max()), 1e-3)
         np.testing.assert_allclose(hidden(a) @ a["w2"] + a["b2"], hidden(b) @ b["w2"] + b["b2"], atol=1e-3)
 
+    def test_widening_keeps_the_net(self):
+        """A 64-unit net widened to 128 (net2net, the specialists' start) gives the same outputs at a zero learning rate."""
+        with tempfile.TemporaryDirectory() as d:
+            data = Path(d) / "d.rbvd"
+            agent = f"pmcts:sims=4,eval=policy:{NET},worlds=2"
+            subprocess.run([str(ENGINE), "--deck1", "decks/riven_sacramento.txt", "--deck2", "decks/riven_sacramento.txt",
+                            "--agent1", agent, "--agent2", agent, "--games", "2", "--threads", "2", "--seed", "5",
+                            "--render-html", "off", "--web", "off", "--value-data", str(data), "--value-samples", "0"],
+                           cwd=ROOT, check=True, capture_output=True)
+            out = Path(d) / "wide.rbpn"
+            r = subprocess.run([sys.executable, str(HERE / "train_policy.py"), str(out), str(data), "--epochs", "1", "--lr", "0",
+                                "--hidden", "128", "--init-value", str(NET)], cwd=ROOT, check=True, capture_output=True, text=True)
+            self.assertIn("widening", r.stdout)
+            a, b = read_rbpn(NET), read_rbpn(out)
+        self.assertEqual(b["W1"].shape[0], 128)
+        live = np.where((a["inv_std"] > 0) & (b["inv_std"] > 0))[0]
+        rng = np.random.default_rng(1)
+        x = np.zeros((40, a["W1"].shape[1]), np.float32)
+        for r_ in x:
+            idx = rng.choice(live, 40, replace=False)
+            r_[idx] = np.abs(a["mean"][idx] + rng.standard_normal(40) / np.maximum(a["inv_std"][idx], 1e-6) * 0.5)
+
+        def out_of(n):
+            h = np.maximum(n["b1"] + ((x - n["mean"]) * n["inv_std"]) @ n["W1"].T, 0)
+            return h @ n["w2"] + n["b2"], h @ n["Wp"].T + n["bp"]
+        (va, pa), (vb, pb) = out_of(a), out_of(b)
+        np.testing.assert_allclose(va, vb, atol=1e-3)
+        np.testing.assert_allclose(pa, pb, atol=1e-3)
+
     def test_the_width_is_read_from_the_file(self):
         self.assertEqual(loop.rbpn_hidden(NET), 64)
 

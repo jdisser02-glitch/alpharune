@@ -66,6 +66,56 @@ VARIANTS = [
 # From 161 to 183 the screen picked variant 0 (the loop's own settings) 2 times in 23, the gentle ones the
 # rest; from 184 variant 0 is the gentle one with half its value target from the search (q_weight 0.5): its
 # screen rates against variant 2's, on the same data, say whether that target helps.
+# Specialists evolve their training settings (population-based training): the first iteration tries these, every
+# later one keeps the settings whose candidate won the last screen and adds 3 mutations of them (learning rate x/÷2,
+# epochs ±1, the share of the search's value in the value target, 64 or 128 hidden units). A wider net starts as the
+# narrower one (train_policy.py widening), and a variant is never narrower than the current specialist.
+SPEC_SEED_VARIANTS = [
+    {"epochs": 2, "lr": 3e-4},
+    {"epochs": 2, "lr": 3e-4, "hidden": 128},
+    {"epochs": 3, "lr": 3e-4, "hidden": 128, "q_weight": 0.5},
+    {"epochs": 1, "lr": 2e-4, "q_weight": 0.5},
+]
+GENES = {"lr": (5e-5, 2e-3), "epochs": (1, 8), "q_weight": (0.0, 0.25, 0.5, 0.75), "hidden": (64, 128)}
+
+
+def mutate(parent: dict, rng: random.Random, min_hidden: int) -> dict:
+    """One or two genes of `parent` changed (GENES)."""
+    child = dict(parent)
+    for gene in rng.sample(sorted(GENES), rng.choice([1, 2])):
+        if gene == "lr":
+            lo, hi = GENES["lr"]
+            child["lr"] = float(min(hi, max(lo, child.get("lr", 3e-4) * rng.choice([0.5, 2.0]))))
+        elif gene == "epochs":
+            lo, hi = GENES["epochs"]
+            child["epochs"] = int(min(hi, max(lo, child.get("epochs", 2) + rng.choice([-1, 1]))))
+        elif gene == "q_weight":
+            child["q_weight"] = rng.choice([q for q in GENES["q_weight"] if q != child.get("q_weight", 0.0)])
+        else:
+            child["hidden"] = rng.choice([h for h in GENES["hidden"] if h >= min_hidden])
+    return child
+
+
+def spec_variants(ladder: dict, it: int, seed: int, min_hidden: int, default_hidden: int) -> list[dict]:
+    """The specialist's population for iteration `it` (see SPEC_SEED_VARIANTS)."""
+    rows = [r for r in ladder.get("iterations", []) if r.get("screen") and r.get("screen_pick") is not None]
+    if rows:
+        last = rows[-1]
+        parent = dict(last["screen"][str(last["screen_pick"])].get("overrides") or {})
+        rng = random.Random(seed * 7919 + it)
+        out, seen = [parent], set()
+        while len(out) < 4:
+            c = mutate(parent, rng, min_hidden)
+            key = json.dumps(c, sort_keys=True)
+            if key not in seen and c != parent:
+                seen.add(key); out.append(c)
+    else:
+        out = [dict(v) for v in SPEC_SEED_VARIANTS]
+    for v in out:
+        v["hidden"] = max(int(v.get("hidden", default_hidden)), min_hidden)
+    return out
+
+
 SCREEN_BLOCKS = 6       # screen blocks per variant
 SCREEN_GAMES = 20       # games per screen block (both seat orders)
 
@@ -135,7 +185,10 @@ def cmd_plan(args, rest):
             "pilots": {k: v for k, v in loop.specialist_pilots().items() if k != a.specialist} if a.specialist else {},
             "ladder": os.path.relpath(loop.LADDER, loop.ROOT), "net_prefix": loop.NET_PREFIX,
             "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current and not a.specialist else [],
-            "variants": VARIANTS, "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
+            "variants": (spec_variants(ladder, len(ladder["iterations"]), a.seed,
+                                       loop.rbpn_hidden(loop.ROOT / current) if current and str(current).endswith(".rbpn") else a.hidden,
+                                       a.hidden) if a.specialist else VARIANTS),
+            "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
     Path(args.out).write_text(json.dumps(plan, indent=1))
     print(json.dumps({k: plan[k] for k in ("it", "current", "tasks")}))
