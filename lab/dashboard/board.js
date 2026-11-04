@@ -250,6 +250,18 @@
   }
 
   // ── element builders ───────────────────────────────────────────────────────
+  /** A trash / banishment pile: a button that opens the list of its cards under the rail (S.openZone, kept across renders). */
+  function pileBtn(p, zone, n, title) {
+    const key = `${p}:${zone}`, on = S.openZone === key;
+    return `<button type="button" class="rb-pile rb-pile-btn ${on ? "on" : ""}" data-zone="${key}" title="${esc(title)}" aria-expanded="${on}"><b>${n}</b><span>${zone}</span></button>`;
+  }
+  /** The open pile's cards, face up (both trashes and banishments are public), with the usual zoom. */
+  function zoneList(pl, p) {
+    const open = S.openZone && S.openZone.split(":"); if (!open || +open[0] !== p) return "";
+    const zone = open[1], cards = (zone === "banish" ? pl.banish_cards : pl.trash_cards) || [];
+    return `<div class="rb-zonelist" role="region" aria-label="P${p} ${zone}"><div class="rb-zl-h">${zone === "banish" ? "Banished" : "Trash"} · P${p} · ${cards.length} card${cards.length === 1 ? "" : "s"}<button type="button" class="rb-zl-x" data-zone="${p}:${zone}" aria-label="close">×</button></div>
+      <div class="rb-zl-cards">${cards.length ? cards.map(c => cardEl(c, p, "sm", null, zone === "banish" ? "banished" : "in the trash")).join("") : `<span class="rb-none">empty</span>`}</div></div>`;
+  }
   function cardEl(ref, p, cls, L, extraState) {
     const c = card(ref), name = nameOf(ref);
     const facedown = ref && typeof ref === "object" && ref.facedown;
@@ -354,7 +366,8 @@
         <div class="rb-legendbox">${legend ? `<div><span class="rb-zlabel">Legend</span>${legend}</div>` : ""}${championStatus(board, i, info, mine ? L : focusOnly(L))}</div>
         <div class="rb-base ${ring === "base" ? "rb-ring" : ""}"><span class="rb-zlabel">Base</span><div class="rb-units">${units.join("") || `<span class="rb-none">no units in base</span>`}</div></div>
         ${runeStrip(pl, info)}
-        <div class="rb-piles"><div class="rb-pile deck" title="cards left in the main deck"><b>${pl.deck ?? "?"}</b><span>deck</span></div><div class="rb-pile" title="cards in the trash"><b>${pl.trash ?? 0}</b><span>trash</span></div>${pl.banish != null ? `<div class="rb-pile" title="banished cards"><b>${pl.banish}</b><span>banish</span></div>` : ""}</div>
+        <div class="rb-piles"><div class="rb-pile deck" title="cards left in the main deck"><b>${pl.deck ?? "?"}</b><span>deck</span></div>${pileBtn(p, "trash", pl.trash ?? (pl.trash_cards || []).length, "show the cards in the trash")}${pl.banish != null || (pl.banish_cards || []).length ? pileBtn(p, "banish", pl.banish ?? (pl.banish_cards || []).length, "show the banished cards") : ""}</div>
+        ${zoneList(pl, p)}
       </div></section>`;
   }
   /** The chain and the focus line under a battlefield in combat: what waits to resolve, who passed, who acts. */
@@ -831,6 +844,11 @@
     on(root, "focusin", e => { const t = e.target.closest("[data-z]"); if (t) { const r = t.getBoundingClientRect(); showZoom(+t.dataset.z, false, r.right, r.top + r.height / 2); } });
     on(root, "focusout", e => { const t = e.target.closest("[data-z]"); if (t && S.zoom && !S.zoom.classList.contains("modal")) hideZoom(); });
     on(root, "click", e => {
+      const zb = e.target.closest("[data-zone]");
+      if (zb && root.contains(zb)) {   // a trash / banishment pile: open or close its list
+        S.openZone = S.openZone === zb.dataset.zone ? null : zb.dataset.zone;
+        if (S.frame) render(S.frame); e.preventDefault(); return;
+      }
       const pick = e.target.closest("[data-pick]");
       if (pick && root.contains(pick) && typeof S.opts.onPick === "function") {
         const idx = +pick.dataset.pick; const entry = (S.frame && S.frame.legal || []).find(x => x.index === idx) || { index: idx };
