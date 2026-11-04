@@ -23,7 +23,9 @@ struct SearchOptions {
     /// Sample hidden information per simulation (honest search).
     /// false = search the real state (sees the opponent's hand and deck order).
     bool determinize = true;
-    /// Final move: "max" (most visited) or "sample" (visit-proportional).
+    /// Final move: "max" (most visited), "sample" (visit-proportional) or "q"
+    /// (pmcts: the best mean value among the moves with at least 40% of the
+    /// most visited one's visits, and 3).
     std::string final_policy = "max";
     /// Settle a leaf before evaluating it: at most this many decisions
     /// (0 = off). A leaf that is not a quiet decision — a main-phase action

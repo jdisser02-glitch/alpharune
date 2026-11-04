@@ -836,6 +836,21 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
         if (gv != gumbel_votes.end()) key += 1e6 * gv->second;
         if (key > best_key) { best_key = key; best = static_cast<int>(i); }
     }
+    // final=q: the best mean value among the moves searched enough (at least
+    // 40% of the most visited one's visits, and 3). At 50-150 simulations the
+    // policy prior decides where the visits go, so the most visited move can be
+    // one the search valued worst (End turn at -0.27 over a playable Stupefy at
+    // -0.12 in a net_164 self-play game).
+    if (opts_.final_policy == "q" && best >= 0 && gumbel_votes.empty()) {
+        int maxv = 0;
+        for (size_t i = 0; i < legal.size(); ++i) maxv = std::max(maxv, out.visits[i]);
+        const int floor_v = std::max(3, static_cast<int>(std::ceil(0.4 * maxv)));
+        double best_q = -1e300;
+        for (size_t i = 0; i < legal.size(); ++i) {
+            if (out.visits[i] < floor_v) continue;
+            if (out.values[i] > best_q) { best_q = out.values[i]; best = static_cast<int>(i); }
+        }
+    }
     out.chosen = best < 0 ? 0 : best;
     return out;
 }
