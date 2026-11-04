@@ -47,7 +47,7 @@ export async function render(container) {
           <div><dt>Val loss, val accuracy</dt><dd>How well the network predicts the winner on games it did not train on. Loss falls as it learns (0.69 means it is guessing); accuracy is the share of positions it calls right.</dd></div>
           <div><dt>Positions</dt><dd>How many board states the network trained on in that iteration. Minutes is the wall-clock time of the whole iteration on the lab machine.</dd></div>
         </dl>
-        <p class="small muted">Until the bot clearly beats a random player, treat deck test results as hints rather than verdicts: both sides of every test are played by this bot.</p>
+        <p class="small muted">Both sides of every deck test are played by this bot. Until its simulated matchups agree with real players' win rates (Home, step 2), treat deck results as hints rather than verdicts.</p>
       </section>
 
       <section class="panel gilt stack v-bot-current" aria-labelledby="bot-current">

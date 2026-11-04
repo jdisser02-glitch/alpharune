@@ -54,8 +54,8 @@ function renderList(container) {
   const kpis = [
     kpi({ label: "Tests", value: num(tests.length), tone: "info", sub: real.length === tests.length ? "all with a thinking bot" : `${num(real.length)} with a thinking bot, ${num(tests.length - real.length)} plumbing` }),
     kpi({ label: "Games played", value: num(games), tone: "info", sub: real.length ? `${num(real.reduce((a, t) => a + testGames(t), 0))} of them with a thinking bot` : "none with a thinking bot yet" }),
-    kpi({ label: "Best list so far", value: best ? pct0(best.deck.weighted_win_rate) : "—", tone: best ? rateTone(best.deck.weighted_win_rate) : "neutral",
-          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · interval ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")}` : "No test with a thinking bot yet",
+    kpi({ label: "Highest in one test", value: best ? pct0(best.deck.weighted_win_rate) : "—", tone: "neutral",
+          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · pooled interval ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")} · the top of many tests with different bots and juries, not a confirmed result` : "No test with a thinking bot yet",
           art: best ? portrait(deckFace(best.deck.path) || best.deck.label, { size: "lg" }) : "", href: best ? `#/tests/${encodeURIComponent(best.test.id)}` : "" }),
     kpi({ label: "Latest test", value: latest ? ago(latest.started_utc) : "—", tone: "neutral", sub: latest ? `${esc(fmtDate(latest.started_utc))} · ${esc(latest.name)}` : "Set one up in Launch", href: latest ? `#/tests/${encodeURIComponent(latest.id)}` : "" }),
   ].join("");

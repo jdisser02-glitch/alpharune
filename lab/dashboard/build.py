@@ -11,6 +11,7 @@ dist/art/*.webp     card art sprite sheets (lab/dashboard/art/, built by art.py)
 usage: build.py [--max-replays 40]
 """
 import argparse
+import datetime as dt
 import json
 import re
 import shutil
@@ -46,6 +47,74 @@ def load_home():
         except ImportError:
             print("  PyYAML is not installed: home.yml ignored" + (", using home.json" if j.exists() else ""))
     return json.loads(j.read_text()) if j.exists() else {}
+
+
+def net_of(agent: str) -> str:
+    """Net file named in an agent spec ('...eval=policy:lab/learn/nets/net_128.rbpn,...' -> 'net_128'), or ''."""
+    m = re.search(r"eval=(?:policy|net):([^,]+)", agent or "")
+    return Path(m.group(1)).stem if m else ""
+
+
+def measured_status(ladder: dict) -> dict:
+    """What the Home steps are scored from, computed from the lab's files rather than typed in home.yml
+    (2026-11-04 critical review: a hand-typed 80% for the best list and a 96% bot score rested on
+    measurements of net_038 and a jury that misplays Kennen):
+    - credibility: the newest simulated-vs-real matchup comparison (lab/meta/compare_meta-*.json):
+      matchups inside the real players' 95% interval, the net it was measured with, stale if not current;
+    - coverage: share of Riven's real non-mirror games played against the legends of that jury;
+    - training: the general net and each specialist (running, adopted net, rejections since);
+    - list: GA confirmation finalists whose difference against the reference excludes 0."""
+    out = {}
+    current = Path(ladder.get("current_net") or "").stem
+    cms = sorted((LAB / "meta").glob("compare_meta-*.json"))
+    if cms:
+        cm = json.loads(cms[-1].read_text())
+        rows = cm.get("rows", [])
+        res = ROOT / cm.get("result", "")
+        agent = json.loads(res.read_text()).get("agent", "") if res.exists() else ""
+        net = net_of(agent)
+        within = sum(1 for r in rows if r.get("verdict") == "within")
+        out["credibility"] = {"file": cms[-1].name, "net": net, "current": current, "stale": bool(net) and net != current,
+                              "within": within, "total": len(rows), "rate": round(within / len(rows), 3) if rows else None,
+                              "far": sorted({f"{r['legend']} vs {r['opponent_legend']}" for r in rows if r.get("verdict") != "within"})}
+        mx = ROOT / cm.get("matrix", "")
+        if mx.exists():
+            real = json.loads(mx.read_text()).get("matchups", {}).get("Riven", {})
+            total = sum(v["games"] for k, v in real.items() if k != "Riven")
+            jury = sorted({r["opponent_legend"] for r in rows if r.get("legend") == "Riven" and r.get("opponent_legend") != "Riven"})
+            got = sum(real[k]["games"] for k in jury if k in real)
+            out["coverage"] = {"legends": jury, "games": got, "of": total, "share": round(got / total, 3) if total else None,
+                               "missing_top": [k for k, _ in sorted(real.items(), key=lambda kv: -kv[1]["games"]) if k != "Riven" and k not in jury][:4]}
+    def track(L):
+        its = L.get("iterations", [])
+        since = 0
+        for r in reversed(its):
+            if r.get("accepted"):
+                break
+            since += 1
+        last = its[-1].get("started_utc") if its else None
+        recent = False
+        if last:
+            try:
+                recent = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(last)).total_seconds() < 3 * 3600
+            except ValueError:
+                pass
+        return {"current": Path(L.get("current_net") or "").stem, "iterations": len(its), "last_started": last,
+                "running": recent, "rejected_since_adoption": since}
+    out["training"] = {"general": track(ladder), "specialists": {}}
+    for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
+        out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()))
+    confirmed = []
+    for f in sorted((LAB / "results").glob("*.json")):
+        r = json.loads(f.read_text())
+        for c in (r.get("ga") or {}).get("confirmation", []) or []:
+            for fin in c.get("finalists", []):
+                ci = fin.get("diff_ci95") or [None, None]
+                if ci[0] is not None and ci[0] > 0:
+                    confirmed.append({"result": f.stem, "label": fin.get("label"), "diff": fin.get("diff_vs_reference"),
+                                      "ci95": ci, "net": net_of(r.get("agent", ""))})
+    out["list"] = {"confirmed": confirmed}
+    return out
 
 
 def main(argv):
@@ -194,6 +263,7 @@ def main(argv):
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
             "ladder": ladder, "replays": replays, "engine": engine, "human_review": human, "art": art,
+            "measured": measured_status(ladder),
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),
