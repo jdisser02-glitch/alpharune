@@ -475,7 +475,15 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
                     row[k] = r[k]
     if plan["anchors"] and not ladder.get("anchor_nets"):
         ladder["anchor_nets"] = plan["anchors"]
-    accepted = mirror_ok and panel_ok
+    human_ok = True
+    hl = row.get("human_legend")
+    if a.specialist and hl and (hl.get("rows") or 0) >= 200:
+        base = next((r.get("human_legend", {}).get("top1") for r in reversed(ladder.get("iterations", []))
+                     if r.get("accepted") and r.get("human_legend")), None)
+        if base is not None and hl.get("top1") is not None:
+            human_ok = hl["top1"] >= base - a.spec_human_margin
+            hl.update(base_top1=base, ok=human_ok)
+    accepted = mirror_ok and panel_ok and human_ok
     row["net"] = cand
     row["accepted"] = accepted
     if accepted:

@@ -105,6 +105,22 @@ SPECIALISTS = {
                        _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                        _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
                        _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]},
+    "kai_sa": {"legend": "Kai'Sa",
+               "decks": [_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                         _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+                         _META + "rro25_2026-10-17/02_art3mis_kai_sa.txt"],
+               "jury": [_RIVEN_BEST,
+                        _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                        _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                        _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+                        _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
+    "evelynn": {"legend": "Evelynn",
+                "decks": [_META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"],
+                "jury": [_RIVEN_BEST,
+                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                         _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                         _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                         _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
 }
 for _s in SPECIALISTS.values():
     _s.setdefault("mirror", _s["decks"][0])
@@ -423,7 +439,12 @@ def train_candidate(a, it, current, row, suffix=""):
                "--q-weight", str(getattr(a, "q_weight", 0.0)),
                "--hidden", str(a.hidden),
                "--entropy", str(a.entropy)]
-        if a.human and Path(a.human).exists():
+        legend_human = specialist_human_files(a) if TRACK else None
+        if legend_human:
+            # Imitation inside every iteration: the specialist's own legend's human decisions weigh
+            # --spec-human-weight, every other human decision --human-weight (train_policy --human-weights).
+            cmd += ["--human", *legend_human, "--human-weights", str(a.spec_human_weight), str(a.human_weight)]
+        elif a.human and Path(a.human).exists():
             cmd += ["--human", a.human]
         if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
             cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
@@ -451,8 +472,26 @@ def train_candidate(a, it, current, row, suffix=""):
                                                      "policy_ce", "policy_entropy", "target_entropy",
                                                      "human_records", "human_val_rows", "human_top1", "human_top3",
                                                      "human_clean_rows", "human_clean_top1", "human_clean_top3")}
+        by_file = report.get("human_by_file") or {}
+        if legend_human and legend_human[0] in by_file:
+            row["human_legend"] = dict(by_file[legend_human[0]], file=Path(legend_human[0]).name)
     cand = str(new_net.relative_to(ROOT)) if new_net.is_relative_to(ROOT) else str(new_net)
     return cand
+
+
+def specialist_human_files(a):
+    """[human_<legend>.rbv3, human_others_<legend>.rbv3] split from the shared human data for the current
+    specialist (lab/tools/split_human_by_legend.py, written once into DATA/human), or None when the legend has
+    no human decision."""
+    src, summary = Path(a.human), LEARN / "human.json"
+    if not TRACK or not src.exists() or not summary.exists():
+        return None
+    out = DATA / "human"
+    own, rest = out / f"human_{TRACK}.rbv3", out / f"human_others_{TRACK}.rbv3"
+    if not own.exists():
+        subprocess.run([sys.executable, str(ROOT / "lab" / "tools" / "split_human_by_legend.py"), "--data", str(src),
+                        "--summary", str(summary), "--out-dir", str(out), "--min", "50"], check=True, capture_output=True)
+    return [str(own), str(rest)] if own.exists() and rest.exists() else None
 
 
 def make_parser():
@@ -478,6 +517,11 @@ def make_parser():
     ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
     ap.add_argument("--specialist", default="", help="stages.py: train the specialist net of this legend "
                     f"({', '.join(SPECIALISTS)}) on its own ladder instead of the general net")
+    ap.add_argument("--spec-human-weight", type=float, default=3.0,
+                    help="--specialist: weight of its own legend's human decisions in training (the others keep --human-weight)")
+    ap.add_argument("--spec-human-margin", type=float, default=0.02,
+                    help="--specialist: a candidate may agree with its legend's held-out human moves at most this much "
+                         "less than the current specialist did (checked when 200+ held-out decisions)")
     ap.add_argument("--spec-panel-margin", type=float, default=0.03,
                     help="--specialist: the candidate may trail the current specialist against the jury by this much")
     ap.add_argument("--spec-mirror", type=float, default=0.2,

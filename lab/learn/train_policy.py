@@ -95,6 +95,9 @@ def main(argv):
     ap.add_argument("--margin-weight", type=float, default=0.5)
     ap.add_argument("--policy-weight", type=float, default=1.0, help="weight of the search-target cross-entropy")
     ap.add_argument("--human-weight", type=float, default=0.3, help="weight of the human one-hot cross-entropy")
+    ap.add_argument("--human-weights", type=float, nargs="*", default=[],
+                    help="per --human file weight, in order (default: --human-weight for every file); a specialist "
+                         "weighs its own legend's human decisions above the others'")
     ap.add_argument("--human-repeat", type=int, default=4, help="times each human training row appears per epoch")
     ap.add_argument("--human-value", action="store_true", help="also fit the value heads on human rows (log result)")
     ap.add_argument("--entropy", type=float, default=0.01, help="entropy bonus on the legal softmax")
@@ -127,6 +130,9 @@ def main(argv):
         d["w"] = np.full(len(d["y"]), a.recency ** age, np.float32)
         d["file"] = k
         d["human"] = np.full(len(d["y"]), human, bool)
+        hk = k - len(a.data)
+        d["hw"] = np.full(len(d["y"]), (a.human_weights[hk] if human and hk < len(a.human_weights) else a.human_weight)
+                          if human else 0.0, np.float32)
         parts.append(d)
         file_report.append({"file": p, "records": int(len(d["y"])), "format": d["version"], "human": human,
                             "games": int(len(np.unique(d["game"]))), "weight": float(a.recency ** age),
@@ -144,6 +150,11 @@ def main(argv):
     if a.q_weight > 0:
         y_fit[has_q] = (1 - a.q_weight) * y[has_q] + a.q_weight * np.clip((q[has_q] + 1) / 2, 0, 1)
     games = np.concatenate([d["game"].astype(np.uint64) + (np.uint64(d["file"]) << np.uint64(32)) for d in parts])
+    # Human files split one game's two seats (human_<legend>.rbv3): their hold-out hashes the game id alone, so
+    # both seats of a game fall on the same side and a held-out game is never half seen in training.
+    split_key = np.concatenate([d["game"].astype(np.uint64) + (np.uint64(0 if d["human"][0] else d["file"] + 1) << np.uint64(32))
+                                if len(d["y"]) else d["game"].astype(np.uint64) for d in parts])
+    human_w, file_of = cat("hw"), np.concatenate([np.full(len(d["y"]), d["file"], np.int32) for d in parts])
     X = SparseRows(dim, sum((d["idx"] for d in parts), []), sum((d["val"] for d in parts), []))
     P = PolicyRows(sum((d["pol_idx"] for d in parts), []), sum((d["pol_val"] for d in parts), []))
     n = len(y)
@@ -159,7 +170,7 @@ def main(argv):
     value_rows = ~is_human | a.human_value                     # rows with a value loss
 
     # Hold-out: whole games by a hash of the game id; human games separately.
-    h = (games * np.uint64(0x9E3779B97F4A7C15)) >> np.uint64(40)
+    h = (split_key * np.uint64(0x9E3779B97F4A7C15)) >> np.uint64(40)
     frac = np.where(is_human, a.human_val_frac, a.val_frac)
     is_val = (h % np.uint64(1000)) < (frac * 1000).astype(np.uint64)
     if a.human_weight <= 0:
@@ -338,7 +349,7 @@ def main(argv):
 
     # Row weights: recency x source weight; human rows repeated per epoch.
     wn = w / w[~is_human].mean()
-    pol_w = np.where(is_human, a.human_weight, a.policy_weight).astype(np.float32)
+    pol_w = np.where(is_human, human_w, a.policy_weight).astype(np.float32)
     train_pool = np.concatenate([tr[~is_human[tr]]] + [tr_hu] * max(1, a.human_repeat))
     history = []
     best = (float("inf"), None, 0)
@@ -406,6 +417,13 @@ def main(argv):
             best = (score, [p_.copy() for p_ in params], ep + 1)
     params = best[1]
     print(f"kept epoch {best[2]}")
+    # Held-out human agreement per --human file (e.g. the specialist's own legend), with the kept parameters.
+    human_by_file = {}
+    for k, f in enumerate(a.human):
+        rows = va_hu[file_of[va_hu] == len(a.data) + k]
+        if len(rows):
+            ev = evaluate(rows)
+            human_by_file[f] = {"top1": ev.get("policy_top1"), "top3": ev.get("policy_top3"), "rows": ev.get("policy_rows")}
 
     # ── unfold to the raw-scale layout and write ──
     W1f, b1f, w2, b2, w3, b3, Wp, bp = params
@@ -435,6 +453,7 @@ def main(argv):
               "history": history, "recency": a.recency, "margin_weight": a.margin_weight,
               "policy_weight": a.policy_weight, "human_weight": a.human_weight, "entropy": a.entropy,
               "prev": a.prev or None, "prev_weight": a.prev_weight if a.prev else None,
+              "human_by_file": human_by_file, "human_weights": a.human_weights or None,
               "files": file_report, "data": a.data, "human": a.human, "seconds": round(time.time() - t_start, 1)}
     out.with_suffix(".json").write_text(json.dumps(report, indent=1))
     print(f"wrote {out}, {out.with_suffix('.rbvn')} and {out.with_suffix('.json')} ({report['seconds']}s)")
