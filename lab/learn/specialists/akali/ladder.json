@@ -1,0 +1,303 @@
+{
+ "description": "Self-play learning ladder: each row is one iteration.",
+ "iterations": [
+  {
+   "iteration": 0,
+   "started_utc": "2026-11-04T20:45:23+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+   "self_play_games": 1600,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 6.7,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt": {
+     "games": 272,
+     "wins": 174,
+     "rate": 0.64
+    },
+    "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt": {
+     "games": 272,
+     "wins": 90,
+     "rate": 0.331
+    },
+    "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt": {
+     "games": 232,
+     "wins": 132,
+     "rate": 0.569
+    },
+    "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt": {
+     "games": 220,
+     "wins": 41,
+     "rate": 0.186
+    },
+    "lab/variants/riven-multistart-ga-2--cef30c16fe.txt": {
+     "games": 248,
+     "wins": 52,
+     "rate": 0.21
+    }
+   },
+   "specialist": "akali",
+   "variant": {
+    "index": 1,
+    "overrides": {
+     "epochs": 1,
+     "lr": 0.0002
+    }
+   },
+   "warm_start": "lab/learn/nets/net_164_v3.rbpn",
+   "records": 119864,
+   "games_in_buffer": 1600,
+   "val_loss": 0.5422185659408569,
+   "val_acc": 0.7244995233555768,
+   "val_margin_mse": 0.1097834709829325,
+   "baseline_val_loss": 0.6813191623071017,
+   "policy": {
+    "search_target_rows": 115101,
+    "policy_val_rows": 10471,
+    "policy_top1": 0.8177824467577117,
+    "policy_top3": 0.9690573966192341,
+    "policy_ce": 0.8899024396347479,
+    "policy_entropy": 0.8911903800580054,
+    "target_entropy": 0.8089028222143234,
+    "human_records": 4491,
+    "human_val_rows": 2103,
+    "human_top1": 0.47360912981455067,
+    "human_top3": 0.7669995244888255,
+    "human_clean_rows": 1324,
+    "human_clean_top1": 0.3496978851963746,
+    "human_clean_top3": 0.6654078549848943
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 77,
+     "rate": 0.6417,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.0003,
+      "q_weight": 0.5
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 80,
+     "rate": 0.6667,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0002
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 79,
+     "rate": 0.6583,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.0003
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 79,
+     "rate": 0.6583,
+     "overrides": {
+      "epochs": 3,
+      "lr": 0.0003
+     }
+    }
+   },
+   "screen_pick": 1,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+    "games": 240,
+    "wins": 162,
+    "rate": 0.675,
+    "ci95": [
+     0.6134,
+     0.7311
+    ],
+    "llr": 12.131,
+    "sprt": "better"
+   },
+   "panel": {
+    "games": 80,
+    "wins": 43,
+    "rate": 0.5375,
+    "base_rate": 0.5125,
+    "diff": 0.025,
+    "margin": 0.03,
+    "ok": true,
+    "matchups": {
+     "riven-multistart-ga-2--cef30c16fe": {
+      "deck": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+      "games": 16,
+      "rate": 0.25,
+      "base_rate": 0.375
+     },
+     "01_tabris_riven": {
+      "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+      "games": 16,
+      "rate": 0.4375,
+      "base_rate": 0.375
+     },
+     "07_zombro_kennen": {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+      "games": 16,
+      "rate": 0.9375,
+      "base_rate": 0.75
+     },
+     "01_jason_tian_kai_sa": {
+      "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+      "games": 16,
+      "rate": 0.3125,
+      "base_rate": 0.4375
+     },
+     "07_luoluoluofu_orianna": {
+      "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+      "games": 16,
+      "rate": 0.75,
+      "base_rate": 0.625
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 60,
+    "rate": 1.0
+   },
+   "net": "lab/learn/nets/spec_akali_000_v1.rbpn",
+   "accepted": true,
+   "elo": 833.1,
+   "elo_current": 833.1,
+   "minutes": 35.5,
+   "parallel": true
+  }
+ ],
+ "matches": [
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 14,
+   "wins_b": 6
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 16,
+   "wins_b": 4
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 14,
+   "wins_b": 6
+  },
+  {
+   "iteration": 0,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 60,
+   "wins_b": 0
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 16,
+   "wins_b": 4
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 14,
+   "wins_b": 6
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 13,
+   "wins_b": 7
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 16,
+   "wins_b": 4
+  },
+  {
+   "iteration": 0,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_akali_000_v1.rbpn",
+   "b": "net:lab/learn/nets/net_164_v3.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  }
+ ],
+ "current_net": "lab/learn/nets/spec_akali_000_v1.rbpn",
+ "elo": {
+  "net:lab/learn/nets/net_164_v3.rbpn": 712.7,
+  "net:lab/learn/nets/spec_akali_000_v1.rbpn": 833.1,
+  "random": 0.0
+ }
+}
