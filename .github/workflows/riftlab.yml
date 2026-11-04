@@ -47,7 +47,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get update -qq
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; }
           sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
 
       - name: Restore build cache
@@ -139,7 +139,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update -qq
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; }
           sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
           python3 -m pip install --quiet numpy
 
@@ -253,7 +253,7 @@ jobs:
       - name: Install build dependencies
         if: steps.bin.outputs.cache-hit != 'true'
         run: |
-          sudo apt-get update -qq
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; }
           sudo apt-get install -y -qq cmake ninja-build g++ libboost-all-dev nlohmann-json3-dev ccache
       - name: Restore build cache
         if: steps.bin.outputs.cache-hit != 'true'
@@ -298,7 +298,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+        run: |
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -377,7 +378,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+        run: |
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -445,7 +447,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+        run: |
+          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
       - uses: actions/download-artifact@v4
         with:
           name: plan
