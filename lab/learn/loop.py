@@ -489,8 +489,11 @@ def specialist_human_files(a):
     out = DATA / "human"
     own, rest = out / f"human_{TRACK}.rbv3", out / f"human_others_{TRACK}.rbv3"
     if not own.exists():
-        subprocess.run([sys.executable, str(ROOT / "lab" / "tools" / "split_human_by_legend.py"), "--data", str(src),
-                        "--summary", str(summary), "--out-dir", str(out), "--min", "50"], check=True, capture_output=True)
+        r = subprocess.run([sys.executable, str(ROOT / "lab" / "tools" / "split_human_by_legend.py"), "--data", str(src),
+                            "--summary", str(summary), "--out-dir", str(out), "--min", "50"], capture_output=True, text=True)
+        if r.returncode != 0:     # train on the shared human data rather than fail the iteration
+            print(f"human split failed, training without the legend's own human weight:\n{r.stderr[-800:]}", flush=True)
+            return None
     return [str(own), str(rest)] if own.exists() and rest.exists() else None
 
 

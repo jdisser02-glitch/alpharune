@@ -21,7 +21,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "lab"))
-import riftlab  # noqa: E402
+try:
+    import riftlab  # noqa: E402
+except Exception:  # noqa: BLE001
+    riftlab = None
 
 
 def champion_of_legend(reg) -> dict:
@@ -65,7 +68,12 @@ def main(argv):
     if b[:4] not in (b"RBV3", b"RBV4"):
         raise SystemExit(f"{a.data}: not RBV3/RBV4")
     games = [g for g in json.loads(Path(a.summary).read_text())["games"] if g.get("rows")]
-    champ = champion_of_legend(riftlab.Registry.load())
+    # The legend -> champion map: from the card registry when it loads (it needs the built engine), else from the
+    # committed lab/learn/legend_champions.json (the training machines have no engine build in that job).
+    try:
+        champ = champion_of_legend(riftlab.Registry.load())
+    except Exception:  # noqa: BLE001 - any registry failure falls back to the committed map
+        champ = json.loads((ROOT / "lab/learn/legend_champions.json").read_text())
     recs = list(records(b))
     if sum(g["rows"] for g in games) != len(recs):
         raise SystemExit(f"summary rows {sum(g['rows'] for g in games)} != {len(recs)} records: rebuild both together")
