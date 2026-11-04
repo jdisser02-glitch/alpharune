@@ -50,6 +50,10 @@ struct GameConfig {
     /// (uniform reservoir sample), the pre-v2 behaviour.
     std::string value_data_path;
     int value_samples_per_game = 0;
+    /// 0 records the decisions of both players; 1 or 2 only that player's (a
+    /// league game: the other seat is an older net or another bot, whose
+    /// moves are not examples to learn from).
+    int value_player = 0;
 
     /// Optional agent factory — when set, replaces GameRunner's built-in
     /// "random-only" factory. The seat index is 0 for P1 and 1 for P2.

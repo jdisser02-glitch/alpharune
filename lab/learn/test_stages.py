@@ -124,6 +124,33 @@ class Merge(unittest.TestCase):
 
 
 
+class League(unittest.TestCase):
+    def test_the_schedule_is_shared_by_every_shard_and_alternates_seats(self):
+        lg = ["lab/learn/nets/net_128.rbpn", loop.MATERIAL]
+        s1 = loop.league_schedule(1, 184, 400, 0.3, lg)
+        self.assertEqual(s1, loop.league_schedule(1, 184, 400, 0.3, lg))
+        picked = [x for x in s1 if x]
+        self.assertTrue(90 <= len(picked) <= 150, len(picked))
+        self.assertEqual([seat for _, seat in picked[:4]], [1, 2, 1, 2])
+        self.assertEqual({o for o, _ in picked}, set(lg))
+        self.assertEqual(loop.league_schedule(1, 184, 50, 0.0, lg), [None] * 50)
+        self.assertEqual(loop.league_schedule(1, 184, 50, 0.3, []), [None] * 50)
+
+    def test_the_league_holds_older_nets_and_the_material_bot_never_the_current(self):
+        ladder = {"iterations": [{"net": "lab/learn/nets/net_164_v3.rbpn", "accepted": True},
+                                 {"net": "lab/learn/nets/net_128.rbpn", "accepted": True}],
+                  "anchor_nets": []}
+        out = loop.league_opponents(ladder, "lab/learn/nets/net_164_v3.rbpn", 4)
+        self.assertNotIn("lab/learn/nets/net_164_v3.rbpn", out)
+        self.assertEqual(out[-1], loop.MATERIAL)
+
+    def test_the_material_bot_has_no_net(self):
+        a = loop.make_parser().parse_args(ARGS + ["--settle", "60"])
+        spec = loop.Loop(a).material_bot()
+        self.assertIn("eval=material", spec)
+        self.assertNotIn(".rbpn", spec)
+
+
 class Population(unittest.TestCase):
     def cands(self):
         return {k: {"cand": f"lab/learn/nets/net_007_v{k}.rbpn", "row": {"iteration": 7, "variant": {"index": k}}}

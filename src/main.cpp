@@ -404,6 +404,8 @@ int main(int argc, char* argv[]) {
          "Batch mode: append self-play value-training records to this file.")
         ("value-samples", po::value<int>()->default_value(0),
          "Decisions sampled per game for --value-data (0 = every decision of both players).")
+        ("value-player", po::value<int>()->default_value(0),
+         "--value-data: record only this player's decisions (1 or 2; 0 = both).")
     ;
 
     po::variables_map vm;
@@ -632,6 +634,7 @@ int main(int argc, char* argv[]) {
         cfg.json_replay_games = vm["review-games"].as<int>();
         cfg.value_data_path   = vm["value-data"].as<std::string>();
         cfg.value_samples_per_game = vm["value-samples"].as<int>();
+        cfg.value_player = vm["value-player"].as<int>();
         cfg.agent_factory = std::move(factory);
 
         AggregateResults results;

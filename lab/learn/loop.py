@@ -105,7 +105,7 @@ def deck_pool():
 BATCH_TIMEOUT_S = int(os.environ.get("RIFTBOUND_BATCH_TIMEOUT", 20 * 60))
 
 
-def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None):
+def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None, value_player=0):
     if max(2, games) >= SEED_BLOCK:
         raise ValueError(f"{games} games do not fit one seed block of {SEED_BLOCK}")
     cmd = [str(ENGINE), "--deck1", deck1, "--deck2", deck2, "--agent1", a1, "--agent2", a2,
@@ -113,6 +113,8 @@ def run_batch(deck1, deck2, a1, a2, games, threads, seed, value_data=None):
            "--render-html", "off", "--web", "off"]
     if value_data:
         cmd += ["--value-data", str(value_data), "--value-samples", "0"]
+        if value_player:
+            cmd += ["--value-player", str(value_player)]
     # A batch that runs far longer than its games should (an engine loop in
     # one game: 2026-10-30, Ekko, Revolutionary) is killed and skipped, so one
     # game cannot stall a night of training.
@@ -134,9 +136,16 @@ class Loop:
         self.a = a
         self.batches = []     # (seed, games, deck1, deck2, agent1, agent2) of every batch run, for the seed tests
 
-    def batch(self, deck1, deck2, a1, a2, games, seed, value_data=None):
+    def batch(self, deck1, deck2, a1, a2, games, seed, value_data=None, value_player=0):
         self.batches.append((seed, max(2, games), deck1, deck2, a1, a2))
-        return run_batch(deck1, deck2, a1, a2, games, self.a.threads, seed, value_data)
+        return run_batch(deck1, deck2, a1, a2, games, self.a.threads, seed, value_data, value_player)
+
+    def material_bot(self, sims=None):
+        """The search with the hand-tuned material count as its evaluation and the
+        action-type prior (no net): a league opponent whose judgement owes
+        nothing to self-play, so it does not share the nets' Riven bias."""
+        settle = f",settle={self.a.settle}" if self.a.settle > 0 else ""
+        return f"pmcts:sims={sims or self.a.sims},eval=material,prior=heuristic,worlds={self.a.worlds}{settle}"
 
     def bot(self, net, sims=None):
         """Agent spec for a network (None = random play). A .rbpn (two-head)
@@ -288,6 +297,35 @@ def pick_anchors(ladder, n=2):
     return picks
 
 
+MATERIAL = "material"   # league entry for Loop.material_bot
+
+
+def league_opponents(ladder, current, n=4):
+    """Self-play league: the last `n` adopted nets before the current one, the
+    anchor nets, and the material bot. Older nets keep the current one from
+    forgetting how to beat play it no longer meets; the material bot judges
+    positions by a count instead of a net."""
+    adopted = [r["net"] for r in ladder.get("iterations", []) if r.get("accepted") and r.get("net")]
+    adopted = [p for p in adopted if p != current and (ROOT / p).exists()]
+    out = list(dict.fromkeys(adopted[-n:] + pick_anchors(ladder)))
+    return [p for p in out if p != current] + [MATERIAL]
+
+
+def league_schedule(seed, it, n_pairs, share, league):
+    """Per self-play pair: None (current net against itself) or (opponent, seat
+    of the current net). Drawn for every pair from one stream so every shard
+    agrees; the current net takes seat 1 and seat 2 in turn."""
+    rng = random.Random(seed * 7919 + it * 104729 + 1)
+    out, flip = [], 0
+    for _ in range(n_pairs):
+        if league and share > 0 and rng.random() < share:
+            out.append((rng.choice(league), 1 + flip))
+            flip ^= 1
+        else:
+            out.append(None)
+    return out
+
+
 def rbpn_hidden(path) -> int:
     """Hidden-layer width of an RBPN file (header: magic, version, input dim, hidden)."""
     import struct
@@ -363,6 +401,10 @@ def make_parser():
     ap.add_argument("--recency", type=float, default=0.7, help="weight multiplier per iteration of age")
     ap.add_argument("--epochs", type=int, default=8)
     ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
+    ap.add_argument("--league", type=float, default=0.0,
+                    help="stages.py (parallel training): share of self-play pairs played against a league opponent (older adopted nets, the anchors, "
+                         "the material bot); only the current net's decisions are recorded in those")
+    ap.add_argument("--league-nets", type=int, default=4, help="--league: adopted nets taken from the end of the ladder")
     ap.add_argument("--q-weight", type=float, default=0.0,
                     help="--policy: mix the search's value of each position into the value target (train_policy.py --q-weight)")
     ap.add_argument("--hidden", type=int, default=64, help="--policy: width of the net's hidden layer")

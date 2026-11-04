@@ -93,6 +93,7 @@ def cmd_plan(args, rest):
         reference = None
     plan = {"it": len(ladder["iterations"]), "current": current, "reference": reference,
             "anchors": loop.pick_anchors(ladder), "args": rest, "tasks": tasks_for(a),
+            "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current else [],
             "variants": VARIANTS, "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
     Path(args.out).write_text(json.dumps(plan, indent=1))
@@ -109,12 +110,24 @@ def cmd_selfplay(args, _):
     out.unlink(missing_ok=True)
     games = a.games * 3 if current is None else a.games
     pairs = L.self_play_pairs(random.Random(a.seed + it), loop.deck_pool(), max(1, games // PER_PAIR))
+    league = loop.league_schedule(a.seed, it, len(pairs), a.league, plan.get("league") or [])
     t0 = time.time()
+    met = {}
     for k, (d1, d2) in enumerate(pairs):
         if k % args.shards != args.shard:
             continue
-        L.batch(d1, d2, L.bot(current), L.bot(current), PER_PAIR, seed_base(it, "selfplay", k), out)
-    meta = {"shard": args.shard, "minutes": round((time.time() - t0) / 60, 1), "batches": len(L.batches)}
+        me = L.bot(current)
+        if league[k] is None:
+            L.batch(d1, d2, me, me, PER_PAIR, seed_base(it, "selfplay", k), out)
+            continue
+        opp, seat = league[k]
+        other = L.material_bot() if opp == loop.MATERIAL else L.bot(opp)
+        a1, a2 = (me, other) if seat == 1 else (other, me)
+        w1, w2 = L.batch(d1, d2, a1, a2, PER_PAIR, seed_base(it, "selfplay", k), out, value_player=seat)
+        m = met.setdefault(opp, {"games": 0, "wins": 0})
+        m["games"] += w1 + w2
+        m["wins"] += w1 if seat == 1 else w2
+    meta = {"shard": args.shard, "minutes": round((time.time() - t0) / 60, 1), "batches": len(L.batches), "league": met}
     out.with_suffix(".json").write_text(json.dumps(meta))
     print(json.dumps(meta))
 
@@ -156,6 +169,13 @@ def cmd_train(args, _):
            "self_play_games": a.games, "sims": a.sims, "agent": a.agent,
            "trainer": "train_policy" if a.policy else "train_value",
            "self_play_minutes": max((m["minutes"] for m in sp), default=None), "shards": len(sp)}
+    league = {}
+    for m in sp:
+        for opp, r in (m.get("league") or {}).items():
+            agg = league.setdefault(opp, {"games": 0, "wins": 0})
+            agg["games"] += r["games"]; agg["wins"] += r["wins"]
+    if league:
+        row["league"] = {opp: dict(r, rate=round(r["wins"] / max(1, r["games"]), 3)) for opp, r in league.items()}
     suffix = ""
     if args.variant is not None:
         over = plan.get("variants", VARIANTS)[args.variant]

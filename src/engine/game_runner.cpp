@@ -173,7 +173,9 @@ GameResult GameRunner::run() {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
         }
-        if (want_values && actions.size() > 1 && chosen.player != PlayerId::None &&
+        const bool value_seat = config_.value_player == 0 ||
+                                (config_.value_player == 1 ? chosen.player == PlayerId::Player1 : chosen.player == PlayerId::Player2);
+        if (want_values && value_seat && actions.size() > 1 && chosen.player != PlayerId::None &&
             !state.cost_cursor.has_value()) {
             ++value_seen;
             const int k = config_.value_samples_per_game;
