@@ -138,6 +138,17 @@ void TriggerManager::fireEquippedTriggers(GameObjectId unit_id, PlayerId control
         events_.logTrace("EQUIP_TRIGGER: " + gear.name + " fires on " +
                          unit.name + " (" + toString(controller) + ")");
 
+        // A trigger with a choice ("you may", a target) goes on the chain, so
+        // its controller is asked and the opponent may respond; it resolves
+        // through onEquippedTrigger (GameEngine::resolveSpell, equipped_unit).
+        if (gear_card->equippedTriggerOnChain()) {
+            chain_.addAbility(gear_id, controller, gear.card_def_id);
+            if (!state_.chain.items.empty()) {
+                state_.chain.items.back().fired_trigger = trigger;
+                state_.chain.items.back().equipped_unit = unit_id;
+            }
+            continue;
+        }
         if (effect_executor_) {
             CardContext ctx{state_, events_, *effect_executor_, controller, gear_id};
             gear_card->onEquippedTrigger(ctx, unit_id, {});

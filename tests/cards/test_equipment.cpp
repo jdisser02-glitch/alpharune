@@ -731,6 +731,38 @@ TEST_F(LastRitesTest, ConquerOrHoldTriggerPlaysUnitFromTrash) {
         << "Trash unit should have left the trash zone";
 }
 
+TEST_F(LastRitesTest, ConquerOrHoldTriggerGoesOnTheChainForItsController) {
+    // 2026-11-04: the trigger ran off the chain, where "you may" cannot ask
+    // anyone: units were played from the trash without their owner choosing.
+    Card* c = card_registry.get(kLastRites);
+    ASSERT_NE(c, nullptr);
+    EXPECT_TRUE(c->equippedTriggerOnChain());
+    auto unit = addUnit(P1, kInvalidId, /*might=*/3, /*at_bf=*/0);
+    auto gear = addGearOnBoard(P1, kLastRites, /*at_bf=*/0);
+    auto& g = state.getObject(gear);
+    g.attached_to = unit;
+    state.getObject(unit).attachments.push_back(gear);
+    auto trash_unit = state.createObject();
+    state.getObject(trash_unit).owner = P1; state.getObject(trash_unit).controller = P1;
+    state.getObject(trash_unit).card_type = CardType::Unit;
+    state.getObject(trash_unit).zone = ZoneType::Trash;
+    state.player(P1).trash.push_back(trash_unit);
+
+    ChainManager cm(state, events, card_db);
+    TriggerManager tm(state, events, card_db, cm, card_registry);
+    EffectExecutor exec(state, events, card_db, &card_registry);
+    tm.setEffectExecutor(&exec);
+    tm.testHook_fireEquippedTriggers(unit, P1, TriggerType::WhenIConquerOrHold);
+
+    ASSERT_FALSE(state.chain.items.empty()) << "the trigger waits on the chain";
+    const auto& item = state.chain.items.back();
+    EXPECT_EQ(item.source, gear);
+    EXPECT_EQ(item.equipped_unit, unit);
+    EXPECT_EQ(item.controller, P1);
+    EXPECT_TRUE(item.is_ability);
+    EXPECT_EQ(state.getObject(trash_unit).zone, ZoneType::Trash) << "nothing played before its owner answers";
+}
+
 TEST_F(LastRitesTest, ConquerOrHoldTriggerNoopWhenTrashHasNoUnit) {
     auto unit = addUnit(P1, kInvalidId, /*might=*/3, /*at_bf=*/0);
     auto gear = addGearOnBoard(P1, kLastRites, /*at_bf=*/0);

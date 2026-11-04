@@ -486,6 +486,11 @@ struct ChainItem {
     // spells / activated abilities / single-trigger cards.
     TriggerType fired_trigger = TriggerType::None;
 
+    // An equipment's triggered ability (Card::equippedTriggerOnChain): the
+    // unit the gear is attached to. Resolution dispatches through
+    // Card::onEquippedTrigger instead of onTrigger. kInvalidId otherwise.
+    GameObjectId equipped_unit = kInvalidId;
+
     // Phase 6r — multi-ability per Card. Identifies which of the source's
     // activated abilities this chain item resolves. 0 = first/only ability
     // (back-compat). Only meaningful when is_activated_ability is true.

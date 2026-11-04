@@ -631,6 +631,14 @@ public:
     /// e.g., "When I conquer" in effect_text → WhenIConquer on the unit.
     virtual TriggerType equippedTriggerType() const { return TriggerType::None; }
 
+    /// Whether that trigger goes on the chain (a triggered ability is put on
+    /// the chain and its controller makes its choices). Needed for a trigger
+    /// with a "you may" or a target: off the chain the choice helpers cannot
+    /// ask anyone and take the first answer (Last Rites played a unit from the
+    /// trash on its own, 2026-11-04). Default false: the trigger runs at once,
+    /// as the equipment cards without a choice expect.
+    virtual bool equippedTriggerOnChain() const { return false; }
+
     /// Called when the equipped unit's trigger fires. Gear handles its own logic.
     virtual void onEquippedTrigger(CardContext& ctx,
                                    GameObjectId unit,

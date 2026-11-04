@@ -46,6 +46,11 @@ public:
         fireTrigger(source, controller, 0, trigger, subject);
     }
 
+    /// Fire the equipped gear's triggers on `unit` as if `trigger` had happened (tests).
+    void testHook_fireEquippedTriggers(GameObjectId unit, PlayerId controller, TriggerType trigger) {
+        fireEquippedTriggers(unit, controller, trigger);
+    }
+
 private:
     GameState& state_;
     EventBus& events_;

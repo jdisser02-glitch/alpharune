@@ -41,6 +41,8 @@ public:
     }
 
     TriggerType equippedTriggerType() const override { return TriggerType::WhenIConquerOrHold; }
+    // "you may play a unit from your trash": its controller chooses whether and which.
+    bool equippedTriggerOnChain() const override { return true; }
     // "When I conquer or hold, you may play a unit from your trash. (You still
     //  pay its costs.)" The unit is paid for through the engine's cost path
     // (EffectExecutor::playPayingCost), so cost modifiers such as Rhasa the

@@ -2402,6 +2402,9 @@ void GameEngine::resolveSpell(const ChainItem& item) {
                     events_.emit(ObjectStateChangedEvent{item.source,
                                                          "gear_ability_used"});
                 }
+            } else if (item.equipped_unit != kInvalidId) {
+                // An equipment's trigger put on the chain (Card::equippedTriggerOnChain).
+                card->onEquippedTrigger(ctx, item.equipped_unit, effective_targets);
             } else {
                 card->onTrigger(ctx, effective_targets);
             }
