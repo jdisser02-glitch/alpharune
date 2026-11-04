@@ -118,9 +118,9 @@ jobs:
             if [ -d "$d" ]; then git add -A "$d"; fi
           done
           git commit -m "riftlab: results for ${{ github.sha }}" || exit 0
-          for i in 1 2 3 4; do
+          for i in 1 2 3 4 5 6 7 8 9 10; do   # GitHub answers some pushes with a 500 for minutes
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((i * 5))
+            sleep $((i * 15))
           done
           exit 1
 
@@ -213,9 +213,9 @@ jobs:
           git add lab/learn/ladder.json lab/learn/nets
           last=$(python3 -c "import json; r=json.load(open('lab/learn/ladder.json'))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))")
           git commit -m "train: iterations up to ${last} (Actions run ${{ github.run_id }})" || exit 0
-          for i in 1 2 3 4; do
+          for i in 1 2 3 4 5 6 7 8 9 10; do   # GitHub answers some pushes with a 500 for minutes
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((i * 5))
+            sleep $((i * 15))
           done
           exit 1
 
@@ -509,9 +509,9 @@ jobs:
           git add lab/learn/ladder.json lab/learn/nets
           last=$(python3 -c "import json; r=json.load(open('lab/learn/ladder.json'))['iterations'][-1]; print(r['iteration'], 'accepted' if r.get('accepted') else 'rejected', r.get('vs_current', {}).get('rate'))")
           git commit -m "train (parallel): iteration ${last} (Actions run ${{ github.run_id }})"
-          for i in 1 2 3 4; do
+          for i in 1 2 3 4 5 6 7 8 9 10; do   # GitHub answers some pushes with a 500 for minutes
             git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
-            sleep $((i * 5))
+            sleep $((i * 15))
           done
           exit 1
       - name: Chain the next iteration
