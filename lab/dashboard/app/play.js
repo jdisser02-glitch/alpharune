@@ -89,7 +89,7 @@ function deckMeta(d) {
   const cs = d.comments || [], head = cs[0] || "", p = deckPilot(d);
   const ev = (cs.find(c => /^Event:/.test(c)) || "").replace(/^Event:\s*/, "");
   if (p && ev) return { name: deckShort(d.path), sub: `#${p.place} · ${eventLabel(ev)}` };
-  if (d.path === bestVariantPath()) return { name: "Best list (provisional)", sub: "the optimiser's best-measured list" };
+  if (d.path === bestVariantPath()) return { name: "Highest single-test list", sub: "the top rate of one test (1 Nov, an older bot), not confirmed against the reference" };
   if (d.path.startsWith("lab/variants/")) return { name: deckShort(d.path), sub: "variant of the reference list" };
   if (head.includes(" — ")) return { name: deckShort(d.path), sub: head.split(" — ").slice(1).join(" — ").replace(/[.\s]+$/, "") };
   return { name: deckShort(d.path), sub: "engine test deck" };

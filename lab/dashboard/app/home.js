@@ -32,8 +32,8 @@ export async function render(container) {
   const p2 = C.rate == null ? 0 : clamp(C.rate * (C.stale ? 0.5 : 1));
   const A = S.agreement || {}, aHist = A.history || [], aNow = aHist.length ? aHist[aHist.length - 1] : null;
   const G = T.general || {}, specs = Object.entries(T.specialists || {});
-  const train = [`General net ${esc(G.current || "—")}: ${G.rejected_since_adoption ?? 0} candidates rejected since its adoption`]
-    .concat(specs.map(([k, s]) => `${esc(k)} specialist: ${s.iterations} iteration${s.iterations === 1 ? "" : "s"}${s.current && s.current !== G.current ? `, uses ${esc(s.current)}` : ", none adopted yet"}`)).join(" · ");
+  const train = [`General net ${esc(G.current || "—")} ${G.running ? "training" : "paused"}, ${G.rejected_since_adoption ?? 0} rejected since its adoption`]
+    .concat(specs.map(([k, s]) => `${esc(k)} specialist ${s.running ? "training" : "paused"}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`)).join(" · ");
   // 3. The opponents are today's meta: newest tournament date among the meta lists.
   const metaDates = (D.decks || []).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
   const newest = metaDates[metaDates.length - 1], metaN = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).length;
@@ -42,10 +42,17 @@ export async function render(container) {
   const missing = ((S.meta || {}).missing || []).length;
   // Share of Riven's real (non-mirror) games played against the jury's legends, times freshness.
   const fresh = age == null ? 0 : age <= 14 ? 1 : clamp(1 - (age - 14) / 28);
-  const p3 = Cv.share == null ? 0 : clamp(Cv.share * fresh);
+  // The newest list test's own jury counts too: a deck verdict is only as broad as the opponents it was played against.
+  const Cl = M.coverage_latest_test || {};
+  const share3 = Cv.share == null ? null : Math.min(Cv.share, Cl.share ?? Cv.share);
+  const p3 = share3 == null ? 0 : clamp(share3 * fresh);
   // 4. The best Riven list: only a list whose difference against the reference excludes 0 counts, and never for more than
   //    the steps it rests on (an engine, a jury and opponents it can be trusted with).
-  const Dk = S.decks || {}, conf = (M.list || {}).confirmed || [];
+  const Dk = S.decks || {}, conf = (M.list || {}).confirmed || [], comps = (M.list || {}).comparisons || [];
+  const lastComp = comps[comps.length - 1];
+  const sgn = v => `${v >= 0 ? "+" : "−"}${Math.abs(Math.round(v * 1000) / 10)}`;
+  const compLine = lastComp ? `Newest check (${esc(lastComp.result.replace(/^\d{8}-\d{6}-/, ""))}, ${esc(lastComp.net)}), against ${esc(lastComp.reference)}: `
+    + lastComp.lists.map(x => `${esc(x.label)} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ") : "";
   const p4 = Math.min(conf.length ? (p2 >= 0.8 ? 1 : 0.5) : 0, p1, p2, p3);
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1,
@@ -55,11 +62,11 @@ export async function render(container) {
       line: C.total ? `${C.within} of ${C.total} simulated matchups inside real players' range${C.stale ? ` · measured with ${esc(C.net)}, an older bot than ${esc(C.current)}: counted half` : ""}` : "Not measured",
       sub: `${C.far && C.far.length ? `Off: ${esc(C.far.join(", "))}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games)` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
-      line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})`,
+      line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
       sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
     { n: 4, title: "Best Riven list found", pct: p4,
       line: conf.length ? `${conf.length} list${conf.length > 1 ? "s" : ""} beat the reference (interval above 0)` : "No list shown better than the reference",
-      sub: esc(Dk.line || ""), href: "#/decks" },
+      sub: [compLine, ((M.list || {}).stale_confirmations || []).length ? `${M.list.stale_confirmations.length} older confirmation(s) by a bot no longer in use not counted` : "", esc(Dk.line || "")].filter(Boolean).join(". "), href: "#/decks" },
   ];
   // Each step rests on the ones before it: the goal is as far along as its weakest step.
   const overall = Math.min(...steps.map(s => s.pct)), weakest = steps.reduce((a, s) => s.pct < a.pct ? s : a, steps[0]);

@@ -74,7 +74,9 @@ def measured_status(ladder: dict) -> dict:
         agent = json.loads(res.read_text()).get("agent", "") if res.exists() else ""
         net = net_of(agent)
         within = sum(1 for r in rows if r.get("verdict") == "within")
-        out["credibility"] = {"file": cms[-1].name, "net": net, "current": current, "stale": bool(net) and net != current,
+        in_use = {current} | {Path(json.loads(f.read_text()).get("current_net") or "").stem
+                              for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
+        out["credibility"] = {"file": cms[-1].name, "net": net, "current": current, "stale": bool(net) and net not in in_use,
                               "within": within, "total": len(rows), "rate": round(within / len(rows), 3) if rows else None,
                               "far": sorted({f"{r['legend']} vs {r['opponent_legend']}" for r in rows if r.get("verdict") != "within"})}
         mx = ROOT / cm.get("matrix", "")
@@ -100,7 +102,7 @@ def measured_status(ladder: dict) -> dict:
             except ValueError:
                 pass
         return {"current": Path(L.get("current_net") or "").stem, "iterations": len(its), "last_started": last,
-                "running": recent, "rejected_since_adoption": since}
+                "running": recent, "rejected_since_adoption": since, "adopted": sum(1 for r in its if r.get("accepted"))}
     out["training"] = {"general": track(ladder), "specialists": {}}
     for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
         out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()))
@@ -113,8 +115,66 @@ def measured_status(ladder: dict) -> dict:
                 if ci[0] is not None and ci[0] > 0:
                     confirmed.append({"result": f.stem, "label": fin.get("label"), "diff": fin.get("diff_vs_reference"),
                                       "ci95": ci, "net": net_of(r.get("agent", ""))})
-    out["list"] = {"confirmed": confirmed}
+    # Head-to-head list comparisons: a test whose lists all met the same opponents (a confirmation such as
+    # cetner-confirm). Each list's weighted rate, and each list minus the first (the reference) with a 95%
+    # interval (normal approximation, matchups independent, weights normalised).
+    comparisons = []
+    for f in sorted((LAB / "results").glob("*.json")):
+        r = json.loads(f.read_text())
+        decks = r.get("decks") or []
+        if r.get("ga") or len(decks) < 2:
+            continue
+        opp = lambda d: {m.get("opponent_deck") or m.get("opponent"): m for m in d.get("matchups", [])}
+        base = opp(decks[0])
+        if not base or any(set(opp(d)) != set(base) for d in decks[1:]):
+            continue
+        W = sum(m.get("weight", 1) for m in base.values()) or 1
+        def stat(d):
+            ms = opp(d)
+            rate = sum(m.get("weight", 1) * m["wins"] / max(1, m["games"]) for m in ms.values()) / W
+            var = sum((m.get("weight", 1) / W) ** 2 * (m["wins"] / max(1, m["games"])) * (1 - m["wins"] / max(1, m["games"])) / max(1, m["games"]) for m in ms.values())
+            return rate, var
+        b_rate, b_var = stat(decks[0])
+        rows = []
+        for d in decks[1:]:
+            rate, var = stat(d)
+            diff, half = rate - b_rate, 1.96 * (var + b_var) ** 0.5
+            rows.append({"label": d.get("label"), "path": d.get("path"), "rate": round(rate, 4), "diff": round(diff, 4),
+                         "ci95": [round(diff - half, 4), round(diff + half, 4)]})
+        legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
+        comparisons.append({"result": f.stem, "net": net_of(r.get("agent", "")), "reference": decks[0].get("label"),
+                            "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends})
+    for c in comparisons:
+        for row in c["lists"]:
+            if row["ci95"][0] > 0:
+                confirmed.append({"result": c["result"], "label": row["label"], "diff": row["diff"], "ci95": row["ci95"], "net": c["net"]})
+    # Only a confirmation played by a net still in use counts (an older bot misjudged the matchups it was played on).
+    in_use = {current} | {Path(json.loads(f.read_text()).get("current_net") or "").stem
+                          for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
+    stale = [c for c in confirmed if c.get("net") not in in_use]
+    confirmed = [c for c in confirmed if c.get("net") in in_use]
+    out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:]}
+    # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
+    if comparisons and "coverage" in out:
+        mx = ROOT / json.loads(cms[-1].read_text()).get("matrix", "")
+        real = json.loads(mx.read_text()).get("matchups", {}).get("Riven", {}) if mx.exists() else {}
+        total = sum(v["games"] for k, v in real.items() if k != "Riven")
+        jl = [l for l in comparisons[-1]["jury_legends"] if l != "Riven"]
+        got = sum(real[k]["games"] for k in jl if k in real)
+        out["coverage_latest_test"] = {"result": comparisons[-1]["result"], "legends": jl,
+                                       "share": round(got / total, 3) if total else None}
     return out
+
+
+def riftlab_legend(path: str):
+    """The champion legend a meta deck file names ('..._kai_sa.txt' -> "Kai'Sa"), from the matrix's legend names."""
+    names = ["Riven", "Kennen", "Kai'Sa", "Rengar", "Vex", "Akali", "Evelynn", "LeBlanc", "Lillia", "Mordekaiser",
+             "Orianna", "Seraphine", "Master Yi", "Nasus", "Ekko", "Ziggs", "Draven", "Viktor", "Jinx"]
+    s = re.sub(r"[^a-z0-9]", "", Path(path).stem.lower())
+    for n in sorted(names, key=len, reverse=True):
+        if re.sub(r"[^a-z0-9]", "", n.lower()) in s:
+            return n
+    return None
 
 
 def main(argv):

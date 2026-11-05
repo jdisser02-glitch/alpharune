@@ -170,7 +170,7 @@ export function deckShort(p) {
   const d = deckByPath(p); if (!d) return String(p || "?").split("/").pop().replace(/\.txt$/, "");
   const m = deckPilot(d);
   if (m) return `${m.name} (${m.pilot})`;
-  if (d.path === bestVariantPath()) return "Best list (provisional)";
+  if (d.path === bestVariantPath()) return "Highest single-test list (unconfirmed)";
   if (d.path.startsWith("lab/variants/")) return d.path.split("/").pop().replace(/\.txt$/, "");
   return deckHero(d);
 }
