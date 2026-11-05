@@ -2453,6 +2453,205 @@
    "elo_current": 766.7,
    "minutes": 100.0,
    "parallel": true
+  },
+  {
+   "iteration": 13,
+   "started_utc": "2026-11-05T10:32:51+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60",
+   "self_play_games": 1600,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 5.2,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/variants/riven-multistart-ga-2--cef30c16fe.txt": {
+     "games": 264,
+     "wins": 116,
+     "rate": 0.439
+    },
+    "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt": {
+     "games": 268,
+     "wins": 220,
+     "rate": 0.821
+    },
+    "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt": {
+     "games": 240,
+     "wins": 96,
+     "rate": 0.4
+    },
+    "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt": {
+     "games": 240,
+     "wins": 196,
+     "rate": 0.817
+    },
+    "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt": {
+     "games": 232,
+     "wins": 113,
+     "rate": 0.487
+    }
+   },
+   "specialist": "evelynn",
+   "variant": {
+    "index": 3,
+    "overrides": {
+     "epochs": 3,
+     "lr": 0.00015,
+     "hidden": 128,
+     "q_weight": 0.5,
+     "spec_human_weight": 1.0
+    }
+   },
+   "warm_start": "lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "records": 257045,
+   "games_in_buffer": 4800,
+   "val_loss": 0.4933052062988281,
+   "val_acc": 0.7462268380155409,
+   "val_margin_mse": 0.07964030170041647,
+   "baseline_val_loss": 0.6916599122923904,
+   "policy": {
+    "search_target_rows": 250663,
+    "policy_val_rows": 26583,
+    "policy_top1": 0.8206748673964563,
+    "policy_top3": 0.9687770379565888,
+    "policy_ce": 0.9522500256089413,
+    "policy_entropy": 0.9674256996054083,
+    "target_entropy": 0.875031840937229,
+    "human_records": 4491,
+    "human_val_rows": 1923,
+    "human_top1": 0.44877795111804475,
+    "human_top3": 0.7571502860114404,
+    "human_clean_rows": 1199,
+    "human_clean_top1": 0.3102585487906589,
+    "human_clean_top3": 0.6480400333611342
+   },
+   "human_legend": {
+    "top1": 0.4256198347107438,
+    "top3": 0.7231404958677686,
+    "rows": 242,
+    "file": "human_evelynn.rbv3",
+    "base_top1": 0.45454545454545453,
+    "ok": false
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 76,
+     "rate": 0.6333,
+     "overrides": {
+      "epochs": 3,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.75
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 76,
+     "rate": 0.6333,
+     "overrides": {
+      "epochs": 4,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.75
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 79,
+     "rate": 0.6583,
+     "overrides": {
+      "epochs": 3,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.75,
+      "spec_human_weight": 10.0
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 83,
+     "rate": 0.6917,
+     "overrides": {
+      "epochs": 3,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.5,
+      "spec_human_weight": 1.0
+     }
+    }
+   },
+   "screen_pick": 3,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60",
+    "games": 120,
+    "wins": 65,
+    "rate": 0.5417,
+    "ci95": [
+     0.4526,
+     0.6281
+    ],
+    "llr": -0.422,
+    "sprt": "rate",
+    "guard_floor": 0.45
+   },
+   "panel": {
+    "games": 240,
+    "wins": 162,
+    "rate": 0.675,
+    "base_rate": 0.5958,
+    "diff": 0.0792,
+    "diff_ci95": [
+     -0.0067,
+     0.165
+    ],
+    "accept": 0.03,
+    "ok": true,
+    "primary": true,
+    "matchups": {
+     "07_luoluoluofu_orianna": {
+      "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+      "games": 48,
+      "rate": 0.9167,
+      "base_rate": 0.7917
+     },
+     "riven-multistart-ga-2--cef30c16fe": {
+      "deck": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+      "games": 48,
+      "rate": 0.5,
+      "base_rate": 0.4167
+     },
+     "01_tabris_riven": {
+      "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+      "games": 48,
+      "rate": 0.6042,
+      "base_rate": 0.5417
+     },
+     "07_zombro_kennen": {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+      "games": 48,
+      "rate": 0.8125,
+      "base_rate": 0.8125
+     },
+     "01_jason_tian_kai_sa": {
+      "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+      "games": 48,
+      "rate": 0.5417,
+      "base_rate": 0.4167
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 59,
+    "rate": 0.9833
+   },
+   "net": "lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "accepted": false,
+   "elo": 776.0,
+   "elo_current": 752.9,
+   "minutes": 110.6,
+   "parallel": true
   }
  ],
  "matches": [
@@ -3976,24 +4175,88 @@
    "games": 20,
    "wins_a": 11,
    "wins_b": 9
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 13,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 59,
+   "wins_b": 1
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 13,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_evelynn_013_v3.rbpn",
+   "b": "net:lab/learn/nets/spec_evelynn_005_v3.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
   }
  ],
  "current_net": "lab/learn/nets/spec_evelynn_005_v3.rbpn",
  "elo": {
-  "net:lab/learn/nets/net_164_v3.rbpn": 557.1,
-  "net:lab/learn/nets/spec_evelynn_000_v1.rbpn": 629.9,
-  "net:lab/learn/nets/spec_evelynn_001_v3.rbpn": 690.1,
-  "net:lab/learn/nets/spec_evelynn_002_v3.rbpn": 721.0,
-  "net:lab/learn/nets/spec_evelynn_003_v1.rbpn": 791.2,
-  "net:lab/learn/nets/spec_evelynn_004_v0.rbpn": 768.7,
-  "net:lab/learn/nets/spec_evelynn_005_v3.rbpn": 766.7,
-  "net:lab/learn/nets/spec_evelynn_006_v0.rbpn": 726.3,
-  "net:lab/learn/nets/spec_evelynn_007_v1.rbpn": 772.8,
-  "net:lab/learn/nets/spec_evelynn_008_v2.rbpn": 808.4,
-  "net:lab/learn/nets/spec_evelynn_009_v2.rbpn": 764.6,
-  "net:lab/learn/nets/spec_evelynn_010_v3.rbpn": 819.6,
-  "net:lab/learn/nets/spec_evelynn_011_v0.rbpn": 805.7,
-  "net:lab/learn/nets/spec_evelynn_012_v3.rbpn": 775.5,
+  "net:lab/learn/nets/net_164_v3.rbpn": 544.9,
+  "net:lab/learn/nets/spec_evelynn_000_v1.rbpn": 617.7,
+  "net:lab/learn/nets/spec_evelynn_001_v3.rbpn": 678.1,
+  "net:lab/learn/nets/spec_evelynn_002_v3.rbpn": 708.2,
+  "net:lab/learn/nets/spec_evelynn_003_v1.rbpn": 778.5,
+  "net:lab/learn/nets/spec_evelynn_004_v0.rbpn": 756.1,
+  "net:lab/learn/nets/spec_evelynn_005_v3.rbpn": 752.9,
+  "net:lab/learn/nets/spec_evelynn_006_v0.rbpn": 712.7,
+  "net:lab/learn/nets/spec_evelynn_007_v1.rbpn": 759.1,
+  "net:lab/learn/nets/spec_evelynn_008_v2.rbpn": 794.8,
+  "net:lab/learn/nets/spec_evelynn_009_v2.rbpn": 750.9,
+  "net:lab/learn/nets/spec_evelynn_010_v3.rbpn": 805.9,
+  "net:lab/learn/nets/spec_evelynn_011_v0.rbpn": 792.0,
+  "net:lab/learn/nets/spec_evelynn_012_v3.rbpn": 761.8,
+  "net:lab/learn/nets/spec_evelynn_013_v3.rbpn": 776.0,
   "random": 0.0
  }
 }
