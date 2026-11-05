@@ -71,8 +71,8 @@ def measured_status(ladder: dict) -> dict:
         cm = json.loads(cms[-1].read_text())
         rows = cm.get("rows", [])
         res = ROOT / cm.get("result", "")
-        agent = json.loads(res.read_text()).get("agent", "") if res.exists() else ""
-        net = net_of(agent)
+        agent = json.loads(res.read_text()).get("agent", "") if cm.get("result") and res.is_file() else ""
+        net = cm.get("net") or net_of(agent)     # realism.py files name the Riven pilot's net directly
         within = sum(1 for r in rows if r.get("verdict") == "within")
         in_use = {current} | {Path(json.loads(f.read_text()).get("current_net") or "").stem
                               for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
