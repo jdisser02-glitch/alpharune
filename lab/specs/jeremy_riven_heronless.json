@@ -1,0 +1,64 @@
+{
+ "name": "jeremy-riven-heronless",
+ "description": "Riven lists built from Jeremy's own cards for his BO3 match (no Astral Heron, no Zhonya's Hourglass, one Blitzcrank), against the meta, with the Sacramento list (3 Herons, 3 Zhonya's) as the reference. Riven is piloted by its specialist, each opponent by its legend's specialist (Orianna by the general net).",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 160,
+ "review_games": 0,
+ "seed": 1105,
+ "decks": [
+  {
+   "deck": "decks/riven_sacramento.txt",
+   "label": "Sacramento base (3 Herons, reference)"
+  },
+  {
+   "deck": "decks/jeremy/riven_a_deserter.txt",
+   "label": "A: +2 Broken Blade, +2 Storm Raptor, +2 Wind and Ghosts"
+  },
+  {
+   "deck": "decks/jeremy/riven_b_big.txt",
+   "label": "B: Angler Wyrm, +2 Storm Raptor, +2 Wind and Ghosts, +1 Broken Blade"
+  },
+  {
+   "deck": "decks/jeremy/riven_c_tempo.txt",
+   "label": "C: +2 Broken Blade, +2 Wind and Ghosts, 3rd Gust, Traveling Merchant"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+   "label": "Kennen (zombro)",
+   "weight": 2,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+   "label": "Kai'Sa (Jason Tian)",
+   "weight": 2,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+   "label": "Riven mirror (Orlando 1st)",
+   "weight": 2,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+   "label": "Evelynn (Vegas)",
+   "weight": 1,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+   "label": "Akali (Sacramento 1st)",
+   "weight": 1,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+   "label": "Orianna (Xi'an 7th)",
+   "weight": 1
+  }
+ ]
+}
