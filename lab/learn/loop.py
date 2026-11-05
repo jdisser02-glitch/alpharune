@@ -527,6 +527,15 @@ def make_parser():
     ap.add_argument("--lr", type=float, default=1e-3, help="--policy: Adam learning rate")
     ap.add_argument("--specialist", default="", help="stages.py: train the specialist net of this legend "
                     f"({', '.join(SPECIALISTS)}) on its own ladder instead of the general net")
+    ap.add_argument("--spec-jury-games", type=int, default=48,
+                    help="--specialist: games per jury task for the candidate and again for the current specialist "
+                         "(one task per jury deck and legend deck); the jury decides adoption")
+    ap.add_argument("--spec-jury-accept", type=float, default=0.03,
+                    help="--specialist: adopted when it beats the current specialist on the jury by this much")
+    ap.add_argument("--spec-mirror-games", type=int, default=120,
+                    help="--specialist: games of the legend mirror against the current specialist (a guard)")
+    ap.add_argument("--spec-mirror-floor", type=float, default=0.45,
+                    help="--specialist: the candidate may not win less than this in the mirror")
     ap.add_argument("--spec-human-weight", type=float, default=3.0,
                     help="--specialist: weight of its own legend's human decisions in training (the others keep --human-weight)")
     ap.add_argument("--spec-human-margin", type=float, default=0.02,

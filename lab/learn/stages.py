@@ -156,7 +156,12 @@ def tasks_for(a) -> list[str]:
     blocks = max(1, a.gate_max // a.gate_block)
     out = [f"gate:{b}" for b in range(blocks)]
     if a.specialist:
-        return out + [f"panel:{m}" for m in range(len(spec(a)["jury"]))] + ["yard:random"]
+        # A specialist is judged on the jury (candidate and current specialist on the same deals, per jury deck
+        # and per legend deck, its first two), with a shorter mirror as a guard.
+        s = spec(a)
+        mirror = [f"gate:{b}" for b in range(max(1, a.spec_mirror_games // a.gate_block))]
+        jury = [f"panel:{m}:{j}" for m in range(len(s["jury"])) for j in range(min(2, len(s["decks"])))]
+        return mirror + jury + ["yard:random"]
     if a.panel_games > 0:
         out += [f"panel:{m}" for m in range(len(loop.PANEL))]
     out += ["yard:random", "yard:reference", "yard:anchors"]
@@ -327,9 +332,19 @@ def cmd_screen(args, _):
     it = plan["it"]
     cand = json.loads(Path(args.cand).read_text())["cand"]
     L = loop.Loop(a)
-    d1, d2 = mirror_decks(a)
-    w, l, g = L.match({"matches": []}, it, L.bot(cand), L.bot(plan["current"]), SCREEN_GAMES,
-                      seed_base(it, "screen", args.variant * SCREEN_BLOCKS + args.block), "screen", d1, d2, record=False)
+    seed = seed_base(it, "screen", args.variant * SCREEN_BLOCKS + args.block)
+    if a.specialist:
+        # Specialists screen on the jury (block b: jury deck b mod the jury), the measure they are adopted on;
+        # every variant plays the same blocks on the same seeds, so their rates compare.
+        s = spec(a)
+        opp_deck = s["jury"][args.block % len(s["jury"])]
+        w, g = spec_vs(L, it, L.bot(cand), L.bot(pilot(plan, opp_deck)), s["decks"][0], opp_deck, SCREEN_GAMES,
+                       seed_base(it, "screen", args.block))
+        l = g - w
+    else:
+        d1, d2 = mirror_decks(a)
+        w, l, g = L.match({"matches": []}, it, L.bot(cand), L.bot(plan["current"]), SCREEN_GAMES,
+                          seed, "screen", d1, d2, record=False)
     res = {"variant": args.variant, "block": args.block, "wins": w, "losses": l, "games": g,
            "batches": [list(b) for b in L.batches]}
     Path(args.out).write_text(json.dumps(res))
@@ -382,16 +397,19 @@ def cmd_gate(args, _):
     elif kind == "panel" and a.specialist:
         # Paired: the candidate and the current specialist each play the legend against this jury deck on the
         # same deals; the candidate must not do worse than the net it would replace.
-        s, m = spec(a), int(idx)
+        s = spec(a)
+        m, _, j = idx.partition(":")
+        m, js = int(m), ([int(j)] if j else range(min(2, len(s["decks"]))))
         opp_deck = s["jury"][m]
         opp = L.bot(pilot(plan, opp_deck))
-        per = max(4, a.panel_games)
+        per = max(4, a.spec_jury_games if j else a.panel_games)
         cw = cn = bw = bn = 0
-        for j, legend_deck in enumerate(s["decks"][:2]):
+        for j in js:
+            legend_deck = s["decks"][j]
             seed = seed_base(it, "panel", 2 * m + j)
-            w, n = spec_vs(L, it, L.bot(cand), opp, legend_deck, opp_deck, per // 2, seed)
+            w, n = spec_vs(L, it, L.bot(cand), opp, legend_deck, opp_deck, per, seed)
             cw += w; cn += n
-            w, n = spec_vs(L, it, L.bot(current), opp, legend_deck, opp_deck, per // 2, seed)
+            w, n = spec_vs(L, it, L.bot(current), opp, legend_deck, opp_deck, per, seed)
             bw += w; bn += n
         res.update(name=Path(opp_deck).stem, deck=opp_deck, wins=cw, losses=cn - cw, games=cn, base_wins=bw, base_games=bn)
     elif kind == "panel":
@@ -447,17 +465,30 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
     row["vs_current"] = {"opponent": loop.Loop(a).bot(current), "games": n, "wins": wins, "rate": round(wins / n, 4),
                          "ci95": [round(lo, 4), round(hi, 4)], "llr": round(llr, 3), "sprt": decision}
     mirror_ok = current is None or decision == "better" or (decision == "rate" and wins / n >= a.accept)
+    if a.specialist and current is not None:
+        # The mirror is a guard for a specialist: not clearly worse than the net it would replace.
+        mirror_ok = wins / n >= a.spec_mirror_floor
+        row["vs_current"]["guard_floor"] = a.spec_mirror_floor
     panel = [r for r in results if r["kind"] == "panel"]
     panel_ok = True
     if panel and a.specialist:
         c_w, c_n = sum(r["wins"] for r in panel), sum(r["games"] for r in panel)
         b_w, b_n = sum(r["base_wins"] for r in panel), sum(r["base_games"] for r in panel)
-        diff = c_w / c_n - b_w / b_n
-        panel_ok = diff >= -a.spec_panel_margin
-        row["panel"] = {"games": c_n, "wins": c_w, "rate": round(c_w / c_n, 4), "base_rate": round(b_w / b_n, 4),
-                        "diff": round(diff, 4), "margin": a.spec_panel_margin, "ok": panel_ok,
-                        "matchups": {r["name"]: {"deck": r["deck"], "games": r["games"], "rate": round(r["wins"] / r["games"], 4),
-                                                 "base_rate": round(r["base_wins"] / r["base_games"], 4)} for r in panel}}
+        pc, pb = c_w / c_n, b_w / b_n
+        diff = pc - pb
+        half = 1.96 * math.sqrt(pc * (1 - pc) / c_n + pb * (1 - pb) / b_n)   # unpaired: the shared deals only narrow it
+        # Adopted on the jury: the candidate must beat the current specialist there by --spec-jury-accept.
+        panel_ok = diff >= a.spec_jury_accept
+        per = {}
+        for r in panel:
+            p_ = per.setdefault(r["name"], {"deck": r["deck"], "games": 0, "wins": 0, "base_games": 0, "base_wins": 0})
+            for k in ("games", "wins", "base_games", "base_wins"):
+                p_[k] += r[k]
+        row["panel"] = {"games": c_n, "wins": c_w, "rate": round(pc, 4), "base_rate": round(pb, 4),
+                        "diff": round(diff, 4), "diff_ci95": [round(diff - half, 4), round(diff + half, 4)],
+                        "accept": a.spec_jury_accept, "ok": panel_ok, "primary": True,
+                        "matchups": {k: {"deck": v["deck"], "games": v["games"], "rate": round(v["wins"] / v["games"], 4),
+                                         "base_rate": round(v["base_wins"] / v["base_games"], 4)} for k, v in per.items()}}
     elif panel and current is not None:
         p_w, p_l, p_n = (sum(r[k] for r in panel) for k in ("wins", "losses", "games"))
         p_lo, p_hi = loop.riftlab.wilson(p_w, p_n)
