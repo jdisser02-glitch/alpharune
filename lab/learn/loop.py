@@ -514,6 +514,8 @@ def make_parser():
     ap.add_argument("--iterations", type=int, default=3)
     ap.add_argument("--games", type=int, default=200, help="self-play games per iteration")
     ap.add_argument("--sims", type=int, default=30)
+    ap.add_argument("--selfplay-sims", type=int, default=0,
+                    help="simulations per move in the self-play games only (0 = --sims); the gates keep --sims")
     ap.add_argument("--agent", choices=["pmcts", "ismcts"], default="pmcts")
     ap.add_argument("--worlds", type=int, default=8, help="pmcts determinizations per decision")
     ap.add_argument("--max-minutes", type=float, default=0, help="stop before an iteration that would end past this many minutes (0 = no limit)")

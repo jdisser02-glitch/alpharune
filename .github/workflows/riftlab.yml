@@ -281,9 +281,11 @@ jobs:
           # The general net (train_parallel.json) or one legend's specialist (train_spec_<name>.json, field "specialist").
           spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
           if [ -n "$spec" ]; then extra="--specialist $spec"; track="spec-$spec"; else extra="--league 0.3"; track="main"; fi
+          # A track's own loop settings (field "args" of its request), after the defaults so they win.
+          own=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("args", ""))' "${{ github.event.inputs.request }}")
           python3 lab/learn/stages.py plan --out stage/plan.json -- \
             --games 1600 --sims 100 --agent pmcts --settle 60 --policy --hidden 64 --warm --human lab/learn/human.rbv3 --threads 4 $extra \
-            --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 20 --buffer 3 --epochs 6
+            --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 20 --buffer 3 --epochs 6 $own
           echo "track=$track" >> "$GITHUB_OUTPUT"
           echo "tasks=$(python3 -c 'import json; print(json.dumps(json.load(open("stage/plan.json"))["tasks"]))')" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4

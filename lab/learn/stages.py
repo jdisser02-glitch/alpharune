@@ -221,12 +221,13 @@ def cmd_selfplay(args, _):
     for k, (d1, d2) in enumerate(pairs):
         if k % args.shards != args.shard:
             continue
-        me = L.bot(current)
+        me = L.bot(current, getattr(a, "selfplay_sims", 0) or None)
         if league[k] is None:
             L.batch(d1, d2, me, me, PER_PAIR, seed_base(it, "selfplay", k), out)
             continue
         opp, seat = league[k]
-        other = L.material_bot() if opp == loop.MATERIAL else L.bot(opp)
+        sp = getattr(a, "selfplay_sims", 0) or None
+        other = L.material_bot(sp) if opp == loop.MATERIAL else L.bot(opp, sp)
         a1, a2 = (me, other) if seat == 1 else (other, me)
         w1, w2 = L.batch(d1, d2, a1, a2, PER_PAIR, seed_base(it, "selfplay", k), out, value_player=seat)
         m = met.setdefault(opp, {"games": 0, "wins": 0})
@@ -241,7 +242,8 @@ def selfplay_specialist(args, plan, a, L, out, games):
     """A specialist's self-play: the current specialist on one of its legend's decks against a jury deck
     piloted by pilot() (only the specialist's decisions recorded), and --spec-mirror of the pairs in the
     legend's mirror against itself (both seats recorded)."""
-    s, it, me = spec(a), plan["it"], L.bot(plan["current"])
+    sp = getattr(a, "selfplay_sims", 0) or None    # deeper search for the recorded games only
+    s, it, me = spec(a), plan["it"], L.bot(plan["current"], sp)
     rng = random.Random(a.seed * 31 + it)
     t0, met = time.time(), {}
     for k in range(max(1, games // PER_PAIR)):
@@ -252,7 +254,7 @@ def selfplay_specialist(args, plan, a, L, out, games):
         if mirror:
             L.batch(legend_deck, s["mirror"], me, me, PER_PAIR, seed, out)
             continue
-        opp = L.bot(pilot(plan, opp_deck))
+        opp = L.bot(pilot(plan, opp_deck), sp)
         seat = 1 + (k // args.shards) % 2
         d1, d2, a1, a2 = (legend_deck, opp_deck, me, opp) if seat == 1 else (opp_deck, legend_deck, opp, me)
         w1, w2 = L.batch(d1, d2, a1, a2, PER_PAIR, seed, out, value_player=seat)
@@ -516,8 +518,12 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
         base = next((r.get("human_legend", {}).get("top1") for r in reversed(ladder.get("iterations", []))
                      if r.get("accepted") and r.get("human_legend")), None)
         if base is not None and hl.get("top1") is not None:
-            human_ok = hl["top1"] >= base - a.spec_human_margin
-            hl.update(base_top1=base, ok=human_ok)
+            # A drop counts only beyond the noise of two agreement rates on this many held-out rows
+            # (95%, unpaired: conservative), and never less than --spec-human-margin.
+            noise = 1.96 * math.sqrt(2 * base * (1 - base) / hl["rows"])
+            tol = max(a.spec_human_margin, noise)
+            human_ok = hl["top1"] >= base - tol
+            hl.update(base_top1=base, tolerance=round(tol, 4), ok=human_ok)
     accepted = mirror_ok and panel_ok and human_ok
     row["net"] = cand
     row["accepted"] = accepted
