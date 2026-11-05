@@ -121,6 +121,13 @@ SPECIALISTS = {
                          _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
                          _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
+    "ziggs": {"legend": "Ziggs",
+              "decks": ["lab/decks/meta/community_2026-11-05/01_lavenchie_ziggs.txt"],
+              "jury": [_RIVEN_BEST,
+                       _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                       _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                       _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                       _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]},
 }
 for _s in SPECIALISTS.values():
     _s.setdefault("mirror", _s["decks"][0])
