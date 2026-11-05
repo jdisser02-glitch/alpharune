@@ -1,0 +1,68 @@
+{
+ "description": "Imitation loops (lab/learn/imitate.py, 5 Nov morning, one core each): agreement with the legend's human RiftLite moves, held-out by game (leave-one-game-out) and on the games learned, then play tests of the Riven nets (Riven best list) against the Kennen and Evelynn specialists, 100 games each, seats swapped, sims 50. Caveat: the start nets had seen part of these human games in training, so their held-out agreement is optimistic; the imitation nets were trained with an old, small self-play file as value anchor (data/learn/iter_039.rbvd), which may have hurt their value head.",
+ "agreement": {
+  "riven": {
+   "games": 8,
+   "decisions": 242,
+   "start": "net_164_v3",
+   "start_held_out": 0.483,
+   "lr3e-4": {
+    "held_out": 0.508,
+    "learned": 0.628
+   },
+   "lr1e-3": {
+    "held_out": 0.533,
+    "learned": 0.669
+   },
+   "memorise_lr1e-3": {
+    "held_out_by_epochs": {
+     "2": 0.5,
+     "4": 0.512,
+     "8": 0.517,
+     "16": 0.492,
+     "32": 0.479
+    },
+    "learned": 0.967
+   }
+  },
+  "evelynn": {
+   "games": 15,
+   "start": "spec_evelynn_005_v3",
+   "start_held_out": 0.594,
+   "held_out_by_epochs": {
+    "1": 0.554,
+    "2": 0.559,
+    "4": 0.557,
+    "8": 0.542,
+    "16": 0.522
+   },
+   "learned": 0.728
+  },
+  "ziggs": {
+   "games": 16,
+   "start": "net_164_v3",
+   "start_held_out": 0.607,
+   "held_out_by_epochs": {
+    "1": 0.589,
+    "2": 0.574,
+    "4": 0.55,
+    "8": 0.536,
+    "16": 0.533
+   },
+   "learned": 0.678
+  }
+ },
+ "play_riven_wins_of_100": {
+  "vs_kennen_specialist": {
+   "net_164_v3": 66,
+   "imitation_lr1e-3": 50,
+   "imitation_memorised": 33
+  },
+  "vs_evelynn_specialist": {
+   "net_164_v3": 37,
+   "imitation_lr1e-3": 35,
+   "imitation_memorised": 18
+  }
+ },
+ "conclusion": "Imitating the human games through (97% of their moves) generalises no better than 4-8 epochs and plays far worse; imitation alone with 8-30 games per legend does not make a stronger bot. It stays a mild term inside the specialists' training, its weight evolved by the population (spec_human_weight)."
+}
