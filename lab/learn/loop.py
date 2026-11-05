@@ -36,6 +36,7 @@ usage: loop.py [--iterations 3] [--games 200] [--sims 30] [--threads N] [--agent
                [--policy [--human data/learn/human.rbv3] [--human-weight 0.3]]
 """
 import argparse
+import hashlib
 import datetime as dt
 import json
 import math
@@ -488,19 +489,23 @@ def train_candidate(a, it, current, row, suffix=""):
 
 def specialist_human_files(a):
     """[human_<legend>.rbv3, human_others_<legend>.rbv3] split from the shared human data for the current
-    specialist (lab/tools/split_human_by_legend.py, written once into DATA/human), or None when the legend has
+    specialist (lab/tools/split_human_by_legend.py into DATA/human, again whenever the shared data changes), or None when the legend has
     no human decision."""
     src, summary = Path(a.human), LEARN / "human.json"
     if not TRACK or not src.exists() or not summary.exists():
         return None
     out = DATA / "human"
     own, rest = out / f"human_{TRACK}.rbv3", out / f"human_others_{TRACK}.rbv3"
-    if not own.exists():
+    # DATA is cached between runs: split again whenever the shared human data changes (new Play games).
+    stamp = out / "source.sha1"
+    digest = hashlib.sha1(src.read_bytes() + summary.read_bytes()).hexdigest()
+    if not own.exists() or not stamp.exists() or stamp.read_text().strip() != digest:
         r = subprocess.run([sys.executable, str(ROOT / "lab" / "tools" / "split_human_by_legend.py"), "--data", str(src),
                             "--summary", str(summary), "--out-dir", str(out), "--min", "50"], capture_output=True, text=True)
         if r.returncode != 0:     # train on the shared human data rather than fail the iteration
             print(f"human split failed, training without the legend's own human weight:\n{r.stderr[-800:]}", flush=True)
             return None
+        stamp.write_text(digest)
     return [str(own), str(rest)] if own.exists() and rest.exists() else None
 
 
