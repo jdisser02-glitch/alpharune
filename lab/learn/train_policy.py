@@ -110,6 +110,9 @@ def main(argv):
     ap.add_argument("--val-frac", type=float, default=0.1, help="share of self-play games held out")
     ap.add_argument("--human-val-frac", type=float, default=0.5, help="share of human games held out")
     ap.add_argument("--max-rows-per-epoch", type=int, default=400_000)
+    ap.add_argument("--keep", choices=["best", "last"], default="best",
+                    help="epoch kept: best on the held-out self-play games (default), or the last one (imitation loops "
+                         "that should learn the human moves through, imitate.py --memorise)")
     ap.add_argument("--init-value", default="", help="RBVN/RBPN whose first layer and value head initialise the net")
     a = ap.parse_args(argv)
     t_start = time.time()
@@ -413,7 +416,7 @@ def main(argv):
                  if ev_hu else ""), flush=True)
         # Model selection: value loss plus policy cross-entropy on the held-out self-play games.
         score = ev_va.get("val_loss", 0.0) + (ev_va.get("policy_ce") or 0.0)
-        if score < best[0]:
+        if score < best[0] or a.keep == "last":
             best = (score, [p_.copy() for p_ in params], ep + 1)
     params = best[1]
     print(f"kept epoch {best[2]}")

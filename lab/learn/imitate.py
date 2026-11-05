@@ -68,7 +68,8 @@ def agreement(net_path: Path, data_path: Path) -> tuple[float, int]:
 def train(out: Path, human: Path, a, epochs: int, init: str) -> None:
     cmd = [sys.executable, str(HERE / "train_policy.py"), str(out), str(a.anchor), "--human", str(human),
            "--human-weights", str(a.human_weight), "--human-val-frac", "0", "--human-repeat", str(a.repeat),
-           "--epochs", str(epochs), "--lr", str(a.lr), "--hidden", str(a.hidden), "--init-value", init]
+           "--epochs", str(epochs), "--lr", str(a.lr), "--hidden", str(a.hidden), "--init-value", init,
+           "--keep", "last" if a.memorise else "best"]
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         raise SystemExit(f"train_policy failed:\n{r.stderr[-1500:]}")
@@ -86,6 +87,9 @@ def main(argv):
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--human-weight", type=float, default=10.0)
     ap.add_argument("--repeat", type=int, default=8, help="times each human decision appears per epoch")
+    ap.add_argument("--memorise", action="store_true",
+                    help="keep the last epoch instead of the best on self-play: the net learns the human moves through, "
+                         "at the risk of playing worse elsewhere (the held-out rounds measure what is left of it)")
     a = ap.parse_args(argv)
 
     src = Path(a.human_dir) / f"human_{a.legend}.rbv3"
