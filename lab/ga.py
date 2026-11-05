@@ -161,6 +161,8 @@ class GA:
         self.pool = build_pool(spec, self.base, reg)
         self.rng = random.Random(int(spec.get("seed", 1)))
         self.max_copies = int(spec.get("max_copies", 3))
+        # "pool.caps": copies a player owns of a card (a collection), below the format's limit
+        self.caps = {k: int(v) for k, v in spec.get("pool", {}).get("caps", {}).items()}
         self.agent = riftlab.resolve_agent(spec.get("agent", "random"))
         self.opp_agent = riftlab.resolve_agent(spec.get("opp_agent", self.agent))
         self.threads = int(spec.get("threads", os.cpu_count() or 1))
@@ -178,7 +180,16 @@ class GA:
         self.test_id = f"{self.started.strftime('%Y%m%d-%H%M%S')}-{spec['name']}"
 
     # ── lists ────────────────────────────────────────────────────────────────
+    def cap(self, name: str) -> int:
+        return min(self.max_copies, self.caps.get(name, self.max_copies))
+
+    def opp_agent_of(self, o: dict) -> str:
+        """An opponent's own agent (e.g. its legend's specialist), else the spec's opp_agent."""
+        return riftlab.resolve_agent(o["agent"]) if o.get("agent") else self.opp_agent
+
     def legal(self, main: dict) -> bool:
+        if any(v > self.cap(k) for k, v in main.items()):
+            return False
         d = dict(self.base)
         d["maindeck"] = collections.OrderedDict((k, v) for k, v in main.items() if v > 0)
         return not riftlab.validate(d, self.reg)
@@ -187,7 +198,7 @@ class GA:
         """One card out, one card in (a different name), within the copy limit."""
         m = dict(main)
         outs = [k for k, v in m.items() if v > 0]
-        ins = [k for k in self.pool if m.get(k, 0) < self.max_copies]
+        ins = [k for k in self.pool if m.get(k, 0) < self.cap(k)]
         for _ in range(40):
             o, i = self.rng.choice(outs), self.rng.choice(ins)
             if o == i:
@@ -225,7 +236,7 @@ class GA:
                 if child[k] == 0:
                     del child[k]
             else:
-                k = self.rng.choice([k for k in names if child.get(k, 0) < self.max_copies])
+                k = self.rng.choice([k for k in names if child.get(k, 0) < self.cap(k)])
                 child[k] = child.get(k, 0) + 1
         return child if sum(child.values()) == target and self.legal(child) else dict(a)
 
@@ -268,11 +279,12 @@ class GA:
         return rate - 1.96 * se
 
     def fingerprint(self) -> dict:
-        nets = sorted(set(re.findall(r"eval=(?:policy|net):([^,]+)", f"{self.agent} {self.opp_agent}")))
+        agents = " ".join([self.agent, self.opp_agent] + [self.opp_agent_of(o) for o in self.opponents])
+        nets = sorted(set(re.findall(r"eval=(?:policy|net):([^,]+)", agents)))
         return {"engine_src": engine_source(), "agent": self.agent, "opp_agent": self.opp_agent,
                 "nets": {n: file_hash(ROOT / n) for n in nets},
                 "base": [self.spec["base"], riftlab.deck_hash(ROOT / self.spec["base"])],
-                "opponents": [[o["label"], o["deck"], riftlab.deck_hash(ROOT / o["deck"]), o["weight"]] for o in self.opponents]}
+                "opponents": [[o["label"], o["deck"], riftlab.deck_hash(ROOT / o["deck"]), o["weight"], o.get("agent", "")] for o in self.opponents]}
 
     def evaluate(self, keys: list[str], gen: int, games: int, field: str = "results"):
         """Every list in `keys` plays `games` per opponent on the seeds of
@@ -287,8 +299,9 @@ class GA:
             for i, o in enumerate(self.opponents):
                 s1 = seed + 1000003 * gen + 10007 * i       # same seeds for every list of the generation
                 half = max(1, games // 2)
-                jobs.append((k, o, 1, (c["path"], o["deck"], self.agent, self.opp_agent, half, 1, s1)))
-                jobs.append((k, o, 2, (o["deck"], c["path"], self.opp_agent, self.agent, max(1, games - half), 1, s1 + 5003)))
+                oa = self.opp_agent_of(o)
+                jobs.append((k, o, 1, (c["path"], o["deck"], self.agent, oa, half, 1, s1)))
+                jobs.append((k, o, 2, (o["deck"], c["path"], oa, self.agent, max(1, games - half), 1, s1 + 5003)))
         with cf.ThreadPoolExecutor(max_workers=self.threads) as pool:
             futs = {pool.submit(riftlab.play_batch, *args): (k, o, seat) for k, o, seat, args in jobs}
             for f in cf.as_completed(futs):

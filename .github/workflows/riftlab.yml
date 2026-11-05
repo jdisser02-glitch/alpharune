@@ -36,7 +36,8 @@ jobs:
   run:
     if: github.event_name != 'workflow_dispatch' || (!endsWith(github.event.inputs.request, 'train.json') && !endsWith(github.event.inputs.request, 'train_parallel.json') && !contains(github.event.inputs.request, 'train_spec_'))
     concurrency:
-      group: riftlab-${{ github.ref }}
+      # one queue per request, so several dispatched tests run side by side on their own machines
+      group: riftlab-${{ github.ref }}-${{ github.event.inputs.request || 'push' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 350
@@ -243,8 +244,15 @@ jobs:
     outputs:
       tasks: ${{ steps.plan.outputs.tasks }}
       track: ${{ steps.plan.outputs.track }}
+      paused: ${{ steps.pause.outputs.paused }}
     steps:
       - uses: actions/checkout@v4
+      - name: Training paused?
+        id: pause
+        run: |
+          # lab/learn/PAUSE on the branch stops every training chain at its next iteration (runners go to deck tests);
+          # the chains are dispatched again (chain=N) when it is removed.
+          if [ -f lab/learn/PAUSE ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; echo "paused: $(cat lab/learn/PAUSE)"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
       - name: Restore the engine binary
         id: bin
         uses: actions/cache@v4
@@ -296,6 +304,7 @@ jobs:
 
   p_selfplay:
     needs: p_plan
+    if: needs.p_plan.outputs.paused != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
