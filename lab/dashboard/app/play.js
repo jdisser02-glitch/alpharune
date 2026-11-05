@@ -10,7 +10,7 @@ import { runtime, data, esc, $, $$, store, sleep, card, cardByName, cardImg, por
          empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural, bestVariantPath } from "./lib.js";
 
 const CSS = new URL("./play.css", import.meta.url).href;
-const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "search", autopay: true };
+const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "search", autopay: true, training: true };
 /* Bot presets: what rb_new_game's bot spec accepts is "greedy[:det=<redeals>,budget=<ms>,steps=<n>,wide=<n>]" or "random". */
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
@@ -322,7 +322,7 @@ async function start() {
     const me = deckByPath(c.me), bot = deckByPath(c.bot);
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
-    G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, decisions: [], notes: [] };
+    G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, training: G.cfg.training !== false, decisions: [], notes: [] };
     G.saved = null; G.played = []; G.savedAt = 0; G.botStory = []; G.chainTargets = []; G.lastSig = null; clearShow();
     Object.assign(G, { st, stage: "playing", busy: false, thinking: false, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1, result: null, error: null,
                        tally: { 1: { conquer: 0, hold: 0, effect: 0 }, 2: { conquer: 0, hold: 0, effect: 0 } } });
@@ -445,6 +445,7 @@ function drawSetup() {
         <div class="field">Bot level<div class="segmented" role="group" aria-label="bot level">${Object.entries(LEVELS).map(([k, v]) => `<button type="button" data-level="${k}" aria-pressed="${c.level === k}">${esc(v.label)}</button>`).join("")}</div><span class="f-help" id="vp-level-help">${esc(LEVELS[c.level].help)}</span></div>
         <label class="f">Seed<input type="text" class="seed" id="vp-seed" value="${esc(c.seed)}" placeholder="random" inputmode="numeric" autocomplete="off"><span class="f-help">The same seed with the same decks and seat replays the same shuffle.</span></label>
         <div class="field">Rune costs<label class="switch"><input type="checkbox" id="vp-autopay" ${c.autopay ? "checked" : ""}><span>Pay automatically</span></label><span class="f-help">The engine pays rune by rune. On, those steps are answered for you; off, you choose which runes to exhaust.</span></div>
+        <div class="field">Training game<label class="switch"><input type="checkbox" id="vp-training" ${c.training !== false ? "checked" : ""}><span>Teach the bot from my moves</span></label><span class="f-help">On, your decisions in this game join the human games the bot learns to imitate, for the specialist of the legend you play. Turn it off for a test game or a game you played carelessly.</span></div>
       </div>
     </section>
     <section class="panel ${loading ? "raised" : ""}">
@@ -523,6 +524,7 @@ function wireSetup() {
   });
   $("#vp-seed", root).addEventListener("change", e => { c.seed = e.target.value.trim(); save(); });
   $("#vp-autopay", root).addEventListener("change", e => { c.autopay = e.target.checked; save(); });
+  $("#vp-training", root).addEventListener("change", e => { c.training = e.target.checked; save(); });
 }
 
 // ── game ────────────────────────────────────────────────────────────────────

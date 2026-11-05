@@ -1,4 +1,5 @@
 #include "effect_executor.h"
+#include "core/portable_random.h"
 
 #include "cards/card.h"
 #include "cards/card_registry.h"
@@ -438,7 +439,7 @@ bool EffectExecutor::burnOut(PlayerId player) {
     }
     ps.trash.clear();
     if (rng_) {
-        std::shuffle(ps.main_deck.begin(), ps.main_deck.end(), *rng_);
+        portableShuffle(ps.main_deck.begin(), ps.main_deck.end(), *rng_);
     }
     PlayerId opp_id = opponent(player);
     auto& opp_ps = state_.player(opp_id);
@@ -932,7 +933,7 @@ void EffectExecutor::recycleCards(PlayerId /*effect_controller*/,
         }
     }
     if (rng_) {
-        std::shuffle(shuffleable.begin(), shuffleable.end(), *rng_);
+        portableShuffle(shuffleable.begin(), shuffleable.end(), *rng_);
     }
     auto recycle_one = [&](GameObjectId cid) {
         auto& obj = state_.getObject(cid);

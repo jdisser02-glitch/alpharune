@@ -1,4 +1,5 @@
 #include <cstdio>
+#include "core/portable_random.h"
 #include <cstdlib>
 #include "game_engine.h"
 #include "cards/card.h"
@@ -496,8 +497,7 @@ void GameEngine::setupBattlefields(const DeckSubmission& deck1,
 
 void GameEngine::determineTurnOrder() {
     // Random coin flip for first player (CR 116)
-    std::uniform_int_distribution<int> coin(0, 1);
-    state_.turn.turn_player = coin(rng_) == 0 ? PlayerId::Player1 : PlayerId::Player2;
+    state_.turn.turn_player = portableUniform(rng_, 0, 1) == 0 ? PlayerId::Player1 : PlayerId::Player2;
     state_.turn.starting_player = state_.turn.turn_player;
     state_.turn.turn_number = 0;
 
@@ -2713,7 +2713,7 @@ void GameEngine::executeMulligan(const Intent& intent) {
     }
 
     // Recycle set-aside cards to bottom of deck in random order (CR 118.3)
-    std::shuffle(set_aside.begin(), set_aside.end(), rng_);
+    portableShuffle(set_aside.begin(), set_aside.end(), rng_);
     for (auto card_id : set_aside) {
         state_.getObject(card_id).zone = ZoneType::MainDeck;
         ps.main_deck.insert(ps.main_deck.begin(), card_id); // bottom = front
@@ -5958,12 +5958,12 @@ void GameEngine::channelRunes(PlayerId player, int count) {
 
 void GameEngine::shuffleDeck(PlayerId player) {
     auto& deck = state_.player(player).main_deck;
-    std::shuffle(deck.begin(), deck.end(), rng_);
+    portableShuffle(deck.begin(), deck.end(), rng_);
 }
 
 void GameEngine::shuffleRuneDeck(PlayerId player) {
     auto& deck = state_.player(player).rune_deck;
-    std::shuffle(deck.begin(), deck.end(), rng_);
+    portableShuffle(deck.begin(), deck.end(), rng_);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

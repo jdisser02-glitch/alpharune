@@ -13,6 +13,12 @@
 /// Output: <out>/game_1.json (frames in the replay format, with human_choice /
 /// bot_choice / agree / lines), <out>/summary.json, <out>/deck_p1.txt and
 /// deck_p2.txt. lab/tools/review_games.py drives it and indexes the result.
+///
+/// With --export-features <file>, every real decision of the human is also
+/// appended to <file> as an imitation record (source = human, the format
+/// lab/tools/build_human_dataset.py writes for RiftLite games), labelled with
+/// the game's result. --sims 0 skips the bot and only exports
+/// (lab/tools/export_play_games.py, the Play tab's training games).
 #include "agents/ismcts_search.h"
 #include "agents/search_options.h"
 #include "cards/card_registry.h"
@@ -21,6 +27,9 @@
 #include "engine/determinize.h"
 #include "engine/game_engine.h"
 #include "io/decision_log.h"
+#include "ml/feature_extractor.h"
+#include "ml/value_net.h"
+#include "openspiel/action_vocab.h"
 #include "rules/deck_validator.h"
 
 #include <boost/program_options.hpp>
@@ -114,7 +123,9 @@ int main(int argc, char** argv) {
         ("eval", po::value<std::string>()->default_value("policy:lab/learn/nets/net_022.rbpn"), "net for the reviewing bot (net:<rbvn> or policy:<rbpn>)")
         ("worlds", po::value<int>()->default_value(8), "determinizations per decision")
         ("rollouts", po::value<int>()->default_value(0), "games per line at each disagreement (0 = none)")
-        ("rollout-sims", po::value<int>()->default_value(24), "simulations per move inside the rollouts");
+        ("rollout-sims", po::value<int>()->default_value(24), "simulations per move inside the rollouts")
+        ("export-features", po::value<std::string>()->default_value(""),
+         "append the human's real decisions to this file as imitation records (RBV3/RBV4, source = human)");
     po::variables_map vm;
     try {
         po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -165,14 +176,26 @@ int main(int argc, char** argv) {
     std::map<std::string, std::pair<int, int>> by_kind;
     json disagreements = json::array();
     double bot_seconds = 0;
+    int remapped = 0;
+    const std::string export_path = vm["export-features"].as<std::string>();
+    std::vector<ml::ValueSample> export_samples;
 
     StepResult step = engine.beginGame(deck1, deck2, seed);
     size_t k = 0;
     while (step.kind == StepKind::NeedDecision) {
         if (k >= decisions.size()) { stop_reason = "record ended before the game"; break; }
         const json& d = decisions[k];
-        const int idx = d.value("chosen", -1);
+        int idx = d.value("chosen", -1);
         const auto& legal = step.legal;
+        // The browser's engine lists some options in another order (it walks the
+        // board's objects in its own hash order), so the record's text decides
+        // when the option at the recorded index says something else.
+        const std::string want = d.contains("text") && d["text"].is_string() ? d["text"].get<std::string>() : "";
+        if (!want.empty() && (idx < 0 || idx >= static_cast<int>(legal.size()) ||
+                              describeIntent(legal[idx], engine.state(), &db) != want)) {
+            for (size_t j = 0; j < legal.size(); ++j)
+                if (describeIntent(legal[j], engine.state(), &db) == want) { idx = static_cast<int>(j); ++remapped; break; }
+        }
         if (idx < 0 || idx >= static_cast<int>(legal.size())) {
             stop_reason = "desync at decision " + std::to_string(k) + ": chosen " + std::to_string(idx) + " of " + std::to_string(legal.size()) + " options";
             break;
@@ -188,7 +211,17 @@ int main(int argc, char** argv) {
         if (human) {
             ++human_decisions;
             if (!real) ++trivial;
-            else {
+            if (real && !export_path.empty()) {
+                ml::ValueSample sample;
+                sample.who = me;
+                sample.turn = st.turn.turn_number;
+                sample.decision_index = st.decision_index;
+                sample.features = ml::sparsify(ml::extractStateFeatures(st, me, db));
+                ml::setHumanTarget(sample, ::riftbound::openspiel::encodeActions(legal, st), idx);
+                sample.flags |= ml::kPolicyFlagCleanBoundary;
+                if (sample.source == ml::kPolicyHuman) export_samples.push_back(std::move(sample));
+            }
+            if (real && sims > 0) {
                 const auto t0 = std::chrono::steady_clock::now();
                 bot.setDecisionHistory(&history);
                 const Intent c = bot.selectAction(st, legal);
@@ -205,7 +238,7 @@ int main(int argc, char** argv) {
         log.record(st, legal, legal[idx], shares, std::move(taken));
         json extra = {{"human_known", true}, {"human_choice", idx}, {"clean_boundary", true},
                       {"kind", kindOf(legal[idx])}, {"who", human ? "me" : "bot"}};
-        if (human && real) {
+        if (human && real && sims > 0) {
             const bool agree = bot_choice == idx;
             ++compared; if (agree) ++agreed;
             auto& bk = by_kind[kindOf(legal[idx])]; bk.first++; if (agree) bk.second++;
@@ -233,6 +266,8 @@ int main(int argc, char** argv) {
         step = engine.applyChoice(idx);
         ++k;
     }
+    if (step.kind != StepKind::NeedDecision && k < decisions.size() && stop_reason == "game over")
+        stop_reason = "desync: the game ended at decision " + std::to_string(k) + " of " + std::to_string(decisions.size());
     const GameState& fin = engine.state();
     const int winner = fin.winner == PlayerId::Player1 ? 1 : fin.winner == PlayerId::Player2 ? 2 : 0;
     const std::vector<std::string> players = seat == 1 ? std::vector<std::string>{"You", "Bot"} : std::vector<std::string>{"Bot", "You"};
@@ -244,6 +279,16 @@ int main(int argc, char** argv) {
                    {"scores", {fin.players[0].score, fin.players[1].score}}, {"seed", seed}, {"source", "play"},
                    {"source_game", doc.value("id", "")}, {"turns", fin.turn.turn_number}, {"uuid", ""}, {"winner", winner},
                    {"play_level", doc.value("level", "")}, {"play_bot_spec", doc.value("bot_spec", "")}};
+    if (!export_path.empty() && fin.game_over && stop_reason == "game over" && !export_samples.empty()) {
+        // The game id hashes the Play record's id, so a game's rows stay together in the human hold-out.
+        uint32_t gid = 2166136261u;
+        for (unsigned char c : "play:" + doc.value("id", std::string("game"))) { gid ^= c; gid *= 16777619u; }
+        ml::appendValueRecords(export_path, ml::kStateFeatureDim, export_samples, fin.winner,
+                               fin.players[0].score, fin.players[1].score, fin.mode.victory_score, gid);
+        std::cout << "exported " << export_samples.size() << " decisions to " << export_path << "\n";
+    } else if (!export_path.empty()) {
+        std::cout << "exported nothing: " << (fin.game_over ? "no real decision of yours" : "the game did not finish (" + stop_reason + ")") << "\n";
+    }
     if (fin.game_over) log.finishGame(fin, std::move(lines));
     log.finish(header, (out / "game_1.json").string());
 
@@ -260,11 +305,11 @@ int main(int argc, char** argv) {
                     {"players", players}, {"result", {{"engine_scores", {fin.players[0].score, fin.players[1].score}}, {"engine_winner", winner},
                                                       {"log_scores", {fin.players[0].score, fin.players[1].score}}, {"reason", fin.game_over_reason},
                                                       {"turns", fin.turn.turn_number}}},
-                    {"seed", seed}, {"source", "play"}, {"stop_reason", stop_reason}, {"rollouts", rollouts},
+                    {"seed", seed}, {"source", "play"}, {"stop_reason", stop_reason}, {"rollouts", rollouts}, {"remapped_by_text", remapped},
                     {"timing", {{"bot_seconds", bot_seconds},
                                 {"seconds", std::chrono::duration<double>(std::chrono::steady_clock::now() - t_start).count()}}}};
     std::ofstream(out / "summary.json") << summary.dump(1) << "\n";
     std::cout << "reviewed " << k << " decisions, " << compared << " compared, " << agreed << " agree ("
-              << static_cast<int>(100 * rate + 0.5) << "%), " << disagreements.size() << " disagreements; " << stop_reason << "\n";
+              << static_cast<int>(100 * rate + 0.5) << "%), " << disagreements.size() << " disagreements, " << remapped << " option(s) matched by text; " << stop_reason << "\n";
     return 0;
 }
