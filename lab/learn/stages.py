@@ -68,7 +68,8 @@ VARIANTS = [
 # screen rates against variant 2's, on the same data, say whether that target helps.
 # Specialists evolve their training settings (population-based training): the first iteration tries these, every
 # later one keeps the settings whose candidate won the last screen and adds 3 mutations of them (learning rate x/÷2,
-# epochs ±1, the share of the search's value in the value target, 64 or 128 hidden units). A wider net starts as the
+# epochs ±1, the share of the search's value in the value target, the weight of the legend's human moves, 64 or 128
+# hidden units). A wider net starts as the
 # narrower one (train_policy.py widening), and a variant is never narrower than the current specialist.
 SPEC_SEED_VARIANTS = [
     {"epochs": 2, "lr": 3e-4},
@@ -76,7 +77,8 @@ SPEC_SEED_VARIANTS = [
     {"epochs": 3, "lr": 3e-4, "hidden": 128, "q_weight": 0.5},
     {"epochs": 1, "lr": 2e-4, "q_weight": 0.5},
 ]
-GENES = {"lr": (5e-5, 2e-3), "epochs": (1, 8), "q_weight": (0.0, 0.25, 0.5, 0.75), "hidden": (64, 128)}
+GENES = {"lr": (5e-5, 2e-3), "epochs": (1, 8), "q_weight": (0.0, 0.25, 0.5, 0.75), "hidden": (64, 128),
+         "spec_human_weight": (1.0, 3.0, 10.0)}
 
 
 def mutate(parent: dict, rng: random.Random, min_hidden: int) -> dict:
@@ -91,6 +93,8 @@ def mutate(parent: dict, rng: random.Random, min_hidden: int) -> dict:
             child["epochs"] = int(min(hi, max(lo, child.get("epochs", 2) + rng.choice([-1, 1]))))
         elif gene == "q_weight":
             child["q_weight"] = rng.choice([q for q in GENES["q_weight"] if q != child.get("q_weight", 0.0)])
+        elif gene == "spec_human_weight":   # how much the legend's own human moves weigh (imitation)
+            child["spec_human_weight"] = rng.choice([w for w in GENES["spec_human_weight"] if w != child.get("spec_human_weight", 3.0)])
         else:
             child["hidden"] = rng.choice([h for h in GENES["hidden"] if h >= min_hidden])
     return child
