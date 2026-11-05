@@ -10,7 +10,7 @@ The imitation set the training reads (lab/learn/human.rbv3 and its summary lab/l
 as the RiftLite games (lab/learn/human_riftlite.rbv3 / .json, made once from the current files) followed by
 the Play games, one summary entry per game with its legends, so split_human_by_legend.py hands each
 specialist the decisions of its legend's player. A game is used when it finished, replays to the end under
-the current engine, and was not marked "training": false in the Play tab.
+the current engine with the recorded winner, and was not marked "training": false in the Play tab.
 
     python3 lab/tools/export_play_games.py [--games lab/play_games] [--binary build/riftbound_review]
 """
@@ -73,6 +73,10 @@ def main(argv=None):
                                      env={**os.environ, "RIFTBOUND_ROOT": str(ROOT)})
                 m = re.search(r"exported (\d+) decisions", out.stdout)
                 rev = json.loads((tmp / gid / "summary.json").read_text()) if (tmp / gid / "summary.json").exists() else {}
+                won = (rev.get("result") or {}).get("engine_winner")
+                if m and won != (doc.get("result") or {}).get("winner"):
+                    m = None   # replayed to the end but another player won: the engine has changed under the game
+                    rev["stop_reason"] = f"replay winner P{won} differs from the recorded winner"
                 entry.update({"status": "ok" if m else "skipped", "rows": int(m.group(1)) if m else 0,
                               "stop_reason": rev.get("stop_reason") or (out.stderr.strip()[-300:] or out.stdout.strip()[-300:]),
                               "remapped_by_text": rev.get("remapped_by_text", 0), "legends": rev.get("legends", {}),
