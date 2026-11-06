@@ -1,0 +1,691 @@
+{
+ "id": "20261106-102503-riven-field-confirm-2",
+ "name": "riven-field-confirm-2",
+ "description": "Confirmation of the Riven field search: one list, 11 opponents weighted by Riven's real games, specialists piloting their legends, 200 games per opponent on the deals every list of this set plays (seed 3106).",
+ "started_utc": "2026-11-06T10:25:03+00:00",
+ "engine_commit": "7470ea6",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 200,
+ "threads": 4,
+ "seed": 3106,
+ "spec": {
+  "name": "riven-field-confirm-2",
+  "description": "Confirmation of the Riven field search: one list, 11 opponents weighted by Riven's real games, specialists piloting their legends, 200 games per opponent on the deals every list of this set plays (seed 3106).",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 200,
+  "review_games": 0,
+  "seed": 3106,
+  "decks": [
+   {
+    "deck": "decks/jeremy/riven_final.txt",
+    "label": "[ref] Jeremy's final list (his collection)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (zombro)",
+    "weight": 25.5,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+    "label": "Kai'Sa (Jason Tian)",
+    "weight": 19.1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+    "label": "Riven mirror (Orlando 1st)",
+    "weight": 19,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+    "label": "Akali (Sacramento 1st)",
+    "weight": 8.6,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt",
+    "label": "Rengar",
+    "weight": 8.5
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/06_sna1l_leblanc.txt",
+    "label": "LeBlanc",
+    "weight": 8.1
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/01_lks10_lillia.txt",
+    "label": "Lillia",
+    "weight": 7.2
+   },
+   {
+    "deck": "lab/decks/meta/s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt",
+    "label": "Vex",
+    "weight": 7.1
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Evelynn (Vegas)",
+    "weight": 6.1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+    "label": "Master Yi",
+    "weight": 5.8
+   },
+   {
+    "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+    "label": "Orianna (Xi'an 7th)",
+    "weight": 3.0
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "[ref] Jeremy's final list (his collection)",
+   "path": "decks/jeremy/riven_final.txt",
+   "hash": "c3941f5206",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.02,
+    "curve": {
+     "1": 5,
+     "2": 14,
+     "3": 8,
+     "4": 6,
+     "5": 4,
+     "6": 2,
+     "8": 1
+    },
+    "types": {
+     "unit": 21,
+     "gear": 3,
+     "spell": 16
+    },
+    "power_symbols": {
+     "chaos": 13,
+     "calm": 8
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Hidden": 5,
+     "Accelerate": 3,
+     "Reaction": 14,
+     "Deflect": 4,
+     "Tank": 1,
+     "Ganking": 3,
+     "Action": 5
+    },
+    "two_drops": 19,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Wind and Ghosts",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Pitiless Stalker",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Sanctum Conservator",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 2,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 25.5,
+     "games": 200,
+     "wins": 130,
+     "win_rate": 0.65,
+     "ci95": [
+      0.5816,
+      0.7127
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 65
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 65
+     },
+     "avg_turns": 13,
+     "wall_s": 467.3,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kennen-zombro",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 3106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 53106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 19.1,
+     "games": 200,
+     "wins": 115,
+     "win_rate": 0.575,
+     "ci95": [
+      0.5057,
+      0.6415
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 63
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 52
+     },
+     "avg_turns": 13,
+     "wall_s": 363.7,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 103106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 153106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven mirror (Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 19,
+     "games": 200,
+     "wins": 89,
+     "win_rate": 0.445,
+     "ci95": [
+      0.3778,
+      0.5143
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 44
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 45
+     },
+     "avg_turns": 13,
+     "wall_s": 363.3,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__riven-mirror-orlando-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 203106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__riven-mirror-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 253106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__riven-mirror-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 8.6,
+     "games": 200,
+     "wins": 156,
+     "win_rate": 0.78,
+     "ci95": [
+      0.7176,
+      0.8318
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 82
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 74
+     },
+     "avg_turns": 13,
+     "wall_s": 363.2,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 303106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 353106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rengar",
+     "opponent_deck": "lab/decks/meta/401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt",
+     "weight": 8.5,
+     "games": 200,
+     "wins": 137,
+     "win_rate": 0.685,
+     "ci95": [
+      0.6176,
+      0.7454
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 70
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 67
+     },
+     "avg_turns": 13,
+     "wall_s": 307.5,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__rengar",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 403106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__rengar/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 453106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__rengar/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "LeBlanc",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/06_sna1l_leblanc.txt",
+     "weight": 8.1,
+     "games": 200,
+     "wins": 64,
+     "win_rate": 0.32,
+     "ci95": [
+      0.2593,
+      0.3875
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 32
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 32
+     },
+     "avg_turns": 14,
+     "wall_s": 258.2,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__leblanc",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/06_sna1l_leblanc.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 503106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__leblanc/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/06_sna1l_leblanc.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 553106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__leblanc/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Lillia",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/01_lks10_lillia.txt",
+     "weight": 7.2,
+     "games": 200,
+     "wins": 120,
+     "win_rate": 0.6,
+     "ci95": [
+      0.5308,
+      0.6654
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 59
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 61
+     },
+     "avg_turns": 13,
+     "wall_s": 319.6,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__lillia",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/01_lks10_lillia.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 603106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__lillia/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/01_lks10_lillia.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 653106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__lillia/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Vex",
+     "opponent_deck": "lab/decks/meta/s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt",
+     "weight": 7.1,
+     "games": 200,
+     "wins": 98,
+     "win_rate": 0.49,
+     "ci95": [
+      0.4216,
+      0.5588
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 58
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 40
+     },
+     "avg_turns": 14,
+     "wall_s": 425.0,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__vex",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 703106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__vex/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 753106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__vex/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 6.1,
+     "games": 200,
+     "wins": 101,
+     "win_rate": 0.505,
+     "ci95": [
+      0.4363,
+      0.5735
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 47
+     },
+     "avg_turns": 13,
+     "wall_s": 305.5,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 803106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 853106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi",
+     "opponent_deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+     "weight": 5.8,
+     "games": 200,
+     "wins": 136,
+     "win_rate": 0.68,
+     "ci95": [
+      0.6125,
+      0.7407
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 71
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 65
+     },
+     "avg_turns": 13,
+     "wall_s": 301.6,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__master-yi",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 903106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__master-yi/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 953106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__master-yi/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 3.0,
+     "games": 200,
+     "wins": 157,
+     "win_rate": 0.785,
+     "ci95": [
+      0.723,
+      0.8363
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 75
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 82
+     },
+     "avg_turns": 13,
+     "wall_s": 316.6,
+     "replays": "lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 decks/jeremy/riven_final.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 1003106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 decks/jeremy/riven_final.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_020_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 1053106 --render-html off --web off --review-dir lab/replays/20261106-102503-riven-field-confirm-2/ref-jeremy-s-final-list-his-collection__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5789
+  }
+ ],
+ "finished_utc": "2026-11-06T11:28:14+00:00"
+}
