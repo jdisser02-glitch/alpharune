@@ -170,12 +170,23 @@ export function deckShort(p) {
   const d = deckByPath(p); if (!d) return String(p || "?").split("/").pop().replace(/\.txt$/, "");
   const m = deckPilot(d);
   if (m) return `${m.name} (${m.pilot})`;
-  if (d.path === bestVariantPath()) return "Highest single-test list (unconfirmed)";
+  if (d.path === bestVariantPath()) return bestName();
   if (d.path.startsWith("lab/variants/")) return d.path.split("/").pop().replace(/\.txt$/, "");
   return deckHero(d);
 }
 /** The optimiser's best-measured list: the variant whose 95% interval has the highest lower bound in any test. */
-export function bestVariantPath() { const r = variantRank(); let best = null, lo = -1; for (const [p, v] of r) if (v > lo) { lo = v; best = p; } return best; }
+export function bestVariantPath() {
+  const m = ((D && D.measured) || {}).list || {};
+  if (m.best && m.best.path) return m.best.path;      // the top list of the newest confirmation (build.py measured_status)
+  const r = variantRank(); let best = null, lo = -1; for (const [p, v] of r) if (v > lo) { lo = v; best = p; } return best;
+}
+/** How the best list stands against the newest confirmation's reference: "ties the reference (−0.6 points, [−3.9, +2.7])". */
+export function bestVerdict() {
+  const b = (((D && D.measured) || {}).list || {}).best; if (!b) return "";
+  const f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
+  return `${b.verdict} the reference (${f(b.diff)} points, [${f(b.ci95[0])}, ${f(b.ci95[1])}])${b.stale ? `, measured with ${b.net}, an older bot` : ""}`;
+}
+const bestName = () => { const b = (((D && D.measured) || {}).list || {}).best; return b ? (b.verdict === "beats" ? "Best measured list" : "Top measured list (not proven better)") : "Highest single-test list (unconfirmed)"; };
 /** Set codes → names (UNL stays a code: the engine's unlisted cards). */
 export const SETS = { OGN: "Origins", OGS: "Origins starter", SFD: "Spiritforged", VEN: "Vendetta", RAD: "Radiance" };
 export const setName = code => SETS[code] ? `${SETS[code]} (${code})` : String(code || "");

@@ -36,7 +36,7 @@ const name = d => variantChanges(d).length ? stem(d.path) : title(d);
 const ordinal = n => n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th");
 /** Short title for a tile or a heading: "Kennen (Dylan Sumner)", the changes of a generated variant, else "Ahri · ahri test". */
 function title(d) {
-  if (d.path === bestVariantPath()) return "Best list (provisional)";
+  if (d.path === bestVariantPath()) return deckShort(d.path);
   if (pilotOf(d)) return deckShort(d.path);
   const ch = variantChanges(d); if (ch.length) return ch.map(([n, k]) => `${k > 0 ? "+" : "−"}${Math.abs(k)} ${n}`).join(", ");
   return `${heroName(d)} · ${stem(d.path).replace(/_/g, " ")}`;

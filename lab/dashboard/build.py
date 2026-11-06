@@ -73,12 +73,18 @@ def measured_status(ladder: dict) -> dict:
         res = ROOT / cm.get("result", "")
         agent = json.loads(res.read_text()).get("agent", "") if cm.get("result") and res.is_file() else ""
         net = cm.get("net") or net_of(agent)     # realism.py files name the Riven pilot's net directly
-        within = sum(1 for r in rows if r.get("verdict") == "within")
+        # Strictly inside the real players' 95% interval (compare_matrix's "within" verdict allows 5 points of slack).
+        def inside(r):
+            lo, hi = (r.get("real_ci95") or [None, None])[:2]
+            return lo is not None and r.get("sim") is not None and lo <= r["sim"] <= hi
+        within = sum(1 for r in rows if inside(r))
+        within_slack = sum(1 for r in rows if r.get("verdict") == "within")
         in_use = {current} | {Path(json.loads(f.read_text()).get("current_net") or "").stem
                               for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
         out["credibility"] = {"file": cms[-1].name, "net": net, "current": current, "stale": bool(net) and net not in in_use,
-                              "within": within, "total": len(rows), "rate": round(within / len(rows), 3) if rows else None,
-                              "far": sorted({f"{r['legend']} vs {r['opponent_legend']}" for r in rows if r.get("verdict") != "within"})}
+                              "within": within, "within_slack": within_slack, "total": len(rows),
+                              "rate": round(within / len(rows), 3) if rows else None,
+                              "far": sorted({f"{r['legend']} vs {r['opponent_legend']}" for r in rows if not inside(r)})}
         mx = ROOT / cm.get("matrix", "")
         if mx.exists():
             real = json.loads(mx.read_text()).get("matchups", {}).get("Riven", {})
@@ -119,11 +125,32 @@ def measured_status(ladder: dict) -> dict:
     # cetner-confirm). Each list's weighted rate, and each list minus the first (the reference) with a 95%
     # interval (normal approximation, matchups independent, weights normalised).
     comparisons = []
+    items = []      # (name, result): multi-list tests as they are, single-list ones grouped by the deals they played
+    groups = {}
     for f in sorted((LAB / "results").glob("*.json")):
         r = json.loads(f.read_text())
         decks = r.get("decks") or []
-        if r.get("ga") or len(decks) < 2:
+        if r.get("ga") or not decks:
             continue
+        if len(decks) >= 2:
+            items.append((f.stem, r))
+            continue
+        sp = r.get("spec") or {}
+        key = (r.get("seed"), r.get("games_per_matchup"), r.get("agent"),
+               tuple(sorted((o.get("deck"), o.get("agent", "")) for o in sp.get("opponents", []))))
+        if key[0] is not None and sp.get("opponents"):
+            groups.setdefault(key, []).append((f.stem, r))
+    for key, members in groups.items():
+        if len(members) < 2:
+            continue
+        decks = [m[1]["decks"][0] for m in members]
+        # the reference: the Sacramento list when the set has it, else the first list
+        decks.sort(key=lambda d: 0 if d.get("path") == "decks/riven_sacramento.txt" else 1)
+        merged = dict(members[-1][1], decks=decks)
+        items.append((f"{members[0][0]} + {len(members) - 1} more (seed {key[0]})", merged))
+    items.sort(key=lambda it: str(it[1].get("started_utc") or ""))
+    for stem, r in items:
+        decks = r.get("decks") or []
         opp = lambda d: {m.get("opponent_deck") or m.get("opponent"): m for m in d.get("matchups", [])}
         base = opp(decks[0])
         if not base or any(set(opp(d)) != set(base) for d in decks[1:]):
@@ -142,7 +169,7 @@ def measured_status(ladder: dict) -> dict:
             rows.append({"label": d.get("label"), "path": d.get("path"), "rate": round(rate, 4), "diff": round(diff, 4),
                          "ci95": [round(diff - half, 4), round(diff + half, 4)]})
         legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
-        comparisons.append({"result": f.stem, "net": net_of(r.get("agent", "")), "reference": decks[0].get("label"),
+        comparisons.append({"result": stem, "net": net_of(r.get("agent", "")), "reference": decks[0].get("label"),
                             "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends})
     for c in comparisons:
         for row in c["lists"]:
@@ -153,7 +180,19 @@ def measured_status(ladder: dict) -> dict:
                           for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
     stale = [c for c in confirmed if c.get("net") not in in_use]
     confirmed = [c for c in confirmed if c.get("net") in in_use]
-    out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:]}
+    # The best measured list: the top-rated list of the newest comparison (lists tagged "[owned]" are the ones
+    # Jeremy can build; prefer them), with its difference against the reference and whether it is proven.
+    best = None
+    if comparisons:
+        c = comparisons[-1]
+        pool = [x for x in c["lists"] if "[owned]" in (x.get("label") or "")] or c["lists"]
+        if pool:
+            top = max(pool, key=lambda x: x["rate"])
+            lo, hi = top["ci95"]
+            best = {**top, "result": c["result"], "reference": c["reference"], "reference_rate": c["reference_rate"],
+                    "net": c["net"], "stale": c["net"] not in in_use,
+                    "verdict": "beats" if lo > 0 else "trails" if hi < 0 else "ties"}
+    out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:
         mx = ROOT / json.loads(cms[-1].read_text()).get("matrix", "")
