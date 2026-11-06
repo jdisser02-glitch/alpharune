@@ -245,6 +245,7 @@ jobs:
       tasks: ${{ steps.plan.outputs.tasks }}
       track: ${{ steps.plan.outputs.track }}
       paused: ${{ steps.pause.outputs.paused }}
+      runners: ${{ steps.pause.outputs.runners }}
     steps:
       - uses: actions/checkout@v4
       - name: Training paused?
@@ -256,6 +257,8 @@ jobs:
           spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
           f=lab/learn/PAUSE; [ -n "$spec" ] && [ -f "lab/learn/specialists/$spec/PAUSE" ] && f="lab/learn/specialists/$spec/PAUSE"
           if [ -f "$f" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; echo "paused ($f): $(cat "$f")"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+          # A track's share of the 20 runners (field "runners" of its request): every matrix of the run is capped at it.
+          echo "runners=$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1])).get("runners", 20)))' "${{ github.event.inputs.request }}")" >> "$GITHUB_OUTPUT"
       - name: Restore the engine binary
         id: bin
         uses: actions/cache@v4
@@ -312,6 +315,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: true
+      max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     steps:
@@ -342,6 +346,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: true
+      max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
         variant: [0, 1, 2, 3]     # lab/learn/stages.py VARIANTS: a population of training settings
     steps:
@@ -391,6 +396,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       fail-fast: true
+      max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
         variant: [0, 1, 2, 3]
         block: [0, 1, 2, 3, 4, 5]
@@ -461,6 +467,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: true
+      max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
         task: ${{ fromJSON(needs.p_plan.outputs.tasks) }}
     steps:
