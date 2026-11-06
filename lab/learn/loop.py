@@ -99,7 +99,11 @@ SPECIALISTS = {
     "riven": {"legend": "Riven",
               "decks": [GATE_DECK, _RIVEN_BEST,
                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
-                        _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt"],
+                        _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt",
+                        # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
+                        # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
+                        "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
+                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt"],
               "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
                        _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
                        _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
