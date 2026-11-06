@@ -41,7 +41,8 @@ TEST_F(PerTurnTest, ShadowWatcher_EntersReadyIfFriendlyDiedInBeginning) {
 }
 
 TEST_F(PerTurnTest, FrigidJewel_BuffsAFriendlyUnitOnSecondDraw) {
-    auto jewel = addUnit(P1, 636, 0, 0);   // gear stand-in (skipped as target)
+    auto jewel = addUnit(P1, 636, 0, 0);
+    state.getObject(jewel).card_type = CardType::Gear;   // the gear itself is no target
     auto unit = addUnit(P1, 1, 4, 0);
     state.player(P1).draws_this_turn = 2;
     int before = state.getObject(unit).current_might;

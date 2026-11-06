@@ -47,7 +47,7 @@ private:
         for (auto cid : ctx.state.player(ctx.controller).hand)
             if (ctx.state.objectExists(cid) && ctx.state.getObject(cid).isGear()) return true;
         for (const auto& [id, obj] : ctx.state.objects)
-            if (obj.isGear() && obj.controller == ctx.controller && obj.location.has_value())
+            if (obj.isAnyGear() && obj.controller == ctx.controller && obj.location.has_value())
                 return true;
         return false;
     }

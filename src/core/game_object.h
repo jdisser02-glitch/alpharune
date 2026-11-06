@@ -223,6 +223,14 @@ struct GameObject {
     // which is the per-battlefield variant).
     bool cant_move_to_base = false;
 
+    // ── Unit gear (Lady of Clockwork 1089, CR 143.5 / 435.1.h) ──
+    // "It becomes a unit gear": a gear that is also a unit. A GameObject has
+    // one card_type, so a unit gear has card_type Unit (it moves, fights and
+    // dies as a unit) and this flag, which keeps it a gear for effects that
+    // look for or count gear (isAnyGear). Set and cleared by the effect that
+    // made it a unit.
+    bool unit_gear = false;
+
     // ── Take-control reversion (CR 416, Phase 6q+) ──
     // EffectExecutor::takeControl with `until_end_of_turn=true` snapshots
     // the original controller into `original_controller_eot` and flips
@@ -290,6 +298,9 @@ struct GameObject {
     bool isBattlefield() const { return card_type == CardType::Battlefield; }
     bool isLegend() const { return card_type == CardType::Legend; }
     bool isPermanent() const { return isUnit() || isGear(); }
+    /// A gear, including a unit gear (card_type Unit + unit_gear): what "a
+    /// gear" / "gear you control" means in card text.
+    bool isAnyGear() const { return isGear() || (unit_gear && isUnit()); }
     bool isChampion() const { return super_type == SuperType::Champion; }
     // CR 185.1: "Token" is an intrinsic category of game object, not a
     // supertype: a token stays a token however it is copied or altered, and a

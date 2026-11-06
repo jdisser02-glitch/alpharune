@@ -21,11 +21,10 @@ public:
     // is no longer a legal target at resolution that instruction is ignored
     // and the draw still happens.
     //
-    // DEVIATION: "It can't move this turn" is not enforced — the engine has
-    // no per-unit "can't move this turn" restriction (only cant_move_to_base,
-    // which is permanent and covers one direction). The card records the
-    // restriction on the unit as card_counters[kCantMoveKey] = turn number + 1
-    // so an engine-side check can honour it later; nothing reads it today.
+    // "It can't move this turn" is recorded on the unit as
+    // card_counters[kCantMoveKey] = turn number + 1, which the engine's
+    // standard-move generator honours. (Moves made by other effects are not
+    // blocked.)
     static constexpr const char* kCantMoveKey = "__cant_move_turn";
 
     TargetRequirements getTargetRequirements() const override {

@@ -32,11 +32,16 @@ struct RunePool {
     int unit_energy = 0;
     int power[static_cast<int>(Domain::Count)] = {};  // per-domain
     int universal_power = 0;  // [A] — any domain
+    // [A] that may be spent "only to play units or gear" (Iron Revenant).
+    // Counted and spent (before universal_power) only when paying the cost of
+    // playing a unit or a gear; invisible to every other payment.
+    int unit_gear_power = 0;
 
     void clear() {
         energy = 0;
         unit_energy = 0;
         universal_power = 0;
+        unit_gear_power = 0;
         for (int i = 0; i < static_cast<int>(Domain::Count); ++i)
             power[i] = 0;
     }

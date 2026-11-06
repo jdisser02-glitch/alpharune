@@ -26,12 +26,13 @@ public:
     // "I don't deal combat damage unless there's a friendly gear here."
     // A self aura recomputed every cleanup: while no gear my controller
     // controls shares my location (a gear attached to a unit here counts —
-    // attached gear is at its unit's location), I suppress my combat damage.
+    // attached gear is at its unit's location, and so does a unit gear made by
+    // Lady of Clockwork: it is still a gear), I suppress my combat damage.
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         forEachSelfOnce(*this, state, controller, [&](GameObjectId sid, GameObject& self) {
             if (!self.location.has_value()) return;
             for (const auto& [gid, g] : state.objects)
-                if (g.isGear() && g.controller == controller && g.location.has_value() &&
+                if (g.isAnyGear() && g.controller == controller && g.location.has_value() &&
                     *g.location == *self.location)
                     return;   // a friendly gear here: I deal combat damage
             GameObject::AuraEffect ae;

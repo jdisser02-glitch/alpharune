@@ -459,7 +459,7 @@ inline int runesControlled(const GameState& state, PlayerId player) {
 inline int gearControlled(const GameState& state, PlayerId player) {
     int n = 0;
     for (const auto& [id, obj] : state.objects)
-        if (obj.isGear() && obj.controller == player && obj.location.has_value()) ++n;
+        if (obj.isAnyGear() && obj.controller == player && obj.location.has_value()) ++n;
     return n;
 }
 

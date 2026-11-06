@@ -157,7 +157,7 @@ void extractPlayerFeatures(const GameState& state, PlayerId player,
     // Power breakdown by domain (7)
     for (int i = 0; i < static_cast<int>(Domain::Count); ++i)
         out.push_back(static_cast<float>(ps.rune_pool.power[i]));
-    out.push_back(static_cast<float>(ps.rune_pool.universal_power));
+    out.push_back(static_cast<float>(ps.rune_pool.universal_power + ps.rune_pool.unit_gear_power));
 
     // Hand card IDs (10) — self only, opponent's hidden
     for (int i = 0; i < 10; ++i) {

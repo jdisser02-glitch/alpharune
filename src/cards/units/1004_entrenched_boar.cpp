@@ -22,13 +22,11 @@ public:
     // paid); onPlay turns the answer into "enters ready this turn", which
     // entersReadyOnPlay reads when I land.
     //
-    // PARTIAL: "I can't move this turn" — the engine has no per-unit "can't
-    // move this turn" restriction. The restriction is recorded as
-    // card_counters["__cant_move_turn"] = turn + 1 (the Hunker Down
-    // convention, for an engine check to honour), and while I'm at a
-    // battlefield that turn the move to base is blocked through
-    // GameObject::cant_move_to_base (applyPassiveAura sets it and clears it
-    // afterwards). A ready Boar at base can still move to a battlefield.
+    // "I can't move this turn" is recorded as card_counters["__cant_move_turn"]
+    // = turn + 1, which the engine's standard-move generator honours (the
+    // Hunker Down convention); while I'm at a battlefield that turn the move
+    // to base is also blocked through GameObject::cant_move_to_base
+    // (applyPassiveAura sets it and clears it afterwards).
     OptionalAdditionalCost optionalAdditionalCost() const override {
         OptionalAdditionalCost c;
         c.valid = true;

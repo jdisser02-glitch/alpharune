@@ -20,10 +20,13 @@ public:
     // "[Reaction][>] Banish a unit or gear from your trash, [E]: [Add] [A].
     //  Spend this Power only to play units or gear."
     // [E] is paid by the engine; the card to banish is chosen and banished as
-    // the ability is put on the chain (a cost, CR 383.3), then [A] is added.
-    // APPROXIMATION (ENGINE-GAP): the rune pool has no Power restricted to
-    // units/gear (only RunePool::unit_energy, for Energy), so the [A] is plain
-    // universal Power and may pay for anything.
+    // the ability is put on the chain (a cost, CR 383.3), then [A] is added
+    // as RunePool::unit_gear_power, which only the cost of playing a unit or
+    // a gear can spend.
+    // APPROXIMATION: the ability uses the chain like other cost-choosing
+    // [Add] abilities (Malzahar, Fanatic) rather than resolving at once
+    // (CR 430.2), and the restricted [A] pays only a unit's or gear's own
+    // cost, not additional costs such as [Accelerate].
     bool hasActivatedAbility() const override { return true; }
     bool isReactionAbility() const override { return true; }
     ActivationCost getActivationCost() const override { return {.exhaust = true}; }
@@ -46,8 +49,8 @@ public:
             }
         }
         if (finalizingChoices(ctx)) return;   // choices and costs end here (CR 383.3)
-        ctx.executor.addFloatingUniversalPower(ctx.controller, 1);
-        ctx.events.logTrace("IRON REVENANT: [Add] [A] (unit/gear-only restriction not enforced)");
+        ctx.executor.addUnitOrGearOnlyPower(ctx.controller, 1);
+        ctx.events.logTrace("IRON REVENANT: [Add] [A] (only to play units or gear)");
     }
 private:
     static std::vector<GameObjectId> banishable(const GameState& state, PlayerId controller) {

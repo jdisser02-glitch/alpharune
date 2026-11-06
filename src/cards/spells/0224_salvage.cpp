@@ -18,7 +18,7 @@ public:
     void onResolve(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
         if (!targets.empty() && ctx.state.objectExists(targets[0])) {
             auto& obj = ctx.state.getObject(targets[0]);
-            if (obj.isGear()) ctx.executor.killObject(targets[0]);
+            if (obj.isAnyGear()) ctx.executor.killObject(targets[0]);   // a unit gear is a gear
         }
         ctx.executor.drawCards(ctx.controller, 1);
         ctx.events.logTrace("SALVAGE: (optional gear kill) + draw 1");

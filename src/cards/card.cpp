@@ -640,7 +640,7 @@ std::vector<GameObjectId> Card::enumerateLegalTargets(
 
         // Type filter
         if (reqs.must_be_unit && !obj.isUnit()) continue;
-        if (reqs.must_be_gear && !obj.isGear()) continue;
+        if (reqs.must_be_gear && !obj.isAnyGear()) continue;   // a unit gear is a gear
 
         // Ownership filter
         if (reqs.must_be_enemy && obj.controller == controller) continue;

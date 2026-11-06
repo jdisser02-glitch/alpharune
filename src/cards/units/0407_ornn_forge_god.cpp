@@ -67,7 +67,7 @@ public:
             if (self.controller != controller || !self.location.has_value()) continue;
             int gear_count = 0;
             for (auto& [gid, g] : state.objects) {
-                if (g.isGear() && g.controller == controller && g.location.has_value())
+                if (g.isAnyGear() && g.controller == controller && g.location.has_value())
                     ++gear_count;
             }
             if (gear_count <= 0) continue;

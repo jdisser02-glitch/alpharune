@@ -163,6 +163,8 @@ public:
     /// Universal power ([A]). Counted separately from domain-specific power
     /// and spendable for any cost.
     void addFloatingUniversalPower(PlayerId player, int amount);
+    /// [A] that can only pay for playing units or gear (Iron Revenant).
+    void addUnitOrGearOnlyPower(PlayerId player, int amount);
 
     // ── Paying inside an effect ──
     /// Power of any Domain ([A]) `player` could pay now: floating power of

@@ -1393,7 +1393,7 @@ bool Driver::isDecisionEvent(const LogLine& e, const std::vector<Intent>& legal,
             if (f.kind == "made_unit" && f.actor == e.actor && nameMatches(f.card, e.card)) return true;
         }
         for (const auto& [id, o] : s.objects)
-            if (o.isGear() && o.isUnit() && o.controller == seatOf(e.actor) && nameMatches(e.card, o.name)) return true;
+            if (o.isUnit() && o.unit_gear && o.controller == seatOf(e.actor) && nameMatches(e.card, o.name)) return true;
         return false;
     }
     // "<X> equipped Edge of Night to Evelynn, Entrancing" after the engine's

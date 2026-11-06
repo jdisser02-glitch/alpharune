@@ -30,19 +30,23 @@ public:
     }
     void onActivate(CardContext& ctx, int /*ability_index*/,
                     const std::vector<GameObjectId>&) override {
-        // Equipment the controller owns and that isn't already attached.
+        // Equipment the controller controls, attached or not (an attached one
+        // moves to the new unit), and a unit to attach it to other than the
+        // one it is on. A unit gear is a unit and can't be attached
+        // (CR 143.5), so it is never offered as the Equipment.
         std::vector<GameObjectId> equips;
         for (auto& [id, obj] : ctx.state.objects) {
             if (obj.controller != ctx.controller || !obj.location.has_value()) continue;
-            if (obj.isGear() && !obj.attached_to.has_value() && isEquipment(obj))
-                equips.push_back(id);
+            if (obj.isGear() && isEquipment(obj)) equips.push_back(id);
         }
-        if (equips.empty()) return;
-        auto units_fn = [&](GameObjectId) {
+        if (equips.empty()) { if (finalizingChoices(ctx)) return; return; }
+        auto units_fn = [&](GameObjectId eq) {
+            std::optional<GameObjectId> host;
+            if (ctx.state.objectExists(eq)) host = ctx.state.getObject(eq).attached_to;
             std::vector<GameObjectId> units;
             for (auto& [id, obj] : ctx.state.objects)
                 if (obj.isUnit() && obj.controller == ctx.controller &&
-                    obj.location.has_value())
+                    obj.location.has_value() && host != std::optional<GameObjectId>{id})
                     units.push_back(id);
             return units;
         };
@@ -50,6 +54,9 @@ public:
                                          equips, units_fn);
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (eq == kInvalidId || unit == kInvalidId) return;  // suspended or fizzled
+        if (!ctx.state.objectExists(eq) || !ctx.state.getObject(eq).isGear()) return;
+        if (!ctx.state.objectExists(unit) || !ctx.state.getObject(unit).isUnit()) return;
+        if (ctx.state.getObject(eq).attached_to.has_value()) ctx.executor.unattachGear(eq);
         attachFree(ctx, eq, unit);
         ctx.events.logTrace("FORGE OF THE FLUFT: attached an Equipment to a unit");
     }

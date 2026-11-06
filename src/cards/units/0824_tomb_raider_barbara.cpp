@@ -22,7 +22,7 @@ public:
     std::vector<GameObjectId> enemyGear(CardContext& ctx) const {
         std::vector<GameObjectId> out;
         for (const auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isGear() || obj.controller == ctx.controller) continue;
+            if (!obj.isAnyGear() || obj.controller == ctx.controller) continue;
             if (!obj.location.has_value() || obj.untargetable_by_enemy) continue;
             out.push_back(id);
         }
@@ -35,7 +35,7 @@ public:
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (tgt == kInvalidId || !ctx.state.objectExists(tgt)) return;
         auto& gear = ctx.state.getObject(tgt);
-        if (!gear.isGear() || !gear.location.has_value()) return;
+        if (!gear.isAnyGear() || !gear.location.has_value()) return;
         if (gear.isEmpowered()) {
             ctx.executor.disempower(tgt);
             ctx.events.logTrace("TOMB-RAIDER BARBARA: disempowered " + gear.name);

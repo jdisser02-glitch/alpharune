@@ -317,7 +317,8 @@ TEST_F(RadianceB10Test, IronRevenant_BanishesAUnitFromTrashToAddPower) {
     activate(legend);
     EXPECT_EQ(s().getObject(unit_in_trash).zone, ZoneType::Banishment);
     EXPECT_EQ(s().getObject(spell_in_trash).zone, ZoneType::Trash);
-    EXPECT_EQ(s().player(P1).rune_pool.universal_power, 1);
+    EXPECT_EQ(s().player(P1).rune_pool.unit_gear_power, 1) << "[A] only for units or gear";
+    EXPECT_EQ(s().player(P1).rune_pool.universal_power, 0);
     EXPECT_TRUE(s().getObject(legend).is_exhausted);
 }
 

@@ -1102,6 +1102,12 @@ void EffectExecutor::addFloatingPower(PlayerId player, Domain domain, int amount
                      std::to_string(state_.player(player).rune_pool.power[idx]) + ")");
 }
 
+void EffectExecutor::addUnitOrGearOnlyPower(PlayerId player, int amount) {
+    state_.player(player).rune_pool.unit_gear_power += amount;
+    events_.logTrace("EFFECT: " + std::string(toString(player)) + " adds " +
+                     std::to_string(amount) + " [A] for playing units / gear only");
+}
+
 void EffectExecutor::addFloatingUniversalPower(PlayerId player, int amount) {
     state_.player(player).rune_pool.universal_power += amount;
     events_.logTrace("EFFECT: " + std::string(toString(player)) + " adds " +

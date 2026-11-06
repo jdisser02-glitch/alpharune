@@ -3000,6 +3000,11 @@ std::vector<Intent> GameEngine::generateMainPhaseActions(PlayerId player) const 
     for (auto unit_id : all_units) {
         auto& unit = state_.getObject(unit_id);
         if (unit.is_exhausted) continue; // must be ready
+        // "It can't move this turn" (Hunker Down, Entrenched Boar): the card
+        // records card_counters["__cant_move_turn"] = turn number + 1.
+        if (auto cm = unit.card_counters.find("__cant_move_turn");
+            cm != unit.card_counters.end() && cm->second == state_.turn.turn_number + 1)
+            continue;
 
         if (unit.isAtBase()) {
             // Can move from base to any battlefield (CR 144.4.a).
@@ -6426,6 +6431,8 @@ bool GameEngine::canAfford(PlayerId player, GameObjectId card_obj, int extra_any
     //     `energy_needed` ready runes, and we're free to pick the
     //     matching-domain ones first when doing so).
     int power_from_pool = pool.universal_power;
+    // [A] spendable only to play units or gear (Iron Revenant).
+    if (card.isUnit() || card.isGear()) power_from_pool += pool.unit_gear_power;
     for (auto d : pay_domains) {
         int di = static_cast<int>(d);
         if (di >= 0 && di < static_cast<int>(Domain::Count)) {
@@ -6604,6 +6611,12 @@ GameEngine::CostPaymentAdvance GameEngine::beginCostPayment(
             int from_pool = std::min(ps.rune_pool.power[di], power_needed);
             ps.rune_pool.power[di] -= from_pool;
             power_needed -= from_pool;
+        }
+        // [A] restricted to playing units or gear before unrestricted [A].
+        if (card.isUnit() || card.isGear()) {
+            int from_ug = std::min(ps.rune_pool.unit_gear_power, power_needed);
+            ps.rune_pool.unit_gear_power -= from_ug;
+            power_needed -= from_ug;
         }
         int from_uni = std::min(ps.rune_pool.universal_power, power_needed);
         ps.rune_pool.universal_power -= from_uni;
