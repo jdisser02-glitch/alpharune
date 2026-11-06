@@ -77,7 +77,7 @@ SPEC_SEED_VARIANTS = [
     {"epochs": 3, "lr": 3e-4, "hidden": 128, "q_weight": 0.5},
     {"epochs": 1, "lr": 2e-4, "q_weight": 0.5},
 ]
-GENES = {"lr": (5e-5, 2e-3), "epochs": (1, 8), "q_weight": (0.0, 0.25, 0.5, 0.75), "hidden": (64, 128),
+GENES = {"lr": (5e-5, 2e-3), "epochs": (1, 8), "q_weight": (0.0, 0.25, 0.5, 0.75), "hidden": (64, 128, 256),
          "spec_human_weight": (1.0, 3.0, 10.0)}
 
 
@@ -195,7 +195,7 @@ def cmd_plan(args, rest):
             "ladder": os.path.relpath(loop.LADDER, loop.ROOT), "net_prefix": loop.NET_PREFIX,
             "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current and not a.specialist else [],
             "variants": (spec_variants(ladder, len(ladder["iterations"]), a.seed,
-                                       loop.rbpn_hidden(loop.ROOT / current) if current and str(current).endswith(".rbpn") else a.hidden,
+                                       max(loop.rbpn_hidden(loop.ROOT / current), a.hidden) if current and str(current).endswith(".rbpn") else a.hidden,
                                        a.hidden) if a.specialist else VARIANTS),
             "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
@@ -247,7 +247,9 @@ def selfplay_specialist(args, plan, a, L, out, games):
     rng = random.Random(a.seed * 31 + it)
     t0, met = time.time(), {}
     for k in range(max(1, games // PER_PAIR)):
-        legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choice(s["jury"]), rng.random() < a.spec_mirror
+        # --spec-riven-weight: Riven jury decks drawn that many times as often (the matchup the simulation gets wrong)
+        w = [getattr(a, "spec_riven_weight", 1.0) if "riven" in Path(d).name else 1.0 for d in s["jury"]]
+        legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choices(s["jury"], weights=w)[0], rng.random() < a.spec_mirror
         if k % args.shards != args.shard:
             continue
         seed = seed_base(it, "selfplay", k)

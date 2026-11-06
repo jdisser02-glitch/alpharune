@@ -550,6 +550,8 @@ def make_parser():
                          "less than the current specialist did (checked when 200+ held-out decisions)")
     ap.add_argument("--spec-panel-margin", type=float, default=0.03,
                     help="--specialist: the candidate may trail the current specialist against the jury by this much")
+    ap.add_argument("--spec-riven-weight", type=float, default=1.0,
+                    help="specialist self-play: Riven jury decks are drawn this many times as often as the others")
     ap.add_argument("--spec-mirror", type=float, default=0.2,
                     help="--specialist: share of self-play pairs played in the legend's mirror (both seats recorded)")
     ap.add_argument("--league", type=float, default=0.0,
