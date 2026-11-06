@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,19 +15,26 @@ namespace {
 class RiptideRex : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty()) {
-            ctx.executor.dealDamage(targets[0], 6, ctx.source);
-            if (ctx.state.objectExists(targets[0]) &&
-                ctx.state.getObject(targets[0]).hasLethalDamage()) {
-                ctx.executor.killObject(targets[0]);
-            }
-        }
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play me, deal 6 to an enemy unit at a battlefield."
+    // The unit is chosen as the trigger is finalized (CR 383.3). A triggered
+    // ability's chain item carries no chosen targets, so the previous
+    // version, which read the unit from `targets`, never did anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [&](const GameObject& o) {
+            return o.controller != ctx.controller && o.isAtBattlefield();
+        });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Riptide Rex: deal 6 to an enemy unit at a battlefield", candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.dealDamage(t, 6, ctx.source);
+        if (ctx.state.objectExists(t) && ctx.state.getObject(t).hasLethalDamage())
+            ctx.executor.killObject(t);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_enemy = true, .must_be_at_battlefield = true};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

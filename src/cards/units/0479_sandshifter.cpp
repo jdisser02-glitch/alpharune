@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,14 +15,24 @@ namespace {
 class Sandshifter : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.killObject(targets[0]);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play me, kill an enemy unit with 3 [M] or less."
+    // The unit is chosen as the trigger is finalized (CR 383.3). A triggered
+    // ability's chain item carries no chosen targets, so the previous
+    // version, which read the unit from `targets`, never did anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [&](const GameObject& o) {
+            return o.controller != ctx.controller && o.current_might <= 3;
+        });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Sandshifter: kill an enemy unit with 3 [M] or less", candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.killObject(t);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_enemy = true, .max_might = 3};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

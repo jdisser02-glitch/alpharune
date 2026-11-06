@@ -20,78 +20,57 @@ public:
     //
     // "Once each turn, if I would die, you may kill a friendly unit to heal me,
     //  exhaust me, and recall me instead."
-    // APPROXIMATION: the engine asks death replacements only of OTHER objects
-    // (Card::applyReplacement is never consulted for the dying unit itself),
-    // but both kill paths honour GameObject::death_replacement_recall_pending
-    // ("heal it, exhaust it, and recall it instead"). So:
-    //  * applyPassiveAura arms that flag while the replacement is still
-    //    available this turn and there is another friendly unit to kill;
-    //  * when the flag is consumed (I would have died and was recalled
-    //    instead), the recall's move fires WhenIMove; that trigger pays the
-    //    cost by killing a friendly unit the controller picks.
-    // Deviations: the "you may" is always taken while it is affordable, and the
-    // friendly unit is killed just after the replacement instead of before it.
-    // Arming shares the flag with Tactical Retreat's one-shot replacement.
-    void applyPassiveAura(GameState& state, PlayerId controller) const override {
-        const int turn = state.turn.turn_number;
-        for (auto& [id, self] : state.objects) {
-            if (self.card_def_id != cardDefId() || self.controller != controller) continue;
-            if (!self.isUnit() || !self.location.has_value()) continue;
-            auto& c = self.card_counters;
-            if (counter(self, kUsedTurn) == turn) continue;           // used this turn
-            if (counter(self, kArmedTurn) == turn && !self.death_replacement_recall_pending) {
-                c[kUsedTurn] = turn;                                    // it was consumed
-                continue;
-            }
-            bool other_unit = false;
-            for (const auto& [oid, o] : state.objects)
-                if (oid != id && o.isUnit() && o.controller == controller && o.location.has_value()) {
-                    other_unit = true;
-                    break;
-                }
-            if (other_unit) {
-                self.death_replacement_recall_pending = true;
-                c[kArmedTurn] = turn;
-            } else if (counter(self, kArmedTurn) != -1) {
-                self.death_replacement_recall_pending = false;          // can't pay: disarm
-                c[kArmedTurn] = -1;
-            }
-        }
-    }
-
-    // The recall that replaced my death: armed this turn, flag now consumed,
-    // not yet accounted for.
-    TriggerType triggerType() const override { return TriggerType::WhenIMove; }
-    bool triggerCondition(const GameState& state, GameObjectId source, PlayerId /*controller*/,
-                          TriggerType /*trigger*/, GameObjectId /*subject*/) const override {
-        if (!state.objectExists(source)) return false;
-        const auto& self = state.getObject(source);
-        const int turn = state.turn.turn_number;
-        return counter(self, kArmedTurn) == turn && !self.death_replacement_recall_pending &&
-               counter(self, kPaidTurn) != turn;
-    }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
-        if (!ctx.state.objectExists(ctx.source)) return;
-        const int turn = ctx.state.turn.turn_number;
+    // A replacement of my own death (Card::replaceOwnDeath), asked as I would
+    // die: while it has not been used this turn and another friendly unit is
+    // on the board, my controller may take it. Killing the friendly unit is
+    // its cost, paid first; then I am healed, exhausted and recalled (moved to
+    // my base without it being a Move, CR 457-458; my attachments come along,
+    // CR 719.3). Declining leaves it available for a later death this turn.
+    bool replaceOwnDeath(CardContext& ctx) override {
+        if (!ctx.state.objectExists(ctx.source)) return false;
         auto& self = ctx.state.getObject(ctx.source);
-        self.card_counters[kUsedTurn] = turn;
-        self.card_counters[kPaidTurn] = turn;
-        const auto friends = chooseableUnits(ctx.state, ctx.controller, [&](const GameObject& o) {
-            return o.controller == ctx.controller && o.id != ctx.source;
-        });
-        GameObjectId victim = pickTarget(ctx, "Mordekaiser, Twice Slain: kill a friendly unit", friends);
-        if (victim == kInvalidId && ctx.state.chain.resuming.has_value() &&
-            ctx.state.chain.resuming->resume_point == 7)
-            return;   // waiting for the agent
-        if (victim == kInvalidId || !ctx.state.objectExists(victim)) return;
-        ctx.executor.killObject(victim);
+        if (!self.isUnit() || !self.location.has_value()) return false;
+        const int turn = ctx.state.turn.turn_number;
+        if (counter(self, kUsedTurn) == turn) return false;   // once each turn
+        std::vector<GameObjectId> friends;
+        for (const auto& [id, o] : ctx.state.objects)
+            if (id != ctx.source && o.isUnit() && o.controller == ctx.controller &&
+                o.location.has_value())
+                friends.push_back(id);
+        if (friends.empty()) return false;   // the cost can't be paid
+        std::sort(friends.begin(), friends.end());
+
+        const Intent yes_no = ctx.executor.chooseNow(ctx.controller,
+            {valChoice(ctx.controller, 0, "Let Mordekaiser die"),
+             valChoice(ctx.controller, 1, "Kill a friendly unit to heal, exhaust and recall him")});
+        if (yes_no.chosen_value.value_or(0) != 1) {
+            ctx.events.logTrace("MORDEKAISER, TWICE SLAIN: declined");
+            return false;
+        }
+        const GameObjectId victim = ctx.executor.chooseObjectNow(ctx.controller, friends);
+        if (victim == kInvalidId) return false;
+        ctx.state.getObject(ctx.source).card_counters[kUsedTurn] = turn;
+        ctx.executor.killObject(victim);   // the cost
         ctx.events.logTrace("MORDEKAISER, TWICE SLAIN: killed " + ctx.state.getObject(victim).name +
                             " to survive (healed, exhausted, recalled)");
+
+        ctx.executor.healObject(ctx.source);
+        ctx.executor.exhaustObject(ctx.source);
+        auto& me = ctx.state.getObject(ctx.source);
+        me.combat_designation = CombatDesignation::None;
+        const LocationId base{BaseLocation{me.controller}};
+        me.location = base;
+        me.zone = ZoneType::Base;
+        for (auto gid : me.attachments) {
+            if (!ctx.state.objectExists(gid)) continue;
+            auto& g = ctx.state.getObject(gid);
+            g.location = base;
+            g.zone = ZoneType::Base;
+        }
+        return true;
     }
 private:
-    static constexpr const char* kArmedTurn = "__mk_armed_turn";
     static constexpr const char* kUsedTurn = "__mk_used_turn";
-    static constexpr const char* kPaidTurn = "__mk_paid_turn";
     static int counter(const GameObject& o, const char* key) {
         auto it = o.card_counters.find(key);
         return it == o.card_counters.end() ? -1 : it->second;

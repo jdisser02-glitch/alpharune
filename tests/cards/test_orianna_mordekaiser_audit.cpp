@@ -572,6 +572,7 @@ TEST_F(OriannaMordekaiserAuditTest, MordekaiserTwiceSlain_SurvivesADeathAtBaseTo
     auto mord = boardObject(P1, kTwiceSlain);
     auto fodder = unitWithMight(P1, 1, 0);
     engine_->testHook_cleanup();
+    p1_.answers = {1};   // yes, kill a friendly unit
     p1_.want = fodder;
     engine_->testHook_executor().killObject(mord);
     engine_->testHook_runChain();
@@ -587,6 +588,8 @@ TEST_F(OriannaMordekaiserAuditTest, MordekaiserTwiceSlain_CanKillAUnitGearToSurv
     makeUnitGear(mask);
     auto mord = boardObject(P1, kTwiceSlain, 0);
     engine_->testHook_cleanup();
+    p1_.answers = {1};
+    p1_.next = 0;
     p1_.want = mask;
     engine_->testHook_executor().killObject(mord);
     engine_->testHook_runChain();

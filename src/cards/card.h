@@ -584,6 +584,13 @@ public:
     virtual bool applyReplacement(CardContext& ctx,
                                   GameObjectId dying_unit) { return false; }
 
+    /// A unit's replacement of its OWN death ("if I would die, ... instead":
+    /// Mordekaiser, Twice Slain). Both kill paths ask the dying unit's card
+    /// (ctx.source = the unit, ctx.controller = its controller) before other
+    /// objects' replacements; `applyReplacement` is never asked of the dying
+    /// unit itself. Return true if the death was replaced.
+    virtual bool replaceOwnDeath(CardContext& /*ctx*/) { return false; }
+
     // ── Equipment / Equip (CR 716-725, 818) ──
     /// Whether this gear has an equip ability.
     virtual bool hasEquipAbility() const { return false; }

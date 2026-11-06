@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -16,36 +17,26 @@ public:
     const CardDef& def() const override { return def_; }
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
     // "When you defend here, you may move a friendly unit here to base."
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        GameObjectId unit = kInvalidId;
-        if (!targets.empty()) {
-            unit = targets[0];
-        } else {
-            auto unitsHere = [&]() {
-                std::vector<GameObjectId> out;
-                for (const auto& bf : ctx.state.battlefields) {
-                    if (bf.card_object_id != ctx.source) continue;
-                    for (auto& [id, obj] : ctx.state.objects) {
-                        if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-                        auto ubf = obj.battlefieldId();
-                        if (ubf && *ubf == bf.id) out.push_back(id);
-                    }
-                }
-                return out;
-            };
-            int go = confirmOptional(ctx, "Reaver's Row: move a friendly unit here to base?",
-                                     [&]() { return !unitsHere().empty(); });
-            if (go < 1) return;   // waiting on the agent, declined or no unit here
-            unit = pickTarget(ctx, "Reaver's Row: move which unit to base", unitsHere());
-        }
+    // Whether to, and which unit, are decided as the trigger is finalized
+    // (CR 383.3); a triggered ability's chain item carries no chosen targets.
+    static std::vector<GameObjectId> unitsHere(const CardContext& ctx) {
+        const auto here = hereOf(ctx.state, ctx.source);
+        if (!here.has_value()) return {};
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [&](const GameObject& o) {
+            return o.controller == ctx.controller && o.battlefieldId() == here;
+        });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const int go = confirmOptional(ctx, "Reaver's Row: move a friendly unit here to base?",
+                                       [&]() { return !unitsHere(ctx).empty(); });
+        if (go < 1) return;   // waiting on the agent, declined or no unit here
+        const GameObjectId unit = pickTarget(ctx, "Reaver's Row: move which unit to base", unitsHere(ctx));
+        if (waitingForTarget(ctx, unit)) return;
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (unit == kInvalidId || !ctx.state.objectExists(unit)) return;
         ctx.executor.moveToBase(unit);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouDefendHere; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_friendly = true, .must_be_at_battlefield = true};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,14 +15,22 @@ namespace {
 class GemJammer : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.giveTemporaryKeyword(targets[0], Keyword::Ganking, 0);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play me, give a unit [Ganking] this turn."
+    // The unit is chosen as the trigger is finalized (CR 383.3). A triggered
+    // ability's chain item carries no chosen targets, so the previous
+    // version, which read the unit from `targets`, never did anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [](const GameObject&) { return true; });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Gem Jammer: give a unit [Ganking]", candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.giveTemporaryKeyword(t, Keyword::Ganking, 0);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

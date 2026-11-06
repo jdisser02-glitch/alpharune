@@ -15,26 +15,22 @@ namespace {
 class Pridestalker : public LegendCard {
 public:
     const CardDef& def() const override { return def_; }
-    TriggerType triggerType() const override { return TriggerType::WhenYouPlayAUnit; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        // If the trigger context carries the played-unit GameObjectId in
-        // targets[0], buff that. Otherwise pick any friendly unit at a BF.
-        GameObjectId pick = kInvalidId;
-        if (!targets.empty() && ctx.state.objectExists(targets[0])) {
-            pick = targets[0];
-        } else {
-            for (auto& [id, obj] : ctx.state.objects) {
-                if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-                if (!obj.isAtBattlefield()) continue;
-                pick = id;
-                break;
-            }
-        }
-        if (pick == kInvalidId) return;
-        ctx.executor.giveTemporaryMight(pick, 1);
-        ctx.events.logTrace("PRIDESTALKER: +1M to " +
-                             ctx.state.getObject(pick).name);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play a unit, give a unit +1 [M] this turn."
+    // The unit is chosen as the trigger is finalized (CR 383.3). A triggered
+    // ability's chain item carries no chosen targets, so the previous
+    // version, which read the unit from `targets`, never did anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [](const GameObject&) { return true; });
     }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Pridestalker: give a unit +1 [M]", candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.giveTemporaryMight(t, 1);
+    }
+    TriggerType triggerType() const override { return TriggerType::WhenYouPlayAUnit; }
 private:
     const CardDef def_ = [] {
         CardDef d;

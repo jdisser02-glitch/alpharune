@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,14 +15,26 @@ namespace {
 class NavoriFightingPit : public BattlefieldCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.buffUnit(targets[0]);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you hold here, buff a unit here." The unit (either player's, at
+    // this battlefield) is chosen as the trigger is finalized (CR 383.3). A
+    // triggered ability's chain item carries no chosen targets, so the
+    // previous version, which read the unit from `targets`, never buffed.
+    static std::vector<GameObjectId> unitsHere(const CardContext& ctx) {
+        const auto here = hereOf(ctx.state, ctx.source);
+        if (!here.has_value()) return {};
+        return chooseableUnitsSorted(ctx.state, ctx.controller,
+            [&](const GameObject& o) { return o.battlefieldId() == here; });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Navori Fighting Pit: buff a unit here", unitsHere(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.buffUnit(t);
+        ctx.events.logTrace("NAVORI FIGHTING PIT: buffed " + ctx.state.getObject(t).name);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouHoldHere; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_at_battlefield = true};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

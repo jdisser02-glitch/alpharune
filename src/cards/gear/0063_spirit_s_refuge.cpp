@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,14 +15,23 @@ namespace {
 class SpiritSRefuge : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.buffUnit(targets[0]);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you play this, buff a friendly unit."
+    // The unit is chosen as the trigger is finalized (CR 383.3). A triggered
+    // ability's chain item carries no chosen targets, so the previous
+    // version, which read the unit from `targets`, never did anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller,
+            [&](const GameObject& o) { return o.controller == ctx.controller; });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const GameObjectId t = pickTarget(ctx, "Spirit's Refuge: buff a friendly unit", candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.buffUnit(t);
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayThis; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_friendly = true};
-    }
     // "Friendly buffed units have [Deflect] if they didn't already."
     void applyPassiveAura(GameState& state, PlayerId controller) const override {
         // Active only while an on-board instance exists.

@@ -14,9 +14,14 @@ namespace {
 class ForgeOfTheFuture : public GearCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.killObject(targets[0]);
+    // "When you play this, play a 1 [M] Recruit unit token at your base."
+    // (The previous version killed `targets[0]` instead, which a triggered
+    // ability's chain item never carries, so it did nothing.)
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        LocationId loc{BaseLocation{ctx.controller}};
+        ctx.executor.createToken(ctx.controller, CardType::Unit, "Recruit",
+                                 1, {"Recruit"}, KeywordSet{}, loc, false);
+        ctx.events.logTrace("FORGE OF THE FUTURE: played a 1 [M] Recruit to base");
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayThis; }
 private:

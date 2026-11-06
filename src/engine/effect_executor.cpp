@@ -204,6 +204,18 @@ void EffectExecutor::killObject(GameObjectId target) {
             return;
         }
 
+        // The dying unit's own "if I would die, ... instead" (Card::replaceOwnDeath).
+        if (card_registry_ && obj.card_def_id != kInvalidId) {
+            if (Card* own = card_registry_->get(obj.card_def_id)) {
+                CardContext octx{state_, events_, *this, controller, target};
+                if (own->replaceOwnDeath(octx)) {
+                    events_.logDebug("REPLACEMENT (own): " + state_.getObject(target).name +
+                                     " does not die");
+                    return;
+                }
+            }
+        }
+
         // Card-defined death replacements (The Boss, Zhonya's Hourglass,
         // Guardian Angel, Soraka, ...). Effect kills consult them exactly as
         // combat deaths do (GameEngine::killUnit): a kill is a kill.
@@ -1078,6 +1090,12 @@ GameObjectId EffectExecutor::chooseObjectNow(PlayerId player,
         std::find(objects.begin(), objects.end(), chosen.chosen_objects.front()) != objects.end())
         return chosen.chosen_objects.front();
     return objects.front();
+}
+
+Intent EffectExecutor::chooseNow(PlayerId player, const std::vector<Intent>& options) {
+    if (options.empty()) return Intent{};
+    if (!agent_query_) return options.front();
+    return agent_query_(player, options);
 }
 
 void EffectExecutor::addUnitOnlyEnergy(PlayerId player, int amount) {

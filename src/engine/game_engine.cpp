@@ -7032,6 +7032,18 @@ void GameEngine::killUnit(GameObjectId unit_id) {
         return;  // replacement consumed — unit does NOT die
     }
 
+    // The dying unit's own "if I would die, ... instead" (Card::replaceOwnDeath).
+    if (unit.card_def_id != kInvalidId) {
+        if (Card* own = card_registry_.get(unit.card_def_id)) {
+            CardContext octx{state_, events_, *effect_executor_, controller, unit_id};
+            if (own->replaceOwnDeath(octx)) {
+                events_.logDebug("REPLACEMENT (own): " + state_.getObject(unit_id).name +
+                                 " does not die");
+                return;
+            }
+        }
+    }
+
     // Altar of Blood (762): "If a unit here would die during combat, its
     // controller may pay [A][A][A] to heal it, exhaust it, and recall it
     // instead." Gated on the dying unit's battlefield carrying the flag (set by

@@ -68,6 +68,11 @@ public:
     /// attaching). Returns the first object when there is no agent to ask, and
     /// kInvalidId when `objects` is empty.
     GameObjectId chooseObjectNow(PlayerId player, const std::vector<GameObjectId>& objects);
+    /// Ask `player` to pick one of `options` right now (same circumstances as
+    /// chooseObjectNow: e.g. a "you may" of a replacement effect, which
+    /// happens inside the game action it replaces). Returns options.front()
+    /// when there is no agent to ask.
+    Intent chooseNow(PlayerId player, const std::vector<Intent>& options);
 
     /// "You may make new choices for it" (CR 750-755): the item's controller
     /// re-chooses its targets. Costs already paid are unaffected (755.1).

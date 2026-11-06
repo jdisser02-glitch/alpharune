@@ -484,6 +484,36 @@ std::vector<GameObjectId> chooseableUnits(const GameState& state, PlayerId choos
     return out;
 }
 
+/// chooseableUnits in id order (the agent's options in a stable order).
+template <typename Pred>
+std::vector<GameObjectId> chooseableUnitsSorted(const GameState& state, PlayerId chooser, Pred&& pred) {
+    auto out = chooseableUnits(state, chooser, std::forward<Pred>(pred));
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
+/// The battlefield "here" means for `source`: a battlefield card's own
+/// battlefield, else the battlefield the object is at (nullopt at a base or
+/// off the board).
+inline std::optional<BattlefieldId> hereOf(const GameState& state, GameObjectId source) {
+    if (auto bf = battlefieldOfCard(state, source)) return bf;
+    if (!state.objectExists(source)) return std::nullopt;
+    return state.getObject(source).battlefieldId();
+}
+
+/// True when Card::pickTarget has just asked the agent and returned kInvalidId
+/// to wait for the answer (resume point 7): the caller returns at once and is
+/// called again with the choice. A triggered ability that chooses its target
+/// at finalization (CR 383.3) reads:
+///     auto t = pickTarget(ctx, label, candidates);
+///     if (waitingForTarget(ctx, t)) return;
+///     if (finalizingChoices(ctx)) return;      // choices end here
+///     if (t == kInvalidId || !ctx.state.objectExists(t)) return;   // none / mistarget
+inline bool waitingForTarget(const CardContext& ctx, GameObjectId picked) {
+    return picked == kInvalidId && ctx.state.chain.resuming.has_value() &&
+           ctx.state.chain.resuming->resume_point == 7;
+}
+
 /// Other units `controller` has at the same location as `self`.
 inline int otherFriendlyUnitsHere(const GameState& state, const GameObject& self) {
     if (!self.location.has_value()) return 0;

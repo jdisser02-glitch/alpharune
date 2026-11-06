@@ -1,4 +1,5 @@
 #include "cards/card.h"
+#include "cards/card_helpers.h"
 #include "cards/card_registry.h"
 #include "core/game_state.h"
 #include "core/events.h"
@@ -14,14 +15,31 @@ namespace {
 class AmateurRecital : public BattlefieldCard {
 public:
     const CardDef& def() const override { return def_; }
-    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
-        if (!targets.empty())
-            ctx.executor.moveToBase(targets[0]);
+    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "When you hold here, you may move a unit at a battlefield to its base."
+    // Whether to, and which unit (either player's, at any battlefield), are
+    // decided as the trigger is finalized (CR 383.3). A triggered ability's
+    // chain item carries no chosen targets, so the previous version, which
+    // read the unit from `targets`, never moved anything.
+    static std::vector<GameObjectId> candidates(const CardContext& ctx) {
+        return chooseableUnitsSorted(ctx.state, ctx.controller, [&](const GameObject& o) {
+            return o.isAtBattlefield() &&
+                   !(o.controller != ctx.controller && o.cant_be_moved_by_enemy);
+        });
+    }
+    void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
+        const int go = confirmOptional(ctx, "Amateur Recital: move a unit at a battlefield to its base?",
+                                       [&]() { return !candidates(ctx).empty(); });
+        if (go < 1) return;   // waiting on the agent, declined or nothing to move
+        const GameObjectId t = pickTarget(ctx, "Amateur Recital: move which unit to its base",
+                                          candidates(ctx));
+        if (waitingForTarget(ctx, t)) return;
+        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
+        if (t == kInvalidId || !ctx.state.objectExists(t)) return;
+        ctx.executor.moveToBase(t);
+        ctx.events.logTrace("AMATEUR RECITAL: moved " + ctx.state.getObject(t).name + " to its base");
     }
     TriggerType triggerType() const override { return TriggerType::WhenYouHoldHere; }
-    TargetRequirements getTargetRequirements() const override {
-        return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_at_battlefield = true};
-    }
 private:
     const CardDef def_ = [] {
         CardDef d;

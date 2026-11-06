@@ -396,6 +396,7 @@ TEST_F(RadianceB01Test, Mordekaiser_KillsAFriendlyUnitToSurviveOncePerTurn) {
     auto fodder = boardObject(P1, kOtterpus);
     s().getObject(mord).damage_marked = 3;
     engine_->testHook_cleanup();
+    p1_.answers = {1, 1};   // yes (the second death this turn is not asked)
     p1_.want = fodder;
     engine_->testHook_executor().killObject(mord);
     engine_->testHook_runChain();
@@ -430,6 +431,7 @@ TEST_F(RadianceB01Test, Mordekaiser_AvailableAgainNextTurn) {
     boardObject(P1, kOtterpus);
     boardObject(P1, kOtterpus);
     engine_->testHook_cleanup();
+    p1_.answers = {1, 1};
     engine_->testHook_executor().killObject(mord);
     engine_->testHook_runChain();
     ASSERT_TRUE(s().getObject(mord).location.has_value());
