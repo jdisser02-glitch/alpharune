@@ -252,7 +252,10 @@ jobs:
         run: |
           # lab/learn/PAUSE on the branch stops every training chain at its next iteration (runners go to deck tests);
           # the chains are dispatched again (chain=N) when it is removed.
-          if [ -f lab/learn/PAUSE ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; echo "paused: $(cat lab/learn/PAUSE)"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+          # lab/learn/specialists/<name>/PAUSE stops that specialist's chain only.
+          spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
+          f=lab/learn/PAUSE; [ -n "$spec" ] && [ -f "lab/learn/specialists/$spec/PAUSE" ] && f="lab/learn/specialists/$spec/PAUSE"
+          if [ -f "$f" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; echo "paused ($f): $(cat "$f")"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
       - name: Restore the engine binary
         id: bin
         uses: actions/cache@v4
