@@ -1,0 +1,1844 @@
+{
+ "id": "20261105-220203-jeremy-riven-heronless",
+ "name": "jeremy-riven-heronless",
+ "description": "Riven lists built from Jeremy's own cards for his BO3 match (no Astral Heron, no Zhonya's Hourglass, one Blitzcrank), against the meta, with the Sacramento list (3 Herons, 3 Zhonya's) as the reference. Riven is piloted by its specialist, each opponent by its legend's specialist (Orianna by the general net).",
+ "started_utc": "2026-11-05T22:02:03+00:00",
+ "engine_commit": "ce2760a",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 160,
+ "threads": 4,
+ "seed": 1105,
+ "spec": {
+  "name": "jeremy-riven-heronless",
+  "description": "Riven lists built from Jeremy's own cards for his BO3 match (no Astral Heron, no Zhonya's Hourglass, one Blitzcrank), against the meta, with the Sacramento list (3 Herons, 3 Zhonya's) as the reference. Riven is piloted by its specialist, each opponent by its legend's specialist (Orianna by the general net).",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 160,
+  "review_games": 0,
+  "seed": 1105,
+  "decks": [
+   {
+    "deck": "decks/riven_sacramento.txt",
+    "label": "Sacramento base (3 Herons, reference)"
+   },
+   {
+    "deck": "decks/jeremy/riven_a_deserter.txt",
+    "label": "A: +2 Broken Blade, +2 Storm Raptor, +2 Wind and Ghosts"
+   },
+   {
+    "deck": "decks/jeremy/riven_b_big.txt",
+    "label": "B: Angler Wyrm, +2 Storm Raptor, +2 Wind and Ghosts, +1 Broken Blade"
+   },
+   {
+    "deck": "decks/jeremy/riven_c_tempo.txt",
+    "label": "C: +2 Broken Blade, +2 Wind and Ghosts, 3rd Gust, Traveling Merchant"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (zombro)",
+    "weight": 2,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+    "label": "Kai'Sa (Jason Tian)",
+    "weight": 2,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+    "label": "Riven mirror (Orlando 1st)",
+    "weight": 2,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Evelynn (Vegas)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+    "label": "Akali (Sacramento 1st)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+    "label": "Orianna (Xi'an 7th)",
+    "weight": 1
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "Sacramento base (3 Herons, reference)",
+   "path": "decks/riven_sacramento.txt",
+   "hash": "77ae76d0c1",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.75,
+    "curve": {
+     "1": 5,
+     "2": 20,
+     "3": 6,
+     "4": 4,
+     "5": 2,
+     "7": 3
+    },
+    "types": {
+     "unit": 19,
+     "gear": 6,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 9,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 3,
+     "Hidden": 10,
+     "Accelerate": 2,
+     "Reaction": 14,
+     "Tank": 2,
+     "Action": 3
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Zhonya's Hourglass",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 95,
+     "win_rate": 0.5938,
+     "ci95": [
+      0.5163,
+      0.6668
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 47
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 48
+     },
+     "avg_turns": 12,
+     "wall_s": 386.7,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kennen-zombro",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 1105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 51105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 110,
+     "win_rate": 0.6875,
+     "ci95": [
+      0.612,
+      0.7542
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 59
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 51
+     },
+     "avg_turns": 12,
+     "wall_s": 291.5,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 101105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 151105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven mirror (Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 82,
+     "win_rate": 0.5125,
+     "ci95": [
+      0.4357,
+      0.5887
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 35
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 47
+     },
+     "avg_turns": 12,
+     "wall_s": 282.5,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__riven-mirror-orlando-1st",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 201105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__riven-mirror-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 251105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__riven-mirror-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 76,
+     "win_rate": 0.475,
+     "ci95": [
+      0.3991,
+      0.5521
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 39
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 37
+     },
+     "avg_turns": 13,
+     "wall_s": 270.3,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 301105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 351105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 128,
+     "win_rate": 0.8,
+     "ci95": [
+      0.7313,
+      0.8546
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 60
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 68
+     },
+     "avg_turns": 13,
+     "wall_s": 289.7,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 401105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 451105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 133,
+     "win_rate": 0.8313,
+     "ci95": [
+      0.7656,
+      0.8814
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 67
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 66
+     },
+     "avg_turns": 12,
+     "wall_s": 222.6,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 decks/riven_sacramento.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 501105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 decks/riven_sacramento.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 551105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/sacramento-base-3-herons-reference__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6326
+  },
+  {
+   "label": "A: +2 Broken Blade, +2 Storm Raptor, +2 Wind and Ghosts",
+   "path": "decks/jeremy/riven_a_deserter.txt",
+   "hash": "5a0006dc1b",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.77,
+    "curve": {
+     "1": 5,
+     "2": 16,
+     "3": 8,
+     "4": 7,
+     "5": 2,
+     "6": 2
+    },
+    "types": {
+     "unit": 21,
+     "gear": 2,
+     "spell": 17
+    },
+    "power_symbols": {
+     "calm": 7,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 2,
+     "Hidden": 6,
+     "Accelerate": 3,
+     "Reaction": 15,
+     "Tank": 1,
+     "Deflect": 3,
+     "Action": 5
+    },
+    "two_drops": 21,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Wind and Ghosts",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 2,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 84,
+     "win_rate": 0.525,
+     "ci95": [
+      0.4479,
+      0.6009
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 43
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 41
+     },
+     "avg_turns": 13,
+     "wall_s": 422.2,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kennen-zombro",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 1105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 51105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 81,
+     "win_rate": 0.5062,
+     "ci95": [
+      0.4295,
+      0.5827
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 41
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 40
+     },
+     "avg_turns": 13,
+     "wall_s": 285.6,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 101105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 151105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven mirror (Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 63,
+     "win_rate": 0.3937,
+     "ci95": [
+      0.3214,
+      0.4711
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 31
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 32
+     },
+     "avg_turns": 13,
+     "wall_s": 298.6,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__riven-mirror-orlando-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 201105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__riven-mirror-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 251105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__riven-mirror-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 70,
+     "win_rate": 0.4375,
+     "ci95": [
+      0.363,
+      0.5149
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 33
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 37
+     },
+     "avg_turns": 13,
+     "wall_s": 263.6,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 301105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 351105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 106,
+     "win_rate": 0.6625,
+     "ci95": [
+      0.5862,
+      0.7312
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 52
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 54
+     },
+     "avg_turns": 14,
+     "wall_s": 331.0,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 401105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 451105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 106,
+     "win_rate": 0.6625,
+     "ci95": [
+      0.5862,
+      0.7312
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 57
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 49
+     },
+     "avg_turns": 13,
+     "wall_s": 266.7,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 decks/jeremy/riven_a_deserter.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 501105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 decks/jeremy/riven_a_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 551105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/a-2-broken-blade-2-storm-raptor-2-wind-and-ghosts__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5125,
+   "vs_first": {
+    "reference": "Sacramento base (3 Herons, reference)",
+    "diff": -0.1201,
+    "ci95": [
+     -0.1658,
+     -0.0745
+    ],
+    "verdict": "worse"
+   }
+  },
+  {
+   "label": "B: Angler Wyrm, +2 Storm Raptor, +2 Wind and Ghosts, +1 Broken Blade",
+   "path": "decks/jeremy/riven_b_big.txt",
+   "hash": "f5ec2f2735",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.88,
+    "curve": {
+     "1": 5,
+     "2": 16,
+     "3": 8,
+     "4": 6,
+     "5": 2,
+     "6": 2,
+     "8": 1
+    },
+    "types": {
+     "unit": 21,
+     "gear": 2,
+     "spell": 17
+    },
+    "power_symbols": {
+     "calm": 7,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 2,
+     "Hidden": 6,
+     "Accelerate": 3,
+     "Reaction": 15,
+     "Tank": 1,
+     "Deflect": 4,
+     "Action": 5
+    },
+    "two_drops": 21,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Wind and Ghosts",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 2,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 90,
+     "win_rate": 0.5625,
+     "ci95": [
+      0.4851,
+      0.637
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 43
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 47
+     },
+     "avg_turns": 13,
+     "wall_s": 425.0,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kennen-zombro",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 1105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 51105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 88,
+     "win_rate": 0.55,
+     "ci95": [
+      0.4726,
+      0.625
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 45
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 43
+     },
+     "avg_turns": 13,
+     "wall_s": 283.2,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 101105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 151105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven mirror (Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 63,
+     "win_rate": 0.3937,
+     "ci95": [
+      0.3214,
+      0.4711
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 30
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 33
+     },
+     "avg_turns": 13,
+     "wall_s": 297.8,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__riven-mirror-orlando-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 201105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__riven-mirror-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 251105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__riven-mirror-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 74,
+     "win_rate": 0.4625,
+     "ci95": [
+      0.387,
+      0.5397
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 35
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 39
+     },
+     "avg_turns": 13,
+     "wall_s": 260.6,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 301105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 351105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 104,
+     "win_rate": 0.65,
+     "ci95": [
+      0.5734,
+      0.7196
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 49
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 55
+     },
+     "avg_turns": 14,
+     "wall_s": 331.0,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 401105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 451105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 108,
+     "win_rate": 0.675,
+     "ci95": [
+      0.5991,
+      0.7427
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 53
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 55
+     },
+     "avg_turns": 13,
+     "wall_s": 273.9,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 decks/jeremy/riven_b_big.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 501105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 decks/jeremy/riven_b_big.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 551105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/b-angler-wyrm-2-storm-raptor-2-wind-and-ghosts-1-broken-blad__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5333,
+   "vs_first": {
+    "reference": "Sacramento base (3 Herons, reference)",
+    "diff": -0.0993,
+    "ci95": [
+     -0.1449,
+     -0.0538
+    ],
+    "verdict": "worse"
+   }
+  },
+  {
+   "label": "C: +2 Broken Blade, +2 Wind and Ghosts, 3rd Gust, Traveling Merchant",
+   "path": "decks/jeremy/riven_c_tempo.txt",
+   "hash": "c954796a9b",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.55,
+    "curve": {
+     "1": 6,
+     "2": 17,
+     "3": 8,
+     "4": 7,
+     "5": 2
+    },
+    "types": {
+     "unit": 20,
+     "gear": 2,
+     "spell": 18
+    },
+    "power_symbols": {
+     "calm": 7,
+     "chaos": 12
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Ganking": 2,
+     "Hidden": 6,
+     "Accelerate": 3,
+     "Reaction": 16,
+     "Tank": 1,
+     "Deflect": 1,
+     "Action": 5
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Battle Preparations",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Wind and Ghosts",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Riven, Broken Blade",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Stellacorn Herder",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 81,
+     "win_rate": 0.5062,
+     "ci95": [
+      0.4295,
+      0.5827
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 39
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 42
+     },
+     "avg_turns": 13,
+     "wall_s": 435.9,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kennen-zombro",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 1105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_015_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 51105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 76,
+     "win_rate": 0.475,
+     "ci95": [
+      0.3991,
+      0.5521
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 36
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 40
+     },
+     "avg_turns": 12,
+     "wall_s": 306.9,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 101105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_012_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 151105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven mirror (Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 2,
+     "games": 160,
+     "wins": 59,
+     "win_rate": 0.3688,
+     "ci95": [
+      0.2979,
+      0.4458
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 27
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 32
+     },
+     "avg_turns": 13,
+     "wall_s": 318.7,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__riven-mirror-orlando-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 201105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__riven-mirror-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 251105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__riven-mirror-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 70,
+     "win_rate": 0.4375,
+     "ci95": [
+      0.363,
+      0.5149
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 30
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 40
+     },
+     "avg_turns": 13,
+     "wall_s": 272.0,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 301105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_005_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 351105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 96,
+     "win_rate": 0.6,
+     "ci95": [
+      0.5226,
+      0.6727
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 48
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 48
+     },
+     "avg_turns": 14,
+     "wall_s": 339.0,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 401105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_000_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 451105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 1,
+     "games": 160,
+     "wins": 104,
+     "win_rate": 0.65,
+     "ci95": [
+      0.5734,
+      0.7196
+     ],
+     "as_p1": {
+      "games": 80,
+      "wins": 49
+     },
+     "as_p2": {
+      "games": 80,
+      "wins": 55
+     },
+     "avg_turns": 13,
+     "wall_s": 263.4,
+     "replays": "lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 decks/jeremy/riven_c_tempo.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 501105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 decks/jeremy/riven_c_tempo.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_012_v0.rbpn,worlds=8,settle=60 --games 80 --threads 4 --seed 551105 --render-html off --web off --review-dir lab/replays/20261105-220203-jeremy-riven-heronless/c-2-broken-blade-2-wind-and-ghosts-3rd-gust-traveling-mercha__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4875,
+   "vs_first": {
+    "reference": "Sacramento base (3 Herons, reference)",
+    "diff": -0.1451,
+    "ci95": [
+     -0.1907,
+     -0.0995
+    ],
+    "verdict": "worse"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-06T00:05:41+00:00"
+}
