@@ -5083,6 +5083,208 @@
    "elo_current": 822.5,
    "minutes": 47.1,
    "parallel": true
+  },
+  {
+   "iteration": 26,
+   "started_utc": "2026-11-06T13:15:27+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60",
+   "self_play_games": 640,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 5.3,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt": {
+     "games": 76,
+     "wins": 37,
+     "rate": 0.487
+    },
+    "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt": {
+     "games": 156,
+     "wins": 61,
+     "rate": 0.391
+    },
+    "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt": {
+     "games": 60,
+     "wins": 31,
+     "rate": 0.517
+    },
+    "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt": {
+     "games": 72,
+     "wins": 58,
+     "rate": 0.806
+    },
+    "lab/variants/riven-multistart-ga-2--cef30c16fe.txt": {
+     "games": 176,
+     "wins": 63,
+     "rate": 0.358
+    }
+   },
+   "specialist": "kai_sa",
+   "variant": {
+    "index": 1,
+    "overrides": {
+     "epochs": 1,
+     "lr": 0.00015,
+     "hidden": 256,
+     "q_weight": 0.0,
+     "spec_human_weight": 1.0
+    }
+   },
+   "warm_start": "lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "records": 172773,
+   "games_in_buffer": 2240,
+   "val_loss": 0.48134922981262207,
+   "val_acc": 0.7596669033632432,
+   "val_margin_mse": 0.0858592616450555,
+   "baseline_val_loss": 0.6922444937948747,
+   "policy": {
+    "search_target_rows": 166824,
+    "policy_val_rows": 15385,
+    "policy_top1": 0.8781930451738706,
+    "policy_top3": 0.9882352941176471,
+    "policy_ce": 0.7170166768810415,
+    "policy_entropy": 0.7237186808551326,
+    "target_entropy": 0.6419499534291515,
+    "human_records": 4797,
+    "human_val_rows": 2012,
+    "human_top1": 0.46123260437375746,
+    "human_top3": 0.7559642147117296,
+    "human_clean_rows": 1288,
+    "human_clean_top1": 0.3454968944099379,
+    "human_clean_top3": 0.656832298136646
+   },
+   "human_legend": {
+    "top1": 0.5133333333333333,
+    "top3": 0.8111111111111111,
+    "rows": 450,
+    "file": "human_kai_sa.rbv3",
+    "base_top1": 0.5022222222222222,
+    "tolerance": 0.0653,
+    "ok": true
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 51,
+     "rate": 0.425,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0003,
+      "hidden": 256,
+      "q_weight": 0.0,
+      "spec_human_weight": 1.0
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 65,
+     "rate": 0.5417,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.00015,
+      "hidden": 256,
+      "q_weight": 0.0,
+      "spec_human_weight": 1.0
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 62,
+     "rate": 0.5167,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0003,
+      "hidden": 256,
+      "q_weight": 0.25,
+      "spec_human_weight": 1.0
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 55,
+     "rate": 0.4583,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0006,
+      "hidden": 256,
+      "q_weight": 0.0,
+      "spec_human_weight": 1.0
+     }
+    }
+   },
+   "screen_pick": 1,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60",
+    "games": 120,
+    "wins": 61,
+    "rate": 0.5083,
+    "ci95": [
+     0.42,
+     0.5961
+    ],
+    "llr": -2.044,
+    "sprt": "rate",
+    "guard_floor": 0.45
+   },
+   "panel": {
+    "games": 480,
+    "wins": 269,
+    "rate": 0.5604,
+    "base_rate": 0.5542,
+    "diff": 0.0062,
+    "diff_ci95": [
+     -0.0566,
+     0.0691
+    ],
+    "accept": 0.03,
+    "ok": false,
+    "primary": true,
+    "matchups": {
+     "07_zombro_kennen": {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+      "games": 96,
+      "rate": 0.5417,
+      "base_rate": 0.5104
+     },
+     "01_dunc_evelynn": {
+      "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+      "games": 96,
+      "rate": 0.5208,
+      "base_rate": 0.5625
+     },
+     "07_luoluoluofu_orianna": {
+      "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+      "games": 96,
+      "rate": 0.9062,
+      "base_rate": 0.875
+     },
+     "riven-multistart-ga-2--cef30c16fe": {
+      "deck": "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+      "games": 96,
+      "rate": 0.3854,
+      "base_rate": 0.3958
+     },
+     "01_tabris_riven": {
+      "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+      "games": 96,
+      "rate": 0.4479,
+      "base_rate": 0.4271
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 60,
+    "rate": 1.0
+   },
+   "net": "lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "accepted": false,
+   "elo": 828.0,
+   "elo_current": 822.5,
+   "minutes": 54.8,
+   "parallel": true
   }
  ],
  "matches": [
@@ -7371,37 +7573,101 @@
    "games": 20,
    "wins_a": 10,
    "wins_b": 10
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 9,
+   "wins_b": 11
+  },
+  {
+   "iteration": 26,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 60,
+   "wins_b": 0
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 8,
+   "wins_b": 12
+  },
+  {
+   "iteration": 26,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
   }
  ],
  "current_net": "lab/learn/nets/spec_kai_sa_025_v1.rbpn",
  "elo": {
-  "net:lab/learn/nets/net_164_v3.rbpn": 605.6,
-  "net:lab/learn/nets/spec_kai_sa_000_v1.rbpn": 661.2,
-  "net:lab/learn/nets/spec_kai_sa_001_v2.rbpn": 697.5,
-  "net:lab/learn/nets/spec_kai_sa_002_v0.rbpn": 751.2,
-  "net:lab/learn/nets/spec_kai_sa_003_v2.rbpn": 773.5,
-  "net:lab/learn/nets/spec_kai_sa_004_v2.rbpn": 828.9,
-  "net:lab/learn/nets/spec_kai_sa_005_v2.rbpn": 839.9,
-  "net:lab/learn/nets/spec_kai_sa_006_v2.rbpn": 850.9,
-  "net:lab/learn/nets/spec_kai_sa_007_v0.rbpn": 842.7,
-  "net:lab/learn/nets/spec_kai_sa_008_v0.rbpn": 834.5,
-  "net:lab/learn/nets/spec_kai_sa_009_v3.rbpn": 853.7,
-  "net:lab/learn/nets/spec_kai_sa_010_v2.rbpn": 831.7,
-  "net:lab/learn/nets/spec_kai_sa_011_v3.rbpn": 817.7,
-  "net:lab/learn/nets/spec_kai_sa_012_v1.rbpn": 833.5,
-  "net:lab/learn/nets/spec_kai_sa_013_v0.rbpn": 833.4,
+  "net:lab/learn/nets/net_164_v3.rbpn": 605.9,
+  "net:lab/learn/nets/spec_kai_sa_000_v1.rbpn": 661.4,
+  "net:lab/learn/nets/spec_kai_sa_001_v2.rbpn": 697.7,
+  "net:lab/learn/nets/spec_kai_sa_002_v0.rbpn": 751.4,
+  "net:lab/learn/nets/spec_kai_sa_003_v2.rbpn": 773.8,
+  "net:lab/learn/nets/spec_kai_sa_004_v2.rbpn": 829.2,
+  "net:lab/learn/nets/spec_kai_sa_005_v2.rbpn": 840.2,
+  "net:lab/learn/nets/spec_kai_sa_006_v2.rbpn": 851.2,
+  "net:lab/learn/nets/spec_kai_sa_007_v0.rbpn": 842.9,
+  "net:lab/learn/nets/spec_kai_sa_008_v0.rbpn": 834.7,
+  "net:lab/learn/nets/spec_kai_sa_009_v3.rbpn": 853.9,
+  "net:lab/learn/nets/spec_kai_sa_010_v2.rbpn": 832.0,
+  "net:lab/learn/nets/spec_kai_sa_011_v3.rbpn": 817.8,
+  "net:lab/learn/nets/spec_kai_sa_012_v1.rbpn": 833.6,
+  "net:lab/learn/nets/spec_kai_sa_013_v0.rbpn": 833.5,
   "net:lab/learn/nets/spec_kai_sa_014_v1.rbpn": 811.7,
   "net:lab/learn/nets/spec_kai_sa_015_v3.rbpn": 811.7,
-  "net:lab/learn/nets/spec_kai_sa_016_v3.rbpn": 877.1,
-  "net:lab/learn/nets/spec_kai_sa_017_v2.rbpn": 817.1,
-  "net:lab/learn/nets/spec_kai_sa_018_v0.rbpn": 849.7,
-  "net:lab/learn/nets/spec_kai_sa_019_v2.rbpn": 833.4,
-  "net:lab/learn/nets/spec_kai_sa_020_v0.rbpn": 866.1,
-  "net:lab/learn/nets/spec_kai_sa_021_v3.rbpn": 806.2,
-  "net:lab/learn/nets/spec_kai_sa_022_v2.rbpn": 844.2,
+  "net:lab/learn/nets/spec_kai_sa_016_v3.rbpn": 877.2,
+  "net:lab/learn/nets/spec_kai_sa_017_v2.rbpn": 817.2,
+  "net:lab/learn/nets/spec_kai_sa_018_v0.rbpn": 849.8,
+  "net:lab/learn/nets/spec_kai_sa_019_v2.rbpn": 833.5,
+  "net:lab/learn/nets/spec_kai_sa_020_v0.rbpn": 866.2,
+  "net:lab/learn/nets/spec_kai_sa_021_v3.rbpn": 806.3,
+  "net:lab/learn/nets/spec_kai_sa_022_v2.rbpn": 844.3,
   "net:lab/learn/nets/spec_kai_sa_023_v1.rbpn": 811.7,
-  "net:lab/learn/nets/spec_kai_sa_024_v1.rbpn": 800.8,
+  "net:lab/learn/nets/spec_kai_sa_024_v1.rbpn": 800.9,
   "net:lab/learn/nets/spec_kai_sa_025_v1.rbpn": 822.5,
+  "net:lab/learn/nets/spec_kai_sa_026_v1.rbpn": 828.0,
   "random": 0.0
  }
 }
