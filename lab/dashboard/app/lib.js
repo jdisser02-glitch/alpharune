@@ -223,8 +223,15 @@ export function groupDecks(decks = allDecks()) {
   const isRiven = d => /Riven/.test(String(d.legend || "") + " " + String(d.champion || ""));
   const rank = variantRank();
   const g = { "Riven": [], "Meta opponents": [], "Optimiser · top 10": [] };
-  const top = decks.filter(d => d.path.startsWith("lab/variants/") && rank.has(d.path)).sort((a, b) => rank.get(b.path) - rank.get(a.path)).slice(0, 10);
-  const best = top[0];
+  // The newest confirmation (lists on shared deals, build.py measured_status) ranks the lists when there is one;
+  // otherwise the best single-test lower bound (older tests, older bots) does.
+  const comps = ((((D && D.measured) || {}).list || {}).comparisons) || [];
+  const newest = comps.length ? comps[comps.length - 1] : null;
+  let top = [];
+  if (newest) top = [...newest.lists].sort((a, b) => b.rate - a.rate).map(x => decks.find(d => d.path === x.path)).filter(Boolean).slice(0, 10);
+  if (!top.length) top = decks.filter(d => d.path.startsWith("lab/variants/") && rank.has(d.path)).sort((a, b) => rank.get(b.path) - rank.get(a.path)).slice(0, 10);
+  const bp = bestVariantPath();
+  const best = decks.find(d => d.path === bp) || top[0];
   decks.forEach(d => {
     if (d.path === "decks/riven_sacramento.txt") g["Riven"].push(d);
     else if (d.path.startsWith("lab/decks/meta/")) {

@@ -7,7 +7,7 @@
    Screen styles are in decks.css (injected once). */
 import { data, esc, num, fmtDate, plural, store, navigate, badge, chip, pageHead, empty, notice, toast, cssOnce,
          cardByName, card, cardImg, cardChip, portrait, domainDots, rate, table, enhance, wilson, pooled,
-         deckByPath, allDecks, groupDecks, bestVariantPath, deckFace, deckPilot, deckEvent, deckHero, deckShort, eventLabel, isPlumbing, testsByDate, $ } from "./lib.js";
+         deckByPath, allDecks, groupDecks, bestVariantPath, bestVerdict, deckFace, deckPilot, deckEvent, deckHero, deckShort, eventLabel, isPlumbing, testsByDate, $ } from "./lib.js";
 
 const DEFAULT = "decks/riven_sacramento.txt";
 const LAUNCH_DEFAULT = { name: "", decks: [DEFAULT], variants: [], opponents: [], agent: "standard", games: 100 };
@@ -62,7 +62,7 @@ function picker() {
     const byEv = new Map(); for (const d of list) { const e = eventOf(d); if (!byEv.has(e)) byEv.set(e, []); byEv.get(e).push(d); }
     body = [...byEv.entries()].sort((a, b) => b[0].slice(-10).localeCompare(a[0].slice(-10))).map(([e, ds]) => `<div class="dk-event"><h3>${esc(eventLabel(e))}</h3><div class="dk-tiles">${ds.sort((x, y) => (pilotOf(x)?.place || 99) - (pilotOf(y)?.place || 99)).map(tile).join("")}</div></div>`).join("");
   } else body = `<div class="dk-tiles">${list.map(tile).join("")}</div>`;
-  const blurb = { "Riven": "The reference list, the Riven lists from recent tournaments, and the optimiser's best.", "Meta opponents": "Recent tournament decks, used as opponents.", "Optimiser · top 10": "The ten best-measured lists from the optimiser. None is proven better than the reference yet." }[st.group] || "";
+  const blurb = { "Riven": "The reference list, the Riven lists from recent tournaments, and the optimiser's best.", "Meta opponents": "Recent tournament decks, used as opponents.", "Optimiser · top 10": bestVerdict() ? `The lists of the newest confirmation (same deals for all), best first: the top one ${bestVerdict()}.` : "The ten best-measured lists from the optimiser. None is proven better than the reference yet." }[st.group] || "";
   return `<section class="panel dk-picker" id="dk-picker" aria-label="choose a deck">${tabs}<p class="small muted" style="margin-top:10px">${esc(blurb)}</p>${list.length ? body : empty("No list in this group", "")}</section>`;
 }
 
