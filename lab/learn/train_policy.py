@@ -37,7 +37,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from rbpn import read_rbpn, write_rbpn, write_rbvn  # noqa: E402
+from rbpn import VOCAB_SIZE, VOCAB_SIZE_BEFORE_OPPONENT_PICKS, read_rbpn, write_rbpn, write_rbvn  # noqa: E402
 from train_value import SparseRows, read_records  # noqa: E402
 
 SRC_NONE, SRC_SEARCH, SRC_HUMAN = 0, 1, 2
@@ -200,7 +200,9 @@ def main(argv):
 
     # ── parameters (z-scale first layer, see train_value.py) ──
     H = a.hidden
-    V = vocab
+    # The vocab only appends slots, so a net is always written at the current size (VOCAB_SIZE) even when every
+    # input file predates the last growth; slots no row uses stay near their initial value.
+    V = max(vocab, VOCAB_SIZE) if vocab >= VOCAB_SIZE_BEFORE_OPPONENT_PICKS else vocab
     W1f = (rng.standard_normal((dim, H)) * np.sqrt(2.0 / max(1, live))).astype(np.float32)
     b1f = -(W1f * mz[:, None]).sum(0).astype(np.float32)
     w2 = (rng.standard_normal(H) * np.sqrt(1.0 / H)).astype(np.float32)
@@ -233,8 +235,11 @@ def main(argv):
             b1f = np.concatenate([b1k, b1f[H0:] * 0.5]).astype(np.float32)
             w2, w3 = np.concatenate([init["w2"], z]), np.concatenate([init["wm"], z])
             b2, b3 = init["b2"].copy(), init["bm"].copy()
+            # read_rbpn padded a pre-growth head to VOCAB_SIZE (new rows copy their legacy stand-in).
             if init["Wp"].shape == (V, H0):
                 Wp, bp = np.concatenate([init["Wp"], np.zeros((V, H - H0), np.float32)], 1), init["bp"].copy()
+            else:
+                print(f"--init-value {a.init_value}: policy head {init['Wp'].shape[0]} rows, not {V}; policy head starts fresh")
             if H0 < H:
                 print(f"widening {a.init_value}: {H0} -> {H} hidden units (new units silent at the start)")
     params = [W1f, b1f, w2, b2, w3, b3, Wp, bp]

@@ -113,6 +113,8 @@ void setHumanTarget(ValueSample& sample, const std::vector<int>& slots, int chos
 /// policy block: uint8 source (PolicySource), uint8 flags, uint16 sims, uint16
 /// n_legal, n_legal x (uint16 vocab slot, float32 target). Appending to an
 /// existing "RBV2" file keeps that format (the policy block is dropped).
+/// Appending to an RBV3/RBV4 file whose header vocab is smaller than
+/// openspiel::kVocabSize raises it in place (the vocab only appends slots).
 /// lab/learn/train_value.py and train_policy.py read RBVD / RBV2 / RBV3.
 void appendValueRecords(const std::string& path, int dim, const std::vector<ValueSample>& samples,
                         PlayerId winner, int score_p1, int score_p2, int victory_score,

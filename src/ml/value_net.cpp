@@ -202,10 +202,13 @@ void appendValueRecords(const std::string& path, int dim, const std::vector<Valu
     static std::mutex mu;
     std::lock_guard<std::mutex> lock(mu);
     int version = 4;
+    int32_t file_vocab = 0;
     {
         std::ifstream probe(path, std::ios::binary);
         char magic[4] = {0, 0, 0, 0};
         if (probe && probe.read(magic, 4)) {
+            int32_t head[2] = {0, 0};
+            if (probe.read(reinterpret_cast<char*>(head), sizeof head)) file_vocab = head[1];
             if (std::memcmp(magic, "RBV2", 4) == 0) version = 2;
             else if (std::memcmp(magic, "RBV3", 4) == 0) version = 3;
             else if (std::memcmp(magic, "RBVD", 4) == 0)
@@ -215,6 +218,15 @@ void appendValueRecords(const std::string& path, int dim, const std::vector<Valu
         } else {
             version = -4;   // fresh file: write the header
         }
+    }
+    if (version >= 3 && file_vocab > 0 && file_vocab < ::riftbound::openspiel::kVocabSize) {
+        // A file started before the vocab grew: its slots keep their meaning
+        // (the vocab only appends), so raise the header's vocab size to cover
+        // the slots these records may use (MakeChoiceOpponent).
+        std::fstream patch(path, std::ios::binary | std::ios::in | std::ios::out);
+        const int32_t vocab = ::riftbound::openspiel::kVocabSize;
+        patch.seekp(8);
+        patch.write(reinterpret_cast<const char*>(&vocab), 4);
     }
     std::ofstream f(path, std::ios::binary | std::ios::app);
     auto put = [&](const void* p, size_t n) { f.write(reinterpret_cast<const char*>(p), static_cast<std::streamsize>(n)); };

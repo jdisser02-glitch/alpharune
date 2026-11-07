@@ -453,3 +453,84 @@ TEST(ActionVocab, VocabSizeIsReasonable) {
     EXPECT_GT(kVocabSize, 1000);
     EXPECT_LT(kVocabSize, 100000);
 }
+
+// ── MakeChoice: own vs opponent's object ────────────────────────────────────
+//
+// A pick of an object controlled by an opponent of the deciding player lands
+// in the MakeChoiceOpponent block at the end of the vocab; the same card
+// picked from the decider's own side keeps its old MakeChoice slot. Before,
+// "Discipline my Orianna" and "Discipline their Orianna" shared one slot.
+
+namespace {
+Intent pick(PlayerId who, GameObjectId obj) {
+    Intent i;
+    i.type = IntentType::MakeChoice;
+    i.player = who;
+    i.chosen_objects = {obj};
+    return i;
+}
+}  // namespace
+
+TEST(ActionVocab, FriendlyAndEnemyPickOfTheSameCardGetDistinctSlots) {
+    MiniState ms;
+    const auto mine = ms.addObject(/*def_id=*/300, PlayerId::Player1);
+    const auto theirs = ms.addObject(/*def_id=*/300, PlayerId::Player2);
+    const int s_mine = encodeAction(pick(PlayerId::Player1, mine), ms.state);
+    const int s_theirs = encodeAction(pick(PlayerId::Player1, theirs), ms.state);
+    EXPECT_NE(s_mine, s_theirs);
+    EXPECT_EQ(s_theirs, verbOffset(ActionVerb::MakeChoiceOpponent) + 299);
+    EXPECT_GE(s_theirs, kVocabSizeBeforeOpponentPicks);
+    EXPECT_LT(s_theirs, kVocabSize);
+    // The view flips with the decider: P2 picking P1's object is the enemy pick.
+    EXPECT_EQ(encodeAction(pick(PlayerId::Player2, mine), ms.state), s_theirs);
+    EXPECT_EQ(encodeAction(pick(PlayerId::Player2, theirs), ms.state), s_mine);
+    // Both round-trip through a legal list holding the two.
+    const std::vector<Intent> legal = {pick(PlayerId::Player1, mine), pick(PlayerId::Player1, theirs)};
+    ASSERT_NE(decodeAction(s_theirs, legal, ms.state), nullptr);
+    EXPECT_EQ(decodeAction(s_theirs, legal, ms.state)->chosen_objects[0], theirs);
+    EXPECT_EQ(decodeAction(s_mine, legal, ms.state)->chosen_objects[0], mine);
+    // Control, not ownership, decides: a stolen unit is the thief's.
+    ms.state.objects[theirs].controller = PlayerId::Player1;
+    EXPECT_EQ(encodeAction(pick(PlayerId::Player1, theirs), ms.state), s_mine);
+}
+
+TEST(ActionVocab, NonEnemyPicksKeepTheirSlots) {
+    // The pre-MakeChoiceOpponent layout: every older verb at the same offset.
+    EXPECT_EQ(kVocabSizeBeforeOpponentPicks, 22971);
+    EXPECT_EQ(kVocabSize, kVocabSizeBeforeOpponentPicks + kNumCardDefIds);
+    EXPECT_EQ(verbOffset(ActionVerb::MakeChoice), 15754);
+    EXPECT_EQ(verbOffset(ActionVerb::SideboardSwap), kVocabSizeBeforeOpponentPicks - kNumCardDefIds);
+
+    MiniState ms;
+    const int mc = verbOffset(ActionVerb::MakeChoice);
+    const auto mine = ms.addObject(/*def_id=*/811, PlayerId::Player1);
+    EXPECT_EQ(encodeAction(pick(PlayerId::Player1, mine), ms.state), mc + 811);
+    // Neutral objects (no controller, no owner) and named cards stay put.
+    const auto neutral = ms.addObject(/*def_id=*/42, PlayerId::None);
+    EXPECT_EQ(encodeAction(pick(PlayerId::Player1, neutral), ms.state), mc + 42);
+    Intent named = pick(PlayerId::Player1, kInvalidId);
+    named.chosen_objects.clear();
+    named.chosen_card_def = 77;
+    EXPECT_EQ(encodeAction(named, ms.state), mc + 77);
+    // Int-coded answers are unaffected even when an enemy object rides along.
+    const auto theirs = ms.addObject(/*def_id=*/811, PlayerId::Player2);
+    Intent yes = pick(PlayerId::Player1, theirs);
+    yes.chosen_value = 1;
+    EXPECT_EQ(encodeAction(yes, ms.state), mc + kNumCardDefIds + 1 + 1);
+    // No player on the intent: the priority holder decides.
+    Intent anon = pick(PlayerId::None, theirs);
+    ms.state.turn.priority_holder = PlayerId::Player2;
+    EXPECT_EQ(encodeAction(anon, ms.state), mc + 811);
+    ms.state.turn.priority_holder = PlayerId::Player1;
+    EXPECT_EQ(encodeAction(anon, ms.state), verbOffset(ActionVerb::MakeChoiceOpponent) + 810);
+}
+
+TEST(ActionVocab, LegacyRowOfMapsTheOpponentBlockOntoMakeChoice) {
+    const int opp = verbOffset(ActionVerb::MakeChoiceOpponent);
+    EXPECT_EQ(legacyRowOf(opp), verbOffset(ActionVerb::MakeChoice) + 1);
+    EXPECT_EQ(legacyRowOf(opp + 299), verbOffset(ActionVerb::MakeChoice) + 300);
+    EXPECT_EQ(legacyRowOf(kVocabSize - 1), verbOffset(ActionVerb::MakeChoice) + kNumCardDefIds);
+    EXPECT_EQ(legacyRowOf(kVocabSize), -1);
+    EXPECT_EQ(legacyRowOf(opp - 1), -1);
+    EXPECT_EQ(legacyRowOf(0), -1);
+}

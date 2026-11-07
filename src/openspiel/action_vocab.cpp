@@ -39,6 +39,26 @@ int playLocBfSlot(const std::optional<LocationId>& loc) {
 
 int verbBase(ActionVerb v) { return verbOffset(v); }
 
+/// The player deciding `intent`: its own player when set (every engine
+/// MakeChoice sets it), else as search::decidingPlayerOf falls back —
+/// priority holder, focus holder, turn player.
+PlayerId decidingPlayer(const Intent& intent, const GameState& state) {
+    if (intent.player == PlayerId::Player1 || intent.player == PlayerId::Player2) return intent.player;
+    if (state.turn.priority_holder.has_value()) return *state.turn.priority_holder;
+    if (state.turn.focus_holder.has_value()) return *state.turn.focus_holder;
+    return state.turn.turn_player;
+}
+
+/// True when `obj` is controlled (or, with no controller, owned) by a player
+/// other than `me`. Objects nobody controls (a neutral battlefield) are not.
+bool controlledByOpponent(const GameState& state, GameObjectId obj, PlayerId me) {
+    if (obj == kInvalidId || !state.objectExists(obj)) return false;
+    if (me != PlayerId::Player1 && me != PlayerId::Player2) return false;
+    const auto& o = state.getObject(obj);
+    const PlayerId who = o.controller != PlayerId::None ? o.controller : o.owner;
+    return (who == PlayerId::Player1 || who == PlayerId::Player2) && who != me;
+}
+
 } // namespace
 
 int encodeAction(const Intent& intent, const GameState& state) {
@@ -169,6 +189,11 @@ int encodeAction(const Intent& intent, const GameState& state) {
         //   0                                 → empty / "skip" (no object)
         //   1..kNumCardDefIds                 → card by def_id
         //   kNumCardDefIds+1..+kNumIntChoices → int answer 0..kNumIntChoices-1
+        // and, in the separate MakeChoiceOpponent block at the end of the
+        // vocab, a chosen object controlled by an opponent of the deciding
+        // player (by def_id), so "target my Riven" and "target their Riven"
+        // are different slots. A named card (chosen_card_def) is not an
+        // object and stays in the MakeChoice block.
         //
         // chosen_value takes priority over chosen_objects when set, because
         // int-coded helpers (confirmOptional, pickMode, pickXAmount) use
@@ -187,7 +212,11 @@ int encodeAction(const Intent& intent, const GameState& state) {
             if (intent.chosen_card_def != kInvalidId) {
                 first = intent.chosen_card_def;          // a named card
             } else if (!intent.chosen_objects.empty()) {
-                first = defIdOf(state, intent.chosen_objects[0]);
+                const GameObjectId obj = intent.chosen_objects[0];
+                first = defIdOf(state, obj);
+                const int s = cardDefSlot(first);
+                if (s >= 0 && controlledByOpponent(state, obj, decidingPlayer(intent, state)))
+                    return verbBase(ActionVerb::MakeChoiceOpponent) + s;
             }
             int idx = (first == 0)
                 ? 0

@@ -9,6 +9,13 @@ Wp[vocab, hidden], bp[vocab] (policy logits). C++ reader: src/ml/policy_net.cpp.
 
 RBVN v1: "RBVN", int32 1, in_dim, hidden, then mean, inv_std, W1, b1, w2, b2.
 
+Vocab growth: the action vocabulary only ever appends slots (every existing slot
+keeps its meaning). A net written before the MakeChoiceOpponent block
+(VOCAB_SIZE_BEFORE_OPPONENT_PICKS rows) is padded on read to VOCAB_SIZE, each
+new row a copy of its legacy_row_of row (bias likewise), exactly as the C++
+loader does, so it scores every option as before; nets are written at their
+array size, i.e. VOCAB_SIZE once trained.
+
     python3 lab/learn/rbpn.py --make-fixture tests/data/tiny_policy   # tiny net + reference outputs
 """
 import json
@@ -19,6 +26,42 @@ from pathlib import Path
 import numpy as np
 
 FIELDS = ("mean", "inv_std", "W1", "b1", "w2", "b2", "wm", "bm", "Wp", "bp")
+
+# Mirrors src/openspiel/action_vocab.h (test_action_vocab.cpp pins the same
+# numbers; test_warm_start.py checks VOCAB_SIZE against the engine's data header).
+NUM_CARD_DEFS = 1200                        # kNumCardDefIds
+MAKECHOICE_BASE = 15754                     # verbOffset(MakeChoice): slot 0 none, 1 + (def - 1) by card
+VOCAB_SIZE_BEFORE_OPPONENT_PICKS = 22971    # kVocabSizeBeforeOpponentPicks
+OPPONENT_PICK_BASE = VOCAB_SIZE_BEFORE_OPPONENT_PICKS   # verbOffset(MakeChoiceOpponent), (def - 1) by card
+VOCAB_SIZE = OPPONENT_PICK_BASE + NUM_CARD_DEFS          # kVocabSize (24171)
+
+
+def legacy_row_of(slot):
+    """The older slot whose row stands in for `slot` in a pre-growth net
+    (openspiel::legacyRowOf): an opponent pick -> the same card's MakeChoice
+    slot. -1 when there is none."""
+    if OPPONENT_PICK_BASE <= slot < OPPONENT_PICK_BASE + NUM_CARD_DEFS:
+        return MAKECHOICE_BASE + 1 + (slot - OPPONENT_PICK_BASE)
+    return -1
+
+
+def pad_policy(net, vocab=VOCAB_SIZE):
+    """Pads a legacy policy head (Wp [rows, hidden], bp [rows]) in place up to
+    `vocab` rows: rows with a legacy_row_of stand-in copy it, others are zero.
+    Heads smaller than VOCAB_SIZE_BEFORE_OPPONENT_PICKS (test fixtures) or
+    already `vocab` rows are left alone. -> net"""
+    rows, hidden = net["Wp"].shape
+    if rows >= vocab or rows < VOCAB_SIZE_BEFORE_OPPONENT_PICKS:
+        return net
+    Wp = np.zeros((vocab, hidden), np.float32)
+    bp = np.zeros(vocab, np.float32)
+    Wp[:rows], bp[:rows] = net["Wp"], net["bp"]
+    for s in range(rows, vocab):
+        src = legacy_row_of(s)
+        if 0 <= src < rows:
+            Wp[s], bp[s] = net["Wp"][src], net["bp"][src]
+    net["Wp"], net["bp"] = Wp, bp
+    return net
 
 
 def write_rbpn(path, net):
@@ -46,7 +89,9 @@ def write_rbvn(path, net):
             f.write(np.ascontiguousarray(np.atleast_1d(net[k]), dtype="<f4").tobytes())
 
 
-def read_rbpn(path):
+def read_rbpn(path, pad=True):
+    """-> dict of the FIELDS arrays; a legacy-size policy head is padded to
+    VOCAB_SIZE (pad_policy) unless `pad` is False."""
     data = Path(path).read_bytes()
     if data[:4] != b"RBPN":
         raise ValueError(f"{path}: not an RBPN file")
@@ -61,7 +106,7 @@ def read_rbpn(path):
         n = int(np.prod(shapes[k]))
         net[k] = np.frombuffer(data, dtype="<f4", count=n, offset=pos).reshape(shapes[k]).astype(np.float32)
         pos += 4 * n
-    return net
+    return pad_policy(net) if pad else net
 
 
 def forward(net, x_dense, slots):

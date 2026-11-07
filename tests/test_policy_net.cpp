@@ -15,7 +15,9 @@
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 
+#include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -98,6 +100,59 @@ TEST(PolicyNet, RejectsBadFiles) {
     bytes = randomPolicyNetBytes(20, 4, 10, 1);
     bytes.resize(bytes.size() - 8);
     EXPECT_THROW(ml::PolicyNet(bytes.data(), bytes.size(), "truncated"), std::runtime_error);
+}
+
+TEST(PolicyNet, AnOldSizeNetIsPaddedAndScoresOldSlotsAsBefore) {
+    // A net written before the MakeChoiceOpponent block: its policy head has
+    // kVocabSizeBeforeOpponentPicks rows. It loads at the full size, every old
+    // slot's logit is the file's, and an enemy pick scores as the same card's
+    // friendly pick (the slot it was encoded to before).
+    const int dim = 20, hidden = 4, old_vocab = openspiel::kVocabSizeBeforeOpponentPicks;
+    const auto bytes = randomPolicyNetBytes(dim, hidden, old_vocab, 5);
+    ml::PolicyNet net(bytes.data(), bytes.size(), "old-size");
+    EXPECT_EQ(net.vocabSize(), openspiel::kVocabSize);
+    EXPECT_EQ(net.fileVocabSize(), old_vocab);
+
+    // The file's own policy rows, read straight from the bytes.
+    const size_t wp_at = 20 + 4 * (2 * dim + static_cast<size_t>(dim) * hidden + 3 * hidden + 2);
+    auto f32 = [&](size_t at) { float v; std::memcpy(&v, &bytes[at], 4); return v; };
+    auto fileLogit = [&](const std::vector<float>& hid, int slot) {
+        double z = f32(wp_at + 4 * (static_cast<size_t>(old_vocab) * hidden + slot));
+        for (int h = 0; h < hidden; ++h) z += f32(wp_at + 4 * (static_cast<size_t>(slot) * hidden + h)) * hid[h];
+        return z;
+    };
+
+    const std::vector<std::pair<uint16_t, float>> x = {{0, 1.0f}, {3, 2.0f}, {11, -1.5f}, {19, 0.5f}};
+    const auto hid = net.hidden(x);
+    const int mc = openspiel::verbOffset(openspiel::ActionVerb::MakeChoice);
+    const int opp = openspiel::verbOffset(openspiel::ActionVerb::MakeChoiceOpponent);
+    const std::vector<int> old_slots = {1, 154, mc, mc + 1, mc + 300, mc + 1200, old_vocab - 1};
+    const auto logits = net.logitsFromHidden(hid, old_slots);
+    for (size_t k = 0; k < old_slots.size(); ++k)
+        EXPECT_NEAR(logits[k], fileLogit(hid, old_slots[k]), 1e-5) << "slot " << old_slots[k];
+    // Softmax over old slots only is the file's softmax.
+    const auto p = net.policyFromHidden(hid, old_slots);
+    double mx = -1e300, z = 0;
+    for (int s : old_slots) mx = std::max(mx, fileLogit(hid, s));
+    for (int s : old_slots) z += std::exp(fileLogit(hid, s) - mx);
+    for (size_t k = 0; k < old_slots.size(); ++k)
+        EXPECT_NEAR(p[k], std::exp(fileLogit(hid, old_slots[k]) - mx) / z, 1e-6);
+    // New enemy rows copy the friendly row of the same card (bias included).
+    const auto pair = net.logitsFromHidden(hid, {mc + 300, opp + 299, mc + 1, opp, mc + 1200, opp + 1199});
+    EXPECT_DOUBLE_EQ(pair[0], pair[1]);
+    EXPECT_DOUBLE_EQ(pair[2], pair[3]);
+    EXPECT_DOUBLE_EQ(pair[4], pair[5]);
+    EXPECT_TRUE(std::isnan(net.logitsFromHidden(hid, {openspiel::kVocabSize})[0]));
+}
+
+TEST(PolicyNet, SmallAndFullSizeNetsAreNotPadded) {
+    const auto tiny = randomPolicyNetBytes(20, 4, 10, 2);
+    ml::PolicyNet a(tiny.data(), tiny.size(), "tiny");
+    EXPECT_EQ(a.vocabSize(), 10);
+    const auto full = randomPolicyNetBytes(20, 4, openspiel::kVocabSize, 3);
+    ml::PolicyNet b(full.data(), full.size(), "full");
+    EXPECT_EQ(b.vocabSize(), openspiel::kVocabSize);
+    EXPECT_EQ(b.fileVocabSize(), openspiel::kVocabSize);
 }
 
 class PolicyPriorTest : public ::testing::Test {

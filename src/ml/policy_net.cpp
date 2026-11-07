@@ -74,6 +74,7 @@ void PolicyNet::load(std::istream& f, const std::string& path) {
     readInto(f, &bm_, 1, path);
     readInto(f, wp_.data(), wp_.size(), path);
     readInto(f, bp_.data(), bp_.size(), path);
+    padPolicyHead();
 
     // Fold the standardisation of zero inputs into the bias (see ValueNet::load).
     w1t_.assign(static_cast<size_t>(in_dim_) * hidden_, 0.0f);
@@ -86,6 +87,27 @@ void PolicyNet::load(std::istream& f, const std::string& path) {
             w1t_[static_cast<size_t>(i) * hidden_ + h] = row[i] * inv_std_[i];
         }
         b1_eff_[h] = static_cast<float>(fold);
+    }
+}
+
+void PolicyNet::padPolicyHead() {
+    // A net written before the vocab grew (openspiel::kVocabSizeBeforeOpponentPicks
+    // rows) is padded to the current size: each new row starts as a copy of the
+    // row the same choice was encoded to before (openspiel::legacyRowOf), so the
+    // old net scores every option exactly as it did. Rows with no stand-in are
+    // zero. Smaller nets (test fixtures) and larger ones are left as they are.
+    namespace os = ::riftbound::openspiel;
+    file_vocab_ = vocab_;
+    if (vocab_ < os::kVocabSizeBeforeOpponentPicks || vocab_ >= os::kVocabSize) return;
+    const int old = vocab_;
+    vocab_ = os::kVocabSize;
+    wp_.resize(static_cast<size_t>(vocab_) * hidden_, 0.0f);
+    bp_.resize(vocab_, 0.0f);
+    for (int s = old; s < vocab_; ++s) {
+        const int src = os::legacyRowOf(s);
+        if (src < 0 || src >= old) continue;
+        std::copy_n(&wp_[static_cast<size_t>(src) * hidden_], hidden_, &wp_[static_cast<size_t>(s) * hidden_]);
+        bp_[s] = bp_[src];
     }
 }
 

@@ -13,6 +13,12 @@
 /// w2[hidden], b2[1] (win logit), wm[hidden], bm[1] (margin, tanh),
 /// wp[vocab * hidden] (one row per vocab slot), bp[vocab] (policy logits).
 ///
+/// A net whose policy head predates the MakeChoiceOpponent block (vocab ==
+/// openspiel::kVocabSizeBeforeOpponentPicks) is padded at load to
+/// openspiel::kVocabSize, each new row a copy of its openspiel::legacyRowOf
+/// row (bias likewise): the old net's logits are unchanged and an enemy pick
+/// scores as the same card's friendly pick did. The file format is unchanged.
+///
 /// Inference is sparse on both ends: the hidden layer accumulates only the
 /// non-zero inputs (standardisation of the zeros folded into the bias, as
 /// ValueNet does) and the policy head computes logits only for the legal
@@ -74,14 +80,17 @@ public:
     int inputDim() const { return in_dim_; }
     int hiddenDim() const { return hidden_; }
     int vocabSize() const { return vocab_; }
+    /// Policy rows stored in the file (< vocabSize() for a padded legacy net).
+    int fileVocabSize() const { return file_vocab_; }
 
     /// Process-wide cache: one immutable network per path (thread-safe).
     static std::shared_ptr<const PolicyNet> shared(const std::string& path);
 
 private:
     void load(std::istream& in, const std::string& label);
+    void padPolicyHead();
 
-    int in_dim_ = 0, hidden_ = 0, vocab_ = 0;
+    int in_dim_ = 0, hidden_ = 0, vocab_ = 0, file_vocab_ = 0;
     std::vector<float> mean_, inv_std_, w1_, b1_, w2_, wm_, wp_, bp_;
     float b2_ = 0, bm_ = 0;
     std::vector<float> w1t_, b1_eff_;   // sparse first layer (see ValueNet)

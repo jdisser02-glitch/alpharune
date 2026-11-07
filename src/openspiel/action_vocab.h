@@ -15,7 +15,10 @@
 /// And maps each remaining bucket to a primary key:
 ///   Play                                → (card_def_id, play location: base or battlefield index)
 ///   HideCard / ActivateAbility          → card_def_id (1..787)
-///   MakeChoice                          → first chosen def_id (0 = none)
+///   MakeChoice                          → first chosen def_id (0 = none); an
+///                                         object controlled by an opponent of
+///                                         the deciding player goes to the
+///                                         MakeChoiceOpponent block instead
 ///   StandardMove / ChooseBattlefield    → battlefield slot (0..7)
 ///   AssignCombatDamage                  → distribution kind (0..3)
 ///   MulliganDecision                    → mulligan count (0..2)
@@ -132,6 +135,18 @@ enum class ActionVerb : uint8_t {
     PayTriggeredCost,          // arity kNumCardDefIds
     DeclineTriggeredCost,      // arity kNumCardDefIds
     SideboardSwap,             // arity kNumCardDefIds (out def id)
+    MakeChoiceOpponent,        // arity kNumCardDefIds. A MakeChoice whose
+                               // chosen object is controlled by an
+                               // OPPONENT of the deciding player (target
+                               // pick, discard pick, ...): slot = verbBase
+                               // + (def_id - 1). Its own / uncontrolled
+                               // objects stay in the MakeChoice block.
+                               // Before this block a friendly and an enemy
+                               // Riven shared one policy slot and the head
+                               // could not learn "buff mine, debuff theirs".
+                               // Appended LAST so every older slot keeps its
+                               // index (old RBV2/3/4 data and RBPN nets stay
+                               // valid; see kVocabSizeBeforeOpponentPicks).
     Count,
 };
 
@@ -160,6 +175,7 @@ constexpr int verbArity(ActionVerb v) {
         case ActionVerb::PayTriggeredCost:        return kNumCardDefIds;
         case ActionVerb::DeclineTriggeredCost:    return kNumCardDefIds;
         case ActionVerb::SideboardSwap:           return kNumCardDefIds;
+        case ActionVerb::MakeChoiceOpponent:      return kNumCardDefIds;
         case ActionVerb::Count:                   return 0;
     }
     return 0;
@@ -174,6 +190,28 @@ constexpr int verbOffset(ActionVerb v) {
 }
 
 constexpr int kVocabSize = verbOffset(ActionVerb::Count);
+
+/// Vocab size before the MakeChoiceOpponent block was appended (22971). Nets
+/// (RBPN) and value data (RBV3/RBV4) written before then carry this size; all
+/// of their slots keep their meaning. ml::PolicyNet pads such a net up to
+/// kVocabSize with legacyRowOf (lab/learn/rbpn.py does the same in Python).
+constexpr int kVocabSizeBeforeOpponentPicks = verbOffset(ActionVerb::MakeChoiceOpponent);
+
+/// For a slot a net of size kVocabSizeBeforeOpponentPicks has no row for: the
+/// older slot whose row stands in for it (a MakeChoiceOpponent slot → the
+/// MakeChoice slot of the same card def, which is where such a pick was
+/// encoded before), so a padded old net scores both picks as it did. -1 for a
+/// slot with no stand-in (and for a slot the old vocab already had).
+constexpr int legacyRowOf(int slot) {
+    const int opp = verbOffset(ActionVerb::MakeChoiceOpponent);
+    if (slot >= opp && slot < opp + verbArity(ActionVerb::MakeChoiceOpponent))
+        return verbOffset(ActionVerb::MakeChoice) + 1 + (slot - opp);
+    return -1;
+}
+
+static_assert(kVocabSizeBeforeOpponentPicks == 22971,
+              "slots before the MakeChoiceOpponent block moved: old nets and data would be misread");
+static_assert(kVocabSize <= 65535, "RBV3/RBV4 store vocab slots as uint16");
 
 // ─── Encoding ───────────────────────────────────────────────────────────────
 

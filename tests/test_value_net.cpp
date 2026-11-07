@@ -2,6 +2,7 @@
 
 #include "ml/value_net.h"
 #include "ml/feature_extractor.h"
+#include "openspiel/action_vocab.h"
 
 #include <gtest/gtest.h>
 
@@ -198,7 +199,26 @@ TEST(ValueData, PolicyRecordsRoundTripThroughTheReader) {
     EXPECT_EQ(f3.records[0].policy.size(), 2u);
     EXPECT_TRUE(std::isnan(f3.records[0].search_value));
     EXPECT_EQ(f3.records[1].source, kPolicyHuman);
+    EXPECT_EQ(f3.vocab, ::riftbound::openspiel::kVocabSize) << "the header grows with the vocab";
     std::remove(path3.c_str());
+
+    // A v4 file begun before the MakeChoiceOpponent slots: appending raises its
+    // header vocab so the new records' slots are inside it; old records stay.
+    const auto path4 = (std::filesystem::temp_directory_path() / "riftbound_policy_test_old.rbv4").string();
+    std::remove(path4.c_str());
+    { std::ofstream o(path4, std::ios::binary); o.write("RBV4", 4);
+      int32_t d = kStateFeatureDim, voc = ::riftbound::openspiel::kVocabSizeBeforeOpponentPicks;
+      o.write(reinterpret_cast<const char*>(&d), 4); o.write(reinterpret_cast<const char*>(&voc), 4); }
+    appendValueRecords(path4, kStateFeatureDim, {a}, PlayerId::Player1, 8, 3, 8, 3u);
+    appendValueRecords(path4, kStateFeatureDim, {h}, PlayerId::Player1, 8, 3, 8, 4u);
+    const ValueFile f4 = readValueRecords(path4);
+    EXPECT_EQ(f4.version, 4);
+    EXPECT_EQ(f4.dim, kStateFeatureDim);
+    EXPECT_EQ(f4.vocab, ::riftbound::openspiel::kVocabSize);
+    ASSERT_EQ(f4.records.size(), 2u);
+    EXPECT_EQ(f4.records[0].game_id, 3u);
+    EXPECT_EQ(f4.records[1].game_id, 4u);
+    std::remove(path4.c_str());
 }
 
 }  // namespace
