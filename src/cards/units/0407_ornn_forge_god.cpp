@@ -3,6 +3,8 @@
 #include "core/game_state.h"
 #include "core/events.h"
 #include "engine/effect_executor.h"
+#include "cards/card_helpers.h"
+#include "cards/units/weaponmaster_base.h"
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -15,48 +17,11 @@ class OrnnForgeGod : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
 
+    // [Weaponmaster]: optional, the Equipment is the controller's choice and
+    // its Equip cost is paid minus one Power (weaponmaster_base.h).
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayMe; }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>&) override {
-        // Weaponmaster: find a friendly Equipment gear and attach it to me
-        // (free — "[A] less" reduces the simple equip cost to nothing here).
-        if (!ctx.state.objectExists(ctx.source)) return;
-        GameObjectId best_gear = kInvalidId;
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isGear() || obj.controller != ctx.controller) continue;
-            if (!obj.location.has_value()) continue;
-            bool is_equipment = false;
-            for (auto& tag : obj.tags) {
-                if (tag == "Equipment") { is_equipment = true; break; }
-            }
-            if (!is_equipment) continue;
-            best_gear = id;
-            break;
-        }
-        if (best_gear == kInvalidId) return;
-
-        auto& gear = ctx.state.getObject(best_gear);
-        // "even if it's already attached" — detach from current bearer first.
-        if (gear.attached_to.has_value()) {
-            auto old_unit = *gear.attached_to;
-            if (ctx.state.objectExists(old_unit)) {
-                auto& old = ctx.state.getObject(old_unit);
-                old.attachment_might_bonus -= gear.might_bonus;
-                auto it = std::find(old.attachments.begin(), old.attachments.end(), best_gear);
-                if (it != old.attachments.end()) old.attachments.erase(it);
-                old.recomputeMight();
-            }
-            gear.attached_to = std::nullopt;
-        }
-        auto& self = ctx.state.getObject(ctx.source);
-        gear.attached_to = ctx.source;
-        self.attachments.push_back(best_gear);
-        gear.location = self.location;
-        gear.zone = self.zone;
-        self.attachment_might_bonus += gear.might_bonus;
-        self.recomputeMight();
-        ctx.events.emit(ObjectStateChangedEvent{best_gear, "attached"});
-        ctx.events.emit(ObjectStateChangedEvent{ctx.source, "equipped"});
-        ctx.events.logTrace("ORNN: Weaponmaster equip " + gear.name);
+        weaponmasterTrigger(ctx, "ORNN, FORGE GOD");
     }
 
     // "I have +1 [M] for each friendly gear." Recomputed every aura pass.

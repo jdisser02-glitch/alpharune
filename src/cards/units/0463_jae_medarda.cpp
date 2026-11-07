@@ -15,10 +15,16 @@ class JaeMedarda : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
     // "When you choose me with a spell, draw 1."
-    // The engine fires WhenYouChooseAFriendlyUnit on ALL the player's units
-    // when ANY friendly unit is chosen, so self-filter: only draw if a chain
-    // item actually chose ME (ChainItem::chosen_objects / targets).
+    // The engine fires WhenYouChooseAFriendlyUnit on all the player's cards
+    // (the chosen unit included) with the chosen unit as subject; the
+    // condition keeps "me", and the body checks a SPELL chose me
+    // (ChainItem::chosen_objects / targets).
     TriggerType triggerType() const override { return TriggerType::WhenYouChooseAFriendlyUnit; }
+    // Only "me" being chosen triggers it (the subject is the chosen unit).
+    bool triggerCondition(const GameState& /*state*/, GameObjectId source, PlayerId /*controller*/,
+                          TriggerType /*trigger*/, GameObjectId subject) const override {
+        return subject == source;
+    }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
         bool chose_me = false;
         for (const auto& item : ctx.state.chain.items) {

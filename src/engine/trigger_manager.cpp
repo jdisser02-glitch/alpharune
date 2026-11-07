@@ -1151,6 +1151,21 @@ void TriggerManager::onObjectStateChanged(const ObjectStateChangedEvent& e) {
         return;
     }
 
+    // A gear that is not a unit was moved by an effect (Command: Attack moves
+    // a [Deploy] gear to a battlefield). Units announce moves with
+    // UnitMovedEvent; a gear's own "when you move this" (The Ball) fires here.
+    if (e.what_changed == "gear_moved") {
+        const auto& g = state_.getObject(e.object);
+        if (g.card_def_id != kInvalidId && g.location.has_value()) {
+            if (cardFiresOn(card_registry_, g.card_def_id, TriggerType::WhenIMove))
+                fireTrigger(e.object, controller, 0, TriggerType::WhenIMove);
+            if (g.isAtBattlefield() &&
+                cardFiresOn(card_registry_, g.card_def_id, TriggerType::WhenIMoveToFB))
+                fireTrigger(e.object, controller, 0, TriggerType::WhenIMoveToFB);
+        }
+        return;
+    }
+
     // "When a unit you control becomes [Mighty]" — fires on the controller's
     // on-board cards AND the controller's legend; the unit that crossed the
     // 5+ [M] threshold is the subject. (Fiora, Worthy 500 / Grand Duelist 519.)
@@ -1180,10 +1195,13 @@ void TriggerManager::onObjectStateChanged(const ObjectStateChangedEvent& e) {
     // (attachGearToUnit / attachFree emit "equipped"). (Aphelios, Exalted 372.)
     if (e.what_changed == "chosen_by_controller") {
         // "When you choose a friendly unit" — a spell or ability its own
-        // controller played chose this unit (at play or at resolution).
+        // controller played chose this unit (at play or at resolution). The
+        // chosen unit itself is a watcher too ("When you choose me": Irelia,
+        // Fervent; Jae Medarda); the subject is the chosen unit, and a card
+        // that means "me" checks it (triggerCondition).
         std::vector<GameObjectId> watchers;
         for (auto& [id, obj] : state_.objects) {
-            if (id == e.object || obj.controller != controller) continue;
+            if (obj.controller != controller) continue;
             if (!obj.location.has_value() && obj.zone != ZoneType::LegendZone) continue;
             if (obj.card_def_id == kInvalidId) continue;
             if (cardFiresOn(card_registry_, obj.card_def_id,

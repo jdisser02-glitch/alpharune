@@ -46,7 +46,8 @@ public:
             return payableEnergy(ctx.state, ctx.controller) >= 1 &&
                    !choosable(ctx.state, ctx.controller, current).empty();
         };
-        if (!costAlreadyPaid(ctx) && !can_pay()) { if (finalizingChoices(ctx)) return; return; }
+        // Nothing to choose or no [1]: the "you may" is not offered, and the
+        // ability leaves the chain at finalization (CR 383.3.a.2).
         const int go = confirmOptional(ctx, "Lady of Clockwork: pay [1] to choose a friendly gear?",
                                        [&]() { return costAlreadyPaid(ctx) || can_pay(); });
         if (go != 1) { if (finalizingChoices(ctx)) return; return; }   // waiting, or declined

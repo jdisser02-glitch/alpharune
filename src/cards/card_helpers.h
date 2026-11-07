@@ -260,12 +260,17 @@ inline void counterChainTop(CardContext& ctx) {
 }
 
 // ── Gold tokens ──
+// "Play a Gold gear token exhausted." (Plundering Poro 778, Treasure Hunter,
+// Honest Broker): a gear token enters ready unless told otherwise (CR 149.1).
 inline void createGoldToken(CardContext& ctx) {
     auto loc = BaseLocation{ctx.controller};
     auto tid = ctx.executor.createToken(ctx.controller, CardType::Gear, "Gold",
                                         0, {"Gold"}, KeywordSet{}, loc, false);
-    if (ctx.state.objectExists(tid))
-        ctx.state.getObject(tid).card_def_id = kGoldGearCardDefId;
+    if (ctx.state.objectExists(tid)) {
+        auto& gold = ctx.state.getObject(tid);
+        gold.card_def_id = kGoldGearCardDefId;
+        gold.is_exhausted = true;
+    }
 }
 
 inline GameObjectId createGoldExhausted(CardContext& ctx) {

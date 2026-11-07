@@ -1120,6 +1120,29 @@ void GameEngine::mainPhase() {
     events_.emit(PhaseChangedEvent{old_phase, TurnPhase::MainPhase,
                                     state_.turn.turn_player});
 
+    // "At the start of your Main Phase" triggers (Lady of Clockwork) go
+    // through the chain now, as the Beginning Phase's do: finalized (their
+    // choices made, a declined "you may" removed, CR 383.3.a.2) and resolved
+    // before the turn player's first main-phase action. Without this the
+    // first main-phase decision was a priority window above a still-pending
+    // trigger. The chain's decisions record the main stage
+    // AfterIntentChain, so resumeFromSnapshot finishes this chain, then
+    // enters the action loop.
+    if (chain_manager_->chainExists()) {
+        using MainStage = DecisionSite::MainStage;
+        auto& site = state_.decision_site;
+        site.main_action_count = 0;
+        site.main_bf_index = 0;
+        site.main_stage = MainStage::AfterIntentChain;
+        runChain();
+        if (state_.game_over) return;
+        cleanup();
+        site.main_stage = MainStage::AfterCleanupChain;
+        if (chain_manager_->chainExists()) runChain();
+        if (state_.game_over) return;
+        site.main_stage = MainStage::Advance;
+    }
+
     mainPhaseLoop();
 }
 
@@ -1609,6 +1632,22 @@ void GameEngine::runFinalizePass(ChainItem& item) {
 
     ChainItem done = std::move(*state_.chain.resuming);
     state_.chain.resuming.reset();
+    // CR 383.3.a.2: a triggered ability whose leading "you may" is declined
+    // (or can't be done: confirmOptional's precondition failed) during
+    // finalization is removed from the chain and considered not to have
+    // triggered.
+    if (done.is_ability && !done.is_activated_ability && done.may_answer == 0) {
+        for (auto it = state_.chain.items.begin(); it != state_.chain.items.end(); ++it) {
+            if (it->id != item_id) continue;
+            const std::string name = state_.objectExists(it->source)
+                ? state_.getObject(it->source).name : std::string("?");
+            state_.chain.items.erase(it);
+            events_.logTrace("TRIGGER_NOT_PERFORMED: " + name +
+                             " (\"you may\" declined at finalization; removed from the chain)");
+            break;
+        }
+        return;
+    }
     for (auto& ci : state_.chain.items) {
         if (ci.id != item_id) continue;
         ci.resume_point = done.resume_point;

@@ -230,6 +230,7 @@ public:
     }
     void testHook_executeIntent(const Intent& i) { executeIntent(i); }
     void testHook_runChain() { runChain(); }
+    void testHook_mainPhase() { mainPhase(); }
     std::vector<Intent> testHook_generateShowdownActions(PlayerId p) const {
         return generateShowdownActions(p);
     }

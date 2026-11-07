@@ -19,6 +19,12 @@ public:
     std::vector<TriggerType> triggerTypes() const override {
         return {TriggerType::WhenYouChooseAFriendlyUnit, TriggerType::WhenIAmReadied};
     }
+    // WhenYouChooseAFriendlyUnit fires on every friendly watcher with the
+    // chosen unit as its subject: only "me" counts.
+    bool triggerCondition(const GameState& /*state*/, GameObjectId source, PlayerId /*controller*/,
+                          TriggerType trigger, GameObjectId subject) const override {
+        return trigger != TriggerType::WhenYouChooseAFriendlyUnit || subject == source;
+    }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>&) override {
         if (!ctx.state.objectExists(ctx.source)) return;
         ctx.executor.giveTemporaryMight(ctx.source, 1);

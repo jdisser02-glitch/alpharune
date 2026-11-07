@@ -39,17 +39,23 @@ public:
             return;   // waiting for the agent
         if (gear == kInvalidId || !ctx.state.objectExists(gear)) return;
         auto& g = ctx.state.getObject(gear);
-        g.location = BattlefieldLocation{dest};
-        g.zone = ZoneType::BattlefieldZone;
-        ctx.events.emit(ObjectStateChangedEvent{gear, "moved"});
-        ctx.events.logTrace("COMMAND: ATTACK: moved " + g.name + " to BF#" +
+        if (g.isUnit()) {
+            // A unit gear (Lady of Clockwork) moves as a unit does.
+            ctx.executor.moveToBattlefield(gear, dest);
+        } else {
+            g.location = BattlefieldLocation{dest};
+            g.zone = ZoneType::BattlefieldZone;
+            // "When you play or move this" (The Ball) — TriggerManager.
+            ctx.events.emit(ObjectStateChangedEvent{gear, "gear_moved"});
+        }
+        ctx.events.logTrace("COMMAND: ATTACK: moved " + ctx.state.getObject(gear).name + " to BF#" +
                             std::to_string(static_cast<int>(dest)));
     }
 private:
     std::vector<GameObjectId> movableGear(const CardContext& ctx, BattlefieldId dest) const {
         std::vector<GameObjectId> out;
         for (const auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isGear() || obj.controller != ctx.controller || !obj.location.has_value()) continue;
+            if (!obj.isAnyGear() || obj.controller != ctx.controller || !obj.location.has_value()) continue;
             if (obj.attached_to.has_value() || obj.battlefieldId() == std::optional<BattlefieldId>{dest})
                 continue;
             const Card* c = (ctx.registry && obj.card_def_id != kInvalidId)
@@ -58,14 +64,25 @@ private:
         }
         return out;
     }
+    // The gear to reveal is the player's choice among the gears in the top 5
+    // (pickTarget; the mode used the pickMode slots). Drawing one is never
+    // worse than not revealing, so the "you may" is taken whenever there is one.
     void lookForGear(CardContext& ctx) {
         auto& ps = ctx.state.player(ctx.controller);
         std::vector<GameObjectId> top;
         for (int i = static_cast<int>(ps.main_deck.size()) - 1; i >= 0 && top.size() < 5; --i)
             top.push_back(ps.main_deck[i]);
-        GameObjectId drawn = kInvalidId;
+        std::vector<GameObjectId> gears;
         for (auto cid : top)
-            if (ctx.state.objectExists(cid) && ctx.state.getObject(cid).isGear()) { drawn = cid; break; }
+            if (ctx.state.objectExists(cid) && ctx.state.getObject(cid).isGear()) gears.push_back(cid);
+        GameObjectId drawn = kInvalidId;
+        if (!gears.empty()) {
+            drawn = pickTarget(ctx, "Command: Attack: gear to reveal and draw", gears);
+            if (drawn == kInvalidId && ctx.state.chain.resuming.has_value() &&
+                ctx.state.chain.resuming->resume_point == 7)
+                return;   // waiting for the agent
+            if (std::find(gears.begin(), gears.end(), drawn) == gears.end()) drawn = gears.front();
+        }
         if (drawn != kInvalidId) {
             ps.main_deck.erase(std::remove(ps.main_deck.begin(), ps.main_deck.end(), drawn),
                                ps.main_deck.end());
@@ -73,6 +90,9 @@ private:
             obj.zone = ZoneType::Hand;
             obj.location = std::nullopt;
             ps.hand.push_back(drawn);
+            ctx.events.emit(CardRevealedEvent{drawn, obj.card_def_id, obj.owner,
+                                              /*revealed_to_all=*/true, ctx.controller,
+                                              ZoneType::MainDeck});
             ctx.events.logTrace("COMMAND: ATTACK: revealed and drew " + obj.name);
         }
         std::vector<GameObjectId> rest;

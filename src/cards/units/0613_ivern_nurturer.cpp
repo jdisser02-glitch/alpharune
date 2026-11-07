@@ -15,7 +15,10 @@ namespace {
 class IvernNurturer : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
-    unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
+    // "Look at the top 3 ... You may reveal a unit": the "you may" is not the
+    // first part of the effect, so it is decided as the ability resolves and
+    // the ability is always finalized to the chain (CR 383.3.a.3). No
+    // finalization choices.
 
     std::vector<TriggerType> triggerTypes() const override {
         return {TriggerType::WhenYouPlayMe, TriggerType::WhenIHold};
@@ -48,7 +51,6 @@ public:
         // "You may reveal a unit ... and draw it." Optional.
         int conf = confirmOptional(ctx,
             "Ivern, Nurturer: reveal a unit from top 3 and draw it?", has_unit);
-        if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (conf == -1) return;  // waiting for agent
 
         // Now actually remove the peeked cards from the top of the deck.

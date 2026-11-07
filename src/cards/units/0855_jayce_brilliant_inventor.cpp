@@ -24,6 +24,19 @@ public:
     std::vector<TriggerType> triggerTypes() const override {
         return {TriggerType::WhenYouPlayMe, TriggerType::WhenYouPlayACard};
     }
+    // The gear half triggers only on the turn's first non-token gear: any
+    // other card played is not a trigger at all (so nothing goes on the chain).
+    bool triggerCondition(const GameState& state, GameObjectId source, PlayerId /*controller*/,
+                          TriggerType trigger, GameObjectId subject) const override {
+        if (trigger != TriggerType::WhenYouPlayACard) return true;
+        if (subject == kInvalidId || !state.objectExists(subject)) return false;
+        const auto& p = state.getObject(subject);
+        if (!p.isGear() || p.isToken()) return false;
+        if (!state.objectExists(source)) return false;
+        const auto& cc = state.getObject(source).card_counters;
+        auto it = cc.find("__jayce_first_gear_turn");
+        return it == cc.end() || it->second != state.turn.turn_number + 1;
+    }
     void onTrigger(CardContext& ctx, const std::vector<GameObjectId>& /*targets*/) override {
         if (!ctx.state.objectExists(ctx.source)) return;
         auto& self = ctx.state.getObject(ctx.source);

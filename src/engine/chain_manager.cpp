@@ -244,7 +244,9 @@ bool ChainManager::stepFinalize(
             bool found = false;
             for (size_t k = 0; k < state_.chain.items.size(); ++k)
                 if (state_.chain.items[k].id == fid) { i = k; found = true; break; }
-            if (!found) continue;
+            // Removed while finalizing (a triggered ability whose "you may"
+            // was declined, CR 383.3.a.2): the next item now sits at i.
+            if (!found) { --i; continue; }
         }
 
         {

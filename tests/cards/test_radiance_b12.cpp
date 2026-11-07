@@ -557,26 +557,26 @@ TEST_F(RadianceB12Test, Seraphine_TwoUnitsAreNotEnoughButSheCounts) {
     EXPECT_EQ(s().player(P1).hand.size(), 1u);
 }
 
-TEST_F(RadianceB12Test, Seraphine_DecliningStillUsesTheTurn) {
+// CR 383.3.e.2: a "once each turn ... you may" ability that is declined at
+// finalization is removed from the chain and is not performed, so it can
+// trigger again later that turn.
+TEST_F(RadianceB12Test, Seraphine_DecliningDoesNotUseTheTurn) {
     makeEngine();
     setLegend(P1); setLegend(P2);
     boardObject(P1, kSeraphine);
     std::vector<GameObjectId> units;
-    for (int i = 0; i < 6; ++i) units.push_back(boardObject(P1, kOtterpus));
+    for (int i = 0; i < 9; ++i) units.push_back(boardObject(P1, kOtterpus));
     deckCard(P1);
-    p1_.answers = {0};
+    deckCard(P1);
+    p1_.answers = {0, 1};
     move({units[0], units[1], units[2]}, 1);
     EXPECT_EQ(p1_.int_prompts.size(), 1u);
     EXPECT_TRUE(s().player(P1).hand.empty());
     move({units[3], units[4], units[5]}, 1);
-    EXPECT_EQ(p1_.int_prompts.size(), 1u) << "once each turn";
-    // Next turn it works again.
-    s().turn.turn_number += 1;
-    for (auto u : units) s().getObject(u).is_exhausted = false;
-    p1_.answers = {1};
-    p1_.next = 0;
-    move({units[0], units[1], units[2]}, 0);
-    EXPECT_EQ(p1_.int_prompts.size(), 2u);
+    EXPECT_EQ(p1_.int_prompts.size(), 2u) << "declined: it can trigger again this turn";
+    EXPECT_EQ(s().player(P1).hand.size(), 1u);
+    move({units[6], units[7], units[8]}, 1);
+    EXPECT_EQ(p1_.int_prompts.size(), 2u) << "performed once: done for the turn";
     EXPECT_EQ(s().player(P1).hand.size(), 1u);
 }
 

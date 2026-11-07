@@ -36,6 +36,18 @@ public:
         return TargetRequirements{.count = 1, .must_be_unit = true, .must_be_friendly = true};
     }
     bool needsPlayTimeTarget() const override { return true; }
+    // The unit is chosen as the spell is played: one of mine that is at a
+    // different location than some battlefield I control.
+    std::vector<GameObjectId> enumerateLegalTargets(const GameState& state,
+                                                    PlayerId controller) const override {
+        return chooseableUnitsSorted(state, controller, [&](const GameObject& o) {
+            if (o.controller != controller) return false;
+            for (const auto& bf : state.battlefields)
+                if (controls(bf, controller) && o.battlefieldId() != std::optional<BattlefieldId>{bf.id})
+                    return true;
+            return false;
+        });
+    }
     bool hasLegalTargets(const GameState& state, PlayerId controller) const override {
         for (const auto& bf : state.battlefields)
             if (controls(bf, controller) && !unitsElsewhere(state, controller, bf.id).empty())
@@ -47,6 +59,9 @@ public:
         // unit (pickTarget) — the helpers' resume slots only compose in that order.
         const auto& bfs = ctx.state.battlefields;
         const int n = static_cast<int>(std::min<size_t>(bfs.size(), 32));
+        GameObjectId chosen = kInvalidId;
+        if (ctx.state.chain.resuming.has_value() && !ctx.state.chain.resuming->targets.empty())
+            chosen = ctx.state.chain.resuming->targets.front();
         uint32_t mask = 0;
         std::vector<std::string> labels;
         for (int i = 0; i < n; ++i) {
@@ -54,8 +69,13 @@ public:
             if (ctx.state.objectExists(bfs[i].card_object_id))
                 name = ctx.state.getObject(bfs[i].card_object_id).name;
             labels.push_back(name);
-            if (controls(bfs[i], ctx.controller) &&
-                !unitsElsewhere(ctx.state, ctx.controller, bfs[i].id).empty())
+            if (!controls(bfs[i], ctx.controller)) continue;
+            const auto elsewhere = unitsElsewhere(ctx.state, ctx.controller, bfs[i].id);
+            // With the unit already chosen (at play), only a battlefield it
+            // is not at keeps that choice legal.
+            if (chosen != kInvalidId
+                    ? std::find(elsewhere.begin(), elsewhere.end(), chosen) != elsewhere.end()
+                    : !elsewhere.empty())
                 mask |= (1u << i);
         }
         int mode = pickMode(ctx, "Resonating Strike: battlefield", n, labels, mask);
@@ -86,7 +106,7 @@ private:
         d.keywords.set(Keyword::Hidden);
         d.keywords.set(Keyword::Reaction);
         d.ability_text = R"RB([Hidden] (Hide now for [A] to react with later for [0].)
-[Reaction] (Play on your turn or in showdowns.)
+[Reaction] (Play any time, even before spells and abilities resolve.)
 Choose a battlefield you control and a unit you control at a different location. Move that unit to that battlefield and give it +2 [M] this turn.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/1a625de128019d65d41dd0af4f8d189d5de530a5-744x1039.png)RB";
         return d;
