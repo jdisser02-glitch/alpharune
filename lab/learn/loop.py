@@ -136,7 +136,12 @@ SPECIALISTS = {
                 "decks": [_META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
                           _META + "s5_shanghai_city_challenge_2026-11-01/03_youjike_sishumoling_orianna.txt",
                           _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/03_dongdong_kapai_orianna.txt",
-                          _META + "s5_fuzhou_city_challenge_2026-10-31/19_liuxin_veil_orianna.txt"],
+                          _META + "s5_fuzhou_city_challenge_2026-10-31/19_liuxin_veil_orianna.txt",
+                          # 7 Nov: Western Showdown lists (riftbound.zone, riftwatch.gg): more varied builds
+                          "lab/decks/community/orianna_showdowns_2026-10-31/kevinyin_sacramento_showdown_134th.txt",
+                          "lab/decks/community/orianna_showdowns_2026-10-31/brandonwolfgang_convergence4_142nd.txt",
+                          "lab/decks/community/orianna_showdowns_2026-10-31/jimmythefish7_melbourne_showdown_22nd.txt",
+                          "lab/decks/community/orianna_showdowns_2026-10-31/burrsir_orlando_showdown_59th.txt"],
                 "jury": ["decks/riven_best_field.txt",
                          _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
                          _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
@@ -157,7 +162,12 @@ SPECIALISTS = {
     # 7 Nov: Jeremy asked for a Volibear specialist (Ritualo's Volibear Dragons deck profile; the general net piloted
     # it at 3-34%, casting removal on its own units). Jury: the legends Volibear meets most in today's meta.
     "volibear": {"legend": "Volibear",
-                 "decks": ["lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt"],
+                 "decks": ["lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+                           # Radiance Volibear lists from riftbound.zone (none placed high in this period)
+                           "lab/decks/community/volibear_radiance_2026-10-31/soldog_convergence4_20261031.txt",
+                           "lab/decks/community/volibear_radiance_2026-10-31/aechkay_sacramento_showdown_20261024.txt",
+                           "lab/decks/community/volibear_radiance_2026-10-31/mustafa_sacramento_showdown_20261024.txt",
+                           "lab/decks/community/volibear_radiance_2026-10-31/oryzias_aserty_invitational_20261010.txt"],
                  "jury": ["decks/riven_best_field.txt",
                           _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
                           _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
