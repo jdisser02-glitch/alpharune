@@ -30,7 +30,14 @@ export async function render(container) {
   // 2. The bot is a credible jury: share of simulated matchups inside real players' 95% interval (data.measured,
   //    from lab/meta/compare_meta-*.json), halved when it was measured with an older net than the one in use.
   const M = D.measured || {}, C = M.credibility || {}, Cv = M.coverage || {}, T = M.training || {};
-  const p2 = C.rate == null ? 0 : clamp(C.rate * (C.stale ? 0.5 : 1));
+  // Since 7 Nov the step is scored on the right favourite (lab/tools/favorites.py): the share of Riven's matchups
+  // where the simulation favours the same side as real players. The field measure (10+ legends) counts when its
+  // pilots are the nets in use, else Riven's specialist jury (current net, fewer legends).
+  const F = M.favorites || {}, Fs = F.specialists || {};
+  const R = F.field && !F.field.stale && F.field.total ? F.field : (Fs.riven && Fs.riven.total ? Fs.riven : F.field);
+  const p2 = R && R.rate != null ? clamp(R.rate * (R.stale ? 0.5 : 1)) : C.rate == null ? 0 : clamp(C.rate * (C.stale ? 0.5 : 1));
+  const favOf = s => `${s.right}/${s.total}`;
+  const others = Object.entries(Fs).filter(([k, s]) => k !== "riven" && s.total).map(([k, s]) => `${esc(s.legend)} ${favOf(s)}`).join(", ");
   const A = S.agreement || {}, aHist = A.history || [], aNow = aHist.length ? aHist[aHist.length - 1] : null;
   const G = T.general || {}, specs = Object.entries(T.specialists || {});
   const train = [`General net ${esc(G.current || "—")} ${G.running ? "training" : "paused"}, ${G.rejected_since_adoption ?? 0} rejected since its adoption`]
@@ -62,8 +69,8 @@ export async function render(container) {
       line: `${fmt1(eNow)} errors per real game (median) · target ${eT} · ${eNow != null && eNow <= eT ? "passed" : "not passed"}`,
       sub: `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
     { n: 2, title: "Bot judges matchups like real players", pct: p2,
-      line: C.total ? `${C.within} of ${C.total} simulated matchups inside real players' range${C.stale ? ` · measured with ${C.net !== C.current ? `${esc(C.net)}, an older Riven bot than ${esc(C.current)}` : esc(C.net)}${(C.stale_pilots || []).length ? ` and ${C.stale_pilots.length} opponent pilot(s) since replaced` : ""}: counted half` : ""}${since(C.engine_commits_since)}` : "Not measured",
-      sub: `${C.far && C.far.length ? `Off: ${esc(C.far.join(", "))}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
+      line: R && R.total ? `${R.right} of ${R.total} Riven matchups with real players' favourite (target ${pct0(R.target ?? 0.8)}) · ${esc(R.source)}, ${esc(R.net || "")}${R.stale ? ": counted half" : ""}${since(R.engine_commits_since)}` : "Not measured",
+      sub: `${R && R.wrong && R.wrong.length ? `Wrong favourite: ${esc(R.wrong.join(", "))}. ` : ""}${others ? `Other legends' juries: ${others}. ` : ""}${C.total ? `Older, stricter measure: ${C.within} of ${C.total} inside real players' 95% range. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
       line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
       sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },

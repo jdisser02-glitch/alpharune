@@ -213,6 +213,15 @@ def measured_status(ladder: dict) -> dict:
                     "engine_commits_since": engine_since(c.get("started_utc")), "result": c["result"], "reference": c["reference"], "reference_rate": c["reference_rate"],
                     "net": c["net"], "stale": c["net"] not in in_use,
                     "verdict": "beats" if lo > 0 else "trails" if hi < 0 else "ties"}
+    # The right-favourite criterion (lab/tools/favorites.py): does the simulation favour the same side as real players.
+    sys.path.insert(0, str(LAB / "tools"))
+    import favorites
+    fav = favorites.all_scores()
+    for s_ in [fav.get("field")] + list(fav["specialists"].values()):
+        if s_:
+            s_["engine_commits_since"] = engine_since(s_.get("measured_utc"))
+            s_["stale"] = bool({Path(v).stem for v in (s_.get("pilots") or {}).values()} - in_use) or (s_.get("net") not in in_use)
+    out["favorites"] = fav
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:
