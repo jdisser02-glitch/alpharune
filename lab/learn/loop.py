@@ -109,7 +109,10 @@ SPECIALISTS = {
                        _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
                        _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                        _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
-                       _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]},
+                       _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+                       # 7 Nov: Mordekaiser's specialist beats the Riven pilot far more often than real players
+                       # do (55% simulated vs 29% real): Riven trains and is judged against it too.
+                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt"]},
     "kai_sa": {"legend": "Kai'Sa",
                "decks": [_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
