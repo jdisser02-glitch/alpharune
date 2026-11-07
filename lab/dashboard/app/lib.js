@@ -184,7 +184,7 @@ export function bestVariantPath() {
 export function bestVerdict() {
   const b = (((D && D.measured) || {}).list || {}).best; if (!b) return "";
   const f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
-  return `${b.verdict} the reference (${f(b.diff)} points, [${f(b.ci95[0])}, ${f(b.ci95[1])}])${b.stale ? `, measured with ${b.net}, an older bot` : ""}`;
+  return `${b.verdict} the reference (${f(b.diff)} points, [${f(b.ci95[0])}, ${f(b.ci95[1])}])${b.stale ? `, measured with ${b.net}, an older bot` : ""}${b.engine_commits_since ? `, before ${b.engine_commits_since} engine change${b.engine_commits_since > 1 ? "s" : ""}` : ""}`;
 }
 const bestName = () => { const b = (((D && D.measured) || {}).list || {}).best; return b ? (b.verdict === "beats" ? "Best measured list" : "Top measured list (not proven better)") : "Highest single-test list (unconfirmed)"; };
 /** Set codes → names (UNL stays a code: the engine's unlisted cards). */

@@ -13,6 +13,7 @@ async function copy() {
 }
 function css() { if (!document.querySelector(`link[href="${CSS}"]`)) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = CSS; document.head.append(l); } }
 const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
+const since = n => n ? ` · ${n} engine change${n > 1 ? "s" : ""} since, not re-measured` : "";
 const fmt1 = v => v == null ? "—" : (Math.round(v * 10) / 10).toString();
 
 
@@ -51,16 +52,18 @@ export async function render(container) {
   const Dk = S.decks || {}, conf = (M.list || {}).confirmed || [], comps = (M.list || {}).comparisons || [];
   const lastComp = comps[comps.length - 1];
   const sgn = v => `${v >= 0 ? "+" : "−"}${Math.abs(Math.round(v * 1000) / 10)}`;
+  const tidy = l => String(l || "").replace(/\s*\([+\u2212-]\d[^)]*\)/, "");
   const compLine = lastComp ? `Newest check (${esc(lastComp.result.replace(/^\d{8}-\d{6}-/, ""))}, ${esc(lastComp.net)}), against ${esc(lastComp.reference)}: `
-    + lastComp.lists.map(x => `${esc(x.label)} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ") : "";
+    + lastComp.lists.map(x => `${esc(tidy(x.label))} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ")
+    + since(((M.list || {}).best || {}).engine_commits_since) : "";
   const p4 = Math.min(conf.length ? (p2 >= 0.8 ? 1 : 0.5) : 0, p1, p2, p3);
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1,
       line: `${fmt1(eNow)} errors per real game (median) · target ${eT} · ${eNow != null && eNow <= eT ? "passed" : "not passed"}`,
-      sub: E.measured ? `Measured ${esc(E.measured)}` : "", href: "#/replays" },
+      sub: `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
     { n: 2, title: "Bot judges matchups like real players", pct: p2,
-      line: C.total ? `${C.within} of ${C.total} simulated matchups inside real players' range${C.stale ? ` · measured with ${esc(C.net)}, an older bot than ${esc(C.current)}: counted half` : ""}` : "Not measured",
-      sub: `${C.far && C.far.length ? `Off: ${esc(C.far.join(", "))}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games)` : ""}`, href: "#/bot" },
+      line: C.total ? `${C.within} of ${C.total} simulated matchups inside real players' range${C.stale ? ` · measured with ${C.net !== C.current ? `${esc(C.net)}, an older Riven bot than ${esc(C.current)}` : esc(C.net)}${(C.stale_pilots || []).length ? ` and ${C.stale_pilots.length} opponent pilot(s) since replaced` : ""}: counted half` : ""}${since(C.engine_commits_since)}` : "Not measured",
+      sub: `${C.far && C.far.length ? `Off: ${esc(C.far.join(", "))}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
       line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
       sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },

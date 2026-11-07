@@ -15,6 +15,7 @@ import datetime as dt
 import json
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -55,6 +56,18 @@ def net_of(agent: str) -> str:
     return Path(m.group(1)).stem if m else ""
 
 
+def engine_since(when):
+    """Engine (src/) commits made after a measurement: a figure taken before them may no longer hold."""
+    if not when:
+        return None
+    try:
+        log = subprocess.run(["git", "log", f"--since={when}", "--format=%h", "--", "src/"], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout.split()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return len(log)
+
+
 def measured_status(ladder: dict) -> dict:
     """What the Home steps are scored from, computed from the lab's files rather than typed in home.yml
     (2026-11-04 critical review: a hand-typed 80% for the best list and a 96% bot score rested on
@@ -66,6 +79,9 @@ def measured_status(ladder: dict) -> dict:
     - list: GA confirmation finalists whose difference against the reference excludes 0."""
     out = {}
     current = Path(ladder.get("current_net") or "").stem
+    rl = LAB / "learn" / "specialists" / "riven" / "ladder.json"
+    riven_now = Path(json.loads(rl.read_text()).get("current_net") or "").stem if rl.exists() else current
+
     cms = sorted((LAB / "meta").glob("compare_meta-*.json"))
     if cms:
         cm = json.loads(cms[-1].read_text())
@@ -81,7 +97,11 @@ def measured_status(ladder: dict) -> dict:
         within_slack = sum(1 for r in rows if r.get("verdict") == "within")
         in_use = {current} | {Path(json.loads(f.read_text()).get("current_net") or "").stem
                               for f in (LAB / "learn" / "specialists").glob("*/ladder.json")}
-        out["credibility"] = {"file": cms[-1].name, "net": net, "current": current, "stale": bool(net) and net not in in_use,
+        pilots = {Path(v).stem for v in (cm.get("pilots") or {}).values()}
+        out["credibility"] = {"file": cms[-1].name, "net": net, "current": riven_now,
+                              "stale": (bool(net) and net not in in_use) or bool(pilots - in_use),
+                              "stale_pilots": sorted(pilots - in_use),
+                              "engine_commits_since": engine_since(cm.get("measured_utc")),
                               "within": within, "within_slack": within_slack, "total": len(rows),
                               "rate": round(within / len(rows), 3) if rows else None,
                               "far": sorted({f"{r['legend']} vs {r['opponent_legend']}" for r in rows if not inside(r)})}
@@ -169,7 +189,7 @@ def measured_status(ladder: dict) -> dict:
             rows.append({"label": d.get("label"), "path": d.get("path"), "rate": round(rate, 4), "diff": round(diff, 4),
                          "ci95": [round(diff - half, 4), round(diff + half, 4)]})
         legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
-        comparisons.append({"result": stem, "net": net_of(r.get("agent", "")), "reference": decks[0].get("label"),
+        comparisons.append({"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
                             "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends})
     for c in comparisons:
         for row in c["lists"]:
@@ -189,7 +209,8 @@ def measured_status(ladder: dict) -> dict:
         if pool:
             top = max(pool, key=lambda x: x["rate"])
             lo, hi = top["ci95"]
-            best = {**top, "result": c["result"], "reference": c["reference"], "reference_rate": c["reference_rate"],
+            best = {**top, "label": re.sub(r"\s*\([+\u2212-]\d[^)]*\)", "", top.get("label") or ""),
+                    "engine_commits_since": engine_since(c.get("started_utc")), "result": c["result"], "reference": c["reference"], "reference_rate": c["reference_rate"],
                     "net": c["net"], "stale": c["net"] not in in_use,
                     "verdict": "beats" if lo > 0 else "trails" if hi < 0 else "ties"}
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
@@ -361,7 +382,8 @@ def main(argv):
 
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
-            "ladder": ladder, "replays": replays, "engine": engine, "human_review": human, "art": art,
+            "ladder": ladder, "replays": replays, "engine": engine,
+            "human_review": {**human, "engine_commits_since": engine_since(human.get("generated"))}, "art": art,
             "measured": measured_status(ladder),
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
