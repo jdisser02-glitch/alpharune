@@ -22,6 +22,7 @@ import json
 import os
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
@@ -29,6 +30,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 LEARN = ROOT / "lab" / "learn"
+CACHE = ROOT / "lab" / "play_games" / "rows"     # each game's exported rows, kept when a later engine can no longer replay it
+sys.path.insert(0, str(ROOT / "lab" / "tools"))
+from split_human_by_legend import records  # noqa: E402
+
+
+def to_version(rows: bytes, src_v4: bool, dst_v4: bool) -> bytes:
+    """Records of one file converted to the other file's version: RBV4 = RBV3 + a float32 search value per record
+    (NaN for human decisions)."""
+    if src_v4 == dst_v4:
+        return rows
+    out = bytearray()
+    fake = (b"RBV4" if src_v4 else b"RBV3") + b"\0" * 8 + rows
+    for s_, e_, _ in records(fake):
+        rec = fake[s_:e_]
+        out += (rec + struct.pack("<f", float("nan"))) if dst_v4 else rec[:-4]
+    return bytes(out)
+
+
+def body_of(path: Path) -> tuple[bytes, bool]:
+    b = path.read_bytes()
+    return b[12:], b[:4] == b"RBV4"
 
 
 def base_set() -> tuple[Path, Path]:
@@ -55,7 +77,7 @@ def main(argv=None):
     summary = json.loads(base_summary.read_text())
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        work = tmp / "human.rbv3"
+        work = tmp / "human.rbv3"   # keeps the base set's version (RBV3 or RBV4); Play rows are converted to it
         shutil.copyfile(base_data, work)
         played = []
         for path in sorted(Path(a.games).glob("*.json")):
@@ -68,8 +90,9 @@ def main(argv=None):
             elif doc.get("training") is False:
                 entry["status"] = "not a training game"
             else:
+                one = tmp / f"{gid}.rbv"
                 out = subprocess.run([a.binary, "--game", str(path), "--out", str(tmp / gid), "--sims", "0",
-                                      "--export-features", str(work)], cwd=ROOT, capture_output=True, text=True,
+                                      "--export-features", str(one)], cwd=ROOT, capture_output=True, text=True,
                                      env={**os.environ, "RIFTBOUND_ROOT": str(ROOT)})
                 m = re.search(r"exported (\d+) decisions", out.stdout)
                 rev = json.loads((tmp / gid / "summary.json").read_text()) if (tmp / gid / "summary.json").exists() else {}
@@ -77,9 +100,28 @@ def main(argv=None):
                 if m and won != (doc.get("result") or {}).get("winner"):
                     m = None   # replayed to the end but another player won: the engine has changed under the game
                     rev["stop_reason"] = f"replay winner P{won} differs from the recorded winner"
-                entry.update({"status": "ok" if m else "skipped", "rows": int(m.group(1)) if m else 0,
+                cached = CACHE / f"{gid}.rbv"
+                status, legends = ("ok" if m else "skipped"), rev.get("legends", {})
+                if m and one.exists():
+                    CACHE.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(one, cached)
+                    (CACHE / f"{gid}.json").write_text(json.dumps({"legends": legends, "players": rev.get("players", [])}))
+                elif cached.exists():
+                    # The engine changed under this game (a card fix changes the options): keep the rows it gave before.
+                    status, one = "cached", cached
+                    meta = json.loads((CACHE / f"{gid}.json").read_text()) if (CACHE / f"{gid}.json").exists() else {}
+                    legends = meta.get("legends", legends)
+                nrows = 0
+                if status in ("ok", "cached") and one.exists():
+                    body, v4 = body_of(one)
+                    wbody, wv4 = body_of(work)
+                    conv = to_version(body, v4, wv4)
+                    nrows = sum(1 for _ in records((b"RBV4" if wv4 else b"RBV3") + b"\0" * 8 + conv))
+                    with open(work, "ab") as f:
+                        f.write(conv)
+                entry.update({"status": status if nrows else "skipped", "rows": nrows,
                               "stop_reason": rev.get("stop_reason") or (out.stderr.strip()[-300:] or out.stdout.strip()[-300:]),
-                              "remapped_by_text": rev.get("remapped_by_text", 0), "legends": rev.get("legends", {}),
+                              "remapped_by_text": rev.get("remapped_by_text", 0), "legends": legends,
                               "players": rev.get("players", []), "result": (doc.get("result") or {}).get("winner")})
             played.append(entry)
             print(f"{gid}: {entry['status']}, {entry['rows']} decisions" + (f" ({entry.get('stop_reason')})" if entry["status"] != "ok" else ""), flush=True)
