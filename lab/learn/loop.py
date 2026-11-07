@@ -83,7 +83,7 @@ SPECIALISTS = {
                          _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
                          _META + "sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt",
                          _META + "rro25_2026-10-17/01_simple_kennen.txt"],
-               "jury": [_RIVEN_BEST,
+               "jury": ["decks/riven_best_field.txt",
                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
                         _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                         _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
