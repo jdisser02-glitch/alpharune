@@ -154,6 +154,16 @@ SPECIALISTS = {
                              _META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
                              _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
                              _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt"]},
+    # 7 Nov: Jeremy asked for a Volibear specialist (Ritualo's Volibear Dragons deck profile; the general net piloted
+    # it at 3-34%, casting removal on its own units). Jury: the legends Volibear meets most in today's meta.
+    "volibear": {"legend": "Volibear",
+                 "decks": ["lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt"],
+                 "jury": ["decks/riven_best_field.txt",
+                          _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                          _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                          _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+                          _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+                          _META + "radiance_release_2026-10-24/07_zombro_kennen.txt"]},
     "ziggs": {"legend": "Ziggs",
               "decks": ["lab/decks/meta/community_2026-11-05/01_lavenchie_ziggs.txt"],
               "jury": [_RIVEN_BEST,

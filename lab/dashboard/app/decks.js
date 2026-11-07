@@ -16,7 +16,7 @@ const GROUP_TITLES = { "Riven": "Riven", "Meta opponents": "Meta opponents", "Op
 const TYPE_ORDER = ["unit", "spell", "gear", "other"];
 const TYPE_TITLES = { unit: "Units", spell: "Spells", gear: "Gear", other: "Other cards" };
 
-let st = { path: DEFAULT, vs: "", group: null, q: "" };
+let st = { path: DEFAULT, vs: "", group: null, q: "", sort: (store("rl.decks.sort") || "event"), legend: "", card: "" };
 let draft = store("rl.draft") || null;
 let root = null;
 const CSS = new URL("./decks.css", import.meta.url).href;
@@ -55,12 +55,35 @@ function picker() {
   const groups = groupDecks(), sel = deckByPath(st.path);
   if (!st.group) st.group = sel ? groupOf(sel) : GROUPS[0];
   const tabs = `<div class="segmented dk-tabs" role="tablist" aria-label="deck groups">${GROUPS.map(g => `<button role="tab" data-group="${esc(g)}" aria-pressed="${st.group === g}" aria-selected="${st.group === g}">${esc(GROUP_TITLES[g])} <span class="dk-n">${(groups[g] || []).length}</span></button>`).join("")}</div>`;
-  const tile = d => `<a class="dk-tile ${d.path === st.path ? "sel" : ""} ${(d.errors || []).length ? "bad" : ""}" href="#/decks/${encodeURIComponent(d.path)}" aria-current="${d.path === st.path}" title="${esc(d.path)}">${portrait(deckFace(d) || heroName(d), { size: "md" })}<span class="dk-tile-t"><span class="dk-tile-n">${esc(title(d))}</span><span class="dk-tile-s">${esc(d.path.startsWith("lab/decks/meta/") ? `${ordinal(pilotOf(d)?.place || 0)} · ${eventLabel(eventOf(d))}` : stem(d.path))}</span></span>${(d.errors || []).length ? `<span class="dk-tile-x" title="not playable in the engine">!</span>` : ""}</a>`;
+  const tile = d => `<a class="dk-tile ${d.path === st.path ? "sel" : ""} ${(d.errors || []).length ? "bad" : ""}" href="#/decks/${encodeURIComponent(d.path)}" aria-current="${d.path === st.path}" title="${esc(d.path)}">${portrait(deckFace(d) || heroName(d), { size: "md" })}<span class="dk-tile-t"><span class="dk-tile-n">${esc(title(d))}</span><span class="dk-tile-s">${esc(eventOf(d) ? `${pilotOf(d)?.place ? `${ordinal(pilotOf(d).place)} · ` : ""}${eventLabel(eventOf(d))}` : stem(d.path))}</span></span>${(d.errors || []).length ? `<span class="dk-tile-x" title="not playable in the engine">!</span>` : ""}</a>`;
   let body;
   const list = groups[st.group] || [];
   if (st.group === "Meta opponents") {
-    const byEv = new Map(); for (const d of list) { const e = eventOf(d); if (!byEv.has(e)) byEv.set(e, []); byEv.get(e).push(d); }
-    body = [...byEv.entries()].sort((a, b) => b[0].slice(-10).localeCompare(a[0].slice(-10))).map(([e, ds]) => `<div class="dk-event"><h3>${esc(eventLabel(e))}</h3><div class="dk-tiles">${ds.sort((x, y) => (pilotOf(x)?.place || 99) - (pilotOf(y)?.place || 99)).map(tile).join("")}</div></div>`).join("");
+    // Grouping toggle (event / legend / energy) and filters (legend, a card the list must contain), Jeremy 7 Nov.
+    const legends = [...new Set(list.map(heroName))].sort();
+    const want = st.card.trim().toLowerCase();
+    const shown = list.filter(d => (!st.legend || heroName(d) === st.legend) && (!want || String(d.text || "").toLowerCase().includes(want)));
+    const avg = d => (d.stats || {}).avg_energy;
+    const tileE = d => tile(d).replace('</span></span>', ` · ${avg(d) != null ? `avg ${avg(d)}` : ""}</span></span>`);
+    const byKey = (key, order) => { const m = new Map(); for (const d of shown) { const k = key(d); if (!m.has(k)) m.set(k, []); m.get(k).push(d); } return [...m.entries()].sort(order); };
+    const place = (x, y) => (pilotOf(x)?.place || 99) - (pilotOf(y)?.place || 99);
+    const newest = ds => ds.map(eventOf).sort().map(e => e.slice(-10)).sort().pop() || "";
+    let groupsHtml;
+    if (st.sort === "legend") {
+      groupsHtml = byKey(heroName, (a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0])).map(([k, ds]) => `<div class="dk-event"><h3>${esc(k)} <span class="dk-n">${ds.length}</span></h3><div class="dk-tiles">${ds.sort((x, y) => eventOf(y).slice(-10).localeCompare(eventOf(x).slice(-10)) || place(x, y)).map(tileE).join("")}</div></div>`).join("");
+    } else if (st.sort === "energy") {
+      const band = d => avg(d) == null ? "Unknown" : avg(d) < 3 ? "Under 3 energy on average" : avg(d) < 3.5 ? "3 to 3.5 energy on average" : avg(d) < 4 ? "3.5 to 4 energy on average" : "4 energy or more on average";
+      const rank = { "Under 3 energy on average": 0, "3 to 3.5 energy on average": 1, "3.5 to 4 energy on average": 2, "4 energy or more on average": 3, "Unknown": 4 };
+      groupsHtml = byKey(band, (a, b) => rank[a[0]] - rank[b[0]]).map(([k, ds]) => `<div class="dk-event"><h3>${esc(k)} <span class="dk-n">${ds.length}</span></h3><div class="dk-tiles">${ds.sort((x, y) => (avg(x) ?? 9) - (avg(y) ?? 9)).map(tileE).join("")}</div></div>`).join("");
+    } else {
+      groupsHtml = byKey(eventOf, (a, b) => b[0].slice(-10).localeCompare(a[0].slice(-10))).map(([e, ds]) => `<div class="dk-event"><h3>${esc(eventLabel(e))}</h3><div class="dk-tiles">${ds.sort(place).map(tile).join("")}</div></div>`).join("");
+    }
+    const sortBtn = (k, l) => `<button data-sort="${k}" aria-pressed="${st.sort === k}">${l}</button>`;
+    const tools = `<div class="dk-tools"><div class="segmented" role="group" aria-label="group the decks by">${sortBtn("event", "By event")}${sortBtn("legend", "By legend")}${sortBtn("energy", "By energy")}</div>
+      <label class="small muted">Legend <select id="dk-legend"><option value="">All (${list.length})</option>${legends.map(l => `<option ${st.legend === l ? "selected" : ""}>${esc(l)}</option>`).join("")}</select></label>
+      <label class="small muted">Contains <input id="dk-card" type="search" placeholder="a card, e.g. Zhonya" value="${esc(st.card)}"></label>
+      <span class="small muted">${shown.length} list${shown.length === 1 ? "" : "s"}</span></div>`;
+    body = tools + (shown.length ? groupsHtml : empty("No list matches", "Change the legend or the card filter."));
   } else body = `<div class="dk-tiles">${list.map(tile).join("")}</div>`;
   const blurb = { "Riven": "The reference list, the Riven lists from recent tournaments, and the optimiser's best.", "Meta opponents": "Recent tournament decks, used as opponents.", "Optimiser · top 10": bestVerdict() ? `The lists of the newest confirmation (same deals for all), best first: the top one ${bestVerdict()}.` : "The ten best-measured lists from the optimiser. None is proven better than the reference yet." }[st.group] || "";
   return `<section class="panel dk-picker" id="dk-picker" aria-label="choose a deck">${tabs}<p class="small muted" style="margin-top:10px">${esc(blurb)}</p>${list.length ? body : empty("No list in this group", "")}</section>`;
@@ -289,6 +312,7 @@ function draw(container) {
 function wire(container, d) {
   root.addEventListener("click", e => {
     const tab = e.target.closest("[data-group]"); if (tab) { st.group = tab.dataset.group; const p = $("#dk-picker", root); if (p) p.outerHTML = picker(); return; }
+    const so = e.target.closest("[data-sort]"); if (so) { st.sort = so.dataset.sort; store("rl.decks.sort", st.sort); const p = $("#dk-picker", root); if (p) p.outerHTML = picker(); return; }
     const b = e.target.closest("[data-act]"); if (!b || !d) return;
     const act = b.dataset.act, n = b.dataset.n, fromSearch = !!b.closest("#dk-hits");
     if (act === "add" || act === "dec") { draft.changes[n] = (draft.changes[n] || 0) + (act === "add" ? 1 : -1); if (!draft.changes[n]) delete draft.changes[n]; saveDraft(); refreshBuilder(d, fromSearch); }
@@ -302,8 +326,15 @@ function wire(container, d) {
       toast(`Variant "${spec.name}" added to the test set-up`, "ok"); navigate("#/launch");
     }
   });
+  root.addEventListener("input", e => {
+    if (e.target.id !== "dk-card") return;
+    st.card = e.target.value; const pos = e.target.selectionStart;
+    const p = $("#dk-picker", root); if (p) p.outerHTML = picker();
+    const i = $("#dk-card", root); if (i) { i.focus(); try { i.setSelectionRange(pos, pos); } catch (_) {} }
+  });
   root.addEventListener("change", e => {
     const t = e.target;
+    if (t.id === "dk-legend") { st.legend = t.value; const p = $("#dk-picker", root); if (p) p.outerHTML = picker(); return; }
     if (t.id === "dk-vs") { navigate(`#/decks/${encodeURIComponent(st.path)}${t.value ? `?vs=${encodeURIComponent(t.value)}` : ""}`); }
     else if (t.id === "dk-name") { nameTyped(d, t.value); refreshBuilder(d); }
     else if (t.id === "dk-note") { draft.note = t.value; saveDraft(); }

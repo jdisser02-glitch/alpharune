@@ -144,7 +144,7 @@ export function deckPilot(deckOrPath) {
   return r ? { place: +r[2], pilot: r[1], name: legendShort(d.legend) } : null;
 }
 /** Event slug of a tournament list ("sacramento_showdown_2026-10-24"), "" for the others. */
-export const deckEvent = p => { const m = String(typeof p === "string" ? p : (p && p.path) || "").match(/^lab\/decks\/meta\/([^/]+)\//); return m ? m[1] : ""; };
+export const deckEvent = p => { const m = String(typeof p === "string" ? p : (p && p.path) || "").match(/^lab\/decks\/(?:meta|community)\/([^/]+)\//); return m ? m[1] : ""; };
 /** "Sacramento showdown, 24 Oct 2026" from an event slug; {date:false} drops the date. Short tokens with digits stay upper case ("RRO25"). */
 export function eventLabel(slug, opts = {}) {
   const s = String(slug || ""); if (!s) return "";
@@ -234,6 +234,7 @@ export function groupDecks(decks = allDecks()) {
   const best = decks.find(d => d.path === bp) || top[0];
   decks.forEach(d => {
     if (d.path === "decks/riven_sacramento.txt") g["Riven"].push(d);
+    else if (d.path.startsWith("lab/decks/community/")) (isRiven(d) ? g["Riven"] : g["Meta opponents"]).push(d);   // deck profiles Jeremy shows
     else if (d.path.startsWith("lab/decks/meta/")) {
       const ref = decks.find(x => x.path === "decks/riven_sacramento.txt");
       if (ref && ref.list && sameMain(ref.list, d.list)) return;   // the reference list is this tournament list: shown once
