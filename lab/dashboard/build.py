@@ -220,7 +220,10 @@ def measured_status(ladder: dict) -> dict:
     for s_ in [fav.get("field")] + list(fav["specialists"].values()):
         if s_:
             s_["engine_commits_since"] = engine_since(s_.get("measured_utc"))
-            s_["stale"] = bool({Path(v).stem for v in (s_.get("pilots") or {}).values()} - in_use) or (s_.get("net") not in in_use)
+            # Counted half only when the measured legend's own net was replaced; opponent pilots that were adopted
+            # since are listed (the specialists keep training, so a field measure is rarely fully current).
+            s_["pilots_replaced"] = sorted({Path(v).stem for v in (s_.get("pilots") or {}).values()} - in_use)
+            s_["stale"] = s_.get("net") not in in_use
     out["favorites"] = fav
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
