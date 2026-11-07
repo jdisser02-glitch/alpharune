@@ -1,0 +1,498 @@
+{
+ "id": "20261107-201026-volibear-dragons-ritualo-20261107",
+ "name": "volibear-dragons-ritualo-20261107",
+ "description": "Ritualo's Volibear Dragons ('Countering the Meta', Nov 2026) against the top meta decks, each opponent piloted by its specialist's current net; Volibear has no specialist and is piloted by the general net, so its rates are a lower bound.",
+ "started_utc": "2026-11-07T20:10:26+00:00",
+ "engine_commit": "dab73b8",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 200,
+ "threads": 4,
+ "seed": 3111,
+ "spec": {
+  "name": "volibear-dragons-ritualo-20261107",
+  "description": "Ritualo's Volibear Dragons ('Countering the Meta', Nov 2026) against the top meta decks, each opponent piloted by its specialist's current net; Volibear has no specialist and is piloted by the general net, so its rates are a lower bound.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 200,
+  "review_games": 0,
+  "seed": 3111,
+  "decks": [
+   {
+    "deck": "lab/decks/community/ritualo_volibear_dragons_2026-11.txt",
+    "label": "Volibear Dragons (Ritualo)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "decks/riven_best_field.txt",
+    "label": "Riven (best field list)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+    "label": "Riven (Tabris, Orlando 1st)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+    "label": "Kai'Sa (Jason Tian)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+    "label": "Mordekaiser (Neal)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_019_v2.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+    "label": "Orianna (Xi'an 7th)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_orianna_013_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+    "label": "Kennen (zombro)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Evelynn (Vegas)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+    "label": "Akali (Sacramento 1st)",
+    "weight": 1,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60"
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "Volibear Dragons (Ritualo)",
+   "path": "lab/decks/community/ritualo_volibear_dragons_2026-11.txt",
+   "hash": "08fbd2139c",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.2,
+    "curve": {
+     "1": 3,
+     "2": 12,
+     "3": 3,
+     "5": 6,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 25,
+     "spell": 12,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 15
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Action": 3,
+     "Reaction": 9,
+     "Ganking": 3
+    },
+    "two_drops": 15,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (best field list)",
+     "opponent_deck": "decks/riven_best_field.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 7,
+     "win_rate": 0.035,
+     "ci95": [
+      0.0171,
+      0.0705
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 1
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 6
+     },
+     "avg_turns": 11,
+     "wall_s": 169.3,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-best-field-list",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 decks/riven_best_field.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 3111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-best-field-list/seat1 --review-games 0",
+      "--deck1 decks/riven_best_field.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 53111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-best-field-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven (Tabris, Orlando 1st)",
+     "opponent_deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 7,
+     "win_rate": 0.035,
+     "ci95": [
+      0.0171,
+      0.0705
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 3
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 4
+     },
+     "avg_turns": 11,
+     "wall_s": 204.2,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-tabris-orlando-1st",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 103111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-tabris-orlando-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_028_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 153111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__riven-tabris-orlando-1st/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (Jason Tian)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 21,
+     "win_rate": 0.105,
+     "ci95": [
+      0.0697,
+      0.1552
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 10
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 11
+     },
+     "avg_turns": 11,
+     "wall_s": 214.3,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kai-sa-jason-tian",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 203111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kai-sa-jason-tian/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 253111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kai-sa-jason-tian/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Mordekaiser (Neal)",
+     "opponent_deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 27,
+     "win_rate": 0.135,
+     "ci95": [
+      0.0945,
+      0.1893
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 14
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 13
+     },
+     "avg_turns": 12,
+     "wall_s": 228.7,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__mordekaiser-neal",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_019_v2.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 303111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__mordekaiser-neal/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_019_v2.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 353111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__mordekaiser-neal/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (Xi'an 7th)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 42,
+     "win_rate": 0.21,
+     "ci95": [
+      0.1593,
+      0.2716
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 26
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 16
+     },
+     "avg_turns": 13,
+     "wall_s": 254.1,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__orianna-xi-an-7th",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_orianna_013_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 403111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__orianna-xi-an-7th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_orianna_013_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 453111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__orianna-xi-an-7th/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 42,
+     "win_rate": 0.21,
+     "ci95": [
+      0.1593,
+      0.2716
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 24
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 18
+     },
+     "avg_turns": 12,
+     "wall_s": 304.0,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kennen-zombro",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 503111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kennen-zombro/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 553111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__kennen-zombro/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Vegas)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 19,
+     "win_rate": 0.095,
+     "ci95": [
+      0.0617,
+      0.1436
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 11
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 8
+     },
+     "avg_turns": 12,
+     "wall_s": 199.6,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__evelynn-vegas",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 603111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__evelynn-vegas/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 653111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__evelynn-vegas/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Sacramento 1st)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+     "weight": 1,
+     "games": 200,
+     "wins": 69,
+     "win_rate": 0.345,
+     "ci95": [
+      0.2826,
+      0.4132
+     ],
+     "as_p1": {
+      "games": 100,
+      "wins": 31
+     },
+     "as_p2": {
+      "games": 100,
+      "wins": 38
+     },
+     "avg_turns": 14,
+     "wall_s": 323.7,
+     "replays": "lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__akali-sacramento-1st",
+     "commands": [
+      "--deck1 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --deck2 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 703111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__akali-sacramento-1st/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt --deck2 lab/decks/community/ritualo_volibear_dragons_2026-11.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 100 --threads 4 --seed 753111 --render-html off --web off --review-dir lab/replays/20261107-201026-volibear-dragons-ritualo-20261107/volibear-dragons-ritualo__vs__akali-sacramento-1st/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.1462
+  }
+ ],
+ "finished_utc": "2026-11-07T20:42:04+00:00"
+}
