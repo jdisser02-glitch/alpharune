@@ -74,6 +74,15 @@ std::string describeIntent(const Intent& i, const GameState& s, const CardDB* db
             !s.getObject(i.ability_source).attached_to.has_value() && !i.targets.empty()) {
             o << "Equip " << src << " to " << objName(s, i.targets[0]);
             if (i.targets.size() > 1) o << " (exhaust " << names(s, {i.targets.begin() + 1, i.targets.end()}) << ")";
+        } else if (i.granted_ability_def != 0) {
+            // An ability another card grants (Black Market, Forge of the Fluft, Gardens of Becoming, ...): name the
+            // granting card, not the bearer's ability number ("Use The Exile ability 4" read as the legend's own).
+            std::string granter;
+            for (const auto& [oid, ob] : s.objects)
+                if (ob.card_def_id == i.granted_ability_def) { granter = ob.name; break; }
+            o << "Use " << (granter.empty() ? src + " ability " + std::to_string(i.ability_index + 1) : granter);
+            if (!granter.empty()) o << " (through " << src << ")";
+            if (!i.targets.empty()) o << " on " << names(s, i.targets);
         } else {
             o << "Use " << src;
             if (i.ability_index) o << " ability " << i.ability_index + 1;

@@ -131,7 +131,10 @@ SPECIALISTS = {
                        _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
                        # 7 Nov: Mordekaiser's specialist beats the Riven pilot far more often than real players
                        # do (55% simulated vs 29% real): Riven trains and is judged against it too.
-                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt"]},
+                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+                       # 8 Nov: Jeremy's Volibear Dragons brings Black Market ([A][A]: draw 1, either player, once a
+                       # turn), which the Riven bot had never met and used every turn, recycling its runes away.
+                       "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt"]},
     "kai_sa": {"legend": "Kai'Sa",
                "decks": [_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
