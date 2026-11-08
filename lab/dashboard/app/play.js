@@ -42,7 +42,8 @@ const PHASE_HELP = {
 const G = {
   host: null, root: null, boardEl: null, ui: { group: {}, logOpen: false, sheet: true, phaseHelp: store("rl.play.phaseHelp") !== "off" },
   passes: [], sitKey: "",          // focus passes in the current showdown (who passed, in order) and the battlefield they belong to
-  cfg: { ...DEFAULTS, ...(store("rl.play") || {}) },
+  // 8 Nov (Jeremy): the bot always thinks long. A level saved before the Deep level existed moves to Deep once.
+  cfg: (() => { const c = { ...DEFAULTS, ...(store("rl.play") || {}) }; if (!c.deepSince) { c.level = "deep"; c.deepSince = "2026-11-08"; } return c; })(),
   worker: null, pending: new Map(), nextId: 1, ready: null, info: null, progress: {},
   stage: "setup", st: null, seat: 1, seed: 0, autopay: true, level: "quick",
   busy: false, thinking: false, thinkStart: 0, timer: 0, lastBot: null, botMoves: [], myMoves: 0, log: [], loggedN: -1,
