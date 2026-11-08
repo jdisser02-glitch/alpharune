@@ -16,20 +16,22 @@ public:
     const CardDef& def() const override { return def_; }
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
     TriggerType triggerType() const override { return TriggerType::WhenYouPlayAUnit; }
+    // "When you play a [Mighty] unit": the unit just played must be Mighty (5+ [M]) as it is played. It used to
+    // check whether ANY friendly unit in play was Mighty, so a 3-might Bilgewater Tracker next to a Gentle
+    // Gemdragon fired it (Jeremy's game, 8 Nov). The engine hands the played unit as the trigger's subject.
+    bool triggerCondition(const GameState& state, GameObjectId /*source*/, PlayerId /*controller*/,
+                          TriggerType /*trigger*/, GameObjectId subject) const override {
+        if (subject == kInvalidId || !state.objectExists(subject)) return false;
+        const auto& u = state.getObject(subject);
+        // The play event fires before the next aura pass: a unit that has just arrived may not have its current
+        // Might computed yet, so its printed Might stands in.
+        const int might = u.current_might > 0 ? u.current_might : u.base_might;
+        return u.isUnit() && might >= 5;
+    }
     void onTrigger(CardContext& ctx,
                    const std::vector<GameObjectId>& /*targets*/) override {
         if (!ctx.state.objectExists(ctx.source)) return;
-        // Gate: a [Mighty] (5+ [M]) friendly unit was just played. The trigger
-        // carries no played-object id, so scan friendly units for any Mighty
-        // one currently in play (best-effort identification of the play that
-        // fired this).
-        bool any_mighty = false;
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-            if (!obj.location.has_value()) continue;
-            if (obj.current_might >= 5) { any_mighty = true; break; }
-        }
-        if (!any_mighty) return;
+
         auto still_legal = [&]() -> bool {
             return ctx.state.objectExists(ctx.source) &&
                    !ctx.state.getObject(ctx.source).is_exhausted;

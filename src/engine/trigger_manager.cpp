@@ -409,7 +409,7 @@ void TriggerManager::onCardPlayed(const CardPlayedEvent& e) {
     // legend itself has no location, so the loop above skips it. Fire any
     // matching legend on the acting player's side.
     if (e.card_type == CardType::Unit) {
-        fireLegendTrigger(TriggerType::WhenYouPlayAUnit, e.player);
+        fireLegendTrigger(TriggerType::WhenYouPlayAUnit, e.player, 0, /*subject=*/e.object);
     }
 }
 
