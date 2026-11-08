@@ -395,12 +395,12 @@ struct BattlefieldState {
     /// Get all unit IDs at this battlefield belonging to a player.
     std::vector<GameObjectId> unitsControlledBy(
         PlayerId player,
-        const std::unordered_map<GameObjectId, GameObject>& objects) const;
+        const std::map<GameObjectId, GameObject>& objects) const;
 
     /// Check if any player has units here.
     bool hasUnitsFrom(
         PlayerId player,
-        const std::unordered_map<GameObjectId, GameObject>& objects) const;
+        const std::map<GameObjectId, GameObject>& objects) const;
 };
 
 // ─── Turn State ──────────────────────────────────────────────────────────────
@@ -696,7 +696,7 @@ struct GameState {
     std::vector<BattlefieldState> battlefields;
 
     // All game objects (the object pool)
-    std::unordered_map<GameObjectId, GameObject> objects;
+    std::map<GameObjectId, GameObject> objects;
     GameObjectId next_object_id = 1;
 
     // Turn

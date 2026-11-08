@@ -6,7 +6,7 @@ namespace riftbound {
 
 std::vector<GameObjectId> BattlefieldState::unitsControlledBy(
     PlayerId player,
-    const std::unordered_map<GameObjectId, GameObject>& objects) const {
+    const std::map<GameObjectId, GameObject>& objects) const {
     std::vector<GameObjectId> result;
     for (auto& [oid, obj] : objects) {
         if (obj.isUnit() && obj.controller == player &&
@@ -22,7 +22,7 @@ std::vector<GameObjectId> BattlefieldState::unitsControlledBy(
 
 bool BattlefieldState::hasUnitsFrom(
     PlayerId player,
-    const std::unordered_map<GameObjectId, GameObject>& objects) const {
+    const std::map<GameObjectId, GameObject>& objects) const {
     for (auto& [oid, obj] : objects) {
         if (obj.isUnit() && obj.controller == player && obj.isAtBattlefield()) {
             auto bf_id = obj.battlefieldId();
