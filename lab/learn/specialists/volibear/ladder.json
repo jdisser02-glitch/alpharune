@@ -3525,6 +3525,205 @@
    "elo_current": 233.4,
    "minutes": 46.9,
    "parallel": true
+  },
+  {
+   "iteration": 18,
+   "started_utc": "2026-11-08T12:14:54+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_volibear_016_v1.rbpn,worlds=8,settle=60",
+   "self_play_games": 480,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 1.7,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt": {
+     "games": 100,
+     "wins": 49,
+     "rate": 0.49
+    },
+    "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt": {
+     "games": 56,
+     "wins": 31,
+     "rate": 0.554
+    },
+    "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt": {
+     "games": 68,
+     "wins": 42,
+     "rate": 0.618
+    },
+    "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt": {
+     "games": 64,
+     "wins": 34,
+     "rate": 0.531
+    },
+    "decks/riven_best_field.txt": {
+     "games": 92,
+     "wins": 35,
+     "rate": 0.38
+    }
+   },
+   "specialist": "volibear",
+   "variant": {
+    "index": 0,
+    "overrides": {
+     "epochs": 2,
+     "lr": 0.00015,
+     "hidden": 128,
+     "q_weight": 0.5,
+     "spec_human_weight": 1.0
+    }
+   },
+   "warm_start": "lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "records": 76520,
+   "games_in_buffer": 1440,
+   "val_loss": 0.4328641891479492,
+   "val_acc": 0.789339454220862,
+   "val_margin_mse": 0.13484237425730441,
+   "baseline_val_loss": 0.6872810089242897,
+   "policy": {
+    "search_target_rows": 71045,
+    "policy_val_rows": 7819,
+    "policy_top1": 0.8836168307967771,
+    "policy_top3": 0.9865711727842436,
+    "policy_ce": 0.7205140576884517,
+    "policy_entropy": 0.7312416662064972,
+    "target_entropy": 0.6627501242605068,
+    "human_records": 5301,
+    "human_val_rows": 2239,
+    "human_top1": 0.4689593568557392,
+    "human_top3": 0.7641804376953998,
+    "human_clean_rows": 1324,
+    "human_clean_top1": 0.338368580060423,
+    "human_clean_top3": 0.6442598187311178
+   },
+   "human_legend": {
+    "top1": 0.42857142857142855,
+    "top3": 0.8035714285714286,
+    "rows": 56,
+    "file": "human_volibear.rbv3"
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 71,
+     "rate": 0.5917,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.5,
+      "spec_human_weight": 1.0
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 71,
+     "rate": 0.5917,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.5,
+      "spec_human_weight": 3.0
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 68,
+     "rate": 0.5667,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.0,
+      "spec_human_weight": 1.0
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 64,
+     "rate": 0.5333,
+     "overrides": {
+      "epochs": 2,
+      "lr": 0.00015,
+      "hidden": 128,
+      "q_weight": 0.25,
+      "spec_human_weight": 1.0
+     }
+    }
+   },
+   "screen_pick": 0,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_volibear_016_v1.rbpn,worlds=8,settle=60",
+    "games": 120,
+    "wins": 64,
+    "rate": 0.5333,
+    "ci95": [
+     0.4444,
+     0.6202
+    ],
+    "llr": -0.827,
+    "sprt": "rate",
+    "guard_floor": 0.45
+   },
+   "panel": {
+    "games": 480,
+    "wins": 317,
+    "rate": 0.6604,
+    "base_rate": 0.6312,
+    "diff": 0.0292,
+    "diff_ci95": [
+     -0.0313,
+     0.0896
+    ],
+    "accept": 0.03,
+    "ok": false,
+    "primary": true,
+    "matchups": {
+     "01_jason_tian_kai_sa": {
+      "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+      "games": 96,
+      "rate": 0.6979,
+      "base_rate": 0.6458
+     },
+     "07_zombro_kennen": {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+      "games": 96,
+      "rate": 0.8125,
+      "base_rate": 0.7708
+     },
+     "01_pcq_master_yi": {
+      "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+      "games": 96,
+      "rate": 0.6771,
+      "base_rate": 0.7292
+     },
+     "riven_best_field": {
+      "deck": "decks/riven_best_field.txt",
+      "games": 96,
+      "rate": 0.5938,
+      "base_rate": 0.5
+     },
+     "01_tabris_riven": {
+      "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+      "games": 96,
+      "rate": 0.5208,
+      "base_rate": 0.5104
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 50,
+    "rate": 0.8333
+   },
+   "net": "lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "accepted": false,
+   "elo": 261.5,
+   "elo_current": 236.3,
+   "minutes": 46.3,
+   "parallel": true
   }
  ],
  "matches": [
@@ -4661,29 +4860,93 @@
    "games": 20,
    "wins_a": 11,
    "wins_b": 9
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 18,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 50,
+   "wins_b": 10
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 18,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_018_v0.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_016_v1.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
   }
  ],
  "current_net": "lab/learn/nets/spec_volibear_016_v1.rbpn",
  "elo": {
-  "net:lab/learn/nets/net_164_v3.rbpn": -165.9,
+  "net:lab/learn/nets/net_164_v3.rbpn": -165.8,
   "net:lab/learn/nets/spec_volibear_000_v0.rbpn": 21.3,
   "net:lab/learn/nets/spec_volibear_001_v1.rbpn": 116.7,
   "net:lab/learn/nets/spec_volibear_002_v2.rbpn": 144.4,
   "net:lab/learn/nets/spec_volibear_003_v3.rbpn": 154.0,
-  "net:lab/learn/nets/spec_volibear_004_v0.rbpn": 156.4,
-  "net:lab/learn/nets/spec_volibear_005_v0.rbpn": 147.1,
+  "net:lab/learn/nets/spec_volibear_004_v0.rbpn": 156.5,
+  "net:lab/learn/nets/spec_volibear_005_v0.rbpn": 147.2,
   "net:lab/learn/nets/spec_volibear_006_v0.rbpn": 146.4,
-  "net:lab/learn/nets/spec_volibear_007_v0.rbpn": 200.8,
-  "net:lab/learn/nets/spec_volibear_008_v0.rbpn": 189.0,
-  "net:lab/learn/nets/spec_volibear_009_v0.rbpn": 187.9,
-  "net:lab/learn/nets/spec_volibear_010_v0.rbpn": 224.6,
-  "net:lab/learn/nets/spec_volibear_011_v0.rbpn": 163.6,
-  "net:lab/learn/nets/spec_volibear_012_v2.rbpn": 171.6,
-  "net:lab/learn/nets/spec_volibear_013_v0.rbpn": 217.9,
-  "net:lab/learn/nets/spec_volibear_014_v0.rbpn": 226.4,
-  "net:lab/learn/nets/spec_volibear_015_v3.rbpn": 234.7,
-  "net:lab/learn/nets/spec_volibear_016_v1.rbpn": 233.4,
-  "net:lab/learn/nets/spec_volibear_017_v2.rbpn": 259.4,
+  "net:lab/learn/nets/spec_volibear_007_v0.rbpn": 201.0,
+  "net:lab/learn/nets/spec_volibear_008_v0.rbpn": 189.2,
+  "net:lab/learn/nets/spec_volibear_009_v0.rbpn": 188.3,
+  "net:lab/learn/nets/spec_volibear_010_v0.rbpn": 224.9,
+  "net:lab/learn/nets/spec_volibear_011_v0.rbpn": 164.0,
+  "net:lab/learn/nets/spec_volibear_012_v2.rbpn": 171.9,
+  "net:lab/learn/nets/spec_volibear_013_v0.rbpn": 219.1,
+  "net:lab/learn/nets/spec_volibear_014_v0.rbpn": 227.2,
+  "net:lab/learn/nets/spec_volibear_015_v3.rbpn": 235.6,
+  "net:lab/learn/nets/spec_volibear_016_v1.rbpn": 236.3,
+  "net:lab/learn/nets/spec_volibear_017_v2.rbpn": 261.5,
+  "net:lab/learn/nets/spec_volibear_018_v0.rbpn": 261.5,
   "random": 0.0
  }
 }
