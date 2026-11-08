@@ -7902,6 +7902,205 @@
    "elo_current": 824.0,
    "minutes": 59.9,
    "parallel": true
+  },
+  {
+   "iteration": 38,
+   "started_utc": "2026-11-08T04:14:18+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_mordekaiser_037_v3.rbpn,worlds=8,settle=60",
+   "self_play_games": 960,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 4.4,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt": {
+     "games": 124,
+     "wins": 82,
+     "rate": 0.661
+    },
+    "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt": {
+     "games": 112,
+     "wins": 77,
+     "rate": 0.688
+    },
+    "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt": {
+     "games": 200,
+     "wins": 157,
+     "rate": 0.785
+    },
+    "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt": {
+     "games": 128,
+     "wins": 104,
+     "rate": 0.812
+    },
+    "decks/riven_best_field.txt": {
+     "games": 188,
+     "wins": 146,
+     "rate": 0.777
+    }
+   },
+   "specialist": "mordekaiser",
+   "variant": {
+    "index": 1,
+    "overrides": {
+     "epochs": 4,
+     "lr": 0.0003,
+     "hidden": 256,
+     "q_weight": 0.5,
+     "spec_human_weight": 1.0
+    }
+   },
+   "warm_start": "lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "records": 205150,
+   "games_in_buffer": 2880,
+   "val_loss": 0.5256972908973694,
+   "val_acc": 0.739932341628435,
+   "val_margin_mse": 0.08673390286355151,
+   "baseline_val_loss": 0.6658327653305838,
+   "policy": {
+    "search_target_rows": 197105,
+    "policy_val_rows": 21294,
+    "policy_top1": 0.872264487649103,
+    "policy_top3": 0.9901380670611439,
+    "policy_ce": 0.7425368219199949,
+    "policy_entropy": 0.7435437896040786,
+    "target_entropy": 0.6840670239049117,
+    "human_records": 5301,
+    "human_val_rows": 2239,
+    "human_top1": 0.46359982134881644,
+    "human_top3": 0.7632871817775793,
+    "human_clean_rows": 1324,
+    "human_clean_top1": 0.3338368580060423,
+    "human_clean_top3": 0.6404833836858006
+   },
+   "human_legend": {
+    "top1": 0.40963855421686746,
+    "top3": 0.8072289156626506,
+    "rows": 83,
+    "file": "human_mordekaiser.rbv3"
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 90,
+     "rate": 0.75,
+     "overrides": {
+      "epochs": 4,
+      "lr": 0.0003,
+      "hidden": 256,
+      "q_weight": 0.5,
+      "spec_human_weight": 3.0
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 96,
+     "rate": 0.8,
+     "overrides": {
+      "epochs": 4,
+      "lr": 0.0003,
+      "hidden": 256,
+      "q_weight": 0.5,
+      "spec_human_weight": 1.0
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 95,
+     "rate": 0.7917,
+     "overrides": {
+      "epochs": 4,
+      "lr": 0.00015,
+      "hidden": 256,
+      "q_weight": 0.5,
+      "spec_human_weight": 1.0
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 92,
+     "rate": 0.7667,
+     "overrides": {
+      "epochs": 4,
+      "lr": 0.00015,
+      "hidden": 256,
+      "q_weight": 0.5,
+      "spec_human_weight": 3.0
+     }
+    }
+   },
+   "screen_pick": 1,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_mordekaiser_037_v3.rbpn,worlds=8,settle=60",
+    "games": 120,
+    "wins": 59,
+    "rate": 0.4917,
+    "ci95": [
+     0.4039,
+     0.58
+    ],
+    "llr": -2.855,
+    "sprt": "rate",
+    "guard_floor": 0.45
+   },
+   "panel": {
+    "games": 480,
+    "wins": 352,
+    "rate": 0.7333,
+    "base_rate": 0.7438,
+    "diff": -0.0104,
+    "diff_ci95": [
+     -0.066,
+     0.0452
+    ],
+    "accept": 0.03,
+    "ok": false,
+    "primary": true,
+    "matchups": {
+     "01_jason_tian_kai_sa": {
+      "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+      "games": 96,
+      "rate": 0.8438,
+      "base_rate": 0.9062
+     },
+     "07_zombro_kennen": {
+      "deck": "lab/decks/meta/radiance_release_2026-10-24/07_zombro_kennen.txt",
+      "games": 96,
+      "rate": 0.7188,
+      "base_rate": 0.6562
+     },
+     "01_pcq_master_yi": {
+      "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+      "games": 96,
+      "rate": 0.6562,
+      "base_rate": 0.6458
+     },
+     "riven_best_field": {
+      "deck": "decks/riven_best_field.txt",
+      "games": 96,
+      "rate": 0.7083,
+      "base_rate": 0.7292
+     },
+     "01_tabris_riven": {
+      "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+      "games": 96,
+      "rate": 0.7396,
+      "base_rate": 0.7812
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 60,
+    "rate": 1.0
+   },
+   "net": "lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "accepted": false,
+   "elo": 817.7,
+   "elo_current": 823.4,
+   "minutes": 54.5,
+   "parallel": true
   }
  ],
  "matches": [
@@ -10298,49 +10497,113 @@
    "games": 20,
    "wins_a": 13,
    "wins_b": 7
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 8,
+   "wins_b": 12
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 38,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 60,
+   "wins_b": 0
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 38,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
+   "games": 20,
+   "wins_a": 9,
+   "wins_b": 11
   }
  ],
  "current_net": "lab/learn/nets/spec_mordekaiser_037_v3.rbpn",
  "elo": {
-  "net:lab/learn/nets/net_164_v3.rbpn": 356.1,
-  "net:lab/learn/nets/spec_mordekaiser_000_v0.rbpn": 457.9,
-  "net:lab/learn/nets/spec_mordekaiser_001_v3.rbpn": 579.6,
-  "net:lab/learn/nets/spec_mordekaiser_002_v0.rbpn": 643.4,
-  "net:lab/learn/nets/spec_mordekaiser_003_v1.rbpn": 639.4,
-  "net:lab/learn/nets/spec_mordekaiser_004_v1.rbpn": 726.9,
-  "net:lab/learn/nets/spec_mordekaiser_005_v0.rbpn": 703.7,
-  "net:lab/learn/nets/spec_mordekaiser_006_v1.rbpn": 766.9,
-  "net:lab/learn/nets/spec_mordekaiser_007_v1.rbpn": 711.7,
-  "net:lab/learn/nets/spec_mordekaiser_008_v3.rbpn": 709.4,
-  "net:lab/learn/nets/spec_mordekaiser_009_v0.rbpn": 712.8,
-  "net:lab/learn/nets/spec_mordekaiser_010_v0.rbpn": 742.6,
-  "net:lab/learn/nets/spec_mordekaiser_011_v3.rbpn": 731.8,
-  "net:lab/learn/nets/spec_mordekaiser_012_v3.rbpn": 792.4,
-  "net:lab/learn/nets/spec_mordekaiser_013_v0.rbpn": 777.4,
-  "net:lab/learn/nets/spec_mordekaiser_014_v0.rbpn": 756.8,
-  "net:lab/learn/nets/spec_mordekaiser_015_v1.rbpn": 783.8,
-  "net:lab/learn/nets/spec_mordekaiser_016_v0.rbpn": 815.5,
-  "net:lab/learn/nets/spec_mordekaiser_017_v0.rbpn": 788.5,
-  "net:lab/learn/nets/spec_mordekaiser_018_v3.rbpn": 772.2,
-  "net:lab/learn/nets/spec_mordekaiser_019_v2.rbpn": 780.0,
-  "net:lab/learn/nets/spec_mordekaiser_020_v1.rbpn": 840.8,
-  "net:lab/learn/nets/spec_mordekaiser_021_v3.rbpn": 802.3,
-  "net:lab/learn/nets/spec_mordekaiser_022_v1.rbpn": 802.3,
+  "net:lab/learn/nets/net_164_v3.rbpn": 356.5,
+  "net:lab/learn/nets/spec_mordekaiser_000_v0.rbpn": 458.3,
+  "net:lab/learn/nets/spec_mordekaiser_001_v3.rbpn": 580.1,
+  "net:lab/learn/nets/spec_mordekaiser_002_v0.rbpn": 643.8,
+  "net:lab/learn/nets/spec_mordekaiser_003_v1.rbpn": 639.8,
+  "net:lab/learn/nets/spec_mordekaiser_004_v1.rbpn": 727.3,
+  "net:lab/learn/nets/spec_mordekaiser_005_v0.rbpn": 704.1,
+  "net:lab/learn/nets/spec_mordekaiser_006_v1.rbpn": 767.4,
+  "net:lab/learn/nets/spec_mordekaiser_007_v1.rbpn": 712.1,
+  "net:lab/learn/nets/spec_mordekaiser_008_v3.rbpn": 709.8,
+  "net:lab/learn/nets/spec_mordekaiser_009_v0.rbpn": 713.2,
+  "net:lab/learn/nets/spec_mordekaiser_010_v0.rbpn": 743.0,
+  "net:lab/learn/nets/spec_mordekaiser_011_v3.rbpn": 732.2,
+  "net:lab/learn/nets/spec_mordekaiser_012_v3.rbpn": 792.9,
+  "net:lab/learn/nets/spec_mordekaiser_013_v0.rbpn": 777.7,
+  "net:lab/learn/nets/spec_mordekaiser_014_v0.rbpn": 757.2,
+  "net:lab/learn/nets/spec_mordekaiser_015_v1.rbpn": 784.2,
+  "net:lab/learn/nets/spec_mordekaiser_016_v0.rbpn": 815.7,
+  "net:lab/learn/nets/spec_mordekaiser_017_v0.rbpn": 788.8,
+  "net:lab/learn/nets/spec_mordekaiser_018_v3.rbpn": 772.4,
+  "net:lab/learn/nets/spec_mordekaiser_019_v2.rbpn": 780.1,
+  "net:lab/learn/nets/spec_mordekaiser_020_v1.rbpn": 840.9,
+  "net:lab/learn/nets/spec_mordekaiser_021_v3.rbpn": 802.4,
+  "net:lab/learn/nets/spec_mordekaiser_022_v1.rbpn": 802.4,
   "net:lab/learn/nets/spec_mordekaiser_023_v0.rbpn": 818.7,
-  "net:lab/learn/nets/spec_mordekaiser_024_v2.rbpn": 829.7,
+  "net:lab/learn/nets/spec_mordekaiser_024_v2.rbpn": 829.8,
   "net:lab/learn/nets/spec_mordekaiser_025_v1.rbpn": 852.1,
-  "net:lab/learn/nets/spec_mordekaiser_026_v1.rbpn": 802.3,
+  "net:lab/learn/nets/spec_mordekaiser_026_v1.rbpn": 802.4,
   "net:lab/learn/nets/spec_mordekaiser_027_v3.rbpn": 852.1,
   "net:lab/learn/nets/spec_mordekaiser_028_v2.rbpn": 791.5,
-  "net:lab/learn/nets/spec_mordekaiser_029_v2.rbpn": 829.7,
-  "net:lab/learn/nets/spec_mordekaiser_030_v3.rbpn": 802.3,
+  "net:lab/learn/nets/spec_mordekaiser_029_v2.rbpn": 829.8,
+  "net:lab/learn/nets/spec_mordekaiser_030_v3.rbpn": 802.4,
   "net:lab/learn/nets/spec_mordekaiser_031_v1.rbpn": 818.7,
   "net:lab/learn/nets/spec_mordekaiser_032_v1.rbpn": 818.7,
   "net:lab/learn/nets/spec_mordekaiser_033_v0.rbpn": 764.5,
-  "net:lab/learn/nets/spec_mordekaiser_034_v1.rbpn": 779.9,
-  "net:lab/learn/nets/spec_mordekaiser_035_v1.rbpn": 785.9,
-  "net:lab/learn/nets/spec_mordekaiser_036_v1.rbpn": 840.6,
-  "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn": 824.0,
+  "net:lab/learn/nets/spec_mordekaiser_034_v1.rbpn": 779.6,
+  "net:lab/learn/nets/spec_mordekaiser_035_v1.rbpn": 785.6,
+  "net:lab/learn/nets/spec_mordekaiser_036_v1.rbpn": 840.4,
+  "net:lab/learn/nets/spec_mordekaiser_037_v3.rbpn": 823.4,
+  "net:lab/learn/nets/spec_mordekaiser_038_v1.rbpn": 817.7,
   "random": 0.0
  }
 }
