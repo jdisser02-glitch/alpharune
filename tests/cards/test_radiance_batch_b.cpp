@@ -341,15 +341,28 @@ TEST_F(RadianceBatchBTest, ElnukHerd_PlayedFromFaceDownIsRecycled) {
     EXPECT_EQ(s().getObject(herd).card_counters["__played_from_facedown"], 0) << "consumed";
 }
 
-TEST_F(RadianceBatchBTest, ElnukHerd_DoesNotBuffItself) {
+// Radiance erratum: "give A friendly unit +3 [M]" (was "another friendly unit"), so the Herd may choose itself.
+TEST_F(RadianceBatchBTest, ElnukHerd_CanBuffItself) {
     makeEngine();
     setLegend(P1); setLegend(P2);
+    auto ally = boardObject(P1, kOtterpus);
     s().player(P1).rune_pool.energy = 6;
     auto herd = cardInHand(P1, kElnukHerd);
     p1_.want = herd;
     play(herd, LocationId{BaseLocation{P1}});
     ASSERT_TRUE(s().getObject(herd).location.has_value());
-    EXPECT_EQ(s().getObject(herd).current_might, 5) << "\"another\" friendly unit";
+    EXPECT_EQ(s().getObject(herd).current_might, 8) << "5 + 3: \"a friendly unit\" includes the Herd";
+    EXPECT_EQ(s().getObject(ally).current_might, 2);
+}
+
+TEST_F(RadianceBatchBTest, ElnukHerd_AloneBuffsItself) {
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    s().player(P1).rune_pool.energy = 6;
+    auto herd = cardInHand(P1, kElnukHerd);
+    play(herd, LocationId{BaseLocation{P1}});
+    ASSERT_TRUE(s().getObject(herd).location.has_value());
+    EXPECT_EQ(s().getObject(herd).current_might, 8) << "the only friendly unit is the Herd itself";
 }
 
 // ─── RAD-009 Antagonistic Apparatus ─────────────────────────────────────────

@@ -16,10 +16,10 @@ public:
     const CardDef& def() const override { return def_; }
 
     // "(Neutral cards can go in decks of any Domain.)
-    //  If Neeko is in your deck, choose 3 different legends in addition to your
-    //  starting legend. (Different means none match names.)
-    //  When you play me, choose one of those legends and add it to your Legend
-    //  Zone while I'm on the board."
+    //  If Neeko is in your deck, choose up to 3 different legends in addition
+    //  to your starting legend. (Different means none match names.)
+    //  When you play me, choose one of those Legends and add it to your Legend
+    //  Zone while I'm on the board." (Radiance erratum: "up to 3", was "3".)
     //
     // ENGINE GAP (not implemented): deck construction has no "choose 3 extra
     // legends" step (decks name one legend), and a player's Legend Zone holds
@@ -49,8 +49,8 @@ private:
         d.might = 4;
         d.rarity = Rarity::Epic;
         d.ability_text = R"RB((Neutral cards can go in decks of any Domain.)
-If Neeko is in your deck, choose 3 different legends in addition to your starting legend. (Different means none match names.)
-When you play me, choose one of those legends and add it to your Legend Zone while I'm on the board.)RB";
+If Neeko is in your deck, choose up to 3 different legends in addition to your starting legend. (Different means none match names.)
+When you play me, choose one of those Legends and add it to your Legend Zone while I'm on the board.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/607da6f534ce1b960ad02586ed4cd47c996e2c42-744x1039.png)RB";
         return d;
     }();

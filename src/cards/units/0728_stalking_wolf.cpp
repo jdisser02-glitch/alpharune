@@ -14,17 +14,20 @@ namespace {
 
 // [Ambush] engine-handled.
 // "As an additional cost to play me, kill a Bird, Cat, Dog, or Poro you
-//  control. You may play me to its battlefield (even if you don't have other
-//  units there)."
+//  control. You may [Ambush] me to its battlefield, even if you don't have
+//  other units there." (Unleashed erratum: was "You may play me to its
+//  battlefield", now only by [Ambush].)
 //
 // The mandatory sacrifice is modeled as a WhenYouPlayMe forced kill of an
 // agent-chosen Bird/Cat/Dog/Poro. APPROXIMATIONS / ENGINE GAP:
 //  - Timing: the sacrifice fires as a play trigger (after Stalking Wolf is on
 //    the board), not strictly as a pre-play additional cost.
-//  - "play me to its battlefield": tying Stalking Wolf's landing zone to the
-//    sacrificed unit's battlefield is not modeled — getPlayLocations is
+//  - "[Ambush] me to its battlefield": tying Stalking Wolf's landing zone to
+//    the sacrificed unit's battlefield is not modeled — getPlayLocations is
 //    consulted before the kill choice exists, so the location can't depend on
-//    it. Stalking Wolf lands per the normal play rules.
+//    it. Since the sacrifice happens after the play, the Bird/Cat/Dog/Poro is
+//    still at its battlefield when the location is chosen, so the plain
+//    [Ambush] rule already offers that battlefield.
 
 class StalkingWolf : public UnitCard {
 public:

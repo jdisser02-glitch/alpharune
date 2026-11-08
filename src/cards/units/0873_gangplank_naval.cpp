@@ -19,7 +19,8 @@ public:
     // "[Empower] [O][O]"
     EmpowerSpec empowerSpec() const override { return empowerCost(0, 2, Domain::Body); }
     // "[Empowered][>] If a spell or ability that chooses me would stun me, give
-    // me -[M], or return me to hand, give me +3 [M] instead."
+    // me -[M], or return me to hand, give me +3 [M] this turn instead."
+    // (Vendetta erratum added "this turn".)
     // A replacement effect: the executor asks this hook before stunning,
     // reducing the Might of, or bouncing a unit, and only for effects of the
     // resolving chain item that chose me (ChainItem::chosen_objects / targets).
@@ -55,7 +56,7 @@ private:
         d.rarity = Rarity::Rare;
         d.keywords.set(Keyword::Empower);
         d.ability_text = R"RB([Empower] [O][O] ([O][O]: Empower me. Use only if not Empowered.)
-[Empowered][>] If a spell or ability that chooses me would stun me, give me -[M], or return me to hand, give me +3 [M] instead.)RB";
+[Empowered][>] If a spell or ability that chooses me would stun me, give me -[M], or return me to hand, give me +3 [M] this turn instead.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f270a3ecc4850594513c45d145f2b855152e2cb7-744x1039.png)RB";
         return d;
     }();

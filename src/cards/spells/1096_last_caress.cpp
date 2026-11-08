@@ -16,8 +16,9 @@ class LastCaress : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
 
-    // "[Reaction] The next unit you play this turn (even from face down) can be
-    //  played to any battlefield. When you play it, [Buff] it."
+    // "[Reaction] The next unit you play this turn, even from face down, can be
+    //  played to any battlefield. When you play it, [Buff] it." (Radiance
+    //  erratum: punctuation only.)
     //
     // APPROXIMATION (engine gap): the engine has no "the next unit you play"
     // play-location grant (the unit play generator only knows a card's own
@@ -177,7 +178,7 @@ private:
         d.rarity = Rarity::Epic;
         d.keywords.set(Keyword::Reaction);
         d.ability_text = R"RB([Reaction] (Play any time, even before spells and abilities resolve.)
-The next unit you play this turn (even from face down) can be played to any battlefield. When you play it, [Buff] it. (Give it a +1 [M] buff if it doesn't have one.))RB";
+The next unit you play this turn, even from face down, can be played to any battlefield. When you play it, [Buff] it. (Give it a +1 [M] buff if it doesn't have one.))RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/c34881b6fe2e63f6345845fe95cfe72eb9d4878c-744x1040.png)RB";
         return d;
     }();

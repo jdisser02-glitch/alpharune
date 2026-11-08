@@ -23,47 +23,68 @@ public:
     void onResolve(CardContext& ctx, const std::vector<GameObjectId>& targets) override {
         if (targets.empty() || !ctx.state.objectExists(targets[0])) return;
         GameObjectId unit = targets[0];
+        // The move happens once, on the first entry (the attach choice below
+        // suspends and re-enters onResolve).
+        const auto& ri = ctx.state.chain.resuming;
+        const bool first_entry = !ri.has_value() || ri->resume_point == 0;
 
         // "Move a friendly unit." Best-effort: move to a battlefield where the
         // controller already has another unit, if the unit isn't already there.
-        auto unit_bf = ctx.state.getObject(unit).battlefieldId();
-        std::optional<BattlefieldId> dest;
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (id == unit) continue;
-            if (!obj.isUnit() || obj.controller != ctx.controller) continue;
-            auto bf = obj.battlefieldId();
-            if (!bf) continue;
-            if (unit_bf && *unit_bf == *bf) continue;   // already there
-            dest = bf;
-            break;
-        }
-        if (dest) {
-            ctx.executor.moveToBattlefield(unit, *dest);
-            ctx.events.logTrace("RELENTLESS PURSUIT: moved a friendly unit");
+        if (first_entry) {
+            auto unit_bf = ctx.state.getObject(unit).battlefieldId();
+            std::optional<BattlefieldId> dest;
+            for (auto& [id, obj] : ctx.state.objects) {
+                if (id == unit) continue;
+                if (!obj.isUnit() || obj.controller != ctx.controller) continue;
+                auto bf = obj.battlefieldId();
+                if (!bf) continue;
+                if (unit_bf && *unit_bf == *bf) continue;   // already there
+                dest = bf;
+                break;
+            }
+            if (dest) {
+                ctx.executor.moveToBattlefield(unit, *dest);
+                ctx.events.logTrace("RELENTLESS PURSUIT: moved a friendly unit");
+            }
         }
 
         // "You may attach up to one Equipment with the same controller to it."
-        GameObjectId gear = kInvalidId;
-        for (auto& [id, obj] : ctx.state.objects) {
-            if (obj.controller != ctx.controller) continue;
-            if (!isEquipment(obj) || !obj.location.has_value()) continue;
-            if (obj.attached_to.has_value()) continue;   // unattached
-            gear = id;
-            break;
-        }
-        if (gear != kInvalidId && ctx.state.objectExists(gear)) {
-            auto& g = ctx.state.getObject(gear);
-            auto& u = ctx.state.getObject(unit);
-            g.attached_to = unit;
-            u.attachments.push_back(gear);
-            g.location = u.location;
-            g.zone = u.zone;
-            u.attachment_might_bonus += g.might_bonus;
-            u.recomputeMight();
-            ctx.events.emit(ObjectStateChangedEvent{gear, "attached"});
-            ctx.events.emit(ObjectStateChangedEvent{unit, "equipped"});
-            ctx.events.logTrace("RELENTLESS PURSUIT: attached " + g.name);
-        }
+        // (Spiritforged erratum: "up to one", was "an Equipment".) Optional,
+        // and the player picks which: an Equipment on the board controlled by
+        // the unit's controller and not already attached to it (one attached
+        // to another unit moves over).
+        auto equipment = [&]() {
+            std::vector<GameObjectId> out;
+            if (!ctx.state.objectExists(unit) || !ctx.state.getObject(unit).location.has_value())
+                return out;
+            const PlayerId owner_side = ctx.state.getObject(unit).controller;
+            for (auto& [id, obj] : ctx.state.objects) {
+                if (obj.controller != owner_side) continue;
+                if (!isEquipment(obj) || !obj.location.has_value()) continue;
+                if (obj.attached_to.has_value() && *obj.attached_to == unit) continue;
+                out.push_back(id);
+            }
+            std::sort(out.begin(), out.end());
+            return out;
+        };
+        int go = confirmOptional(ctx, "Relentless Pursuit: attach an Equipment?",
+                                 [&]() { return !equipment().empty(); });
+        if (go != 1) return;   // waiting, declined, or no Equipment
+        GameObjectId gear = pickTarget(ctx, "Relentless Pursuit: Equipment to attach", equipment());
+        if (gear == kInvalidId || !ctx.state.objectExists(gear)) return;   // waiting / none
+        if (!ctx.state.objectExists(unit) || !ctx.state.getObject(unit).location.has_value()) return;
+        if (ctx.state.getObject(gear).attached_to.has_value()) ctx.executor.unattachGear(gear);
+        auto& g = ctx.state.getObject(gear);
+        auto& u = ctx.state.getObject(unit);
+        g.attached_to = unit;
+        u.attachments.push_back(gear);
+        g.location = u.location;
+        g.zone = u.zone;
+        u.attachment_might_bonus += g.might_bonus;
+        u.recomputeMight();
+        ctx.events.emit(ObjectStateChangedEvent{gear, "attached"});
+        ctx.events.emit(ObjectStateChangedEvent{unit, "equipped"});
+        ctx.events.logTrace("RELENTLESS PURSUIT: attached " + g.name);
         // The delayed "When I conquer, you may move me to my base" grant is a
         // documented no-op (no per-object delayed-ability injection API).
     }

@@ -18,8 +18,9 @@ public:
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
 
     // [Hidden] is engine-handled (keyword).
-    // "When you play me, give another friendly unit +3 [M] this turn, then
-    //  recycle me if I was played from face down."
+    // "When you play me, give a friendly unit +3 [M] this turn, then recycle
+    //  me if I was played from face down." (Radiance erratum: "a friendly
+    //  unit", was "another friendly unit" -- the Herd may buff itself.)
     // A play from face down is stamped card_counters["__played_from_facedown"]
     // = 1 by the engine. It is latched on the ability's first entry (the
     // finalization pass, or resolution if there was none) and consumed, so a
@@ -38,17 +39,16 @@ public:
                 from_facedown = 0;
             }
         }
-        const auto others = chooseableUnits(ctx.state, ctx.controller,
-            [&](const GameObject& o) {
-                return o.controller == ctx.controller && o.id != ctx.source;
-            });
-        GameObjectId tgt = pickTarget(ctx, "Elnuk Herd: give another friendly unit +3 [M]",
-                                      others);
+        const auto friendly = chooseableUnits(ctx.state, ctx.controller,
+            [&](const GameObject& o) { return o.controller == ctx.controller; });
+        GameObjectId tgt = pickTarget(ctx, "Elnuk Herd: give a friendly unit +3 [M]",
+                                      friendly);
         if (finalizingChoices(ctx)) return;   // choices end here (CR 383.3)
         if (tgt == kInvalidId && ctx.state.chain.resuming.has_value() &&
             ctx.state.chain.resuming->resume_point == 7)
             return;                           // waiting for the agent
-        if (tgt != kInvalidId && tgt != ctx.source && ctx.state.objectExists(tgt)) {
+        if (tgt != kInvalidId && ctx.state.objectExists(tgt) &&
+            ctx.state.getObject(tgt).location.has_value()) {
             ctx.executor.giveTemporaryMight(tgt, 3);
             ctx.events.logTrace("ELNUK HERD: +3 [M] this turn to " +
                                 ctx.state.getObject(tgt).name);
@@ -100,7 +100,7 @@ private:
         d.rarity = Rarity::Uncommon;
         d.keywords.set(Keyword::Hidden);
         d.ability_text = R"RB([Hidden] (Hide now for [A] to react with later for [0].)
-When you play me, give another friendly unit +3 [M] this turn, then recycle me if I was played from face down.)RB";
+When you play me, give a friendly unit +3 [M] this turn, then recycle me if I was played from face down.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/1799cd4c46fcf0243b4022de2d427b15e67a15ad-744x1039.png)RB";
         return d;
     }();

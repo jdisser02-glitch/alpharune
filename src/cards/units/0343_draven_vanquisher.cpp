@@ -18,8 +18,9 @@ public:
     unsigned choicesAtFinalization() const override { return kFinalizeTrigger; }
 
     // "When I win a combat, play a Gold gear token exhausted.
-    //  When I attack or defend, you may pay [R]. If you do, give me +2 [M]
-    //  this turn."
+    //  When I attack or defend, you may pay [R] to give me +2 [M] this turn."
+    //  (Spiritforged erratum, errata/vendetta-errata.txt: "[cost] to [effect]",
+    //  so the [R] is paid when the ability is finalized, CR 383.3.)
     std::vector<TriggerType> triggerTypes() const override {
         return {TriggerType::WhenIWinCombat, TriggerType::WhenIAttackOrDefend};
     }
