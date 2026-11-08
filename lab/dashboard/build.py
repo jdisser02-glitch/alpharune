@@ -113,7 +113,7 @@ def measured_status(ladder: dict) -> dict:
             got = sum(real[k]["games"] for k in jury if k in real)
             out["coverage"] = {"legends": jury, "games": got, "of": total, "share": round(got / total, 3) if total else None,
                                "missing_top": [k for k, _ in sorted(real.items(), key=lambda kv: -kv[1]["games"]) if k != "Riven" and k not in jury][:4]}
-    def track(L):
+    def track(L, pause=None):
         its = L.get("iterations", [])
         since = 0
         for r in reversed(its):
@@ -127,11 +127,13 @@ def measured_status(ladder: dict) -> dict:
                 recent = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(last)).total_seconds() < 3 * 3600
             except ValueError:
                 pass
+        paused = bool(pause and pause.exists())
         return {"current": Path(L.get("current_net") or "").stem, "iterations": len(its), "last_started": last,
-                "running": recent, "rejected_since_adoption": since, "adopted": sum(1 for r in its if r.get("accepted"))}
-    out["training"] = {"general": track(ladder), "specialists": {}}
+                "running": recent and not paused, "state": "paused" if paused else "training" if recent else "idle",
+                "rejected_since_adoption": since, "adopted": sum(1 for r in its if r.get("accepted"))}
+    out["training"] = {"general": track(ladder, LAB / "learn" / "PAUSE"), "specialists": {}}
     for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
-        out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()))
+        out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()), f.parent / "PAUSE")
     confirmed = []
     for f in sorted((LAB / "results").glob("*.json")):
         r = json.loads(f.read_text())
@@ -234,7 +236,21 @@ def measured_status(ladder: dict) -> dict:
         jl = [l for l in comparisons[-1]["jury_legends"] if l != "Riven"]
         got = sum(real[k]["games"] for k in jl if k in real)
         out["coverage_latest_test"] = {"result": comparisons[-1]["result"], "legends": jl,
-                                       "share": round(got / total, 3) if total else None}
+                                       "share": round(got / total, 3) if total else None,
+                                       "missing_top": [k for k, _ in sorted(real.items(), key=lambda kv: -kv[1]["games"])
+                                                       if k != "Riven" and k not in jl][:4]}
+    # Engine check: the newest replay of the RiftLite games through the current engine (lab/learn/human_riftlite.json,
+    # rebuilt by build_human_dataset.py), median desyncs per game (all desyncs: no engine-only split is recorded).
+    hr = LAB / "learn" / "human_riftlite.json"
+    if hr.exists():
+        H = json.loads(hr.read_text())
+        ds = sorted(g["desyncs"] for g in H.get("games", []) if g.get("desyncs") is not None)
+        if ds:
+            n = len(ds)
+            med = ds[n // 2] if n % 2 else (ds[n // 2 - 1] + ds[n // 2]) / 2
+            out["engine_replay"] = {"file": "lab/learn/human_riftlite.json", "generated": H.get("generated"), "games": n,
+                                    "median": med, "mean": round(sum(ds) / n, 2),
+                                    "engine_commits_since": engine_since(H.get("generated"))}
     return out
 
 

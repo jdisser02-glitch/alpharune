@@ -24,7 +24,10 @@ export async function render(container) {
   // 1. The engine follows real games (live from the replay review when it ran without a bot, else home.yml).
   const hr = D.human_review || {}, hg = hr.games || [];
   const E = S.engine || {}, eHist = E.history || [], eT = E.target ?? 3, eStart = eHist.length ? eHist[0].value : null;
-  const eNow = hr.agent === "random" && hg.length ? median(hg.map(g => g.desyncs_engine ?? g.desyncs ?? 0)) : (eHist.length ? eHist[eHist.length - 1].value : null);
+  // Newest first: a replay of the RiftLite games through the current engine (data.measured.engine_replay) when it is
+  // newer than the bot review, else the review when it ran without a bot, else home.yml's history.
+  const ER = (D.measured || {}).engine_replay, erNewer = ER && (!hr.generated || String(ER.generated) > String(hr.generated));
+  const eNow = erNewer ? ER.median : hr.agent === "random" && hg.length ? median(hg.map(g => g.desyncs_engine ?? g.desyncs ?? 0)) : (eHist.length ? eHist[eHist.length - 1].value : null);
   // Not passed until the median is at the target: progress is capped at 90% before that.
   const p1 = eNow == null || eStart == null ? 0 : eNow <= eT ? 1 : Math.min(0.9, clamp((eStart - eNow) / (eStart - eT)));
   // 2. The bot is a credible jury: share of simulated matchups inside real players' 95% interval (data.measured,
@@ -37,11 +40,12 @@ export async function render(container) {
   const R = F.field && !F.field.stale && F.field.total ? F.field : (Fs.riven && Fs.riven.total ? Fs.riven : F.field);
   const p2 = R && R.rate != null ? clamp(R.rate * (R.stale ? 0.5 : 1)) : C.rate == null ? 0 : clamp(C.rate * (C.stale ? 0.5 : 1));
   const favOf = s => `${s.right}/${s.total}`;
-  const others = Object.entries(Fs).filter(([k, s]) => k !== "riven" && s.total).map(([k, s]) => `${esc(s.legend)} ${favOf(s)}`).join(", ");
+  const others = Object.entries(Fs).filter(([k, s]) => k !== "riven" && s.total).map(([k, s]) => `${esc(s.legend)} ${favOf(s)}${s.engine_commits_since ? ` (before ${s.engine_commits_since} engine change${s.engine_commits_since > 1 ? "s" : ""})` : ""}`).join(", ");
   const A = S.agreement || {}, aHist = A.history || [], aNow = aHist.length ? aHist[aHist.length - 1] : null;
   const G = T.general || {}, specs = Object.entries(T.specialists || {});
-  const train = [`General net ${esc(G.current || "—")} ${G.running ? "training" : "paused"}, ${G.rejected_since_adoption ?? 0} rejected since its adoption`]
-    .concat(specs.map(([k, s]) => `${esc(k)} specialist ${s.running ? "training" : "paused"}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`)).join(" · ");
+  const stateOf = s => s.state || (s.running ? "training" : "paused");
+  const train = [`General net ${esc(G.current || "—")} ${stateOf(G)}, ${G.rejected_since_adoption ?? 0} rejected since its adoption`]
+    .concat(specs.map(([k, s]) => `${esc(k)} specialist ${stateOf(s)}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`)).join(" · ");
   // 3. The opponents are today's meta: newest tournament date among the meta lists.
   const metaDates = (D.decks || []).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
   const newest = metaDates[metaDates.length - 1], metaN = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).length;
@@ -67,13 +71,13 @@ export async function render(container) {
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1,
       line: `${fmt1(eNow)} errors per real game (median) · target ${eT} · ${eNow != null && eNow <= eT ? "passed" : "not passed"}`,
-      sub: `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
+      sub: erNewer ? `Replay of ${ER.games} RiftLite games through the engine, ${esc(fmtDate(ER.generated))} (all desyncs, mean ${fmt1(ER.mean)})${since(ER.engine_commits_since)}` : `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
     { n: 2, title: "Bot judges matchups like real players", pct: p2,
       line: R && R.total ? `${R.right} of ${R.total} Riven matchups with real players' favourite (target ${pct0(R.target ?? 0.8)}) · ${esc(R.source)}, ${esc(R.net || "")}${R.stale ? ": counted half" : ""}${(R.pilots_replaced || []).length ? ` · opponent pilot(s) replaced since: ${esc(R.pilots_replaced.join(", "))}` : ""}${R.spearman != null ? ` · rank correlation with real rates ${R.spearman}` : ""}${since(R.engine_commits_since)}` : "Not measured",
       sub: `${R && R.wrong && R.wrong.length ? `Wrong favourite: ${esc(R.wrong.join(", "))}. ` : ""}${others ? `Other legends' juries: ${others}. ` : ""}${C.total ? `Older, stricter measure: ${C.within} of ${C.total} inside real players' 95% range. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
       line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
-      sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
+      sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${Cl.missing_top && Cl.missing_top.length ? `Missing from the newest list test: ${esc(Cl.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
     { n: 4, title: "Best Riven list found", pct: p4,
       line: conf.length ? `${conf.length} list${conf.length > 1 ? "s" : ""} beat the reference (interval above 0)` : "No list shown better than the reference",
       sub: [compLine, ((M.list || {}).stale_confirmations || []).length ? `${M.list.stale_confirmations.length} older confirmation(s) by a bot no longer in use not counted` : "", esc(Dk.line || "")].filter(Boolean).join(". "), href: "#/decks" },

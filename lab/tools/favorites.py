@@ -33,7 +33,8 @@ LEGENDS = ["Riven", "Kennen", "Kai'Sa", "Rengar", "Vex", "Akali", "Evelynn", "Le
            "Orianna", "Seraphine", "Master Yi", "Nasus", "Ekko", "Ziggs", "Draven", "Viktor", "Jinx", "Jarvan IV",
            "Volibear", "Kha'Zix", "Irelia", "Yasuo", "Ahri", "Leona", "Lux", "Teemo", "Sett", "Garen", "Miss Fortune"]
 SPEC_LEGEND = {"riven": "Riven", "orianna": "Orianna", "mordekaiser": "Mordekaiser", "kennen": "Kennen",
-               "kai_sa": "Kai'Sa", "akali": "Akali", "evelynn": "Evelynn", "ziggs": "Ziggs"}
+               "kai_sa": "Kai'Sa", "akali": "Akali", "evelynn": "Evelynn", "ziggs": "Ziggs",
+               "volibear": "Volibear"}
 TARGET = 0.8
 
 
