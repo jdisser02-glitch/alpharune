@@ -57,6 +57,7 @@ function maskDraws(log, bot) {
   });
 }
 
+let loadInto = null, curPnet = "";   // set by init; policyNet swaps the bot's policy net
 const CMDS = {
   async init({ base, net, pnet }) {
     const wasm = await fetchBytes(base + "riftbound.wasm", "wasm");
@@ -70,7 +71,7 @@ const CMDS = {
             loadNet: c("rb_load_value_net", "number", ["number", "number"]), endGame: c("rb_end_game", null, []) };
     // An older engine build has no rb_load_policy_net: the bot then stays on the value net.
     if (M._rb_load_policy_net) api.loadPolicyNet = c("rb_load_policy_net", "number", ["number", "number"]);
-    const loadInto = async (url, what, load, label) => {
+    loadInto = async (url, what, load, label) => {
       if (!url || !load) return false;
       try {
         let bytes = await fetchBytes(url, what);
@@ -88,7 +89,16 @@ const CMDS = {
     };
     const netOk = await loadInto(net, "net", api.loadNet, "value net");
     const pnetOk = await loadInto(pnet, "pnet", api.loadPolicyNet, "policy net");
+    if (pnetOk) curPnet = pnet;
     return { version: api.version(), cards: api.cardCount(), net: netOk, pnet: pnetOk };
+  },
+  // The bot deck's legend has its own specialist net: load it (once per page) before the game; "" keeps the current one.
+  async policyNet({ url }) {
+    if (!api || !api.loadPolicyNet) return { pnet: false, url: curPnet };
+    if (!url || url === curPnet) return { pnet: !!curPnet, url: curPnet };
+    const ok = await loadInto(url, "pnet", api.loadPolicyNet, "policy net");
+    if (ok) curPnet = url;
+    return { pnet: ok, url: curPnet };
   },
   async newGame({ deck1, deck2, humanSeat: seat, seed, bot }) {
     if (!api) throw new Error("engine not initialised");

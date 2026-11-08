@@ -321,6 +321,12 @@ async function start() {
     G.autopay = !!c.autopay; G.level = LEVELS[c.level] ? c.level : "quick";
     const me = deckByPath(c.me), bot = deckByPath(c.bot);
     if (!me || !bot) throw new Error("Pick a deck for both seats.");
+    // The bot plays its legend's specialist net when one ships (engine.specialist_nets), else the general net.
+    const E2 = data().engine || {}, legendCard = String(bot.legend || "").split(", ").slice(-1)[0];
+    const slug = (E2.legend_slug || {})[legendCard] || (E2.legend_slug || {})[bot.legend], spec = (E2.specialist_nets || {})[slug];
+    const want = spec ? new URL(spec.file, location.href).href : (E2.policy_net ? new URL(E2.policy_net, location.href).href : "");
+    const pn = await call("policyNet", { url: want });
+    G.botNet = pn && pn.pnet ? (spec && pn.url === want ? spec.source : E2.policy_net_source || "") : "";
     const st = await call("newGame", { deck1: G.seat === 1 ? me.text : bot.text, deck2: G.seat === 1 ? bot.text : me.text, humanSeat: G.seat, seed: G.seed, bot: LEVELS[G.level].spec });
     G.rec = { v: 1, started: new Date().toISOString(), seat: G.seat, seed: G.seed, level: G.level, bot_spec: LEVELS[G.level].spec, me: G.cfg.me, opponent: G.cfg.bot, training: G.cfg.training !== false, decisions: [], notes: [] };
     G.saved = null; G.played = []; G.savedAt = 0; G.botStory = []; G.chainTargets = []; G.lastSig = null; clearShow();
@@ -494,6 +500,7 @@ function tilesHtml(side) {
 function engineLine() {
   const E = data().engine;
   if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards · ${G.info.pnet ? "policy net loaded (the search bot plays as in training)" : G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
+  if (G.botNet) return `Bot policy net: ${esc(G.botNet.split("/").pop())}${/spec_/.test(G.botNet) ? " (its legend's specialist)" : " (general net)"}`;
   return E.policy_net_source ? `Bot policy net: ${esc(E.policy_net_source.split("/").pop())}` : E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
 }
 function progressHtml() {
@@ -789,7 +796,7 @@ async function saveGame(partial = false) {
   const { db, meId } = await runtime();
   const id = `${G.rec.started.slice(0, 19).replace(/[-:T]/g, "")}_${G.seed}`;
   const doc = { ...G.rec, id, finished: partial ? null : new Date().toISOString(), in_progress: partial, result: partial ? null : G.result, my_moves: G.myMoves, bot_moves: G.botMoves.length, author: meId || "",
-    engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "", pnet: (G.info || {}).pnet ? ((data().engine || {}).policy_net_source || "") : "" };
+    engine: (G.info || {}).version || "", net: ((data().engine || {}).net_source) || "", pnet: G.botNet != null ? G.botNet : (G.info || {}).pnet ? ((data().engine || {}).policy_net_source || "") : "" };
   window.__lastGameRecord = doc;                  // reachable from the console (copy(__lastGameRecord)) when there is no database
   if (!db) { G.saving = false; if (!partial) { G.saved = { ok: false, why: "open the page on claude.ai with your account to save games for review" }; paintSaved(); } return; }
   try { await db.collection("games").doc(id).set(doc); if (!partial) G.saved = { ok: true, id }; }

@@ -33,6 +33,8 @@ ART_DIR = LAB / "dashboard" / "art"                                             
 ENGINE_FILES = {"engine/riftbound.js": ROOT / "build-wasm" / "riftbound.js",
                 "engine/riftbound.wasm": ROOT / "build-wasm" / "riftbound.wasm"}
 DEFAULT_NET = LAB / "learn" / "nets" / "net_000.rbvn"
+# Legends whose specialist net the Play bot uses (the active tracks and the Stuttgart field's top legends).
+PLAY_SPECIALISTS = ["riven", "volibear", "orianna", "mordekaiser", "kennen", "kai_sa"]
 SESSION = {"session_id": "session_01F68srW6k6CBYFTm9oVwNVu",
            "environment_id": "env_01TgKU1MBDD1jDjD7f3iW6Gm",
            "repo": "jdisser02-glitch/alpharune", "branch": "claude/zen-goodall-hb2ssu"}
@@ -392,7 +394,29 @@ def main(argv):
                 print(f"  {pnet_rel_out} is over 16 MB: not shipped, the bot will use the value net")
                 (DIST / pnet_rel_out).unlink()
                 pnet_rel_out = ""
+        # Each legend the bot may pilot gets its specialist's policy net (8 Nov: the Play bot played Riven with the
+        # general net, which never trained on it). Gzipped + base64 like the general one (~7-11 MB each); the Play tab
+        # loads the one for the bot deck's legend and falls back to the general net for the others.
+        legend_slug = json.loads((LAB / "learn" / "legend_champions.json").read_text())
+        spec_nets = {}
+        for slug in PLAY_SPECIALISTS:
+            lf = LAB / "learn" / "specialists" / slug / "ladder.json"
+            cur = json.loads(lf.read_text()).get("current_net") if lf.exists() else None
+            src = ROOT / cur if cur else None
+            if not src or src.suffix != ".rbpn" or not src.exists():
+                continue
+            rel = f"engine/policy_{slug}.json"
+            (DIST / rel).write_text(json.dumps({"source": cur, "encoding": "gzip",
+                                                "base64": base64.b64encode(gzip.compress(src.read_bytes(), 9, mtime=0)).decode()}))
+            size = (DIST / rel).stat().st_size
+            if size > 16_000_000:
+                (DIST / rel).unlink()
+                print(f"  {rel} is over 16 MB: not shipped, the {slug} bot uses the general net")
+                continue
+            spec_nets[slug] = {"file": rel, "source": cur}
+            print(f"  {rel:<24} {size / 1e6:.2f} MB  (from {cur})")
         engine = {"js": "engine/riftbound.js", "wasm": "engine/riftbound.wasm",
+                  "specialist_nets": spec_nets, "legend_slug": legend_slug,
                   "net": net_rel_out, "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else "",
                   "policy_net": pnet_rel_out, "policy_net_source": str(pnet_path.relative_to(ROOT)) if pnet_rel_out else ""}
     else:

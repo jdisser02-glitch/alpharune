@@ -9,6 +9,7 @@
 // follow libc++'s algorithms on a 32-bit target, the browser engine's, so the
 // browser's games keep their deals and native replays reproduce them.
 
+#include <algorithm>
 #include <bit>
 #include <cstdint>
 #include <iterator>
