@@ -2,8 +2,8 @@
   "name": "train_spec_riven",
   "kind": "train",
   "specialist": "riven",
-  "description": "Dispatch marker for the Riven specialist (riftlab.yml, request=lab/specs/train_spec_riven.json, chain=N iterations): a net of its own, started from the general net, trained on its own decisions with Riven against the jury of loop.SPECIALISTS['riven'] (piloted by the general net or by that legend's specialist), adopted when it beats its previous version in the Riven mirror (55% or SPRT) without doing worse against the jury (paired, 3 points). Ladder: lab/learn/specialists/riven/ladder.json; nets lab/learn/nets/spec_riven_*.",
-  "args": "--selfplay-sims 200 --games 480 --hidden 128",
+  "description": "Dispatch marker for the Riven specialist (riftlab.yml, request=lab/specs/train_spec_riven.json, chain=N iterations): a net of its own, started from the general net, trained on its own decisions with Riven against the jury of loop.SPECIALISTS['riven'] (piloted by the general net or by that legend's specialist), adopted when it beats its previous version in the Riven mirror (55% or SPRT) without doing worse against the jury (paired, 3 points). Ladder: lab/learn/specialists/riven/ladder.json; nets lab/learn/nets/spec_riven_*. 8 Nov 18:00 UTC (Jeremy): back on, merged with the human track riven_h: its human decisions weigh 10, Volibear Dragons joins its jury; 6 runners.",
+  "args": "--selfplay-sims 200 --games 480 --hidden 128 --spec-human-weight 10",
   "note": "6 Nov 22:40: Jeremy expects Riven to be nerfed; it keeps training on 4 of the 20 runners (Orianna 8, Mordekaiser 8). 480 self-play games at 200 simulations so an iteration stays a few hours on 4 runners.",
-  "runners": 4
+  "runners": 6
 }

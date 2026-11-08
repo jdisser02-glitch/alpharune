@@ -112,7 +112,9 @@ SPECIALISTS = {
                        _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
                        # 7 Nov: Mordekaiser's specialist beats the Riven pilot far more often than real players
                        # do (55% simulated vs 29% real): Riven trains and is judged against it too.
-                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt"]},
+                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+                       # 8 Nov (Jeremy): riven and riven_h merged; Volibear Dragons (and its Black Market) joins the jury.
+                       "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt"]},
     # 8 Nov (Jeremy): Riven started again from the net that replays the human games (replay_imitate.py,
     # replay_base), trained by playing (the reward of winning) while pulled toward that human net.
     "riven_h": {"legend": "Riven", "human_slug": "riven",
