@@ -10,13 +10,16 @@ import { runtime, data, esc, $, $$, store, sleep, card, cardByName, cardImg, por
          empty, notice, modal, toast, hidePreview, deckByPath, deckShort, deckLabel, deckFace, deckPilot, groupDecks, legendShort, eventLabel, num, plural, bestVariantPath, bestVerdict } from "./lib.js";
 
 const CSS = new URL("./play.css", import.meta.url).href;
-const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "search", autopay: true, training: true };
+const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt", seat: "random", seed: "", level: "deep", autopay: true, training: true };
 /* Bot presets: what rb_new_game's bot spec accepts is "greedy[:det=<redeals>,budget=<ms>,steps=<n>,wide=<n>]" or "random". */
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
   search:  { label: "Search",  spec: "search:sims=50,worlds=6,settle=60",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move. It plays combats out before judging a move." },
-  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals, steered like the training games by the current policy net (its move preferences pick what to look at, its value head judges the outcome). The strongest the browser can run; expect 5 to 15 s per move. It plays combats out before judging a move." },
+  strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals, steered like the training games by the current policy net (its move preferences pick what to look at, its value head judges the outcome). Expect 1 to 5 s per move. It plays combats out before judging a move." },
+  // 8 Nov (Jeremy): "even if the bot takes 30 seconds a move, make it think". With 150 simulations its first instinct often
+  // won the move (it moved Riven home where a longer search preferred hiding Bedeviling Stranger by 0.65).
+  deep:    { label: "Deep",    spec: "search:sims=3000,worlds=16,settle=60", help: "Twenty times the Strong search: 3000 simulations over 16 redeals, so the bot's reasoning outweighs its first instinct. Up to 30 s per move on hard decisions." },
 };
 const SEATS = { "1": "Player 1, on the play", "2": "Player 2, on the draw", random: "Random" };
 const BOT_PAUSE = { undecided: 450, forced: 160 }, AUTO_PAUSE = { pass: 220, pay: 100, focus: 1100 }, LOG_MAX = 400;

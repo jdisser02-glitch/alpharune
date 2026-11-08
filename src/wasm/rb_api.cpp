@@ -282,7 +282,7 @@ SearchSpec parseSearchSpec(const std::string& spec) {
         const int v = std::atoi(spec.c_str() + k + std::strlen(key)); if (v > 0) v_out = v;
     };
     grab("sims=", out.sims); grab("worlds=", out.worlds); grab("settle=", out.settle);
-    out.sims = std::min(out.sims, 400);
+    out.sims = std::min(out.sims, 5000);   // 8 Nov: the Deep level thinks up to ~30 s a move (was 400)
     out.worlds = std::min(out.worlds, 16);
     out.settle = std::min(out.settle, 500);
     if (const auto k = spec.find("vtemp="); k != std::string::npos) {
