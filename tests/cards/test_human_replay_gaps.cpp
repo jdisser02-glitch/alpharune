@@ -243,6 +243,21 @@ TEST_F(HumanReplayGaps, AstralHeron_PlayedFirstToAControlledBattlefieldDiscounts
     EXPECT_TRUE(offersPlayAt(blade, LocationId{BaseLocation{P1}}));
 }
 
+// Vendetta erratum: "the next card you play THIS TURN costs [2][A][A] less". The discount used to carry over
+// to the opponent's turn (Jeremy's game of 8 Nov: a free Discipline, then a free Rebuke).
+TEST_F(HumanReplayGaps, AstralHeron_DiscountEndsWithTheTurn) {
+    makeEngine();
+    setLegend(P1, kTheExile); setLegend(P2);
+    controlBf(0, P1);
+    s().player(P1).rune_pool.energy = 7;
+    auto heron = cardInHand(P1, kAstralHeron);
+    play(heron, LocationId{BattlefieldLocation{0}});
+    ASSERT_EQ(s().player(P1).cost_modifiers.size(), 1u);
+    EXPECT_TRUE(s().player(P1).cost_modifiers[0].this_turn_only);
+    s().player(P1).resetTurnTracking();          // the turn ends
+    EXPECT_TRUE(s().player(P1).cost_modifiers.empty());
+}
+
 TEST_F(HumanReplayGaps, AstralHeron_PlayedToBaseGivesNoDiscount) {
     makeEngine();
     setLegend(P1, kTheExile); setLegend(P2);

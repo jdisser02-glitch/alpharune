@@ -15,8 +15,10 @@ namespace {
 class AstralHeron : public UnitCard {
 public:
     const CardDef& def() const override { return def_; }
-    // "When you play your first card each turn, if I'm at a battlefield, your
-    //  next card costs [2][A][A] less."
+    // "When you play your first card each turn, if I'm at a battlefield, the
+    //  next card you play this turn costs [2][A][A] less." (Vendetta erratum,
+    //  rules/patch-notes/vendetta-rules-faq-and-clarifications.md; CR example
+    //  under 1943 of rules/core-rules.md.) The discount ends with the turn.
     // "First card each turn" is read at resolution as
     // PlayerState::cards_played_this_turn == 1 (the triggering play itself).
     // The [A][A] half is CostModifier::power_reduction, which the engine's
@@ -32,7 +34,8 @@ public:
         m.energy_reduction = 2;
         m.power_reduction = 2;
         m.next_card_only = true;
-        m.this_turn_only = false;   // "your next card", whenever it is played
+        m.this_turn_only = true;    // erratum: "the next card you play THIS TURN" (it carried over to the
+                                    // opponent's turn before: Jeremy's game of 8 Nov, free Discipline and Rebuke)
         m.affects_friendly_only = true;
         ps.cost_modifiers.push_back(m);
         ctx.events.logTrace("ASTRAL HERON: first card this turn -> next card costs [2][A][A] less");
@@ -54,7 +57,7 @@ private:
         d.energy_cost = 7;
         d.might = 7;
         d.rarity = Rarity::Epic;
-        d.ability_text = R"RB(When you play your first card each turn, if I'm at a battlefield, your next card costs [2][A][A] less.)RB";
+        d.ability_text = R"RB(When you play your first card each turn, if I'm at a battlefield, the next card you play this turn costs [2][A][A] less.)RB";
         d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/b1ce87efc9a1a7e2438c53e034a7f92caaa67ed6-744x1039.png)RB";
         return d;
     }();
