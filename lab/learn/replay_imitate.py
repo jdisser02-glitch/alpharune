@@ -81,10 +81,10 @@ def report(rows):
 
 
 def train(out: Path, human: Path, init: Path, a) -> None:
-    cmd = [sys.executable, str(HERE / "train_policy.py"), str(out), str(a.anchor), "--human", str(human),
+    cmd = [sys.executable, str(HERE / "train_policy.py"), str(out), *a.anchor, "--human", str(human),
            "--human-weights", str(a.human_weight), "--human-val-frac", "0", "--human-repeat", str(a.repeat),
            "--epochs", str(a.epochs), "--lr", str(a.lr), "--hidden", str(a.hidden), "--init-value", str(init),
-           "--keep", "last", "--entropy", "0", "--seed", str(a.seed)]
+           "--keep", "last", "--entropy", "0", "--seed", str(a.seed)] + (["--human-value"] if a.human_value else [])
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         raise SystemExit(f"train_policy failed:\n{r.stderr[-1500:]}")
@@ -95,8 +95,9 @@ def main(argv=None):
     ap.add_argument("--human", default=str(ROOT / "lab" / "learn" / "human.rbv3"))
     ap.add_argument("--init", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--anchor", default=str(ROOT / "data" / "learn" / "iter_039.rbvd"),
+    ap.add_argument("--anchor", nargs="+", default=[str(ROOT / "data" / "learn" / "iter_039.rbvd")],
                     help="self-play data that keeps the value head (it carries no policy target here)")
+    ap.add_argument("--human-value", action="store_true", help="also fit the value head on the human games' results")
     ap.add_argument("--target", type=float, default=0.9, help="share of human moves to reproduce")
     ap.add_argument("--rounds", type=int, default=30)
     ap.add_argument("--epochs", type=int, default=2, help="training epochs per round")
