@@ -113,6 +113,25 @@ SPECIALISTS = {
                        # 7 Nov: Mordekaiser's specialist beats the Riven pilot far more often than real players
                        # do (55% simulated vs 29% real): Riven trains and is judged against it too.
                        _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt"]},
+    # 8 Nov (Jeremy): Riven started again from the net that replays the human games (replay_imitate.py,
+    # replay_base), trained by playing (the reward of winning) while pulled toward that human net.
+    "riven_h": {"legend": "Riven", "human_slug": "riven",
+              "decks": [GATE_DECK, _RIVEN_BEST,
+                        _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                        _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt",
+                        # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
+                        # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
+                        "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
+                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt"],
+              "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
+                       _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                       _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
+                       _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+                       _META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt",
+                       _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+                       # 7 Nov: Mordekaiser's specialist beats the Riven pilot far more often than real players
+                       # do (55% simulated vs 29% real): Riven trains and is judged against it too.
+                       _META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt"]},
     "kai_sa": {"legend": "Kai'Sa",
                "decks": [_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
@@ -509,7 +528,13 @@ def train_candidate(a, it, current, row, suffix=""):
             cmd += ["--human", *legend_human, "--human-weights", str(a.spec_human_weight), str(a.human_weight)]
         elif a.human and Path(a.human).exists():
             cmd += ["--human", a.human]
-        if current and str(current).endswith(".rbpn") and a.prev_weight > 0:
+        # --human-anchor (Jeremy, 8 Nov): the pull goes to a fixed net that replays the human games (replay_imitate.py)
+        # instead of the previous net, so the reward of winning improves play without unlearning the human moves.
+        anchor = a.human_anchor if getattr(a, "human_anchor", "") and (ROOT / a.human_anchor).exists() else ""
+        if anchor and a.prev_weight > 0:
+            cmd += ["--prev", str(ROOT / anchor), "--prev-weight", str(a.prev_weight)]
+            row["human_anchor"] = anchor
+        elif current and str(current).endswith(".rbpn") and a.prev_weight > 0:
             cmd += ["--prev", str(ROOT / current), "--prev-weight", str(a.prev_weight)]
         # Continuous training: start from the current net instead of from scratch, when it has this width.
         if a.warm and current and str(current).endswith(".rbpn") and rbpn_hidden(ROOT / current) <= a.hidden:   # equal, or widened (net2net)
@@ -550,7 +575,8 @@ def specialist_human_files(a):
     if not TRACK or not src.exists() or not summary.exists():
         return None
     out = DATA / "human"
-    own, rest = out / f"human_{TRACK}.rbv3", out / f"human_others_{TRACK}.rbv3"
+    slug = SPECIALISTS.get(TRACK, {}).get("human_slug", TRACK)
+    own, rest = out / f"human_{slug}.rbv3", out / f"human_others_{slug}.rbv3"
     # DATA is cached between runs: split again whenever the shared human data changes (new Play games).
     stamp = out / "source.sha1"
     digest = hashlib.sha1(src.read_bytes() + summary.read_bytes()).hexdigest()
@@ -625,6 +651,7 @@ def make_parser():
     ap.add_argument("--human-weight", type=float, default=0.3)
     ap.add_argument("--entropy", type=float, default=0.01, help="--policy: entropy bonus")
     ap.add_argument("--prev-weight", type=float, default=0.1, help="--policy: pull toward the previous net's policy")
+    ap.add_argument("--human-anchor", default="", help="--policy: pull toward this fixed human-replay net instead of the previous net")
     ap.add_argument("--threads", type=int, default=os.cpu_count() or 2)
     ap.add_argument("--seed", type=int, default=1)
     return ap

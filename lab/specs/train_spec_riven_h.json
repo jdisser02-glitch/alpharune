@@ -1,0 +1,8 @@
+{
+  "name": "train_spec_riven_h",
+  "kind": "train",
+  "specialist": "riven_h",
+  "runners": 4,
+  "args": "--games 480 --hidden 128 --prev-weight 0.5 --human-anchor lab/learn/nets/replay_base.rbpn --spec-human-weight 10",
+  "description": "Dispatch marker for the human-anchored Riven track (Jeremy, 8 Nov): starts from lab/learn/nets/replay_base.rbpn, the general net taught to replay the human games move for move (lab/learn/replay_imitate.py: 91% of the human moves of 58 games, 52.5% on 15 unseen ones); trains by self-play (the reward of winning) with its policy pulled toward that human net (--human-anchor, --prev-weight 0.5) and Riven's human decisions weighted 10. Adopted on the jury like the other specialists, with the human-agreement guard. 4 runners taken from Mordekaiser."
+}
