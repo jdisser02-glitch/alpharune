@@ -49,7 +49,7 @@ private:
         d.collector_number = 24;
         d.artist = R"RB(Fish Art Studio)RB";
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Chaos};
+        d.domains = {Domain::Calm};  // the printed card shows the Calm symbol; the official gallery data says Chaos
         d.tags = {R"RB(Device)RB"};
         d.energy_cost = 2;
         d.rarity = Rarity::Common;
