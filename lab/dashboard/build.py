@@ -280,8 +280,18 @@ def main(argv):
     (DIST / "replays").mkdir(parents=True)
 
     tests = []
+    indexed = {d["path"] for d in index["decks"]}
     for t in index["tests"]:
-        tests.append(json.loads((ROOT / t["file"]).read_text()))
+        tr = json.loads((ROOT / t["file"]).read_text())
+        # A test's deck rows carry the list's full stats; the page reads the card list from the deck index when the
+        # list is indexed (tests.js deckSection) and never reads keywords or power symbols, so those stay out of
+        # data.json (the artifact's per-file limit is 16 MB; genetic searches add hundreds of rows).
+        for row in tr.get("decks") or []:
+            s = row.get("stats")
+            if isinstance(s, dict):
+                for k in ("keywords", "power_symbols") + (("list",) if row.get("path") in indexed else ()):
+                    s.pop(k, None)
+        tests.append(tr)
 
     replays = []
     for f in sorted((LAB / "replays").rglob("game_*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
