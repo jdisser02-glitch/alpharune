@@ -404,7 +404,7 @@ TEST_F(RadianceB07Test, GoodStuff_PlayedToABattlefieldDiscardsOneThenDrawsThree)
     std::vector<GameObjectId> deck;
     for (int i = 0; i < 4; ++i) deck.push_back(deckCard(P1));
     s().player(P1).rune_pool.energy = 3;
-    s().player(P1).rune_pool.power[static_cast<int>(Domain::Body)] = 1;
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Chaos)] = 1;
     auto gs = cardInHand(P1, kGoodStuff);
     p1_.want = junk;
     play(gs, LocationId{BattlefieldLocation{1}});
@@ -420,7 +420,7 @@ TEST_F(RadianceB07Test, GoodStuff_DrawsThreeWithAnEmptyHand) {
     makeEngine();
     for (int i = 0; i < 3; ++i) deckCard(P1);
     s().player(P1).rune_pool.energy = 3;
-    s().player(P1).rune_pool.power[static_cast<int>(Domain::Body)] = 1;
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Chaos)] = 1;
     auto gs = cardInHand(P1, kGoodStuff);
     play(gs, LocationId{BattlefieldLocation{0}});
     EXPECT_EQ(s().player(P1).hand.size(), 3u);

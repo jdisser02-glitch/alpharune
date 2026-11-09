@@ -53,7 +53,7 @@ private:
         d.public_code = R"RB(RAD-106/167)RB";
         d.collector_number = 106;
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Body};
+        d.domains = {Domain::Chaos};  // the printed card shows the Chaos symbol; the official gallery data says Body
         d.tags = {R"RB(Device)RB"};
         d.energy_cost = 3;
         d.power_cost = 1;
