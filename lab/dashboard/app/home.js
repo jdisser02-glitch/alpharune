@@ -41,6 +41,9 @@ export async function render(container) {
   const p2 = R && R.rate != null ? clamp(R.rate * (R.stale ? 0.5 : 1)) : C.rate == null ? 0 : clamp(C.rate * (C.stale ? 0.5 : 1));
   const favOf = s => `${s.right}/${s.total}`;
   const others = Object.entries(Fs).filter(([k, s]) => k !== "riven" && s.total).map(([k, s]) => `${esc(s.legend)} ${favOf(s)}${s.engine_commits_since ? ` (before ${s.engine_commits_since} engine change${s.engine_commits_since > 1 ? "s" : ""})` : ""}`).join(", ");
+  const cParts = [C.stale ? `${esc(C.net)}, an older bot` : "", C.engine_commits_since ? `before ${C.engine_commits_since} engine change${C.engine_commits_since > 1 ? "s" : ""}` : ""].filter(Boolean);
+  const cTag = cParts.length ? ` (${cParts.join("; ")})` : "";
+  const netNo = s => { const m = /net[ _](\d+)/.exec(String(s || "")); return m ? +m[1] : null; };
   const A = S.agreement || {}, aHist = A.history || [], aNow = aHist.length ? aHist[aHist.length - 1] : null;
   const G = T.general || {}, specs = Object.entries(T.specialists || {});
   const stateOf = s => s.state || (s.running ? "training" : "paused");
@@ -71,10 +74,10 @@ export async function render(container) {
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1,
       line: `${fmt1(eNow)} errors per real game (median) · target ${eT} · ${eNow != null && eNow <= eT ? "passed" : "not passed"}`,
-      sub: erNewer ? `Replay of ${ER.games} RiftLite games through the engine, ${esc(fmtDate(ER.generated))} (all desyncs, mean ${fmt1(ER.mean)})${since(ER.engine_commits_since)}` : `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
+      sub: erNewer ? `Replay of ${ER.games} RiftLite games through the engine, ${esc(fmtDate(ER.generated))} (all desyncs, mean ${fmt1(ER.mean)}; the start value ${fmt1(eStart)} counted engine-side desyncs only)${since(ER.engine_commits_since)}` : `${E.measured ? `Measured ${esc(E.measured)}` : ""}${since(hr.engine_commits_since)}`, href: "#/replays" },
     { n: 2, title: "Bot judges matchups like real players", pct: p2,
       line: R && R.total ? `${R.right} of ${R.total} Riven matchups with real players' favourite (target ${pct0(R.target ?? 0.8)}) · ${esc(R.source)}, ${esc(R.net || "")}${R.stale ? ": counted half" : ""}${(R.pilots_replaced || []).length ? ` · opponent pilot(s) replaced since: ${esc(R.pilots_replaced.join(", "))}` : ""}${R.spearman != null ? ` · rank correlation with real rates ${R.spearman}` : ""}${since(R.engine_commits_since)}` : "Not measured",
-      sub: `${R && R.wrong && R.wrong.length ? `Wrong favourite: ${esc(R.wrong.join(", "))}. ` : ""}${others ? `Other legends' juries: ${others}. ` : ""}${C.total ? `Older, stricter measure: ${C.within} of ${C.total} inside real players' 95% range. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
+      sub: `${R && R.wrong && R.wrong.length ? `Wrong favourite: ${esc(R.wrong.join(", "))}. ` : ""}${others ? `Other legends' juries: ${others}. ` : ""}${C.total ? `Older, stricter measure: ${C.within} of ${C.total} inside real players' 95% range${cTag}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}${netNo(aNow.label) != null && netNo(G.current) != null && netNo(aNow.label) !== netNo(G.current) ? ", a net no longer in use" : ""}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
       line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
       sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${Cl.missing_top && Cl.missing_top.length ? `Missing from the newest list test: ${esc(Cl.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },

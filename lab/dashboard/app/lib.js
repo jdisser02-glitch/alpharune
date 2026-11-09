@@ -186,7 +186,13 @@ export function bestVerdict() {
   const f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
   return `${b.verdict} the reference (${f(b.diff)} points, [${f(b.ci95[0])}, ${f(b.ci95[1])}])${b.stale ? `, measured with ${b.net}, an older bot` : ""}${b.engine_commits_since ? `, before ${b.engine_commits_since} engine change${b.engine_commits_since > 1 ? "s" : ""}` : ""}`;
 }
-const bestName = () => { const b = (((D && D.measured) || {}).list || {}).best; return b ? (b.verdict === "beats" ? "Best measured list" : "Top measured list (not proven better)") : "Highest single-test list (unconfirmed)"; };
+/** " (older bot, before 11 engine changes)" when the best list's confirmation no longer reflects the bot or engine in use. */
+export function bestStale() {
+  const b = (((D && D.measured) || {}).list || {}).best; if (!b) return "";
+  const parts = [b.stale ? "older bot" : "", b.engine_commits_since ? `before ${b.engine_commits_since} engine change${b.engine_commits_since > 1 ? "s" : ""}` : ""].filter(Boolean);
+  return parts.length ? ` (${parts.join(", ")})` : "";
+}
+const bestName = () => { const b = (((D && D.measured) || {}).list || {}).best; return b ? (b.verdict === "beats" ? "Best measured list" + bestStale() : "Top measured list (not proven better)") : "Highest single-test list (unconfirmed)"; };
 /** Set codes → names (UNL stays a code: the engine's unlisted cards). */
 export const SETS = { OGN: "Origins", OGS: "Origins starter", SFD: "Spiritforged", VEN: "Vendetta", RAD: "Radiance" };
 export const setName = code => SETS[code] ? `${SETS[code]} (${code})` : String(code || "");
