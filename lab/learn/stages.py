@@ -292,7 +292,7 @@ def selfplay_specialist(args, plan, a, L, out, games):
         if mirror:
             L.batch(legend_deck, mirror_deck, me, me, PER_PAIR, seed, out)
             continue
-        opp = L.bot(pilot(plan, opp_deck), sp)
+        opp = L.bot(pilot(plan, opp_deck), getattr(a, "selfplay_opp_sims", 0) or sp)
         seat = 1 + (k // args.shards) % 2
         d1, d2, a1, a2 = (legend_deck, opp_deck, me, opp) if seat == 1 else (opp_deck, legend_deck, opp, me)
         w1, w2 = L.batch(d1, d2, a1, a2, PER_PAIR, seed, out, value_player=seat)

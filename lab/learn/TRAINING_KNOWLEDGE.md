@@ -111,3 +111,37 @@ frozen checkpoints (BayesElo, Ordo); OpenSpiel's AlphaZero tracks strength again
 
 [I] The Go multipliers will not transfer as such to a card-game MLP; each change needs its own A/B on the
 yardstick of step 1.
+
+## 4. What was changed, and what it gave
+
+**10 Nov 07:54 UTC, from iteration 91 (Riven alone on the 20 runners): steps 1 to 4 above.** Self-play opponents
+separated from the held-out panel; four frozen anchors met every iteration; one candidate per iteration, adopted
+unless clearly worse; 1,600 self-play games (was 480) and a 6-iteration window; no screen, no mutations.
+
+Baseline, iterations 91 to 102 (about 35 minutes each; 10 adopted, 2 refused):
+
+| Measure | Start | End |
+|---|---|---|
+| Mirror against the four frozen anchors | 48.8% [43.3, 54.2] (iterations 91-92, 320 games) | 62.7% [58.9, 66.4] (99-102, 640 games) |
+| Same, by halves | 56.8% [53.6, 59.9] (91-96) | 62.9% [59.9, 66.0] (97-102) |
+| Held-out panel, net in place | 50.3% [47.5, 53.2] (91-96) | 57.0% [54.2, 59.9] (97-102) |
+| Value loss on held-out games | 0.613 | 0.458 |
+| Same first move as the search | 82.7% | 84.7% |
+| Same first move as humans (Riven) | 46.2% | 45.5% |
+
+The gain came in the first five iterations; from 96 to 102 the anchor rate sits around 63%. The rate against each
+anchor rose (general net 55 → 67%, spec_riven_059 56 → 63%). Before the change, spec_riven_059 scored exactly 100
+of 200 against spec_riven_028 (three adoptions earlier). Held-out panel by opponent (iterations 97-102): Kennen
+70%, Kai'Sa 68%, Master Yi 68%, Akali 66%, Orianna 43%, Mordekaiser 30% (the Mordekaiser pilot still beats Riven
+far more than real players do).
+
+The two refusals were noise: at 192 games a side the panel difference has a standard error of about 5 points, so a
+-3 guard refuses roughly a quarter of the candidates that are as good as the net in place (iteration 100 was
+refused with the best anchor rate of the series, 70.6%). The guard is -8 points from iteration 104; the mirror
+floor (45% over 200 games) stays.
+
+**10 Nov 15:15 UTC, from iteration 104: step 5.** `--selfplay-sims 500 --selfplay-extra cap=0.25,fast=80,explore=4`:
+a full 500-simulation search on a quarter of the decisions (the only ones recorded as policy targets), 80
+simulations on the rest, and the move drawn from the root visits during the first 4 turns. The opponents' pilots
+search at 200. Average cost per decision about the same as before. [I] One track, so the comparison is before and
+after on the anchor curve, not a controlled A/B.

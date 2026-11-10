@@ -676,6 +676,10 @@ def make_parser():
                     help="specialist self-play: more pmcts options for the recorded player only, e.g. "
                          "cap=0.25,fast=80,explore=4 (playout-cap randomisation and sampled early moves, "
                          "src/agents/search_options.h); with cap, --selfplay-sims is the full search")
+    ap.add_argument("--selfplay-opp-sims", type=int, default=0,
+                    help="specialist self-play: simulations of the opponent's pilot (0: --selfplay-sims); set it "
+                         "when --selfplay-sims is the full search of a playout cap, so opponents do not search "
+                         "every move at the full budget")
     ap.add_argument("--agent", choices=["pmcts", "ismcts"], default="pmcts")
     ap.add_argument("--worlds", type=int, default=8, help="pmcts determinizations per decision")
     ap.add_argument("--max-minutes", type=float, default=0, help="stop before an iteration that would end past this many minutes (0 = no limit)")
