@@ -67,9 +67,14 @@ export async function render(container) {
   const lastComp = comps[comps.length - 1];
   const sgn = v => `${v >= 0 ? "+" : "−"}${Math.abs(Math.round(v * 1000) / 10)}`;
   const tidy = l => String(l || "").replace(/\s*\([+\u2212-]\d[^)]*\)/, "");
-  const compLine = lastComp ? `Newest check (${esc(lastComp.result.replace(/^\d{8}-\d{6}-/, ""))}, ${esc(lastComp.net)}), against ${esc(lastComp.reference)}: `
-    + lastComp.lists.map(x => `${esc(tidy(x.label))} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ")
-    + since(((M.list || {}).best || {}).engine_commits_since) : "";
+  const compNet = c => `${esc(c.net)}${c.stale ? ", a net no longer in use" : ""}`;
+  const compLine = !lastComp ? "" : lastComp.ga
+    ? `Newest check: genetic search ${esc(lastComp.result.replace(/^\d{8}-\d{6}-/, ""))} (${compNet(lastComp)}), its ${lastComp.lists.length} finalists against ${esc(lastComp.reference)} on fresh deals: `
+      + lastComp.lists.map((x, i) => `#${i + 1} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ")
+      + (lastComp.lists.some(x => x.ci95[0] > 0) ? "" : ` (none beats ${esc(lastComp.reference)})`) + since(lastComp.engine_commits_since)
+    : `Newest check (${esc(lastComp.result.replace(/^\d{8}-\d{6}-/, ""))}, ${compNet(lastComp)}), against ${esc(lastComp.reference)}: `
+      + lastComp.lists.map(x => `${esc(tidy(x.label))} ${sgn(x.diff)} points [${sgn(x.ci95[0])}, ${sgn(x.ci95[1])}]`).join("; ")
+      + since(lastComp.engine_commits_since);
   const p4 = Math.min(conf.length ? (p2 >= 0.8 ? 1 : 0.5) : 0, p1, p2, p3);
   const steps = [
     { n: 1, title: "Engine follows the real rules", pct: p1,

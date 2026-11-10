@@ -139,6 +139,8 @@ def measured_status(ladder: dict) -> dict:
     confirmed = []
     for f in sorted((LAB / "results").glob("*.json")):
         r = json.loads(f.read_text())
+        if riftlab_legend((r.get("spec") or {}).get("base", "")) != "Riven":
+            continue            # step 4 is the best Riven list: other legends' searches do not count here
         for c in (r.get("ga") or {}).get("confirmation", []) or []:
             for fin in c.get("finalists", []):
                 ci = fin.get("diff_ci95") or [None, None]
@@ -173,6 +175,21 @@ def measured_status(ladder: dict) -> dict:
         merged = dict(members[-1][1], decks=decks)
         items.append((f"{members[0][0]} + {len(members) - 1} more (seed {key[0]})", merged))
     items.sort(key=lambda it: str(it[1].get("started_utc") or ""))
+    # A Riven genetic search ends with a confirmation on fresh seeds (its finalists against the base list): it is a
+    # list comparison too, the newest one when it is the latest Riven test.
+    ga_comps = []
+    for f in sorted((LAB / "results").glob("*.json")):
+        r = json.loads(f.read_text())
+        sp = r.get("spec") or {}
+        conf = ((r.get("ga") or {}).get("confirmation") or [None])[-1]
+        if not conf or riftlab_legend(sp.get("base", "")) != "Riven":
+            continue
+        rows = [{"label": x.get("label"), "path": x.get("path"), "rate": x.get("confirmed_rate"), "diff": x.get("diff_vs_reference"),
+                 "ci95": x.get("diff_ci95")} for x in conf.get("finalists", []) if x.get("diff_ci95")]
+        legends = sorted({riftlab_legend(o.get("deck", "")) for o in sp.get("opponents", [])} - {None})
+        ga_comps.append({"result": f.stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"),
+                         "reference": Path(sp.get("base", "")).stem, "reference_rate": (conf.get("reference") or {}).get("confirmed_rate"),
+                         "lists": rows, "jury_legends": legends, "ga": True})
     for stem, r in items:
         decks = r.get("decks") or []
         opp = lambda d: {m.get("opponent_deck") or m.get("opponent"): m for m in d.get("matchups", [])}
@@ -195,7 +212,10 @@ def measured_status(ladder: dict) -> dict:
         legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
         comparisons.append({"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
                             "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends})
+    comparisons = sorted(comparisons + ga_comps, key=lambda c: str(c.get("started_utc") or ""))
     for c in comparisons:
+        if c.get("ga"):
+            continue            # already counted from the search's own confirmation above
         for row in c["lists"]:
             if row["ci95"][0] > 0:
                 confirmed.append({"result": c["result"], "label": row["label"], "diff": row["diff"], "ci95": row["ci95"], "net": c["net"]})
@@ -207,8 +227,9 @@ def measured_status(ladder: dict) -> dict:
     # The best measured list: the top-rated list of the newest comparison (lists tagged "[owned]" are the ones
     # Jeremy can build; prefer them), with its difference against the reference and whether it is proven.
     best = None
-    if comparisons:
-        c = comparisons[-1]
+    plain = [c for c in comparisons if not c.get("ga")]   # a search's finalists are measured against its base list
+    if plain:
+        c = plain[-1]
         pool = [x for x in c["lists"] if "[owned]" in (x.get("label") or "")] or c["lists"]
         if pool:
             top = max(pool, key=lambda x: x["rate"])
@@ -229,6 +250,9 @@ def measured_status(ladder: dict) -> dict:
             s_["pilots_replaced"] = sorted({Path(v).stem for v in (s_.get("pilots") or {}).values()} - in_use)
             s_["stale"] = s_.get("net") not in in_use
     out["favorites"] = fav
+    for c in comparisons[-3:]:
+        c["stale"] = c.get("net") not in in_use
+        c["engine_commits_since"] = engine_since(c.get("started_utc"))
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:

@@ -308,6 +308,17 @@ export function testConclusion(t) {
   const bp = pooled(base), sep = overlaps(tp.ci, bp.ci) ? "their intervals overlap, so the gap is not yet established" : "the intervals do not overlap";
   if (t.kind === "ga" || t.ga) {
     const gens = (t.ga && t.ga.generations || []).length, bestGames = tp.games;
+    // The search's own confirmation (fresh deals, finalists against the unchanged list) decides; the rates measured
+    // during the generations favour lists that were lucky on few games.
+    const conf = ((t.ga && t.ga.confirmation) || []).slice(-1)[0];
+    if (conf && (conf.finalists || []).length) {
+      const f = conf.finalists, sg = v => `${v >= 0 ? "+" : "−"}${Math.abs(100 * v).toFixed(1)}`;
+      const won = f.filter(x => x.diff_ci95 && x.diff_ci95[0] > 0);
+      const one = x => `${sg(x.diff_vs_reference)} points [${sg(x.diff_ci95[0])}, ${sg(x.diff_ci95[1])}]`;
+      return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games); the ${f.length} best then played ${num(conf.games_per_opponent || 0)} new games per opponent against the unchanged list (${pct0((conf.reference || {}).confirmed_rate || 0)}). `
+        + (won.length ? `${won.length === 1 ? "One finalist beats it" : `${won.length} finalists beat it`}: ${won.map(one).join("; ")}. Picked as the best of ${f.length}, so the true gain is likely smaller.`
+                      : `None beats it: ${f.map(one).join("; ")}.`);
+    }
     const verdict = base === top ? "No change beat the unchanged list." : overlaps(tp.ci, bp.ci)
       ? `Over ${num(bestGames)} games that lead is inside the margin of error: not proven yet.` : `The gap holds up: the intervals do not overlap.`;
     return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games). The unchanged list wins ${pct0(base.weighted_win_rate)} of its games; the best version so far wins ${pct0(top.weighted_win_rate)} (${interval(tp.ci)}). ${verdict}`;
