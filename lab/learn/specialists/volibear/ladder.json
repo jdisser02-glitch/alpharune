@@ -11684,6 +11684,205 @@
    "elo_current": 251.1,
    "minutes": 40.4,
    "parallel": true
+  },
+  {
+   "iteration": 59,
+   "started_utc": "2026-11-09T23:46:09+00:00",
+   "player": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_volibear_048_v0.rbpn,worlds=8,settle=60",
+   "self_play_games": 960,
+   "sims": 100,
+   "agent": "pmcts",
+   "trainer": "train_policy",
+   "self_play_minutes": 5.6,
+   "shards": 20,
+   "self_play_jury": {
+    "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt": {
+     "games": 144,
+     "wins": 114,
+     "rate": 0.792
+    },
+    "lab/decks/meta/stuttgart_rc_europe_2026-11-08/05_dziden_kai_sa.txt": {
+     "games": 140,
+     "wins": 134,
+     "rate": 0.957
+    },
+    "lab/decks/meta/stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt": {
+     "games": 120,
+     "wins": 88,
+     "rate": 0.733
+    },
+    "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt": {
+     "games": 212,
+     "wins": 201,
+     "rate": 0.948
+    },
+    "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt": {
+     "games": 136,
+     "wins": 84,
+     "rate": 0.618
+    }
+   },
+   "specialist": "volibear",
+   "variant": {
+    "index": 1,
+    "overrides": {
+     "epochs": 1,
+     "lr": 0.0002,
+     "hidden": 128,
+     "q_weight": 0.25,
+     "spec_human_weight": 10.0
+    }
+   },
+   "warm_start": "lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "records": 161784,
+   "games_in_buffer": 2880,
+   "val_loss": 0.4250243902206421,
+   "val_acc": 0.8008980029486664,
+   "val_margin_mse": 0.1012284460759262,
+   "baseline_val_loss": 0.5889566140839725,
+   "policy": {
+    "search_target_rows": 155740,
+    "policy_val_rows": 14884,
+    "policy_top1": 0.8987503359312012,
+    "policy_top3": 0.9891830153184628,
+    "policy_ce": 0.7210592795851234,
+    "policy_entropy": 0.721318191572825,
+    "target_entropy": 0.6687098017777848,
+    "human_records": 5573,
+    "human_val_rows": 2326,
+    "human_top1": 0.44926913155631987,
+    "human_top3": 0.7691315563198624,
+    "human_clean_rows": 1411,
+    "human_clean_top1": 0.32955350815024803,
+    "human_clean_top3": 0.6583982990786676
+   },
+   "human_legend": {
+    "top1": 0.4077669902912621,
+    "top3": 0.8543689320388349,
+    "rows": 103,
+    "file": "human_volibear.rbv3"
+   },
+   "screen": {
+    "0": {
+     "games": 120,
+     "wins": 93,
+     "rate": 0.775,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0004,
+      "hidden": 128,
+      "q_weight": 0.25,
+      "spec_human_weight": 10.0
+     }
+    },
+    "1": {
+     "games": 120,
+     "wins": 97,
+     "rate": 0.8083,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0002,
+      "hidden": 128,
+      "q_weight": 0.25,
+      "spec_human_weight": 10.0
+     }
+    },
+    "2": {
+     "games": 120,
+     "wins": 97,
+     "rate": 0.8083,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0004,
+      "hidden": 128,
+      "q_weight": 0.25,
+      "spec_human_weight": 1.0
+     }
+    },
+    "3": {
+     "games": 120,
+     "wins": 90,
+     "rate": 0.75,
+     "overrides": {
+      "epochs": 1,
+      "lr": 0.0004,
+      "hidden": 128,
+      "q_weight": 0.25,
+      "spec_human_weight": 3.0
+     }
+    }
+   },
+   "screen_pick": 1,
+   "vs_current": {
+    "opponent": "pmcts:sims=100,eval=policy:lab/learn/nets/spec_volibear_048_v0.rbpn,worlds=8,settle=60",
+    "games": 120,
+    "wins": 68,
+    "rate": 0.5667,
+    "ci95": [
+     0.4773,
+     0.6519
+    ],
+    "llr": 0.794,
+    "sprt": "rate",
+    "guard_floor": 0.45
+   },
+   "panel": {
+    "games": 480,
+    "wins": 402,
+    "rate": 0.8375,
+    "base_rate": 0.8479,
+    "diff": -0.0104,
+    "diff_ci95": [
+     -0.0565,
+     0.0356
+    ],
+    "accept": 0.03,
+    "ok": false,
+    "primary": true,
+    "matchups": {
+     "05_dziden_kai_sa": {
+      "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/05_dziden_kai_sa.txt",
+      "games": 96,
+      "rate": 1.0,
+      "base_rate": 1.0
+     },
+     "01_evansrhim_kennen": {
+      "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
+      "games": 96,
+      "rate": 0.8021,
+      "base_rate": 0.8542
+     },
+     "01_pcq_master_yi": {
+      "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+      "games": 96,
+      "rate": 0.8542,
+      "base_rate": 0.7917
+     },
+     "02_sonecon_riven": {
+      "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+      "games": 96,
+      "rate": 0.5729,
+      "base_rate": 0.625
+     },
+     "03_diamondhat_riven": {
+      "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+      "games": 96,
+      "rate": 0.9583,
+      "base_rate": 0.9688
+     }
+    }
+   },
+   "vs_random": {
+    "games": 60,
+    "wins": 50,
+    "rate": 0.8333
+   },
+   "net": "lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "accepted": false,
+   "elo": 289.6,
+   "elo_current": 249.8,
+   "minutes": 41.9,
+   "parallel": true
   }
  ],
  "matches": [
@@ -15403,6 +15602,69 @@
    "games": 20,
    "wins_a": 12,
    "wins_b": 8
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 12,
+   "wins_b": 8
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 59,
+   "label": "vs_random",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "random",
+   "games": 60,
+   "wins_a": 50,
+   "wins_b": 10
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 11,
+   "wins_b": 9
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 10,
+   "wins_b": 10
+  },
+  {
+   "iteration": 59,
+   "label": "gate",
+   "a": "net:lab/learn/nets/spec_volibear_059_v1.rbpn",
+   "b": "net:lab/learn/nets/spec_volibear_048_v0.rbpn",
+   "games": 20,
+   "wins_a": 14,
+   "wins_b": 6
   }
  ],
  "current_net": "lab/learn/nets/spec_volibear_048_v0.rbpn",
@@ -15436,37 +15698,38 @@
   "net:lab/learn/nets/spec_volibear_025_v0.rbpn": 265.8,
   "net:lab/learn/nets/spec_volibear_026_v0.rbpn": 287.8,
   "net:lab/learn/nets/spec_volibear_027_v1.rbpn": 287.8,
-  "net:lab/learn/nets/spec_volibear_028_v1.rbpn": 236.9,
-  "net:lab/learn/nets/spec_volibear_029_v1.rbpn": 232.4,
-  "net:lab/learn/nets/spec_volibear_030_v0.rbpn": 212.4,
+  "net:lab/learn/nets/spec_volibear_028_v1.rbpn": 236.8,
+  "net:lab/learn/nets/spec_volibear_029_v1.rbpn": 232.3,
+  "net:lab/learn/nets/spec_volibear_030_v0.rbpn": 212.3,
   "net:lab/learn/nets/spec_volibear_031_v1.rbpn": 200.0,
   "net:lab/learn/nets/spec_volibear_032_v0.rbpn": 250.0,
   "net:lab/learn/nets/spec_volibear_033_v3.rbpn": 195.9,
-  "net:lab/learn/nets/spec_volibear_034_v0.rbpn": 224.8,
-  "net:lab/learn/nets/spec_volibear_035_v2.rbpn": 239.2,
-  "net:lab/learn/nets/spec_volibear_036_v3.rbpn": 255.2,
-  "net:lab/learn/nets/spec_volibear_037_v1.rbpn": 214.5,
-  "net:lab/learn/nets/spec_volibear_038_v3.rbpn": 236.3,
-  "net:lab/learn/nets/spec_volibear_039_v2.rbpn": 232.1,
-  "net:lab/learn/nets/spec_volibear_040_v0.rbpn": 211.4,
-  "net:lab/learn/nets/spec_volibear_041_v3.rbpn": 207.3,
-  "net:lab/learn/nets/spec_volibear_042_v2.rbpn": 186.9,
-  "net:lab/learn/nets/spec_volibear_043_v1.rbpn": 223.8,
-  "net:lab/learn/nets/spec_volibear_044_v1.rbpn": 223.8,
-  "net:lab/learn/nets/spec_volibear_045_v2.rbpn": 236.3,
-  "net:lab/learn/nets/spec_volibear_046_v1.rbpn": 270.7,
-  "net:lab/learn/nets/spec_volibear_047_v2.rbpn": 219.6,
-  "net:lab/learn/nets/spec_volibear_048_v0.rbpn": 251.1,
-  "net:lab/learn/nets/spec_volibear_049_v2.rbpn": 277.4,
-  "net:lab/learn/nets/spec_volibear_050_v2.rbpn": 226.4,
-  "net:lab/learn/nets/spec_volibear_051_v2.rbpn": 213.9,
-  "net:lab/learn/nets/spec_volibear_052_v1.rbpn": 213.9,
-  "net:lab/learn/nets/spec_volibear_053_v1.rbpn": 222.2,
-  "net:lab/learn/nets/spec_volibear_054_v1.rbpn": 234.7,
-  "net:lab/learn/nets/spec_volibear_055_v3.rbpn": 268.8,
-  "net:lab/learn/nets/spec_volibear_056_v0.rbpn": 260.2,
-  "net:lab/learn/nets/spec_volibear_057_v3.rbpn": 255.9,
-  "net:lab/learn/nets/spec_volibear_058_v1.rbpn": 234.7,
+  "net:lab/learn/nets/spec_volibear_034_v0.rbpn": 224.7,
+  "net:lab/learn/nets/spec_volibear_035_v2.rbpn": 239.0,
+  "net:lab/learn/nets/spec_volibear_036_v3.rbpn": 255.1,
+  "net:lab/learn/nets/spec_volibear_037_v1.rbpn": 214.2,
+  "net:lab/learn/nets/spec_volibear_038_v3.rbpn": 236.1,
+  "net:lab/learn/nets/spec_volibear_039_v2.rbpn": 231.9,
+  "net:lab/learn/nets/spec_volibear_040_v0.rbpn": 211.1,
+  "net:lab/learn/nets/spec_volibear_041_v3.rbpn": 207.0,
+  "net:lab/learn/nets/spec_volibear_042_v2.rbpn": 186.7,
+  "net:lab/learn/nets/spec_volibear_043_v1.rbpn": 223.5,
+  "net:lab/learn/nets/spec_volibear_044_v1.rbpn": 223.5,
+  "net:lab/learn/nets/spec_volibear_045_v2.rbpn": 236.1,
+  "net:lab/learn/nets/spec_volibear_046_v1.rbpn": 270.5,
+  "net:lab/learn/nets/spec_volibear_047_v2.rbpn": 219.4,
+  "net:lab/learn/nets/spec_volibear_048_v0.rbpn": 249.8,
+  "net:lab/learn/nets/spec_volibear_049_v2.rbpn": 276.4,
+  "net:lab/learn/nets/spec_volibear_050_v2.rbpn": 225.4,
+  "net:lab/learn/nets/spec_volibear_051_v2.rbpn": 212.9,
+  "net:lab/learn/nets/spec_volibear_052_v1.rbpn": 212.9,
+  "net:lab/learn/nets/spec_volibear_053_v1.rbpn": 221.2,
+  "net:lab/learn/nets/spec_volibear_054_v1.rbpn": 233.8,
+  "net:lab/learn/nets/spec_volibear_055_v3.rbpn": 267.7,
+  "net:lab/learn/nets/spec_volibear_056_v0.rbpn": 259.1,
+  "net:lab/learn/nets/spec_volibear_057_v3.rbpn": 254.9,
+  "net:lab/learn/nets/spec_volibear_058_v1.rbpn": 233.8,
+  "net:lab/learn/nets/spec_volibear_059_v1.rbpn": 289.6,
   "random": 0.0
  }
 }
