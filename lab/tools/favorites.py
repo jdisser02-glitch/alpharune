@@ -126,12 +126,18 @@ def from_specialist(name: str):
         return None
     it = adopted[-1]
     legend = SPEC_LEGEND.get(name, name.title())
+    # Continuous training (10 Nov): a panel is small (about 32 games per opponent) and the net moves a little every
+    # iteration, so the simulated rates are pooled over the last 12 panels (the held-out opponents).
+    panels = [it]
+    if it.get("continuous"):
+        panels = [r for r in L.get("iterations", []) if r.get("continuous") and (r.get("panel") or {}).get("matchups")][-12:]
     agg = {}
-    for m in it["panel"]["matchups"].values():
-        opp = legend_of(m.get("deck", ""))
-        if opp:
-            w, g = agg.get(opp, (0.0, 0))
-            agg[opp] = (w + m["rate"] * m.get("games", 0), g + m.get("games", 0))
+    for r in panels:
+        for m in r["panel"]["matchups"].values():
+            opp = legend_of(m.get("deck", ""))
+            if opp:
+                w, g = agg.get(opp, (0.0, 0))
+                agg[opp] = (w + m["rate"] * m.get("games", 0), g + m.get("games", 0))
     sims = {k: (w / g, g) for k, (w, g) in agg.items() if g}
     mx, real = real_row(legend)
     out = score(legend, sims, real)

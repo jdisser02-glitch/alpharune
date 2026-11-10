@@ -151,14 +151,33 @@ def spec_vs(L, it, me, opp, legend_deck, opp_deck, games, seed):
     """`games` games of `me` on legend_deck against `opp` on opp_deck, half with the legend on each seat
     (the same deals). Returns (wins of me, games)."""
     half = max(1, games // 2)
-    w1, _ = L.batch(legend_deck, opp_deck, me, opp, half, seed)
-    _, w2 = L.batch(opp_deck, legend_deck, opp, me, half, seed)
-    return w1 + w2, 2 * max(2, half)
+    w1, l1 = L.batch(legend_deck, opp_deck, me, opp, half, seed)
+    l2, w2 = L.batch(opp_deck, legend_deck, opp, me, half, seed)
+    # a batch killed by the timeout returns no win at all: its games are not counted (they used to count as losses)
+    return w1 + w2, sum(max(2, half) for won in (w1 + l1, w2 + l2) if won > 0)
+
+
+def continuous(a) -> bool:
+    """--continuous on a specialist (lab/learn/TRAINING_KNOWLEDGE.md): one candidate, adopted unless clearly worse."""
+    return bool(a.specialist and getattr(a, "continuous", False))
+
+
+def panel_decks(a) -> list[str]:
+    """Opponents of the panel: the held-out 'measure' lists in continuous mode, else the jury."""
+    s = spec(a)
+    return s.get("measure") or s["jury"] if continuous(a) else s["jury"]
 
 
 def tasks_for(a) -> list[str]:
     blocks = max(1, a.gate_max // a.gate_block)
     out = [f"gate:{b}" for b in range(blocks)]
+    if continuous(a):
+        # The mirror against the net it would replace and the paired panel on the held-out opponents are the
+        # guard; the frozen anchors (and the panel's own rates) are the progress curve.
+        s = spec(a)
+        mirror = [f"gate:{b}" for b in range(max(1, a.spec_mirror_games // a.gate_block))]
+        return (mirror + [f"panel:{m}:0" for m in range(len(panel_decks(a)))]
+                + [f"yard:anchor:{k}" for k in range(len(s.get("anchors") or []))] + ["yard:random"])
     if a.specialist:
         # A specialist is judged on the jury (candidate and current specialist on the same deals, per jury deck
         # and per legend deck, its first two), with a shorter mirror as a guard.
@@ -184,6 +203,13 @@ def cmd_plan(args, rest):
     reference = ladder.get("reference_net")
     if reference and not (loop.ROOT / reference).exists():
         reference = None
+    committed = current
+    if continuous(a):
+        # The adopted net travels between iterations in the Actions cache (ladder head_net); when the cache lost
+        # it, the last committed net (current_net) carries on.
+        head = ladder.get("head_net")
+        if head and (loop.ROOT / head).exists():
+            current = head
     if a.specialist:
         # A specialist starts as the general net and keeps it as its reference until it adopts one of its own.
         current = current or general
@@ -194,13 +220,16 @@ def cmd_plan(args, rest):
             "pilots": {k: v for k, v in loop.specialist_pilots().items() if k != a.specialist} if a.specialist else {},
             "ladder": os.path.relpath(loop.LADDER, loop.ROOT), "net_prefix": loop.NET_PREFIX,
             "league": loop.league_opponents(ladder, current, a.league_nets) if a.league > 0 and current and not a.specialist else [],
-            "variants": (spec_variants(ladder, len(ladder["iterations"]), a.seed,
+            "variants": ([{"hidden": max(loop.rbpn_hidden(loop.ROOT / current), a.hidden) if current and str(current).endswith(".rbpn") else a.hidden}]
+                         if continuous(a) else
+                         spec_variants(ladder, len(ladder["iterations"]), a.seed,
                                        max(loop.rbpn_hidden(loop.ROOT / current), a.hidden) if current and str(current).endswith(".rbpn") else a.hidden,
                                        a.hidden) if a.specialist else VARIANTS),
-            "screen": [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
+            "screen": [] if continuous(a) else [f"{k}:{b}" for k in range(len(VARIANTS)) for b in range(SCREEN_BLOCKS)],
+            "continuous": continuous(a), "committed": committed,
             "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "t0": time.time()}
     Path(args.out).write_text(json.dumps(plan, indent=1))
-    print(json.dumps({k: plan[k] for k in ("it", "current", "tasks")}))
+    print(json.dumps({k: plan[k] for k in ("it", "current", "committed", "continuous", "tasks")}))
 
 
 def cmd_selfplay(args, _):
@@ -248,13 +277,20 @@ def selfplay_specialist(args, plan, a, L, out, games):
     t0, met = time.time(), {}
     for k in range(max(1, games // PER_PAIR)):
         # --spec-riven-weight: Riven jury decks drawn that many times as often (the matchup the simulation gets wrong)
-        w = [getattr(a, "spec_riven_weight", 1.0) if "riven" in Path(d).name else 1.0 for d in s["jury"]]
-        legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choices(s["jury"], weights=w)[0], rng.random() < a.spec_mirror
+        if continuous(a) and s.get("train"):
+            # the 'train' opponents by their share of the legend's real games; the mirror meets any of the legend's lists
+            pool, w = [d for d, _ in s["train"]], [x for _, x in s["train"]]
+            mirror_deck = rng.choice(s["decks"])
+        else:
+            pool = s["jury"]
+            w = [getattr(a, "spec_riven_weight", 1.0) if "riven" in Path(d).name else 1.0 for d in pool]
+            mirror_deck = s["mirror"]
+        legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choices(pool, weights=w)[0], rng.random() < a.spec_mirror
         if k % args.shards != args.shard:
             continue
         seed = seed_base(it, "selfplay", k)
         if mirror:
-            L.batch(legend_deck, s["mirror"], me, me, PER_PAIR, seed, out)
+            L.batch(legend_deck, mirror_deck, me, me, PER_PAIR, seed, out)
             continue
         opp = L.bot(pilot(plan, opp_deck), sp)
         seat = 1 + (k // args.shards) % 2
@@ -366,6 +402,10 @@ def pick(plan: dict, cands: dict, screens: list[dict]) -> dict:
     for r in screens:
         t = tot.setdefault(r["variant"], [0, 0])
         t[0] += r["wins"]; t[1] += r["games"]
+    if not screens:
+        # no screen (continuous training): the one candidate, or the one with the lowest held-out loss
+        best = min(sorted(cands), key=lambda k: cands[k]["row"].get("val_loss") or 0.0)
+        return json.loads(json.dumps(cands[best]))
     missing = [k for k in cands if k not in tot] + [k for k in tot if k not in cands]
     if missing:
         raise SystemExit(f"screen and candidates do not match: {missing}")
@@ -386,7 +426,7 @@ def cmd_pick(args, _):
     screens = [json.loads(Path(f).read_text()) for f in args.screens]
     out = pick(plan, cands, screens)
     Path(args.out).write_text(json.dumps(out, indent=1))
-    print(out["cand"], json.dumps(out["row"]["screen"]))
+    print(out["cand"], json.dumps(out["row"].get("screen")))
 
 
 def cmd_gate(args, _):
@@ -408,7 +448,7 @@ def cmd_gate(args, _):
         s = spec(a)
         m, _, j = idx.partition(":")
         m, js = int(m), ([int(j)] if j else range(min(2, len(s["decks"]))))
-        opp_deck = s["jury"][m]
+        opp_deck = panel_decks(a)[m]
         opp = L.bot(pilot(plan, opp_deck))
         per = max(4, a.spec_jury_games if j else a.panel_games)
         cw = cn = bw = bn = 0
@@ -432,6 +472,13 @@ def cmd_gate(args, _):
     elif kind == "yard" and idx == "random":
         r_w, _, r_n = L.match(ladder, it, L.bot(cand), "random", a.yardstick_games, seed_base(it, "vs_random"), "vs_random", d1, d2)
         res["vs_random"] = {"games": r_n, "wins": r_w, "rate": round(r_w / r_n, 4)}
+    elif kind == "yard" and idx.startswith("anchor:"):
+        # the candidate against one frozen net of the specialist's 'anchors', in the legend's mirror
+        k = int(idx.split(":")[1])
+        anc = spec(a)["anchors"][k]
+        if anc != cand:
+            g_w, _, g_n = L.match(ladder, it, L.bot(cand), L.bot(anc), a.spec_anchor_games, seed_base(it, "anchor", k), "vs_anchor", d1, d2)
+            res["vs_anchors"] = {anc: {"games": g_n, "wins": g_w, "rate": round(g_w / max(1, g_n), 4)}}
     elif kind == "yard" and idx == "reference":
         if reference and reference != cand:
             f_w, _, f_n = L.match(ladder, it, L.bot(cand), L.bot(reference), a.yardstick_games,
@@ -486,7 +533,9 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
         diff = pc - pb
         half = 1.96 * math.sqrt(pc * (1 - pc) / c_n + pb * (1 - pb) / b_n)   # unpaired: the shared deals only narrow it
         # Adopted on the jury: the candidate must beat the current specialist there by --spec-jury-accept.
-        panel_ok = diff >= a.spec_jury_accept
+        # Continuous training turns the rule round: refused only when it trails by more than --spec-guard.
+        need = a.spec_guard if continuous(a) else a.spec_jury_accept
+        panel_ok = diff >= need
         per = {}
         for r in panel:
             p_ = per.setdefault(r["name"], {"deck": r["deck"], "games": 0, "wins": 0, "base_games": 0, "base_wins": 0})
@@ -494,7 +543,7 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
                 p_[k] += r[k]
         row["panel"] = {"games": c_n, "wins": c_w, "rate": round(pc, 4), "base_rate": round(pb, 4),
                         "diff": round(diff, 4), "diff_ci95": [round(diff - half, 4), round(diff + half, 4)],
-                        "accept": a.spec_jury_accept, "ok": panel_ok, "primary": True,
+                        "accept": need, "ok": panel_ok, "primary": True, "held_out": continuous(a),
                         "matchups": {k: {"deck": v["deck"], "games": v["games"], "rate": round(v["wins"] / v["games"], 4),
                                          "base_rate": round(v["base_wins"] / v["base_games"], 4)} for k, v in per.items()}}
     elif panel and current is not None:
@@ -509,9 +558,15 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
                                   "b": loop.Loop.key(loop.Loop(a).bot(current)), "games": p_n, "wins_a": p_w, "wins_b": p_l})
     for r in results:
         if r["kind"] == "yard":
-            for k in ("vs_random", "vs_reference", "vs_anchors"):
+            for k in ("vs_random", "vs_reference"):
                 if k in r:
                     row[k] = r[k]
+            if "vs_anchors" in r:      # one task per anchor in continuous mode
+                row.setdefault("vs_anchors", {}).update(r["vs_anchors"])
+    if continuous(a) and row.get("vs_anchors"):
+        g = sum(v["games"] for v in row["vs_anchors"].values())
+        row["anchor_rate"] = round(sum(v["wins"] for v in row["vs_anchors"].values()) / g, 4) if g else None
+        row["anchor_games"] = g
     if plan["anchors"] and not ladder.get("anchor_nets"):
         ladder["anchor_nets"] = plan["anchors"]
     human_ok = True
@@ -529,7 +584,20 @@ def decide(plan: dict, cand_info: dict, results: list[dict], ladder: dict) -> di
     accepted = mirror_ok and panel_ok and human_ok
     row["net"] = cand
     row["accepted"] = accepted
-    if accepted:
+    if continuous(a):
+        # The adopted net becomes the head (it plays the next self-play and is what the next candidate starts
+        # from); it replaces the committed current_net only every --commit-every iterations, so the repository
+        # does not grow by a net per iteration.
+        row["continuous"] = True
+        row["base"] = current
+        if accepted:
+            current = cand
+            ladder["head_net"] = cand
+            committed = plan.get("committed")
+            if it % max(1, a.commit_every) == 0 or not committed or not (loop.ROOT / committed).exists():
+                ladder["current_net"] = cand
+                row["committed"] = True
+    elif accepted:
         current = cand
         ladder["current_net"] = cand
     if reference is None:
@@ -554,6 +622,11 @@ def cmd_decide(args, _):
     row = decide(plan, json.loads(Path(args.cand).read_text()), results, ladder)
     loop.LADDER.parent.mkdir(parents=True, exist_ok=True)
     loop.LADDER.write_text(json.dumps(ladder, indent=1))
+    if args.summary:
+        # for the workflow: which net is the head (to cache) and which nets belong in the repository
+        Path(args.summary).write_text(json.dumps({"continuous": bool(plan.get("continuous")), "accepted": bool(row.get("accepted")),
+                                                  "head": ladder.get("head_net"), "current": ladder.get("current_net"),
+                                                  "reference": ladder.get("reference_net"), "committed": bool(row.get("committed"))}))
     print(json.dumps(row))
 
 
@@ -573,10 +646,11 @@ def main(argv):
     p.add_argument("--variant", type=int, required=True); p.add_argument("--block", type=int, required=True)
     p.add_argument("--out", required=True)
     p = sub.add_parser("pick"); p.add_argument("--plan", required=True); p.add_argument("--out", required=True)
-    p.add_argument("--cands", nargs="+", required=True); p.add_argument("--screens", nargs="+", required=True)
+    p.add_argument("--cands", nargs="+", required=True); p.add_argument("--screens", nargs="*", default=[])
     p = sub.add_parser("gate"); p.add_argument("--plan", required=True); p.add_argument("--cand", required=True)
     p.add_argument("--task", required=True); p.add_argument("--out", required=True)
     p = sub.add_parser("decide"); p.add_argument("--plan", required=True); p.add_argument("--cand", required=True)
+    p.add_argument("--summary", default="")
     p.add_argument("results", nargs="+")
     args = ap.parse_args(argv)
     {"plan": cmd_plan, "selfplay": cmd_selfplay, "train": cmd_train, "screen": cmd_screen, "pick": cmd_pick,

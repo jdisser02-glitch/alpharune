@@ -103,7 +103,36 @@ SPECIALISTS = {
                         # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
                         # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
                         "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
-                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt"],
+                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt",
+                        # 10 Nov: the Stuttgart Top 4 Riven lists (DiamondHat's plays The Good Stuff, which the
+                        # pilot had never seen: it lost 98% with that list).
+                        _META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+                        _META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+                        _META + "stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt"],
+              # --continuous (10 Nov, lab/learn/TRAINING_KNOWLEDGE.md): the opponents of self-play, weighted by
+              # Riven's real games against each legend (RiftDecks), are NOT the ones the net is measured on.
+              "train": [(_META + "radiance_release_2026-10-24/07_zombro_kennen.txt", 25.5),
+                        (_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt", 19.1),
+                        (_META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt", 8.6),
+                        (_META + "401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt", 8.5),
+                        (_META + "radiance_release_2026-10-24/06_sna1l_leblanc.txt", 8.1),
+                        (_META + "radiance_release_2026-10-24/01_lks10_lillia.txt", 7.2),
+                        (_META + "s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt", 7.1),
+                        (_META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt", 6.1),
+                        (_META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt", 3.0),
+                        (_META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt", 3.0),
+                        ("lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt", 3.0)],
+              # Held out of self-play: other lists of the same legends, each one a list its pilot trained on (a
+              # pilot on a list it does not know says nothing), and Master Yi under the general net.
+              "measure": [_META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                          _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+                          _META + "sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+                          _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+                          _META + "s5_shanghai_city_challenge_2026-11-01/03_youjike_sishumoling_orianna.txt",
+                          _META + "ldxp_sacramento_challenge_2026-10-25/09_calvin_mordekaiser.txt"],
+              # Frozen nets the candidate meets in the mirror every iteration: the progress curve.
+              "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_riven_020_v1.rbpn",
+                          "lab/learn/nets/spec_riven_028_v0.rbpn", "lab/learn/nets/spec_riven_059_v0.rbpn"],
               "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
                        _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
                        _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
@@ -124,7 +153,36 @@ SPECIALISTS = {
                         # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
                         # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
                         "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
-                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt"],
+                        "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt",
+                        # 10 Nov: the Stuttgart Top 4 Riven lists (DiamondHat's plays The Good Stuff, which the
+                        # pilot had never seen: it lost 98% with that list).
+                        _META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+                        _META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+                        _META + "stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt"],
+              # --continuous (10 Nov, lab/learn/TRAINING_KNOWLEDGE.md): the opponents of self-play, weighted by
+              # Riven's real games against each legend (RiftDecks), are NOT the ones the net is measured on.
+              "train": [(_META + "radiance_release_2026-10-24/07_zombro_kennen.txt", 25.5),
+                        (_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt", 19.1),
+                        (_META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt", 8.6),
+                        (_META + "401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt", 8.5),
+                        (_META + "radiance_release_2026-10-24/06_sna1l_leblanc.txt", 8.1),
+                        (_META + "radiance_release_2026-10-24/01_lks10_lillia.txt", 7.2),
+                        (_META + "s5_fuzhou_city_challenge_2026-10-31/01_x_vex.txt", 7.1),
+                        (_META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt", 6.1),
+                        (_META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt", 3.0),
+                        (_META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt", 3.0),
+                        ("lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt", 3.0)],
+              # Held out of self-play: other lists of the same legends, each one a list its pilot trained on (a
+              # pilot on a list it does not know says nothing), and Master Yi under the general net.
+              "measure": [_META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                          _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+                          _META + "sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+                          _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+                          _META + "s5_shanghai_city_challenge_2026-11-01/03_youjike_sishumoling_orianna.txt",
+                          _META + "ldxp_sacramento_challenge_2026-10-25/09_calvin_mordekaiser.txt"],
+              # Frozen nets the candidate meets in the mirror every iteration: the progress curve.
+              "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_riven_020_v1.rbpn",
+                          "lab/learn/nets/spec_riven_028_v0.rbpn", "lab/learn/nets/spec_riven_059_v0.rbpn"],
               "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",
                        _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
                        _META + "ldxp_sacramento_challenge_2026-10-25/01_vincent_nguyen_akali.txt",
@@ -363,7 +421,8 @@ class Loop:
         half = max(1, games // 2)
         w1, l1 = self.batch(deck1, deck2, a1, a2, half, seed)
         l2, w2 = self.batch(deck1, deck2, a2, a1, half, seed)
-        n = 2 * max(2, half)
+        # a batch killed by the timeout returns no win at all: its games are not counted (they used to count as losses)
+        n = sum(max(2, half) for won in (w1 + l1, w2 + l2) if won > 0)
         wins = w1 + w2
         losses = l1 + l2
         if record:
@@ -645,6 +704,18 @@ def make_parser():
                          "less than the current specialist did (checked when 200+ held-out decisions)")
     ap.add_argument("--spec-panel-margin", type=float, default=0.03,
                     help="--specialist: the candidate may trail the current specialist against the jury by this much")
+    ap.add_argument("--continuous", action="store_true",
+                    help="--specialist: one candidate per iteration with the loop's own settings (no screen, no mutation), "
+                         "adopted unless clearly worse (--spec-guard, the mirror floor); self-play against the "
+                         "specialist's 'train' opponents, the panel on its held-out 'measure' opponents, and the "
+                         "frozen 'anchors' as the progress curve (lab/learn/TRAINING_KNOWLEDGE.md)")
+    ap.add_argument("--spec-guard", type=float, default=-0.03,
+                    help="--continuous: refused only when it trails the net it would replace on the panel by more than this")
+    ap.add_argument("--spec-anchor-games", type=int, default=40,
+                    help="--continuous: mirror games against each frozen anchor net, every iteration")
+    ap.add_argument("--commit-every", type=int, default=8,
+                    help="--continuous: the adopted net travels between iterations in the Actions cache (ladder "
+                         "head_net) and is committed as current_net only every this many iterations")
     ap.add_argument("--spec-riven-weight", type=float, default=1.0,
                     help="specialist self-play: Riven jury decks are drawn this many times as often as the others")
     ap.add_argument("--spec-mirror", type=float, default=0.2,

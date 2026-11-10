@@ -244,6 +244,8 @@ jobs:
     outputs:
       tasks: ${{ steps.plan.outputs.tasks }}
       track: ${{ steps.plan.outputs.track }}
+      variants: ${{ steps.plan.outputs.variants }}
+      screen: ${{ steps.plan.outputs.screen }}
       paused: ${{ steps.pause.outputs.paused }}
       runners: ${{ steps.pause.outputs.runners }}
     steps:
@@ -257,6 +259,7 @@ jobs:
           spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
           f=lab/learn/PAUSE; [ -n "$spec" ] && [ -f "lab/learn/specialists/$spec/PAUSE" ] && f="lab/learn/specialists/$spec/PAUSE"
           if [ -f "$f" ]; then echo "paused=true" >> "$GITHUB_OUTPUT"; echo "paused ($f): $(cat "$f")"; else echo "paused=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$spec" ]; then echo "track=spec-$spec" >> "$GITHUB_OUTPUT"; else echo "track=main" >> "$GITHUB_OUTPUT"; fi
           # A track's share of the 20 runners (field "runners" of its request): every matrix of the run is capped at it.
           echo "runners=$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1])).get("runners", 20)))' "${{ github.event.inputs.request }}")" >> "$GITHUB_OUTPUT"
       - name: Restore the engine binary
@@ -289,12 +292,20 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
           cmake --build build --target riftbound -j4
           mkdir -p stage && cp build/riftbound stage/riftbound
+      - name: Restore the head net (continuous training)
+        uses: actions/cache/restore@v4
+        with:
+          path: stage_head
+          key: learn-head-${{ steps.pause.outputs.track }}-${{ github.run_id }}
+          restore-keys: learn-head-${{ steps.pause.outputs.track }}-
       - name: Plan the iteration
         id: plan
         run: |
           # The general net (train_parallel.json) or one legend's specialist (train_spec_<name>.json, field "specialist").
           spec=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("specialist", ""))' "${{ github.event.inputs.request }}")
           if [ -n "$spec" ]; then extra="--specialist $spec"; track="spec-$spec"; else extra="--league 0.3"; track="main"; fi
+          # Continuous training: the adopted net of the last iteration (ladder head_net) comes back from the cache.
+          cp stage_head/* lab/learn/nets/ 2>/dev/null || true
           # A track's own loop settings (field "args" of its request), after the defaults so they win.
           own=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("args", ""))' "${{ github.event.inputs.request }}")
           python3 lab/learn/stages.py plan --out stage/plan.json -- \
@@ -302,6 +313,12 @@ jobs:
             --accept 0.55 --gate-min 80 --gate-max 240 --gate-block 20 --buffer 3 --epochs 6 $own
           echo "track=$track" >> "$GITHUB_OUTPUT"
           echo "tasks=$(python3 -c 'import json; print(json.dumps(json.load(open("stage/plan.json"))["tasks"]))')" >> "$GITHUB_OUTPUT"
+          # One training job per variant; the screen only when the plan has one (continuous training has none).
+          echo "variants=$(python3 -c 'import json; print(json.dumps(list(range(len(json.load(open("stage/plan.json"))["variants"])))))')" >> "$GITHUB_OUTPUT"
+          echo "screen=$(python3 -c 'import json; print("true" if json.load(open("stage/plan.json"))["screen"] else "false")')" >> "$GITHUB_OUTPUT"
+          # A current net that is not in the repository (the cached head) travels to every job with the plan.
+          cur=$(python3 -c 'import json; print(json.load(open("stage/plan.json")).get("current") or "")')
+          if [ -n "$cur" ] && ! git ls-files --error-unmatch "$cur" >/dev/null 2>&1; then mkdir -p stage/nets && cp "${cur%.rbpn}".* stage/nets/; ls -la stage/nets; fi
       - uses: actions/upload-artifact@v4
         with:
           name: plan
@@ -333,6 +350,7 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
+          cp stage/nets/* lab/learn/nets/ 2>/dev/null || true
           python3 -u lab/learn/stages.py selfplay --plan stage/plan.json --shard ${{ matrix.shard }} --shards 20
       - uses: actions/upload-artifact@v4
         with:
@@ -348,7 +366,7 @@ jobs:
       fail-fast: true
       max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
-        variant: [0, 1, 2, 3]     # lab/learn/stages.py VARIANTS: a population of training settings
+        variant: ${{ fromJSON(needs.p_plan.outputs.variants) }}     # lab/learn/stages.py: the plan's training settings
     steps:
       - uses: actions/checkout@v4
       - run: python3 -m pip install --quiet numpy
@@ -372,10 +390,11 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           ls -la data/learn
+          cp stage/nets/* lab/learn/nets/ 2>/dev/null || true
           python3 -u lab/learn/stages.py train --plan stage/plan.json --out stage/cand_${{ matrix.variant }}.json --variant ${{ matrix.variant }}
           mkdir -p stage/nets && cp "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["cand"])' stage/cand_${{ matrix.variant }}.json | sed 's/\.rbpn$//')".* stage/nets/
-          # keep the last 3 iterations of data in the buffer
-          ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -3 | xargs -r rm -f
+          # keep the last 8 iterations of data in the cache (the loop's --buffer says how many it trains on)
+          ls data/learn/iter_*.rbvd 2>/dev/null | sort | head -n -8 | xargs -r rm -f
       - name: Save the replay buffer
         if: matrix.variant == 0
         uses: actions/cache/save@v4
@@ -392,13 +411,14 @@ jobs:
 
   p_screen:
     needs: [p_plan, p_train]
+    if: needs.p_plan.outputs.screen == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       fail-fast: true
       max-parallel: ${{ fromJSON(needs.p_plan.outputs.runners || '20') }}
       matrix:
-        variant: [0, 1, 2, 3]
+        variant: ${{ fromJSON(needs.p_plan.outputs.variants) }}
         block: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
@@ -429,7 +449,8 @@ jobs:
           retention-days: 3
 
   p_pick:
-    needs: [p_plan, p_screen]
+    needs: [p_plan, p_train, p_screen]
+    if: ${{ !cancelled() && needs.p_train.result == 'success' && (needs.p_screen.result == 'success' || needs.p_screen.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -443,13 +464,14 @@ jobs:
           pattern: cand-*
           path: cands
       - uses: actions/download-artifact@v4
+        if: needs.p_plan.outputs.screen == 'true'
         with:
           pattern: screen-*
           path: screens
       - name: Pick the best variant
         run: |
           mkdir -p pick/nets
-          python3 lab/learn/stages.py pick --plan stage/plan.json --out pick/cand.json --cands cands/*/cand_*.json --screens screens/*/screen.json
+          python3 lab/learn/stages.py pick --plan stage/plan.json --out pick/cand.json --cands cands/*/cand_*.json --screens $(ls screens/*/screen.json 2>/dev/null)
           net="$(python3 -c 'import json; print(json.load(open("pick/cand.json"))["cand"])')"
           cp cands/*/nets/"$(basename "${net%.rbpn}")".* pick/nets/
           ls pick/nets
@@ -463,6 +485,7 @@ jobs:
 
   p_gate:
     needs: [p_plan, p_pick]
+    if: ${{ !cancelled() && needs.p_pick.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
@@ -499,6 +522,7 @@ jobs:
 
   p_decide:
     needs: [p_plan, p_pick, p_gate]
+    if: ${{ !cancelled() && needs.p_gate.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -521,12 +545,22 @@ jobs:
           git config user.email "riftlab-bot@users.noreply.github.com"
           git pull --rebase origin "${GITHUB_REF_NAME}"
           cp stage/nets/* lab/learn/nets/
-          python3 lab/learn/stages.py decide --plan stage/plan.json --cand stage/cand.json results/*/result.json | tee decide.log
+          python3 lab/learn/stages.py decide --plan stage/plan.json --cand stage/cand.json --summary stage/decide.json results/*/result.json | tee decide.log
+          # Continuous training: the head net goes to the cache (next step); only the committed nets stay in the tree.
+          python3 - <<'PY'
+          import glob, json, os, shutil
+          d = json.load(open("stage/decide.json"))
+          os.makedirs("stage_head", exist_ok=True)
+          if d.get("continuous") and d.get("accepted") and d.get("head"):
+              for f in glob.glob(d["head"].rsplit(".", 1)[0] + ".*"):
+                  shutil.copy(f, "stage_head/")
+          print("head cache:", os.listdir("stage_head"))
+          PY
           python3 - <<'PY'
           import glob, json, os, subprocess
           plan = json.load(open("stage/plan.json"))
           L = json.load(open(plan.get("ladder", "lab/learn/ladder.json")))
-          keep = {os.path.basename(r["net"]).split(".")[0] for r in L["iterations"] if r.get("accepted") and r.get("net")}
+          keep = set() if plan.get("continuous") else {os.path.basename(r["net"]).split(".")[0] for r in L["iterations"] if r.get("accepted") and r.get("net")}
           keep |= {os.path.basename(L[k]).split(".")[0] for k in ("current_net", "reference_net") if L.get(k)}
           for f in glob.glob("lab/learn/nets/" + plan.get("net_prefix", "net_") + "*"):
               tracked = subprocess.run(["git", "ls-files", "--error-unmatch", f], capture_output=True).returncode == 0
@@ -542,6 +576,15 @@ jobs:
             sleep $((i * 15))
           done
           exit 1
+      - name: Is there a new head net?
+        id: head
+        run: echo "save=$([ -n "$(ls stage_head 2>/dev/null)" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - name: Save the head net (continuous training)
+        if: steps.head.outputs.save == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: stage_head
+          key: learn-head-${{ needs.p_plan.outputs.track }}-${{ github.run_id }}
       - name: Chain the next iteration
         if: success() && github.event.inputs.chain != '0' && github.event.inputs.chain != ''
         env:
