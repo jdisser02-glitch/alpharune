@@ -168,10 +168,12 @@ SPECIALISTS = {
                           "lab/decks/community/orianna_showdowns_2026-10-31/burrsir_orlando_showdown_59th.txt"],
                 "jury": [# 8 Nov (Jeremy): the Stuttgart Regional Championship Europe field (291 decks: Riven 43%, Kai'Sa 17.5%,
                          # Kennen 15%, Master Yi 5.5%); two Riven lists, --spec-riven-weight 1.5 in self-play.
-                         # 9 Nov: the Stuttgart Top 8 lists themselves (riftwatch.gg open decklists).
+                         # 9 Nov: Stuttgart Top 8 lists (riftwatch.gg open decklists). 10 Nov: DiamondHat's Riven and
+                         # DZiden's Kai'Sa are out again: under pilots that never trained on those lists they lost
+                         # 96-98% (40% of the panel with no signal); Tabris and Jason Tian are lists the pilots know.
                          _META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/05_dziden_kai_sa.txt",
+                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                         _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
                          _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt"]},
     "mordekaiser": {"legend": "Mordekaiser",
@@ -181,10 +183,12 @@ SPECIALISTS = {
                               _META + "s5_shenzhen_city_challenge_2026-10-31/17_3x_tianzi_mordekaiser.txt"],
                     "jury": [# 8 Nov (Jeremy): the Stuttgart Regional Championship Europe field (291 decks: Riven 43%, Kai'Sa 17.5%,
                          # Kennen 15%, Master Yi 5.5%); two Riven lists, --spec-riven-weight 1.5 in self-play.
-                         # 9 Nov: the Stuttgart Top 8 lists themselves (riftwatch.gg open decklists).
+                         # 9 Nov: Stuttgart Top 8 lists (riftwatch.gg open decklists). 10 Nov: DiamondHat's Riven and
+                         # DZiden's Kai'Sa are out again: under pilots that never trained on those lists they lost
+                         # 96-98% (40% of the panel with no signal); Tabris and Jason Tian are lists the pilots know.
                          _META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/05_dziden_kai_sa.txt",
+                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                         _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
                          _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt"]},
     # 7 Nov: Jeremy asked for a Volibear specialist (Ritualo's Volibear Dragons deck profile; the general net piloted
@@ -198,10 +202,12 @@ SPECIALISTS = {
                            "lab/decks/community/volibear_radiance_2026-10-31/oryzias_aserty_invitational_20261010.txt"],
                  "jury": [# 8 Nov (Jeremy): the Stuttgart Regional Championship Europe field (291 decks: Riven 43%, Kai'Sa 17.5%,
                          # Kennen 15%, Master Yi 5.5%); two Riven lists, --spec-riven-weight 1.5 in self-play.
-                         # 9 Nov: the Stuttgart Top 8 lists themselves (riftwatch.gg open decklists).
+                         # 9 Nov: Stuttgart Top 8 lists (riftwatch.gg open decklists). 10 Nov: DiamondHat's Riven and
+                         # DZiden's Kai'Sa are out again: under pilots that never trained on those lists they lost
+                         # 96-98% (40% of the panel with no signal); Tabris and Jason Tian are lists the pilots know.
                          _META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
-                         _META + "stuttgart_rc_europe_2026-11-08/05_dziden_kai_sa.txt",
+                         _META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+                         _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                          _META + "stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
                          _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt"]},
     "ziggs": {"legend": "Ziggs",

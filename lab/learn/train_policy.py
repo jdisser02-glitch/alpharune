@@ -195,6 +195,17 @@ def main(argv):
     var = np.maximum(s2 / n - mean ** 2, 0)
     inv_std = np.where(var > 1e-8, 1.0 / np.sqrt(var + 1e-8), 0.0).astype(np.float32)
     mean = mean.astype(np.float32)
+    if a.init_value and a.init_value.endswith(".rbpn"):
+        # A feature that never varies in this buffer (a card no game of the window showed) keeps the scale of the
+        # net this run starts from: without it the unfold below zeroed what that net had learned about the
+        # feature (66 input columns lost between spec_riven_028 and spec_riven_059; audit of 10 Nov).
+        i0 = read_rbpn(a.init_value)
+        if i0["W1"].shape[1] == dim:
+            keep = (inv_std <= 0) & (i0["inv_std"] > 0)
+            inv_std = np.where(keep, i0["inv_std"], inv_std).astype(np.float32)
+            mean = np.where(keep, i0["mean"], mean).astype(np.float32)
+            if keep.any():
+                print(f"{int(keep.sum())} input features absent from this buffer keep the scale of {a.init_value}")
     live = int((inv_std > 0).sum())
     mz = (mean * inv_std).astype(np.float32)
 
