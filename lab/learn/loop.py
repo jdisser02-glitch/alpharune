@@ -257,7 +257,32 @@ SPECIALISTS = {
                            "lab/decks/community/volibear_radiance_2026-10-31/soldog_convergence4_20261031.txt",
                            "lab/decks/community/volibear_radiance_2026-10-31/aechkay_sacramento_showdown_20261024.txt",
                            "lab/decks/community/volibear_radiance_2026-10-31/mustafa_sacramento_showdown_20261024.txt",
-                           "lab/decks/community/volibear_radiance_2026-10-31/oryzias_aserty_invitational_20261010.txt"],
+                           "lab/decks/community/volibear_radiance_2026-10-31/oryzias_aserty_invitational_20261010.txt",
+                           # 10 Nov: the two lists the Stuttgart searches confirmed above Ritualo's (+13 points on
+                           # 30 games per opponent, best of 3 finalists): the pilot learns them before step 4.
+                           "lab/variants/volibear-stuttgart-1-best.txt", "lab/variants/volibear-stuttgart-2-best.txt"],
+                 # --continuous (the method proven on Riven, lab/learn/TRAINING_KNOWLEDGE.md). No real data for
+                 # Volibear's matchups: self-play opponents by their share of the Stuttgart field.
+                 "train": [(_META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt", 15.0),
+                           (_META + "coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt", 14.0),
+                           ("decks/riven_best_field.txt", 14.0),
+                           (_META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt", 17.5),
+                           (_META + "radiance_release_2026-10-24/07_zombro_kennen.txt", 15.0),
+                           (_META + "ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt", 3.4),
+                           (_META + "s5_shenyang_city_challenge_2026-10-31/01_ccb_irelia.txt", 2.7),
+                           (_META + "401_games_vaughan_riftbound_radiance_5k_2026-10-25/01_ssntoli_rengar.txt", 2.0),
+                           (_META + "radiance_release_2026-10-24/06_sna1l_leblanc.txt", 1.7),
+                           (_META + "s5_xian_city_challenge_2026-11-01/07_luoluoluofu_orianna.txt", 1.0)],
+                 # Held out of self-play, each list known to its pilot (the Riven pilot trains on the Stuttgart
+                 # Top 4 lists since 10 Nov).
+                 "measure": [_META + "stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+                             _META + "stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+                             _META + "radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+                             _META + "s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+                             _META + "s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+                             _META + "sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt"],
+                 "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_volibear_022_v2.rbpn",
+                             "lab/learn/nets/spec_volibear_037_v1.rbpn", "lab/learn/nets/spec_volibear_048_v0.rbpn"],
                  "jury": [# 8 Nov (Jeremy): the Stuttgart Regional Championship Europe field (291 decks: Riven 43%, Kai'Sa 17.5%,
                          # Kennen 15%, Master Yi 5.5%); two Riven lists, --spec-riven-weight 1.5 in self-play.
                          # 9 Nov: Stuttgart Top 8 lists (riftwatch.gg open decklists). 10 Nov: DiamondHat's Riven and
