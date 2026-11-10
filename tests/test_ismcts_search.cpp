@@ -326,6 +326,41 @@ TEST_F(IsMctsSearchTest, FindsTheWinningMove) {
     EXPECT_GT(r.root_value, 0.5);
 }
 
+// Playout-cap randomisation (SearchOptions::cap / fast): a fast search runs
+// the small budget and offers no policy target; a full search offers one.
+TEST_F(IsMctsSearchTest, PlayoutCapFastSearchesGiveNoPolicyTarget) {
+    EventBus bus;
+    GameEngine engine(*db_, bus, *registry_);
+    SearchOptions opts;
+    opts.eval = "board";
+    opts.worlds = 2;
+    opts.cap = 0.5;
+    opts.fast = 2;
+    opts.explore = 3;
+    search::PuctAgent bot(*db_, *registry_, *deck_, *deck_, 3, 42, 12, opts);
+    RandomAgent rnd(99);
+    std::vector<int32_t> history;
+    bot.setDecisionHistory(&history);
+    RecordingAgent seat1(bot, history), seat2(rnd, history);
+    int full = 0, fast = 0;
+    engine.on_decision = [&](const GameState& s, const std::vector<Intent>& legal, const Intent& chosen) {
+        if (chosen.player != PlayerId::Player1 || legal.size() < 2 || s.cost_cursor.has_value()) return;
+        const int sims = bot.lastResult().simulations + bot.lastResult().failed;
+        if (sims == 0) return;
+        if (bot.lastSearch().empty()) {
+            ++fast;
+            EXPECT_LE(sims, 2 + 2) << "a fast search stays within its budget";
+        } else {
+            ++full;
+            EXPECT_GT(sims, 4) << "a full search runs the agent's own budget";
+        }
+    };
+    const GameResult res = engine.runGame(*deck_, *deck_, seat1, seat2, 3);
+    EXPECT_GT(res.total_decisions, 0);
+    EXPECT_GT(full, 0);
+    EXPECT_GT(fast, 0);
+}
+
 TEST_F(IsMctsSearchTest, PuctAgentPlaysAWholeGame) {
     EventBus bus;
     GameEngine engine(*db_, bus, *registry_);

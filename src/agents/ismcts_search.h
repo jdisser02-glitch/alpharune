@@ -142,9 +142,11 @@ public:
     /// `state`. `seed` drives world sampling and tie-breaks: the same inputs
     /// and seed give the same result (per thread; thread merging is
     /// order-independent).
+    /// `sims_override` > 0 replaces the simulation budget for this call (a
+    /// fast search of playout-cap randomisation).
     SearchResult search(const GameState& state, const std::vector<Intent>& legal,
                         PlayerId perspective, uint64_t seed,
-                        const std::vector<int32_t>* history = nullptr) const;
+                        const std::vector<int32_t>* history = nullptr, int sims_override = 0) const;
 
     /// Leaf value for `perspective` in [-1, 1] under SearchOptions::eval.
     double evaluate(const GameState& state, PlayerId perspective) const;
@@ -210,7 +212,11 @@ public:
               uint64_t engine_seed, uint64_t search_seed, int sims, SearchOptions opts = {});
 
     Intent selectAction(const GameState& state, const std::vector<Intent>& legal_actions) override;
-    std::vector<std::pair<int, double>> lastSearch() const override { return last_.shares; }
+    /// The root visit shares of the last decision: the policy target. Empty
+    /// after a fast search of playout-cap randomisation (SearchOptions::cap).
+    std::vector<std::pair<int, double>> lastSearch() const override {
+        return policy_target_ ? last_.shares : std::vector<std::pair<int, double>>{};
+    }
     int lastSearchSims() const override { return last_.simulations; }
     double lastSearchValue() const override {
         return last_.simulations > 0 ? last_.root_value : std::numeric_limits<double>::quiet_NaN();
@@ -228,6 +234,7 @@ private:
     const std::vector<int32_t>* history_ = nullptr;
     std::mt19937_64 rng_;
     bool final_max_ = true;
+    bool policy_target_ = true;   ///< the last search was a full one
     SearchResult last_;
     long long total_sims_ = 0;
     double total_seconds_ = 0.0;

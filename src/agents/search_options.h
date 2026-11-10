@@ -75,6 +75,18 @@ struct SearchOptions {
     /// root).
     std::string root = "puct";
     int gumbel_m = 16;
+    /// Playout-cap randomisation for self-play (KataGo, Wu 2019): each
+    /// decision is a full search (the agent's `sims`) with probability `cap`
+    /// and a `fast`-simulation search otherwise. Only a full search is offered
+    /// as a policy target (PuctAgent::lastSearch is empty after a fast one);
+    /// every decision still gives a value sample. cap <= 0 or fast <= 0: every
+    /// search is full.
+    double cap = 0.0;
+    int fast = 0;
+    /// Exploration for self-play: during the first `explore` turns of a game
+    /// the move is drawn in proportion to the root visits instead of taking
+    /// the most visited one (the search itself is unchanged). 0 = off.
+    int explore = 0;
 };
 
 /// Apply one `key=value` of an agent spec to `opts`. Returns false when `key`
@@ -93,6 +105,9 @@ inline bool applySearchOption(SearchOptions& opts, const std::string& key, const
     else if (key == "prior_temp") opts.prior_temp = std::stod(val);
     else if (key == "root") opts.root = val;
     else if (key == "gumbel_m") opts.gumbel_m = std::stoi(val);
+    else if (key == "cap") opts.cap = std::stod(val);
+    else if (key == "fast") opts.fast = std::stoi(val);
+    else if (key == "explore") opts.explore = std::stoi(val);
     else return false;
     return true;
 }

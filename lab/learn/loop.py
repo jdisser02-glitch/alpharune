@@ -392,15 +392,17 @@ class Loop:
         settle = f",settle={self.a.settle}" if self.a.settle > 0 else ""
         return f"pmcts:sims={sims or self.a.sims},eval=material,prior=heuristic,worlds={self.a.worlds}{settle}"
 
-    def bot(self, net, sims=None):
+    def bot(self, net, sims=None, extra=""):
         """Agent spec for a network (None = random play). A .rbpn (two-head)
         network is used by pmcts as value head + policy prior; a .rbvn as the
-        value head alone."""
+        value head alone. `extra`: more pmcts options (the self-play player's --selfplay-extra)."""
         if not net:
             return "random"
         sims = sims or self.a.sims
         policy = str(net).endswith(".rbpn")
         settle = f",settle={self.a.settle}" if self.a.settle > 0 else ""
+        if extra:
+            settle += "," + extra.strip(",")
         if getattr(self.a, "vtemp", 1.0) != 1.0:
             settle += f",vtemp={self.a.vtemp}"
         if self.a.agent == "ismcts" and not policy:
@@ -670,6 +672,10 @@ def make_parser():
     ap.add_argument("--sims", type=int, default=30)
     ap.add_argument("--selfplay-sims", type=int, default=0,
                     help="simulations per move in the self-play games only (0 = --sims); the gates keep --sims")
+    ap.add_argument("--selfplay-extra", default="",
+                    help="specialist self-play: more pmcts options for the recorded player only, e.g. "
+                         "cap=0.25,fast=80,explore=4 (playout-cap randomisation and sampled early moves, "
+                         "src/agents/search_options.h); with cap, --selfplay-sims is the full search")
     ap.add_argument("--agent", choices=["pmcts", "ismcts"], default="pmcts")
     ap.add_argument("--worlds", type=int, default=8, help="pmcts determinizations per decision")
     ap.add_argument("--max-minutes", type=float, default=0, help="stop before an iteration that would end past this many minutes (0 = no limit)")

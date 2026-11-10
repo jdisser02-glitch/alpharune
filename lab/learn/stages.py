@@ -272,7 +272,7 @@ def selfplay_specialist(args, plan, a, L, out, games):
     piloted by pilot() (only the specialist's decisions recorded), and --spec-mirror of the pairs in the
     legend's mirror against itself (both seats recorded)."""
     sp = getattr(a, "selfplay_sims", 0) or None    # deeper search for the recorded games only
-    s, it, me = spec(a), plan["it"], L.bot(plan["current"], sp)
+    s, it, me = spec(a), plan["it"], L.bot(plan["current"], sp, getattr(a, "selfplay_extra", ""))
     rng = random.Random(a.seed * 31 + it)
     t0, met = time.time(), {}
     for k in range(max(1, games // PER_PAIR)):

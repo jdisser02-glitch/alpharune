@@ -750,7 +750,7 @@ private:
 
 SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Intent>& legal,
                                   PlayerId perspective, uint64_t seed,
-                                  const std::vector<int32_t>* history) const {
+                                  const std::vector<int32_t>* history, int sims_override) const {
     SearchResult out;
     out.visits.assign(legal.size(), 0);
     out.values.assign(legal.size(), 0.0);
@@ -760,7 +760,8 @@ SearchResult IsMctsSearch::search(const GameState& state, const std::vector<Inte
 
     const int threads = std::max(1, opts_.threads);
     const double c = opts_.uct_c > 0 ? opts_.uct_c : 1.5;
-    const int per_thread = std::max(1, (sims_ + threads - 1) / threads);
+    const int budget = sims_override > 0 ? sims_override : sims_;
+    const int per_thread = std::max(1, (budget + threads - 1) / threads);
     const int n_worlds = opts_.worlds > 0 ? std::min(opts_.worlds, per_thread) : per_thread;
 
     std::vector<std::unique_ptr<Worker>> workers;
@@ -866,6 +867,7 @@ PuctAgent::PuctAgent(const CardDB& db, const CardRegistry& registry,
 
 Intent PuctAgent::selectAction(const GameState& state, const std::vector<Intent>& legal) {
     last_ = SearchResult{};
+    policy_target_ = true;
     if (legal.empty()) return Intent::concede(state.turn.turn_player);
     if (legal.size() == 1) return legal[0];
     // Which rune pays a cost is not worth a search (see Worker::simulate).
@@ -873,7 +875,16 @@ Intent PuctAgent::selectAction(const GameState& state, const std::vector<Intent>
 
     const auto t0 = std::chrono::steady_clock::now();
     const PlayerId me = decidingPlayerOf(state, legal);
-    last_ = search_.search(state, legal, me, rng_(), history_);
+    // Playout-cap randomisation: a fast search most of the time, a full one
+    // (the only kind recorded as a policy target) with probability `cap`.
+    const SearchOptions& so = search_.options();
+    int sims_override = 0;
+    if (so.cap > 0.0 && so.fast > 0 &&
+        std::uniform_real_distribution<double>(0.0, 1.0)(rng_) >= so.cap) {
+        sims_override = so.fast;
+        policy_target_ = false;
+    }
+    last_ = search_.search(state, legal, me, rng_(), history_, sims_override);
     const double secs = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
     total_seconds_ += secs;
     total_sims_ += last_.simulations;
@@ -893,7 +904,7 @@ Intent PuctAgent::selectAction(const GameState& state, const std::vector<Intent>
     }
     if (last_.shares.empty()) return legal[0];
     int pick = last_.chosen;
-    if (!final_max_) {
+    if (!final_max_ || (so.explore > 0 && state.turn.turn_number <= so.explore)) {
         double r = std::uniform_real_distribution<double>(0.0, 1.0)(rng_), acc = 0.0;
         for (const auto& [i, share] : last_.shares) { acc += share; pick = i; if (acc >= r) break; }
     }
