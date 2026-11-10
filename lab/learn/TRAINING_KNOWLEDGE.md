@@ -145,3 +145,30 @@ a full 500-simulation search on a quarter of the decisions (the only ones record
 simulations on the rest, and the move drawn from the root visits during the first 4 turns. The opponents' pilots
 search at 200. Average cost per decision about the same as before. [I] One track, so the comparison is before and
 after on the anchor curve, not a controlled A/B.
+
+**10 Nov 23:15 UTC, review after iterations 104 to 115** (12 iterations with step 5, 11 adopted, 1 refused on the
+mirror floor; about 35 minutes each):
+
+| Measure | Before (97-102) | Since step 5 (104-115) |
+|---|---|---|
+| Mirror against the four frozen anchors | 62.9% [59.9, 66.0] (960 games) | 72.2% [70.2, 74.2] (1,920 games) |
+| Same, by halves | | 71.7% (104-109), 72.7% (110-115) |
+| Held-out panel, net in place | 57.0% [54.2, 59.9] | 61.8% [59.8, 63.8] |
+| Value loss on held-out games | 0.458 | 0.435 |
+| Same first move as the search | 84.7% | 81.9% |
+| Same first move as humans (Riven) | 45.5% | 45.5% |
+
+Step 5 does not hurt, and its own share of the gain cannot be told. The level changed at iteration 103 (75.6%
+against the anchors, 66.7% on the panel), and that net was trained and measured entirely with the earlier settings
+(its run was dispatched 12 minutes before the change, on the earlier commit). Since then the curve is flat at about
+72%: the two halves of 104-115 differ by 1.0 point (standard error 2.0). The fall of "same first move as the
+search" is expected: only the full 500-simulation searches are recorded now (about 160k rows in the window, was
+610k), and they are harder to predict than 200-simulation ones.
+
+By anchor (104-115): general net 75%, spec_riven_020 71%, spec_riven_028 74%, spec_riven_059 69%. Held-out panel
+by opponent: Master Yi 73%, Akali 70%, Kai'Sa 69%, Kennen 67%, Orianna 51% (was 38%), Mordekaiser 40% (was 29%):
+the gain on the panel comes from the two bad matchups.
+
+[I] Over the whole change (iterations 91 to 115) the net went from 46-52% to about 72% against the frozen nets,
+most of it in two steps (91-96 and 103), with two plateaus. Human agreement did not move at all: the net gets
+stronger at beating earlier nets without playing more like the Riven players in the replays.
