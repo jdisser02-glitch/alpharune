@@ -282,8 +282,13 @@ jobs:
         id: bin
         uses: actions/cache@v4
         with:
-          path: stage/riftbound
-          key: rb-bin-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+          # The engine and the two Boost libraries it loads (stage/lib): they travel with the plan, so the 60-odd
+          # jobs of an iteration do not depend on an apt mirror answering (11 Nov: two iterations lost to
+          # "Temporary failure resolving azure.archive.ubuntu.com" on one machine).
+          path: |
+            stage/riftbound
+            stage/lib
+          key: rb-bin2-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
       - name: Install build dependencies
         if: steps.bin.outputs.cache-hit != 'true'
         run: |
@@ -308,6 +313,7 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
           cmake --build build --target riftbound -j4
           mkdir -p stage && cp build/riftbound stage/riftbound
+          mkdir -p stage/lib && cp -L $(ldd build/riftbound | awk '/libboost/ {print $3}') stage/lib/ && ls -la stage/lib
       - name: Restore the head net (continuous training)
         uses: actions/cache/restore@v4
         with:
@@ -361,7 +367,7 @@ jobs:
           for i in 1 2 3 4; do
             sudo apt-get update -qq || true
             sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            [ "$i" = 4 ] && exit 1
+            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
             sleep $((i * 10))
           done
       - uses: actions/download-artifact@v4
@@ -374,6 +380,9 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
+          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/ 2>/dev/null || true
           python3 -u lab/learn/stages.py selfplay --plan stage/plan.json --shard ${{ matrix.shard }} --shards 20
       - uses: actions/upload-artifact@v4
@@ -454,7 +463,7 @@ jobs:
           for i in 1 2 3 4; do
             sudo apt-get update -qq || true
             sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            [ "$i" = 4 ] && exit 1
+            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
             sleep $((i * 10))
           done
       - uses: actions/download-artifact@v4
@@ -471,6 +480,9 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
+          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/
           python3 -u lab/learn/stages.py screen --plan stage/plan.json --cand stage/cand_${{ matrix.variant }}.json \
             --variant ${{ matrix.variant }} --block ${{ matrix.block }} --out stage/screen.json
@@ -535,7 +547,7 @@ jobs:
           for i in 1 2 3 4; do
             sudo apt-get update -qq || true
             sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            [ "$i" = 4 ] && exit 1
+            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
             sleep $((i * 10))
           done
       - uses: actions/download-artifact@v4
@@ -552,6 +564,9 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
+          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/
           python3 -u lab/learn/stages.py gate --plan stage/plan.json --cand stage/cand.json --task "${{ matrix.task }}" --out stage/result.json
       - uses: actions/upload-artifact@v4
