@@ -48,7 +48,11 @@ export async function render(container) {
   const G = T.general || {}, specs = Object.entries(T.specialists || {});
   const stateOf = s => s.state || (s.running ? "training" : "paused");
   const train = [`General net ${esc(G.current || "—")} ${stateOf(G)}, ${G.rejected_since_adoption ?? 0} rejected since its adoption`]
-    .concat(specs.map(([k, s]) => `${esc(k)} specialist ${stateOf(s)}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`)).join(" · ");
+    .concat(specs.map(([k, s]) => { const c = s.continuous, g = s.gated;
+      // Continuous training (10 Nov) is counted apart from the gated iterations before it; its newest net (the head)
+      // is committed only every few iterations, so the net in use can be older.
+      if (c) return `${esc(k)} specialist ${stateOf(s)}: continuous since iteration ${c.since}, ${c.adopted} of ${c.iterations} kept${c.anchor_rate_last8 != null ? ` (${pct0(c.anchor_rate_last8)} against its frozen earlier nets, last ${Math.min(8, c.iterations)} iterations)` : ""}; net in use ${esc(s.current)}${c.head && c.head !== s.current ? `, newest ${esc(c.head)} not committed yet` : ""}${g ? `; before that ${g.adopted} of ${g.iterations} adopted` : ""}`;
+      return `${esc(k)} specialist ${stateOf(s)}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`; })).join(" · ");
   // 3. The opponents are today's meta: newest tournament date among the meta lists.
   const metaDates = (D.decks || []).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
   const newest = metaDates[metaDates.length - 1], metaN = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).length;
@@ -84,7 +88,7 @@ export async function render(container) {
       line: R && R.total ? `${R.right} of ${R.total} Riven matchups with real players' favourite (target ${pct0(R.target ?? 0.8)}) · ${esc(R.source)}, ${esc(R.net || "")}${R.stale ? ": counted half" : ""}${(R.pilots_replaced || []).length ? ` · opponent pilot(s) replaced since: ${esc(R.pilots_replaced.join(", "))}` : ""}${R.spearman != null ? ` · rank correlation with real rates ${R.spearman}` : ""}${since(R.engine_commits_since)}` : "Not measured",
       sub: `${R && R.wrong && R.wrong.length ? `Wrong favourite: ${esc(R.wrong.join(", "))}. ` : ""}${others ? `Other legends' juries: ${others}. ` : ""}${C.total ? `Older, stricter measure: ${C.within} of ${C.total} inside real players' 95% range${cTag}. ` : ""}${train}${aNow ? ` · ${fmt1(aNow.value)}% same first move as humans (${esc(aNow.label)}${netNo(aNow.label) != null && netNo(G.current) != null && netNo(aNow.label) !== netNo(G.current) ? ", a net no longer in use" : ""}, partly its own training games${since(hr.engine_commits_since).replace(" · ", "; ")})` : ""}`, href: "#/bot" },
     { n: 3, title: "Opponents are today's meta", pct: p3,
-      line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
+      line: Cv.share == null ? "Not measured" : `The jury's legends meet Riven in ${pct0(Cv.share)} of its real games (${Cv.games} of ${Cv.of}; the credibility jury${Cv.measured_utc ? ` of ${esc(fmtDate(Cv.measured_utc))}` : ""}${Cv.matrix ? `, real results ${esc((Cv.matrix.match(/\d{4}-?\d{2}-?\d{2}/) || [Cv.matrix])[0])}` : ""})${Cl.share != null ? `; the newest list test's jury (${esc((Cl.legends || []).join(", "))}) in ${pct0(Cl.share)}` : ""}`,
       sub: `${Cv.missing_top && Cv.missing_top.length ? `Missing: ${esc(Cv.missing_top.join(", "))}. ` : ""}${Cl.missing_top && Cl.missing_top.length ? `Missing from the newest list test: ${esc(Cl.missing_top.join(", "))}. ` : ""}${metaN} tournament decks · ${events.size} events imported${missing ? `, ${missing} newer to add` : ""}`, href: "#/decks" },
     { n: 4, title: "Best Riven list found", pct: p4,
       line: conf.length ? `${conf.length} list${conf.length > 1 ? "s" : ""} beat the reference (interval above 0)` : "No list shown better than the reference",

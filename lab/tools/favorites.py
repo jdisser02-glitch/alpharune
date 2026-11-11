@@ -141,7 +141,11 @@ def from_specialist(name: str):
     sims = {k: (w / g, g) for k, (w, g) in agg.items() if g}
     mx, real = real_row(legend)
     out = score(legend, sims, real)
-    out.update({"legend": legend, "source": f"{name} specialist's jury, iteration {it.get('iteration')}",
+    src = f"{name} specialist's jury, iteration {it.get('iteration')}"
+    if len(panels) > 1:     # pooled: the rates are not the newest net's alone
+        src = (f"{name} specialist's held-out panel, iterations {panels[0].get('iteration')} to {panels[-1].get('iteration')} "
+               f"pooled ({len(panels)} successive nets)")
+    out.update({"legend": legend, "source": src, "pooled_nets": len(panels),
                 "net": cur, "measured_utc": it.get("started_utc"), "matrix": str(mx.relative_to(ROOT)) if mx else None})
     return out
 

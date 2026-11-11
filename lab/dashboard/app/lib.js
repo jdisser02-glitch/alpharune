@@ -315,9 +315,18 @@ export function testConclusion(t) {
       const f = conf.finalists, sg = v => `${v >= 0 ? "+" : "−"}${Math.abs(100 * v).toFixed(1)}`;
       const won = f.filter(x => x.diff_ci95 && x.diff_ci95[0] > 0);
       const one = x => `${sg(x.diff_vs_reference)} points [${sg(x.diff_ci95[0])}, ${sg(x.diff_ci95[1])}]`;
+      // What a later, larger comparison found for the same list files, and whether the net that played the search
+      // is still the one in use (data.measured.list, computed by build.py).
+      const L = ((data().measured || {}).list) || {}, RT = L.retests || {}, inUse = L.nets_in_use || [];
+      const later = won.map(x => RT[x.path]).filter(r => r && String(r.started_utc || "") > String(t.started_utc || ""));
+      const held = later.filter(r => r.ci95[0] > 0).length;
+      const retest = later.length ? ` Measured again later on more games (${later[0].result}): ${later.map(r => `${sg(r.diff)} [${sg(r.ci95[0])}, ${sg(r.ci95[1])}]`).join("; ")} against ${later[0].reference}: ${held === later.length ? "the gain held" : held ? `the gain held for ${held} of ${later.length}` : "the gain did not hold"}.` : "";
+      const net = (String(t.agent || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1];
+      const who = net ? ` Played by ${net}${inUse.length && !inUse.includes(net) ? ", a net no longer in use" : ""}.` : "";
+      const claim = won.length === 1 ? (later.length && !held ? "One finalist came out ahead" : "One finalist beats it") : (later.length && !held ? `${won.length} finalists came out ahead` : `${won.length} finalists beat it`);
       return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games); the ${f.length} best then played ${num(conf.games_per_opponent || 0)} new games per opponent against the unchanged list (${pct0((conf.reference || {}).confirmed_rate || 0)}). `
-        + (won.length ? `${won.length === 1 ? "One finalist beats it" : `${won.length} finalists beat it`}: ${won.map(one).join("; ")}. Picked as the best of ${f.length}, so the true gain is likely smaller.`
-                      : `None beats it: ${f.map(one).join("; ")}.`);
+        + (won.length ? `${claim}: ${won.map(one).join("; ")}. Picked as the best of ${f.length}${later.length ? "" : ` on ${num(conf.games_per_opponent || 0)} games per opponent and not measured again`}, so the true gain is likely smaller.${retest}`
+                      : `None beats it: ${f.map(one).join("; ")}.`) + who;
     }
     const verdict = base === top ? "No change beat the unchanged list." : overlaps(tp.ci, bp.ci)
       ? `Over ${num(bestGames)} games that lead is inside the margin of error: not proven yet.` : `The gap holds up: the intervals do not overlap.`;

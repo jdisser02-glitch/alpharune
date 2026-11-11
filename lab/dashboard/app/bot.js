@@ -14,7 +14,14 @@ export async function render(container) {
   const current = it.find(r => r.net === net) || it.filter(r => r.accepted).slice(-1)[0] || null;
   const latest = it.slice(-1)[0] || null;
   const tests = (D.tests || []).filter(t => usesNet(t.agent, net) || usesNet(t.opp_agent, net));
-  const playUsesIt = !!(D.engine && D.engine.net && (!net || D.engine.net_source === net));
+  const stem = s => String(s || "").split("/").pop().replace(/\.rb[pv]n$/, "");
+  const playUsesIt = !!(D.engine && D.engine.net && (!net || stem(D.engine.net_source) === stem(net) || stem(D.engine.policy_net_source) === stem(net)));
+  // This page follows the general net. Since 5 Nov each legend has its own specialist net, and since 10 Nov the
+  // specialists train continuously (data.measured.training): say which ones, so the page is not read as the whole story.
+  const TS = ((D.measured || {}).training || {}).specialists || {};
+  const specList = Object.entries(TS).map(([k, s]) => `${k} ${s.state}${s.continuous ? `, continuous since iteration ${s.continuous.since} (${s.continuous.adopted} of ${s.continuous.iterations} kept)` : ""}`);
+  const lastIt = it.slice(-1)[0];
+  const specNote = `This page follows the general net${lastIt ? `, last trained ${esc(fmtDate(lastIt.started_utc))}` : ""}. Deck tests are now played by each legend's own specialist net where one exists${specList.length ? ` (${esc(specList.join("; "))})` : ""}; the continuous method keeps a new net unless it is clearly worse than the one before, instead of the gate described above.`;
   const hr = D.human_review || {}, hg = hr.games || [];
   const compared = hg.reduce((a, g) => a + (g.decisions_compared || 0), 0);
   const agreed = hg.reduce((a, g) => a + (g.decisions_compared || 0) * (g.agreement_pct || 0) / 100, 0);
@@ -47,7 +54,7 @@ export async function render(container) {
           <div><dt>Val loss, val accuracy</dt><dd>How well the network predicts the winner on games it did not train on. Loss falls as it learns (0.69 means it is guessing); accuracy is the share of positions it calls right.</dd></div>
           <div><dt>Positions</dt><dd>How many board states the network trained on in that iteration. Minutes is the wall-clock time of the whole iteration on the lab machine.</dd></div>
         </dl>
-        <p class="small muted">Both sides of every deck test are played by this bot. Until its simulated matchups agree with real players' win rates (Home, step 2), treat deck results as hints rather than verdicts.</p>
+        <p class="small muted">${specNote} Until the simulated matchups agree with real players' win rates (Home, step 2), treat deck results as hints rather than verdicts.</p>
       </section>
 
       <section class="panel gilt stack v-bot-current" aria-labelledby="bot-current">

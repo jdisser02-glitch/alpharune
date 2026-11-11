@@ -15,7 +15,7 @@ const DEFAULTS = { me: "decks/riven_sacramento.txt", bot: "lab/decks/meta/sacram
 const LEVELS = {
   quick:   { label: "Quick",   spec: "greedy",                   help: "Redeals what it cannot see 3 times and answers within about 1.5 s." },
   careful: { label: "Careful", spec: "greedy:det=5,budget=3000", help: "Five redeals and up to 3 s per move: steadier choices, slower turns." },
-  search:  { label: "Search",  spec: "search:sims=50,worlds=6,settle=60",   help: "The lab's real search, as in training: 50 simulated continuations per move over 6 redeals, with the current net. Stronger; a few seconds per move. It plays combats out before judging a move." },
+  search:  { label: "Search",  spec: "search:sims=50,worlds=6,settle=60",   help: "The lab's real search with the current net, lighter than in the lab's own games: 50 simulated continuations per move over 6 redeals. Stronger; a few seconds per move. It plays combats out before judging a move." },
   strong:  { label: "Strong",  spec: "search:sims=150,worlds=8,settle=60",  help: "The same search with 150 simulations and 8 redeals, steered like the training games by the current policy net (its move preferences pick what to look at, its value head judges the outcome). Expect 1 to 5 s per move. It plays combats out before judging a move." },
   // 8 Nov (Jeremy): "even if the bot takes 30 seconds a move, make it think". With 150 simulations its first instinct often
   // won the move (it moved Riven home where a longer search preferred hiding Bedeviling Stranger by 0.65).
@@ -504,7 +504,10 @@ function tilesHtml(side) {
 function engineLine() {
   const E = data().engine;
   if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards · ${G.info.pnet ? "policy net loaded (the search bot plays as in training)" : G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
-  if (G.botNet) return `Bot policy net: ${esc(G.botNet.split("/").pop())}${/spec_/.test(G.botNet) ? " (its legend's specialist)" : " (general net)"}`;
+  if (G.botNet) { const name = (G.botNet.match(/spec_([a-z_]+?)_\d+/) || [])[1];
+    const tr = name && ((((data().measured || {}).training || {}).specialists || {})[name] || {}).continuous;
+    const newer = tr && tr.head && !G.botNet.includes(tr.head) ? ` · training has a newer net (${esc(tr.head)}), not committed yet` : "";
+    return `Bot policy net: ${esc(G.botNet.split("/").pop())}${/spec_/.test(G.botNet) ? " (its legend's specialist)" : " (general net)"}${newer}`; }
   return E.policy_net_source ? `Bot policy net: ${esc(E.policy_net_source.split("/").pop())}` : E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
 }
 function progressHtml() {

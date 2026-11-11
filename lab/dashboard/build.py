@@ -114,6 +114,7 @@ def measured_status(ladder: dict) -> dict:
             jury = sorted({r["opponent_legend"] for r in rows if r.get("legend") == "Riven" and r.get("opponent_legend") != "Riven"})
             got = sum(real[k]["games"] for k in jury if k in real)
             out["coverage"] = {"legends": jury, "games": got, "of": total, "share": round(got / total, 3) if total else None,
+                               "file": cms[-1].name, "measured_utc": cm.get("measured_utc"), "matrix": Path(cm.get("matrix", "")).name,
                                "missing_top": [k for k, _ in sorted(real.items(), key=lambda kv: -kv[1]["games"]) if k != "Riven" and k not in jury][:4]}
     def track(L, pause=None):
         its = L.get("iterations", [])
@@ -130,9 +131,25 @@ def measured_status(ladder: dict) -> dict:
             except ValueError:
                 pass
         paused = bool(pause and pause.exists())
-        return {"current": Path(L.get("current_net") or "").stem, "iterations": len(its), "last_started": last,
-                "running": recent and not paused, "state": "paused" if paused else "training" if recent else "idle",
-                "rejected_since_adoption": since, "adopted": sum(1 for r in its if r.get("accepted"))}
+        t = {"current": Path(L.get("current_net") or "").stem, "iterations": len(its), "last_started": last,
+             "running": recent and not paused, "state": "paused" if paused else "training" if recent else "idle",
+             "rejected_since_adoption": since, "adopted": sum(1 for r in its if r.get("accepted"))}
+        # Continuous training (10 Nov): one candidate per iteration, adopted unless clearly worse. Counted apart from
+        # the gated iterations before it; the head (newest adopted net) is committed only every few iterations, so the
+        # net in use (tests, Play) can be older than the head.
+        cont = [r for r in its if r.get("continuous")]
+        if cont:
+            # the legend's own frozen nets only: the general net loses nearly every mirror to a specialist (no signal)
+            anchors = [(a.get("wins", 0), a.get("games", 0)) for r in cont[-8:]
+                       for k, a in (r.get("vs_anchors") or {}).items() if "spec_" in k]
+            g = sum(x[1] for x in anchors)
+            t["continuous"] = {"since": cont[0].get("iteration"), "iterations": len(cont),
+                               "adopted": sum(1 for r in cont if r.get("accepted")),
+                               "head": Path(L.get("head_net") or L.get("current_net") or "").stem,
+                               "anchor_rate_last8": round(sum(x[0] for x in anchors) / g, 4) if g else None, "anchor_games_last8": g}
+            gated = [r for r in its if not r.get("continuous")]
+            t["gated"] = {"iterations": len(gated), "adopted": sum(1 for r in gated if r.get("accepted"))}
+        return t
     out["training"] = {"general": track(ladder, LAB / "learn" / "PAUSE"), "specialists": {}}
     for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
         out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()), f.parent / "PAUSE")
@@ -192,6 +209,10 @@ def measured_status(ladder: dict) -> dict:
                          "lists": rows, "jury_legends": legends, "ga": True})
     for stem, r in items:
         decks = r.get("decks") or []
+        # Home's list figures are about Riven lists: a comparison of another legend's lists (Orianna against Riven,
+        # 10 Nov) is not a Riven list check.
+        if any(deck_legend(d.get("path", ""), d.get("label", "")) not in (None, "Riven") for d in decks):
+            continue
         opp = lambda d: {m.get("opponent_deck") or m.get("opponent"): m for m in d.get("matchups", [])}
         base = opp(decks[0])
         if not base or any(set(opp(d)) != set(base) for d in decks[1:]):
@@ -253,7 +274,16 @@ def measured_status(ladder: dict) -> dict:
     for c in comparisons[-3:]:
         c["stale"] = c.get("net") not in in_use
         c["engine_commits_since"] = engine_since(c.get("started_utc"))
-    out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best}
+    # A search finalist measured again later in a plain comparison (more games, fresh deals): the newest such row
+    # per list file, so a page that quotes the search's own confirmation can say what the re-test found.
+    retests = {}
+    for c in plain:
+        for row in c["lists"]:
+            if row.get("path"):
+                retests[row["path"]] = {"result": c["result"], "started_utc": c.get("started_utc"), "diff": row["diff"], "ci95": row["ci95"],
+                                        "reference": c["reference"], "net": c["net"]}
+    out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best,
+                   "retests": retests, "nets_in_use": sorted(n for n in in_use if n)}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:
         mx = ROOT / json.loads(cms[-1].read_text()).get("matrix", "")
@@ -280,10 +310,44 @@ def measured_status(ladder: dict) -> dict:
     return out
 
 
+_LEGENDS = None
+
+
+def _legend_names():
+    """Legend names: the fixed list plus every legend of the newest real-results matrix (Rek'Sai, Irelia, Jayce...)."""
+    global _LEGENDS
+    if _LEGENDS is None:
+        names = ["Riven", "Kennen", "Kai'Sa", "Rengar", "Vex", "Akali", "Evelynn", "LeBlanc", "Lillia", "Mordekaiser",
+                 "Orianna", "Seraphine", "Master Yi", "Nasus", "Ekko", "Ziggs", "Draven", "Viktor", "Jinx", "Volibear",
+                 "Rek'Sai", "Irelia", "Jayce"]
+        ms = sorted((LAB / "meta").glob("riftdecks_winrate_*.json"))
+        if ms:
+            try:
+                names += [k for k in json.loads(ms[-1].read_text()).get("matchups", {}) if k not in names]
+            except (ValueError, OSError):
+                pass
+        _LEGENDS = names
+    return _LEGENDS
+
+
+def deck_legend(path: str, label: str = ""):
+    """The legend of a deck file, read from its Legend section ("1 Orianna, Lady of Clockwork" -> "Orianna");
+    from the file name or label when the file is gone. None when it cannot be told."""
+    f = ROOT / path
+    if path and f.is_file():
+        lines = f.read_text(errors="replace").splitlines()
+        for i, ln in enumerate(lines):
+            if ln.strip().lower().startswith("legend"):
+                for nxt in lines[i + 1:i + 4]:
+                    m = re.match(r"\s*\d+\s+([^,]+)", nxt)
+                    if m:
+                        return m.group(1).strip()
+    return riftlab_legend(path) or riftlab_legend(label.replace(" ", "_"))
+
+
 def riftlab_legend(path: str):
     """The champion legend a meta deck file names ('..._kai_sa.txt' -> "Kai'Sa"), from the matrix's legend names."""
-    names = ["Riven", "Kennen", "Kai'Sa", "Rengar", "Vex", "Akali", "Evelynn", "LeBlanc", "Lillia", "Mordekaiser",
-             "Orianna", "Seraphine", "Master Yi", "Nasus", "Ekko", "Ziggs", "Draven", "Viktor", "Jinx"]
+    names = _legend_names()
     s = re.sub(r"[^a-z0-9]", "", Path(path).stem.lower())
     for n in sorted(names, key=len, reverse=True):
         if re.sub(r"[^a-z0-9]", "", n.lower()) in s:
