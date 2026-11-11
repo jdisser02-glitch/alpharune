@@ -212,3 +212,31 @@ Riven ahead of Volibear, and the lab cannot tell the two apart without a Riven p
 One incident: the run for iteration 72 was dispatched 4 seconds after iteration 71's push, resolved the branch to
 the commit before it, played iteration 71 a second time and died at the decide step (06:05 UTC, about 50 minutes
 lost until the restart). The workflow now restarts such a run from its first job (commit a244cea).
+
+**Volibear, second review, 11 Nov 19:05 UTC: iterations 80 to 88** (24 continuous iterations in all, all 24 kept).
+
+| Measure | 65-71 | 72-79 | 80-88 |
+|---|---|---|---|
+| Mirror against its three frozen earlier nets | 53.5% [50.1, 56.8] | 59.0% [55.8, 62.1] | 58.0% [55.0, 60.9] (1,080 games) |
+| Held-out panel, net in place | 69.9% [67.5, 72.4] | 75.3% [73.2, 77.5] | 77.7% [75.7, 79.6] (1,728 games) |
+| Value loss on held-out games | 0.486 → 0.394 | 0.402 → 0.364 | 0.369 → 0.372 (lowest 0.343) |
+| Same first move as humans | 44.3% | 44.5% | 45.4% (88) |
+
+Against its own frozen nets the curve has been flat since iteration 72: last 8 iterations minus the 8 before,
+-1.4 points (standard error 2.2). The held-out panel still edges up, +2.0 points (standard error 1.5), which is
+not distinguishable from flat either. Panel by opponent, 72-79 → 80-88: DiamondHat Riven 63 → 63%, Caravaggio
+Riven 60 → 63%, Kai'Sa 73 → 79%, Kennen 82 → 83%, Master Yi 83 → 88%, Akali 91 → 91%; in self-play the three Riven
+lists went from 54-56% to 58-60%. [I] Same shape as Riven's run: a quick first step, then a plateau; Riven's
+second step came after seven flat iterations, so a plateau of this length does not yet say the net is exhausted.
+
+No iteration between 13:50 and 16:50 UTC: GitHub's apt mirror (azure.archive.ubuntu.com) stopped resolving on part
+of the runners; three iterations failed on one machine each (a gate job, then self-play jobs, the last one despite
+four retries), and a fourth run sat 40 minutes in p_plan's install. The engine's two Boost libraries are now in
+the repository (lab/learn/runtime) and travel with the plan; an iteration uses no apt unless the engine sources
+changed (commits d779ead, dbc02e1, ccbcae5, d6bd24b; confirmed by iterations 85 to 88).
+
+Jeremy's list of 11 Nov (Laggy's Dragons with Rengar, lab/decks/community/jeremy_2026-11-11) was measured on
+spec_volibear_084_v0 against Ritualo's list and the search's best, 40 games per opponent on the same deals
+(lab/results/20261111-165301-volibear-jeremy-20261111.json): 66.0% against 78.9% for Ritualo's, -12.9 points
+[-22.1, -3.7]; the search's list 81.7%, +2.7 [-5.7, +11.1]. The net never trained on that list, so part of the
+gap is pilot error; Jeremy chose not to add it to the training lists.
