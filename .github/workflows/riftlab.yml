@@ -667,7 +667,9 @@ jobs:
   # stops after two runs and is left to the watchdog. A cancelled run is not restarted.
   p_retry:
     needs: [p_plan, p_selfplay, p_train, p_screen, p_pick, p_gate, p_decide]
-    if: ${{ failure() && needs.p_plan.result != 'skipped' && needs.p_plan.outputs.paused != 'true' && github.event.inputs.retry != '1' }}
+    # A job GitHub cancels by itself (11 Nov 21:41: p_plan waited 15 minutes for a machine and was cancelled) counts
+    # as a failure here; a run cancelled by hand (cancelled()) does not.
+    if: ${{ !cancelled() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && needs.p_plan.result != 'skipped' && needs.p_plan.outputs.paused != 'true' && github.event.inputs.retry != '1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
