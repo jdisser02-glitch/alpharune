@@ -355,7 +355,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
         run: |
-          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
+          # one of 20 gate jobs failed here and fail-fast cancelled the others).
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+          for i in 1 2 3 4; do
+            sudo apt-get update -qq || true
+            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -440,7 +448,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
         run: |
-          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
+          # one of 20 gate jobs failed here and fail-fast cancelled the others).
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+          for i in 1 2 3 4; do
+            sudo apt-get update -qq || true
+            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -513,7 +529,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Engine runtime libraries
         run: |
-          { sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*; sudo apt-get update -qq || true; } && sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0
+          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
+          # one of 20 gate jobs failed here and fail-fast cancelled the others).
+          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+          for i in 1 2 3 4; do
+            sudo apt-get update -qq || true
+            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 10))
+          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
