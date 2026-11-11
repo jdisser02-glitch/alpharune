@@ -172,3 +172,16 @@ the gain on the panel comes from the two bad matchups.
 [I] Over the whole change (iterations 91 to 115) the net went from 46-52% to about 72% against the frozen nets,
 most of it in two steps (91-96 and 103), with two plateaus. Human agreement did not move at all: the net gets
 stronger at beating earlier nets without playing more like the Riven players in the replays.
+
+**11 Nov 02:10 UTC: Riven paused at iteration 120, Volibear takes the 20 runners.** Stopping rule set the evening
+before: pooled anchor rate of the last 8 iterations less than 2 points above the 8 before. It read 74.1% (113-120)
+against 72.2% (105-112): +1.9, standard error 1.8. The net in place is spec_riven_120_v0 (committed, in Play).
+
+The rule passed by a hair and the held-out panel says the net was still improving: the net in place scored 64.7%
+over 113-120 against 59.6% over 105-112 (+5.1 points, standard error 1.7). [I] Riven is not exhausted; the pause is
+a choice of where the runners are worth most before the ban announcement of 13 Nov, and the track can resume from
+net 120.
+
+Whole run, iterations 91 to 120 (30 iterations, 26 adopted, about 17.5 hours): anchors 48.8% → 74.1%; held-out
+panel of the net in place 50.3% → 64.7%; value loss 0.613 → 0.437; same first move as humans 46.2% → about 45.5%
+(unchanged).
