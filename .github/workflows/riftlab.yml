@@ -27,6 +27,9 @@ on:
       minutes:
         description: "Training only: time budget of the loop, in minutes"
         default: "300"
+      retry:
+        description: "Set by the workflow itself: 1 when this run is the automatic restart of a failed training iteration"
+        default: "0"
 
 permissions:
   contents: write
@@ -657,3 +660,21 @@ jobs:
           done
           sleep 5
           gh workflow run riftlab.yml --ref "${GITHUB_REF_NAME}" -f request="${{ github.event.inputs.request }}" -f chain="${left}"
+
+  # A training iteration that fails (an artifact upload refused by GitHub, a runner lost, a mirror down) is started
+  # again once, at once, instead of waiting for the hourly watchdog: on 11 Nov four failures of that kind cost
+  # about four hours. Only once: the restart carries retry=1 and does not restart itself, so a real code failure
+  # stops after two runs and is left to the watchdog. A cancelled run is not restarted.
+  p_retry:
+    needs: [p_plan, p_selfplay, p_train, p_screen, p_pick, p_gate, p_decide]
+    if: ${{ failure() && needs.p_plan.result != 'skipped' && needs.p_plan.outputs.paused != 'true' && github.event.inputs.retry != '1' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Start the iteration again
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "::warning::this training run failed; starting the iteration again once (retry=1)"
+          gh workflow run riftlab.yml --repo "${GITHUB_REPOSITORY}" --ref "${GITHUB_REF_NAME}" \
+            -f request="${{ github.event.inputs.request }}" -f chain="${{ github.event.inputs.chain }}" -f retry=1
