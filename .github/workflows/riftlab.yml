@@ -359,17 +359,6 @@ jobs:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     steps:
       - uses: actions/checkout@v4
-      - name: Engine runtime libraries
-        run: |
-          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
-          # one of 20 gate jobs failed here and fail-fast cancelled the others).
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
-          for i in 1 2 3 4; do
-            sudo apt-get update -qq || true
-            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
-            sleep $((i * 10))
-          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -380,8 +369,19 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
-          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
-          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          # The Boost libraries come with the plan (stage/lib): no apt on the 60-odd machines of an iteration. On
+          # 11 Nov three iterations in a row were lost to "Temporary failure resolving azure.archive.ubuntu.com" on
+          # one machine out of 20, retries included. apt is only the fallback for a plan built before that.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then
+            export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          else
+            sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+            for i in 1 2 3; do
+              sudo apt-get update -qq || true
+              sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0 && break
+              sleep $((i * 10))
+            done
+          fi
           if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/ 2>/dev/null || true
           python3 -u lab/learn/stages.py selfplay --plan stage/plan.json --shard ${{ matrix.shard }} --shards 20
@@ -455,17 +455,6 @@ jobs:
         block: [0, 1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
-      - name: Engine runtime libraries
-        run: |
-          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
-          # one of 20 gate jobs failed here and fail-fast cancelled the others).
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
-          for i in 1 2 3 4; do
-            sudo apt-get update -qq || true
-            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
-            sleep $((i * 10))
-          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -480,8 +469,19 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
-          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
-          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          # The Boost libraries come with the plan (stage/lib): no apt on the 60-odd machines of an iteration. On
+          # 11 Nov three iterations in a row were lost to "Temporary failure resolving azure.archive.ubuntu.com" on
+          # one machine out of 20, retries included. apt is only the fallback for a plan built before that.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then
+            export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          else
+            sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+            for i in 1 2 3; do
+              sudo apt-get update -qq || true
+              sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0 && break
+              sleep $((i * 10))
+            done
+          fi
           if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/
           python3 -u lab/learn/stages.py screen --plan stage/plan.json --cand stage/cand_${{ matrix.variant }}.json \
@@ -539,17 +539,6 @@ jobs:
         task: ${{ fromJSON(needs.p_plan.outputs.tasks) }}
     steps:
       - uses: actions/checkout@v4
-      - name: Engine runtime libraries
-        run: |
-          # An apt mirror that times out on one machine must not cost the whole iteration (11 Nov, run 43028575383:
-          # one of 20 gate jobs failed here and fail-fast cancelled the others).
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
-          for i in 1 2 3 4; do
-            sudo apt-get update -qq || true
-            sudo apt-get install -y -qq -o Acquire::Retries=3 libboost-program-options1.83.0 libboost-context1.83.0 && break
-            if [ "$i" = 4 ]; then echo "::warning::apt failed four times; relying on the libraries shipped with the plan"; break; fi
-            sleep $((i * 10))
-          done
       - uses: actions/download-artifact@v4
         with:
           name: plan
@@ -564,8 +553,19 @@ jobs:
           RIFTBOUND_ROOT: .
         run: |
           chmod +x stage/riftbound
-          # The Boost libraries shipped with the plan come first; apt (above) is only the fallback.
-          if ls stage/lib/*.so* >/dev/null 2>&1; then export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"; fi
+          # The Boost libraries come with the plan (stage/lib): no apt on the 60-odd machines of an iteration. On
+          # 11 Nov three iterations in a row were lost to "Temporary failure resolving azure.archive.ubuntu.com" on
+          # one machine out of 20, retries included. apt is only the fallback for a plan built before that.
+          if ls stage/lib/*.so* >/dev/null 2>&1; then
+            export LD_LIBRARY_PATH="$PWD/stage/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          else
+            sudo rm -f /etc/apt/sources.list.d/microsoft-prod.*
+            for i in 1 2 3; do
+              sudo apt-get update -qq || true
+              sudo apt-get install -y -qq libboost-program-options1.83.0 libboost-context1.83.0 && break
+              sleep $((i * 10))
+            done
+          fi
           if ldd stage/riftbound | grep "not found"; then echo "::error::the engine's libraries are missing (no stage/lib in the plan and apt failed)"; exit 1; fi
           cp stage/nets/* lab/learn/nets/
           python3 -u lab/learn/stages.py gate --plan stage/plan.json --cand stage/cand.json --task "${{ matrix.task }}" --out stage/result.json
