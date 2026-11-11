@@ -282,13 +282,8 @@ jobs:
         id: bin
         uses: actions/cache@v4
         with:
-          # The engine and the two Boost libraries it loads (stage/lib): they travel with the plan, so the 60-odd
-          # jobs of an iteration do not depend on an apt mirror answering (11 Nov: two iterations lost to
-          # "Temporary failure resolving azure.archive.ubuntu.com" on one machine).
-          path: |
-            stage/riftbound
-            stage/lib
-          key: rb-bin2-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
+          path: stage/riftbound
+          key: rb-bin-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', 'src/**/*.cpp', 'src/**/*.h') }}
       - name: Install build dependencies
         if: steps.bin.outputs.cache-hit != 'true'
         run: |
@@ -313,7 +308,12 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER="env;CCACHE_SLOPPINESS=pch_defines,time_macros;ccache"
           cmake --build build --target riftbound -j4
           mkdir -p stage && cp build/riftbound stage/riftbound
-          mkdir -p stage/lib && cp -L $(ldd build/riftbound | awk '/libboost/ {print $3}') stage/lib/ && ls -la stage/lib
+      - name: Engine libraries travel with the plan
+        run: |
+          # The two Boost libraries the engine loads, kept in the repository (lab/learn/runtime): with the binary
+          # from the cache, an iteration needs no apt at all. On 11 Nov the runners' apt mirror stopped resolving
+          # on some machines and four iterations were lost.
+          mkdir -p stage/lib && cp lab/learn/runtime/lib/*.so* stage/lib/ && ls -la stage/lib
       - name: Restore the head net (continuous training)
         uses: actions/cache/restore@v4
         with:
