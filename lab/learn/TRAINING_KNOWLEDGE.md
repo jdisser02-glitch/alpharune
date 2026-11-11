@@ -185,3 +185,30 @@ net 120.
 Whole run, iterations 91 to 120 (30 iterations, 26 adopted, about 17.5 hours): anchors 48.8% → 74.1%; held-out
 panel of the net in place 50.3% → 64.7%; value loss 0.613 → 0.437; same first move as humans 46.2% → about 45.5%
 (unchanged).
+
+**Volibear, same method: 11 Nov 02:07 UTC, from iteration 65** (the Riven settings without the human weight, 15%
+mirror; start net spec_volibear_048_v0). First review at 11:00 UTC, iterations 65 to 79: 15 iterations, all 15
+kept, about 30 minutes each.
+
+| Measure | 65-71 | 72-79 |
+|---|---|---|
+| Mirror against its three frozen earlier nets (022, 037, 048) | 53.5% [50.1, 56.8] (840 games) | 59.0% [55.8, 62.1] (960 games) |
+| Held-out panel, net in place | 69.9% [67.5, 72.4] | 75.3% [73.2, 77.5] |
+| Value loss on held-out games | 0.486 (iteration 65) | 0.364 (iteration 79) |
+| Same first move as the search | 88.4% (65) | 83.6% (79) |
+| Same first move as humans (Volibear) | 44.3% (65) | 44.5% (79) |
+
+The curve rises: +5.5 points against the frozen nets (standard error 2.4) and +5.4 on the held-out panel
+(standard error 1.7). The first iteration alone read 49.2% against the three nets. The fourth anchor, the general
+net, loses 96-98% of its games and carries no signal: the four-anchor figure in the ladder (64.0% → 68.6%) is
+inflated by it and is not the one to read.
+
+Held-out panel by opponent, 65-71 → 72-79: DiamondHat Riven 53 → 63%, Caravaggio Riven 51 → 60%, Kai'Sa 67 → 73%,
+Kennen 80 → 82%, Master Yi 76 → 83%, Akali 93 → 91%. In self-play the three Riven lists went from 46-50% to
+54-56%. [I] All the Riven lists, held-out ones included, are piloted by the same frozen net (spec_riven_120_v0), so
+part of the gain against Riven can be this pilot's habits being learned rather than the matchup; real players have
+Riven ahead of Volibear, and the lab cannot tell the two apart without a Riven pilot that keeps training.
+
+One incident: the run for iteration 72 was dispatched 4 seconds after iteration 71's push, resolved the branch to
+the commit before it, played iteration 71 a second time and died at the decide step (06:05 UTC, about 50 minutes
+lost until the restart). The workflow now restarts such a run from its first job (commit a244cea).
