@@ -112,7 +112,7 @@ private:
         d.collector_number = 47;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Spell;
-        d.domains = {};
+        d.domains = {Domain::Mind};  // the printed card shows the Mind symbol; the official gallery data lists no domain
         d.energy_cost = 3;
         d.rarity = Rarity::Common;
         d.ability_text = R"RB(The next three times you play a unit this turn, draw 1.)RB";

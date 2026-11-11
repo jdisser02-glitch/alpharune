@@ -53,7 +53,7 @@ private:
         d.collector_number = 41;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Spell;
-        d.domains = {};   // printed without a domain: its Power cost is [A][A]
+        d.domains = {Domain::Calm};  // the printed card shows the Calm symbol; the official gallery data lists no domain
         d.energy_cost = 1;
         d.power_cost = 2;
         d.rarity = Rarity::Rare;

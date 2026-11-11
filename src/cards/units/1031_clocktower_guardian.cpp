@@ -141,7 +141,7 @@ private:
         d.collector_number = 67;
         d.artist = R"RB(Polar Engine Studio)RB";
         d.card_type = CardType::Unit;
-        d.domains = {Domain::Fury};
+        d.domains = {Domain::Mind};  // the printed card shows the Mind symbol; the official gallery data says Fury
         d.tags = {R"RB(Mech)RB"};
         d.energy_cost = 8;
         d.power_cost = 2;

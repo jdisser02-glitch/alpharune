@@ -50,6 +50,7 @@ private:
         d.might = 3;
         d.rarity = Rarity::Common;
         d.ability_text = R"RB([Disarm] (When I attack, give an enemy unit here -1 [M] this turn.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/78106b7cea441b13d108e532adc5ce063f448165-744x1039.png)RB";
         return d;
     }();
 };

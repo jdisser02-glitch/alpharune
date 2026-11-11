@@ -42,7 +42,7 @@ private:
         d.collector_number = 49;
         d.artist = R"RB(Six More Vodka)RB";
         d.card_type = CardType::Unit;
-        d.domains = {};
+        d.domains = {Domain::Mind};  // the printed card shows the Mind symbol; the official gallery data lists no domain
         d.energy_cost = 4;
         d.might = 1;
         d.rarity = Rarity::Common;

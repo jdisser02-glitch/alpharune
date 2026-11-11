@@ -104,7 +104,7 @@ private:
         d.collector_number = 102;
         d.artist = R"RB(Luscinia Studio)RB";
         d.card_type = CardType::Spell;
-        d.domains = {Domain::Fury};
+        d.domains = {Domain::Chaos};  // the printed card shows the Chaos symbol; the official gallery data says Fury
         d.energy_cost = 3;
         d.rarity = Rarity::Uncommon;
         d.keywords.set(Keyword::Hidden);

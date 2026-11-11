@@ -45,6 +45,7 @@ private:
         d.might = 2;
         d.rarity = Rarity::Common;
         d.ability_text = R"RB(When I become exhausted, [Predict]. (Look at the top card of your Main Deck. You may recycle it.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/5973b5036060f29e24f8778949bf6f01f360c0a4-744x1039.png)RB";
         return d;
     }();
 };

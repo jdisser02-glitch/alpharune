@@ -44,7 +44,7 @@ private:
         d.collector_number = 9;
         d.artist = R"RB(Caravan Studio)RB";
         d.card_type = CardType::Unit;
-        d.domains = {};
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data lists no domain
         d.energy_cost = 6;
         d.power_cost = 1;
         d.might = 3;

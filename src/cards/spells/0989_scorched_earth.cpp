@@ -18,7 +18,7 @@ class ScorchedEarth : public SpellCard {
 public:
     const CardDef& def() const override { return def_; }
     unsigned choicesAtFinalization() const override { return kFinalizeResolve; }
-    // [Action] is the keyword; the domainless [A] power cost is engine-paid.
+    // [Action] is the keyword; the [Fury] power cost is engine-paid.
 
     // "Deal 5 damage split among units at a single battlefield."
     // The battlefield is chosen as the spell is played (finalize pass,
@@ -195,6 +195,7 @@ private:
         d.collector_number = 6;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Spell;
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data lists no domain
         d.energy_cost = 4;
         d.power_cost = 1;
         d.rarity = Rarity::Common;

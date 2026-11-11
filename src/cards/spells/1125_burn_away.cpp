@@ -84,6 +84,7 @@ private:
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB(Banish a unit with 3 [M] or less or a gear.
 [Burn 2]. (Put the top 2 cards of your Main Deck into your trash.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/751629a34ee6ba6476ce2f0a821b9f84b5562acd-744x1039.png)RB";
         return d;
     }();
 };

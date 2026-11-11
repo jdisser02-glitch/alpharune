@@ -62,6 +62,7 @@ private:
         d.keywords.set(Keyword::Shield);
         d.ability_text = R"RB([Shield] (+1 [M] while I'm a defender.)
 I don't deal combat damage unless there's a friendly gear here.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/3e608c51698b6fb0cc6a00335dbd1bca84f57c73-744x1039.png)RB";
         return d;
     }();
 };

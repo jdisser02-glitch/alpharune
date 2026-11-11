@@ -102,7 +102,9 @@ SPECIALISTS = {
                         _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt",
                         # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
                         # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
-                        "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
+                        # 11 Nov: the field search's finalist riven-field-5--001ea89136 left the list: it plays
+                        # Industrious Mechsmith, which prints the Mind symbol (the gallery data gave it no domain).
+                        "decks/riven_best_field.txt",
                         "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt",
                         # 10 Nov: the Stuttgart Top 4 Riven lists (DiamondHat's plays The Good Stuff, which the
                         # pilot had never seen: it lost 98% with that list).
@@ -152,7 +154,9 @@ SPECIALISTS = {
                         _META + "rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt",
                         # 6 Nov: more varied lists, so the net learns the cards it misplayed (Jeremy's exhaust
                         # package: Ki Burst, Meditation, Life from Stone) and the field search's finalists.
-                        "decks/riven_best_field.txt", "lab/variants/riven-field-5--001ea89136.txt",
+                        # 11 Nov: the field search's finalist riven-field-5--001ea89136 left the list: it plays
+                        # Industrious Mechsmith, which prints the Mind symbol (the gallery data gave it no domain).
+                        "decks/riven_best_field.txt",
                         "decks/jeremy/tournament_d.txt", _META + "convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt",
                         # 10 Nov: the Stuttgart Top 4 Riven lists (DiamondHat's plays The Good Stuff, which the
                         # pilot had never seen: it lost 98% with that list).

@@ -129,6 +129,7 @@ private:
         d.rarity = Rarity::Rare;
         d.ability_text = R"RB([Disarm 2] (When I attack, give an enemy unit here -2 [M] this turn.)
 Once each turn, when you exhaust three or more friendly units at the same time, you may draw 1.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/60e0711c64958cc3a59a3bd3bf4c013758b1b92b-744x1039.png)RB";
         return d;
     }();
 };

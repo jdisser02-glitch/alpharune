@@ -89,6 +89,7 @@ private:
         d.ability_text = R"RB([Deploy] (Play this only to a battlefield. When an opponent holds here, kill this.)
 When you play this, you may move an enemy unit to here.
 Friendly units here have [Shield 2]. (+2 [M] while they're defenders.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0a625c22d828c83302132b0465dceb3ab11a08bc-744x1039.png)RB";
         return d;
     }();
 };

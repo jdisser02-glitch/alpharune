@@ -128,6 +128,7 @@ private:
         d.might = 7;
         d.rarity = Rarity::Epic;
         d.ability_text = R"RB(If you would channel runes, channel that many runes plus 1 exhausted rune instead.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/ad1793554440d8d5017eadc565ca6c787a969de1-744x1039.png)RB";
         return d;
     }();
 };

@@ -113,6 +113,7 @@ private:
         d.might = 4;
         d.rarity = Rarity::Rare;
         d.ability_text = R"RB(You may return a friendly gear to its owner's hand as an additional cost to play me. If you do, I enter ready and get +[M] equal to that gear's Energy cost this turn.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/7a1f527e5910fbc18f7cb3cddf2aa59b483393f4-744x1039.png)RB";
         return d;
     }();
 };

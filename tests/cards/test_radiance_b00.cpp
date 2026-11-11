@@ -247,7 +247,7 @@ TEST_F(RadianceB00Test, Data_KeywordsAndCosts) {
     EXPECT_TRUE(card_db.get(kBrawl).keywords.has(Keyword::Action));
     EXPECT_TRUE(card_db.get(kScorched).keywords.has(Keyword::Action));
     EXPECT_TRUE(card_db.get(kWarScout).keywords.has(Keyword::Accelerate));
-    EXPECT_TRUE(card_db.get(kScorched).domains.empty());
+    EXPECT_EQ(card_db.get(kScorched).domains, std::vector<Domain>{Domain::Fury});
     EXPECT_EQ(card_db.get(kScorched).power_cost, 1);
     EXPECT_EQ(card_db.get(kAkali).super_type, SuperType::Champion);
     EXPECT_EQ(card_db.get(kAkali).might, 5);
@@ -335,7 +335,7 @@ TEST_F(RadianceB00Test, Brawl_GivesAssaultEqualToMight) {
     makeEngine();
     auto& pool = s().player(P1).rune_pool;
     pool.energy = 3;
-    pool.power[static_cast<int>(Domain::Chaos)] = 1;
+    pool.power[static_cast<int>(Domain::Fury)] = 1;
     auto unit = bigUnit(P1, -1, 4);
     p1_.want = unit;
     auto brawl = cardInHand(P1, kBrawl);
@@ -389,7 +389,7 @@ TEST_F(RadianceB00Test, Animus_EntersReadyAfterAFriendlyGearDied) {
 TEST_F(RadianceB00Test, ScorchedEarth_SplitsFiveAmongUnitsAtOneBattlefield) {
     makeEngine();
     s().player(P1).rune_pool.energy = 4;
-    rune(P1, Domain::Fury);   // recycled for the [A]
+    rune(P1, Domain::Fury);   // recycled for the [Fury]
     auto a = bigUnit(P2, 0);
     auto b = bigUnit(P2, 0);
     auto c = bigUnit(P2, 1);
@@ -514,7 +514,7 @@ TEST_F(RadianceB00Test, Anvil_KillThisBanishesAnotherCard) {
     auto top = deckTop(P1, kOtterpus);
     auto& pool = s().player(P1).rune_pool;
     pool.energy = 2;
-    pool.power[static_cast<int>(Domain::Chaos)] = 1;
+    pool.power[static_cast<int>(Domain::Fury)] = 1;
     EXPECT_TRUE(offersActivation(anvil, 0));
     activate(anvil, 0);
     EXPECT_FALSE(s().getObject(anvil).location.has_value());

@@ -194,7 +194,7 @@ TEST_F(RadianceB04Test, Supernova_DealsTenToAUnitAndDrawsTwo) {
     auto d2 = deckCard(P1);
     auto spell = cardInHand(P1, kSupernova);
     s().player(P1).rune_pool.energy = 9;
-    s().player(P1).rune_pool.power[static_cast<int>(Domain::Order)] = 1;
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Mind)] = 1;
     p1_.picks = {enemy};
 
     play(spell);
@@ -287,7 +287,7 @@ TEST_F(RadianceB04Test, GravityField_DeploysOnlyToABattlefield) {
     makeEngine();
     auto gf = cardInHand(P1, kGravityField);
     s().player(P1).rune_pool.energy = 5;
-    s().player(P1).rune_pool.power[static_cast<int>(Domain::Calm)] = 1;
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Mind)] = 1;
     EXPECT_FALSE(offersPlayAt(gf, LocationId{BaseLocation{P1}}));
     EXPECT_TRUE(offersPlayAt(gf, LocationId{BattlefieldLocation{1}}));
 }
@@ -428,7 +428,7 @@ TEST_F(RadianceB04Test, Clocktower_PlayPredictsThree) {
     for (int i = 0; i < 4; ++i) deckCard(P1);
     auto cg = cardInHand(P1, kClocktower);
     s().player(P1).rune_pool.energy = 8;
-    s().player(P1).rune_pool.power[static_cast<int>(Domain::Fury)] = 2;
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Mind)] = 2;
     play(cg, LocationId{BaseLocation{P1}});
     ASSERT_TRUE(s().getObject(cg).isAtBase());
     EXPECT_EQ(p1_.obj_prompts.size(), 3u) << "Predict 3";

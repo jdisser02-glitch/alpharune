@@ -227,7 +227,7 @@ TEST_F(RadianceB01Test, CoalescedEnergy_DoesNothingOnTheOpponentsTurn) {
 TEST_F(RadianceB01Test, Amplifier_KillAnotherFriendlyUnitToDraw) {
     makeEngine();
     s().player(P1).rune_pool.energy = 4;
-    power(P1, Domain::Chaos, 1);
+    power(P1, Domain::Fury, 1);
     auto fodder = boardObject(P1, kOtterpus);
     auto top = cardOnTopOfDeck(P1, kOtterpus);
     auto amp = cardInHand(P1, kAmplifier);
@@ -242,7 +242,7 @@ TEST_F(RadianceB01Test, Amplifier_KillAnotherFriendlyUnitToDraw) {
 TEST_F(RadianceB01Test, Amplifier_DecliningKillsNothingAndDrawsNothing) {
     makeEngine();
     s().player(P1).rune_pool.energy = 4;
-    power(P1, Domain::Chaos, 1);
+    power(P1, Domain::Fury, 1);
     auto fodder = boardObject(P1, kOtterpus);
     cardOnTopOfDeck(P1, kOtterpus);
     auto amp = cardInHand(P1, kAmplifier);

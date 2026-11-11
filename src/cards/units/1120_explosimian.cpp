@@ -85,6 +85,7 @@ private:
         d.might = 6;
         d.rarity = Rarity::Common;
         d.ability_text = R"RB(When I hold, play three Bomb gear tokens to a single battlefield. (They have [Deploy]. When one dies, deal 2 to an enemy there and kill your other Bombs there.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/f2590617229f3efc078aa2429f65b85101303200-744x1039.png)RB";
         return d;
     }();
 };

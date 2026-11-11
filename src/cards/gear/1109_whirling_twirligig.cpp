@@ -121,6 +121,7 @@ private:
         d.ability_text = R"RB([E]: Play a Gold gear token exhausted. (It has "[Reaction][>] Kill this, [E]: [Add] [A].")
 Kill a friendly gear, [E]: Play a 1 [M] Recruit unit token.
 Kill a friendly unit, [E]: Play a 3 [M] Mech unit token.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/a05ff95e5bb933664e09656973c72f4d39d8e701-744x1039.png)RB";
         return d;
     }();
 };

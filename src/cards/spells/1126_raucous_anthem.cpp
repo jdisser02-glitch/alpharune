@@ -52,6 +52,7 @@ private:
         d.power_cost = 1;
         d.rarity = Rarity::Rare;
         d.ability_text = R"RB(Ready your units and give them +3 [M] this turn.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0c307d5f4785efc4f0a4c8e486b53735f8cf04aa-744x1039.png)RB";
         return d;
     }();
 };

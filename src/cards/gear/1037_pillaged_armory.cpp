@@ -55,7 +55,7 @@ private:
         d.public_code = R"RB(RAD-073/167)RB";
         d.collector_number = 73;
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Calm};
+        d.domains = {Domain::Body};  // the printed card shows the Body symbol; the official gallery data says Calm
         d.tags = {R"RB(Device)RB"};
         d.energy_cost = 1;
         d.rarity = Rarity::Common;

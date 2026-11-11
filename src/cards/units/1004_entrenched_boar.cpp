@@ -90,6 +90,7 @@ private:
         d.collector_number = 26;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Unit;
+        d.domains = {Domain::Calm};  // the printed card shows the Calm symbol; the official gallery data lists no domain
         d.energy_cost = 2;
         d.might = 2;
         d.rarity = Rarity::Common;

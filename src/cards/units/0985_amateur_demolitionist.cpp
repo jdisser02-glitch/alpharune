@@ -38,7 +38,7 @@ private:
         d.collector_number = 1;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Unit;
-        d.domains = {Domain::Chaos};
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data says Chaos
         d.energy_cost = 2;
         d.might = 1;
         d.rarity = Rarity::Common;

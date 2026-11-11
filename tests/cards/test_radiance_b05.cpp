@@ -211,7 +211,7 @@ TEST_F(RadianceB05Test, Nazuman_EquipForOneGrantsShieldTwo) {
     auto unit = boardObject(P1, kOtterpus);
     EXPECT_TRUE(equipTargets(gear).empty()) << "no Energy to pay [1]";
 
-    rune(P1, Domain::Order);
+    rune(P1, Domain::Body);
     EXPECT_EQ(equipTargets(gear),
               (std::vector<std::vector<GameObjectId>>{std::vector<GameObjectId>{unit}}));
     Intent equip;
@@ -265,7 +265,7 @@ TEST_F(RadianceB05Test, Armory_DeploysAndBuffsAFriendlyUnitWhenPlayed) {
     makeEngine();
     auto ally = boardObject(P1, kOtterpus);
     auto enemy = boardObject(P2, kOtterpus);
-    rune(P1, Domain::Calm);
+    rune(P1, Domain::Body);
     auto armory = cardInHand(P1, kArmory);
     EXPECT_FALSE(offersPlayAt(armory, LocationId{BaseLocation{P1}})) << "[Deploy]";
     EXPECT_TRUE(offersPlayAt(armory, LocationId{BattlefieldLocation{1}}));

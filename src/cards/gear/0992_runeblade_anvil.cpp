@@ -46,7 +46,7 @@ public:
         kill.cost.exhaust = true;
         kill.cost.energy = 2;
         kill.cost.power = 1;
-        kill.cost.power_domain = Domain::Chaos;
+        kill.cost.power_domain = Domain::Fury;   // the printed cost is [2] + a Fury rune
         ActivatedAbility play;   // no cost: the card's own costs are paid as it is played
         return {kill, play};
     }
@@ -80,7 +80,7 @@ private:
         d.collector_number = 12;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Chaos};
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data says Chaos
         d.energy_cost = 1;
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB(When you play this or when this leaves the board, banish the top card of your Main Deck. Until your next Ending Phase, you may play that card. (You still pay its costs.)

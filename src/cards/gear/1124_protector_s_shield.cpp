@@ -70,6 +70,7 @@ private:
         d.ability_text = R"RB([Quick-Draw] (This has [Reaction]. When you play it, attach it to a unit you control.)
 [Equip] [1] ([1]: Attach this to a unit you control.))RB";
         d.effect_text = R"RB([Tank] (I must be assigned combat damage first.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/97618bc30e9b65a2e5223e6f94db58d7098d30a6-744x1039.png)RB";
         return d;
     }();
 };

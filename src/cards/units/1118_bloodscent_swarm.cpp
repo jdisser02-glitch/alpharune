@@ -53,6 +53,7 @@ private:
         d.might = 8;
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB(I cost [2] less for each battlefield you've conquered this turn.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/775ccea752fb404be2433c4b870c7877e2445a8c-744x1039.png)RB";
         return d;
     }();
 };

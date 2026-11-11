@@ -371,7 +371,7 @@ TEST_F(RadianceBatchBTest, Apparatus_EntersReadyAndPlaysAReadyMechHere) {
     makeEngine();
     setLegend(P1); setLegend(P2);
     s().player(P1).rune_pool.energy = 6;
-    s().player(P1).rune_pool.universal_power = 1;   // its [A]
+    s().player(P1).rune_pool.power[static_cast<int>(Domain::Fury)] = 1;   // its [Fury]
     auto app = cardInHand(P1, kApparatus);
     play(app, LocationId{BaseLocation{P1}});
     ASSERT_TRUE(s().getObject(app).location.has_value());
@@ -391,10 +391,10 @@ TEST_F(RadianceBatchBTest, Apparatus_EntersReadyAndPlaysAReadyMechHere) {
     EXPECT_EQ(mechs, 1);
 }
 
-TEST_F(RadianceBatchBTest, Apparatus_IsDomainless) {
+TEST_F(RadianceBatchBTest, Apparatus_IsFury) {
     makeEngine();
     const auto& def = card_db.get(kApparatus);
-    EXPECT_TRUE(def.domains.empty());
+    EXPECT_EQ(def.domains, std::vector<Domain>{Domain::Fury});
     EXPECT_EQ(def.energy_cost, 6);
     EXPECT_EQ(def.power_cost, 1);
 }

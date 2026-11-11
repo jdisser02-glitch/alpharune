@@ -81,6 +81,7 @@ private:
         d.keywords.set(Keyword::Shield);
         d.ability_text = R"RB([Shield 3] (+3 [M] while I'm a defender.)
 When you play me to a battlefield, you may move another unit you control here to your base.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/8513fbe02a37f957b2a98bcee5badfdc56f41e82-744x1039.png)RB";
         return d;
     }();
 };

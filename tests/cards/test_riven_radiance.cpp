@@ -505,12 +505,25 @@ TEST_F(RivenRadianceTest, Deserter_ExhaustAFriendlyUnitToReadyAUnitOncePerTurn) 
 // ─── Engine fixes found while adding Radiance ───────────────────────────────
 
 TEST_F(RivenRadianceTest, DomainlessPowerCostIsPaidByAnyRune) {
-    // Hush (no domain, [1][A][A]): two ready runes of any domain pay it.
+    // Neeko, Blending In (no domain, [6][A]): a rune of any domain pays the [A].
+    makeEngine();
+    setLegend(P1); setLegend(P2);
+    s().player(P1).rune_pool.energy = 6;
+    auto neeko = cardInHand(P1, 1106);
+    EXPECT_FALSE(engine_->testHook_canAfford(P1, neeko)) << "no Power yet";
+    rune(P1, Domain::Chaos);
+    EXPECT_TRUE(engine_->testHook_canAfford(P1, neeko));
+}
+
+TEST_F(RivenRadianceTest, HushPowerCostIsCalm) {
+    // Hush prints the Calm symbol ([1][Calm][Calm]): only Calm runes pay its Power.
     makeEngine();
     setLegend(P1); setLegend(P2);
     rune(P1, Domain::Calm);
     rune(P1, Domain::Chaos);
     auto hush = cardInHand(P1, 971);
+    EXPECT_FALSE(engine_->testHook_canAfford(P1, hush)) << "one Calm rune is one Calm Power short";
+    rune(P1, Domain::Calm);
     EXPECT_TRUE(engine_->testHook_canAfford(P1, hush));
 }
 

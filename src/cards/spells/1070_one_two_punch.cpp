@@ -66,6 +66,7 @@ private:
         d.collector_number = 121;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Spell;
+        d.domains = {Domain::Order};  // the printed card shows the Order symbol; the official gallery data lists no domain
         d.energy_cost = 3;
         d.rarity = Rarity::Common;
         d.keywords.set(Keyword::Action);

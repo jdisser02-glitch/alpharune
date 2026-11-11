@@ -112,6 +112,7 @@ private:
         d.keywords.set(Keyword::Deflect);
         d.ability_text = R"RB([Deflect] (Opponents must pay [A] to choose me with a spell or ability.)
 [E]: Choose an opponent. They must move a unit they control to my battlefield.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e805eba9add03fd3e1b1601b15c12a46fd403282-744x1039.png)RB";
         return d;
     }();
 };

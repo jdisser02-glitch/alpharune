@@ -203,7 +203,7 @@ TEST_F(RadianceBatchATest, Hush_CountersASpellWithPowerCostTwo) {
     s().player(P1).rune_pool.universal_power = 2;
     auto hush = cardInHand(P2, kHush);
     s().player(P2).rune_pool.energy = 1;
-    s().player(P2).rune_pool.universal_power = 2;   // Hush has no domain: [A][A]
+    s().player(P2).rune_pool.power[static_cast<int>(Domain::Calm)] = 2;   // Hush is Calm: [Calm][Calm]
     p2_.react_with = hush;
 
     play(hunt);

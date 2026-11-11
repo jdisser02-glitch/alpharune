@@ -93,7 +93,7 @@ private:
         d.collector_number = 62;
         d.artist = R"RB(Fish Art Studio)RB";
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Calm};
+        d.domains = {Domain::Mind};  // the printed card shows the Mind symbol; the official gallery data says Calm
         d.tags = {R"RB(Device)RB"};
         d.energy_cost = 5;
         d.power_cost = 1;

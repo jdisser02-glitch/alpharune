@@ -71,6 +71,7 @@ private:
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB(Ready a unit.
 When you play a card with Energy cost [7] or more, you may play this from your trash for [1][R][R]. Then banish this.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/293518dcf6c2f9e3f59a2e259826fd813436b3a5-744x1039.png)RB";
         return d;
     }();
 };

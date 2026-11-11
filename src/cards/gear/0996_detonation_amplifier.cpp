@@ -100,7 +100,7 @@ private:
         d.collector_number = 17;
         d.artist = R"RB(Fish Art Studio)RB";
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Chaos};
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data says Chaos
         d.tags = {R"RB(Device)RB"};
         d.energy_cost = 4;
         d.power_cost = 1;

@@ -181,6 +181,7 @@ private:
         d.power_cost = 2;
         d.rarity = Rarity::Rare;
         d.ability_text = R"RB(Play up to 3 units and/or gear from your trash, each with Energy cost no more than [3] and Power cost no more than [A], ignoring their costs.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/0bfd45446d5ffb816438ae2668ad4e5b7f188ad3-744x1039.png)RB";
         return d;
     }();
 };

@@ -52,7 +52,7 @@ private:
         d.public_code = R"RB(RAD-071/167)RB";
         d.collector_number = 71;
         d.card_type = CardType::Gear;
-        d.domains = {Domain::Order};
+        d.domains = {Domain::Body};  // the printed card shows the Body symbol; the official gallery data says Order
         d.tags = {R"RB(Equipment)RB"};
         d.energy_cost = 1;
         d.might_bonus = 0;

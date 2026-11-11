@@ -71,6 +71,7 @@ private:
         d.might = 5;
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB([E]: [Stun] an enemy unit. (It doesn't deal combat damage this turn.))RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/fc61b244fb3ed01d61617c3c2633a71424604130-744x1039.png)RB";
         return d;
     }();
 };

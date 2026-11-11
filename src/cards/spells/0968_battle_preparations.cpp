@@ -70,6 +70,7 @@ private:
         d.ability_text = R"RB([Reaction] (Play any time, even before spells and abilities resolve.)
 [Show Off] a gear. (As you play this, you may reveal a gear from hand or pick a friendly one.)
 Give a unit +2 [M] this turn. If you showed off, ready up to 2 runes.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/9422caf2fcd4cfb346cf0dce48245ef13a77180f-744x1039.png)RB";
         return d;
     }();
 };

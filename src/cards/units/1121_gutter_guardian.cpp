@@ -80,6 +80,7 @@ private:
         d.ability_text = R"RB([Hidden] (Hide now for [A] to react with later for [0].)
 [Show Off] a card with [Hidden]. (As you play me, you may reveal a card with [Hidden] from hand or pick another friendly one.)
 When you play me, if you showed off, [Add] [A].)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/756827744317003e4992163ff9bf1dc991682de8-744x1039.png)RB";
         return d;
     }();
 };

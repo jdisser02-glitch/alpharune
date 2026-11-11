@@ -82,6 +82,7 @@ private:
         d.ability_text = R"RB([Shield 3] (+3 [M] while I'm a defender.)
 [Tank] (I must be assigned combat damage first.)
 When I move, you may deal damage equal to my [Shield] to a unit at a battlefield.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/c479f2fda00506e71a57ac4e8cc297f7f3110a54-744x1039.png)RB";
         return d;
     }();
 };

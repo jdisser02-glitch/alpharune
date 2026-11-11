@@ -57,6 +57,7 @@ private:
         d.rarity = Rarity::Uncommon;
         d.ability_text = R"RB([Show Off] a Mech. (As you play me, you may reveal a Mech from hand or pick another friendly Mech.)
 I enter ready if you showed off.)RB";
+        d.image_url = R"RB(https://cmsassets.rgpub.io/sanity/images/dsfx7636/game_data_live/e95470d5c2fbc9f7f8ab0b1c19f32fd704918c83-744x1039.png)RB";
         return d;
     }();
 };

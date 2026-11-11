@@ -47,7 +47,7 @@ private:
         d.collector_number = 16;
         d.artist = R"RB(Michal Ivan)RB";
         d.card_type = CardType::Unit;
-        d.domains = {Domain::Mind};
+        d.domains = {Domain::Fury};  // the printed card shows the Fury symbol; the official gallery data says Mind
         d.energy_cost = 4;
         d.power_cost = 2;
         d.might = 4;

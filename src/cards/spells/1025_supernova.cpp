@@ -54,7 +54,7 @@ private:
         d.collector_number = 59;
         d.artist = R"RB(Kudos Productions)RB";
         d.card_type = CardType::Spell;
-        d.domains = {Domain::Order};
+        d.domains = {Domain::Mind};  // the printed card shows the Mind symbol; the official gallery data says Order
         d.energy_cost = 9;
         d.power_cost = 1;
         d.rarity = Rarity::Uncommon;
