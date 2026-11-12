@@ -62,7 +62,7 @@ function picker() {
     // Grouping toggle (event / legend / energy) and filters (legend, a card the list must contain), Jeremy 7 Nov.
     const legends = [...new Set(list.map(heroName))].sort();
     const want = st.card.trim().toLowerCase();
-    const shown = list.filter(d => (!st.legend || heroName(d) === st.legend) && (!want || String(d.text || "").toLowerCase().includes(want)));
+    const shown = list.filter(d => (!st.legend || heroName(d) === st.legend) && (!want || `${d.text || ""}\n${(d.comments || []).join("\n")}`.toLowerCase().includes(want)));
     const avg = d => (d.stats || {}).avg_energy;
     const tileE = d => tile(d).replace('</span></span>', ` · ${avg(d) != null ? `avg ${avg(d)}` : ""}</span></span>`);
     const byKey = (key, order) => { const m = new Map(); for (const d of shown) { const k = key(d); if (!m.has(k)) m.set(k, []); m.get(k).push(d); } return [...m.entries()].sort(order); };

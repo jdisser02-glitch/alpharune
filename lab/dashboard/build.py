@@ -563,9 +563,14 @@ def main(argv):
     ladder = json.loads(ladder_path.read_text()) if ladder_path.exists() else {"iterations": []}
 
     # Deck texts: the Play tab hands them to the in-browser engine (rb_new_game takes the deck files' text).
+    # A generated variant's header lines are already in its `comments`; repeating them in `text` for 2,400 variants
+    # cost 1.4 MB of the 16 MB data.json may hold, so the text of a variant carries the list only.
     for d in index["decks"]:
         p = ROOT / d["path"]
-        d["text"] = p.read_text() if p.exists() else ""
+        text = p.read_text() if p.exists() else ""
+        if d["path"].startswith("lab/variants/"):
+            text = "".join(l for l in text.splitlines(keepends=True) if not l.lstrip().startswith("#"))
+        d["text"] = text
 
     engine = {}
     net_rel = ladder.get("current_net")

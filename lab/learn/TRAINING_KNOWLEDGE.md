@@ -267,3 +267,38 @@ the plateau: three frozen nets 59.1% [56.9, 61.3] over 99-114 (57.0% over 89-98,
 points against the frozen nets (standard error 2.2), -2.1 on the panel (standard error 1.5). Value loss 0.378 →
 0.342; same first move as humans 45.9%. Forty-two iterations (about 21 hours of the 20 runners) since the last
 gain. The next step was put to Jeremy at 03:10 UTC; no answer yet, the training goes on.
+
+**Volibear list search against the Stuttgart field, 12 Nov** (Jeremy: "go c"; training paused at 12:35 UTC, head
+of iteration 118 in the Actions cache, spec_volibear_108_v0 committed). Six starts of `lab/ga.py`
+(`lab/specs/ga/volibear-field-1..6.json`, base Ritualo's Dragons, pilot spec_volibear_108_v0, opponents weighted
+by their share at Stuttgart: Sonecon Riven 63, Tabris Riven 63, Kai'Sa 51, Kennen 44, Master Yi 16, Rek'Sai 10,
+each played by its own net). In their own 40-game confirmations no finalist was separated from Ritualo's list.
+Final confirmation, 8 lists × 200 games per opponent on the same deals (seed 4242), merged in
+`lab/results/20261112-175700-volibear-field-confirm.json` (difference against Ritualo's list, 95% interval,
+lists treated as independent although they share deals, so the intervals are on the wide side):
+
+| list | weighted rate | difference |
+|---|---|---|
+| Ritualo Dragons (reference) | 76.8% | |
+| soldog's main deck (Convergence 4), Ritualo's battlefields | 85.4% | +8.6 [+5.0, +12.1] |
+| finalist start 1 (77eb23) | 83.4% | +6.5 [+2.9, +10.1] |
+| finalist start 6 (86d815) | 83.1% | +6.2 [+2.5, +9.9] |
+| finalist start 3 (1cd407) | 82.1% | +5.2 [+1.5, +8.9] |
+| finalist start 4 (a2ad03) | 78.9% | +2.1 [-1.7, +5.8] |
+| finalist start 2 (30a4da) | 75.6% | -1.2 [-5.1, +2.6] |
+| Laggy Dragons + Rengar (own runes and battlefields) | 70.5% | -6.3 [-10.2, -2.4] |
+
+Seven comparisons: soldog's +8.6 is 4.7 standard errors, it stands after correction; finalists 1 and 6 too (3.5
+and 3.3); finalist 3 (2.8) is at the limit. The gain is entirely against Riven (Sonecon 67.5% → 76.5%, Tabris
+68.0% → 85.5%) and Kai'Sa (80% → 87%); Kennen, Master Yi and Rek'Sai are at 90% and more for every list.
+Finalists 1, 3 and 6 are soldog's main deck with one to four cards changed: the search did not find anything
+better than a list a player had already registered, it found its way back to it from Ritualo's. The 40-game
+measure of 11 Nov (+2.7 [-5.7, +11.1], net 084) was too small to see it. Laggy's list loses to Riven only
+(57.5% and 55.5%); it is level elsewhere.
+Limits: the pilot trained on Ritualo's and soldog's lists, so both are played with the same familiarity, but
+Laggy's cards (Kinkou Initiate, Herald of Scales, Elder Dragon) are new to it; 70-85% for Volibear against Riven
+is not what players report, only differences between lists mean something; the search keeps the base's runes
+and battlefields, so "soldog" here plays on Vilemaw's Lair, Dragon Roost and Black Market, not on his own Sigil
+of the Storm, Sunken Temple and The Papertree: measured separately (`lab/specs/volibear_soldog_bf_*.json`, seed
+4343, dispatched 18:10 UTC, which also repeats soldog against Ritualo on new deals).
+`lab/variants/volibear-field-best.txt` is the winning list.
