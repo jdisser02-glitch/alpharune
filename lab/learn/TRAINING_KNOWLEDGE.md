@@ -280,7 +280,7 @@ lists treated as independent although they share deals, so the intervals are on 
 | list | weighted rate | difference |
 |---|---|---|
 | Ritualo Dragons (reference) | 76.8% | |
-| soldog's main deck (Convergence 4), Ritualo's battlefields | 85.4% | +8.6 [+5.0, +12.1] |
+| soldog's main deck (Convergence 4), Ritualo's battlefields | 85.4% | +8.5 [+5.0, +12.1] |
 | finalist start 1 (77eb23) | 83.4% | +6.5 [+2.9, +10.1] |
 | finalist start 6 (86d815) | 83.1% | +6.2 [+2.5, +9.9] |
 | finalist start 3 (1cd407) | 82.1% | +5.2 [+1.5, +8.9] |
@@ -288,7 +288,7 @@ lists treated as independent although they share deals, so the intervals are on 
 | finalist start 2 (30a4da) | 75.6% | -1.2 [-5.1, +2.6] |
 | Laggy Dragons + Rengar (own runes and battlefields) | 70.5% | -6.3 [-10.2, -2.4] |
 
-Seven comparisons: soldog's +8.6 is 4.7 standard errors, it stands after correction; finalists 1 and 6 too (3.5
+Seven comparisons: soldog's +8.5 is 4.7 standard errors, it stands after correction; finalists 1 and 6 too (3.5
 and 3.3); finalist 3 (2.8) is at the limit. The gain is entirely against Riven (Sonecon 67.5% → 76.5%, Tabris
 68.0% → 85.5%) and Kai'Sa (80% → 87%); Kennen, Master Yi and Rek'Sai are at 90% and more for every list.
 Finalists 1, 3 and 6 are soldog's main deck with one to four cards changed: the search did not find anything
@@ -302,3 +302,5 @@ and battlefields, so "soldog" here plays on Vilemaw's Lair, Dragon Roost and Bla
 of the Storm, Sunken Temple and The Papertree: measured separately (`lab/specs/volibear_soldog_bf_*.json`, seed
 4343, dispatched 18:10 UTC, which also repeats soldog against Ritualo on new deals).
 `lab/variants/volibear-field-best.txt` is the winning list.
+
+The merge is `python3 lab/tools/merge_results.py NAME [--write]` (every `lab/results/*-NAME-<opponent>.json`).
