@@ -11,6 +11,7 @@ dist/art/*.webp     card art sprite sheets (lab/dashboard/art/, built by art.py)
 usage: build.py [--max-replays 40]
 """
 import argparse
+import hashlib
 import datetime as dt
 import json
 import re
@@ -287,6 +288,22 @@ def measured_status(ladder: dict) -> dict:
             if row.get("path"):
                 retests[row["path"]] = {"result": c["result"], "started_utc": c.get("started_utc"), "diff": row["diff"], "ci95": row["ci95"],
                                         "reference": c["reference"], "reference_path": c.get("reference_path"), "net": c["net"]}
+    # The same list under another file name (a search finalist copied to "<search>-best.txt" and re-measured under
+    # that name) is the same list: a finalist's file also points at the re-test of its copy.
+    def digest(path):
+        f = ROOT / path
+        if not path or not f.is_file():
+            return None
+        lines = sorted(ln.strip() for ln in f.read_text(errors="replace").splitlines() if ln.strip() and not ln.lstrip().startswith("#"))
+        return hashlib.sha1("\n".join(lines).encode()).hexdigest()
+    by_digest = {digest(path): row for path, row in retests.items()}
+    by_digest.pop(None, None)
+    for f in sorted((LAB / "results").glob("*.json")):
+        conf = ((json.loads(f.read_text()).get("ga") or {}).get("confirmation") or [None])[-1]
+        for x in (conf or {}).get("finalists", []):
+            pth = x.get("path")
+            if pth and pth not in retests and digest(pth) in by_digest:
+                retests[pth] = by_digest[digest(pth)]
     # A multi-list test's own comparison (each list against the test's first list, same deals), by result id: the
     # test page states that, not "best of N" against whichever list came last.
     by_result = {c["result"]: {"reference": c["reference"], "reference_rate": c["reference_rate"], "lists": c["lists"],
