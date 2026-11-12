@@ -304,3 +304,11 @@ of the Storm, Sunken Temple and The Papertree: measured separately (`lab/specs/v
 `lab/variants/volibear-field-best.txt` is the winning list.
 
 The merge is `python3 lab/tools/merge_results.py NAME [--write]` (every `lab/results/*-NAME-<opponent>.json`).
+
+**Follow-up, 12 Nov 18:40 UTC: soldog's own battlefields, and the comparison repeated on new deals** (seed 4343,
+200 games per opponent, `lab/results/20261112-183*-volibear-soldog-battlefields.json`). Ritualo 77.2%; soldog's
+main deck on Ritualo's battlefields 82.2%, +5.0 [+1.4, +8.7]; soldog as registered (Sigil of the Storm, Sunken
+Temple, The Papertree) 82.5%, +5.3 [+1.7, +9.0]. The two sets of battlefields are not separated (+0.3 [-3.2,
++3.8]): the bot's play does not make them matter. The gain over Ritualo's list is confirmed but smaller than the
+first measure (+8.5), as a list picked for being first usually is; both measures together (400 games per
+opponent): about +6.8 [+4.2, +9.3]. Against Tabris's Riven the gain went from +17.5 to +5.5 points.
