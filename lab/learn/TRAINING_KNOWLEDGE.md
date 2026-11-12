@@ -240,3 +240,23 @@ spec_volibear_084_v0 against Ritualo's list and the search's best, 40 games per 
 (lab/results/20261111-165301-volibear-jeremy-20261111.json): 66.0% against 78.9% for Ritualo's, -12.9 points
 [-22.1, -3.7]; the search's list 81.7%, +2.7 [-5.7, +11.1]. The net never trained on that list, so part of the
 gap is pilot error; Jeremy chose not to add it to the training lists.
+
+**Volibear, third review, 12 Nov 03:10 UTC: iterations 89 to 98** (34 continuous iterations, 33 kept; iteration
+94 refused on the mirror floor, 41.5% of 200 games).
+
+| Measure | 72-79 | 80-88 | 89-98 |
+|---|---|---|---|
+| Mirror against its three frozen earlier nets | 59.0% [55.8, 62.1] | 58.0% [55.0, 60.9] | 57.0% [54.2, 59.8] (1,200 games) |
+| Held-out panel, net in place | 75.3% [73.2, 77.5] | 77.7% [75.7, 79.6] | 77.4% [75.6, 79.3] (1,920 games) |
+| Value loss on held-out games | 0.402 → 0.364 | 0.369 → 0.372 | 0.363 → 0.369 (lowest 0.336) |
+| Same first move as humans | 44.5% (79) | 45.4% (88) | 45.8% (98) |
+
+The run is on its plateau: nothing rises any more. Against its frozen nets, last 8 iterations minus the 8 before
+is -3.1 points (standard error 2.3); on the held-out panel -1.2 (standard error 1.5). The whole gain of the run came
+in its first eight iterations (65 to 72): 49% → 59% against the frozen nets, 70% → 75-78% on the panel. Panel by
+opponent, 80-88 → 89-98: DiamondHat Riven 63 → 66%, Caravaggio Riven 63 → 60%, Kai'Sa 79 → 72%, Kennen 83 → 85%,
+Master Yi 88 → 89%, Akali 91 → 93%.
+
+Two more iterations lost to GitHub on 11 Nov evening (iteration 91, twice): one self-play shard's artifact upload
+refused (20:29 UTC), then no machine for p_plan during 15 minutes (21:41). A failed training run now restarts
+itself once (job p_retry, commits 29f20fb and 6677f2e); not yet exercised by a real failure.
