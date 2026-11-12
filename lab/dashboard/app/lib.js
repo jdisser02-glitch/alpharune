@@ -304,7 +304,20 @@ export function testConclusion(t) {
     if (/random/.test(t.opp_agent || "")) { const b = botSpec(t.agent).text; return `${b[0].toUpperCase()}${b.slice(1)} wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games against a random player, interval ${interval(tp.ci)}.`; }
     return `${top.label} wins ${pct0(top.weighted_win_rate)} ${vs} over ${num(tp.games)} games, interval ${interval(tp.ci)}.`;
   }
-  const base = ranked.find(d => /base|control/i.test(d.label)) || ranked[ranked.length - 1];
+  const L0 = ((data().measured || {}).list) || {};
+  const netOf = (String(t.agent || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1];
+  const playedBy = netOf ? ` Played by ${netOf}${(L0.nets_in_use || []).length && !L0.nets_in_use.includes(netOf) ? ", a net no longer in use" : ""}.` : "";
+  // A test of several lists on the same deals: each list against the test's first list (the reference), with its
+  // interval (data.measured.list.by_result, build.py), instead of "best of N" against whichever list came last.
+  const C = !(t.kind === "ga" || t.ga) && (L0.by_result || {})[t.id];
+  if (C && (C.lists || []).length) {
+    const sg = v => `${v >= 0 ? "+" : "−"}${Math.abs(100 * v).toFixed(1)}`;
+    const word = x => x.ci95[0] > 0 ? "ahead" : x.ci95[1] < 0 ? "behind" : "not separated";
+    const since = C.engine_commits_since ? ` ${C.engine_commits_since} engine change${C.engine_commits_since > 1 ? "s" : ""} since.` : "";
+    return `${n} lists on the same deals. Reference: ${C.reference} at ${pct0(C.reference_rate)}. `
+      + C.lists.map(x => `${x.label} ${sg(x.diff)} points [${sg(x.ci95[0])}, ${sg(x.ci95[1])}], ${word(x)}`).join("; ") + "." + playedBy + since;
+  }
+  const base = ranked.find(d => isBaseLabel(d.label)) || ranked[ranked.length - 1];
   const bp = pooled(base), sep = overlaps(tp.ci, bp.ci) ? "their intervals overlap, so the gap is not yet established" : "the intervals do not overlap";
   if (t.kind === "ga" || t.ga) {
     const gens = (t.ga && t.ga.generations || []).length, bestGames = tp.games;
@@ -333,6 +346,17 @@ export function testConclusion(t) {
     return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games). The unchanged list wins ${pct0(base.weighted_win_rate)} of its games; the best version so far wins ${pct0(top.weighted_win_rate)} (${interval(tp.ci)}). ${verdict}`;
   }
   return `Best of ${n} lists: ${top.label} at ${pct0(top.weighted_win_rate)}${base !== top ? `, ${/base|control/i.test(base.label) ? "the base list" : base.label} at ${pct0(base.weighted_win_rate)}; ${sep}` : ""}.`;
+}
+/** A label that names the unchanged list of a test ("base (control)", "Sacramento base (Nam Dang)", "[ref] ..."), not any
+    label containing the word (11 Nov: "PKPikmin (Ball control, 208th)" was taken for the base list). */
+export const isBaseLabel = label => /^\s*(\[ref\]|base\b|control\b)|\(control\)|\bbase \(|\breference\)/i.test(label || "");
+/** The newest list comparison in words, for the page that shows its lists: its own top list against its own reference. */
+export function newestComparisonVerdict() {
+  const comps = ((((D && D.measured) || {}).list || {}).comparisons) || [], c = comps[comps.length - 1];
+  if (!c || !(c.lists || []).length) return "";
+  const top = [...c.lists].sort((a, b) => b.rate - a.rate)[0], f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
+  const word = top.ci95[0] > 0 ? "beats" : top.ci95[1] < 0 ? "trails" : "is not separated from";
+  return `the top one ${word} ${c.reference} (${f(top.diff)} points, [${f(top.ci95[0])}, ${f(top.ci95[1])}])${c.stale ? `, measured with ${c.net}, a net no longer in use` : ""}${c.engine_commits_since ? `, before ${c.engine_commits_since} engine change${c.engine_commits_since > 1 ? "s" : ""}` : ""}`;
 }
 /** Legends on each side of a test: {mine:[card], theirs:[card]} (deduplicated). */
 export function testFaces(t) {

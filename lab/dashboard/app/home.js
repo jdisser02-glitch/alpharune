@@ -54,7 +54,7 @@ export async function render(container) {
       if (c) return `${esc(k)} specialist ${stateOf(s)}: continuous since iteration ${c.since}, ${c.adopted} of ${c.iterations} kept${c.anchor_rate_last8 != null ? ` (${pct0(c.anchor_rate_last8)} against its frozen earlier nets, last ${Math.min(8, c.iterations)} iterations)` : ""}; net in use ${esc(s.current)}${c.head && c.head !== s.current ? `, newest ${esc(c.head)} not committed yet` : ""}${g ? `; before that ${g.adopted} of ${g.iterations} adopted` : ""}`;
       return `${esc(k)} specialist ${stateOf(s)}: ${s.adopted || 0} of ${s.iterations} adopted${s.rejected_since_adoption ? `, ${s.rejected_since_adoption} rejected since` : ""}`; })).join(" · ");
   // 3. The opponents are today's meta: newest tournament date among the meta lists.
-  const metaDates = (D.decks || []).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
+  const metaDates = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).map(d => (/_(\d{4}-\d{2}-\d{2})\//.exec(d.path) || [])[1]).filter(Boolean).sort();
   const newest = metaDates[metaDates.length - 1], metaN = (D.decks || []).filter(d => d.path.startsWith("lab/decks/meta/")).length;
   const age = newest ? Math.max(0, (Date.now() - Date.parse(newest)) / 864e5) : null;
   const events = new Set((D.decks || []).map(d => (/^lab\/decks\/meta\/([^/]+)\//.exec(d.path) || [])[1]).filter(Boolean));

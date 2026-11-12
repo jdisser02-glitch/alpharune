@@ -3,7 +3,7 @@
    #/tests/<id>   conclusion first, facts, opponents and their weights, per tested deck the matchup table + card grid,
                   the optimizer's round-by-round standings when the test ran rounds, commands and raw spec for the curious.
    Everything is derived from data.json through lib.js; screen-specific styles are in tests.css (injected once). */
-import { data, esc, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice, portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, pooled, cssOnce, botSpec, botBadge, isPlumbing, testsByDate, testById, bestList, bestVariantPath, bestVerdict, bestStale, testConclusion, testFaces, deckFace, deckByPath, deckHero, legendShort, toast } from "./lib.js";
+import { data, isBaseLabel, esc, pct0, num, interval, fmtDate, fmtDateTime, ago, duration, plural, kpi, badge, chip, pageHead, empty, notice, portrait, portraits, cardChip, cardGrid, rateBar, rate, rateTone, table, enhance, wilson, pooled, cssOnce, botSpec, botBadge, isPlumbing, testsByDate, testById, bestList, bestVariantPath, bestVerdict, bestStale, testConclusion, testFaces, deckFace, deckByPath, deckHero, legendShort, toast } from "./lib.js";
 
 const CSS = new URL("./tests.css", import.meta.url).href;
 
@@ -24,7 +24,7 @@ async function copyList(path, btn) {
   try { await navigator.clipboard.writeText(dk.text); toast("List copied: paste it into a deck builder or a text file.", "ok"); if (btn) { btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy list"; }, 1800); } }
   catch (e) { toast("Could not copy: open the list and select its text.", ""); }
 }
-const isControl = label => /\b(control|base)\b/i.test(label || "");
+const isControl = label => isBaseLabel(label);
 /** A tested list's label; the ladder tests label their side with the raw agent spec, which reads better as the bot's name. */
 const labelOf = d => /^(ismcts|mcts|random|greedy)/i.test(d.label || "") ? botSpec(d.label).label : (d.label || "");
 const hasReplays = t => (data().replays || []).some(r => r.test_id === t.id);
@@ -161,7 +161,7 @@ function deckSection(d, t, i, open) {
   const seats = (d.matchups || []).reduce((a, m) => { if (m.as_p1 && m.as_p2) { a.p1g += m.as_p1.games; a.p1w += m.as_p1.wins; a.p2g += m.as_p2.games; a.p2w += m.as_p2.wins; } return a; }, { p1g: 0, p1w: 0, p2g: 0, p2w: 0 });
   const head = `<summary class="t-deck-head">
       ${portrait(face, { size: "lg" })}
-      <div class="t-deck-title"><h2>${esc(labelOf(d))}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}${isBestSoFar(d, t) ? ` ${badge((bestVerdict().startsWith("beats") ? "best measured list" : "top measured list") + bestStale(), bestVerdict().startsWith("beats") ? "gold" : "neutral")}` : ""}</h2>
+      <div class="t-deck-title"><h2>${esc(labelOf(d))}${isControl(d.label) ? ` ${badge("control", "neutral")}` : ""}${isBestSoFar(d, t) ? ` ${badge((bestVerdict().startsWith("beats") ? "best measured list" : "top measured list") + bestStale(), bestVerdict().startsWith("beats") && !bestStale() ? "gold" : "neutral")}` : ""}</h2>
         <div class="t-deck-sub">${dk ? `<a href="#/decks/${encodeURIComponent(dk.path)}">${esc(deckHero(dk))}${dk.path.startsWith("lab/variants/") ? ` · ${esc(dk.path.split("/").pop().replace(/\.txt$/, ""))}` : ""} · open the list</a>` : `<span class="mono muted">${esc(d.path || "")}</span>`}${changeChips(d.changes)}</div></div>
       <div class="t-deck-rate">${dk && dk.text ? `<button type="button" class="btn-sm t-copy" data-copy="${esc(dk.path)}" title="Copy the list as text (legend, champion, main deck, battlefields, runes)">Copy list</button>` : ""}${d.weighted_win_rate != null ? `${rateBar(d.weighted_win_rate, p.ci, 150)}<span class="t-deck-num">${pct0(d.weighted_win_rate)}</span><span class="xs muted">${interval(p.ci)} · ${plural(p.games, "game")}${t.decks.some(x => (x.matchups || []).length > 1) ? " · weighted" : ""}</span>` : `<span class="muted">no result</span>`}</div>
     </summary>`;
@@ -224,7 +224,7 @@ function gatesHtml() {
   const engineOk = med <= 3 && followed / hg.length >= 0.9, botOk = cn > 0 && ca / cn >= 0.4;
   const row = (ok, label, value, target) => `<div class="gate ${ok ? "ok" : "no"}"><span class="gate-mark">${ok ? "✓" : "✗"}</span><div><b>${label}</b><div class="small">${value} <span class="muted">· target ${target}</span></div></div></div>`;
   return `<section class="panel t-gates ${engineOk && botOk ? "pass" : "fail"}"><div class="panel-head"><h2>Can these numbers be trusted yet?</h2><a class="more" href="#/replays?test=human">Real games →</a></div>
-    <p class="small">Every win rate below comes from the bot playing both sides inside the engine. It only measures the real game once two gates pass, checked against ${hg.length} real RiftLite games replayed through the engine.</p>
+    <p class="small">Every win rate below comes from the bot playing both sides inside the engine. It only measures the real game once two gates pass, checked against ${hg.length} real RiftLite games replayed through the engine${(() => { const hr = data().human_review || {}, n = hr.engine_commits_since; return hr.generated ? ` (review of ${esc(fmtDate(hr.generated))}${n ? `, before ${n} engine change${n > 1 ? "s" : ""}: not re-measured` : ""})` : ""; })()}.</p>
     <div class="gates">
       ${row(engineOk, "Engine follows real games", `${med} engine desyncs per game (median)${artefacts ? `, ${artefacts} more proven to be log artefacts` : ""}, ${followed} of ${hg.length} games followed to the end of their log`, "≤ 3 and ≥ 90%")}
       ${row(botOk, "Bot agrees with human players", `${cn ? (100 * ca / cn).toFixed(0) : "—"}% of ${num(cn)} clean decisions`, "≥ 40%")}

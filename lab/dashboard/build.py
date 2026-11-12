@@ -207,12 +207,13 @@ def measured_status(ladder: dict) -> dict:
         ga_comps.append({"result": f.stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"),
                          "reference": Path(sp.get("base", "")).stem, "reference_rate": (conf.get("reference") or {}).get("confirmed_rate"),
                          "lists": rows, "jury_legends": legends, "ga": True})
+    other_comps = []        # comparisons of another legend's lists: for their own test page, never for Home
     for stem, r in items:
         decks = r.get("decks") or []
         # Home's list figures are about Riven lists: a comparison of another legend's lists (Orianna against Riven,
         # 10 Nov) is not a Riven list check.
-        if any(deck_legend(d.get("path", ""), d.get("label", "")) not in (None, "Riven") for d in decks):
-            continue
+        legs = {deck_legend(d.get("path", ""), d.get("label", "")) for d in decks} - {None}
+        not_riven = bool(legs - {"Riven"})
         opp = lambda d: {m.get("opponent_deck") or m.get("opponent"): m for m in d.get("matchups", [])}
         base = opp(decks[0])
         if not base or any(set(opp(d)) != set(base) for d in decks[1:]):
@@ -231,8 +232,10 @@ def measured_status(ladder: dict) -> dict:
             rows.append({"label": d.get("label"), "path": d.get("path"), "rate": round(rate, 4), "diff": round(diff, 4),
                          "ci95": [round(diff - half, 4), round(diff + half, 4)]})
         legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
-        comparisons.append({"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
-                            "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends})
+        (other_comps if not_riven else comparisons).append(
+            {"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
+             "reference_path": decks[0].get("path"), "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends,
+             "legend": sorted(legs)[0] if len(legs) == 1 else None})
     comparisons = sorted(comparisons + ga_comps, key=lambda c: str(c.get("started_utc") or ""))
     for c in comparisons:
         if c.get("ga"):
@@ -276,14 +279,21 @@ def measured_status(ladder: dict) -> dict:
         c["engine_commits_since"] = engine_since(c.get("started_utc"))
     # A search finalist measured again later in a plain comparison (more games, fresh deals): the newest such row
     # per list file, so a page that quotes the search's own confirmation can say what the re-test found.
+    # Every legend's lists count here (a Volibear finalist re-measured in a Volibear test), newest last.
     retests = {}
-    for c in plain:
+    every = sorted(plain + other_comps, key=lambda c: str(c.get("started_utc") or ""))
+    for c in every:
         for row in c["lists"]:
             if row.get("path"):
                 retests[row["path"]] = {"result": c["result"], "started_utc": c.get("started_utc"), "diff": row["diff"], "ci95": row["ci95"],
-                                        "reference": c["reference"], "net": c["net"]}
+                                        "reference": c["reference"], "reference_path": c.get("reference_path"), "net": c["net"]}
+    # A multi-list test's own comparison (each list against the test's first list, same deals), by result id: the
+    # test page states that, not "best of N" against whichever list came last.
+    by_result = {c["result"]: {"reference": c["reference"], "reference_rate": c["reference_rate"], "lists": c["lists"],
+                               "net": c["net"], "legend": c.get("legend"), "engine_commits_since": engine_since(c.get("started_utc"))}
+                 for c in every}
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best,
-                   "retests": retests, "nets_in_use": sorted(n for n in in_use if n)}
+                   "retests": retests, "by_result": by_result, "nets_in_use": sorted(n for n in in_use if n)}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:
         mx = ROOT / json.loads(cms[-1].read_text()).get("matrix", "")
@@ -517,6 +527,12 @@ def main(argv):
                   "specialist_nets": spec_nets, "legend_slug": legend_slug,
                   "net": net_rel_out, "net_source": str(net_path.relative_to(ROOT)) if net_path.exists() else "",
                   "policy_net": pnet_rel_out, "policy_net_source": str(pnet_path.relative_to(ROOT)) if pnet_rel_out else ""}
+        # The browser engine is built by hand (cmake --build build-wasm): say when it is older than the engine
+        # sources, so Play does not pass for the current rules (11 Nov: 22 card domains fixed, Play a day behind).
+        wasm = ROOT / "build-wasm" / "riftbound.wasm"
+        built = dt.datetime.fromtimestamp(wasm.stat().st_mtime, dt.timezone.utc).isoformat(timespec="seconds")
+        engine["built_utc"] = built
+        engine["src_commits_since_build"] = engine_since(built)
     else:
         print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
 

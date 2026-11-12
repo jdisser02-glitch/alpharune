@@ -503,7 +503,8 @@ function tilesHtml(side) {
 }
 function engineLine() {
   const E = data().engine;
-  if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards · ${G.info.pnet ? "policy net loaded (the search bot plays as in training)" : G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
+  const behind = E && E.src_commits_since_build ? ` · built before ${E.src_commits_since_build} engine change${E.src_commits_since_build > 1 ? "s" : ""}: not the current rules` : "";
+  if (G.info) return `Engine ${esc(G.info.version)} · ${num(G.info.cards)} cards${behind} · ${G.info.pnet ? "policy net loaded (the search bot plays as in training)" : G.info.net ? "value net loaded" : "no value net: the bot uses a heuristic"}`;
   if (G.botNet) { const name = (G.botNet.match(/spec_([a-z_]+?)_\d+/) || [])[1];
     const tr = name && ((((data().measured || {}).training || {}).specialists || {})[name] || {}).continuous;
     const newer = tr && tr.head && !G.botNet.includes(tr.head) ? ` · training has a newer net (${esc(tr.head)}), not committed yet` : "";
