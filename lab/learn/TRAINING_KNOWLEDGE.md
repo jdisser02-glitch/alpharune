@@ -260,3 +260,10 @@ Master Yi 88 → 89%, Akali 91 → 93%.
 Two more iterations lost to GitHub on 11 Nov evening (iteration 91, twice): one self-play shard's artifact upload
 refused (20:29 UTC), then no machine for p_plan during 15 minutes (21:41). A failed training run now restarts
 itself once (job p_retry, commits 29f20fb and 6677f2e); not yet exercised by a real failure.
+
+**Volibear, fourth review, 12 Nov 11:10 UTC: iterations 99 to 114** (50 continuous iterations, 49 kept). Still
+the plateau: three frozen nets 59.1% [56.9, 61.3] over 99-114 (57.0% over 89-98, 58.0% over 80-88, 59.0% over
+72-79); held-out panel 78.2% [76.7, 79.6] (77.4%, 77.7%, 75.3%). Last 8 iterations minus the 8 before: -2.4
+points against the frozen nets (standard error 2.2), -2.1 on the panel (standard error 1.5). Value loss 0.378 →
+0.342; same first move as humans 45.9%. Forty-two iterations (about 21 hours of the 20 runners) since the last
+gain. The next step was put to Jeremy at 03:10 UTC; no answer yet, the training goes on.
