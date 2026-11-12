@@ -1,8 +1,11 @@
-/* Riven Lab — Bot: how the bot learns, the self-play ladder (chart + table), the network in use and how often the
-   bot agrees with human players. Everything comes from data.json (`ladder`, `engine`, `tests`, `human_review`).
+/* Riven Lab — Bot: the learning curves of each legend's net (app/bot_curves.js, `learning`), how the bot learns, the
+   general net's self-play ladder (chart + table), the network in use and how often the bot agrees with human
+   players. Everything comes from data.json (`learning`, `ladder`, `engine`, `tests`, `human_review`).
    Router contract: render(container, params, ctx) / destroy(). No params. Styles: app/bot.css (prefix .v-bot). */
 import { data, esc, el, pct, pct0, num, interval, fmtDate, fmtDateTime, ago, plural, wilson, kpi, badge, chip, pageHead, empty,
          rate, table, enhance, portrait, legendFace, legendShort, netName, botSpec, cssOnce, $ } from "./lib.js";
+
+import { learningSection, wireLearning, unwireLearning } from "./bot_curves.js";
 
 const CSS = new URL("./bot.css", import.meta.url).href;
 const usesNet = (agent, net) => !!(net && String(agent || "").includes(net));
@@ -42,6 +45,9 @@ export async function render(container) {
 
   container.innerHTML = `
     ${pageHead({ title: "The bot", sub: "The player that pilots both sides of every simulated game. It gets stronger by playing itself; this page shows how far it has come and how far it has to go." })}
+    ${learningSection(D)}
+
+    <div class="section-head v-bot-general"><h2>The general net</h2><span class="small muted">one net for every legend, last trained ${lastIt ? esc(fmtDate(lastIt.started_utc)) : "—"}; the legends above have their own since</span></div>
     <div class="kpis">${kpis}</div>
 
     <div class="v-bot grid2 v-bot-top">
@@ -75,12 +81,12 @@ export async function render(container) {
     </div>
 
     <section class="v-bot panel stack" aria-labelledby="bot-ladder">
-      <div class="panel-head"><h2 id="bot-ladder">The ladder</h2><span class="small muted">${it.length ? `${plural(it.length, "iteration")}, ${esc(fmtDate(it[0].started_utc))} to ${esc(fmtDate(latest.started_utc))}` : ""}</span></div>
+      <div class="panel-head"><h2 id="bot-ladder">The general net's ladder</h2><span class="small muted">${it.length ? `${plural(it.length, "iteration")}, ${esc(fmtDate(it[0].started_utc))} to ${esc(fmtDate(latest.started_utc))}` : ""}</span></div>
       ${it.length ? `<p class="small muted">Each point is one iteration. Filled points were adopted, hollow ones rejected. The band is the 95% interval of the gate match; the dashed line is 50%, even with the previous bot. Hover a column for the numbers.</p>${chart(it)}${eloChart(it)}` : empty("No iteration yet", "Training has not produced a row in the ladder.")}
     </section>
 
     <section class="v-bot panel" aria-labelledby="bot-table">
-      <div class="panel-head"><h2 id="bot-table">Iterations</h2><span class="small muted">click a header to sort</span></div>
+      <div class="panel-head"><h2 id="bot-table">The general net's iterations</h2><span class="small muted">click a header to sort</span></div>
       ${iterationTable(it)}
     </section>
 
@@ -94,16 +100,17 @@ export async function render(container) {
     </section>`;
   enhance(container);
   wireChart(container);
+  wireLearning(container);
 }
 
-export function destroy() { const t = $(".v-bot-tip"); if (t) t.remove(); }
+export function destroy() { unwireLearning(); const t = $(".v-bot-tip"); if (t) t.remove(); }
 
 /* ── the ladder chart ───────────────────────────────────────────────────── */
 function chart(it) {
   const W = 680, H = 250, L = 46, R = 44, T = 18, B = 40, n = it.length;
   const x = i => L + (n === 1 ? (W - L - R) / 2 : i * (W - L - R) / (n - 1));
   const y = v => T + (H - T - B) * (1 - v);
-  const path = key => it.map((r, i) => { const v = key(r); return v == null ? "" : `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; }).join(" ");
+  const path = key => { let pen = false; return it.map((r, i) => { const v = key(r); if (v == null) return ""; const cmd = pen ? "L" : "M"; pen = true; return `${cmd}${x(i).toFixed(1)},${y(v).toFixed(1)}`; }).join(" ").trim(); };   // a line may start after iteration 0
   const band = it.map((r, i) => `${x(i).toFixed(1)},${y(r.vs_current && r.vs_current.ci95 ? r.vs_current.ci95[1] : r.vs_current.rate).toFixed(1)}`).join(" ")
     + " " + [...it].reverse().map((r, k) => { const i = n - 1 - k; return `${x(i).toFixed(1)},${y(r.vs_current && r.vs_current.ci95 ? r.vs_current.ci95[0] : r.vs_current.rate).toFixed(1)}`; }).join(" ");
   const marker = (cx, cy, color, filled, square) => square
@@ -152,7 +159,7 @@ function eloChart(it) {
   let s = `<svg class="v-bot-svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Elo of each iteration's network, relative to random play at zero.">`;
   for (let v = lo; v <= hi; v += (hi - lo) / 4) s += `<line x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--line)"/><text x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${Math.round(v)}</text>`;
   // the network in use at each iteration (the step line): adopted iterations raise it, rejected ones leave it
-  let cur = null; const step = it.map((r, i) => { if (r.accepted && r.elo != null) cur = r.elo; else if (r.elo_current != null) cur = r.elo_current; return cur == null ? "" : `${i ? "L" : "M"}${x(i).toFixed(1)},${y(cur).toFixed(1)}`; }).join(" ");
+  let cur = null, pen = false; const step = it.map((r, i) => { if (r.accepted && r.elo != null) cur = r.elo; else if (r.elo_current != null) cur = r.elo_current; if (cur == null) return ""; const cmd = pen ? "L" : "M"; pen = true; return `${cmd}${x(i).toFixed(1)},${y(cur).toFixed(1)}`; }).join(" ").trim();
   s += `<path d="${step}" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linejoin="round"/>`;
   it.forEach((r, i) => { if (r.elo == null) return; s += `<circle cx="${x(i).toFixed(1)}" cy="${y(r.elo).toFixed(1)}" r="4.5" fill="${r.accepted ? "var(--gold)" : "var(--s1)"}" stroke="var(--gold)" stroke-width="2"><title>Iteration ${r.iteration}: Elo ${Math.round(r.elo)}, ${r.accepted ? "adopted" : "rejected"}</title></circle>`;
     s += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" class="v-bot-xl">${r.iteration}</text>`; });

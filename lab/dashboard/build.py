@@ -340,6 +340,89 @@ def measured_status(ladder: dict) -> dict:
 _LEGENDS = None
 
 
+def learning_tracks(training: dict) -> dict:
+    """The learning curves of each legend's specialist net, one compact row per iteration (the Bot tab draws them):
+    Elo, the mirror against the run's own frozen earlier nets, the net in place against the panel of tournament
+    lists, the value loss on held-out games and the share of human first moves found.
+
+    The mirror counts the legend's own frozen nets only (the general net loses nearly every game and carries no
+    signal), and the panel is the net in place (`base_rate`), as lab/learn/TRAINING_KNOWLEDGE.md reads them. A curve
+    is only comparable while its opponents stay the same: `ms` and `ps` number the stretches of the run that share
+    one set of frozen nets and one panel, so the page restarts its line where they change. `trend` is the last 8
+    iterations against the 8 before (pooled games, standard error of the difference), within the newest stretch."""
+    titles = {v: k for k, v in json.loads((LAB / "learn" / "legend_champions.json").read_text()).items()}
+
+    def trend(rows, key, seg):
+        last = rows[-1].get(seg) if rows else None
+        xs = [r[key] for r in rows if r.get(key) and r.get(seg) == last]
+        if last is None or len(xs) < 16:
+            return None
+        (w1, g1), (w0, g0) = [(sum(x[0] for x in part), sum(x[1] for x in part)) for part in (xs[-8:], xs[-16:-8])]
+        p1, p0 = w1 / g1, w0 / g0
+        return {"last": round(p1, 4), "prev": round(p0, 4), "diff": round(p1 - p0, 4), "games": g1,
+                "se": round((p1 * (1 - p1) / g1 + p0 * (1 - p0) / g0) ** 0.5, 4)}
+
+    tracks = []
+    for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
+        L, slug = json.loads(f.read_text()), f.parent.name
+        its = sorted(L.get("iterations", []), key=lambda r: r.get("iteration", 0))
+        if not its:
+            continue
+        rows, mkey, pkey, ms, ps = [], None, None, 0, 0
+        for r in its:
+            row = {"i": r.get("iteration"), "t": r.get("started_utc"), "ok": bool(r.get("accepted"))}
+            if r.get("continuous"):
+                row["c"] = 1
+            if r.get("committed"):
+                row["k"] = 1
+            if r.get("elo") is not None:
+                row["elo"] = round(r["elo"], 1)
+            own = {k: a for k, a in (r.get("vs_anchors") or {}).items() if "spec_" in k and a.get("games")}
+            if own:
+                if tuple(sorted(own)) != mkey:
+                    mkey, ms = tuple(sorted(own)), ms + 1
+                row["m"], row["ms"] = [sum(a.get("wins", 0) for a in own.values()), sum(a["games"] for a in own.values())], ms
+            pn = r.get("panel") or {}
+            if pn.get("games") and pn.get("base_rate") is not None:
+                key = (tuple(sorted(pn.get("matchups") or {})), bool(pn.get("held_out")))
+                if key != pkey:
+                    pkey, ps = key, ps + 1
+                row["p"], row["ps"] = [round(pn["base_rate"] * pn["games"]), pn["games"]], ps
+                if pn.get("rate") is not None:
+                    row["pc"] = round(pn["rate"], 4)
+            if r.get("val_loss") is not None:
+                row["vl"] = round(r["val_loss"], 4)
+            hl = r.get("human_legend") or {}
+            if hl.get("rows") and hl.get("top1") is not None:
+                row["hu"] = [round(hl["top1"] * hl["rows"]), hl["rows"]]
+            vc = r.get("vs_current") or {}
+            if vc.get("games"):
+                row["g"] = [vc.get("wins", 0), vc["games"]]
+            if r.get("minutes") is not None:
+                row["min"] = round(r["minutes"], 1)
+            rows.append(row)
+        st = training.get(slug, {})
+        cont = [r["i"] for r in rows if r.get("c")]
+        last_panel = (its[-1].get("panel") or {})
+        tracks.append({
+            "slug": slug, "legend": riftlab_legend(slug) or slug.replace("_", " ").title(),
+            "title": titles.get(slug) or titles.get(slug.rsplit("_h", 1)[0]) or "",
+            "human_games": slug.endswith("_h"),      # riven_h: the variant warm-started on human games
+            "state": st.get("state") or "idle", "last_started": rows[-1]["t"], "first_started": rows[0]["t"],
+            "current": Path(L.get("current_net") or "").stem, "head": Path(L.get("head_net") or L.get("current_net") or "").stem,
+            "continuous_since": cont[0] if cont else None, "kept": sum(1 for r in rows if r["ok"]),
+            "minutes": round(sum(r.get("min") or 0 for r in rows)),
+            "panel_held_out": bool(last_panel.get("held_out")),
+            "panel_lists": [riftlab_legend(m.get("deck", "")) or riftlab_legend(k) or k
+                            for k, m in sorted((last_panel.get("matchups") or {}).items())],
+            "mirror_nets": [Path(k).stem for k in (mkey or ())],
+            "trend": {"mirror": trend(rows, "m", "ms"), "panel": trend(rows, "p", "ps")},
+            "rows": rows})
+    tracks.sort(key=lambda t: t["last_started"] or "", reverse=True)      # the run in progress first, then the newest
+    tracks.sort(key=lambda t: t["state"] != "training")
+    return {"tracks": tracks}
+
+
 def _legend_names():
     """Legend names: the fixed list plus every legend of the newest real-results matrix (Rek'Sai, Irelia, Jayce...)."""
     global _LEGENDS
@@ -563,11 +646,13 @@ def main(argv):
     else:
         print("  no sprite sheets in lab/dashboard/art/ (run art.py): cards fall back to the CDN, which the hosting may block")
 
+    measured = measured_status(ladder)
     data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
             "ladder": ladder, "replays": replays, "engine": engine,
             "human_review": {**human, "engine_commits_since": engine_since(human.get("generated"))}, "art": art,
-            "measured": measured_status(ladder),
+            "measured": measured,
+            "learning": learning_tracks(measured.get("training", {}).get("specialists", {})),
             "cards": [{"id": c.get("card_id"), "name": c["name"], "type": c["card_type"], "domains": c["domains"],
                        "energy": c.get("energy_cost") or 0, "power": c.get("power_cost") or 0,
                        "might": c.get("might") or 0, "super": c.get("super_type"), "tags": c.get("tags", []),

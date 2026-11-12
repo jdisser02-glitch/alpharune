@@ -14,6 +14,7 @@ lab/dashboard/
   app/main.js       hash router + view lifecycle
   app/lib.js        data, formatting, cards, imagery, stats, components
   app/<view>.js     one module per screen: home tests decks replays play bot launch cards
+  app/bot_curves.js the Bot screen's learning curves (one track per legend's net), imported by bot.js
   app/<view>.css    that screen's own classes (prefix .v-<view>), loaded by the module with cssOnce()
   art.py            downloads the card art once and packs the sprite sheets into art/ (committed)
   art/              thumb-NN.webp, large-NN.webp (+ *land* sheets for battlefields) and art.json, the cell map
@@ -42,7 +43,7 @@ export function update(container, params, ctx)        // optional: same view, ne
   wire events and call `enhance(container)` (sortable tables). No framework, no build step.
 
 Routes: `#/home` (default) `#/tests` `#/tests/<id>` `#/decks` `#/decks/<path>` `#/replays`
-`#/replays/<file>` (`?test=<id>` filters) `#/play` `#/bot` `#/launch` `#/cards` (`?q=` search).
+`#/replays/<file>` (`?test=<id>` filters) `#/play` `#/bot` ("Training" in the menu) `#/launch` `#/cards` (`?q=` search).
 
 ### What `lib.js` exports
 
@@ -142,6 +143,7 @@ Layout: `.wrap` · `.stack` (column, 16px; `.tight` 8, `.loose` 32) · `.row` (w
 | Table | `table(columns, rows, {rowAttrs, cls, sort, empty})` → `.tablewrap > table.data`; `enhance(root)` | Sticky header, zebra rows, `num` columns right-aligned in mono, `sort: true` headers (click to sort, `data-v` carries the value). `tr.click` rows, `tr.sel` selected, `td.lead` + `.sub` for title/subtitle cells. `.tablewrap.tall` caps height |
 | Rate bar | `rateBar(rate, ci, w)`, `rate(rate, ci)` → `.rate` | Dot at the rate, 50% tick, the 95% interval as a translucent band with whiskers; colour from `rateTone` |
 | Progress | `.prog > i`, `.bar > i` | Width in %, gold |
+| Curve | `app/bot_curves.js` (`.v-bot-lc-*`) | A measure per iteration: faint points (hollow = rejected), the mean of the last 8 as a 2px gold line, its 95% interval as a band, the value at the right end. Drawn at the pixel size of its cell (no scaled text); one crosshair and one tooltip across the charts of a group; the line restarts where the opponents change; a table of the same rows sits under the charts |
 | States | `empty(title, hint)`, `loadingBox(msg)`, `errorBox(msg)`, `notice(html, "ok|error|info")` | Empty states say what would fill them and link to where |
 | Toast | `toast(msg, "ok|error")` | Confirmation of an action; 4s |
 | Modal | `modal({title, body, actions:[{label, value, primary}]})` → promise | Esc / backdrop dismiss with `null` |

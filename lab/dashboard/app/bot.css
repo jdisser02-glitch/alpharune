@@ -59,3 +59,52 @@
 .v-bot-legend .dot.p2 { background: var(--p2); border-color: var(--p2); }
 .v-bot-h3 { margin: 18px 0 4px; }
 .v-bot-elo svg text { fill: var(--ink-dim); font-size: 11px; }
+
+/* ── learning curves (app/bot_curves.js) ─────────────────────────────────── */
+.v-bot-general { margin-top: var(--sp-6); }
+.v-bot-lc-tracks { align-self: flex-start; }
+.v-bot-lc-tracks > button { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.v-bot-lc-tracks .live { width: 7px; height: 7px; border-radius: 50%; background: var(--win); box-shadow: 0 0 0 3px rgba(60, 200, 130, .18); display: inline-block; }
+.v-bot-lc-body { display: flex; flex-direction: column; gap: var(--sp-4); min-width: 0; }
+.v-bot-lc-status { display: flex; flex-direction: column; gap: var(--sp-3); padding: var(--sp-4); background: var(--s2); border: 1px solid var(--line); border-radius: var(--r-2); }
+.v-bot-lc-status p { margin: 0; max-width: 78ch; }
+.v-bot-lc-who { display: flex; align-items: center; gap: var(--sp-3); }
+.v-bot-lc-name { font: 600 20px/1.2 var(--display); color: var(--parch); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.v-bot-lc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-4); }
+.v-bot-lc-cell { margin: 0; min-width: 0; padding: var(--sp-3) var(--sp-4) var(--sp-2); background: var(--s1); border: 1px solid var(--line); border-radius: var(--r-2); display: flex; flex-direction: column; gap: 6px; }
+.v-bot-lc-cell.wide { grid-column: 1 / -1; }
+.v-bot-lc-cell figcaption h3 { margin: 0 0 2px; }
+.v-bot-lc-cell figcaption p { margin: 0; max-width: 86ch; }
+.v-bot-lc-now { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.v-bot-lc-now b { font: 600 26px/1.1 var(--display); color: var(--parch); font-variant-numeric: tabular-nums; }
+.v-bot-lc-delta { font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); }
+.v-bot-lc-delta.up { color: var(--win); } .v-bot-lc-delta.down { color: var(--loss); }
+.v-bot-lc-none { margin: auto 0; padding: var(--sp-4) 0; }
+.v-bot-lc-plot { min-width: 0; overflow: hidden; }
+.v-bot-lc-svg { display: block; max-width: 100%; height: auto; }
+.v-bot-lc-svg text { font: 11px/1 var(--mono); fill: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.v-bot-lc-svg .axis, .v-bot-lc-svg .note { font: 600 10px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; fill: var(--ink-faint); }
+.v-bot-lc-svg .grid { stroke: var(--line); }
+.v-bot-lc-svg .mid { stroke: var(--line-strong); stroke-dasharray: 4 4; }
+.v-bot-lc-svg .rule { stroke: var(--gold-dim); stroke-dasharray: 2 4; }
+.v-bot-lc-svg .rule.faint { stroke: var(--line-strong); }
+.v-bot-lc-svg .band { fill: var(--gold); opacity: .14; }
+.v-bot-lc-svg .mean { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.v-bot-lc-svg .pt { fill: var(--ink-dim); opacity: .6; }
+.v-bot-lc-svg .pt.no { fill: var(--s1); stroke: var(--ink-dim); stroke-width: 1.2; opacity: .75; }
+.v-bot-lc-svg .end { fill: var(--gold); stroke: var(--s1); stroke-width: 2; }
+.v-bot-lc-svg .endv { font: 600 12px/1 var(--display); fill: var(--parch); }
+.v-bot-lc-svg .cross { stroke: var(--line-strong); opacity: 0; }
+.v-bot-lc-svg .hover { fill: var(--s1); stroke: var(--gold-2); stroke-width: 2; opacity: 0; }
+.v-bot-lc-svg .cross.on, .v-bot-lc-svg .hover.on { opacity: 1; }
+.v-bot-lc-svg .hit { cursor: crosshair; }
+.v-bot-legend .lc-line { width: 18px; height: 0; border-top: 2px solid var(--gold); display: inline-block; }
+.v-bot-legend .lc-band { width: 18px; height: 10px; background: var(--gold); opacity: .2; border-radius: 2px; display: inline-block; }
+.v-bot-legend .lc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-dim); border: 1.5px solid var(--ink-dim); display: inline-block; }
+.v-bot-legend .lc-dot.hollow { background: var(--s1); }
+.v-bot-legend .lc-rule { width: 0; height: 14px; border-left: 2px dotted var(--gold-dim); display: inline-block; }
+.v-bot-lc-table > summary { cursor: pointer; color: var(--gold-2); font: 600 13px/1.4 var(--display); letter-spacing: .04em; padding: 4px 0; }
+.v-bot-lc-table[open] > summary { margin-bottom: var(--sp-3); }
+@media (max-width: 760px) { .v-bot-lc-grid { grid-template-columns: 1fr; } .v-bot-lc-cell { padding: var(--sp-3); } }
+.v-bot .row > .chip { min-width: 0; max-width: 100%; white-space: normal; } .v-bot .chip b { overflow-wrap: anywhere; min-width: 0; }   /* a bot's full spec is one long word */
+.v-bot-top > .panel { min-width: 0; } .v-bot-uses li { min-width: 0; } .v-bot-uses li, .v-bot-current p { overflow-wrap: anywhere; }   /* long net names must not widen the page on a phone */
