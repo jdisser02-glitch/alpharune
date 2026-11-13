@@ -172,7 +172,7 @@ training (he paused both tracks on purpose).
 
 ## 6. State and next actions (the watchdog reads this; update it every time something is dispatched or finishes)
 
-Jeremy, 13 Nov 08:00 UTC: "ok go, feu vert pour l'entraînement Volibear. Je veux que les machines tournent en
+Jeremy, 13 Nov 07:50 UTC: "ok go, feu vert pour l'entraînement Volibear. Je veux que les machines tournent en
 permanence de la façon la plus efficace possible." So: never an idle machine (20 jobs at once at most), training
 and search share them, and each finished step starts the next one without asking.
 
@@ -183,7 +183,7 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   about 3 hours). Shards 20-31 are NOT dispatched: the training took those machines. Exploration is done when the
   20 files `lab/deckopt/volibear-noaurora-cards/explore-00..19.json` exist.
 - Volibear training, continuous, with list variations (`"vary"` in `lab/learn/loop.py`: 60% of the self-play pairs
-  play a starting list of S1 plus 0, 1, 2 or 4 random swaps): dispatched 08:15 UTC,
+  play a starting list of S1 plus 0, 1, 2 or 4 random swaps): dispatched 07:55 UTC,
   `request=lab/specs/train_spec_volibear.json`, `chain=16` (iterations 119 to about 135, 35-50 minutes each while
   it shares the machines). If no run is in progress or queued, there is no PAUSE file and the ladder
   (`lab/learn/specialists/volibear/ladder.json`) is below iteration 135: dispatch it again with the chain that is
