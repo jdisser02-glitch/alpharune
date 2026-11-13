@@ -229,13 +229,24 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   Race 1 dispatched 10:47 UTC: six requests `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`, 432 games
   per list shared out by the opponents' weights (110, 110, 90, 76, 28, 18), seed 5101.
 
+- 11:45 UTC, step 3. Race 1 (432 games per list, full pilot, seed 5101): the reference 72.5% (it had 78.3% on its
+  480 exploration games: the two together put it near 75.5%), the candidates between 73.6% and 82.6%; spread minus
+  noise: the candidates really differ by about 1.2 points only, so the order among them is mostly luck. Top five
+  to race 2: ref+2 82.6% (Ritualo, two Show of Strength out for two Rengar), c2+3 82.4% (soldog-gemdragon with
+  Trinity Force and Avalanche out), ref+4 81.5%, c1+4 81.0%, centre2 80.3% (soldog-gemdragon as it is). The lists
+  with the most swaps did worst (ref+6 73.6%, c1+9 75.4%): the model's additive prediction over-reaches beyond
+  about four swaps, as expected. Cheap pilot on the same fourteen lists (408 games each so far): reference 77.2%,
+  the candidates 77.7-84.3%; it too puts the candidates a few points above the reference.
+  Race 2 dispatched 11:47 UTC: six requests `…race2.*.json`, 1,728 more games per list by weight (440, 440, 356,
+  308, 112, 70), seed 5102; `rank --stage race2` adds race 1's games.
+
 **Next, in order (each as soon as its inputs exist)**
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
    correlation over the cards with at least 100 lists; write the answer here).
 2. (done, above) All twenty shards in: `model S1`, `propose S1`, check no candidate plays Dazzling Aurora, `wave S1 --stage
    race1`, commit, push, dispatch the six `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`.
-3. Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
+3. (done, above) Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
    --stage race2`, commit, push, dispatch the six race2 requests.
 4. Six race2 results: `rank --stage race2`, `wave --stage confirm`, commit, push, dispatch the six confirm requests.
 5. Six confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py
