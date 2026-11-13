@@ -24,18 +24,22 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "lab"))
 import riftlab  # noqa: E402
 
-# (slug, legend chip, title, list file, note, sideboard). A slug that was on the earlier page keeps its counts.
+# (slug, legend chip, title, list file, note, sideboard[, extra sections between the runes and the sideboard]).
+# A slug that was on the earlier page keeps its counts.
 DECKS = [
-    ("volibear-best", "Volibear (best list)", "Volibear Dragons: the lab's best list after the bans", "lab/variants/volibear-noaurora-best.txt",
-     "No banned card. Measured 13 Nov on 3,602 simulated games: 82.5% against 76.9% for Ritualo's list (+5.6 points), "
-     "and level with the best list that played Dazzling Aurora. Main deck from soldog's list (Convergence 4). "
-     "Sideboard: soldog's own (not simulated).",
+    ("volibear", "Volibear (Ritualo)", "Volibear Dragons: Ritualo's list and its improved version", "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+     "Ritualo's list as registered (40 cards with the champion), then the improved version: 2 Rengar, Trophy Hunter "
+     "replace 2 Show of Strength (measured +4.3 points on 3,602 simulated games). This is the list with the most "
+     "turn-2 plays (3 Dragonsoul Sage, 3 Mobilize). Sideboard: Ritualo's without the banned Dazzling Aurora; its 3 "
+     "free slots are filled with 2 Repulse (against spells that return your dragons to hand) and 1 Decree of Strength "
+     "(against Mind decks such as Kai'Sa), both from soldog's sideboard. Sideboards are not simulated.",
+     "2 Thermo Beam|2 Minotaur Reckoner|2 Rampage|1 Sabotage|2 Repulse|1 Decree of Strength",
+     [("Improved list (in for 2 Show of Strength)", "2 Rengar, Trophy Hunter")]),
+    ("volibear-best", "Volibear (other build)", "Volibear Dragons: the other build (soldog's deck, adapted)", "lab/variants/volibear-noaurora-best.txt",
+     "A different 40 cards, only if you want to build it too. Measured 82.5%, 1.3 points above the improved Ritualo "
+     "list, a gap the simulation cannot tell from zero; it has very few turn-2 plays (3 Mobilize), which the bot "
+     "punishes less than a player would. Sideboard: soldog's own (not simulated).",
      "1 Assembly Rig|1 Deadbloom Predator|1 Decree of Strength|1 Ferrous Forerunner|1 Punch First|2 Repulse|2 Ruin Runner|1 Sabotage"),
-    ("volibear", "Volibear (Ritualo + 2 Rengar)", "Volibear Dragons: Ritualo's list with 2 Rengar", "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
-     "The cheaper route if you already own Ritualo's list: 2 Show of Strength out, 2 Rengar, Trophy Hunter in. "
-     "Measured 81.2% (+4.3 points over Ritualo's list as registered), 1.3 points behind the list above. "
-     "Sideboard: Ritualo's without Dazzling Aurora (not simulated; 3 slots left open).",
-     "2 Thermo Beam|2 Minotaur Reckoner|2 Rampage|1 Sabotage"),
     ("evelynn", "Evelynn", "Evelynn: your list of 13 Nov", "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
      "No banned card. Not measured: the list as you sent it (champion Evelynn, Entrancing assumed), with its sideboard.",
      "2 Gust|1 Abandon|1 Switcheroo|2 Ravenbloom Prefect|1 Trinity Force|1 Vex, Apathetic|2 Graves, Blasting Through"),
@@ -48,8 +52,9 @@ DECKS = [
      "section will then show the full list. Sideboard: the Sacramento list's (not simulated).",
      "2 Decree of Focus|1 Hush|2 An Offer You Can't Refuse|1 Not So Fast|1 Rebuke|1 Star-Crossed|1 Tomb-Raider Barbara|1 Baron Nashor"),
 ]
-SUB = ("Volibear, Evelynn, Mordekaiser, then Riven; updated 13 Nov 2026 after the ban announcement. Enter how many copies "
-       "of each card you are missing, then export the CSV for the buying agent.")
+SUB = ("Volibear, Evelynn, Mordekaiser, then Riven, each with its sideboard; updated 13 Nov 2026 after the ban "
+       "announcement. In the Missing column, enter how many copies of the card you do not own (All missing: you own "
+       "none of that list), then export the CSV for the buying agent.")
 
 
 def main():
@@ -92,11 +97,13 @@ def main():
         return "data:image/webp;base64," + base64.b64encode(b.getvalue()).decode()
 
     data = []
-    for slug, legend, title, path, note, side in DECKS:
+    for slug, legend, title, path, note, side, *more in DECKS:
         sec, rows, dropped = None, [], []
         lines = (ROOT / path).read_text().splitlines()
         if "Sideboard:" in lines:               # the list file's own sideboard gives way to the one named above
             lines = lines[:lines.index("Sideboard:")]
+        for name, cards in (more[0] if more else []):
+            lines += [name + ":"] + cards.split("|")
         for line in lines + ["Sideboard:"] + side.split("|"):
             line = line.strip()
             if not line or line.startswith("#"):
@@ -120,7 +127,7 @@ def main():
             rows.append(row)
         copies = {}
         for r in rows:
-            if r["section"] in ("Champion", "Main deck", "Sideboard"):
+            if r["section"] not in ("Legend", "Battlefields", "Runes"):
                 copies[r["name"]] = copies.get(r["name"], 0) + r["qty"]
         over = {k: v for k, v in copies.items() if v > 3}
         if over or sum(r["qty"] for r in rows if r["section"] == "Sideboard") > 10:

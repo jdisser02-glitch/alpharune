@@ -93,7 +93,7 @@ function renderBar() {
   bar.innerHTML = `<span class="lbl">Missing copies per list:</span>` + DECKS.map(d => { const t = deckTotals(d);
     return `<a class="chip ${t.m ? "has" : ""}" href="#${d.slug}">${esc(d.legend)} <b>${t.m}</b></a>`; }).join("") +
     `<span class="spacer"></span>
-     <select id="mode" aria-label="CSV layout"><option value="deck">CSV: one row per deck</option><option value="card">CSV: summed per card</option></select>
+     <select id="mode" aria-label="CSV layout"><option value="deck">CSV: one row per list</option><option value="card">CSV: per card, summed over the lists</option><option value="max">CSV: per card, the most one list needs</option></select>
      <button id="copy">Copy CSV</button>
      <button class="primary" id="dl">Export CSV</button>`;
   document.getElementById("mode").value = mode;
@@ -147,10 +147,12 @@ document.getElementById("decks").addEventListener("change", e => {
 const q = s => /[",\n]/.test(String(s)) ? '"' + String(s).replace(/"/g, '""') + '"' : String(s);
 function csv() {
   const lines = [];
-  if (mode === "card") {
+  if (mode === "card" || mode === "max") {
     const by = new Map();
     DECKS.forEach(d => d.cards.forEach((c, i) => { const v = get(d, i); if (!v) return;
-      const r = by.get(c.code) || {c, v: 0, decks: []}; r.v += v; r.decks.push(d.legend); by.set(c.code, r); }));
+      const r = by.get(c.code) || {c, v: 0, per: new Map()}; r.per.set(d.slug, (r.per.get(d.slug) || 0) + v); by.set(c.code, r);
+      r.v = mode === "max" ? Math.max(...r.per.values()) : [...r.per.values()].reduce((a, b) => a + b, 0);
+      r.decks = [...r.per.keys()].map(s => DECKS.find(x => x.slug === s).legend); }));
     lines.push(["card_name", "code", "collector_number", "set", "rarity", "missing", "for_decks"].join(","));
     [...by.values()].sort((a, b) => a.c.code.localeCompare(b.c.code)).forEach(({c, v, decks}) =>
       lines.push([c.name, c.code, c.number, c.set, c.rarity, v, decks.join(" + ")].map(q).join(",")));
@@ -172,7 +174,7 @@ async function copyCsv() {
 async function exportCsv() {
   if (empty()) return; const text = csv();
   if (!downloads) { showBox(text); toast("Download unavailable here: copy the CSV below"); return; }
-  try { await downloads.save({filename: `riftbound_buy_list_${mode === "card" ? "by_card" : "by_deck"}.csv`, data: text}); }
+  try { await downloads.save({filename: `riftbound_buy_list_${mode === "deck" ? "by_list" : mode === "card" ? "by_card_summed" : "by_card_largest_need"}.csv`, data: text}); }
   catch (e) { showBox(text); toast("Download declined: the CSV is below"); }
 }
 render();
