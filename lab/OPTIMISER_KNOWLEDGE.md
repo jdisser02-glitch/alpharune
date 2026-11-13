@@ -24,6 +24,10 @@ Runners: a plain request is one 4-core machine, 350 minutes at most, about 1,400
 pilots (`pmcts:sims=50,…,worlds=8`). Several requests run side by side (each its own machine). Twelve were run at
 once on 13 Nov.
 
+- `lab/tools/postban.py` + `lab/meta/banned_2026-11-23.json` + `lab/decks/postban/`: lists without the cards banned
+  on 23 Nov 2026 (patch rule, Riven starting lists, check). `lab/tools/build_buylist.py`: rebuilds the page of the
+  "Riftbound Buy List" artifact (https://claude.ai/artifact/18y7hmz2sjy9Cd1Ls2Tmzy) from the lists named in it.
+
 ## 1. Audit of the genetic search (12 Nov, Volibear, six starts, 25,920 games)
 
 **It ranks luck.** Each list played 72 to 360 games during the search; the three finalists of each start then
@@ -304,7 +308,93 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   4 further swaps 85.9%, 84.3%, 83.1% against 82.5% as it is and 78.1% for the reference; cheap race 2 running
   (9,600 games each for the best five). Dashboard to rebuild and publish with that result.
 
-**Next, in order (each as soon as its inputs exist)**
+- 17:50 UTC: **Riven after the bans** (Jeremy, 17:30: "tu adapterais Riven comment ?" then "lance des simu cette nuit
+  pour me répondre non ? et mets à jour l'artefact pour commander"). What was built, and why:
+  - `lab/meta/banned_2026-11-23.json` (the ban list for the lab's tools; the engine's `CardDef::banned` is untouched)
+    and `lab/tools/postban.py` (`patch`: a banned card is replaced by the legend's most played legal cards, a banned
+    battlefield by its most played legal one; `check`; `riven-centres`). `lab/decks/postban/` holds the patched
+    opponents (Kai'Sa, Kennen, Master Yi, Akali, Orianna) and Riven's starting lists: 21 tournament main decks
+    patched, four hand-built (`riven_hand_plain`, `_equipment`, `_exhaust`, `_draw`), two frames.
+  - Two searches, one per champion still legal for The Exile, because a `deckopt` spec has ONE frame (champion,
+    runes, battlefields): `lab/specs/deckopt/riven-postban-shattered.json` (Riven, Shattered, 6 Calm / 6 Chaos) and
+    `…-deserter.json` (Riven, Deserter, 5/7); battlefields Hunters' Circle, Rakelstake, Windswept Hillock; pool 107
+    cards (every card of the tournament Riven lists, Equipment for Shattered, draw for the lost Herder,
+    protection for the lost Hourglass, exhaust/ready cards for Deserter). Field without banned cards: Kai'Sa 51,
+    Kennen 44, the two Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8 (Stuttgart's shares, the
+    mirror cut from 126 to 40: nobody knows the post-ban shares). Exploration "weighted", 32 games a list, swaps
+    mean 4 (up to 10), cheap pilot. `deckopt` stages take `"agent_sub"` (races cheap, `confirm` with the full
+    pilot) and there is a `confirm2` stage for the pilot trained since.
+  - **Known weakness, to say with every result:** the Riven pilot (spec_riven_120_v0) has never played either
+    champion nor most of the pool, and Volibear showed a pilot loses about 2 points per copy of a card it never
+    trained on. Differences inside one champion's search are fairer than the gap between the two champions. The
+    cure is the alternation of section 5: the Riven training resumes tonight on variations of these lists
+    (`loop.SPECIALISTS["riven"]["vary"]` = both specs, 60% of the self-play pairs; `--commit-every 6`), and
+    `confirm2` replays the confirmation with that pilot.
+  - `lab/specs/riven_postban_frames.json`: the frame choices the searches do not explore (five sets of
+    battlefields, the other rune split), 12 lists, cheap pilot, 400 games per opponent.
+  Dispatched 17:50 UTC: four runner shards (`riven-postban-{shattered,deserter}.explore-0{0,1}.json`, up to 5,000
+  lists each, they stop drawing after 300 minutes and push `lab/deckopt/riven-postban-*/explore-0?.json` at about
+  23:15 UTC). On the session's machine, detached (`nohup`): `<scratchpad>/riven_local.sh` (shards 10, 11, … of 300
+  lists, both champions in turn, from the end of the Volibear race until 23:00 UTC, files in
+  `<scratchpad>/riven_out/riven-postban-*/`), then `riven_local2.sh` (the frame test, log `riven_out/frames.log`).
+
+- 18:00 UTC, **Jeremy changed the order**: "j'aimerais focus sur Evelynn, Volibear et Mordekaiser", then "on laisse
+  Riven, mais là, en dernier". (He had also asked for an opinion on the post-ban metagame "sans lancer de machines":
+  given in the chat, nothing measured.) So:
+  - The buy-list artifact was rebuilt (`python3 lab/tools/build_buylist.py OUT.html`, published at the same URL):
+    Volibear's best post-ban list, Ritualo + 2 Rengar, Evelynn (Jeremy's list of 13 Nov), Mordekaiser (Neal), then
+    Riven's cards that stay legal; banned cards are left out.
+  - Two more searches, same field, same method: `lab/specs/deckopt/mordekaiser-postban.json` (base Neal's list, five
+    starting lists, pool 42 cards, pilot spec_mordekaiser_070_v0) and `lab/specs/deckopt/evelynn-postban.json` (base
+    Jeremy's list, Dunc's as second starting list, pool 48 cards, pilot spec_evelynn_018_v0, a weak pilot that only
+    knows Dunc's list: read its table with that in mind). One runner shard each, dispatched 18:05 UTC.
+  - The Riven training is NOT started (Riven is last; its PAUSE file stays; `vary` is ready in loop.py for the day
+    it resumes). No Evelynn or Mordekaiser training either: Jeremy paused both and said on 13 Nov "ne train rien
+    sur evelynn pour le moment"; asked in the report of 18:10 UTC whether the 20 training machines should move to
+    them. Until he answers, the standing green light holds: the Volibear training continues.
+  - `wave` can group a stage's opponents into a few requests (`"requests": n` in the stage; an opponent's own
+    "games" in a test spec): race1 2 requests, race2 3, confirm 4 per search.
+  - Session's machine: `<scratchpad>/night_local.sh` (replaces riven_local.sh): from the end of the Volibear race to
+    23:00 UTC, shards of 300 lists in turn (Mordekaiser, Evelynn, Mordekaiser, Evelynn, Riven Shattered, Riven
+    Deserter), files in `<scratchpad>/riven_out/<search name>/explore-NN.json`; then `riven_local2.sh` (Riven frame
+    test, `riven_out/frames.log`).
+
+**THE NIGHT OF 13-14 NOV, in order (the hourly watchdog does the next step whose inputs exist; times are UTC).
+The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
+when machines or attention are short, in that order.**
+
+A. Volibear's training chain ends by itself at iteration 134 (commit "train (spec-volibear): iteration 134 …", about
+   19:30-20:30). As soon as that commit exists (or no iteration commit for 60 minutes and no training run in
+   progress): dispatch `riftlab.yml` with `request=lab/specs/train_spec_volibear.json`, `chain=16` again (standing
+   green light of 13 Nov 07:50). Nothing else trains tonight.
+B. From 23:00 (the runner shards push `lab/deckopt/<S>/explore-0?.json` at about 23:15-23:30): copy
+   `<scratchpad>/riven_out/<S>/explore-*.json` into `lab/deckopt/<S>/`, `git pull`, and for each S that has its local
+   shards and its runner shard (at 23:50 take what exists): `python3 lab/deckopt.py model lab/specs/deckopt/<S>.json`
+   (keep the top and bottom ten cards and the "never trained on" line for the log), `propose`, `python3
+   lab/tools/postban.py check lab/variants/<S>-cand-*.txt` (all clean), `wave --stage race1`; commit, push; dispatch
+   the 2 `lab/specs/deckopt/<S>.race1.g?.json` of each search (8 runs, cheap pilot, about 40 minutes).
+C. race1 results (`lab/results/*-<S>-race1-g?.json`, two per search): `rank --stage race1`, `wave --stage race2`,
+   commit, push, dispatch the 3 race2 requests of each search (about 45 minutes).
+D. race2 results: `rank --stage race2`, `wave --stage confirm` (full pilot, 3,600 games a list: the reference and
+   the best two; for Riven also the other champion's reference), commit, push, dispatch the 4 confirm requests of
+   each search (about 2 hours).
+E. Confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py <S>-confirm --write`. A list is
+   "better" only if its interval against the reference is above 0; write `lab/variants/<legend>-postban-best.txt`
+   only then, otherwise the reference stays the list to play and say so. The two Riven confirmations play the same
+   opponents on the same seeds (6103): the two champions can be read side by side, with the pilot caveat above.
+F. (Only if Jeremy puts Riven back on the training machines) `confirm2` with the pilot trained on the post-ban
+   variations: add `["spec_riven_120_v0", "<new net's stem>"]` to `confirm2.agent_sub` of both Riven specs.
+G. Riven frame test done (`riven_out/frames.log` ends with DONE; `lab/results/*-riven-postban-frames.json`): log the
+   table; a set of battlefields or the other rune split replaces the frame's only if its interval is above 0.
+H. Morning report to Jeremy (French, plain words), in his order: Mordekaiser, Evelynn (what the search changes in
+   the list he would buy, how sure), Volibear (training state; round 2 waits for the post-ban Riven list, half of
+   its field), Riven last (which champion, which cards replace Hourglass and Herder, how sure). Then rebuild the
+   buy-list artifact with every list that passed step E (`lab/tools/build_buylist.py`: edit DECKS), the dashboard
+   (data.json is at 15.5 MB: trim the variant texts first), and section 4 of this file.
+I. Round 1b of Volibear: its cheap race 2 ended on the session's machine at about 19:15
+   (`lab/results/*-volibear-noaurora-cards-b-race2*.json`; `rank` printed in the task output): log it in section 4.
+
+**Earlier steps of 13 Nov (all done)**
 0. (done, above) Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank

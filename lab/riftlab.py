@@ -417,7 +417,7 @@ def build_variant(spec: dict, reg: Registry) -> Path:
 
 def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
     """spec = {"name", "agent": "ismcts:sims=50", "opp_agent": (default agent; an opponent's own "agent" overrides it),
-               "games": N per matchup (split across seats), "threads", "seed",
+               "games": N per matchup (split across seats; an opponent's own "games" overrides it), "threads", "seed",
                "decks": [entry...], "opponents": [{"deck": path, "weight": w, "label"}...]}"""
     agent = resolve_agent(spec.get("agent", "random"))
     opp_agent = resolve_agent(spec.get("opp_agent", agent))
@@ -451,13 +451,14 @@ def run_test(spec: dict, reg: Registry, out_dir: Path) -> Path:
             continue
         wsum = wwin = 0.0
         for i, o in enumerate(opponents):
-            half = games // 2
+            og = int(o.get("games", games))      # an opponent's own "games" (a field test shares the games by weight)
+            half = og // 2
             s1 = seed + 100000 * i
             rdir = LAB / "replays" / result["id"] / f"{_slug(label)}__vs__{_slug(o['label'])}"
             oa = resolve_agent(o["agent"]) if o.get("agent") else opp_agent   # e.g. the opponent legend's specialist
             a = play_batch(path, o["deck"], agent, oa, half, threads, s1,
                            str((rdir / "seat1").relative_to(ROOT)), review_games)
-            b = play_batch(o["deck"], path, oa, agent, games - half, threads, s1 + 50000,
+            b = play_batch(o["deck"], path, oa, agent, og - half, threads, s1 + 50000,
                            str((rdir / "seat2").relative_to(ROOT)), review_games)
             wins = a["p1"] + b["p2"]
             n = a["p1"] + a["p2"] + a["draws"] + b["p1"] + b["p2"] + b["draws"]

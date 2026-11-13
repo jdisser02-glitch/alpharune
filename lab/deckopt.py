@@ -428,15 +428,28 @@ def wave(spec: dict, stage: str) -> int:
         for a, b in st.get("agent_sub", []):
             agent = agent.replace(a, b)
         return agent
+    opps = []
     for o in spec["opponents"]:
         o = dict(o, **({"agent": sub(o["agent"])} if o.get("agent") else {}))
-        share = max(8, 2 * round(total * o.get("weight", 1) / W / 2))
-        tag = slug(o["label"].split("(")[0])[:14].strip("-") + "-" + slug(Path(o["deck"]).stem)[:10].strip("-")
+        o["games"] = max(8, 2 * round(total * o.get("weight", 1) / W / 2))
+        opps.append(o)
+    # One request per opponent, or "requests": n of them with the opponents shared out so each machine plays about
+    # as many games (fewer dispatches for a stage whose games are cheap).
+    n = int(st.get("requests", 0))
+    if n:
+        groups = [[] for _ in range(min(n, len(opps)))]
+        for o in sorted(opps, key=lambda o: -o["games"]):
+            min(groups, key=lambda g: sum(x["games"] for x in g)).append(o)
+        named = [(f"g{k + 1}", g) for k, g in enumerate(groups)]
+    else:
+        named = [(slug(o["label"].split("(")[0])[:14].strip("-") + "-" + slug(Path(o["deck"]).stem)[:10].strip("-"), [o]) for o in opps]
+    for tag, group in named:
         t = {"name": f"{spec['name']}-{stage}-{tag}",
              "description": f"{spec.get('description', spec['name'])} Stage {stage}: {len(decks)} lists on the same seeds, "
-                            f"{total} games per list shared out by the opponents' weights. This request: {o['label']}, {share} games.",
-             "agent": sub(spec["agent"]), "opp_agent": sub(spec.get("opp_agent", spec["agent"])), "games": share,
-             "review_games": 0, "seed": int(st.get("seed", 5100)), "decks": decks, "opponents": [o]}
+                            f"{total} games per list shared out by the opponents' weights. This request: "
+                            + ", ".join(f"{o['label']} {o['games']} games" for o in group) + ".",
+             "agent": sub(spec["agent"]), "opp_agent": sub(spec.get("opp_agent", spec["agent"])), "games": group[0]["games"],
+             "review_games": 0, "seed": int(st.get("seed", 5100)), "decks": decks, "opponents": group}
         p = LAB / "specs" / "deckopt" / f"{spec['name']}.{stage}.{tag}.json"
         p.write_text(json.dumps(t, indent=1) + "\n")
         print(p.relative_to(ROOT))
