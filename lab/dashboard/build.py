@@ -327,8 +327,40 @@ def measured_status(ladder: dict) -> dict:
     by_result = {c["result"]: {"reference": c["reference"], "reference_rate": c["reference_rate"], "lists": c["lists"],
                                "net": c["net"], "legend": c.get("legend"), "engine_commits_since": engine_since(c.get("started_utc"))}
                  for c in every}
+    # The Decks page's optimiser tab for every legend but Riven (Riven's follows `comparisons` above): the lists of
+    # that legend's comparisons played by the net of its newest one against the same reference list. A list measured
+    # in several of them (the same cards, whatever the file name) is pooled, each measure weighted by its precision,
+    # so a list measured twice is not ranked on its luckier measure. Best first, ten at most.
+    optimiser = {}
+    by_legend = {}
+    for c in sorted(other_comps, key=lambda c: str(c.get("started_utc") or "")):
+        if c.get("legend"):
+            by_legend.setdefault(c["legend"], []).append(c)
+    for leg, cs in by_legend.items():
+        last = cs[-1]
+        rows = {}
+        for c in cs:
+            if c["net"] != last["net"] or c.get("reference_path") != last.get("reference_path"):
+                continue
+            for row in c["lists"]:
+                rows.setdefault(digest(row.get("path")) or row.get("path"), []).append({**row, "result": c["result"]})
+        pooled_rows = []
+        for ms in rows.values():
+            ws = [1 / max(1e-9, ((m["ci95"][1] - m["ci95"][0]) / 3.92) ** 2) for m in ms]
+            diff = sum(w * m["diff"] for w, m in zip(ws, ms)) / sum(ws)
+            se = (1 / sum(ws)) ** 0.5
+            newest = ms[-1]
+            pooled_rows.append({"path": newest.get("path"), "label": newest.get("label"), "diff": round(diff, 4),
+                                "ci95": [round(diff - 1.96 * se, 4), round(diff + 1.96 * se, 4)],
+                                "rate": newest.get("rate"), "measures": len(ms), "results": [m["result"] for m in ms]})
+        if not any(str(x.get("path") or "").startswith("lab/variants/") for x in pooled_rows):
+            continue            # two community lists compared: no search behind it, so not on the optimiser tab
+        optimiser[leg] = {"reference": last["reference"], "reference_path": last.get("reference_path"), "net": last["net"],
+                          "stale": last["net"] not in in_use, "engine_commits_since": engine_since(last.get("started_utc")),
+                          "lists": sorted(pooled_rows, key=lambda x: -x["diff"])[:10]}
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best,
-                   "retests": retests, "by_result": by_result, "nets_in_use": sorted(n for n in in_use if n)}
+                   "retests": retests, "by_result": by_result, "nets_in_use": sorted(n for n in in_use if n),
+                   "optimiser": optimiser}
     # Coverage of the newest list test's jury (what the newest deck verdicts rest on), next to compare_meta's.
     if comparisons and "coverage" in out:
         mx = ROOT / json.loads(cms[-1].read_text()).get("matrix", "")

@@ -259,7 +259,9 @@ export function groupDecks(decks = allDecks()) {
     }
   });
   if (best) g["Riven"].unshift(best);   // the best-measured list first, then the reference and the tournament lists
-  g["Optimiser · top 10"] = top;
+  // Other legends' confirmed comparisons (data.measured.list.optimiser, build.py) follow Riven's in the same tab.
+  const others = Object.values(((((D && D.measured) || {}).list || {}).optimiser) || {}).flatMap(o => (o.lists || []).map(x => decks.find(d => d.path === x.path)).filter(Boolean));
+  g["Optimiser · top 10"] = [...top, ...others.filter(d => !top.includes(d))];
   return g;
 }
 /** Two lists with the same legend, champion, main deck, battlefields and runes (the sideboard is ignored). */

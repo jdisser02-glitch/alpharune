@@ -12,7 +12,7 @@ import { data, esc, num, fmtDate, plural, store, navigate, badge, chip, pageHead
 const DEFAULT = "decks/riven_sacramento.txt";
 const LAUNCH_DEFAULT = { name: "", decks: [DEFAULT], variants: [], opponents: [], agent: "standard", games: 100 };
 const GROUPS = ["Riven", "Meta opponents", "Optimiser · top 10"];
-const GROUP_TITLES = { "Riven": "Riven", "Meta opponents": "Meta opponents", "Optimiser · top 10": "Optimiser · top 10", "Other": "Other lists" };
+const GROUP_TITLES = { "Riven": "Riven", "Meta opponents": "Meta opponents", "Optimiser · top 10": "Optimiser · by legend", "Other": "Other lists" };
 const TYPE_ORDER = ["unit", "spell", "gear", "other"];
 const TYPE_TITLES = { unit: "Units", spell: "Spells", gear: "Gear", other: "Other cards" };
 
@@ -84,8 +84,20 @@ function picker() {
       <label class="small muted">Contains <input id="dk-card" type="search" placeholder="a card, e.g. Zhonya" value="${esc(st.card)}"></label>
       <span class="small muted">${shown.length} list${shown.length === 1 ? "" : "s"}</span></div>`;
     body = tools + (shown.length ? groupsHtml : empty("No list matches", "Change the legend or the card filter."));
+  } else if (st.group === "Optimiser · top 10") {
+    // One section per legend: Riven's newest confirmation, then every other legend that has one (Volibear, …),
+    // each list with its measured difference against that legend's reference list.
+    const O = (((data().measured || {}).list) || {}).optimiser || {}, sg = v => `${v >= 0 ? "+" : "−"}${Math.abs(100 * v).toFixed(1)}`;
+    const inOther = new Set(Object.values(O).flatMap(o => (o.lists || []).map(x => x.path)));
+    const riven = list.filter(d => !inOther.has(d.path));
+    const sec = (h, note, tiles) => `<div class="stack tight" style="margin-top:14px"><h3>${esc(h)}</h3><p class="small muted">${esc(note)}</p><div class="dk-tiles">${tiles}</div></div>`;
+    const word = x => x.ci95[0] > 0 ? "ahead" : x.ci95[1] < 0 ? "behind" : "not separated";
+    body = (riven.length ? sec("Riven", newestComparisonVerdict() ? `The lists of the newest confirmation (same deals for all), best first: ${newestComparisonVerdict()}.` : "No confirmation yet.", riven.map(tile).join("")) : "")
+      + Object.entries(O).map(([leg, o]) => { const ls = (o.lists || []).filter(x => deckByPath(x.path)); if (!ls.length) return "";
+          const top = ls[0], note = `Against ${o.reference}, best first. ${top.ci95[0] > 0 ? `The top one is ahead: ${sg(top.diff)} points [${sg(top.ci95[0])}, ${sg(top.ci95[1])}]${top.measures > 1 ? ` over ${top.measures} measures` : ""}` : "None is shown better than the reference"}. Played by ${o.net}${o.stale ? ", a net no longer in use" : ""}${o.engine_commits_since ? `, before ${o.engine_commits_since} engine change${o.engine_commits_since > 1 ? "s" : ""}` : ""}.`;
+          return sec(leg, note, ls.map(x => { const d = deckByPath(x.path); return `<div class="stack tight">${tile(d)}<span class="xs muted" style="padding:0 6px">${esc(x.label || "")} · ${sg(x.diff)} [${sg(x.ci95[0])}, ${sg(x.ci95[1])}], ${word(x)}${x.measures > 1 ? ` · ${x.measures} measures` : ""}</span></div>`; }).join("")); }).join("");
   } else body = `<div class="dk-tiles">${list.map(tile).join("")}</div>`;
-  const blurb = { "Riven": "The reference list, the Riven lists from recent tournaments, and the optimiser's best.", "Meta opponents": "Recent tournament decks, used as opponents.", "Optimiser · top 10": newestComparisonVerdict() ? `The lists of the newest confirmation (same deals for all), best first: ${newestComparisonVerdict()}.` : "The ten best-measured lists from the optimiser. None is proven better than the reference yet." }[st.group] || "";
+  const blurb = { "Riven": "The reference list, the Riven lists from recent tournaments, and the optimiser's best.", "Meta opponents": "Recent tournament decks, used as opponents.", "Optimiser · top 10": "The lists the optimiser's confirmations measured, by legend. A difference counts only when its interval stays above 0." }[st.group] || "";
   return `<section class="panel dk-picker" id="dk-picker" aria-label="choose a deck">${tabs}<p class="small muted" style="margin-top:10px">${esc(blurb)}</p>${list.length ? body : empty("No list in this group", "")}</section>`;
 }
 
