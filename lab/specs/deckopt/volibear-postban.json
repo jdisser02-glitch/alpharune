@@ -1,0 +1,146 @@
+{
+ "kind": "deckopt-spec",
+ "name": "volibear-postban",
+ "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']).",
+ "base": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+ "centres": [
+  "lab/variants/volibear-noaurora-best.txt",
+  "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+  "lab/variants/volibear-noaurora-cards-cand-refp4.txt",
+  "lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt",
+  "lab/variants/volibear-noaurora-cards-b-cand-c2p6.txt",
+  "lab/variants/volibear-noaurora-cards-b-cand-c1p6.txt",
+  "lab/variants/volibear-noaurora-cards-b-cand-c1p4.txt",
+  "lab/variants/volibear-noaurora-cards-b-cand-c2p3.txt"
+ ],
+ "pool": {
+  "from_decks": [
+   "lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+   "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "lab/decks/community/jeremy_2026-11-11/volibear_dragons_rengar.txt",
+   "lab/variants/volibear-stuttgart-1-best.txt",
+   "lab/variants/volibear-stuttgart-2-best.txt",
+   "lab/decks/meta/*/*volibear*.txt"
+  ],
+  "extra": [
+   "Thermo Beam",
+   "Minotaur Reckoner",
+   "Rampage",
+   "Sabotage",
+   "Repulse",
+   "Avalanche",
+   "Unyielding Spirit",
+   "Punch First",
+   "Decree of Strength",
+   "Kinkou Initiate",
+   "Dunebreaker",
+   "Ruin Runner"
+  ],
+  "exclude": [
+   "Riven, Broken Blade",
+   "Zhonya's Hourglass",
+   "Stellacorn Herder",
+   "Nocturne, Horrifying",
+   "Rhasa the Sunderer",
+   "Brynhir Thundersong",
+   "Dazzling Aurora",
+   "Baited Hook"
+  ]
+ },
+ "max_copies": 3,
+ "pilot_lists": [
+  "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+  "lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+  "lab/variants/volibear-stuttgart-1-best.txt",
+  "lab/variants/volibear-stuttgart-2-best.txt",
+  "lab/variants/volibear-noaurora-best.txt",
+  "lab/variants/volibear-noaurora-cards-cand-*.txt"
+ ],
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+   "label": "Kai'Sa (Jason Tian, post-ban)",
+   "weight": 51,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/kennen_zombro.txt",
+   "label": "Kennen (zombro, post-ban)",
+   "weight": 44,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_deserter.txt",
+   "label": "Riven Deserter (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+   "label": "Rek'Sai (Rajan Nandan)",
+   "weight": 10
+  },
+  {
+   "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+   "label": "Akali (Vincent Nguyen, post-ban)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+   "label": "Mordekaiser (Neal)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60"
+  }
+ ],
+ "seed": 2331,
+ "threads": 4,
+ "explore": {
+  "shards": 1,
+  "lists": 5000,
+  "games_per_cell": 2,
+  "swaps_mean": 3,
+  "max_swaps": 8,
+  "design": "weighted"
+ },
+ "race1": {
+  "games": 300,
+  "seed": 6121,
+  "requests": 2
+ },
+ "race2": {
+  "games": 1200,
+  "keep": 5,
+  "seed": 6122,
+  "requests": 3
+ },
+ "confirm": {
+  "games": 450,
+  "keep": 2,
+  "seed": 6123,
+  "agent_sub": [
+   [
+    "sims=4",
+    "sims=50"
+   ],
+   [
+    "worlds=2",
+    "worlds=8"
+   ]
+  ],
+  "requests": 4
+ }
+}

@@ -2,5 +2,8 @@
   "name": "train_spec_kennen",
   "kind": "train",
   "specialist": "kennen",
-  "description": "Dispatch marker for the Kennen specialist (riftlab.yml, request=lab/specs/train_spec_kennen.json, chain=N iterations): a net of its own, started from the general net, trained on its own decisions with Kennen against the jury of loop.SPECIALISTS['kennen'] (piloted by the general net or by that legend's specialist), adopted when it beats its previous version in the Kennen mirror (55% or SPRT) without doing worse against the jury (paired, 3 points). Ladder: lab/learn/specialists/kennen/ladder.json; nets lab/learn/nets/spec_kennen_*."
+  "description": "Dispatch marker for the Kennen specialist (riftlab.yml, request=lab/specs/train_spec_kennen.json, chain=N iterations): a net of its own, started from the general net, trained on its own decisions with Kennen against the jury of loop.SPECIALISTS['kennen'] (piloted by the general net or by that legend's specialist), adopted when it beats its previous version in the Kennen mirror (55% or SPRT) without doing worse against the jury (paired, 3 points). Ladder: lab/learn/specialists/kennen/ladder.json; nets lab/learn/nets/spec_kennen_*.",
+  "args": "--continuous --selfplay-sims 500 --selfplay-extra cap=0.25,fast=80,explore=4 --selfplay-opp-sims 200 --games 800 --hidden 128 --spec-mirror 0.15 --buffer 6 --recency 0.85 --epochs 1 --lr 3e-4 --q-weight 0.5 --spec-mirror-games 200 --spec-jury-games 32 --spec-guard -0.08 --spec-anchor-games 40 --commit-every 6",
+  "runners": 2,
+  "note": "13 Nov 22:40 UTC (Jeremy: 'entra\u00eenement sur Voli, Morde, Riven et Evelynn apr\u00e8s ban', away for the weekend): post-ban track (loop._POSTBAN_TRACKS: lists and opponents without the banned cards, continuous mode, a net committed every 6 iterations), 2 of the 20 runners."
 }

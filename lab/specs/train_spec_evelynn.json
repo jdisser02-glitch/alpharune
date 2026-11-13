@@ -2,5 +2,8 @@
   "name": "train_spec_evelynn",
   "kind": "train",
   "specialist": "evelynn",
-  "description": "Dispatch marker for the Evelynn specialist (riftlab.yml, request=lab/specs/train_spec_evelynn.json, chain=N): see train_spec_kennen.json. Trained on its own decisions with Evelynn against loop.SPECIALISTS['evelynn'] jury, with its legend's human RiftLite decisions weighted --spec-human-weight; ladder lab/learn/specialists/evelynn/."
+  "description": "Dispatch marker for the Evelynn specialist (riftlab.yml, request=lab/specs/train_spec_evelynn.json, chain=N): see train_spec_kennen.json. Trained on its own decisions with Evelynn against loop.SPECIALISTS['evelynn'] jury, with its legend's human RiftLite decisions weighted --spec-human-weight; ladder lab/learn/specialists/evelynn/.",
+  "args": "--continuous --selfplay-sims 500 --selfplay-extra cap=0.25,fast=80,explore=4 --selfplay-opp-sims 200 --games 1600 --hidden 128 --spec-mirror 0.15 --buffer 6 --recency 0.85 --epochs 1 --lr 3e-4 --q-weight 0.5 --spec-mirror-games 200 --spec-jury-games 32 --spec-guard -0.08 --spec-anchor-games 40 --commit-every 6",
+  "runners": 5,
+  "note": "13 Nov 22:40 UTC (Jeremy: 'entra\u00eenement sur Voli, Morde, Riven et Evelynn apr\u00e8s ban', away for the weekend): post-ban track (loop._POSTBAN_TRACKS: lists and opponents without the banned cards, continuous mode, a net committed every 6 iterations), 5 of the 20 runners."
 }

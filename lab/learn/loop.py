@@ -315,6 +315,70 @@ SPECIALISTS = {
                        _META + "ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
                        _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]},
 }
+# ── After the bans of 23 Nov 2026 ─────────────────────────────────────────────────────────────────────────────────
+# Jeremy, 13 Nov 22:30 UTC: "essaie de trouver la nouvelle meta, entraînement sur Voli, Morde, Riven et Evelynn après
+# ban" (lab/learn/TRAINING_KNOWLEDGE.md, section 5; lab/OPTIMISER_KNOWLEDGE.md, section 7). From here every track
+# below trains on lists without the banned cards (lab/decks/postban/, made by lab/tools/postban.py), against one
+# shared field without them, continuously (--continuous). The entries above keep the history of each track; these
+# override their decks, opponents and yardsticks. Kai'Sa and Kennen train too, on a small share of the machines:
+# they are the two heaviest opponents of the field and their pilots were the least trained.
+_POST = "lab/decks/postban/"
+# Self-play opponents of every post-ban track (a track never meets its own legend here: the mirror has its own
+# share, --spec-mirror). Weights: the Stuttgart shares of the legends still standing, Riven cut from 126 to 40
+# (two champions), and 8 for each legend Jeremy plays. Nobody knows the real post-ban shares yet.
+POSTBAN_FIELD = [(_POST + "kai_sa_jason_tian.txt", 51.0), (_POST + "kennen_zombro.txt", 44.0),
+                 (_POST + "riven_frame_shattered.txt", 20.0), (_POST + "riven_frame_deserter.txt", 20.0),
+                 (_POST + "master_yi_pcq.txt", 16.0),
+                 (_META + "ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt", 10.0),
+                 (_POST + "akali_vincent_nguyen.txt", 8.0), ("lab/variants/volibear-noaurora-best.txt", 8.0),
+                 (_META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt", 8.0),
+                 ("lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt", 8.0),
+                 (_POST + "orianna_luoluoluofu.txt", 3.0)]
+# Held out of self-play (the panel of each track): other lists of the same legends, each known to its pilot.
+POSTBAN_HELD = [_POST + "kai_sa_icrazyfool.txt", _POST + "kennen_yizhenglong.txt", _POST + "akali_alex_gorica.txt",
+                _POST + "riven_hand_draw.txt", "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+                _POST + "mordekaiser_calvin.txt", _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]
+_POSTBAN_TRACKS = {
+    # decks[0] is the mirror deck of the gate and of the frozen-net curve
+    "volibear": {"decks": ["lab/variants/volibear-noaurora-best.txt", "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+                           "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+                           "lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt",
+                           "lab/variants/volibear-noaurora-cards-b-cand-c2p6.txt"],
+                 "vary": {"spec": "lab/specs/deckopt/volibear-postban.json", "share": 0.6},
+                 "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_volibear_048_v0.rbpn",
+                             "lab/learn/nets/spec_volibear_108_v0.rbpn", "lab/learn/nets/spec_volibear_132_v0.rbpn"]},
+    "mordekaiser": {"decks": [_META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+                              _POST + "mordekaiser_calvin.txt",
+                              _META + "future_cup_fsw_evolution_cards_2026-11-01/09_cijian_baiwen_mordekaiser.txt",
+                              _POST + "mordekaiser_3x_tianzi.txt", "lab/variants/mordekaiser-stuttgart-2-best.txt"],
+                    "vary": {"spec": "lab/specs/deckopt/mordekaiser-postban.json", "share": 0.6},
+                    "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_mordekaiser_047_v0.rbpn",
+                                "lab/learn/nets/spec_mordekaiser_070_v0.rbpn"]},
+    "riven": {"decks": [_POST + "riven_frame_shattered.txt", _POST + "riven_frame_deserter.txt",
+                        _POST + "riven_hand_equipment.txt", _POST + "riven_hand_draw.txt"],
+              "vary": {"specs": ["lab/specs/deckopt/riven-postban-shattered.json",
+                                 "lab/specs/deckopt/riven-postban-deserter.json"], "share": 0.6},
+              "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_riven_059_v0.rbpn",
+                          "lab/learn/nets/spec_riven_120_v0.rbpn"]},
+    "evelynn": {"decks": ["lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+                          _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"],
+                "vary": {"spec": "lab/specs/deckopt/evelynn-postban.json", "share": 0.6},
+                "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_evelynn_005_v3.rbpn",
+                            "lab/learn/nets/spec_evelynn_018_v0.rbpn"]},
+    "kai_sa": {"decks": [_POST + "kai_sa_jason_tian.txt", _POST + "kai_sa_icrazyfool.txt", _POST + "kai_sa_art3mis.txt"],
+               "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_kai_sa_012_v1.rbpn",
+                           "lab/learn/nets/spec_kai_sa_025_v1.rbpn"]},
+    "kennen": {"decks": [_POST + "kennen_zombro.txt", _POST + "kennen_yizhenglong.txt", _POST + "kennen_evansrhim.txt",
+                         _POST + "kennen_dylan_sumner.txt", _POST + "kennen_simple.txt"],
+               "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_kennen_015_v1.rbpn",
+                           "lab/learn/nets/spec_kennen_020_v0.rbpn"]},
+}
+for _name, _over in _POSTBAN_TRACKS.items():
+    _mine = lambda d, _n=_name: _n in Path(d).name.lower()
+    SPECIALISTS[_name].pop("vary", None)
+    SPECIALISTS[_name].update(_over, train=[(d, w) for d, w in POSTBAN_FIELD if not _mine(d)],
+                              measure=[d for d in POSTBAN_HELD if not _mine(d)])
+
 for _s in SPECIALISTS.values():
     _s.setdefault("mirror", _s["decks"][0])
 MAIN_LADDER = LADDER
