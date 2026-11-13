@@ -1,0 +1,35 @@
+{
+ "name": "volibear-noaurora-cards-holdout-akali-03-alex-gori",
+ "description": "Hold-out check of round 1 of the Volibear search without Dazzling Aurora (13 Nov): the reference, the two confirmed lists and soldog's list with Aurora against five lists that were NOT in the search's field (each known to its pilot), 1800 games per list shared out by the weights of the field's legends, seed 5104. Does the gain found against the six lists of the search hold against other lists of the same legends? This request: Akali (Alex Gorica), 190 games.",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 190,
+ "review_games": 0,
+ "seed": 5104,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+   "label": "ref+2"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+   "label": "c2+3"
+  },
+  {
+   "deck": "lab/variants/volibear-field-best.txt",
+   "label": "soldog with Dazzling Aurora (not legal under the assumption)"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+   "label": "Akali (Alex Gorica)",
+   "weight": 26,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60"
+  }
+ ]
+}
