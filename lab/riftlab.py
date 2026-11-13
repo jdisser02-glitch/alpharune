@@ -289,10 +289,12 @@ def card_exposure(ndjson: Path, seat: int) -> dict:
     """Card-level counts for the deck in `seat` (1 or 2) over the games of one batch, from the engine's games.ndjson
     (the "cards" block: opening hand, cards held with the turn first seen, cards played).
 
-    {"games": n, "wins": w, "cards": {name: [open_n, open_w, early_n, early_w, held_n, held_w, played_n, played_w]}}
-    where open = at least one copy kept after the mulligan, early = held by turn EARLY_TURN, held = in hand at some
-    point, played = played at least once. The shuffle decides who holds what, so "open" compares like with like
-    inside one list; "held" and "played" also grow with the length of the game, read them with that in mind."""
+    {"games": n, "wins": w, "cards": {name: [open_n, open_w, early_n, early_w, held_n, held_w, played_n, played_w,
+                                              dealt_n, dealt_w]}}
+    where dealt = at least one copy in the hand as dealt, before the mulligan (the shuffle alone decides it, so
+    "dealt" against "not dealt" compares like with like inside one list); open = kept after the mulligan (the pilot's
+    choice enters); early = held by turn EARLY_TURN; held = in hand at some point; played = played at least once.
+    "held" and "played" also grow with the length of the game: read them with that in mind."""
     out = {"games": 0, "wins": 0, "cards": {}}
     if not ndjson.exists():
         return out
@@ -310,9 +312,10 @@ def card_exposure(ndjson: Path, seat: int) -> dict:
         held = {n for n, _ in (c.get("held") or [])}
         early = {n for n, t in (c.get("held") or []) if t <= EARLY_TURN} | opening
         played = set(c.get("played") or [])
-        for i, names in enumerate((opening, early, held | opening, played)):
+        dealt = set(c.get("dealt") or [])
+        for i, names in enumerate((opening, early, held | opening, played, dealt)):
             for n in names:
-                row = out["cards"].setdefault(n, [0] * 8)
+                row = out["cards"].setdefault(n, [0] * 10)
                 row[2 * i] += 1; row[2 * i + 1] += won
     return out
 
@@ -325,7 +328,7 @@ def merge_exposure(a: dict | None, b: dict | None) -> dict:
             continue
         out["games"] += x.get("games", 0); out["wins"] += x.get("wins", 0)
         for n, row in (x.get("cards") or {}).items():
-            acc = out["cards"].setdefault(n, [0] * 8)
+            acc = out["cards"].setdefault(n, [0] * 10)
             for i, v in enumerate(row):
                 acc[i] += v
     return out

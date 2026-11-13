@@ -165,6 +165,8 @@ GameResult GameRunner::run() {
     // player holds, so "won with the card in the opening hand" against "won without" compares like with like inside
     // one list: the lab's card-level statistics (lab/tools/card_stats.py) are built on it.
     struct Exposure {
+        std::vector<GameObjectId> dealt;      // the hand as dealt, before the mulligan (decided by the shuffle alone)
+        bool dealt_set = false;
         std::vector<GameObjectId> opening;
         bool opening_set = false;
         std::vector<std::pair<GameObjectId, int>> held;   // object, turn first seen in hand
@@ -204,6 +206,13 @@ GameResult GameRunner::run() {
                               const Intent& chosen) {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
+        }
+        if (want_exposure && state.turn.phase == TurnPhase::Mulligan) {
+            for (int p = 0; p < 2; ++p)
+                if (!exposure[p].dealt_set && !state.players[p].hand.empty()) {
+                    exposure[p].dealt = state.players[p].hand;
+                    exposure[p].dealt_set = true;
+                }
         }
         if (want_exposure && state.turn.phase != TurnPhase::Setup && state.turn.phase != TurnPhase::Mulligan) {
             for (int p = 0; p < 2; ++p) {
@@ -287,10 +296,12 @@ GameResult GameRunner::run() {
             nlohmann::json cards = nlohmann::json::array();
             for (int p = 0; p < 2; ++p) {
                 nlohmann::json opening = nlohmann::json::array(), held = nlohmann::json::array(), played = nlohmann::json::array();
+                nlohmann::json dealt = nlohmann::json::array();
+                for (GameObjectId id : exposure[p].dealt) { const auto n = name_of(id); if (!n.empty()) dealt.push_back(n); }
                 for (GameObjectId id : exposure[p].opening) { const auto n = name_of(id); if (!n.empty()) opening.push_back(n); }
                 for (const auto& [id, turn] : exposure[p].held) { const auto n = name_of(id); if (!n.empty()) held.push_back({n, turn}); }
                 for (CardDefId def : exposure[p].played) played.push_back(card_db_.get(def).name);
-                cards.push_back({{"opening", opening}, {"held", held}, {"played", played}});
+                cards.push_back({{"dealt", dealt}, {"opening", opening}, {"held", held}, {"played", played}});
             }
             header["cards"] = cards;
         }
