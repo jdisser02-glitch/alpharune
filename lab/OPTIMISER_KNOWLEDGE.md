@@ -373,10 +373,13 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
 The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
 when machines or attention are short, in that order.**
 
-A. Volibear's training chain ends by itself at iteration 134 (commit "train (spec-volibear): iteration 134 …", about
-   19:30-20:30). As soon as that commit exists (or no iteration commit for 60 minutes and no training run in
-   progress): dispatch `riftlab.yml` with `request=lab/specs/train_spec_volibear.json`, `chain=16` again (standing
-   green light of 13 Nov 07:50). Nothing else trains tonight.
+A. Volibear's training chain ends by itself at iteration **135** (`chain=16` means sixteen more runs after the
+   first: 119 to 135; at 18:49 UTC the workflow itself dispatched iteration 135 after 134). 19:03 UTC: a manual
+   dispatch made on seeing the commit of 134 was cancelled at once (run 43488456160, before any job started): two
+   runs of the same iteration collide. So: dispatch `riftlab.yml` with `request=lab/specs/train_spec_volibear.json`,
+   `chain=16` only when the commit "train (spec-volibear): iteration 135 …" exists AND the newest queued or
+   in-progress run was not started by github-actions[bot] (list_workflow_runs, status queued then in_progress,
+   perPage 1: read `actor.login` and `head_commit.message`). Nothing else trains tonight.
 B. From 23:00 (the runner shards push `lab/deckopt/<S>/explore-0?.json` at about 23:15-23:30): copy
    `<scratchpad>/riven_out/<S>/explore-*.json` into `lab/deckopt/<S>/`, `git pull`, and for each S that has its local
    shards and its runner shard (at 23:50 take what exists): `python3 lab/deckopt.py model lab/specs/deckopt/<S>.json`
