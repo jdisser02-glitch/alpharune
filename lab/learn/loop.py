@@ -133,6 +133,12 @@ SPECIALISTS = {
                           _META + "s5_shanghai_city_challenge_2026-11-01/03_youjike_sishumoling_orianna.txt",
                           _META + "ldxp_sacramento_challenge_2026-10-25/09_calvin_mordekaiser.txt"],
               # Frozen nets the candidate meets in the mirror every iteration: the progress curve.
+              # 13 Nov (lab/OPTIMISER_KNOWLEDGE.md): the bans of 23 Nov take Riven, Broken Blade. 60% of the self-play
+              # pairs play a post-ban starting list (champion Riven, Shattered or Riven, Deserter) plus 0, 1, 2 or 4
+              # random swaps from the post-ban search's pool, so the pilot learns the champions and cards it never
+              # played; the other 40% keep the lists above (legal until 22 Nov, and the gate's yardstick).
+              "vary": {"specs": ["lab/specs/deckopt/riven-postban-shattered.json",
+                                 "lab/specs/deckopt/riven-postban-deserter.json"], "share": 0.6},
               "anchors": ["lab/learn/nets/net_164_v3.rbpn", "lab/learn/nets/spec_riven_020_v1.rbpn",
                           "lab/learn/nets/spec_riven_028_v0.rbpn", "lab/learn/nets/spec_riven_059_v0.rbpn"],
               "jury": [_META + "radiance_release_2026-10-24/07_zombro_kennen.txt",

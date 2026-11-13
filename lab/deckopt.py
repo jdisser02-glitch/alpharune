@@ -37,6 +37,9 @@ spec (lab/specs/deckopt/<name>.json) = {
   "race1": {"games": 72, "seed": 5101}, "race2": {"games": 288, "keep": 5, "seed": 5102},
   "confirm": {"games": 600, "keep": 2, "seed": 5103, "extra": [{"deck": "...", "label": "..."}]}
 }
+A stage may carry "agent_sub": [["sims=4", "sims=50"], ["worlds=2", "worlds=8"]]: substitutions applied to every agent
+of that stage (explore and race with the cheap pilot, confirm with the full one; or another net for "confirm2", a
+second confirmation of race2's survivors, e.g. by the pilot trained since).
 "games" in a stage are per opponent, half on each seat.
 """
 from __future__ import annotations
@@ -421,13 +424,18 @@ def wave(spec: dict, stage: str) -> int:
     # The stage's games (its "games" times the number of opponents) are shared out by the opponents' weights: the
     # rate that counts is the field-weighted one, and its noise is smallest when the heavy opponents get the games.
     total, W = int(st.get("games", 72)) * len(spec["opponents"]), sum(o.get("weight", 1) for o in spec["opponents"])
+    def sub(agent):
+        for a, b in st.get("agent_sub", []):
+            agent = agent.replace(a, b)
+        return agent
     for o in spec["opponents"]:
+        o = dict(o, **({"agent": sub(o["agent"])} if o.get("agent") else {}))
         share = max(8, 2 * round(total * o.get("weight", 1) / W / 2))
         tag = slug(o["label"].split("(")[0])[:14].strip("-") + "-" + slug(Path(o["deck"]).stem)[:10].strip("-")
         t = {"name": f"{spec['name']}-{stage}-{tag}",
              "description": f"{spec.get('description', spec['name'])} Stage {stage}: {len(decks)} lists on the same seeds, "
                             f"{total} games per list shared out by the opponents' weights. This request: {o['label']}, {share} games.",
-             "agent": spec["agent"], "opp_agent": spec.get("opp_agent", spec["agent"]), "games": share,
+             "agent": sub(spec["agent"]), "opp_agent": sub(spec.get("opp_agent", spec["agent"])), "games": share,
              "review_games": 0, "seed": int(st.get("seed", 5100)), "decks": decks, "opponents": [o]}
         p = LAB / "specs" / "deckopt" / f"{spec['name']}.{stage}.{tag}.json"
         p.write_text(json.dumps(t, indent=1) + "\n")
@@ -498,7 +506,7 @@ def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("phase", choices=["explore", "requests", "model", "propose", "wave", "rank"])
     ap.add_argument("spec")
-    ap.add_argument("--stage", choices=["race1", "race2", "confirm"])
+    ap.add_argument("--stage", choices=["race1", "race2", "confirm", "confirm2"])
     a = ap.parse_args(argv)
     if a.phase == "explore":
         return explore(a.spec)

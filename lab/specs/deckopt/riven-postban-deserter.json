@@ -1,0 +1,249 @@
+{
+ "kind": "deckopt-spec",
+ "name": "riven-postban-deserter",
+ "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'.",
+ "base": "lab/decks/postban/riven_frame_deserter.txt",
+ "centres": [
+  "lab/decks/postban/riven_main_*.txt",
+  "lab/decks/postban/riven_hand_*.txt"
+ ],
+ "pool": {
+  "from_decks": [
+   "lab/decks/meta/*/*riven*.txt",
+   "lab/decks/postban/riven_*.txt"
+  ],
+  "extra": [
+   "Riven, Shattered",
+   "Riven, Deserter",
+   "Doran's Shield",
+   "Doran's Ring",
+   "Cull",
+   "Soul Sword",
+   "Brutalizer",
+   "Guardian Angel",
+   "Hand Hammer",
+   "Sterak's Gage",
+   "Svellsongur",
+   "Boots of Swiftness",
+   "Last Rites",
+   "Edge of Night",
+   "Master Bingwen",
+   "Aphelios, Exalted",
+   "Jax, Unmatched",
+   "Apprentice Smith",
+   "Ornn, Blacksmith",
+   "Watchful Curator",
+   "Ezreal, Prodigy",
+   "Evershade Stalker",
+   "Suave Negotiator",
+   "Clockwork Keeper",
+   "Affectionate Poro",
+   "Pakaa Protector",
+   "Lunar Boon",
+   "Hunker Down",
+   "Life from Stone",
+   "Meditation",
+   "Poro Snax",
+   "Corrupt Enforcer",
+   "Treasure Trove",
+   "Traveling Merchant",
+   "The Good Stuff",
+   "Not So Fast",
+   "Consult the Heavens",
+   "Decree of Focus",
+   "Wind Wall",
+   "Crumbling Sands",
+   "Hard Bargain",
+   "Twilight Shroud",
+   "Block",
+   "Abandon",
+   "Ki Burst",
+   "Entrenched Boar",
+   "Iridescent Avian",
+   "Pitiless Stalker",
+   "Simian Ancestor",
+   "Royal Entourage",
+   "Invigorating Bloom",
+   "Forgotten Signpost",
+   "Last Breath",
+   "Defiant Dance",
+   "Monch",
+   "Eclipse Herald",
+   "Solari Shieldbearer",
+   "Rune Prison",
+   "Momentary Companion",
+   "Sanctum Conservator",
+   "Stoic Ferryman",
+   "Back Off",
+   "Wind and Ghosts",
+   "Gutter Guardian",
+   "Siren of the Shallows",
+   "Windsinger",
+   "Sneaky Deckhand",
+   "Miss Fortune, Buccaneer",
+   "Irelia, Fervent",
+   "Tornado Warrior",
+   "Explosimian",
+   "Satchel Charge",
+   "Tomb-Raider Barbara",
+   "Isolate",
+   "Charm",
+   "Skyward Strike",
+   "Blossoming Dreamroot",
+   "Command: Attack",
+   "Wielder of Water",
+   "Angler Wyrm",
+   "Vex, Apathetic",
+   "Storm Raptor",
+   "Battle Preparations",
+   "Star-Crossed",
+   "Rebuke",
+   "An Offer You Can't Refuse",
+   "Siren's Song",
+   "Vilemaw",
+   "Hush",
+   "Ride the Wind",
+   "En Garde",
+   "Evelynn, Entrancing",
+   "Fizz, Trickster"
+  ],
+  "exclude": [
+   "Riven, Broken Blade",
+   "Zhonya's Hourglass",
+   "Stellacorn Herder",
+   "Nocturne, Horrifying",
+   "Rhasa the Sunderer",
+   "Brynhir Thundersong",
+   "Dazzling Aurora",
+   "Baited Hook"
+  ],
+  "caps": {
+   "Riven, Shattered": 2,
+   "Riven, Deserter": 2
+  }
+ },
+ "max_copies": 3,
+ "pilot_lists": [
+  "decks/riven_sacramento.txt",
+  "lab/variants/riven-multistart-ga-2--cef30c16fe.txt",
+  "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+  "lab/decks/meta/rift_tour_finale_paris_2026-10-24/01_nuitwltuiazewikx_riven.txt",
+  "decks/riven_best_field.txt",
+  "decks/jeremy/tournament_d.txt",
+  "lab/decks/meta/convergence_iv_2026-10-31/01_wojciech_cetner_riven.txt",
+  "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+  "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+  "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt"
+ ],
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+   "label": "Kai'Sa (Jason Tian, post-ban)",
+   "weight": 51,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/kennen_zombro.txt",
+   "label": "Kennen (zombro, post-ban)",
+   "weight": 44,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_deserter.txt",
+   "label": "Riven Deserter (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+   "label": "Rek'Sai (Rajan Nandan)",
+   "weight": 10
+  },
+  {
+   "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+   "label": "Akali (Vincent Nguyen, post-ban)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-best.txt",
+   "label": "Volibear (lab's post-ban list)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60"
+  }
+ ],
+ "seed": 2302,
+ "threads": 4,
+ "explore": {
+  "shards": 2,
+  "lists": 5000,
+  "games_per_cell": 2,
+  "swaps_mean": 4,
+  "max_swaps": 10,
+  "design": "weighted"
+ },
+ "race1": {
+  "games": 300,
+  "seed": 6101
+ },
+ "race2": {
+  "games": 1200,
+  "keep": 5,
+  "seed": 6102
+ },
+ "confirm": {
+  "games": 450,
+  "keep": 2,
+  "seed": 6103,
+  "agent_sub": [
+   [
+    "sims=4",
+    "sims=50"
+   ],
+   [
+    "worlds=2",
+    "worlds=8"
+   ]
+  ],
+  "extra": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "reference of the shattered frame"
+   }
+  ]
+ },
+ "confirm2": {
+  "games": 450,
+  "keep": 2,
+  "seed": 6104,
+  "agent_sub": [
+   [
+    "sims=4",
+    "sims=50"
+   ],
+   [
+    "worlds=2",
+    "worlds=8"
+   ]
+  ],
+  "extra": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "reference of the shattered frame"
+   }
+  ]
+ }
+}

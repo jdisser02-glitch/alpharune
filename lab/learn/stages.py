@@ -272,27 +272,32 @@ _VARY = {}
 
 def varied_deck(s, it, k):
     """A random variation of one of the legend's lists for self-play pair k: a starting list of the search named by
-    s["vary"]["spec"] (lab/deckopt.py spec: base, centres, pool) plus 0, 1, 2 or 4 random legal swaps from its
+    s["vary"]["spec"] (or one of s["vary"]["specs"]; lab/deckopt.py spec: base, centres, pool) plus 0, 1, 2 or 4 random legal swaps from its
     pool, written under data/learn/vary/. The same (iteration, k) always gives the same list.
 
     Why (lab/OPTIMISER_KNOWLEDGE.md, section 5): a pilot plays the cards it never trained on worse, so a list
     search rates lists by how well the pilot knows them. Training on variations puts every card the search may
     try in front of the pilot."""
     v = s["vary"]
-    if "frame" not in _VARY:
+    if "frames" not in _VARY:
         sys.path.insert(0, str(loop.ROOT / "lab"))
         import deckopt
-        spec = json.loads((loop.ROOT / v["spec"]).read_text())
-        g = deckopt.frame_of({**spec, "opponents": []})
-        _VARY["frame"] = (deckopt, g, deckopt.centres_of(spec, g))
-    deckopt, g, centres = _VARY["frame"]
+        frames = []
+        # "specs": several searches of the same legend (Riven after the bans: one frame per champion), drawn evenly
+        for path in v.get("specs") or [v["spec"]]:
+            spec = json.loads((loop.ROOT / path).read_text())
+            g = deckopt.frame_of({**spec, "opponents": []})
+            frames.append((g, deckopt.centres_of(spec, g), path))
+        _VARY["frames"] = (deckopt, frames)
+    deckopt, frames = _VARY["frames"]
     rng = random.Random(1_000_003 * it + 7919 * k + 17)
+    g, centres, used = frames[rng.randrange(len(frames))] if len(frames) > 1 else frames[0]
     g.rng = rng
     m = dict(rng.choice(centres)["main"])
     for _ in range(rng.choices([0, 1, 2, 4], weights=v.get("swap_weights", [25, 30, 25, 20]))[0]):
         m = g.swap(m) or m
     path = loop.DATA / "vary" / f"it{it:03d}_k{k:06d}.txt"
-    deckopt.write_list(g, m, path, [f"self-play variation, iteration {it}, pair {k} ({v['spec']})"])
+    deckopt.write_list(g, m, path, [f"self-play variation, iteration {it}, pair {k} ({used})"])
     return str(path)
 
 
