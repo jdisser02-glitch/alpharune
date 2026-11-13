@@ -417,12 +417,16 @@ def wave(spec: dict, stage: str) -> int:
     st = spec.get(stage, {})
     decks = stage_lists(spec, stage)
     slug = lambda s: "".join(ch if ch.isalnum() else "-" for ch in s.lower()).strip("-")
+    # The stage's games (its "games" times the number of opponents) are shared out by the opponents' weights: the
+    # rate that counts is the field-weighted one, and its noise is smallest when the heavy opponents get the games.
+    total, W = int(st.get("games", 72)) * len(spec["opponents"]), sum(o.get("weight", 1) for o in spec["opponents"])
     for o in spec["opponents"]:
+        share = max(8, 2 * round(total * o.get("weight", 1) / W / 2))
         tag = slug(o["label"].split("(")[0])[:14].strip("-") + "-" + slug(Path(o["deck"]).stem)[:10].strip("-")
         t = {"name": f"{spec['name']}-{stage}-{tag}",
              "description": f"{spec.get('description', spec['name'])} Stage {stage}: {len(decks)} lists on the same seeds, "
-                            f"{st.get('games')} games per opponent. This request: {o['label']}.",
-             "agent": spec["agent"], "opp_agent": spec.get("opp_agent", spec["agent"]), "games": int(st.get("games", 72)),
+                            f"{total} games per list shared out by the opponents' weights. This request: {o['label']}, {share} games.",
+             "agent": spec["agent"], "opp_agent": spec.get("opp_agent", spec["agent"]), "games": share,
              "review_games": 0, "seed": int(st.get("seed", 5100)), "decks": decks, "opponents": [o]}
         p = LAB / "specs" / "deckopt" / f"{spec['name']}.{stage}.{tag}.json"
         p.write_text(json.dumps(t, indent=1) + "\n")
