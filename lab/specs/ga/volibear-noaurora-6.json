@@ -1,0 +1,89 @@
+{
+ "name": "volibear-noaurora-6",
+ "description": "Best Volibear list against the Stuttgart RC Europe field if Dazzling Aurora is banned (Jeremy, 13 Nov 2026: 'continue en assumant que Dazzling Aurora est ban'; no ban was announced at that time). Dazzling Aurora is excluded from the card pool and from every starting list. Same frame as the 12 Nov search: Volibear piloted by spec_volibear_108_v0, the six most played decks of the field weighted by decks registered, each piloted by its own net, Ritualo's Dragons as the base and reference (it plays no Dazzling Aurora in its main deck). Starting lists: soldog's main deck with its three Dazzling Aurora replaced nine ways, the finalists of starts 1, 6 and 3 of 12 Nov without theirs, Laggy's Dragons with Rengar and oryzias's list. Caveat: the pilot trained on lists with Dazzling Aurora in them and plays their replacements less well. The finalists of all starts then meet on 200 games per opponent in a separate test. Start 6 of 6 (seed 1306).",
+ "base": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+ "seeds": [
+  "lab/variants/volibear-noaurora-seed-*.txt",
+  "lab/decks/community/jeremy_2026-11-11/volibear_dragons_rengar.txt",
+  "lab/decks/community/volibear_radiance_2026-10-31/oryzias_aserty_invitational_20261010.txt"
+ ],
+ "pool": {
+  "from_decks": [
+   "lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+   "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "lab/decks/community/jeremy_2026-11-11/volibear_dragons_rengar.txt",
+   "lab/variants/volibear-stuttgart-1-best.txt",
+   "lab/variants/volibear-stuttgart-2-best.txt",
+   "lab/decks/meta/*/*volibear*.txt"
+  ],
+  "extra": [
+   "Thermo Beam",
+   "Minotaur Reckoner",
+   "Rampage",
+   "Sabotage",
+   "Repulse",
+   "Avalanche",
+   "Unyielding Spirit",
+   "Punch First",
+   "Decree of Strength",
+   "Kinkou Initiate",
+   "Dunebreaker",
+   "Ruin Runner"
+  ],
+  "exclude": [
+   "Dazzling Aurora"
+  ]
+ },
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+   "label": "Riven (Sonecon, Stuttgart 2nd)",
+   "weight": 63,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+   "label": "Riven (Tabris, Orlando 1st)",
+   "weight": 63,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+   "label": "Kai'Sa (Jason Tian)",
+   "weight": 51,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
+   "label": "Kennen (Evansrhim, Stuttgart 1st)",
+   "weight": 44,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+   "label": "Master Yi (PCQ)",
+   "weight": 16
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+   "label": "Rek'Sai (Rajan Nandan)",
+   "weight": 10
+  }
+ ],
+ "population": 16,
+ "generations": 5,
+ "elite": 4,
+ "games": 10,
+ "swaps": [
+  1,
+  3
+ ],
+ "crossover": 0.6,
+ "max_copies": 3,
+ "finalists": 3,
+ "confirm_games": 40,
+ "threads": 4,
+ "seed": 1306
+}

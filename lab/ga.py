@@ -384,6 +384,9 @@ class GA:
                         m = dict(riftlab.parse_deck(Path(f))["maindeck"])
                     except Exception as e:  # noqa: BLE001
                         print(f"seed skipped {f}: {e}", file=sys.stderr); continue
+                    banned = sorted(set(m) & set(self.spec.get("pool", {}).get("exclude", [])))
+                    if banned:      # a card the search may not use (pool.exclude) cannot enter through a seed either
+                        print(f"seed skipped {Path(f).name}: plays {', '.join(banned)}, excluded from the pool", file=sys.stderr); continue
                     if sum(m.values()) != sum(self.base["maindeck"].values()) or not self.legal(m):
                         print(f"seed skipped {Path(f).name}: not legal in the base's frame", file=sys.stderr); continue
                     k = self.register(m, 0)
