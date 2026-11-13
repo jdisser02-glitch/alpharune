@@ -2,6 +2,16 @@
 
 C++20 game engine that simulates 1v1 Riftbound TCG matches. This file is the standards and conventions reference for engine development. For project status, completed work, and active backlog, see git log + the sibling riftbound-trainer repo's `docs/`.
 
+## Lab notebooks: read before working in `lab/`
+
+The lab (`lab/`: list tests, list search, self-play training, dashboard) keeps what it has learned in two files.
+Read the relevant one before changing a method or stating a result, and append to its log afterwards; they exist
+so that knowledge survives from one session to the next.
+
+- `lab/OPTIMISER_KNOWLEDGE.md` — list search: inventory of the tools, audit of the genetic search, what the
+  literature says, the card-level method (`lab/deckopt.py`), log of every search.
+- `lab/learn/TRAINING_KNOWLEDGE.md` — training of the pilots: audit, literature, continuous training, log.
+
 ## Build
 
 ```bash

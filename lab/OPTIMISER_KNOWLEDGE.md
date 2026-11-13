@@ -1,0 +1,137 @@
+# List search: what the audit found, what the literature says, what the lab does now (13 Nov 2026)
+
+Read this before touching `lab/ga.py`, `lab/optimize.py`, `lab/card_impact.py` or `lab/deckopt.py`, and before
+telling anyone which list is "best". The training side has its own notebook, `lab/learn/TRAINING_KNOWLEDGE.md`.
+Section 4 is the log: append to it after every search.
+
+Jeremy, 13 Nov: "j'ai l'impression que tu fais des demi-tâches […] j'aimerais que tu fasses des recherches et que
+tu t'instruises. Tu perds du contexte à chaque fois." This file is the answer to the last sentence.
+
+## 0. The tools that exist (inventory, so none is rebuilt by mistake)
+
+| tool | what it does |
+|---|---|
+| `lab/riftlab.py run SPEC` | plays lists against opponents (`decks` × `opponents`), result in `lab/results/` |
+| `lab/tools/merge_results.py NAME` | puts one-opponent results back together as one test (a field test is dispatched one opponent per machine) |
+| `lab/optimize.py` | successive halving over explicit candidates or one-for-one swaps |
+| `lab/ga.py` | genetic search (population, crossover, 1-3 swaps); see section 1 for why it is not trusted alone |
+| `lab/card_impact.py` | improvement-when-drawn of each card of ONE list, from game logs (1 Nov); writes A/B specs |
+| `lab/deckopt.py` | the card-level search (13 Nov): explore → model → propose → race → confirm |
+| engine `--review-dir D --review-games 0` | `D/games.ndjson`, one line per game: seed, winner, and per player the hand as dealt, the opening hand, cards held (with the turn) and cards played |
+| `riftlab.play_batch(..., cards_seat=1|2)` | the same counted per card (`card_exposure`) |
+
+Runners: a plain request is one 4-core machine, 350 minutes at most, about 1,400 games an hour with the trained
+pilots (`pmcts:sims=50,…,worlds=8`). Several requests run side by side (each its own machine). Twelve were run at
+once on 13 Nov.
+
+## 1. Audit of the genetic search (12 Nov, Volibear, six starts, 25,920 games)
+
+**It ranks luck.** Each list played 72 to 360 games during the search; the three finalists of each start then
+played 40 fresh games per opponent (240), and eight lists played 200 per opponent (1,200).
+
+| | lead over the reference |
+|---|---|
+| the 18 finalists, during the search | +7.8 points on average (from +3.3 to +15.0) |
+| the same 18, on the search's own fresh games | −2.3 points on average |
+
+A list's rate on 72 games is known to ±6 points (one standard error), on 360 games to ±2.6; the real differences
+between good lists are 2 to 8. Picking the best of 12-16 such numbers picks the luckiest (the best of 16 equal
+lists looks about 11 points better than it is on 72 games). The games that made a list survive stay in its
+average, so the bias never washes out.
+
+**It returns its starting lists.** The lists that held up on 1,200 games were soldog's tournament list and that
+list with 1 to 4 cards changed; none of the changed ones beat it. The search told us which starting list is
+best, which a plain test of the starting lists would have told for a fraction of the games.
+
+**The last test was under-powered too.** At 1,200 games per list the standard error of a difference is 2 points:
+a real +3 passes "interval above 0" less than half the time.
+
+**What the same games say card by card.** A regression of the win on the card counts over those 25,920 games
+gives each card's effect to about ±2 points per copy: only Elder Dragon (+6 per copy) and Thermo Beam (−6) stand
+out; Dazzling Aurora is +1.1 ± 2.0 per copy, i.e. not shown to matter. Card effects are small (most within ±2
+points a copy), so finding them needs either ten times the games or statistics from inside the games.
+
+**Same seed, near lists.** The engine is deterministic for a seed, and the opponent's deal is the same for two
+lists on the same seed: the outcomes of two lists three cards apart correlate at 0.29 (random pilots, 3,000
+games), 0.11 for lists 25 cards apart. Our own shuffle is NOT coupled (same opening hand in 25% of games only):
+shuffling by a per-card key would raise the correlation and shrink every paired comparison's noise. Not done yet.
+
+## 2. What the literature says (review of 13 Nov; the full report with URLs and what was read in full is in the
+session transcript, the PDFs were not kept)
+
+**Budgets.** Published deck searches used 0.25 to 3 million games: García-Sánchez et al. 2018 (Hearthstone,
+population 10+10, 200 generations, 128 games per evaluation, about 257k games per hero); Fontaine et al. 2019
+(MAP-Elites, 10,000 evaluations × 200 games = 2M per run); Zhang et al. 2021 (same budget plus a surrogate model);
+Chen et al. 2018, Q-DeckRec (300 games per evaluation, GA plateaued after about 270 evaluations); Kowalski &
+Miernik 2020 (1M games). Zhang: "to evaluate a candidate deck requires at least 200 games even against restricted
+opponents". Nobody reports success at about 60 games per evaluation. A broad search at 30-60k games has no
+support.
+
+**What worked there.** Small swap mutations with a geometric number of swaps (Fontaine, Zhang). A model trained
+online on the decks the search actually proposes, on the bag-of-cards vector (Zhang: every surrogate variant beat
+plain MAP-Elites; a linear one beat an MLP trained offline on random decks). Card-level credit (Kowalski &
+Miernik's "active genes": only the genes of the cards that were actually drafted are updated; the baseline that
+re-evaluated everything "generates average solutions during the first generation that it cannot further
+improve").
+
+**What failed there.** Maximising a learned win-rate predictor (Q-DeckRec): it got worse with more samples because
+"outlier decks with spuriously high predicted win rates trick" the search, the winner's curse on a model. Only
+44% of Zhang's surrogate elites stayed elites when really played. So a model proposes, play decides.
+
+**Noise.** Racing (irace, Hoeffding/Bernstein races): candidates play the same seeds in blocks (one block = one
+game per opponent and seat), nobody is dropped before 5 blocks, elites are dropped only after as many blocks as
+their challengers. Successive halving (Karnin et al. 2013): halve the field each round with the budget split
+evenly over the rounds. Two lists differing by Δ need about 2.9/Δ² games in total to tell apart at 90% (Garivier
+& Kaufmann 2016): 3,200 games for 3 points, 1,150 for 5. Chess engines (Fishtest) test every change with a
+sequential test on paired games and allow "four or five tries" at most, because each extra try is another chance
+for luck. Selection bias: the best of many noisy estimates overstates itself; shrink it,
+`m + A/(A+σ²)·(x−m)` with A the spread of the estimates minus their sampling variance (Efron 2011), and never
+reuse the games that selected a list to rate it.
+
+**Card statistics from play (17Lands, Limited Magic).** GIH (in hand at some point), OH (opening hand), GNS
+(never seen), IWD = GIH − GNS. Their own caveats: GIH flatters late-game cards (long games show more cards and
+are won more by the deck that got there), OH is biased by mulligans, and all of them rate a card against the rest
+of its deck, not against its replacement (practitioners who cut "underperformers" saw former stars turn
+mediocre). The hand as dealt, before the mulligan, depends on the shuffle alone: that comparison is clean. No
+published work closes the loop from drawn-vs-not statistics in simulation to constructed-deck search (de
+Mesentier Silva et al. 2019 computed them and found only a small correlation with what a nerf does).
+
+**The pilot.** Every deck paper flags it, none solves it: the decks found are the decks the agent plays well
+(García-Sánchez: curves shifted low, the AI misplaying specific cards; Fontaine: "dependent on a particular
+game-playing agent"). On training breadth, VGC-Bench (Pokémon, 2025): an agent trained on 64 teams beats the
+1-team agent 67% on unseen teams, but on its own team the 1-team agent beats the broad ones 70-74%. Breadth buys
+generalisation and costs peak skill. ByteDance's Hearthstone agent randomises the first deck-building picks so
+the battle policy sees diverse decks. Recipe that follows: before a search, fine-tune the pilot by self-play on
+randomised lists (the incumbent plus 0, 1, 2 or 4 random swaps) so every candidate card has been seen; for the
+final test give incumbent and finalist the same list-specific fine-tuning; put "cards the pilot never trained on"
+in the regression (a clearly negative coefficient means the search measures the pilot, not the deck).
+
+**The field.** Papers that validated only against the opponents and pilot used for fitness could not tell
+over-fitting from strength. Keep two or three opposing lists (or ±3-card variants of the six) out of the search
+and report the gain on them separately. Co-evolving the field costs millions of games: not affordable.
+
+## 3. The method now (`lab/deckopt.py`)
+
+1. **Explore** (runners, 12 shards): about 720 lists, each a starting list plus a geometric number of random legal
+   swaps (mean 3, at most 8), 24 games each (2 per opponent and seat), independent seeds, card exposure recorded.
+   Every starting list is played once per shard as it is (the yardsticks). About 17,000 games.
+2. **Model** (session): ridge logistic regression of the win on card counts + opponent × seat, the penalty set by
+   how much the cards really differ (spread of the effects minus their noise); a covariate for copies of cards
+   the pilot never trained on; and per card "dealt vs not dealt" inside the lists that play it.
+3. **Propose** (session): the reference, the best starting lists by the model, and 2-9 of the model's best swaps
+   from the two best. The model's favourite only earns a place in the race.
+4. **Race** (runners, one request per opponent): race1 every candidate, 72 games per opponent on shared seeds;
+   race2 the best five + the reference, 288 more. Ranking by shrunk difference.
+5. **Confirm** (runners): the best two + the reference (+ a yardstick), 600 games per opponent on new seeds.
+   A list is "better" only if its interval against the reference is above 0 there. At most two finalists.
+
+Not done yet, in order of worth: (a) the pilot fine-tuned on randomised lists before a search, and the same
+fine-tuning for incumbent and finalist before the confirmation; (b) paired analysis by seed and a coupled shuffle;
+(c) opposing lists held out of the search; (d) a sequential stopping rule for the confirmation.
+
+## 4. Log
+
+**13 Nov, Volibear without Dazzling Aurora** (Jeremy: "continue en assumant que Dazzling Aurora est ban"; an
+assumption, nothing announced). Six starts of the genetic search were dispatched at 07:05 UTC and cancelled at
+07:55 once the audit above was done; the card-level search replaced them (`lab/specs/deckopt/volibear-noaurora-cards.json`,
+twelve exploration shards dispatched 07:55 UTC, results in `lab/deckopt/volibear-noaurora-cards/`).
