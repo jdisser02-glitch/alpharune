@@ -312,3 +312,36 @@ Temple, The Papertree) 82.5%, +5.3 [+1.7, +9.0]. The two sets of battlefields ar
 +3.8]): the bot's play does not make them matter. The gain over Ritualo's list is confirmed but smaller than the
 first measure (+8.5), as a list picked for being first usually is; both measures together (400 games per
 opponent): about +6.8 [+4.2, +9.3]. Against Tabris's Riven the gain went from +17.5 to +5.5 points.
+
+## 5. After the bans of 23 Nov 2026: six post-ban tracks (13 Nov 22:45 UTC)
+
+Jeremy, 13 Nov: "essaie de trouver la nouvelle meta, entraînement sur Voli, Morde, Riven et Evelynn après ban"; he is
+away until Monday 16 Nov. `loop._POSTBAN_TRACKS` (end of the SPECIALISTS table in `lab/learn/loop.py`) overrides,
+for Volibear, Mordekaiser, Riven, Evelynn, Kai'Sa and Kennen:
+- `decks`: lists without the banned cards (`lab/decks/postban/`, `lab/tools/postban.py`); `decks[0]` is the mirror
+  deck of the gate and of the frozen-net curve. Riven: the two post-ban frames (champion Riven, Shattered and
+  Riven, Deserter): the pilot had never played either.
+- `vary` (the four legends Jeremy plays): 60% of the self-play pairs play a starting list of the legend's post-ban
+  search plus 0, 1, 2 or 4 random swaps from its pool (`lab/OPTIMISER_KNOWLEDGE.md` section 5).
+- `train`: one shared field without banned cards (`loop.POSTBAN_FIELD`: Kai'Sa 51, Kennen 44, the two Riven frames
+  20 each, Master Yi 16, Rek'Sai 10, Akali, Volibear, Mordekaiser, Evelynn 8 each, Orianna 3), minus the track's
+  own legend; each opponent is piloted by its legend's net as committed (`specialist_pilots()`), so the six tracks
+  meet each other's newest committed nets. `measure`: `loop.POSTBAN_HELD`, other lists of the same legends.
+- `anchors`: the general net and two earlier nets of the track, the last one being the net it started from.
+All six run `--continuous` with the settings proven on Riven and Volibear (1,600 self-play games an iteration, 800
+for Kai'Sa and Kennen; 500-simulation searches on a quarter of the moves; window of 6 iterations; guard -8 points
+on the panel, mirror floor 45%; `--commit-every 6`). Shares of the 20 runners (`runners` in
+`lab/specs/train_spec_<name>.json`; every matrix of a run is capped at it): Evelynn 5, Riven 5, Mordekaiser 4,
+Volibear 2, Kai'Sa 2, Kennen 2. Expected time of an iteration: about 2.5 hours at 5 runners, 3 at 4, 4-5 at 2.
+
+What to read, and what not: from these iterations on (Volibear 138, Mordekaiser 85, Riven 121, Evelynn 19, Kai'Sa
+29, Kennen 27) the mirror, the frozen-net curve and the panel are measured on post-ban lists against post-ban
+opponents: **the curves before and after are not comparable**. For Riven the frozen nets do not know the new
+champions, so the candidate should pass them quickly: that is learning the champion, not general strength.
+Mordekaiser, Evelynn, Kai'Sa and Kennen switch from the old mode (jury +3) to continuous here.
+
+Watching: `python3 lab/tools/watch_status.py` (STALE = no iteration committed for twice the expected time). A
+chain of n plays n+1 iterations and ends by itself; `chain=40` outlasts the weekend. Never dispatch a track whose
+chain may still be running: two runs of one iteration collide (13 Nov 19:03). Checked before the dispatch: the plan
+stage builds for the six tracks, the variations are legal lists, and one self-play shard of Riven wrote its games.
+

@@ -386,38 +386,7 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   (9,600 each). The Riven frame test runs on the session's machine as task b1bg30rsl (about 75 minutes; result
   `lab/results/*-riven-postban-frames.json`). The runner shards are due at about 23:15-23:30: then step B.
 
-**THE NIGHT OF 13-14 NOV, in order (the hourly watchdog does the next step whose inputs exist; times are UTC).
-The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
-when machines or attention are short, in that order.**
-
-A. (done 20:27) Volibear training dispatched again with `chain=16`: it ends by itself at iteration 152 (a chain
-   of n plays n+1 iterations). Dispatch the next chain only when the commit of iteration 152 exists and no run is
-   queued. Nothing else trains tonight.
-B. From 23:00 (the runner shards push `lab/deckopt/<S>/explore-0?.json` at about 23:15-23:30; no local driver stops by itself any more, see 20:26 above): copy
-   `<scratchpad>/riven_out/<S>/explore-*.json` into `lab/deckopt/<S>/`, `git pull`, and for each S that has its local
-   shards and its runner shard (at 23:50 take what exists): `python3 lab/deckopt.py model lab/specs/deckopt/<S>.json`
-   (keep the top and bottom ten cards and the "never trained on" line for the log), `propose`, `python3
-   lab/tools/postban.py check lab/variants/<S>-cand-*.txt` (all clean), `wave --stage race1`; commit, push; dispatch
-   the 2 `lab/specs/deckopt/<S>.race1.g?.json` of each search (8 runs, cheap pilot, about 40 minutes).
-C. race1 results (`lab/results/*-<S>-race1-g?.json`, two per search): `rank --stage race1`, `wave --stage race2`,
-   commit, push, dispatch the 3 race2 requests of each search (about 45 minutes).
-D. race2 results: `rank --stage race2`, `wave --stage confirm` (full pilot, 3,600 games a list: the reference and
-   the best two; for Riven also the other champion's reference), commit, push, dispatch the 4 confirm requests of
-   each search (about 2 hours).
-E. Confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py <S>-confirm --write`. A list is
-   "better" only if its interval against the reference is above 0; write `lab/variants/<legend>-postban-best.txt`
-   only then, otherwise the reference stays the list to play and say so. The two Riven confirmations play the same
-   opponents on the same seeds (6103): the two champions can be read side by side, with the pilot caveat above.
-F. (Only if Jeremy puts Riven back on the training machines) `confirm2` with the pilot trained on the post-ban
-   variations: add `["spec_riven_120_v0", "<new net's stem>"]` to `confirm2.agent_sub` of both Riven specs.
-G. Riven frame test done (`riven_out/frames.log` ends with DONE; `lab/results/*-riven-postban-frames.json`): log the
-   table; a set of battlefields or the other rune split replaces the frame's only if its interval is above 0.
-H. Morning report to Jeremy (French, plain words), in his order: Mordekaiser, Evelynn (what the search changes in
-   the list he would buy, how sure), Volibear (training state; round 2 waits for the post-ban Riven list, half of
-   its field), Riven last (which champion, which cards replace Hourglass and Herder, how sure). Then rebuild the
-   buy-list artifact with every list that passed step E (`lab/tools/build_buylist.py`: edit DECKS), the dashboard
-   (data.json is at 15.5 MB: trim the variant texts first), and section 4 of this file.
-I. (done 19:02, above) Round 1b of Volibear: cheap race 2 logged.
+**From 13 Nov 22:30 UTC the plan is section 7 (the weekend); the steps that were here moved there.**
 
 **Earlier steps of 13 Nov (all done)**
 0. (done, above) Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
@@ -442,3 +411,86 @@ I. (done 19:02, above) Round 1b of Volibear: cheap race 2 logged.
 7. While round 2's search runs on 6-20 machines, the training goes on (chain again) with `vary` pointing at the
    round-2 spec, unless round 2 and round 1 agree on the best list (then the alternation has converged: say so to
    Jeremy and ask whether Riven is next).
+
+## 7. The weekend of 14-15 Nov: find the post-ban metagame (Jeremy away until Monday; the watchdog runs this)
+
+Jeremy, 13 Nov 22:30 UTC: "essaie de trouver la nouvelle meta, entraînement sur Voli, Morde, Riven et Evelynn après
+ban. Je suis occupé tout le week-end. Tu peux gérer les tâches ?" Yes. Nobody answers questions before Monday: decide,
+write the decision here, go on. Report to him Monday 06:00 UTC (French, plain), and two or three lines when a
+confirmation or a matrix finishes.
+
+**What "the metagame" is here, and what it is not.** No tournament has been played without the banned cards. The
+lab can do three things: (1) for each legend, look for its best list without them (sections 3 and 5); (2) play
+every list against every other and compute what a field of players who all pick the best deck against each other
+would settle on (`lab/tools/meta_matrix.py`: matrix, rate against the prior field, equilibrium with its spread);
+(3) search each legend again against that field, train the pilots on what was found, and repeat (the loop of
+section 5, with the field moving too; in the literature: double oracle / policy-space response oracles, and Nash
+averaging for the ranking). Limits to print with every table: a legend whose pilot trained less looks weaker than
+it is (Master Yi and Rek'Sai play under the general net; Kai'Sa and Kennen had 25 and 20 iterations when this
+started); the bots play tempo and bounce badly (the lab has Volibear at 75-85% where players had Riven ahead);
+sideboards and best-of-three are not simulated; the prior shares are Stuttgart's, a guess for after the bans.
+
+**Training (lab/learn/TRAINING_KNOWLEDGE.md section 5).** Six tracks since 22:45 UTC, all on lists and a field
+without the banned cards: Evelynn 5 runners, Riven 5, Mordekaiser 4, Volibear 2, Kai'Sa 2, Kennen 2
+(`runners` in `lab/specs/train_spec_<name>.json`), `chain=40`, a net committed every 6 iterations. Kai'Sa and Kennen
+were not in Jeremy's sentence: they are the two heaviest opponents and the weakest pilots, so the matrix and every
+search depend on them; four of the twenty machines is the price. Told to Jeremy at 23:10.
+
+**Each watchdog pass:** `git pull`; `python3 lab/tools/watch_status.py`; do what its "next" lines say, in the order
+Mordekaiser, Evelynn, Volibear, Riven; then the matrix and round steps below; update the log at the end of this
+section; commit; push. Work on the session's machine only as a `run_in_background` task (section 6, 20:26).
+
+**Searches, round 1 (running; pilots as they were on 13 Nov).** S = mordekaiser-postban, evelynn-postban,
+volibear-postban, riven-postban-shattered, riven-postban-deserter (specs in `lab/specs/deckopt/`).
+- B. When a search has its runner shard (`lab/deckopt/<S>/explore-0N.json`, pushed about 5.5 hours after its
+  dispatch; Riven, Mordekaiser, Evelynn: 23:15-23:45 UTC on 13 Nov; Volibear: about 04:30 on 14 Nov): `python3
+  lab/deckopt.py model lab/specs/deckopt/<S>.json` (keep the ten best and ten worst cards and the "never trained
+  on" line for the log), `propose`, `python3 lab/tools/postban.py check lab/variants/<S>-cand-*.txt` (all clean),
+  `wave --stage race1`; commit, push; dispatch the 2 `<S>.race1.g?.json` (cheap pilot, about 40 minutes).
+- C. Both race1 results in: `rank --stage race1`, `wave --stage race2`, commit, push, dispatch the 3 race2 requests.
+- D. race2 results in: `rank --stage race2`, `wave --stage confirm` (full pilot, 3,600 games a list: the reference
+  and the best two; Riven also the other champion's reference), commit, push, dispatch the 4 confirm requests.
+- E. Confirm results in: `rank --stage confirm`, `python3 lab/tools/merge_results.py <S>-confirm --write`. A list is
+  "better" only if its interval against the reference is above 0: then copy it to
+  `lab/variants/<legend>-postban-best.txt` with a header saying how it was measured; otherwise the reference stays
+  the list to play. Log the table below. The two Riven confirmations share opponents and seeds (6103): read the two
+  champions side by side, with the caveat that the pilot of round 1 never played either.
+- G. Riven frame test (`lab/results/*-riven-postban-frames.json`, session's machine, about 23:40 UTC): log its table;
+  a set of battlefields or the other rune split replaces the frame's only if its interval is above 0.
+
+**Matrices.** Lists in `lab/meta/postban_decks_<tag>.json`, requests `lab/specs/meta/<tag>.row-<key>.json` (one per
+list), results `lab/results/*-meta-<tag>-row-*.json`, output `lab/meta/postban_meta_<tag>.{json,md}`.
+- m0 (dispatched 22:55 UTC, 13 lists, 500 games a pair, cheap pilots, the nets of 13 Nov): when its 13 results are
+  in, `python3 lab/tools/meta_matrix.py solve m0 --decks lab/meta/postban_decks_m0.json`; log the table. It is the
+  "before training" picture.
+- m1: when round 1's confirmations are done for at least Mordekaiser, Evelynn and Volibear AND each of the four
+  main tracks has committed a net at least 6 iterations past its start (Evelynn ≥ 24, Riven ≥ 126, Mordekaiser ≥
+  90, Volibear ≥ 144), or at 14 Nov 16:00 UTC with what exists: copy the decks file to `…_m1.json`, replace a
+  legend's list by its `…-postban-best.txt` when one passed (keep the old one as a second row with prior 0), `specs
+  m1 --games 600`, commit, push, dispatch every row, `solve m1`.
+- m2: 15 Nov about 16:00 UTC, the same with round 2's lists and the nets of that hour, `--games 800`; and the eight
+  lists with the largest equilibrium or prior-field rate again with `--full --games 300` (tag m2f).
+
+**Round 2 (after m1).** For each S: `python3 lab/tools/postban_round.py lab/specs/deckopt/<S>.json --round 2 --meta
+lab/meta/postban_meta_m1.json` (new pilots, opponents and weights from the matrix, starting lists from round 1),
+commit, push, dispatch `<S>-r2.explore-00.json`, then B to E on `<S>-r2`. In `loop._POSTBAN_TRACKS` point each
+track's `vary` at its `-r2` spec once that spec exists (the variations then follow the search). A round-2 list that
+passes replaces `…-postban-best.txt`. If a third round fits before Monday 03:00 UTC, the same with `--round 3` and m2.
+
+**Monday 06:00 UTC, the report (French, plain).** The matrix m2 as a table (list, pilot's iterations, rate against
+the field, share at equilibrium with its range); per legend Jeremy plays: the list, what changed against the list
+he has in the buy list, the confirmation's interval, the matchups that decide; what moved between m0, m1 and m2
+(a legend that only rose when its pilot trained is a pilot effect, say so); the limits above. Then rebuild the
+buy-list artifact (`lab/tools/build_buylist.py`: DECKS) with every list that passed, and the dashboard (data.json is
+at 15.5 MB: trim the variant texts in `lab/dashboard/build.py` first, with a `deckText()` fallback in the app).
+
+**Failures.** A training track STALE in `watch_status.py`: read the failed job of its last run
+(`list_workflow_jobs`, then `get_job_logs` with `failed_only`), fix or dispatch `chain=40` again; twice the same
+failure: leave that track, log it, go on. A request that fails twice: skip it and say what is missing in the log.
+Runners: 20 jobs at once for everything; search requests queue behind the training matrices and that is fine.
+
+**Log of the weekend**
+- 13 Nov 22:45 UTC: PAUSE files of Riven, Mordekaiser, Evelynn, Kai'Sa, Kennen removed; five chains dispatched
+  (`chain=40`); Volibear's running chain (to iteration 152) takes the post-ban lists and its 2 runners from its next
+  iteration. `volibear-postban` exploration shard dispatched (results about 04:30). 22:55: matrix m0, 13 rows.
+
