@@ -286,6 +286,15 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   (`lab/results/*-volibear-noaurora-cards-b-race1-*.json`); then `wave … --stage race2`, run the six specs with
   `riftlab.py run`, `rank`. Its leaders become extra starting lists of round 2; they are not ratings.
 
+- 16:30 UTC: **the real bans are out** (`lab/meta/ban_watch_2026-11-13.md`), effective 23 Nov: Riven, Broken Blade;
+  Zhonya's Hourglass; Stellacorn Herder; Nocturne, Horrifying; Rhasa the Sunderer; Brynhir Thundersong; Dazzling
+  Aurora; Baited Hook; battlefields Emperor's Dais and Star Spring. The assumption held (Aurora is banned), and
+  round 1's two confirmed lists stay legal. But five of the six lists of the search's FIELD lose cards (both
+  Rivens their champion, Kennen 6 cards, Kai'Sa 3, Master Yi 4): from 23 Nov the field has to be rebuilt.
+  Put to Jeremy at 16:35 UTC: build a post-ban field (each legend's best list without its banned cards, by this
+  same method, cheap pilot first), then search Volibear against it. Until he answers: the Volibear training goes
+  on (it serves any field), round 2 below waits for his answer on which field to use.
+
 **Next, in order (each as soon as its inputs exist)**
 0. Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
