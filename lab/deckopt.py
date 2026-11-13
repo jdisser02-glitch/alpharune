@@ -308,7 +308,10 @@ def propose(spec: dict) -> int:
     import numpy as np
     model = json.loads((out_dir(spec) / "model.json").read_text())
     g = frame_of(spec)
-    beta = {r["card"]: r["beta"] for r in model["cards"]}
+    # A card the pilot never trained on is charged the measured cost of that (the race is played by this pilot);
+    # the candidates of the round after the pilot has trained on variations are proposed without it.
+    unseen = model.get("unseen_beta") or 0.0
+    beta = {r["card"]: r["beta"] + (unseen if r.get("pilot_knows") is False else 0.0) for r in model["cards"]}
     names = model["cov"]["cards"]; C = np.array(model["cov"]["matrix"]); pos = {c: i for i, c in enumerate(names)}
     slope = model["slope"]
     lists = load_explored(spec)
@@ -363,6 +366,11 @@ def propose(spec: dict) -> int:
     for rank, ci in enumerate(ranked[:4]):
         if ci != 0:
             cands.append((f"centre{rank + 1}", dict(centres[ci]["main"]), f"starting list {centres[ci]['path']}"))
+    for steps in (2, 4, 6):                  # the reference itself, improved the way the model suggests
+        m, trail = climb(base, steps)
+        if trail:
+            cands.append((f"ref+{len(trail)}", m, f"the reference then the model's {len(trail)} best swaps: "
+                          + ", ".join(f"-1 {o} +1 {i}" for o, i in trail)))
     for rank, ci in enumerate(ranked[:2]):
         for steps in ((2, 4, 6, 9) if rank == 0 else (3, 6)):
             m, trail = climb(centres[ci]["main"], steps)
