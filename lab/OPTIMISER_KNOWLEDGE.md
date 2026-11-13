@@ -133,5 +133,5 @@ fine-tuning for incumbent and finalist before the confirmation; (b) paired analy
 
 **13 Nov, Volibear without Dazzling Aurora** (Jeremy: "continue en assumant que Dazzling Aurora est ban"; an
 assumption, nothing announced). Six starts of the genetic search were dispatched at 07:05 UTC and cancelled at
-07:55 once the audit above was done; the card-level search replaced them (`lab/specs/deckopt/volibear-noaurora-cards.json`,
-twelve exploration shards dispatched 07:55 UTC, results in `lab/deckopt/volibear-noaurora-cards/`).
+07:32 once the audit above was done; the card-level search replaced them (`lab/specs/deckopt/volibear-noaurora-cards.json`,
+twelve exploration shards dispatched 07:33 UTC, results in `lab/deckopt/volibear-noaurora-cards/`).
