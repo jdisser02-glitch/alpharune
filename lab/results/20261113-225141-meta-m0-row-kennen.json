@@ -1,0 +1,679 @@
+{
+ "id": "20261113-225141-meta-m0-row-kennen",
+ "name": "meta-m0-row-kennen",
+ "description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Kennen (zombro, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_kennen_020_v0).",
+ "started_utc": "2026-11-13T22:51:41+00:00",
+ "engine_commit": "b839c57",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+ "games_per_matchup": 500,
+ "threads": 4,
+ "seed": 7001,
+ "spec": {
+  "name": "meta-m0-row-kennen",
+  "description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Kennen (zombro, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_kennen_020_v0).",
+  "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+  "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+  "games": 500,
+  "review_games": 0,
+  "seed": 7001,
+  "decks": [
+   {
+    "deck": "lab/decks/postban/kennen_zombro.txt",
+    "label": "Kennen (zombro, post-ban)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+    "label": "Kai'Sa (Jason Tian, post-ban)",
+    "weight": 51,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven, Shattered (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "Riven, Deserter (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+    "label": "Rek'Sai (Rajan Nandan)",
+    "weight": 10,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+    "label": "Akali (Vincent Nguyen, post-ban)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-best.txt",
+    "label": "Volibear (lab's post-ban list)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+    "label": "Volibear (Ritualo + 2 Rengar)",
+    "weight": 0,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+    "label": "Mordekaiser (Neal)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+    "label": "Evelynn (Jeremy, 13 Nov)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Evelynn (Dunc)",
+    "weight": 0,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/orianna_luoluoluofu.txt",
+    "label": "Orianna (luoluoluofu, post-ban)",
+    "weight": 3,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60"
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "Kennen (zombro, post-ban)",
+   "path": "lab/decks/postban/kennen_zombro.txt",
+   "hash": "4698309af8",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.05,
+    "curve": {
+     "0": 3,
+     "1": 6,
+     "2": 19,
+     "3": 10,
+     "4": 2
+    },
+    "types": {
+     "unit": 15,
+     "spell": 19,
+     "gear": 6
+    },
+    "power_symbols": {
+     "chaos": 20
+    },
+    "rune_split": {
+     "chaos": 9,
+     "order": 3
+    },
+    "keywords": {
+     "Action": 8,
+     "Reaction": 12,
+     "Hidden": 7
+    },
+    "two_drops": 28,
+    "list": [
+     {
+      "name": "Seal of Discord",
+      "count": 3,
+      "type": "gear",
+      "energy": 0,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Lightning Rush",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "An Offer You Can't Refuse",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Flash",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hard Bargain",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ride the Wind",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kennen, Storm of Shuriken",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Last Rites",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 500,
+     "wins": 117,
+     "win_rate": 0.234,
+     "ci95": [
+      0.199,
+      0.2731
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 53
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 64
+     },
+     "avg_turns": 13,
+     "wall_s": 132.8,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 7001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 57001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven, Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 500,
+     "wins": 107,
+     "win_rate": 0.214,
+     "ci95": [
+      0.1803,
+      0.2521
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 44
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 63
+     },
+     "avg_turns": 12,
+     "wall_s": 103.6,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 107001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 157001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven, Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 500,
+     "wins": 76,
+     "win_rate": 0.152,
+     "ci95": [
+      0.1232,
+      0.1861
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 37
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 39
+     },
+     "avg_turns": 12,
+     "wall_s": 97.5,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 207001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 257001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 500,
+     "wins": 18,
+     "win_rate": 0.036,
+     "ci95": [
+      0.0229,
+      0.0562
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 6
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 12
+     },
+     "avg_turns": 11,
+     "wall_s": 78.1,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 307001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 357001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 500,
+     "wins": 158,
+     "win_rate": 0.316,
+     "ci95": [
+      0.2768,
+      0.358
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 67
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 91
+     },
+     "avg_turns": 13,
+     "wall_s": 120.4,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 407001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 457001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 171,
+     "win_rate": 0.342,
+     "ci95": [
+      0.3018,
+      0.3846
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 94
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 77
+     },
+     "avg_turns": 15,
+     "wall_s": 151.6,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 507001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 557001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 1,
+     "win_rate": 0.002,
+     "ci95": [
+      0.0004,
+      0.0112
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 0
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 1
+     },
+     "avg_turns": 12,
+     "wall_s": 75.7,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 607001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 657001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (Ritualo + 2 Rengar)",
+     "opponent_deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+     "weight": 0,
+     "games": 500,
+     "wins": 3,
+     "win_rate": 0.006,
+     "ci95": [
+      0.002,
+      0.0175
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 2
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 1
+     },
+     "avg_turns": 13,
+     "wall_s": 92.5,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-ritualo-2-rengar",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 707001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-ritualo-2-rengar/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 757001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__volibear-ritualo-2-rengar/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Mordekaiser (Neal)",
+     "opponent_deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 25,
+     "win_rate": 0.05,
+     "ci95": [
+      0.0341,
+      0.0728
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 9
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 16
+     },
+     "avg_turns": 12,
+     "wall_s": 86.2,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__mordekaiser-neal",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 807001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__mordekaiser-neal/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 857001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__mordekaiser-neal/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Jeremy, 13 Nov)",
+     "opponent_deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 21,
+     "win_rate": 0.042,
+     "ci95": [
+      0.0276,
+      0.0634
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 10
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 11
+     },
+     "avg_turns": 12,
+     "wall_s": 94.5,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-jeremy-13-nov",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 907001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-jeremy-13-nov/seat1 --review-games 0",
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 957001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-jeremy-13-nov/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Dunc)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 0,
+     "games": 500,
+     "wins": 3,
+     "win_rate": 0.006,
+     "ci95": [
+      0.002,
+      0.0175
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 2
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 1
+     },
+     "avg_turns": 12,
+     "wall_s": 75.2,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-dunc",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1007001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-dunc/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1057001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__evelynn-dunc/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (luoluoluofu, post-ban)",
+     "opponent_deck": "lab/decks/postban/orianna_luoluoluofu.txt",
+     "weight": 3,
+     "games": 500,
+     "wins": 148,
+     "win_rate": 0.296,
+     "ci95": [
+      0.2577,
+      0.3374
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 73
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 75
+     },
+     "avg_turns": 13,
+     "wall_s": 125.9,
+     "replays": "lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__orianna-luoluoluofu-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/orianna_luoluoluofu.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1107001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__orianna-luoluoluofu-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/orianna_luoluoluofu.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1157001 --render-html off --web off --review-dir lab/replays/20261113-225141-meta-m0-row-kennen/kennen-zombro-post-ban__vs__orianna-luoluoluofu-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.18
+  }
+ ],
+ "finished_utc": "2026-11-13T23:12:15+00:00"
+}
