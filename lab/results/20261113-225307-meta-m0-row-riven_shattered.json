@@ -1,0 +1,686 @@
+{
+ "id": "20261113-225307-meta-m0-row-riven_shattered",
+ "name": "meta-m0-row-riven_shattered",
+ "description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Riven, Shattered (post-ban frame) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_riven_120_v0).",
+ "started_utc": "2026-11-13T22:53:07+00:00",
+ "engine_commit": "b839c57",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "games_per_matchup": 500,
+ "threads": 4,
+ "seed": 7001,
+ "spec": {
+  "name": "meta-m0-row-riven_shattered",
+  "description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Riven, Shattered (post-ban frame) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_riven_120_v0).",
+  "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+  "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+  "games": 500,
+  "review_games": 0,
+  "seed": 7001,
+  "decks": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven, Shattered (post-ban frame)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+    "label": "Kai'Sa (Jason Tian, post-ban)",
+    "weight": 51,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/kennen_zombro.txt",
+    "label": "Kennen (zombro, post-ban)",
+    "weight": 44,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "Riven, Deserter (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+    "label": "Rek'Sai (Rajan Nandan)",
+    "weight": 10,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+    "label": "Akali (Vincent Nguyen, post-ban)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-best.txt",
+    "label": "Volibear (lab's post-ban list)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+    "label": "Volibear (Ritualo + 2 Rengar)",
+    "weight": 0,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+    "label": "Mordekaiser (Neal)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+    "label": "Evelynn (Jeremy, 13 Nov)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Evelynn (Dunc)",
+    "weight": 0,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60"
+   },
+   {
+    "deck": "lab/decks/postban/orianna_luoluoluofu.txt",
+    "label": "Orianna (luoluoluofu, post-ban)",
+    "weight": 3,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60"
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "Riven, Shattered (post-ban frame)",
+   "path": "lab/decks/postban/riven_frame_shattered.txt",
+   "hash": "e4982c5669",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.88,
+    "curve": {
+     "1": 6,
+     "2": 19,
+     "3": 8,
+     "5": 2,
+     "6": 1,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 22,
+     "gear": 3,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 12,
+     "chaos": 15
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 14,
+     "Action": 4,
+     "Accelerate": 3,
+     "Deflect": 1
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 500,
+     "wins": 260,
+     "win_rate": 0.52,
+     "ci95": [
+      0.4762,
+      0.5635
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 121
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 139
+     },
+     "avg_turns": 12,
+     "wall_s": 54.6,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 7001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 57001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 500,
+     "wins": 432,
+     "win_rate": 0.864,
+     "ci95": [
+      0.8312,
+      0.8913
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 209
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 223
+     },
+     "avg_turns": 13,
+     "wall_s": 76.6,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 107001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 157001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven, Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 500,
+     "wins": 179,
+     "win_rate": 0.358,
+     "ci95": [
+      0.3172,
+      0.401
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 89
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 90
+     },
+     "avg_turns": 12,
+     "wall_s": 42.1,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 207001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 257001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 500,
+     "wins": 191,
+     "win_rate": 0.382,
+     "ci95": [
+      0.3405,
+      0.4253
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 102
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 89
+     },
+     "avg_turns": 12,
+     "wall_s": 38.5,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 307001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 357001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 500,
+     "wins": 381,
+     "win_rate": 0.762,
+     "ci95": [
+      0.7228,
+      0.7972
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 177
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 204
+     },
+     "avg_turns": 12,
+     "wall_s": 45.4,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 407001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 457001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 368,
+     "win_rate": 0.736,
+     "ci95": [
+      0.6957,
+      0.7727
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 185
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 183
+     },
+     "avg_turns": 13,
+     "wall_s": 54.5,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 507001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 557001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 62,
+     "win_rate": 0.124,
+     "ci95": [
+      0.0979,
+      0.1558
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 28
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 34
+     },
+     "avg_turns": 13,
+     "wall_s": 41.0,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 607001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 657001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (Ritualo + 2 Rengar)",
+     "opponent_deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+     "weight": 0,
+     "games": 500,
+     "wins": 91,
+     "win_rate": 0.182,
+     "ci95": [
+      0.1506,
+      0.2182
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 43
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 48
+     },
+     "avg_turns": 13,
+     "wall_s": 49.8,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-ritualo-2-rengar",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 707001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-ritualo-2-rengar/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 757001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__volibear-ritualo-2-rengar/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Mordekaiser (Neal)",
+     "opponent_deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 162,
+     "win_rate": 0.324,
+     "ci95": [
+      0.2845,
+      0.3662
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 74
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 88
+     },
+     "avg_turns": 12,
+     "wall_s": 50.4,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__mordekaiser-neal",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 807001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__mordekaiser-neal/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 857001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__mordekaiser-neal/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Jeremy, 13 Nov)",
+     "opponent_deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+     "weight": 8,
+     "games": 500,
+     "wins": 290,
+     "win_rate": 0.58,
+     "ci95": [
+      0.5363,
+      0.6225
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 159
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 131
+     },
+     "avg_turns": 12,
+     "wall_s": 49.4,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-jeremy-13-nov",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 907001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-jeremy-13-nov/seat1 --review-games 0",
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 957001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-jeremy-13-nov/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Evelynn (Dunc)",
+     "opponent_deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+     "weight": 0,
+     "games": 500,
+     "wins": 223,
+     "win_rate": 0.446,
+     "ci95": [
+      0.403,
+      0.4898
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 128
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 95
+     },
+     "avg_turns": 12,
+     "wall_s": 43.0,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-dunc",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1007001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-dunc/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1057001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__evelynn-dunc/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Orianna (luoluoluofu, post-ban)",
+     "opponent_deck": "lab/decks/postban/orianna_luoluoluofu.txt",
+     "weight": 3,
+     "games": 500,
+     "wins": 337,
+     "win_rate": 0.674,
+     "ci95": [
+      0.6317,
+      0.7136
+     ],
+     "as_p1": {
+      "games": 250,
+      "wins": 167
+     },
+     "as_p2": {
+      "games": 250,
+      "wins": 170
+     },
+     "avg_turns": 12,
+     "wall_s": 46.3,
+     "replays": "lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__orianna-luoluoluofu-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/orianna_luoluoluofu.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1107001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__orianna-luoluoluofu-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/orianna_luoluoluofu.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 250 --threads 4 --seed 1157001 --render-html off --web off --review-dir lab/replays/20261113-225307-meta-m0-row-riven_shattered/riven-shattered-post-ban-frame__vs__orianna-luoluoluofu-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5771
+  }
+ ],
+ "finished_utc": "2026-11-13T23:02:59+00:00"
+}
