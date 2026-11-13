@@ -267,6 +267,35 @@ def cmd_selfplay(args, _):
     print(json.dumps(meta))
 
 
+_VARY = {}
+
+
+def varied_deck(s, it, k):
+    """A random variation of one of the legend's lists for self-play pair k: a starting list of the search named by
+    s["vary"]["spec"] (lab/deckopt.py spec: base, centres, pool) plus 0, 1, 2 or 4 random legal swaps from its
+    pool, written under data/learn/vary/. The same (iteration, k) always gives the same list.
+
+    Why (lab/OPTIMISER_KNOWLEDGE.md, section 5): a pilot plays the cards it never trained on worse, so a list
+    search rates lists by how well the pilot knows them. Training on variations puts every card the search may
+    try in front of the pilot."""
+    v = s["vary"]
+    if "frame" not in _VARY:
+        sys.path.insert(0, str(loop.ROOT / "lab"))
+        import deckopt
+        spec = json.loads((loop.ROOT / v["spec"]).read_text())
+        g = deckopt.frame_of({**spec, "opponents": []})
+        _VARY["frame"] = (deckopt, g, deckopt.centres_of(spec, g))
+    deckopt, g, centres = _VARY["frame"]
+    rng = random.Random(1_000_003 * it + 7919 * k + 17)
+    g.rng = rng
+    m = dict(rng.choice(centres)["main"])
+    for _ in range(rng.choices([0, 1, 2, 4], weights=v.get("swap_weights", [25, 30, 25, 20]))[0]):
+        m = g.swap(m) or m
+    path = loop.DATA / "vary" / f"it{it:03d}_k{k:06d}.txt"
+    deckopt.write_list(g, m, path, [f"self-play variation, iteration {it}, pair {k} ({v['spec']})"])
+    return str(path)
+
+
 def selfplay_specialist(args, plan, a, L, out, games):
     """A specialist's self-play: the current specialist on one of its legend's decks against a jury deck
     piloted by pilot() (only the specialist's decisions recorded), and --spec-mirror of the pairs in the
@@ -288,6 +317,12 @@ def selfplay_specialist(args, plan, a, L, out, games):
         legend_deck, opp_deck, mirror = rng.choice(s["decks"]), rng.choices(pool, weights=w)[0], rng.random() < a.spec_mirror
         if k % args.shards != args.shard:
             continue
+        # "vary": a share of the pairs plays a random variation of the legend's lists instead of a fixed file (its own
+        # random stream, so the draws above are the same with and without it).
+        if s.get("vary") and continuous(a) and random.Random(a.seed * 131 + it * 7 + k).random() < s["vary"].get("share", 0.5):
+            legend_deck = varied_deck(s, it, k)
+            if mirror:
+                mirror_deck = varied_deck(s, it, k + 500_000)
         seed = seed_base(it, "selfplay", k)
         if mirror:
             L.batch(legend_deck, mirror_deck, me, me, PER_PAIR, seed, out)

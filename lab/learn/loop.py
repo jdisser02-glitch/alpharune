@@ -265,6 +265,10 @@ SPECIALISTS = {
                            # 10 Nov: the two lists the Stuttgart searches confirmed above Ritualo's (+13 points on
                            # 30 games per opponent, best of 3 finalists): the pilot learns them before step 4.
                            "lab/variants/volibear-stuttgart-1-best.txt", "lab/variants/volibear-stuttgart-2-best.txt"],
+                 # 13 Nov (Jeremy's go-ahead; lab/OPTIMISER_KNOWLEDGE.md section 5): 60% of the self-play pairs play a
+                 # random variation of the list search's starting lists (0, 1, 2 or 4 swaps from its pool), so the
+                 # pilot has played every card the search may try; the fixed lists above keep the other 40%.
+                 "vary": {"spec": "lab/specs/deckopt/volibear-noaurora-cards.json", "share": 0.6},
                  # --continuous (the method proven on Riven, lab/learn/TRAINING_KNOWLEDGE.md). No real data for
                  # Volibear's matchups: self-play opponents by their share of the Stuttgart field.
                  "train": [(_META + "stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt", 15.0),
