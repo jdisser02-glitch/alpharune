@@ -253,6 +253,22 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   On the session's machine: a cheap-pilot race of race 2's six lists, 9,600 games per list
   (`lab/results/*-volibear-noaurora-cards-cheaprace-*.json`, merged by `merge_results.py`).
 
+- 16:10 UTC, step 5. **Round 1's confirmation** (fresh seeds, 3,602 games per list, full pilot spec_volibear_108_v0,
+  `lab/results/20261113-155901-volibear-noaurora-cards-confirm.json`): Ritualo 76.9%; ref+2 81.2%, +4.3 [+2.5,
+  +6.1]; c2+3 82.5%, +5.6 [+3.8, +7.4]; soldog WITH Aurora 82.2%, +5.4 [+3.6, +7.2]. c2+3 against soldog with
+  Aurora +0.2 [-1.5, +1.9]: **the assumed ban costs nothing that 3,600 games can see**. c2+3 against ref+2 +1.3
+  [-0.5, +3.0] (cheap pilot, 9,588 games each: +1.6 [+0.5, +2.6]). Both finalists pass (interval above 0): the first
+  time a search of this lab finds lists that hold on fresh games. `lab/variants/volibear-noaurora-best.txt` = c2+3:
+  soldog's main deck with −3 Dazzling Aurora, −1 Trinity Force, −1 Avalanche, −1 Portable Portal, +3 Gentle
+  Gemdragon, +1 Seraphic Wyvern, +2 Blazing Scorcher. Runner-up ref+2: Ritualo's list with 2 Show of Strength out
+  for 2 Rengar. Provisional: the pilot had not trained on variations.
+  Cheap pilot (sims=4) against full pilot at list level: cheap race (9,588 games per list) reference 77.4%, ref+2
+  +4.0, c2+3 +5.6, ref+4 +4.3, c1+4 +4.8, centre2 +3.1; full confirmation ref+2 +4.3, c2+3 +5.6. **The cheap pilot
+  gave the confirmation's answer** on these lists, at a fourteenth of the cost. Races can run on it; the last
+  confirmation stays with the full pilot.
+  What the search cost: 115,200 exploration games (63,360 of them cheap, on the session's machine), 6,048 + 10,368
+  in the races, 14,408 in the confirmation, 57,528 cheap in the cheap race: about 10 hours of wall time.
+
 **Next, in order (each as soon as its inputs exist)**
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
@@ -262,7 +278,7 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
 3. (done, above) Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
    --stage race2`, commit, push, dispatch the six race2 requests.
 4. (done, above) Six race2 results: `rank --stage race2`, `wave --stage confirm`, commit, push, dispatch the six confirm requests.
-5. Six confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py
+5. (done, above) Six confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py
    volibear-noaurora-cards-confirm --write`, write `lab/variants/volibear-noaurora-best.txt` if a list's interval
    against the reference is above 0, log it in section 4, dashboard, report to Jeremy (French, plain): this is the
    answer with the OLD pilot, provisional.

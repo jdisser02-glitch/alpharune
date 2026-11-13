@@ -253,6 +253,9 @@ def measured_status(ladder: dict) -> dict:
         legends = sorted({riftlab_legend(m.get("opponent_deck", "")) for m in base.values()} - {None})
         (other_comps if not_riven else comparisons).append(
             {"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
+             # A race of a card-level search (lab/deckopt.py) picks its leaders on these very games: it is a
+             # selection stage, never a rating (its leads are inflated). Only confirmations rate a list.
+             "selection": bool(re.search(r"-(race\d+|cheaprace)(-|$)", r.get("name", ""))),
              "reference_path": decks[0].get("path"), "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends,
              "legend": sorted(legs)[0] if len(legs) == 1 else None})
     comparisons = sorted(comparisons + ga_comps, key=lambda c: str(c.get("started_utc") or ""))
@@ -302,6 +305,8 @@ def measured_status(ladder: dict) -> dict:
     retests = {}
     every = sorted(plain + other_comps, key=lambda c: str(c.get("started_utc") or ""))
     for c in every:
+        if c.get("selection"):
+            continue
         for row in c["lists"]:
             if row.get("path"):
                 retests[row["path"]] = {"result": c["result"], "started_utc": c.get("started_utc"), "diff": row["diff"], "ci95": row["ci95"],
@@ -325,7 +330,8 @@ def measured_status(ladder: dict) -> dict:
     # A multi-list test's own comparison (each list against the test's first list, same deals), by result id: the
     # test page states that, not "best of N" against whichever list came last.
     by_result = {c["result"]: {"reference": c["reference"], "reference_rate": c["reference_rate"], "lists": c["lists"],
-                               "net": c["net"], "legend": c.get("legend"), "engine_commits_since": engine_since(c.get("started_utc"))}
+                               "net": c["net"], "legend": c.get("legend"), "selection": bool(c.get("selection")),
+                               "engine_commits_since": engine_since(c.get("started_utc"))}
                  for c in every}
     # The Decks page's optimiser tab for every legend but Riven (Riven's follows `comparisons` above): the lists of
     # that legend's comparisons played by the net of its newest one against the same reference list. A list measured
@@ -334,7 +340,7 @@ def measured_status(ladder: dict) -> dict:
     optimiser = {}
     by_legend = {}
     for c in sorted(other_comps, key=lambda c: str(c.get("started_utc") or "")):
-        if c.get("legend"):
+        if c.get("legend") and not c.get("selection"):
             by_legend.setdefault(c["legend"], []).append(c)
     for leg, cs in by_legend.items():
         last = cs[-1]
@@ -355,9 +361,14 @@ def measured_status(ladder: dict) -> dict:
                                 "rate": newest.get("rate"), "measures": len(ms), "results": [m["result"] for m in ms]})
         if not any(str(x.get("path") or "").startswith("lab/variants/") for x in pooled_rows):
             continue            # two community lists compared: no search behind it, so not on the optimiser tab
-        optimiser[leg] = {"reference": last["reference"], "reference_path": last.get("reference_path"), "net": last["net"],
+        # A search's stages call the reference list just "reference": show the name earlier tests gave that file.
+        ref_name = next((c["reference"] for c in cs if c.get("reference_path") == last.get("reference_path")
+                         and c["reference"] != "reference"), last["reference"])
+        optimiser[leg] = {"reference": ref_name, "reference_path": last.get("reference_path"), "net": last["net"],
                           "stale": last["net"] not in in_use, "engine_commits_since": engine_since(last.get("started_utc")),
-                          "lists": sorted(pooled_rows, key=lambda x: -x["diff"])[:10]}
+                          # ranked by the low end of the interval: the list most surely above the reference first,
+                          # so one lucky measure does not outrank a list measured three times
+                          "lists": sorted(pooled_rows, key=lambda x: -x["ci95"][0])[:10]}
     out["list"] = {"confirmed": confirmed, "stale_confirmations": stale, "comparisons": comparisons[-3:], "best": best,
                    "retests": retests, "by_result": by_result, "nets_in_use": sorted(n for n in in_use if n),
                    "optimiser": optimiser}

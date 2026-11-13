@@ -328,7 +328,8 @@ export function testConclusion(t) {
     const word = x => x.ci95[0] > 0 ? "ahead" : x.ci95[1] < 0 ? "behind" : "not separated";
     const since = C.engine_commits_since ? ` ${C.engine_commits_since} engine change${C.engine_commits_since > 1 ? "s" : ""} since.` : "";
     return `${n} lists on the same deals. Reference: ${C.reference} at ${pct0(C.reference_rate)}. `
-      + C.lists.map(x => `${x.label} ${sg(x.diff)} points [${sg(x.ci95[0])}, ${sg(x.ci95[1])}], ${word(x)}`).join("; ") + "." + playedBy + since;
+      + C.lists.map(x => `${x.label} ${sg(x.diff)} points [${sg(x.ci95[0])}, ${sg(x.ci95[1])}], ${word(x)}`).join("; ") + "."
+      + (C.selection ? " This is a selection stage of a list search: its leaders were picked on these very games, so their leads are inflated. Only the search's confirmation, on new deals, rates a list." : "") + playedBy + since;
   }
   const base = ranked.find(d => isBaseLabel(d.label)) || ranked[ranked.length - 1];
   const bp = pooled(base), sep = overlaps(tp.ci, bp.ci) ? "their intervals overlap, so the gap is not yet established" : "the intervals do not overlap";
