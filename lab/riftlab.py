@@ -282,12 +282,68 @@ def wilson(wins: float, n: int, z: float = 1.96) -> tuple[float, float]:
     return (max(0.0, c - h), min(1.0, c + h))
 
 
+EARLY_TURN = 6      # "held early": in hand by the end of the third turn of each player
+
+
+def card_exposure(ndjson: Path, seat: int) -> dict:
+    """Card-level counts for the deck in `seat` (1 or 2) over the games of one batch, from the engine's games.ndjson
+    (the "cards" block: opening hand, cards held with the turn first seen, cards played).
+
+    {"games": n, "wins": w, "cards": {name: [open_n, open_w, early_n, early_w, held_n, held_w, played_n, played_w]}}
+    where open = at least one copy kept after the mulligan, early = held by turn EARLY_TURN, held = in hand at some
+    point, played = played at least once. The shuffle decides who holds what, so "open" compares like with like
+    inside one list; "held" and "played" also grow with the length of the game, read them with that in mind."""
+    out = {"games": 0, "wins": 0, "cards": {}}
+    if not ndjson.exists():
+        return out
+    for line in ndjson.read_text().splitlines():
+        try:
+            g = json.loads(line)
+        except ValueError:
+            continue
+        c = (g.get("cards") or [None, None])[seat - 1]
+        if not c or g.get("winner") not in (1, 2):
+            continue
+        won = 1 if g["winner"] == seat else 0
+        out["games"] += 1; out["wins"] += won
+        opening = set(c.get("opening") or [])
+        held = {n for n, _ in (c.get("held") or [])}
+        early = {n for n, t in (c.get("held") or []) if t <= EARLY_TURN} | opening
+        played = set(c.get("played") or [])
+        for i, names in enumerate((opening, early, held | opening, played)):
+            for n in names:
+                row = out["cards"].setdefault(n, [0] * 8)
+                row[2 * i] += 1; row[2 * i + 1] += won
+    return out
+
+
+def merge_exposure(a: dict | None, b: dict | None) -> dict:
+    """Sum two card_exposure() results."""
+    out = {"games": 0, "wins": 0, "cards": {}}
+    for x in (a, b):
+        if not x:
+            continue
+        out["games"] += x.get("games", 0); out["wins"] += x.get("wins", 0)
+        for n, row in (x.get("cards") or {}).items():
+            acc = out["cards"].setdefault(n, [0] * 8)
+            for i, v in enumerate(row):
+                acc[i] += v
+    return out
+
+
 def play_batch(deck1: str, deck2: str, agent1: str, agent2: str, games: int,
                threads: int, seed: int, review_dir: str | None = None,
-               review_games: int = 0) -> dict:
+               review_games: int = 0, cards_seat: int = 0) -> dict:
+    """One batch of games. `cards_seat` (1 or 2) also returns that seat's card-level counts under "cards"
+    (card_exposure), read from a throw-away review directory when the caller gave none."""
     cmd = [str(ENGINE), "--deck1", deck1, "--deck2", deck2, "--agent1", agent1,
            "--agent2", agent2, "--games", str(max(games, 2)), "--threads", str(threads),
            "--seed", str(seed), "--render-html", "off", "--web", "off"]
+    tmp = None
+    if cards_seat and not review_dir:
+        import tempfile
+        tmp = tempfile.mkdtemp(prefix="riftlab-cards-")
+        review_dir, review_games = tmp, 0
     if review_dir:
         cmd += ["--review-dir", review_dir, "--review-games", str(review_games)]
     t0 = time.time()
@@ -298,9 +354,16 @@ def play_batch(deck1: str, deck2: str, agent1: str, agent2: str, games: int,
     out = p.stdout
     r = {k: int(m.group(1)) if (m := rx.search(out)) else 0 for k, rx in RESULT_RE.items()}
     a = {k: int(m.group(1)) if (m := rx.search(out)) else None for k, rx in AVG_RE.items()}
-    return {"p1": r["P1 wins"], "p2": r["P2 wins"], "draws": r["Draws"],
-            "avg_turns": a["turns"], "avg_decisions": a["decisions"], "wall_s": round(wall, 2),
-            "cmd": " ".join(cmd[1:])}
+    res = {"p1": r["P1 wins"], "p2": r["P2 wins"], "draws": r["Draws"],
+           "avg_turns": a["turns"], "avg_decisions": a["decisions"], "wall_s": round(wall, 2),
+           "cmd": " ".join(cmd[1:])}
+    if cards_seat:
+        rd = Path(review_dir) if Path(review_dir).is_absolute() else ROOT / review_dir
+        res["cards"] = card_exposure(rd / "games.ndjson", cards_seat)
+    if tmp:
+        import shutil
+        shutil.rmtree(tmp, ignore_errors=True)
+    return res
 
 
 def git_commit() -> str:
