@@ -369,6 +369,13 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   plays in the soldog build): these swaps take cheap cards out again; the bot does not punish a slow start the way
   a player does, so a round-2 winner of this kind needs that caveat.
 
+- 19:26 UTC: **the session's container restarted at about 19:08** (`uptime` said 0 minutes): the local drivers were
+  killed after 103 lists of Mordekaiser's shard 11 (the file is kept; a shard file is valid after every list).
+  Relaunched: `nohup setsid <scratchpad>/night_local.sh 20 …` (its argument is the first shard number, above every
+  shard already written) and `riven_local2.sh`. **At every watchdog pass until 23:00 UTC: `pgrep -f night_local`;
+  if nothing runs, relaunch with a first shard number above the highest `explore-NN.json` in
+  `<scratchpad>/riven_out/*/`** (same for `riven_local2.sh` until `riven_out/frames.log` ends with DONE).
+
 **THE NIGHT OF 13-14 NOV, in order (the hourly watchdog does the next step whose inputs exist; times are UTC).
 The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
 when machines or attention are short, in that order.**
