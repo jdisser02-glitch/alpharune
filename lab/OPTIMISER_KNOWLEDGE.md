@@ -295,8 +295,17 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   same method, cheap pilot first), then search Volibear against it. Until he answers: the Volibear training goes
   on (it serves any field), round 2 below waits for his answer on which field to use.
 
+- 17:30 UTC: **hold-out check done** (`lab/results/20261113-171223-volibear-noaurora-cards-holdout.json`, 1,802 games
+  per list against five lists outside the search's field): reference 75.4%; ref+2 81.7%, +6.3 [+3.7, +8.8]; c2+3
+  81.2%, +5.8 [+3.2, +8.4]; soldog with Aurora 82.1%, +6.7 [+4.1, +9.3]. Against DiamondHat's and Caravaggio's
+  Riven the reference wins 63-65%, the two found lists 71-73%; against IcrazyFool's Kai'Sa 79% → 86-87%. **The gain
+  holds outside the field** (confirmation: +4.3 and +5.6): it is not an over-fit to the six lists of the search.
+  Round 1b's cheap race 1 (2,402 games per list, session's machine): the confirmed list with the model's 9, 6 and
+  4 further swaps 85.9%, 84.3%, 83.1% against 82.5% as it is and 78.1% for the reference; cheap race 2 running
+  (9,600 games each for the best five). Dashboard to rebuild and publish with that result.
+
 **Next, in order (each as soon as its inputs exist)**
-0. Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
+0. (done, above) Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
    correlation over the cards with at least 100 lists; write the answer here).

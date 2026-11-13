@@ -1,0 +1,1535 @@
+{
+ "id": "20261113-171223-volibear-noaurora-cards-holdout",
+ "name": "volibear-noaurora-cards-holdout",
+ "description": "Hold-out check of round 1 of the Volibear search without Dazzling Aurora (13 Nov): the reference, the two confirmed lists and soldog's list with Aurora against five lists that were NOT in the search's field (each known to its pilot), 1800 games per list shared out by the weights of the field's legends, seed 5104. Does the gain found against the six lists of the search hold against other lists of the same legends? Merged from 5 requests, one per opponent.",
+ "started_utc": "2026-11-13T16:13:23+00:00",
+ "engine_commit": "c28f5a1",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 460,
+ "threads": 4,
+ "seed": 5104,
+ "spec": {
+  "name": "volibear-noaurora-cards-holdout",
+  "description": "Hold-out check of round 1 of the Volibear search without Dazzling Aurora (13 Nov): the reference, the two confirmed lists and soldog's list with Aurora against five lists that were NOT in the search's field (each known to its pilot), 1800 games per list shared out by the weights of the field's legends, seed 5104. Does the gain found against the six lists of the search hold against other lists of the same legends? This request: Riven (DiamondHat, Stuttgart 3rd), 460 games.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 460,
+  "review_games": 0,
+  "seed": 5104,
+  "decks": [
+   {
+    "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+    "label": "ref+2"
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+    "label": "c2+3"
+   },
+   {
+    "deck": "lab/variants/volibear-field-best.txt",
+    "label": "soldog with Dazzling Aurora (not legal under the assumption)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+    "label": "Riven (DiamondHat, Stuttgart 3rd)",
+    "weight": 63,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+    "label": "Riven (Caravaggio, Stuttgart 4th)",
+    "weight": 63,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+    "label": "Kai'Sa (IcrazyFool)",
+    "weight": 51,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+    "label": "Kennen (Yizhenglong)",
+    "weight": 44,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60"
+   },
+   {
+    "deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+    "label": "Akali (Alex Gorica)",
+    "weight": 26,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60"
+   }
+  ],
+  "threads": 4
+ },
+ "merged_from": [
+  "20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha",
+  "20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi",
+  "20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo",
+  "20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo",
+  "20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori"
+ ],
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "hash": "43bda1d687",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.2,
+    "curve": {
+     "1": 3,
+     "2": 12,
+     "3": 3,
+     "5": 6,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 25,
+     "spell": 12,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 15
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Action": 3,
+     "Reaction": 9,
+     "Ganking": 3
+    },
+    "two_drops": 15,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (DiamondHat, Stuttgart 3rd)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 292,
+     "win_rate": 0.6348,
+     "ci95": [
+      0.5898,
+      0.6775
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 144
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 148
+     },
+     "avg_turns": 14,
+     "wall_s": 818.3,
+     "replays": "lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/reference__vs__riven-diamondhat-stuttgart-3rd",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/reference__vs__riven-diamondhat-stuttgart-3rd/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/reference__vs__riven-diamondhat-stuttgart-3rd/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven (Caravaggio, Stuttgart 4th)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 300,
+     "win_rate": 0.6522,
+     "ci95": [
+      0.6076,
+      0.6943
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 145
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 155
+     },
+     "avg_turns": 13,
+     "wall_s": 924.6,
+     "replays": "lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/reference__vs__riven-caravaggio-stuttgart-4th",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/reference__vs__riven-caravaggio-stuttgart-4th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/reference__vs__riven-caravaggio-stuttgart-4th/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 51,
+     "games": 372,
+     "wins": 294,
+     "win_rate": 0.7903,
+     "ci95": [
+      0.7461,
+      0.8286
+     ],
+     "as_p1": {
+      "games": 186,
+      "wins": 141
+     },
+     "as_p2": {
+      "games": 186,
+      "wins": 153
+     },
+     "avg_turns": 13,
+     "wall_s": 624.5,
+     "replays": "lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/reference__vs__kai-sa-icrazyfool",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/reference__vs__kai-sa-icrazyfool/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/reference__vs__kai-sa-icrazyfool/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (Yizhenglong)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+     "weight": 44,
+     "games": 320,
+     "wins": 299,
+     "win_rate": 0.9344,
+     "ci95": [
+      0.9018,
+      0.9567
+     ],
+     "as_p1": {
+      "games": 160,
+      "wins": 150
+     },
+     "as_p2": {
+      "games": 160,
+      "wins": 149
+     },
+     "avg_turns": 13,
+     "wall_s": 587.0,
+     "replays": "lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/reference__vs__kennen-yizhenglong",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/reference__vs__kennen-yizhenglong/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/reference__vs__kennen-yizhenglong/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Alex Gorica)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+     "weight": 26,
+     "games": 190,
+     "wins": 174,
+     "win_rate": 0.9158,
+     "ci95": [
+      0.8676,
+      0.9475
+     ],
+     "as_p1": {
+      "games": 95,
+      "wins": 86
+     },
+     "as_p2": {
+      "games": 95,
+      "wins": 88
+     },
+     "avg_turns": 14,
+     "wall_s": 261.7,
+     "replays": "lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/reference__vs__akali-alex-gorica",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/reference__vs__akali-alex-gorica/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/reference__vs__akali-alex-gorica/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.7543
+  },
+  {
+   "label": "ref+2",
+   "path": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+   "hash": "59fe416940",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.35,
+    "curve": {
+     "1": 3,
+     "2": 10,
+     "3": 3,
+     "5": 8,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 27,
+     "spell": 10,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 15
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Reaction": 9,
+     "Ganking": 3,
+     "Action": 3
+    },
+    "two_drops": 13,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (DiamondHat, Stuttgart 3rd)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 325,
+     "win_rate": 0.7065,
+     "ci95": [
+      0.6633,
+      0.7463
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 157
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 168
+     },
+     "avg_turns": 14,
+     "wall_s": 823.2,
+     "replays": "lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/ref-2__vs__riven-diamondhat-stuttgart-3rd",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/ref-2__vs__riven-diamondhat-stuttgart-3rd/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/ref-2__vs__riven-diamondhat-stuttgart-3rd/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven (Caravaggio, Stuttgart 4th)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 330,
+     "win_rate": 0.7174,
+     "ci95": [
+      0.6746,
+      0.7566
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 165
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 165
+     },
+     "avg_turns": 13,
+     "wall_s": 959.0,
+     "replays": "lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/ref-2__vs__riven-caravaggio-stuttgart-4th",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/ref-2__vs__riven-caravaggio-stuttgart-4th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/ref-2__vs__riven-caravaggio-stuttgart-4th/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 51,
+     "games": 372,
+     "wins": 325,
+     "win_rate": 0.8737,
+     "ci95": [
+      0.836,
+      0.9036
+     ],
+     "as_p1": {
+      "games": 186,
+      "wins": 156
+     },
+     "as_p2": {
+      "games": 186,
+      "wins": 169
+     },
+     "avg_turns": 13,
+     "wall_s": 603.2,
+     "replays": "lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/ref-2__vs__kai-sa-icrazyfool",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/ref-2__vs__kai-sa-icrazyfool/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/ref-2__vs__kai-sa-icrazyfool/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (Yizhenglong)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+     "weight": 44,
+     "games": 320,
+     "wins": 311,
+     "win_rate": 0.9719,
+     "ci95": [
+      0.9474,
+      0.9851
+     ],
+     "as_p1": {
+      "games": 160,
+      "wins": 156
+     },
+     "as_p2": {
+      "games": 160,
+      "wins": 155
+     },
+     "avg_turns": 13,
+     "wall_s": 573.1,
+     "replays": "lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/ref-2__vs__kennen-yizhenglong",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/ref-2__vs__kennen-yizhenglong/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/ref-2__vs__kennen-yizhenglong/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Alex Gorica)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+     "weight": 26,
+     "games": 190,
+     "wins": 181,
+     "win_rate": 0.9526,
+     "ci95": [
+      0.9124,
+      0.9749
+     ],
+     "as_p1": {
+      "games": 95,
+      "wins": 91
+     },
+     "as_p2": {
+      "games": 95,
+      "wins": 90
+     },
+     "avg_turns": 14,
+     "wall_s": 268.6,
+     "replays": "lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/ref-2__vs__akali-alex-gorica",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-refp2.txt --deck2 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/ref-2__vs__akali-alex-gorica/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --deck2 lab/variants/volibear-noaurora-cards-cand-refp2.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/ref-2__vs__akali-alex-gorica/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.817,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0717,
+    "ci95": [
+     0.0112,
+     0.1323
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c2+3",
+   "path": "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+   "hash": "5eff2cf602",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.05,
+    "curve": {
+     "1": 2,
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 8,
+     "6": 4,
+     "7": 3,
+     "8": 8,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 26,
+     "spell": 11,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 16,
+     "body": 32
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 5
+    },
+    "two_drops": 5,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (DiamondHat, Stuttgart 3rd)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 334,
+     "win_rate": 0.7261,
+     "ci95": [
+      0.6836,
+      0.7648
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 165
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 169
+     },
+     "avg_turns": 13,
+     "wall_s": 698.3,
+     "replays": "lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/c2-3__vs__riven-diamondhat-stuttgart-3rd",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/c2-3__vs__riven-diamondhat-stuttgart-3rd/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --deck2 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/c2-3__vs__riven-diamondhat-stuttgart-3rd/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven (Caravaggio, Stuttgart 4th)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 331,
+     "win_rate": 0.7196,
+     "ci95": [
+      0.6768,
+      0.7587
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 161
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 170
+     },
+     "avg_turns": 13,
+     "wall_s": 794.3,
+     "replays": "lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/c2-3__vs__riven-caravaggio-stuttgart-4th",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/c2-3__vs__riven-caravaggio-stuttgart-4th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --deck2 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/c2-3__vs__riven-caravaggio-stuttgart-4th/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 51,
+     "games": 372,
+     "wins": 320,
+     "win_rate": 0.8602,
+     "ci95": [
+      0.8213,
+      0.8918
+     ],
+     "as_p1": {
+      "games": 186,
+      "wins": 155
+     },
+     "as_p2": {
+      "games": 186,
+      "wins": 165
+     },
+     "avg_turns": 13,
+     "wall_s": 573.0,
+     "replays": "lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/c2-3__vs__kai-sa-icrazyfool",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/c2-3__vs__kai-sa-icrazyfool/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --deck2 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/c2-3__vs__kai-sa-icrazyfool/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (Yizhenglong)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+     "weight": 44,
+     "games": 320,
+     "wins": 296,
+     "win_rate": 0.925,
+     "ci95": [
+      0.8908,
+      0.9491
+     ],
+     "as_p1": {
+      "games": 160,
+      "wins": 146
+     },
+     "as_p2": {
+      "games": 160,
+      "wins": 150
+     },
+     "avg_turns": 13,
+     "wall_s": 510.2,
+     "replays": "lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/c2-3__vs__kennen-yizhenglong",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/c2-3__vs__kennen-yizhenglong/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --deck2 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/c2-3__vs__kennen-yizhenglong/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Alex Gorica)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+     "weight": 26,
+     "games": 190,
+     "wins": 183,
+     "win_rate": 0.9632,
+     "ci95": [
+      0.9259,
+      0.982
+     ],
+     "as_p1": {
+      "games": 95,
+      "wins": 92
+     },
+     "as_p2": {
+      "games": 95,
+      "wins": 91
+     },
+     "avg_turns": 13,
+     "wall_s": 217.2,
+     "replays": "lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/c2-3__vs__akali-alex-gorica",
+     "commands": [
+      "--deck1 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --deck2 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/c2-3__vs__akali-alex-gorica/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --deck2 lab/variants/volibear-noaurora-cards-cand-c2p3.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/c2-3__vs__akali-alex-gorica/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8125,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0913,
+    "ci95": [
+     0.0313,
+     0.1513
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "soldog with Dazzling Aurora (not legal under the assumption)",
+   "path": "lab/variants/volibear-field-best.txt",
+   "hash": "58cc56e2ca",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.97,
+    "curve": {
+     "1": 2,
+     "2": 4,
+     "3": 3,
+     "4": 4,
+     "5": 7,
+     "6": 4,
+     "7": 2,
+     "8": 5,
+     "9": 5,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 20,
+     "spell": 12,
+     "gear": 8
+    },
+    "power_symbols": {
+     "fury": 16,
+     "body": 40
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Action": 5,
+     "Ganking": 4,
+     "Reaction": 6
+    },
+    "two_drops": 6,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 1,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Trinity Force",
+      "count": 1,
+      "type": "gear",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Avalanche",
+      "count": 1,
+      "type": "spell",
+      "energy": 5,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 2,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dazzling Aurora",
+      "count": 3,
+      "type": "gear",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven (DiamondHat, Stuttgart 3rd)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 342,
+     "win_rate": 0.7435,
+     "ci95": [
+      0.7017,
+      0.7813
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 167
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 175
+     },
+     "avg_turns": 14,
+     "wall_s": 758.5,
+     "replays": "lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-diamondhat-stuttgart-3rd",
+     "commands": [
+      "--deck1 lab/variants/volibear-field-best.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-diamondhat-stuttgart-3rd/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/03_diamondhat_riven.txt --deck2 lab/variants/volibear-field-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161323-volibear-noaurora-cards-holdout-riven-03-diamondha/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-diamondhat-stuttgart-3rd/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven (Caravaggio, Stuttgart 4th)",
+     "opponent_deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt",
+     "weight": 63,
+     "games": 460,
+     "wins": 343,
+     "win_rate": 0.7457,
+     "ci95": [
+      0.7039,
+      0.7833
+     ],
+     "as_p1": {
+      "games": 230,
+      "wins": 171
+     },
+     "as_p2": {
+      "games": 230,
+      "wins": 172
+     },
+     "avg_turns": 14,
+     "wall_s": 856.4,
+     "replays": "lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-caravaggio-stuttgart-4th",
+     "commands": [
+      "--deck1 lab/variants/volibear-field-best.txt --deck2 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-caravaggio-stuttgart-4th/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/stuttgart_rc_europe_2026-11-08/04_caravaggio_riven.txt --deck2 lab/variants/volibear-field-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 230 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161329-volibear-noaurora-cards-holdout-riven-04-caravaggi/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__riven-caravaggio-stuttgart-4th/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kai'Sa (IcrazyFool)",
+     "opponent_deck": "lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt",
+     "weight": 51,
+     "games": 372,
+     "wins": 314,
+     "win_rate": 0.8441,
+     "ci95": [
+      0.8037,
+      0.8774
+     ],
+     "as_p1": {
+      "games": 186,
+      "wins": 145
+     },
+     "as_p2": {
+      "games": 186,
+      "wins": 169
+     },
+     "avg_turns": 13,
+     "wall_s": 617.0,
+     "replays": "lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kai-sa-icrazyfool",
+     "commands": [
+      "--deck1 lab/variants/volibear-field-best.txt --deck2 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kai-sa-icrazyfool/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/radiance_release_2026-10-24/02_icrazyfool_kai_sa.txt --deck2 lab/variants/volibear-field-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 186 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161419-volibear-noaurora-cards-holdout-kai-sa-02-icrazyfoo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kai-sa-icrazyfool/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (Yizhenglong)",
+     "opponent_deck": "lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt",
+     "weight": 44,
+     "games": 320,
+     "wins": 296,
+     "win_rate": 0.925,
+     "ci95": [
+      0.8908,
+      0.9491
+     ],
+     "as_p1": {
+      "games": 160,
+      "wins": 149
+     },
+     "as_p2": {
+      "games": 160,
+      "wins": 147
+     },
+     "avg_turns": 13,
+     "wall_s": 545.4,
+     "replays": "lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kennen-yizhenglong",
+     "commands": [
+      "--deck1 lab/variants/volibear-field-best.txt --deck2 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kennen-yizhenglong/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/s5_xian_city_challenge_2026-11-01/10_yizhenglong_kennen.txt --deck2 lab/variants/volibear-field-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 160 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161346-volibear-noaurora-cards-holdout-kennen-10-yizhenglo/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__kennen-yizhenglong/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Alex Gorica)",
+     "opponent_deck": "lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt",
+     "weight": 26,
+     "games": 190,
+     "wins": 185,
+     "win_rate": 0.9737,
+     "ci95": [
+      0.9399,
+      0.9887
+     ],
+     "as_p1": {
+      "games": 95,
+      "wins": 91
+     },
+     "as_p2": {
+      "games": 95,
+      "wins": 94
+     },
+     "avg_turns": 13,
+     "wall_s": 228.9,
+     "replays": "lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__akali-alex-gorica",
+     "commands": [
+      "--deck1 lab/variants/volibear-field-best.txt --deck2 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 5104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__akali-alex-gorica/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/sacramento_showdown_2026-10-24/03_alex_gorica_akali.txt --deck2 lab/variants/volibear-field-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60 --games 95 --threads 4 --seed 55104 --render-html off --web off --review-dir lab/replays/20261113-161406-volibear-noaurora-cards-holdout-akali-03-alex-gori/soldog-with-dazzling-aurora-not-legal-under-the-assumption__vs__akali-alex-gorica/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8214,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1087,
+    "ci95": [
+     0.0493,
+     0.1681
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-13T17:12:23+00:00"
+}
