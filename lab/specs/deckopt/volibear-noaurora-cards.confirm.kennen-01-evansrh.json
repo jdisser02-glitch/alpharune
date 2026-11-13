@@ -1,0 +1,35 @@
+{
+ "name": "volibear-noaurora-cards-confirm-kennen-01-evansrh",
+ "description": "Best Volibear list against the Stuttgart RC Europe field if Dazzling Aurora is banned (Jeremy, 13 Nov 2026; an assumption, no ban announced then), by the card-level method: lists drawn around the starting lists, a regression of the win on the cards, then a race and a confirmation. Volibear piloted by spec_volibear_108_v0, each opponent by its own net, Ritualo's Dragons as the reference. Stage confirm: 4 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kennen (Evansrhim, Stuttgart 1st), 642 games.",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 642,
+ "review_games": 0,
+ "seed": 5103,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+   "label": "ref+2"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+   "label": "c2+3"
+  },
+  {
+   "deck": "lab/variants/volibear-field-best.txt",
+   "label": "soldog with Dazzling Aurora (not legal under the assumption)"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
+   "label": "Kennen (Evansrhim, Stuttgart 1st)",
+   "weight": 44,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60"
+  }
+ ]
+}
