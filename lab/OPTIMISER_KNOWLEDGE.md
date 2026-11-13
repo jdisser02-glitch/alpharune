@@ -359,6 +359,16 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
     Deserter), files in `<scratchpad>/riven_out/<search name>/explore-NN.json`; then `riven_local2.sh` (Riven frame
     test, `riven_out/frames.log`).
 
+- 19:02 UTC: **round 1b's cheap race 2 done** (session's machine, 12,000 games per list with race 1's,
+  `lab/results/20261113-190203-volibear-noaurora-cards-b-race2.json`, `lab/deckopt/volibear-noaurora-cards-b/race2-rank.json`):
+  reference (Ritualo) 78.0%; the confirmed list with the model's 9 further swaps (`…-b-cand-c1p9.txt`) 84.6%, +6.7
+  [+5.7, +7.6]; c2+6 83.8%; c1+6 83.4%; c1+4 83.3%; c2+3 82.7%. Spread minus noise among the five: 0.5 point. The
+  confirmed list itself was at 82.5% in race 1: the deeper swaps (Punch First, Ferrous Forerunner and Stormbringer
+  out; Dune Drake, Deadbloom Predator, Herald of Scales in) add at most about 2 points on selection games, not
+  rated. These five are starting lists for round 2, nothing more. Note for Jeremy's question of 18:15 (few turn-2
+  plays in the soldog build): these swaps take cheap cards out again; the bot does not punish a slow start the way
+  a player does, so a round-2 winner of this kind needs that caveat.
+
 **THE NIGHT OF 13-14 NOV, in order (the hourly watchdog does the next step whose inputs exist; times are UTC).
 The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
 when machines or attention are short, in that order.**
@@ -391,8 +401,7 @@ H. Morning report to Jeremy (French, plain words), in his order: Mordekaiser, Ev
    its field), Riven last (which champion, which cards replace Hourglass and Herder, how sure). Then rebuild the
    buy-list artifact with every list that passed step E (`lab/tools/build_buylist.py`: edit DECKS), the dashboard
    (data.json is at 15.5 MB: trim the variant texts first), and section 4 of this file.
-I. Round 1b of Volibear: its cheap race 2 ended on the session's machine at about 19:15
-   (`lab/results/*-volibear-noaurora-cards-b-race2*.json`; `rank` printed in the task output): log it in section 4.
+I. (done 19:02, above) Round 1b of Volibear: cheap race 2 logged.
 
 **Earlier steps of 13 Nov (all done)**
 0. (done, above) Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
