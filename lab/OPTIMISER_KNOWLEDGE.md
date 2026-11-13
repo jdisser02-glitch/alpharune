@@ -277,6 +277,15 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   the reference holds there, it is not an over-fit to the six lists of the search; if it does not, say so plainly.
   On the session's machine: cheap-pilot exploration around the four leading lists (`…-fast4d`, 36 shards).
 
+- 16:35 UTC: **round 1b on the session's machine, cheap pilot only** (`lab/specs/deckopt/volibear-noaurora-cards-b.json`,
+  `explore_from` = the full-pilot exploration and the four cheap sets): card model on 9,360 lists and 224,640
+  games (± 0.15 to 0.4 a copy): Elder Dragon +4.6, Seraphic Wyvern +1.9, Gentle Gemdragon +1.8, Rengar +1.2, Dune
+  Drake +1.1; Thermo Beam −3.3, Unyielding Spirit −2.6, Trinity Force −2.2, Sabotage −1.6, Avalanche −1.5,
+  Challenge −1.5, Morgana −1.4; a card the pilot never trained on −1.9 (± 0.16) a copy. Thirteen candidates built
+  from c2+3, c1+4, ref+4, ref+2 (first swaps: Punch First out for Dune Drake) race locally, 2,400 games each
+  (`lab/results/*-volibear-noaurora-cards-b-race1-*.json`); then `wave … --stage race2`, run the six specs with
+  `riftlab.py run`, `rank`. Its leaders become extra starting lists of round 2; they are not ratings.
+
 **Next, in order (each as soon as its inputs exist)**
 0. Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
