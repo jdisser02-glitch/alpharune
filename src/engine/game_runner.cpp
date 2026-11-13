@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <map>
 #include <random>
 #include <sstream>
 #include <stdexcept>
@@ -159,6 +160,37 @@ GameResult GameRunner::run() {
         });
     }
 
+    // Card exposure, written to games.ndjson: the cards each player kept after the mulligan, every card that was in
+    // hand at a decision (with the turn it was first seen) and every card played. The shuffle decides which copies a
+    // player holds, so "won with the card in the opening hand" against "won without" compares like with like inside
+    // one list: the lab's card-level statistics (lab/tools/card_stats.py) are built on it.
+    struct Exposure {
+        std::vector<GameObjectId> opening;
+        bool opening_set = false;
+        std::vector<std::pair<GameObjectId, int>> held;   // object, turn first seen in hand
+        std::map<GameObjectId, int> seen;
+        std::vector<CardDefId> played;
+    };
+    Exposure exposure[2];
+    const bool want_exposure = !config_.json_replay_dir.empty();
+    if (want_exposure) {
+        events.on_phase_changed.connect([&exposure, &engine](const PhaseChangedEvent& e) {
+            if (e.old_phase != TurnPhase::Mulligan) return;
+            for (int p = 0; p < 2; ++p)
+                if (!exposure[p].opening_set) {
+                    exposure[p].opening = engine.state().players[p].hand;
+                    exposure[p].opening_set = true;
+                }
+        });
+        events.on_card_played.connect([&exposure, &engine](const CardPlayedEvent& e) {
+            if (e.player == PlayerId::None) return;
+            const auto& objects = engine.state().objects;
+            const auto it = objects.find(e.object);
+            if (it != objects.end() && !it->second.isToken())
+                exposure[playerIndex(e.player)].played.push_back(it->second.card_def_id);
+        });
+    }
+
     // Self-play value records: every non-trivial decision of both players
     // (or a reservoir sample of `value_samples_per_game` of them).
     std::vector<ml::ValueSample> value_samples;
@@ -172,6 +204,15 @@ GameResult GameRunner::run() {
                               const Intent& chosen) {
         if (replay) {
             replay->recordDecision(state, actions, chosen, renderer);
+        }
+        if (want_exposure && state.turn.phase != TurnPhase::Setup && state.turn.phase != TurnPhase::Mulligan) {
+            for (int p = 0; p < 2; ++p) {
+                Exposure& ex = exposure[p];
+                if (!ex.opening_set) { ex.opening = state.players[p].hand; ex.opening_set = true; }
+                for (GameObjectId id : state.players[p].hand)
+                    if (ex.seen.emplace(id, state.turn.turn_number).second)
+                        ex.held.emplace_back(id, state.turn.turn_number);
+            }
         }
         const bool value_seat = config_.value_player == 0 ||
                                 (config_.value_player == 1 ? chosen.player == PlayerId::Player1 : chosen.player == PlayerId::Player2);
@@ -237,6 +278,22 @@ GameResult GameRunner::run() {
             {"scores", {result.final_scores[0], result.final_scores[1]}},
             {"turns", result.total_turns}, {"decisions", result.total_decisions},
             {"reason", result.termination_reason}};
+        {
+            const GameState& fin = engine.state();
+            const auto name_of = [&](GameObjectId id) -> std::string {
+                const auto it = fin.objects.find(id);
+                return it == fin.objects.end() ? std::string() : card_db_.get(it->second.card_def_id).name;
+            };
+            nlohmann::json cards = nlohmann::json::array();
+            for (int p = 0; p < 2; ++p) {
+                nlohmann::json opening = nlohmann::json::array(), held = nlohmann::json::array(), played = nlohmann::json::array();
+                for (GameObjectId id : exposure[p].opening) { const auto n = name_of(id); if (!n.empty()) opening.push_back(n); }
+                for (const auto& [id, turn] : exposure[p].held) { const auto n = name_of(id); if (!n.empty()) held.push_back({n, turn}); }
+                for (CardDefId def : exposure[p].played) played.push_back(card_db_.get(def).name);
+                cards.push_back({{"opening", opening}, {"held", held}, {"played", played}});
+            }
+            header["cards"] = cards;
+        }
         std::filesystem::create_directories(config_.json_replay_dir);
         if (review) {
             review->finishGame(engine.state(), std::move(review_lines));
