@@ -42,6 +42,16 @@ code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace}
 tr.missing .step input{color:var(--miss);font-weight:700}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.on{opacity:1}
+.tabs{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabs button{border:0;border-radius:0;background:var(--surface);padding:6px 12px}
+.tabs button+button{border-left:1px solid var(--line)}
+.tabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+.tabs b{font-variant-numeric:tabular-nums}
+.state{font-size:12px;color:var(--ink2)}
+.hand{display:inline-block;font-size:11px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px}
+tr.zero .name,tr.zero .img{opacity:.5}
+.step button[data-reset]{border-left:1px solid var(--line);font-size:14px}
+.empty{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;color:var(--ink2)}
 .step button.edge{font-size:11px;color:var(--ink2);padding-left:7px;padding-right:7px}
 .step button[data-set="0"]{border-right:1px solid var(--line)}
 .step button[data-set="max"]{border-left:1px solid var(--line)}
@@ -70,7 +80,7 @@ textarea{width:100%;height:160px;margin-top:10px;font:12px ui-monospace,monospac
 <script id="data" type="application/json">__DATA__</script>
 <script>
 const DECKS = JSON.parse(document.getElementById("data").textContent);
-const KEY = "rb-buylist-v2";
+const KEY = "rb-buylist-v2", SKEY = "rb-buylist-saved-v1";
 // Counts are kept per list, section and card code. OLD: the rows of the page of 8 Nov, to carry its counts over.
 const OLD = __OLD__;
 let miss = null;
@@ -88,24 +98,127 @@ const CAP = 9;   // more than the list plays is allowed (spare copies); "max" se
 const get = (d, i) => d.cards[i].banned ? 0 : Math.max(0, Math.min(CAP, miss[k(d, i)] | 0));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let mode = "deck", downloads = null;
+const CARD = new Map(); DECKS.forEach(d => d.cards.forEach(c => { if (!CARD.has(c.code)) CARD.set(c.code, c); }));
+
+// ── Saved cards: one number per card, whatever the list. Written by the Save button; a number changed by hand in
+// the Saved view (e: true) is kept as set until its reset. Stored in the viewer's own private document
+// (data/users/<id>/buylist) when the page can reach it, and always in this browser.
+let saved = {rule: "sum", at: null, cards: {}};      // cards: code -> {q, e, name}
+try { const s = JSON.parse(localStorage.getItem(SKEY) || "null"); if (s && s.cards && typeof s.cards === "object") saved = {rule: s.rule === "max" ? "max" : "sum", at: s.at || null, cards: s.cards}; } catch (e) {}
+let view = location.hash === "#saved" ? "saved" : "lists";
+let store = null, storeState = saved.at ? "local" : "none", writing = false, again = false, timer = null;
+
+function need(rule) {       // code -> {v, per: Map(list slug -> copies marked missing)}
+  const by = new Map();
+  DECKS.forEach(d => d.cards.forEach((c, i) => { const v = get(d, i); if (!v) return;
+    const r = by.get(c.code) || {per: new Map()}; r.per.set(d.slug, (r.per.get(d.slug) || 0) + v); by.set(c.code, r); }));
+  by.forEach(r => { const xs = [...r.per.values()]; r.v = rule === "max" ? Math.max(...xs) : xs.reduce((a, b) => a + b, 0); });
+  return by;
+}
+const nameOf = code => (CARD.get(code) || {}).name || (saved.cards[code] || {}).name || code;
+function merge() {          // the lists' counts into the saved cards; numbers set by hand stay
+  const by = need(saved.rule), out = {};
+  by.forEach((r, code) => { const old = saved.cards[code]; out[code] = old && old.e ? old : {q: r.v, name: nameOf(code)}; });
+  for (const [code, o] of Object.entries(saved.cards)) if (o.e && !out[code]) out[code] = o;
+  saved.cards = out;
+}
+function dirty() {
+  const by = need(saved.rule);
+  for (const [code, r] of by) { const o = saved.cards[code]; if (!o || (!o.e && o.q !== r.v)) return true; }
+  for (const [code, o] of Object.entries(saved.cards)) if (!o.e && !by.has(code)) return true;
+  return false;
+}
+const savedTotals = () => { const xs = Object.values(saved.cards).filter(o => o.q > 0); return {cards: xs.length, copies: xs.reduce((s, o) => s + o.q, 0)}; };
+function body() {
+  return {v: 1, at: saved.at, rule: saved.rule,
+          cards: Object.entries(saved.cards).map(([code, o]) => ({code, q: o.q, e: !!o.e, name: nameOf(code)})),
+          counts: Object.entries(miss).map(([key, n]) => ({k: key, n}))};
+}
+function stateText() {
+  const when = saved.at ? " (" + new Date(saved.at).toLocaleString([], {day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"}) + ")" : "";
+  return {none: "Nothing saved yet", saving: "Saving…", account: "Saved to your Claude account" + when,
+          local: "Saved in this browser only" + when, error: "The online save failed: kept in this browser" + when}[storeState];
+}
+function setState(s) { storeState = s; const el = document.getElementById("state"); if (el) el.textContent = stateText(); }
+async function persist() {
+  saved.at = new Date().toISOString();
+  try { localStorage.setItem(SKEY, JSON.stringify(saved)); } catch (e) {}
+  if (!store) { setState("local"); return; }
+  if (writing) { again = true; return; }                 // one write at a time; the latest state goes next
+  writing = true; setState("saving");
+  let ok = false;
+  for (let attempt = 0; attempt < 2 && !ok; attempt++) {
+    try { await store.set(body()); ok = true; }
+    catch (e) { if (!e || e.code !== "unavailable" || attempt) break; await new Promise(r => setTimeout(r, 400 + Math.random() * 600)); }
+  }
+  writing = false; setState(ok ? "account" : "error");
+  if (again) { again = false; persist(); }
+}
+const persistSoon = () => { clearTimeout(timer); timer = setTimeout(persist, 700); };
+async function connect() {
+  if (!(window.claude && claude.use)) return;
+  claude.use("downloads").then(x => { downloads = x; }).catch(() => {});
+  let db = null, id = null;
+  try { const [d, u] = await Promise.all([claude.use("db"), claude.use("user")]); db = d; id = u ? await u.id() : null; } catch (e) {}
+  if (!db || !id) return;
+  const ref = db.doc("data/users/" + id + "/buylist");
+  let snap = null;
+  try { snap = await Promise.race([ref.get(), new Promise((_, no) => setTimeout(() => no({code: "timeout"}), 10000))]); }
+  catch (e) { store = ref; return; }                      // unreachable for now: a later Save tries again
+  store = ref;
+  const d = snap.exists ? snap.data() : null;
+  if (d && Array.isArray(d.cards) && d.at && (!saved.at || d.at > saved.at)) {
+    const cards = {};
+    d.cards.forEach(c => { if (c && typeof c.code === "string") cards[c.code] = {q: Math.max(0, Math.min(99, c.q | 0)), e: !!c.e, name: String(c.name || "")}; });
+    saved = {rule: d.rule === "max" ? "max" : "sum", at: d.at, cards};
+    if (!Object.keys(miss).length && Array.isArray(d.counts)) {      // a new device: take the lists' counts too
+      d.counts.forEach(x => { if (x && typeof x.k === "string" && x.n > 0) miss[x.k] = Math.min(CAP, x.n | 0); }); save();
+    }
+    try { localStorage.setItem(SKEY, JSON.stringify(saved)); } catch (e) {}
+    storeState = "account"; render();
+  } else if (saved.at) {                                  // this browser holds the newer save: send it
+    writing = true; setState("saving");
+    try { await store.set(body()); setState("account"); } catch (e) { setState("error"); }
+    writing = false;
+  }
+}
 
 function deckTotals(d) {
   let m = 0, cards = 0; d.cards.forEach((c, i) => { const v = get(d, i); m += v; if (v) cards++; });
   return {m, cards, total: d.cards.reduce((s, c) => s + (c.banned ? 0 : c.qty), 0)};
 }
 function renderBar() {
-  const bar = document.getElementById("bar");
-  bar.innerHTML = `<span class="lbl">Missing copies per list:</span>` + DECKS.map(d => { const t = deckTotals(d);
-    return `<a class="chip ${t.m ? "has" : ""}" href="#${d.slug}">${esc(d.legend)} <b>${t.m}</b></a>`; }).join("") +
-    `<span class="spacer"></span>
-     <select id="mode" aria-label="CSV layout"><option value="deck">CSV: one row per list</option><option value="card">CSV: per card, summed over the lists</option><option value="max">CSV: per card, the most one list needs</option></select>
+  const bar = document.getElementById("bar"), st = savedTotals();
+  const tabs = `<span class="tabs" role="group" aria-label="View"><button data-view="lists" aria-pressed="${view === "lists"}">Lists</button><button data-view="saved" aria-pressed="${view === "saved"}">Saved cards <b>${st.cards}</b></button></span>`;
+  if (view === "saved") {
+    bar.innerHTML = tabs + `<span class="state" id="state">${esc(stateText())}</span><span class="spacer"></span>
+     <select id="rule" aria-label="A card in several lists"><option value="sum">In several lists: add the counts</option><option value="max">In several lists: keep the largest</option></select>
      <button id="copy">Copy CSV</button>
      <button class="primary" id="dl">Export CSV</button>`;
-  document.getElementById("mode").value = mode;
-  document.getElementById("mode").onchange = e => { mode = e.target.value; };
+    document.getElementById("rule").value = saved.rule;
+    document.getElementById("rule").onchange = e => { saved.rule = e.target.value; merge(); persist(); render(); };
+  } else {
+    const dt = dirty();
+    bar.innerHTML = tabs + `<span class="lbl">Missing copies per list:</span>` + DECKS.map(d => { const t = deckTotals(d);
+      return `<a class="chip ${t.m ? "has" : ""}" href="#${d.slug}">${esc(d.legend)} <b>${t.m}</b></a>`; }).join("") +
+      `<span class="spacer"></span>
+       <button class="primary" id="savebtn" title="${dt ? "The lists changed since the last save" : "Saved cards match the lists"}">Save${dt ? " •" : ""}</button>
+       <select id="mode" aria-label="CSV layout"><option value="deck">CSV: one row per list</option><option value="card">CSV: per card, summed over the lists</option><option value="max">CSV: per card, the most one list needs</option></select>
+       <button id="copy">Copy CSV</button>
+       <button id="dl">Export CSV</button>`;
+    document.getElementById("mode").value = mode;
+    document.getElementById("mode").onchange = e => { mode = e.target.value; };
+    document.getElementById("savebtn").onclick = saveNow;
+  }
   document.getElementById("copy").onclick = copyCsv;
   document.getElementById("dl").onclick = exportCsv;
+  bar.querySelectorAll("[data-view]").forEach(b => { b.onclick = () => { location.hash = b.dataset.view === "saved" ? "#saved" : "#lists"; }; });
 }
+function saveNow() {
+  merge(); persist(); renderBar();
+  const st = savedTotals(); toast(st.cards ? `Saved: ${st.copies} copies of ${st.cards} cards` : "Saved: no card is marked missing");
+}
+const step = (v, max, extra) => `<span class="step"><button class="edge" data-set="0" aria-label="Set to zero" title="Set to zero">0</button><button data-a="-1" aria-label="One fewer">−</button><input type="number" min="0" max="${max}" value="${v}" aria-label="${esc(extra)}"><button data-a="1" aria-label="One more">+</button>`;
 function renderDeck(d) {
   const t = deckTotals(d); let sec = null;
   const rows = d.cards.map((c, i) => {
@@ -118,7 +231,7 @@ function renderDeck(d) {
       <td class="num hide-s"><code>${esc(c.code)}</code></td>
       <td class="num hide-s">${c.number}</td>
       <td class="qty">×${c.qty}</td>
-      <td>${c.banned ? '<span class="na">not to buy</span>' : `<span class="step"><button class="edge" data-set="0" aria-label="None missing" title="None missing">0</button><button data-a="-1" aria-label="One fewer missing">−</button><input type="number" min="0" max="${CAP}" value="${v}" aria-label="Missing copies of ${esc(c.name)}"><button data-a="1" aria-label="One more missing">+</button><button class="edge" data-set="max" aria-label="All copies missing" title="All copies missing">max</button></span>`}</td>
+      <td>${c.banned ? '<span class="na">not to buy</span>' : step(v, CAP, "Missing copies of " + c.name) + `<button class="edge" data-set="max" aria-label="All copies missing" title="All copies missing">max</button></span>`}</td>
     </tr>`;
   }).join("");
   return `<section id="${d.slug}">
@@ -128,7 +241,28 @@ function renderDeck(d) {
     <table><thead><tr><th></th><th>Card</th><th class="hide-s">Code</th><th class="hide-s">No.</th><th>List</th><th>Missing</th></tr></thead><tbody>${rows}</tbody></table>
   </section>`;
 }
-function render() { renderBar(); document.getElementById("decks").innerHTML = DECKS.map(renderDeck).join(""); }
+function forLists(code, by) {
+  const r = by.get(code); if (!r) return "not marked missing in the lists now";
+  return [...r.per].map(([slug, n]) => DECKS.find(x => x.slug === slug).legend + " " + n).join(" + ");
+}
+function renderSaved() {
+  const by = need(saved.rule), st = savedTotals();
+  const codes = Object.keys(saved.cards).sort((a, b) => nameOf(a).localeCompare(nameOf(b)));
+  const rows = codes.map(code => { const o = saved.cards[code], c = CARD.get(code);
+    return `<tr class="${o.q ? "" : "zero"}" data-code="${esc(code)}">
+      <td class="img">${c && c.img ? `<img class="${c.section === "Battlefields" ? "land" : ""}" src="${c.img}" alt="${esc(c.name)}" loading="lazy">` : ""}</td>
+      <td><div class="name">${esc(nameOf(code))}${o.e ? '<span class="hand">set by hand</span>' : ""}</div><div class="meta"><code>${esc(code)}</code>${c ? " · " + esc(c.set) + " · " + esc(c.rarity) : " · no longer on this page"}</div><div class="meta show-s">${esc(forLists(code, by))}</div></td>
+      <td class="meta hide-s">${esc(forLists(code, by))}</td>
+      <td>${step(o.q, 99, "Copies of " + nameOf(code) + " to buy")}${o.e ? `<button class="edge" data-reset="1" aria-label="Back to the lists' count" title="Back to the lists' count">↺</button>` : ""}</span></td>
+    </tr>`; }).join("");
+  return `<section id="saved">
+    <div class="dh"><h2>Saved cards</h2><span class="tot"><b>${st.copies}</b> copies of ${st.cards} cards</span></div>
+    <p class="note">One row per card, whatever the list. Change a number and it stays as you set it (marked "set by hand") until you press its ↺; the other rows take the lists' counts each time you press Save in the Lists view. Changes made here are saved by themselves.</p>
+    ${codes.length ? `<table><thead><tr><th></th><th>Card</th><th class="hide-s">Marked missing in</th><th>To buy</th></tr></thead><tbody>${rows}</tbody></table>`
+                   : `<p class="empty">Nothing saved yet. In the Lists view, set the Missing numbers, then press Save.</p>`}
+  </section>`;
+}
+function render() { renderBar(); document.getElementById("decks").innerHTML = view === "saved" ? renderSaved() : DECKS.map(renderDeck).join(""); }
 function refresh(d) {
   renderBar(); const t = deckTotals(d);
   document.getElementById("tot-" + d.slug).innerHTML = `<b>${t.m}</b> missing / ${t.total} cards`;
@@ -140,28 +274,53 @@ function setVal(slug, i, v) {
   const tr = document.querySelector(`tr[data-d="${slug}"][data-i="${i}"]`);
   tr.classList.toggle("missing", v > 0); tr.querySelector("input").value = v; refresh(d);
 }
+function setSaved(code, v) {
+  const o = saved.cards[code]; if (!o) return;
+  saved.cards[code] = {q: Math.max(0, Math.min(99, v | 0)), e: true, name: nameOf(code)};
+  persistSoon(); render();
+}
+function resetSaved(code) {
+  const r = need(saved.rule).get(code);
+  if (r) saved.cards[code] = {q: r.v, name: nameOf(code)}; else delete saved.cards[code];
+  persistSoon(); render();
+}
 document.getElementById("decks").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
-  if (b.dataset.a) { const tr = b.closest("tr"); setVal(tr.dataset.d, +tr.dataset.i, get(DECKS.find(x => x.slug === tr.dataset.d), +tr.dataset.i) + +b.dataset.a); }
-  if (b.dataset.set) { const tr = b.closest("tr"), d = DECKS.find(x => x.slug === tr.dataset.d); setVal(tr.dataset.d, +tr.dataset.i, b.dataset.set === "max" ? d.cards[+tr.dataset.i].qty : 0); }
+  const tr = b.closest("tr");
+  if (tr && tr.dataset.code) {
+    const code = tr.dataset.code, o = saved.cards[code];
+    if (b.dataset.reset) resetSaved(code);
+    else if (b.dataset.a) setSaved(code, o.q + +b.dataset.a);
+    else if (b.dataset.set) setSaved(code, 0);
+    return;
+  }
+  if (b.dataset.a) setVal(tr.dataset.d, +tr.dataset.i, get(DECKS.find(x => x.slug === tr.dataset.d), +tr.dataset.i) + +b.dataset.a);
+  if (b.dataset.set) { const d = DECKS.find(x => x.slug === tr.dataset.d); setVal(tr.dataset.d, +tr.dataset.i, b.dataset.set === "max" ? d.cards[+tr.dataset.i].qty : 0); }
   const all = b.dataset.all, none = b.dataset.none;
   if (all || none) { const d = DECKS.find(x => x.slug === (all || none)); d.cards.forEach((c, i) => setVal(d.slug, i, all ? c.qty : 0)); }
 });
 document.getElementById("decks").addEventListener("change", e => {
-  if (e.target.tagName === "INPUT") { const tr = e.target.closest("tr"); setVal(tr.dataset.d, +tr.dataset.i, +e.target.value); }
+  if (e.target.tagName !== "INPUT") return;
+  const tr = e.target.closest("tr");
+  if (tr.dataset.code) setSaved(tr.dataset.code, +e.target.value); else setVal(tr.dataset.d, +tr.dataset.i, +e.target.value);
+});
+window.addEventListener("hashchange", () => {
+  const v = location.hash === "#saved" ? "saved" : "lists";
+  if (v !== view) { view = v; render(); if (v === "saved") window.scrollTo(0, 0); }
 });
 const q = s => /[",\n]/.test(String(s)) ? '"' + String(s).replace(/"/g, '""') + '"' : String(s);
 function csv() {
   const lines = [];
-  if (mode === "card" || mode === "max") {
-    const by = new Map();
-    DECKS.forEach(d => d.cards.forEach((c, i) => { const v = get(d, i); if (!v) return;
-      const r = by.get(c.code) || {c, v: 0, per: new Map()}; r.per.set(d.slug, (r.per.get(d.slug) || 0) + v); by.set(c.code, r);
-      r.v = mode === "max" ? Math.max(...r.per.values()) : [...r.per.values()].reduce((a, b) => a + b, 0);
-      r.decks = [...r.per.keys()].map(s => DECKS.find(x => x.slug === s).legend); }));
+  if (view === "saved") {
+    const by = need(saved.rule);
+    lines.push(["card_name", "code", "collector_number", "set", "rarity", "quantity", "marked_missing_in"].join(","));
+    Object.keys(saved.cards).sort().forEach(code => { const o = saved.cards[code], c = CARD.get(code) || {}; if (!o.q) return;
+      lines.push([nameOf(code), code, c.number || "", c.set || "", c.rarity || "", o.q, by.has(code) ? forLists(code, by) : ""].map(q).join(",")); });
+  } else if (mode === "card" || mode === "max") {
+    const by = need(mode === "max" ? "max" : "sum");
     lines.push(["card_name", "code", "collector_number", "set", "rarity", "missing", "for_decks"].join(","));
-    [...by.values()].sort((a, b) => a.c.code.localeCompare(b.c.code)).forEach(({c, v, decks}) =>
-      lines.push([c.name, c.code, c.number, c.set, c.rarity, v, decks.join(" + ")].map(q).join(",")));
+    [...by.keys()].sort().forEach(code => { const c = CARD.get(code), r = by.get(code);
+      lines.push([c.name, c.code, c.number, c.set, c.rarity, r.v, [...r.per.keys()].map(s => DECKS.find(x => x.slug === s).legend).join(" + ")].map(q).join(",")); });
   } else {
     lines.push(["deck", "section", "card_name", "code", "collector_number", "set", "rarity", "copies_in_list", "missing"].join(","));
     DECKS.forEach(d => d.cards.forEach((c, i) => { const v = get(d, i); if (!v) return;
@@ -170,7 +329,7 @@ function csv() {
   return lines.join("\n") + "\n";
 }
 let tt; function toast(m) { const t = document.getElementById("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2200); }
-function empty() { const n = csv().trim().split("\n").length - 1; if (!n) { toast("Nothing marked missing yet"); return true; } return false; }
+function empty() { const n = csv().trim().split("\n").length - 1; if (!n) { toast(view === "saved" ? "No saved card yet" : "Nothing marked missing yet"); return true; } return false; }
 function showBox(text) { const b = document.getElementById("csvbox"); b.value = text; b.style.display = "block"; b.focus(); b.select(); }
 async function copyCsv() {
   if (empty()) return; const text = csv();
@@ -180,9 +339,10 @@ async function copyCsv() {
 async function exportCsv() {
   if (empty()) return; const text = csv();
   if (!downloads) { showBox(text); toast("Download unavailable here: copy the CSV below"); return; }
-  try { await downloads.save({filename: `riftbound_buy_list_${mode === "deck" ? "by_list" : mode === "card" ? "by_card_summed" : "by_card_largest_need"}.csv`, data: text}); }
+  const name = view === "saved" ? "saved_cards" : mode === "deck" ? "by_list" : mode === "card" ? "by_card_summed" : "by_card_largest_need";
+  try { await downloads.save({filename: `riftbound_buy_list_${name}.csv`, data: text}); }
   catch (e) { showBox(text); toast("Download declined: the CSV is below"); }
 }
 render();
-if (window.claude && claude.use) claude.use("downloads").then(x => { downloads = x; }).catch(() => {});
+connect();
 </script>

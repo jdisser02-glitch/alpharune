@@ -8,7 +8,10 @@ its printed code (base printing, from cards/raw/gallery_raw.json), a thumbnail c
 and a "missing" counter; the page exports the missing cards as CSV. Cards of lab/meta/banned_2026-11-23.json are
 left out of every list. Counts are stored in the browser per list, section and card code
 (lab/tools/buylist_old_rows.json maps the rows of the page of 8 Nov so its counts carry over).
-To publish: Artifact tool, `url` above, `file_path` OUT.html (read the artifact first).
+The Save button writes the per-card numbers ("Saved cards" view) to the viewer's own private document
+data/users/<id>/buylist of the artifact's database (ArtifactData: collection data/users/me, doc_id buylist) and to
+the browser. To publish: Artifact tool, `url` above, `file_path` OUT.html, capabilities {downloads, db, user}
+(read the artifact first).
 """
 import base64
 import html
@@ -53,8 +56,9 @@ DECKS = [
      "2 Decree of Focus|1 Hush|2 An Offer You Can't Refuse|1 Not So Fast|1 Rebuke|1 Star-Crossed|1 Tomb-Raider Barbara|1 Baron Nashor"),
 ]
 SUB = ("Volibear, Evelynn, Mordekaiser, then Riven, each with its sideboard; updated 13 Nov 2026 after the ban "
-       "announcement. In the Missing column, enter how many copies of the card you do not own (0 and max set none or the "
-       "list's count; + goes beyond it, up to 9, if you want spare copies), then export the CSV for the buying agent.")
+       "announcement. In the Missing column, enter how many copies of the card you do not own (0 and max set none or "
+       "the list's count; + goes beyond it, up to 9, for spare copies). Save puts them in Saved cards: one row per "
+       "card, whatever the list, with a number you can change, and its own CSV export.")
 
 
 def main():
