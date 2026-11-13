@@ -269,7 +269,16 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   What the search cost: 115,200 exploration games (63,360 of them cheap, on the session's machine), 6,048 + 10,368
   in the races, 14,408 in the confirmation, 57,528 cheap in the cheap race: about 10 hours of wall time.
 
+- 16:25 UTC: **hold-out check** dispatched (five requests `lab/specs/deckopt/volibear-noaurora-cards.holdout.*.json`,
+  results `lab/results/*-volibear-noaurora-cards-holdout-*.json`, then `python3 lab/tools/merge_results.py
+  volibear-noaurora-cards-holdout --write`): the reference, ref+2, c2+3 and soldog with Aurora against five lists
+  that were NOT in the search's field and that their pilots know (DiamondHat's and Caravaggio's Riven, IcrazyFool's
+  Kai'Sa, Yizhenglong's Kennen, Alex Gorica's Akali), 1,800 games per list by weight, seed 5104. If the gain over
+  the reference holds there, it is not an over-fit to the six lists of the search; if it does not, say so plainly.
+  On the session's machine: cheap-pilot exploration around the four leading lists (`…-fast4d`, 36 shards).
+
 **Next, in order (each as soon as its inputs exist)**
+0. Five hold-out results in: merge, add the table to section 4 and tell Jeremy in three lines.
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
    correlation over the cards with at least 100 lists; write the answer here).
