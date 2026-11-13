@@ -190,8 +190,31 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   left. A net is committed every 12 iterations (`current_net`); the head stays in the Actions cache.
 - Cheap-pilot calibration, on the session's machine (not the runners): `…-fast1` and `…-fast4`.
 
+**Done**
+- 09:05 UTC, step 1. Twelve shards in (720 lists, 17,280 games, 45 minutes a shard: about 1,900 games per
+  machine-hour). The model was first fitted with every opponent counting the same; that is wrong (Riven is half
+  the field and a third of those games), so `fit` now re-weights to the field. Field-weighted table: overall 70.6%;
+  **a copy of a card the pilot never trained on costs 1.4 points (± 0.4)**: the pilot bias is real and large next
+  to the card effects. Clear cards, points per copy: Elder Dragon +3.2 (± 0.6), Seraphic Wyvern +2.4, Kadregrin
+  +1.4, Deadbloom Predator +1.2, Rengar +1.2, Mobilize +1.1; Challenge −1.9, Thermo Beam −1.9, Trinity Force −1.8
+  (−8.3 ± 1.2 when it is in the dealt hand), Avalanche −1.6, Platewyrm Egg −1.0. Starting lists as they are (288
+  games each, about ± 2.7): f3 81.0%, Ritualo 79.8%, soldog-runner 78.8%, f6 78.4%, soldog-topend 77.3%, the other
+  soldog replacements 68-75%, Laggy 71.8%, oryzias 37%. **Without Dazzling Aurora, soldog's shell no longer
+  stands above Ritualo's list** (with it, it led by about 7 points on 12 Nov).
+- Cheap pilots (`lab/tools/pilot_agreement.py`, the same 720 lists, halves of the shards against each other, 18
+  cards in at least 200 lists): "dealt against not dealt" agrees across pilots as well as the full pilot agrees
+  with itself (full with itself 0.73; full with sims=4 on different games 0.78; with sims=1 0.77); the regression
+  effects are noisier (0.52 with itself; 0.59 and 0.39 across). So the cheap pilots rate the common cards like
+  the full one, as far as 17,000 games can tell; nothing is known yet for the rarely played cards. sims=1 rates
+  Ritualo's list 5 points higher than the other two do (88.9% against 84%, unweighted, 288 games): sims=4 is the
+  cheap pilot to use.
+- 09:05 UTC: 36 more shards with sims=4 on the session's machine (spec `…-fast4w`: new lists, opponents drawn by
+  their weight, five times as many lists around Ritualo's; about 52,000 games in 110 minutes; written outside the
+  repository and moved into `lab/deckopt/volibear-noaurora-cards-fast4w/` when done). S1 now lists both cheap
+  sets under `explore_from`: its model uses them with their own intercepts.
+
 **Next, in order (each as soon as its inputs exist)**
-1. First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
+1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
    correlation over the cards with at least 100 lists; write the answer here).
 2. All twenty shards in: `model S1`, `propose S1`, check no candidate plays Dazzling Aurora, `wave S1 --stage
