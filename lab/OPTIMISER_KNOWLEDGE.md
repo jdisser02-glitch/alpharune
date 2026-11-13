@@ -381,6 +381,11 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
 - 20:27 UTC: Volibear iteration 135 was accepted at 19:33 (chain over); nothing queued, six exploration shards in
   progress: training dispatched again, `chain=16` (iterations 136 to 152).
 
+- 22:22 UTC: local exploration task ended (20:27 to 22:17); its shards are copied into `lab/deckopt/<S>/` and
+  committed: Mordekaiser 931 lists (29,792 games), Evelynn 600 (19,200), Riven Shattered 300, Riven Deserter 300
+  (9,600 each). The Riven frame test runs on the session's machine as task b1bg30rsl (about 75 minutes; result
+  `lab/results/*-riven-postban-frames.json`). The runner shards are due at about 23:15-23:30: then step B.
+
 **THE NIGHT OF 13-14 NOV, in order (the hourly watchdog does the next step whose inputs exist; times are UTC).
 The four searches are S = mordekaiser-postban, evelynn-postban, riven-postban-shattered, riven-postban-deserter;
 when machines or attention are short, in that order.**
