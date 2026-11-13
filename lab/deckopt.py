@@ -106,7 +106,8 @@ def explore(req_path: str) -> int:
     centres = centres_of(spec, g)
     rng = random.Random(int(spec.get("seed", 1)) * 7919 + shard)
     g.rng = rng
-    n_lists, cell_games = int(ex.get("lists", 60)), int(ex.get("games_per_cell", 2))
+    # A request may carry its own "lists" (a longer shard on a machine that has the time).
+    n_lists, cell_games = int(req.get("lists", ex.get("lists", 60))), int(ex.get("games_per_cell", 2))
     mean_k, max_k = float(ex.get("swaps_mean", 3)), int(ex.get("max_swaps", 8))
     out_path = out_dir(spec) / f"explore-{shard:02d}.json"
     result = {"spec": req["spec"], "name": spec["name"], "shard": shard, "engine_commit": riftlab.git_commit(),
