@@ -240,7 +240,8 @@ def fit(spec: dict, verbose: bool = True) -> dict:
     mean = X[:, ncell:].mean(0); X[:, ncell:] -= mean      # card counts sum to the deck size: centre them
 
     def irls(lam_cards: float):
-        lam = np.r_[np.zeros(ncell), np.full(len(cards), lam_cards), [lam_cards if seen else 1e6]]
+        # (a whisper of penalty on the intercepts: a pilot with no game in some cell must not make the system singular)
+        lam = np.r_[np.full(ncell, 1e-6), np.full(len(cards), lam_cards), [lam_cards if seen else 1e6]]
         b = np.zeros(X.shape[1])
         for _ in range(80):
             p = 1 / (1 + np.exp(-(X @ b))); W = wgt * n * p * (1 - p)

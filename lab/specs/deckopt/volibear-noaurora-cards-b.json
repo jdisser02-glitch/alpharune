@@ -1,0 +1,114 @@
+{
+ "kind": "deckopt-spec",
+ "name": "volibear-noaurora-cards-b",
+ "description": "Round 1b of the Volibear search without Dazzling Aurora (13 Nov), entirely with the cheap pilot (sims=4, worlds=2) on the session's machine: the card model on every explored game so far (about 270,000), candidates built from round 1's confirmed lists, then races. Its leaders join round 2's starting lists; nothing here is a rating.",
+ "base": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+ "centres": [
+  "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+  "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+  "lab/variants/volibear-noaurora-cards-cand-refp4.txt",
+  "lab/variants/volibear-noaurora-cards-cand-c1p4.txt"
+ ],
+ "pool": {
+  "from_decks": [
+   "lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+   "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "lab/decks/community/jeremy_2026-11-11/volibear_dragons_rengar.txt",
+   "lab/variants/volibear-stuttgart-1-best.txt",
+   "lab/variants/volibear-stuttgart-2-best.txt",
+   "lab/decks/meta/*/*volibear*.txt"
+  ],
+  "extra": [
+   "Thermo Beam",
+   "Minotaur Reckoner",
+   "Rampage",
+   "Sabotage",
+   "Repulse",
+   "Avalanche",
+   "Unyielding Spirit",
+   "Punch First",
+   "Decree of Strength",
+   "Kinkou Initiate",
+   "Dunebreaker",
+   "Ruin Runner"
+  ],
+  "exclude": [
+   "Dazzling Aurora"
+  ]
+ },
+ "max_copies": 3,
+ "pilot_lists": [
+  "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+  "lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+  "lab/variants/volibear-stuttgart-1-best.txt",
+  "lab/variants/volibear-stuttgart-2-best.txt"
+ ],
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+   "label": "Riven (Sonecon, Stuttgart 2nd)",
+   "weight": 63,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/coolstuffcon_orlando_25k_2026-11-01/01_tabris_riven.txt",
+   "label": "Riven (Tabris, Orlando 1st)",
+   "weight": 63,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_radiance_win_a_case_samedi_2026-10-24/01_jason_tian_kai_sa.txt",
+   "label": "Kai'Sa (Jason Tian)",
+   "weight": 51,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/01_evansrhim_kennen.txt",
+   "label": "Kennen (Evansrhim, Stuttgart 1st)",
+   "weight": 44,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/meta/s5_shanghai_city_challenge_2026-11-01/01_pcq_master_yi.txt",
+   "label": "Master Yi (PCQ)",
+   "weight": 16
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+   "label": "Rek'Sai (Rajan Nandan)",
+   "weight": 10
+  }
+ ],
+ "seed": 1401,
+ "threads": 4,
+ "explore": {
+  "shards": 12,
+  "lists": 60,
+  "games_per_cell": 2,
+  "swaps_mean": 3,
+  "max_swaps": 8
+ },
+ "race1": {
+  "games": 400,
+  "seed": 5301
+ },
+ "race2": {
+  "games": 1600,
+  "keep": 5,
+  "seed": 5302
+ },
+ "confirm": {
+  "games": 600,
+  "keep": 2,
+  "seed": 5303
+ },
+ "explore_from": [
+  "volibear-noaurora-cards",
+  "volibear-noaurora-cards-fast4",
+  "volibear-noaurora-cards-fast4w",
+  "volibear-noaurora-cards-fast4c",
+  "volibear-noaurora-cards-fast4d"
+ ]
+}
