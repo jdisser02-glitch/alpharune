@@ -325,18 +325,25 @@ SPECIALISTS = {
 _POST = "lab/decks/postban/"
 # Self-play opponents of every post-ban track (a track never meets its own legend here: the mirror has its own
 # share, --spec-mirror). Weights: the Stuttgart shares of the legends still standing, Riven cut from 126 to 40
-# (two champions), and 8 for each legend Jeremy plays. Nobody knows the real post-ban shares yet.
+# (two champions), and 8 for each legend Jeremy plays, then moved towards what the matchup matrices say
+# (lab/tools/meta_matrix.py). Nobody knows the real post-ban shares yet.
 POSTBAN_FIELD = [(_POST + "kai_sa_jason_tian.txt", 51.0), (_POST + "kennen_zombro.txt", 44.0),
                  (_POST + "riven_frame_shattered.txt", 20.0), (_POST + "riven_frame_deserter.txt", 20.0),
                  (_POST + "master_yi_pcq.txt", 16.0),
                  (_META + "ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt", 10.0),
-                 (_POST + "akali_vincent_nguyen.txt", 8.0), ("lab/variants/volibear-noaurora-best.txt", 8.0),
+                 (_POST + "akali_vincent_nguyen.txt", 8.0),
+                 # 13 Nov 23:40 UTC, matrix m0 (lab/meta/postban_meta_m0.md): the two Volibear lists beat every other
+                 # list 60-100% and are the whole equilibrium. Players had Riven ahead of Volibear, so the other
+                 # pilots do not know how to play against it: Volibear goes from 8 to 50 (a fifth of every other
+                 # track's self-play), half on each list.
+                 ("lab/variants/volibear-noaurora-best.txt", 25.0),
+                 ("lab/variants/volibear-noaurora-cards-cand-refp2.txt", 25.0),
                  (_META + "ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt", 8.0),
                  ("lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt", 8.0),
                  (_POST + "orianna_luoluoluofu.txt", 3.0)]
 # Held out of self-play (the panel of each track): other lists of the same legends, each known to its pilot.
 POSTBAN_HELD = [_POST + "kai_sa_icrazyfool.txt", _POST + "kennen_yizhenglong.txt", _POST + "akali_alex_gorica.txt",
-                _POST + "riven_hand_draw.txt", "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+                _POST + "riven_hand_draw.txt", "lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt",
                 _POST + "mordekaiser_calvin.txt", _META + "vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt"]
 _POSTBAN_TRACKS = {
     # decks[0] is the mirror deck of the gate and of the frozen-net curve

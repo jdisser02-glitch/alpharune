@@ -1,7 +1,179 @@
 {
-"generated_utc": "2026-11-13T19:02:04+00:00",
-"engine_commit": "9b4d1da",
+"generated_utc": "2026-11-13T23:25:52+00:00",
+"engine_commit": "37a1dc9",
 "tests": [
+{
+"id": "20261113-222247-riven-postban-frames",
+"file": "lab/results/20261113-222247-riven-postban-frames.json",
+"name": "riven-postban-frames",
+"description": "Riven after the bans: what the card-level searches keep fixed. The same main deck (the post-ban reference) for each champion on five sets of battlefields and with the other rune split, cheap pilot (sims=4, worlds=2), 400 games per opponent on the same seeds, the post-ban field of lab/specs/deckopt/riven-postban-*.json. The pilot has never played either champion: differences between battlefields or runes for one champion mean more than the gap between champions.",
+"started_utc": "2026-11-13T22:22:47+00:00",
+"finished_utc": "2026-11-13T23:25:34+00:00",
+"engine_commit": "5a8cfc1",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 400,
+"decks": [
+{
+"label": "shattered: Hunters' Circle, Rakelstake, Windswept Hillock (the frame)",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5624,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Hunters' Circle, Rakelstake, Valley of Idols",
+"path": "lab/variants/riven-postban-frame-shattered-valley.txt",
+"weighted_win_rate": 0.5624,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Hunters' Circle, Rakelstake, Forge of the Fluft",
+"path": "lab/variants/riven-postban-frame-shattered-fluft.txt",
+"weighted_win_rate": 0.5624,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Hunters' Circle, Rakelstake, Threshold of the Gray",
+"path": "lab/variants/riven-postban-frame-shattered-threshold.txt",
+"weighted_win_rate": 0.5624,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Hunters' Circle, Windswept Hillock, Valley of Idols",
+"path": "lab/variants/riven-postban-frame-shattered-hillock-valley.txt",
+"weighted_win_rate": 0.5624,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: 5 Calm / 7 Chaos runes",
+"path": "lab/variants/riven-postban-frame-shattered-runes57.txt",
+"weighted_win_rate": 0.5713,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle, Rakelstake, Windswept Hillock (the frame)",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.6712,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle, Rakelstake, Valley of Idols",
+"path": "lab/variants/riven-postban-frame-deserter-valley.txt",
+"weighted_win_rate": 0.6712,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle, Rakelstake, Forge of the Fluft",
+"path": "lab/variants/riven-postban-frame-deserter-fluft.txt",
+"weighted_win_rate": 0.6712,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle, Rakelstake, Threshold of the Gray",
+"path": "lab/variants/riven-postban-frame-deserter-threshold.txt",
+"weighted_win_rate": 0.6712,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle, Windswept Hillock, Valley of Idols",
+"path": "lab/variants/riven-postban-frame-deserter-hillock-valley.txt",
+"weighted_win_rate": 0.6712,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: 6 Calm / 6 Chaos runes",
+"path": "lab/variants/riven-postban-frame-deserter-runes66.txt",
+"weighted_win_rate": 0.6688,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-190203-volibear-noaurora-cards-b-race2",
+"file": "lab/results/20261113-190203-volibear-noaurora-cards-b-race2.json",
+"name": "volibear-noaurora-cards-b-race2",
+"description": "Round 1b of the Volibear search without Dazzling Aurora (13 Nov), entirely with the cheap pilot (sims=4, worlds=2) on the session's machine: the card model on every explored game so far (about 270,000), candidates built from round 1's confirmed lists, then races. Its leaders join round 2's starting lists; nothing here is a rating. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 6 requests, one per opponent.",
+"started_utc": "2026-11-13T17:18:14+00:00",
+"finished_utc": "2026-11-13T19:02:03+00:00",
+"engine_commit": "f29be9b",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2448,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.7791,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt",
+"weighted_win_rate": 0.8431,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/volibear-noaurora-cards-b-cand-c1p6.txt",
+"weighted_win_rate": 0.8313,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-noaurora-cards-b-cand-c2p6.txt",
+"weighted_win_rate": 0.8372,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/volibear-noaurora-cards-b-cand-c1p4.txt",
+"weighted_win_rate": 0.8334,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-noaurora-cards-b-cand-c2p3.txt",
+"weighted_win_rate": 0.8275,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian)",
+"Kennen (Evansrhim, Stuttgart 1st)",
+"Master Yi (PCQ)",
+"Rek'Sai (Rajan Nandan)",
+"Riven (Sonecon, Stuttgart 2nd)",
+"Riven (Tabris, Orlando 1st)"
+]
+},
 {
 "id": "20261113-183738-volibear-noaurora-cards-b-race2-riven-02-sonecon",
 "file": "lab/results/20261113-183738-volibear-noaurora-cards-b-race2-riven-02-sonecon.json",
@@ -31312,6 +31484,84 @@
 }
 },
 {
+"path": "lab/decks/postban/kai_sa_art3mis.txt",
+"legend": "Kai'Sa, Daughter of the Void",
+"champion": "Kai'Sa, Survivor",
+"comments": [
+"lab/decks/meta/rro25_2026-10-17/02_art3mis_kai_sa.txt without the cards banned on 23 Nov 2026 (lab/tools/postban.py patch):",
+"-3 Brynhir Thundersong, +1 Bilgewater Tracker, +1 Lecturing Yordle, +1 Smoke Screen.",
+"Not a list anyone registered: the nearest legal one by a fixed rule."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.05,
+"curve": {
+"1": 8,
+"2": 15,
+"3": 7,
+"4": 4,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 21,
+"spell": 18,
+"gear": 1
+},
+"rune_split": {
+"fury": 7,
+"mind": 5
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Kai'Sa, Daughter of the Void": 1
+},
+"champion": {
+"Kai'Sa, Survivor": 1
+},
+"maindeck": {
+"Hextech Ray": 3,
+"Noxus Hopeful": 3,
+"Falling Star": 3,
+"Stupefy": 3,
+"Watchful Sentry": 3,
+"Thousand-Tailed Watcher": 3,
+"Plundering Poro": 3,
+"Temporal Breach": 3,
+"Lecturing Yordle": 3,
+"Smoke Screen": 3,
+"Bilgewater Tracker": 3,
+"The Empyrean": 2,
+"Orb of Regret": 1,
+"Time Warp": 1,
+"Bellows Breath": 1,
+"Lost to the Sands": 1
+},
+"battlefields": {
+"Void Gate": 1,
+"Rockfall Path": 1,
+"Frozen Fortress": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Mind Rune": 5
+},
+"sideboard": {
+"Decree of Rage": 3,
+"Pickpocket": 2,
+"Thermo Beam": 1,
+"Dr. Mundo, Expert": 1,
+"Ferrous Forerunner": 1,
+"Brittle Steel": 1,
+"Decree of Insight": 1
+}
+}
+},
+{
 "path": "lab/decks/postban/kai_sa_icrazyfool.txt",
 "legend": "Kai'Sa, Daughter of the Void",
 "champion": "Kai'Sa, Survivor",
@@ -31457,6 +31707,86 @@
 }
 },
 {
+"path": "lab/decks/postban/kennen_dylan_sumner.txt",
+"legend": "Kennen, Heart of the Tempest",
+"champion": "Kennen, Storm of Shuriken",
+"comments": [
+"lab/decks/meta/sacramento_showdown_2026-10-24/06_dylan_sumner_kennen.txt without the cards banned on 23 Nov 2026 (lab/tools/postban.py patch):",
+"-3 Nocturne, Horrifying, -3 Rhasa the Sunderer, +1 Gust, +1 Last Rites, +1 Star-Crossed, +1 Switcheroo, +1 Fizz, Trickster, +1 Bedeviling Stranger.",
+"Not a list anyone registered: the nearest legal one by a fixed rule."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.0,
+"curve": {
+"0": 3,
+"1": 6,
+"2": 19,
+"3": 12
+},
+"types": {
+"unit": 16,
+"spell": 17,
+"gear": 7
+},
+"rune_split": {
+"chaos": 9,
+"order": 3
+},
+"two_drops": 28
+},
+"list": {
+"legend": {
+"Kennen, Heart of the Tempest": 1
+},
+"champion": {
+"Kennen, Storm of Shuriken": 1
+},
+"maindeck": {
+"An Offer You Can't Refuse": 1,
+"Carrion Dredger": 1,
+"Edge of Night": 1,
+"Fizz, Trickster": 2,
+"Flash": 1,
+"Gust": 3,
+"Hard Bargain": 1,
+"Last Rites": 3,
+"Lightning Rush": 3,
+"Reckless Innovator": 3,
+"Ride the Wind": 3,
+"Seal of Discord": 3,
+"Shadow Order Disciple": 1,
+"Star-Crossed": 2,
+"Switcheroo": 3,
+"Tideturner": 1,
+"Traveling Merchant": 3,
+"Trifarian Captain": 3,
+"Bedeviling Stranger": 1
+},
+"battlefields": {
+"Minefield": 1,
+"Ruined Monastery": 1,
+"Zaun Warrens": 1
+},
+"runes": {
+"Chaos Rune": 9,
+"Order Rune": 3
+},
+"sideboard": {
+"Abandon": 1,
+"An Offer You Can't Refuse": 1,
+"Decree of Unity": 2,
+"Fizz, Trickster": 1,
+"Imperial Decree": 1,
+"Ravenbloom Prefect": 1,
+"Rebuke": 1,
+"Star-Crossed": 1,
+"Tail-Cloaked Matriarch": 1
+}
+}
+},
+{
 "path": "lab/decks/postban/kennen_evansrhim.txt",
 "legend": "Kennen, Heart of the Tempest",
 "champion": "Kennen, Storm of Shuriken",
@@ -31521,6 +31851,84 @@
 "runes": {
 "Chaos Rune": 9,
 "Order Rune": 3
+}
+}
+},
+{
+"path": "lab/decks/postban/kennen_simple.txt",
+"legend": "Kennen, Heart of the Tempest",
+"champion": "Kennen, Storm of Shuriken",
+"comments": [
+"lab/decks/meta/rro25_2026-10-17/01_simple_kennen.txt without the cards banned on 23 Nov 2026 (lab/tools/postban.py patch):",
+"-3 Rhasa the Sunderer, -3 Nocturne, Horrifying, +1 Gust, +1 Last Rites, +1 Ride the Wind, +1 Star-Crossed, +1 Switcheroo, +1 Fizz, Trickster.",
+"Not a list anyone registered: the nearest legal one by a fixed rule."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.17,
+"curve": {
+"0": 3,
+"1": 6,
+"2": 15,
+"3": 13,
+"4": 3
+},
+"types": {
+"unit": 18,
+"gear": 6,
+"spell": 16
+},
+"rune_split": {
+"chaos": 9,
+"order": 3
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Kennen, Heart of the Tempest": 1
+},
+"champion": {
+"Kennen, Storm of Shuriken": 1
+},
+"maindeck": {
+"Traveling Merchant": 3,
+"Seal of Discord": 3,
+"Tail-Cloaked Matriarch": 3,
+"Lightning Rush": 3,
+"Trifarian Captain": 3,
+"Gust": 3,
+"Ride the Wind": 3,
+"Last Rites": 3,
+"Tornado Warrior": 2,
+"Bedeviling Stranger": 2,
+"Flash": 1,
+"Switcheroo": 2,
+"Star-Crossed": 2,
+"Shadows of the Past": 1,
+"An Offer You Can't Refuse": 1,
+"Fizz, Trickster": 3,
+"Ezreal, Prodigy": 1
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Minefield": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Chaos Rune": 9,
+"Order Rune": 3
+},
+"sideboard": {
+"Vex, Apathetic": 2,
+"Decree of Unity": 2,
+"Rebuke": 1,
+"Switcheroo": 1,
+"Star-Crossed": 1,
+"Abandon": 1,
+"Ravenbloom Prefect": 1,
+"An Offer You Can't Refuse": 1
 }
 }
 },
@@ -31734,6 +32142,147 @@
 "runes": {
 "Calm Rune": 5,
 "Body Rune": 7
+}
+}
+},
+{
+"path": "lab/decks/postban/mordekaiser_3x_tianzi.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Dominating",
+"comments": [
+"lab/decks/meta/s5_shenzhen_city_challenge_2026-10-31/17_3x_tianzi_mordekaiser.txt without the cards banned on 23 Nov 2026 (lab/tools/postban.py patch):",
+"-1 Brynhir Thundersong, +1 Vi, Peacekeeper.",
+"Not a list anyone registered: the nearest legal one by a fixed rule."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 6,
+"2": 14,
+"3": 6,
+"4": 5,
+"5": 6,
+"6": 2,
+"9": 1
+},
+"types": {
+"unit": 25,
+"spell": 10,
+"gear": 5
+},
+"rune_split": {
+"fury": 6,
+"order": 6
+},
+"two_drops": 20
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Dominating": 1
+},
+"maindeck": {
+"Cleave": 3,
+"Flame Chompers": 3,
+"Noxus Hopeful": 3,
+"Darius, Trifarian": 2,
+"Kai'Sa, Survivor": 2,
+"Imperial Decree": 1,
+"Salvage": 2,
+"Ferrous Forerunner": 2,
+"Long Sword": 2,
+"Honest Broker": 3,
+"Falling Star": 1,
+"Vi, Peacekeeper": 3,
+"Punching Poro": 3,
+"Bilgewater Tracker": 3,
+"Concert Poster": 3,
+"Realm of Death": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 6,
+"Order Rune": 6
+}
+}
+},
+{
+"path": "lab/decks/postban/mordekaiser_calvin.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Dominating",
+"comments": [
+"lab/decks/meta/ldxp_sacramento_challenge_2026-10-25/09_calvin_mordekaiser.txt without the cards banned on 23 Nov 2026 (lab/tools/postban.py patch):",
+"-1 Brynhir Thundersong, +1 Long Sword.",
+"Not a list anyone registered: the nearest legal one by a fixed rule."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.95,
+"curve": {
+"0": 2,
+"2": 18,
+"3": 9,
+"4": 5,
+"5": 4,
+"6": 1,
+"9": 1
+},
+"types": {
+"unit": 29,
+"gear": 5,
+"spell": 6
+},
+"rune_split": {
+"fury": 6,
+"order": 6
+},
+"two_drops": 20
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Dominating": 1
+},
+"maindeck": {
+"Darius, Trifarian": 1,
+"Kai'Sa, Survivor": 3,
+"Vanguard Captain": 1,
+"Seal of Unity": 2,
+"Hidden Blade": 2,
+"Spectral Matron": 2,
+"Ferrous Forerunner": 1,
+"Blast Corps Cadet": 2,
+"Long Sword": 3,
+"Honest Broker": 1,
+"Xin Zhao, Vigilant": 2,
+"Falling Star": 1,
+"Vi, Peacekeeper": 3,
+"LeBlanc, Fragmented": 2,
+"Carrion Dredger": 3,
+"Escaped Grayback": 2,
+"Bilgewater Tracker": 2,
+"Trifarian Captain": 3,
+"Realm of Death": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Minefield": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 6,
+"Order Rune": 6
 }
 }
 },
@@ -224687,6 +225236,153 @@
 "volibear-noaurora-cards-fast4",
 "volibear-noaurora-cards-fast4w"
 ]
+},
+{
+"spec": "lab/specs/deckopt/volibear-postban.json",
+"kind": "deckopt-spec",
+"name": "volibear-postban",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']).",
+"base": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"centres": [
+"lab/variants/volibear-noaurora-best.txt",
+"lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+"lab/variants/volibear-noaurora-cards-cand-refp4.txt",
+"lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt",
+"lab/variants/volibear-noaurora-cards-b-cand-c2p6.txt",
+"lab/variants/volibear-noaurora-cards-b-cand-c1p6.txt",
+"lab/variants/volibear-noaurora-cards-b-cand-c1p4.txt",
+"lab/variants/volibear-noaurora-cards-b-cand-c2p3.txt"
+],
+"pool": {
+"from_decks": [
+"lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+"lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"lab/decks/community/jeremy_2026-11-11/volibear_dragons_rengar.txt",
+"lab/variants/volibear-stuttgart-1-best.txt",
+"lab/variants/volibear-stuttgart-2-best.txt",
+"lab/decks/meta/*/*volibear*.txt"
+],
+"extra": [
+"Thermo Beam",
+"Minotaur Reckoner",
+"Rampage",
+"Sabotage",
+"Repulse",
+"Avalanche",
+"Unyielding Spirit",
+"Punch First",
+"Decree of Strength",
+"Kinkou Initiate",
+"Dunebreaker",
+"Ruin Runner"
+],
+"exclude": [
+"Riven, Broken Blade",
+"Zhonya's Hourglass",
+"Stellacorn Herder",
+"Nocturne, Horrifying",
+"Rhasa the Sunderer",
+"Brynhir Thundersong",
+"Dazzling Aurora",
+"Baited Hook"
+]
+},
+"max_copies": 3,
+"pilot_lists": [
+"lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"lab/decks/community/volibear_radiance_2026-10-31/*.txt",
+"lab/variants/volibear-stuttgart-1-best.txt",
+"lab/variants/volibear-stuttgart-2-best.txt",
+"lab/variants/volibear-noaurora-best.txt",
+"lab/variants/volibear-noaurora-cards-cand-*.txt"
+],
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"opponents": [
+{
+"deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+"label": "Kai'Sa (Jason Tian, post-ban)",
+"weight": 51,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+},
+{
+"deck": "lab/decks/postban/kennen_zombro.txt",
+"label": "Kennen (zombro, post-ban)",
+"weight": 44,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+},
+{
+"deck": "lab/decks/postban/riven_frame_shattered.txt",
+"label": "Riven Shattered (post-ban frame)",
+"weight": 20,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+},
+{
+"deck": "lab/decks/postban/riven_frame_deserter.txt",
+"label": "Riven Deserter (post-ban frame)",
+"weight": 20,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+},
+{
+"deck": "lab/decks/postban/master_yi_pcq.txt",
+"label": "Master Yi (PCQ, post-ban)",
+"weight": 16
+},
+{
+"deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+"label": "Rek'Sai (Rajan Nandan)",
+"weight": 10
+},
+{
+"deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+"label": "Akali (Vincent Nguyen, post-ban)",
+"weight": 8,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+},
+{
+"deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"label": "Mordekaiser (Neal)",
+"weight": 8,
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60"
+}
+],
+"seed": 2331,
+"threads": 4,
+"explore": {
+"shards": 1,
+"lists": 5000,
+"games_per_cell": 2,
+"swaps_mean": 3,
+"max_swaps": 8,
+"design": "weighted"
+},
+"race1": {
+"games": 300,
+"seed": 6121,
+"requests": 2
+},
+"race2": {
+"games": 1200,
+"keep": 5,
+"seed": 6122,
+"requests": 3
+},
+"confirm": {
+"games": 450,
+"keep": 2,
+"seed": 6123,
+"agent_sub": [
+[
+"sims=4",
+"sims=50"
+],
+[
+"worlds=2",
+"worlds=8"
+]
+],
+"requests": 4
+}
 },
 {
 "spec": "lab/specs/ga/jeremy-buy-1.json",

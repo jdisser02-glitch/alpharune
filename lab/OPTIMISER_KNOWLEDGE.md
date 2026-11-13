@@ -493,4 +493,41 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
 - 13 Nov 22:45 UTC: PAUSE files of Riven, Mordekaiser, Evelynn, Kai'Sa, Kennen removed; five chains dispatched
   (`chain=40`); Volibear's running chain (to iteration 152) takes the post-ban lists and its 2 runners from its next
   iteration. `volibear-postban` exploration shard dispatched (results about 04:30). 22:55: matrix m0, 13 rows.
+- 13 Nov 23:45 UTC, **round 1, card models** (runner shards in for Mordekaiser, Evelynn and both Riven; cheap
+  pilot, the nets of 13 Nov; full tables in `lab/deckopt/<S>/model.json`):
+  - Mordekaiser (5,074 lists, 162,368 games, 76.8% overall; unknown card −1.6 ± 0.1 a copy): Ferrous Forerunner
+    +2.8, Pyke, Dockside Butcher +2.7, Trifarian Captain +2.5 (+6.1 when dealt), Rengar, Unseen +1.8; Decree of Rage
+    −3.9, Perfect Execution −2.6, Seal of Unity −1.7, Deathgrip −1.5, Long Sword −1.1. Starting lists as they are
+    (256 games each): Neal 81.8%, stuttgart-2-best 83.3%, stuttgart-2-leader 82.0%, cijian 81.1%.
+  - Evelynn (3,820 lists, 122,240 games, 57.9%; unknown card −2.1 ± 0.1): Evelynn, In Control +5.8 (+10.0 when
+    dealt), Rengar, Trophy Hunter +4.3, Baron Nashor +2.7, Vex, Apathetic +2.6, K'Sante +2.4; Pack of Wonders −7.0,
+    Ember Monk −6.4, Bone Skewer −5.1, Star-Crossed −1.7, Punch First −1.6. As they are (160 games): Jeremy's list
+    48.9%, Dunc's 64.5%; the pilot only ever trained on Dunc's, so most of that gap is the pilot.
+  - Riven, Shattered (8,197 lists, 262,304 games, 36.9% overall; unknown card −2.8) and Riven, Deserter (7,848
+    lists, 251,136 games, 47.5%; unknown card −3.1): effects three times as large as for the other legends (prior
+    3.7 and 4.0 points a copy), i.e. mostly cards the pilot cannot play (Block −16, Stoic Ferryman −13, Twilight
+    Shroud −11 to −14, Hard Bargain −10). Blitzcrank +4.0 (+8.7 when dealt) and Illaoi +3.9 to +5.1 are the solid
+    positives. Starting lists as they are (128 games each): Shattered frame 57.5%, `riven_hand_draw` 63.5%;
+    Deserter: DiamondHat's main deck 73.5%, `riven_hand_draw` 67.2%. Deserter is about 10 points above Shattered
+    with this pilot.
+  39 candidates written, none plays a banned card; race 1 dispatched for the four searches (8 requests,
+  `<S>.race1.g1/g2.json`).
+- 13 Nov 23:45 UTC, **matrix m0** (`lab/meta/postban_meta_m0.md`, 1,000 games a pair, cheap pilots, nets of 13 Nov):
+  against the prior field Volibear 90.1% (soldog build) and 87.4% (Ritualo + 2 Rengar), Mordekaiser 77.2%, Riven
+  Deserter 67.2%, Evelynn (Dunc) 65.7%, Master Yi 62.0%, Evelynn (Jeremy) 56.4%, Riven Shattered 55.7%, Kai'Sa
+  52.8%, Orianna 41.8%, Rek'Sai 38.9%, Akali 34.8%, Kennen 24.4%. The equilibrium is Volibear alone (96% Ritualo +
+  2 Rengar, which beats the soldog build 55-45 head to head). **This is the picture before training and it is not
+  believable as a metagame**: Volibear beats Kai'Sa 88-91% and Kennen 100% here, while players had Riven ahead of
+  Volibear; the patched Kennen has lost its engine and its pilot is the weakest. What it says for certain: the
+  other pilots do not know how to play against Volibear. Decision: Volibear's weight in every other track's
+  self-play goes from 8 to 50 (`loop.POSTBAN_FIELD`, from each track's next iteration); the held-out Volibear list
+  of the panels becomes round 1b's leader (c1+9).
+- 13 Nov 23:45 UTC, **Riven frame test** (`lab/results/20261113-222247-riven-postban-frames.json`): every set of
+  battlefields gave exactly the same games (Shattered 56.2%, Deserter 67.1% for all five). Cause: the engine asks
+  the pilot which of its three battlefields to play (CR 487.5 says random for a single game) and **the lab's
+  pilots always answer the first one listed**: a list's second and third battlefields are never played in any
+  simulation of this lab. Rune split: no difference (Shattered 5/7 +0.9 [−1.9, +3.7]; Deserter 6/6 −0.2). Frame
+  test 2 dispatched on a runner (`lab/specs/riven_postban_frames2.json`: six different battlefields listed first).
+  To decide Monday with Jeremy: draw the battlefield at random in simulations (an engine option, game flow, not
+  card logic), since his real games draw it.
 

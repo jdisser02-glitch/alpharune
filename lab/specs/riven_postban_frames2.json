@@ -1,0 +1,107 @@
+{
+ "name": "riven-postban-frames2",
+ "description": "Riven after the bans, frame test 2. The first test (lab/results/20261113-222247-riven-postban-frames.json) gave the same games for every set of battlefields: the engine asks the pilot which of its three battlefields to play (game_engine.cpp, battlefield setup) and the lab's pilots always answer the first one listed, so only the first battlefield of a list is ever played. Here the same main deck for each champion with six different battlefields listed first, cheap pilot, 400 games per opponent on the same seeds.",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games": 400,
+ "review_games": 0,
+ "seed": 6202,
+ "decks": [
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "shattered: Hunters' Circle first (the frame)"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-shattered-first-rakelstake.txt",
+   "label": "shattered: Rakelstake first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-shattered-first-windswept-hillock.txt",
+   "label": "shattered: Windswept Hillock first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-shattered-first-valley-of-idols.txt",
+   "label": "shattered: Valley of Idols first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-shattered-first-forge-of-the-fluft.txt",
+   "label": "shattered: Forge of the Fluft first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-shattered-first-threshold-of-the-gray.txt",
+   "label": "shattered: Threshold of the Gray first"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_deserter.txt",
+   "label": "deserter: Hunters' Circle first (the frame)"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-deserter-first-rakelstake.txt",
+   "label": "deserter: Rakelstake first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-deserter-first-windswept-hillock.txt",
+   "label": "deserter: Windswept Hillock first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-deserter-first-valley-of-idols.txt",
+   "label": "deserter: Valley of Idols first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-deserter-first-forge-of-the-fluft.txt",
+   "label": "deserter: Forge of the Fluft first"
+  },
+  {
+   "deck": "lab/variants/riven-postban-frame-deserter-first-threshold-of-the-gray.txt",
+   "label": "deserter: Threshold of the Gray first"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+   "label": "Kai'Sa (Jason Tian, post-ban)",
+   "weight": 51,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/kennen_zombro.txt",
+   "label": "Kennen (zombro, post-ban)",
+   "weight": 44,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_deserter.txt",
+   "label": "Riven Deserter (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16
+  },
+  {
+   "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+   "label": "Rek'Sai (Rajan Nandan)",
+   "weight": 10
+  },
+  {
+   "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+   "label": "Akali (Vincent Nguyen, post-ban)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-best.txt",
+   "label": "Volibear (lab's post-ban list)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60"
+  }
+ ]
+}
