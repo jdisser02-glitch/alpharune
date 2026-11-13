@@ -1,0 +1,43 @@
+{
+ "name": "volibear-noaurora-cards-race2-riven-02-sonecon",
+ "description": "Best Volibear list against the Stuttgart RC Europe field if Dazzling Aurora is banned (Jeremy, 13 Nov 2026; an assumption, no ban announced then), by the card-level method: lists drawn around the starting lists, a regression of the win on the cards, then a race and a confirmation. Volibear piloted by spec_volibear_108_v0, each opponent by its own net, Ritualo's Dragons as the reference. Stage race2: 6 lists on the same seeds, 1728 games per list shared out by the opponents' weights. This request: Riven (Sonecon, Stuttgart 2nd), 440 games.",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_108_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 440,
+ "review_games": 0,
+ "seed": 5102,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+   "label": "ref+2"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-c2p3.txt",
+   "label": "c2+3"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-refp4.txt",
+   "label": "ref+4"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-c1p4.txt",
+   "label": "c1+4"
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-cards-cand-centre2.txt",
+   "label": "centre2"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/meta/stuttgart_rc_europe_2026-11-08/02_sonecon_riven.txt",
+   "label": "Riven (Sonecon, Stuttgart 2nd)",
+   "weight": 63,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60"
+  }
+ ]
+}
