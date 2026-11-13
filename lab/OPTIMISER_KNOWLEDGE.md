@@ -169,3 +169,46 @@ rechercher des listes, etc." Yes. One round:
 To build before round 2: random-variation lists in the self-play deck pool of `lab/learn/loop.py` (today a
 specialist trains on a fixed list of files). Step 2 needs Jeremy's go-ahead each time it uses the runners for
 training (he paused both tracks on purpose).
+
+## 6. State and next actions (the watchdog reads this; update it every time something is dispatched or finishes)
+
+Jeremy, 13 Nov 08:00 UTC: "ok go, feu vert pour l'entraînement Volibear. Je veux que les machines tournent en
+permanence de la façon la plus efficace possible." So: never an idle machine (20 jobs at once at most), training
+and search share them, and each finished step starts the next one without asking.
+
+S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volibear_108_v0).
+
+**Running now**
+- Round 1 exploration: shards 00-11 (60 lists, dispatched 07:33 UTC), shards 12-19 (180 lists, dispatched 07:50,
+  about 3 hours). Shards 20-31 are NOT dispatched: the training took those machines. Exploration is done when the
+  20 files `lab/deckopt/volibear-noaurora-cards/explore-00..19.json` exist.
+- Volibear training, continuous, with list variations (`"vary"` in `lab/learn/loop.py`: 60% of the self-play pairs
+  play a starting list of S1 plus 0, 1, 2 or 4 random swaps): dispatched 08:15 UTC,
+  `request=lab/specs/train_spec_volibear.json`, `chain=16` (iterations 119 to about 135, 35-50 minutes each while
+  it shares the machines). If no run is in progress or queued, there is no PAUSE file and the ladder
+  (`lab/learn/specialists/volibear/ladder.json`) is below iteration 135: dispatch it again with the chain that is
+  left. A net is committed every 12 iterations (`current_net`); the head stays in the Actions cache.
+- Cheap-pilot calibration, on the session's machine (not the runners): `…-fast1` and `…-fast4`.
+
+**Next, in order (each as soon as its inputs exist)**
+1. First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
+   (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
+   correlation over the cards with at least 100 lists; write the answer here).
+2. All twenty shards in: `model S1`, `propose S1`, check no candidate plays Dazzling Aurora, `wave S1 --stage
+   race1`, commit, push, dispatch the six `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`.
+3. Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
+   --stage race2`, commit, push, dispatch the six race2 requests.
+4. Six race2 results: `rank --stage race2`, `wave --stage confirm`, commit, push, dispatch the six confirm requests.
+5. Six confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py
+   volibear-noaurora-cards-confirm --write`, write `lab/variants/volibear-noaurora-best.txt` if a list's interval
+   against the reference is above 0, log it in section 4, dashboard, report to Jeremy (French, plain): this is the
+   answer with the OLD pilot, provisional.
+6. Training chain ended (ladder at about 135, a `current_net` committed at 132 or later) and step 5 done: round 2
+   with the new pilot. Copy S1 to `lab/specs/deckopt/volibear-noaurora-cards-r2.json` with `name` …-r2, `agent` =
+   the committed current net, `centres` = round 1's starting lists + its race2 survivors, seeds changed (seed
+   1501, race seeds 5201-5203); `requests`, dispatch 20 shards (or the cheap pilot at ten times the lists if step 1
+   showed it rates the cards like the full one); then steps 2-5 again. Round 1's best lists are confirmed again
+   inside round 2's confirmation: a list that was ahead only because the old pilot knew it better falls back there.
+7. While round 2's search runs on 6-20 machines, the training goes on (chain again) with `vary` pointing at the
+   round-2 spec, unless round 2 and round 1 agree on the best list (then the alternation has converged: say so to
+   Jeremy and ask whether Riven is next).
