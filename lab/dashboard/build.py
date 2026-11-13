@@ -59,6 +59,24 @@ def net_of(agent: str) -> str:
     return Path(m.group(1)).stem if m else ""
 
 
+def merged_parts():
+    """Result ids that a merged result was put together from (lab/tools/merge_results.py: one request per opponent,
+    merged into one test). The merged result is the test; its parts are not tests of their own on any page."""
+    parts = set()
+    for f in (LAB / "results").glob("*.json"):
+        try:
+            parts.update(json.loads(f.read_text()).get("merged_from") or [])
+        except (OSError, ValueError):
+            pass
+    return parts
+
+
+def result_files():
+    """Result files, oldest first, without the parts of a merged result."""
+    parts = merged_parts()
+    return [f for f in sorted((LAB / "results").glob("*.json")) if f.stem not in parts]
+
+
 def engine_since(when):
     """Engine (src/) commits made after a measurement: a figure taken before them may no longer hold."""
     if not when:
@@ -155,7 +173,7 @@ def measured_status(ladder: dict) -> dict:
     for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
         out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()), f.parent / "PAUSE")
     confirmed = []
-    for f in sorted((LAB / "results").glob("*.json")):
+    for f in result_files():
         r = json.loads(f.read_text())
         if riftlab_legend((r.get("spec") or {}).get("base", "")) != "Riven":
             continue            # step 4 is the best Riven list: other legends' searches do not count here
@@ -171,7 +189,7 @@ def measured_status(ladder: dict) -> dict:
     comparisons = []
     items = []      # (name, result): multi-list tests as they are, single-list ones grouped by the deals they played
     groups = {}
-    for f in sorted((LAB / "results").glob("*.json")):
+    for f in result_files():
         r = json.loads(f.read_text())
         decks = r.get("decks") or []
         if r.get("ga") or not decks:
@@ -196,7 +214,7 @@ def measured_status(ladder: dict) -> dict:
     # A Riven genetic search ends with a confirmation on fresh seeds (its finalists against the base list): it is a
     # list comparison too, the newest one when it is the latest Riven test.
     ga_comps = []
-    for f in sorted((LAB / "results").glob("*.json")):
+    for f in result_files():
         r = json.loads(f.read_text())
         sp = r.get("spec") or {}
         conf = ((r.get("ga") or {}).get("confirmation") or [None])[-1]
@@ -298,7 +316,7 @@ def measured_status(ladder: dict) -> dict:
         return hashlib.sha1("\n".join(lines).encode()).hexdigest()
     by_digest = {digest(path): row for path, row in retests.items()}
     by_digest.pop(None, None)
-    for f in sorted((LAB / "results").glob("*.json")):
+    for f in result_files():
         conf = ((json.loads(f.read_text()).get("ga") or {}).get("confirmation") or [None])[-1]
         for x in (conf or {}).get("finalists", []):
             pth = x.get("path")
@@ -479,8 +497,12 @@ def main(argv):
 
     tests = []
     indexed = {d["path"] for d in index["decks"]}
+    parts = merged_parts()
     for t in index["tests"]:
+        if Path(t["file"]).stem in parts:
+            continue            # one opponent's share of a merged test: the merged test is the one shown
         tr = json.loads((ROOT / t["file"]).read_text())
+        tr["engine_commits_since"] = engine_since(tr.get("started_utc"))
         # A test's deck rows carry the list's full stats; the page reads the card list from the deck index when the
         # list is indexed (tests.js deckSection) and never reads keywords or power symbols, so those stay out of
         # data.json (the artifact's per-file limit is 16 MB; genetic searches add hundreds of rows).
@@ -637,6 +659,12 @@ def main(argv):
         wasm = ROOT / "build-wasm" / "riftbound.wasm"
         built = dt.datetime.fromtimestamp(wasm.stat().st_mtime, dt.timezone.utc).isoformat(timespec="seconds")
         engine["built_utc"] = built
+        # What a first game downloads, measured on the shipped files (the Play page quotes it).
+        mb = lambda q: round(q.stat().st_size / 1e6, 1) if q.is_file() else None
+        pol = [m for m in (mb(q) for q in sorted((DIST / "engine").glob("policy_*.json"))) if m]
+        engine["size_mb"] = {"engine": round(sum(q.stat().st_size for q in (DIST / "engine").glob("riftbound.*")) / 1e6, 1),
+                             "value_net": mb(DIST / "engine" / "value_net.json"),
+                             "policy_min": min(pol) if pol else None, "policy_max": max(pol) if pol else None}
         engine["src_commits_since_build"] = engine_since(built)
     else:
         print("  no WebAssembly engine in build-wasm/: the Play tab will be hidden")
@@ -652,7 +680,12 @@ def main(argv):
         print("  no sprite sheets in lab/dashboard/art/ (run art.py): cards fall back to the CDN, which the hosting may block")
 
     measured = measured_status(ladder)
-    data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"],
+    try:        # the last commit that touched the engine sources (the repository head is often a results commit)
+        src_commit = subprocess.run(["git", "log", "-1", "--format=%h", "--", "src/"], cwd=ROOT, capture_output=True,
+                                    text=True, check=True).stdout.strip() or None
+    except (OSError, subprocess.CalledProcessError):
+        src_commit = None
+    data = {"generated_utc": index["generated_utc"], "engine_commit": index["engine_commit"], "engine_src_commit": src_commit,
             **SESSION, "tests": tests, "decks": index["decks"], "variants": index["variants"],
             "ladder": ladder, "replays": replays, "engine": engine,
             "human_review": {**human, "engine_commits_since": engine_since(human.get("generated"))}, "art": art,

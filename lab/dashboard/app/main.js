@@ -57,5 +57,5 @@ async function route() {
 
 installCardPreview();
 window.addEventListener("hashchange", route);
-loadData().then(d => { const m = $("#foot-meta"); if (m) m.textContent = `engine ${d.engine_commit} · data ${fmtDateTime(d.generated_utc)}`; }).catch(() => {});
+loadData().then(d => { const m = $("#foot-meta"); if (m) m.textContent = `engine ${d.engine_src_commit || d.engine_commit} · data ${fmtDateTime(d.generated_utc)}`; }).catch(() => {});
 route();

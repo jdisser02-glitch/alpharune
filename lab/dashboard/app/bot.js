@@ -16,8 +16,16 @@ export async function render(container) {
   const net = ladder.current_net || "";
   const current = it.find(r => r.net === net) || it.filter(r => r.accepted).slice(-1)[0] || null;
   const latest = it.slice(-1)[0] || null;
-  const tests = (D.tests || []).filter(t => usesNet(t.agent, net) || usesNet(t.opp_agent, net));
+  // A test "played with" this net when it piloted the tested lists; a test whose opponents were played by it (often
+  // only the request's default opponent bot, each legend then having its own specialist) is counted apart.
+  const oppBots = t => { const o = (((t.spec || {}).opponents) || []).map(x => x.agent || t.opp_agent || t.agent); return o.length ? o : [t.opp_agent || t.agent]; };
+  const tests = (D.tests || []).filter(t => usesNet(t.agent, net));
+  const oppOnly = (D.tests || []).filter(t => !usesNet(t.agent, net) && oppBots(t).some(o => usesNet(o, net)));
+  const simsOf = s => +((String(s || "").match(/sims=(\d+)/) || [])[1] || 0);
+  const testSims = (D.tests || []).map(t => simsOf(t.agent)).filter(Boolean);
+  const specLegends = Object.keys((D.engine || {}).specialist_nets || {});
   const stem = s => String(s || "").split("/").pop().replace(/\.rb[pv]n$/, "");
+  const netStemOf = s => (String(s || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1] || "an unknown net";
   const playUsesIt = !!(D.engine && D.engine.net && (!net || stem(D.engine.net_source) === stem(net) || stem(D.engine.policy_net_source) === stem(net)));
   // This page follows the general net. Since 5 Nov each legend has its own specialist net, and since 10 Nov the
   // specialists train continuously (data.measured.training): say which ones, so the page is not read as the whole story.
@@ -40,7 +48,7 @@ export async function render(container) {
     kpi({ label: "Iterations", value: it.length, tone: "info",
           sub: it.length ? `${it.filter(r => r.accepted).length} adopted, ${it.filter(r => !r.accepted).length} rejected · ${num(it.reduce((a, r) => a + (r.minutes || 0), 0))} minutes of training in all` : "Training has not started" }),
     kpi({ label: "Agreement with humans", value: compared ? pct0(agreed / compared) : "—", tone: compared ? (agreed / compared >= 0.5 ? "win" : "warn") : "neutral",
-          sub: compared ? `${num(compared)} decisions compared in ${plural(hg.length, "real game")}` : "No human game compared yet", href: "#/replays?test=human" }),
+          sub: compared ? `${num(compared)} decisions compared in ${plural(hg.length, "real game")}${cleanN ? `; ${pct0(hg.reduce((a, g) => a + (g.compared_clean || 0) * (g.agreement_clean_pct || 0) / 100, 0) / cleanN)} of the ${num(cleanN)} decisions outside desyncs` : ""} · measured with ${esc(netStemOf(hr.agent))}${usesNet(hr.agent, net) ? "" : ", not the network in use"}, ${esc(fmtDate(hr.generated))}${hr.engine_commits_since ? `, before ${hr.engine_commits_since} engine change${hr.engine_commits_since > 1 ? "s" : ""}` : ""}` : "No human game compared yet", href: "#/replays?test=human" }),
   ].join("");
 
   container.innerHTML = `
@@ -68,11 +76,11 @@ export async function render(container) {
         ${current ? `
           <div class="v-bot-net"><span class="v-bot-netname mono">${esc(netName(current.net))}</span>${badge("in use", "gold")}</div>
           <p>The network from iteration ${current.iteration}, trained on ${num(current.records)} positions from ${num(current.self_play_games)} self-play games and adopted on ${esc(fmtDate(current.started_utc))}. In the gate it won ${pct0(current.vs_current.rate)} against ${current.vs_current.opponent === "random" ? "a random player" : "the previous network"} (${current.vs_current.wins} of ${current.vs_current.games}, interval ${interval(current.vs_current.ci95)}).</p>
-          <p>At each decision the bot searches a number of continuations (its <i>sims</i>: 20 to 100 in tests, 300 when compared with humans) and scores the positions it reaches with this network.</p>
+          <p>At each decision the bot searches a number of continuations (its <i>sims</i>: ${testSims.length ? `${Math.min(...testSims)} to ${Math.max(...testSims)} in tests` : "set per test"}${simsOf(hr.agent) ? `, ${simsOf(hr.agent)} when compared with humans` : ""}) and scores the positions it reaches with this network.</p>
           <h3>Where it is used</h3>
           <ul class="v-bot-uses">
-            <li>${badge(playUsesIt ? "yes" : "no", playUsesIt ? "win" : "neutral")} <a href="#/play">Play tab</a>: ${playUsesIt ? "the in-browser bot evaluates with this network" : D.engine && D.engine.net ? `the in-browser bot still runs ${esc(netName(D.engine.net_source))}` : "the engine is not built for the browser in this version"}</li>
-            <li>${badge(tests.length ? String(tests.length) : "none", tests.length ? "info" : "neutral")} <a href="#/tests">Tests</a>: ${tests.length ? `${plural(tests.length, "test")} played with it${tests.length <= 3 ? ` (${tests.map(t => esc(t.name)).join(", ")})` : ""}` : "no test has used it yet; new tests launched from Launch will"}</li>
+            <li>${badge(playUsesIt ? "yes" : "no", playUsesIt ? "win" : "neutral")} <a href="#/play">Play tab</a>: ${playUsesIt ? (specLegends.length ? `the in-browser bot evaluates with this network for legends without a specialist; ${specLegends.length} legends play their own specialist net (${esc(specLegends.join(", ").replace(/_/g, " "))})` : "the in-browser bot evaluates with this network") : D.engine && D.engine.net ? `the in-browser bot still runs ${esc(netName(D.engine.net_source))}` : "the engine is not built for the browser in this version"}</li>
+            <li>${badge(tests.length ? String(tests.length) : "none", tests.length ? "info" : "neutral")} <a href="#/tests">Tests</a>: ${tests.length ? `${plural(tests.length, "test")} with it piloting the tested lists${tests.length <= 3 ? ` (${tests.map(t => esc(t.name)).join(", ")})` : ""}` : "no test has it piloting the tested lists"}${oppOnly.length ? `; ${plural(oppOnly.length, "more test")} with it on the opponents' side only` : ""}</li>
             <li>${badge(usesNet(hr.agent, net) ? "yes" : "no", usesNet(hr.agent, net) ? "win" : "neutral")} <a href="#/replays?test=human">Real games</a>: ${hr.agent ? `compared with ${esc(botSpec(hr.agent).text)}` : "no comparison yet"}</li>
           </ul>
           ${latest && latest.iteration !== current.iteration ? `<p class="small muted">Iteration ${latest.iteration} was tried ${esc(ago(latest.started_utc))} and rejected: it won ${pct0(latest.vs_current.rate)} of its gate (interval ${interval(latest.vs_current.ci95)}).</p>` : ""}`
@@ -93,7 +101,7 @@ export async function render(container) {
     <section class="v-bot panel stack" aria-labelledby="bot-human">
       <div class="panel-head"><h2 id="bot-human">Does it play like a person?</h2><a class="more" href="#/replays?test=human">Real games in Replays →</a></div>
       ${hg.length ? `
-        <p>Real games from RiftLite are replayed through the engine. At each decision of the captured player the bot is asked what it would do; agreement is how often its first choice is the move the human made. Across ${plural(hg.length, "game")} the bot agrees <b>${pct0(agreed / compared)}</b> of the time (${num(Math.round(agreed))} of ${num(compared)} decisions, interval ${interval(wilson(agreed, compared))}).${cleanN ? ` Counting only decisions where the engine's state was verified against the log just before, it agrees ${pct0(cleanAgreed / cleanN)} (${num(cleanN)} decisions).` : ""} With 5 to 20 legal moves a random player agrees around 10 to 20%, so a figure near that means the bot has no opinion yet.</p>
+        <p>Real games from RiftLite are replayed through the engine. At each decision of the captured player the bot is asked what it would do; agreement is how often its first choice is the move the human made. Across ${plural(hg.length, "game")} the bot agrees <b>${pct0(agreed / compared)}</b> of the time (${num(Math.round(agreed))} of ${num(compared)} decisions, interval ${interval(wilson(agreed, compared))}).${cleanN ? ` Counting only decisions where the engine's state was verified against the log just before, it agrees ${pct0(cleanAgreed / cleanN)} (${num(cleanN)} decisions).` : ""} A player choosing at random among 5 to 20 legal moves agrees 5 to 20% of the time, so a figure near that means the bot has no opinion yet.</p>
         <div class="row tight">${chip(`compared with <b>${esc(hr.agent ? botSpec(hr.agent).text : "—")}</b>`)}${chip(`${num(hg.reduce((a, g) => a + (g.desyncs || 0), 0))} desyncs, points where the engine could not follow the log`)}${hr.generated ? chip(`compared ${esc(ago(hr.generated))}`) : ""}</div>
         ${humanTable(hg)}`
       : empty("No human game compared yet", "Captured RiftLite games are replayed through the engine by lab/tools/human_review.py; the results appear here and in <a href=\"#/replays\">Replays</a>.")}

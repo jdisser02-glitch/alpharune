@@ -9,9 +9,18 @@ const CSS = new URL("./tests.css", import.meta.url).href;
 
 /** Both sides of a test in one phrase: "the bot (40 continuations per move, network 0) on both sides" / "… against a random player". */
 function sidesText(t) {
-  const a = botSpec(t.agent), b = botSpec(t.opp_agent || t.agent);
+  const a = botSpec(t.agent), os = oppAgents(t);
+  if (os.length > 1) return `${a.text} against each opponent's own bot (${os.map(netStem).join(", ")})`;
+  const b = botSpec(os[0] || t.agent);
   return a.raw === b.raw ? `${a.text} on both sides` : `${a.text} against ${b.text}`;
 }
+/** The bots that really played the opponents: a request may give each opponent its own (spec.opponents[].agent, a
+    legend's specialist); the test's top-level opp_agent is only the default for those that name none. */
+function oppAgents(t) {
+  const o = (((t.spec || {}).opponents) || []).map(x => x.agent || t.opp_agent || t.agent).filter(Boolean);
+  return [...new Set(o.length ? o : [t.opp_agent || t.agent].filter(Boolean))];
+}
+const netStem = s => (String(s || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1] || botSpec(s).text;
 
 // ── shared numbers ──────────────────────────────────────────────────────────
 const testGames = t => (t.decks || []).reduce((a, d) => a + pooled(d).games, 0);
@@ -55,7 +64,7 @@ function renderList(container) {
     kpi({ label: "Tests", value: num(tests.length), tone: "info", sub: real.length === tests.length ? "all with a thinking bot" : `${num(real.length)} with a thinking bot, ${num(tests.length - real.length)} plumbing` }),
     kpi({ label: "Games played", value: num(games), tone: "info", sub: real.length ? `${num(real.reduce((a, t) => a + testGames(t), 0))} of them with a thinking bot` : "none with a thinking bot yet" }),
     kpi({ label: "Highest in one test", value: best ? pct0(best.deck.weighted_win_rate) : "—", tone: "neutral",
-          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · pooled interval ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")} · the top of many tests with different bots and juries, not a confirmed result` : "No test with a thinking bot yet",
+          sub: best ? `${esc(best.deck.label)} in ${esc(best.test.name)} · interval ${interval(best.pooled.ci)} over ${plural(best.pooled.games, "game")} · the top of many tests with different bots and juries, not a confirmed result` : "No test with a thinking bot yet",
           art: best ? portrait(deckFace(best.deck.path) || best.deck.label, { size: "lg" }) : "", href: best ? `#/tests/${encodeURIComponent(best.test.id)}` : "" }),
     kpi({ label: "Latest test", value: latest ? ago(latest.started_utc) : "—", tone: "neutral", sub: latest ? `${esc(fmtDate(latest.started_utc))} · ${esc(latest.name)}` : "Set one up in Launch", href: latest ? `#/tests/${encodeURIComponent(latest.id)}` : "" }),
   ].join("");
@@ -70,7 +79,7 @@ function renderList(container) {
       <div class="t-who"><span class="versus">${portraits(faces.mine.length ? faces.mine : [null], { size: "md", max: 2 })}<span class="vs">vs</span>${portraits(faces.theirs.length ? faces.theirs : [null], { size: "md", max: 3 })}</span></div>
       <div class="t-main">
         <div class="t-title">${esc(t.description || t.name)}</div>
-        <div class="t-meta"><span class="mono faint">${esc(t.name)}</span>${plumb ? badge("plumbing", "neutral") : botBadge(t.agent)}${!plumb && t.opp_agent && t.opp_agent !== t.agent ? `<span class="xs muted">vs</span>${botBadge(t.opp_agent)}` : ""}${opt ? badge(`${t.optimize.rounds.length} rounds`, "gold") : ""}</div>
+        <div class="t-meta"><span class="mono faint">${esc(t.name)}</span>${plumb ? badge("plumbing", "neutral") : botBadge(t.agent)}${!plumb && oppAgents(t).length > 1 ? `<span class="xs muted">vs</span><span title="${esc(oppAgents(t).map(netStem).join(", "))}">${badge(`${oppAgents(t).length} opponent bots`, "neutral")}</span>` : !plumb && oppAgents(t)[0] && oppAgents(t)[0] !== t.agent ? `<span class="xs muted">vs</span>${botBadge(oppAgents(t)[0])}` : ""}${opt ? badge(`${t.optimize.rounds.length} rounds`, "gold") : ""}</div>
       </div>
       <div class="t-side">${results}</div>
       <div class="t-foot"><span class="mono">${num(g)} games${per ? ` · ${per}` : ""}</span><span class="mono faint">${esc(fmtDate(t.started_utc))}</span>${hasReplays(t) ? badge("replays", "gold") : ""}</div>
@@ -78,7 +87,7 @@ function renderList(container) {
   }).join("");
 
   container.innerHTML = `<div class="v-tests stack loose">${gatesHtml()}
-    ${pageHead({ title: "Tests", eyebrow: "Simulated matches", sub: `Each test plays one or more Riven lists against a set of tournament decks, half the games on the play and half on the draw. A win rate is only as good as the bot playing both sides, so every number carries its 95% interval, the range the true rate most likely sits in, and its game count. Tests marked <span class="badge neutral">plumbing</span> use random players: they check that the engine runs and say nothing about deck strength.` })}
+    ${pageHead({ title: "Tests", eyebrow: "Simulated matches", sub: `Each test plays one or more lists against a set of tournament decks, half the games on the play and half on the draw. A win rate is only as good as the bot playing both sides, so every number carries its 95% interval, the range the true rate most likely sits in, and its game count. Tests marked <span class="badge neutral">plumbing</span> use random players: they check that the engine runs and say nothing about deck strength.` })}
     <div class="kpis">${kpis}</div>
     <section class="section" aria-labelledby="t-list-h">
       <div class="section-head"><h2 id="t-list-h">All tests</h2><span class="small muted">newest first</span></div>
@@ -106,7 +115,7 @@ function humanGames(D) {
   ];
   return `<section class="section" aria-labelledby="t-human-h">
     <div class="section-head"><h2 id="t-human-h">Real games: does the bot play like a person?</h2><a class="more" href="#/replays">Replays →</a></div>
-    <p class="muted">Each row is a real RiftLite game replayed through the engine. At every decision of the captured player the bot (${botBadge(hr.agent)}) was asked what it would do. Agreement is the share of those decisions where the bot's first choice is the move the human made, with its 95% interval; "clean" counts only decisions taken right after the engine's state was checked against the log. With 5 to 20 legal moves a random player agrees around 10 to 20%, so a figure near that means the bot has no opinion yet. Desyncs are points where the engine could not follow the log; the replay stops after a few.</p>
+    <p class="muted">Each row is a real RiftLite game replayed through the engine. At every decision of the captured player the bot (${botBadge(hr.agent)}) was asked what it would do. Agreement is the share of those decisions where the bot's first choice is the move the human made, with its 95% interval; "clean" counts only decisions taken right after the engine's state was checked against the log. A player choosing at random among 5 to 20 legal moves agrees 5 to 20% of the time, so a figure near that means the bot has no opinion yet. Desyncs are points where the engine could not follow the log; the replay stops after a few.</p>
     ${table(cols, games, { empty: "No human game compared yet." })}
   </section>`;
 }
@@ -245,7 +254,7 @@ function renderDetail(container, id) {
   ].filter(Boolean).join("");
   const commands = (t.decks || []).flatMap(d => (d.matchups || []).flatMap(m => m.commands || []));
   container.innerHTML = `<div class="v-tests stack loose">
-    ${pageHead({ eyebrow: `${plumb ? "Plumbing check" : opt ? "Optimizer test" : "Bot test"} · ${esc(fmtDate(t.started_utc))}`, title: t.name, actions, sub: `<span class="t-head-sub"><span class="t-head-faces"><span class="versus">${portraits(faces.mine.length ? faces.mine : [null], { size: "md", max: 3 })}<span class="vs">vs</span>${portraits(faces.theirs.length ? faces.theirs : [null], { size: "md", max: 5 })}</span>${plumb ? badge("plumbing", "neutral") : botBadge(t.agent)}${!plumb && t.opp_agent && t.opp_agent !== t.agent ? `<span class="xs muted">vs</span>${botBadge(t.opp_agent)}` : ""}</span>${t.description ? `<span class="t-desc">${esc(t.description)}</span>` : ""}</span>` })}
+    ${pageHead({ eyebrow: `${plumb ? "Plumbing check" : opt ? "Optimizer test" : "Bot test"} · ${esc(fmtDate(t.started_utc))}`, title: t.name, actions, sub: `<span class="t-head-sub"><span class="t-head-faces"><span class="versus">${portraits(faces.mine.length ? faces.mine : [null], { size: "md", max: 3 })}<span class="vs">vs</span>${portraits(faces.theirs.length ? faces.theirs : [null], { size: "md", max: 5 })}</span>${plumb ? badge("plumbing", "neutral") : botBadge(t.agent)}${!plumb && oppAgents(t).length > 1 ? `<span class="xs muted">vs</span><span title="${esc(oppAgents(t).map(netStem).join(", "))}">${badge(`${oppAgents(t).length} opponent bots`, "neutral")}</span>` : !plumb && oppAgents(t)[0] && oppAgents(t)[0] !== t.agent ? `<span class="xs muted">vs</span>${botBadge(oppAgents(t)[0])}` : ""}</span>${t.description ? `<span class="t-desc">${esc(t.description)}</span>` : ""}</span>` })}
     <section class="panel gilt t-summary"><h3>What this test says</h3><p class="t-conclusion">${summary(t)}</p><div class="row tight" style="margin-top:12px">${facts}</div></section>
     ${opt ? roundsPanel(t) : ""}
     ${opponentsPanel(t)}
@@ -255,7 +264,7 @@ function renderDetail(container, id) {
       <div class="stack" style="margin-top:12px">
         ${commands.length ? `<div class="stack tight"><h3>Exact commands</h3><div class="log">${commands.map(esc).join("\n")}</div></div>` : ""}
         <div class="stack tight"><h3>Spec (lab/specs format)</h3><div class="log">${esc(JSON.stringify(t.spec || {}, null, 1))}</div></div>
-        <div class="row tight small muted"><span>bot: <span class="mono">${esc(t.agent)}</span></span>${t.opp_agent && t.opp_agent !== t.agent ? `<span>opponent bot: <span class="mono">${esc(t.opp_agent)}</span></span>` : ""}<span>test id <span class="mono">${esc(t.id)}</span></span></div>
+        <div class="row tight small muted"><span>bot: <span class="mono">${esc(t.agent)}</span></span>${oppAgents(t).some(o => o !== t.agent) ? `<span>opponent bot${oppAgents(t).length > 1 ? "s" : ""}: <span class="mono">${esc(oppAgents(t).join(" | "))}</span></span>` : ""}<span>test id <span class="mono">${esc(t.id)}</span></span></div>
       </div></details>
   </div>`;
   container.querySelectorAll("button[data-copy]").forEach(b => { b.onclick = e => { e.preventDefault(); e.stopPropagation(); copyList(b.dataset.copy, b); }; });

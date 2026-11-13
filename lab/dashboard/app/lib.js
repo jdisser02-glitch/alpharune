@@ -88,11 +88,22 @@ export function wilson(wins, n, z = 1.96) {
 }
 /** Do two intervals overlap? (overlapping = the lists are not separated) */
 export const overlaps = (a, b) => !!(a && b) && a[0] <= b[1] && b[0] <= a[1];
-/** Pool a deck's matchups: {games, wins, rate, ci} unweighted, plus the weighted rate the test reports. */
+/** Pool a deck's matchups: {games, wins, rate} unweighted, plus the weighted rate the test reports. `ci` is the 95%
+    interval of the rate the pages print: when the opponents' weights make the weighted rate differ from the pooled
+    one, it is the interval of the weighted rate (normal approximation over the matchups), not of the pooled count,
+    which could leave the printed rate outside its own interval. */
 export function pooled(deck) {
   const ms = deck.matchups || []; const games = ms.reduce((a, m) => a + (m.games || 0), 0), wins = ms.reduce((a, m) => a + (m.wins || 0), 0);
-  return { games, wins, rate: games ? wins / games : null, ci: wilson(wins, games), weighted: deck.weighted_win_rate };
+  const rate = games ? wins / games : null, w = deck.weighted_win_rate; let ci = wilson(wins, games);
+  if (w != null && rate != null && Math.abs(w - rate) > 0.002) {
+    const W = ms.reduce((a, m) => a + (m.games ? (m.weight ?? 1) : 0), 0);
+    const v = ms.reduce((a, m) => { if (!m.games || !W) return a; const p = m.wins / m.games, k = (m.weight ?? 1) / W; return a + k * k * p * (1 - p) / m.games; }, 0);
+    const h = 1.96 * Math.sqrt(v); ci = [Math.max(0, w - h), Math.min(1, w + h)];
+  }
+  return { games, wins, rate, ci, weighted: w };
 }
+/** " N engine change(s) since." for a test measured before engine commits (data.tests[].engine_commits_since), else "". */
+export const engineSince = t => t && t.engine_commits_since ? ` ${t.engine_commits_since} engine change${t.engine_commits_since > 1 ? "s" : ""} since.` : "";
 
 // ── colours ─────────────────────────────────────────────────────────────────
 export const DOMAINS = { fury: "#d4483b", calm: "#27a97e", mind: "#3f86e0", body: "#e38a2e", chaos: "#8e5cf0", order: "#e1b83a" };
@@ -298,15 +309,15 @@ export function testConclusion(t) {
   const ranked = decks.filter(d => d.weighted_win_rate != null).sort((a, b) => b.weighted_win_rate - a.weighted_win_rate);
   if (!ranked.length) return "No result recorded.";
   const top = ranked[0], tp = pooled(top), opps = (top.matchups || []).length;
+  const L0 = ((data().measured || {}).list) || {};
+  const netOf = (String(t.agent || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1];
+  const playedBy = netOf ? ` Played by ${netOf}${(L0.nets_in_use || []).length && !L0.nets_in_use.includes(netOf) ? ", a net no longer in use" : ""}.` : "";
   if (n === 1) {
     const vs = opps === 1 ? `against ${top.matchups[0].opponent}` : `against ${opps} opponents`;
     if (/^(ismcts|mcts|greedy)/i.test(top.label || "")) { const b = botSpec(top.label).text; return `${b[0].toUpperCase()}${b.slice(1)} wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games ${/random/.test(t.opp_agent || "") ? "against a random player" : vs}, interval ${interval(tp.ci)}.`; }
     if (/random/.test(t.opp_agent || "")) { const b = botSpec(t.agent).text; return `${b[0].toUpperCase()}${b.slice(1)} wins ${pct0(top.weighted_win_rate)} of ${num(tp.games)} games against a random player, interval ${interval(tp.ci)}.`; }
-    return `${top.label} wins ${pct0(top.weighted_win_rate)} ${vs} over ${num(tp.games)} games, interval ${interval(tp.ci)}.`;
+    return `${top.label} wins ${pct0(top.weighted_win_rate)} ${vs} over ${num(tp.games)} games, interval ${interval(tp.ci)}.${playedBy}${engineSince(t)}`;
   }
-  const L0 = ((data().measured || {}).list) || {};
-  const netOf = (String(t.agent || "").match(/((?:spec|net)_[A-Za-z0-9_]+)\.rb/) || [])[1];
-  const playedBy = netOf ? ` Played by ${netOf}${(L0.nets_in_use || []).length && !L0.nets_in_use.includes(netOf) ? ", a net no longer in use" : ""}.` : "";
   // A test of several lists on the same deals: each list against the test's first list (the reference), with its
   // interval (data.measured.list.by_result, build.py), instead of "best of N" against whichever list came last.
   const C = !(t.kind === "ga" || t.ga) && (L0.by_result || {})[t.id];
@@ -339,7 +350,7 @@ export function testConclusion(t) {
       const claim = won.length === 1 ? (later.length && !held ? "One finalist came out ahead" : "One finalist beats it") : (later.length && !held ? `${won.length} finalists came out ahead` : `${won.length} finalists beat it`);
       return `${num(n)} versions of the list were tried over ${plural(gens, "generation")} (${num(games)} games); the ${f.length} best then played ${num(conf.games_per_opponent || 0)} new games per opponent against the unchanged list (${pct0((conf.reference || {}).confirmed_rate || 0)}). `
         + (won.length ? `${claim}: ${won.map(one).join("; ")}. Picked as the best of ${f.length}${later.length ? "" : ` on ${num(conf.games_per_opponent || 0)} games per opponent and not measured again`}, so the true gain is likely smaller.${retest}`
-                      : `None beats it: ${f.map(one).join("; ")}.`) + who;
+                      : `None beats it: ${f.map(one).join("; ")}.`) + who + engineSince(t);
     }
     const verdict = base === top ? "No change beat the unchanged list." : overlaps(tp.ci, bp.ci)
       ? `Over ${num(bestGames)} games that lead is inside the margin of error: not proven yet.` : `The gap holds up: the intervals do not overlap.`;

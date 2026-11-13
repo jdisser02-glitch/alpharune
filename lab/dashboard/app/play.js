@@ -464,7 +464,7 @@ function drawSetup() {
         <span class="engine" id="vp-engine">${engineLine()}</span>
       </div>
       <div id="vp-prog" style="margin-top:12px">${progressHtml()}</div>
-      ${!loading && (firstVisit || !G.info) ? `<p class="hint" style="margin-top:10px">The first start downloads the engine, about 10 MB, once. Your browser keeps it for the next games.</p>` : ""}
+      ${!loading && (firstVisit || !G.info) ? `<p class="hint" style="margin-top:10px">The first start downloads the engine${(data().engine || {}).size_mb ? (s => `, about ${num(Math.round(s.engine + (s.value_net || 0)))} MB, and the bot's net, ${s.policy_min === s.policy_max ? `${Math.round(s.policy_min)}` : `${Math.round(s.policy_min)} to ${Math.round(s.policy_max)}`} MB`)(data().engine.size_mb) : ""}, once. Your browser keeps it for the next games.</p>` : ""}
       ${G.error ? `<div style="margin-top:12px">${notice(esc(G.error), "error")}</div>` : ""}
       ${r ? `<div class="vp-last" style="margin-top:12px">${notice(`Last game: <b>${r.winner === G.seat ? "you won" : r.winner ? "the bot won" : "a draw"}</b> ${r.scores.join("–")} in ${plural(r.turns, "turn")}${G.lastHint ? ` — ${esc(G.lastHint)}` : ""}.`, r.winner === G.seat ? "ok" : "")}</div>` : ""}
     </section>
@@ -509,7 +509,11 @@ function engineLine() {
     const tr = name && ((((data().measured || {}).training || {}).specialists || {})[name] || {}).continuous;
     const newer = tr && tr.head && !G.botNet.includes(tr.head) ? ` · training has a newer net (${esc(tr.head)}), not committed yet` : "";
     return `Bot policy net: ${esc(G.botNet.split("/").pop())}${/spec_/.test(G.botNet) ? " (its legend's specialist)" : " (general net)"}${newer}`; }
-  return E.policy_net_source ? `Bot policy net: ${esc(E.policy_net_source.split("/").pop())}` : E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
+  // Before a game: the net the chosen bot deck will load (its legend's specialist when one ships, else the general net).
+  const pick = deckByPath(G.cfg.bot), lc = pick ? String(pick.legend || "").split(", ").slice(-1)[0] : "";
+  const sl = pick && E ? (E.legend_slug || {})[lc] || (E.legend_slug || {})[pick.legend] : null, sp = sl && E ? (E.specialist_nets || {})[sl] : null;
+  if (sp && sp.source) return `Bot policy net: ${esc(String(sp.source).split("/").pop())} (its legend's specialist)`;
+  return E.policy_net_source ? `Bot policy net: ${esc(E.policy_net_source.split("/").pop())} (general net)` : E.net_source ? `Bot value net: ${esc(E.net_source.split("/").pop())}` : "";
 }
 function progressHtml() {
   if (G.stage !== "loading") return "";

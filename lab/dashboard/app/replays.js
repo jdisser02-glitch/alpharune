@@ -143,7 +143,7 @@ function renderLibrary() {
     ${!shown.length ? empty("No game matches", `Clear a filter, or run a test in <a href="#/launch">Launch</a>: its games show up here.`) : ""}
     ${humans.length ? `<section class="section v-replays-group" aria-labelledby="rg-human">
       <div class="section-head"><h2 id="rg-human">Real games</h2><span class="small muted">${humans.length} from RiftLite, replayed through the engine and compared with ${esc(agentLabel(hr.agent))}</span></div>
-      <p class="small muted">At each move of the captured player the bot was asked what it would do. Agreement is how often its first choice was the move the human made; with 5 to 20 legal moves a random player agrees around 10 to 20%.</p>
+      <p class="small muted">At each move of the captured player the bot was asked what it would do. Agreement is how often its first choice was the move the human made; a player choosing at random among 5 to 20 legal moves agrees 5 to 20% of the time.</p>
       <div class="v-replays-games">${humans.map(gameCard).join("")}</div></section>` : ""}
     ${order.map(id => {
       const t = testById(id), games = byTest.get(id).sort((a, b) => String(a.matchup).localeCompare(String(b.matchup)) || String(a.seat).localeCompare(String(b.seat)) || (a.game || 0) - (b.game || 0));
