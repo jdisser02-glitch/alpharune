@@ -62,8 +62,15 @@ from riftlab import LAB, ROOT  # noqa: E402
 BUDGET_S = 300 * 60         # a runner stops drawing new lists after this long (the job limit is 350 minutes)
 
 
+def data_root() -> Path:
+    """Where the exploration files live: lab/deckopt/, or $DECKOPT_OUT for a run on the session's own machine whose
+    files are moved into the repository when it ends."""
+    import os
+    return Path(os.environ["DECKOPT_OUT"]) if os.environ.get("DECKOPT_OUT") else LAB / "deckopt"
+
+
 def out_dir(spec: dict) -> Path:
-    d = LAB / "deckopt" / spec["name"]
+    d = data_root() / spec["name"]
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -113,7 +120,8 @@ def explore(req_path: str) -> int:
     result = {"spec": req["spec"], "name": spec["name"], "shard": shard, "engine_commit": riftlab.git_commit(),
               "started_utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "agent": g.agent,
               "opponents": [[o["label"], o["deck"], o["weight"], g.opp_agent_of(o)] for o in g.opponents],
-              "centres": [c["path"] for c in centres], "games_per_cell": cell_games, "lists": []}
+              "centres": [c["path"] for c in centres], "games_per_cell": cell_games,
+              "design": ex.get("design", "uniform"), "lists": []}
     t0 = time.time()
     tmp = Path(tempfile.mkdtemp(prefix="deckopt-"))
 
@@ -121,7 +129,9 @@ def explore(req_path: str) -> int:
         """Every centre once per shard (they are the yardsticks), then a centre plus k random legal swaps."""
         if j < len(centres):
             return j, 0, dict(centres[j]["main"])
-        ci = rng.randrange(len(centres))
+        # "centre_weights": {path: weight} draws more lists around some centres (1 when not named)
+        cw = ex.get("centre_weights", {})
+        ci = rng.choices(range(len(centres)), weights=[float(cw.get(c["path"], 1)) for c in centres])[0]
         k = 1
         while k < max_k and rng.random() > 1.0 / mean_k:      # geometric, mean about swaps_mean
             k += 1
@@ -141,26 +151,36 @@ def explore(req_path: str) -> int:
             path = tmp / f"list_{j:03d}.txt"
             write_list(g, main, path, [f"deckopt {spec['name']} shard {shard} list {j}"])
             seed0 = int(spec.get("seed", 1)) + 1_000_003 * (shard * 1000 + j)
+            # "uniform": every opponent on both seats. "weighted": as many batches, each against an opponent drawn
+            # by its weight in the field, so the games a list plays already look like the field it is rated on.
+            if ex.get("design", "uniform") == "weighted":
+                lr = random.Random(seed0)
+                plan = [(lr.choices(range(len(g.opponents)), weights=[o["weight"] for o in g.opponents])[0], 1 + b % 2, b)
+                        for b in range(2 * len(g.opponents))]
+            else:
+                plan = [(i, seat, 0) for i in range(len(g.opponents)) for seat in (1, 2)]
             jobs = []
-            for i, o in enumerate(g.opponents):
-                oa = g.opp_agent_of(o)
-                jobs.append((i, 1, (str(path), o["deck"], g.agent, oa, cell_games, 1, seed0 + 10007 * i, None, 0, 1)))
-                jobs.append((i, 2, (o["deck"], str(path), oa, g.agent, cell_games, 1, seed0 + 10007 * i + 5003, None, 0, 2)))
+            for i, seat, b in plan:
+                o = g.opponents[i]; oa = g.opp_agent_of(o)
+                sd = seed0 + 10007 * i + 5003 * (seat - 1) + 101 * b
+                jobs.append((i, seat, (str(path), o["deck"], g.agent, oa, cell_games, 1, sd, None, 0, 1) if seat == 1
+                             else (o["deck"], str(path), oa, g.agent, cell_games, 1, sd, None, 0, 2)))
             futs = {pool.submit(riftlab.play_batch, *args): (i, seat) for i, seat, args in jobs}
-            cells, cards = [], None
+            acc, cards = {}, None
             for f in cf.as_completed(futs):
                 i, seat = futs[f]
                 x = f.result()
-                games = x["p1"] + x["p2"] + x["draws"]
-                cells.append([i, seat, games, x["p1"] if seat == 1 else x["p2"]])
+                c = acc.setdefault((i, seat), [i, seat, 0, 0])
+                c[2] += x["p1"] + x["p2"] + x["draws"]; c[3] += x["p1"] if seat == 1 else x["p2"]
                 cards = riftlab.merge_exposure(cards, x.get("cards"))
+            cells = list(acc.values())
             result["lists"].append({"centre": ci, "swaps": k, "main": main, "cells": sorted(cells),
                                     "cards": (cards or {}).get("cards", {})})
             result["elapsed_s"] = round(time.time() - t0)
             out_path.write_text(json.dumps(result, separators=(",", ":")))
             won = sum(c[3] for c in cells); played = sum(c[2] for c in cells)
             print(f"shard {shard} list {j:3d} centre {ci:2d} swaps {k}  {won}/{played}  ({result['elapsed_s']} s)", flush=True)
-    print(f"written {out_path.relative_to(ROOT)}: {len(result['lists'])} lists")
+    print(f"written {out_path}: {len(result['lists'])} lists")
     return 0
 
 
@@ -176,9 +196,15 @@ def requests(spec_path: str) -> int:
 
 # ── 2. model ─────────────────────────────────────────────────────────────────
 def load_explored(spec: dict) -> list[dict]:
+    """Every explored list of the spec and of the specs named in its "explore_from" (the same lists' frame played by
+    another pilot, e.g. a cheap one): each list carries `src` (0 = the spec itself) and `design`."""
     lists = []
-    for f in sorted((LAB / "deckopt" / spec["name"]).glob("explore-*.json")):
-        lists += json.loads(f.read_text())["lists"]
+    for src, name in enumerate([spec["name"]] + list(spec.get("explore_from", []))):
+        for f in sorted((LAB / "deckopt" / name).glob("explore-*.json")):
+            d = json.loads(f.read_text())
+            for l in d["lists"]:
+                l["src"], l["design"] = src, d.get("design", "uniform")
+            lists += d["lists"]
     return lists
 
 
@@ -194,12 +220,19 @@ def fit(spec: dict, verbose: bool = True) -> dict:
         for f in glob.glob(str(ROOT / p)):
             seen |= set(riftlab.parse_deck(Path(f))["maindeck"])
     cards = sorted({c for l in lists for c in l["main"]})
-    ncell = 2 * len(opps)
+    nsrc = 1 + max(l["src"] for l in lists)
+    ncell = 2 * len(opps) * nsrc             # one intercept per pilot, opponent and seat
     rows = [(l, c) for l in lists for c in l["cells"] if c[2]]
     X = np.zeros((len(rows), ncell + len(cards) + 1)); y = np.zeros(len(rows)); n = np.zeros(len(rows))
+    wgt = np.ones(len(rows))
+    mean_w = sum(o["weight"] for o in opps) / len(opps)
     idx = {c: ncell + i for i, c in enumerate(cards)}
     for r, (l, (i, seat, games, wins)) in enumerate(rows):
-        X[r, 2 * i + seat - 1] = 1
+        X[r, 2 * len(opps) * l["src"] + 2 * i + seat - 1] = 1
+        # A list that met every opponent equally is re-weighted to the field (Riven is half of it, a third of
+        # those games); a list whose opponents were drawn by their weight needs nothing.
+        if l["design"] != "weighted":
+            wgt[r] = opps[i]["weight"] / mean_w
         for c, k in l["main"].items():
             X[r, idx[c]] = k
         X[r, -1] = sum(k for c, k in l["main"].items() if seen and c not in seen)
@@ -210,13 +243,14 @@ def fit(spec: dict, verbose: bool = True) -> dict:
         lam = np.r_[np.zeros(ncell), np.full(len(cards), lam_cards), [lam_cards if seen else 1e6]]
         b = np.zeros(X.shape[1])
         for _ in range(80):
-            p = 1 / (1 + np.exp(-(X @ b))); W = n * p * (1 - p)
+            p = 1 / (1 + np.exp(-(X @ b))); W = wgt * n * p * (1 - p)
             H = (X.T * W) @ X + np.diag(lam)
-            step = np.linalg.solve(H, X.T @ (y - n * p) - lam * b)
+            step = np.linalg.solve(H, X.T @ (wgt * (y - n * p)) - lam * b)
             b += step
             if abs(step).max() < 1e-9:
                 break
-        return b, np.linalg.inv(H)
+        Hi = np.linalg.inv(H)                   # weighted likelihood: sandwich covariance
+        return b, Hi @ ((X.T * (wgt * wgt * n * p * (1 - p))) @ X) @ Hi
 
     # Empirical Bayes: how much the cards really differ (variance of the weakly-penalised effects minus their
     # sampling variance) sets the penalty, so a noisy data set pulls every card towards "no effect".
@@ -225,7 +259,7 @@ def fit(spec: dict, verbose: bool = True) -> dict:
     A = max(float(np.var(eff) - var.mean()), 1e-4)
     lam = min(400.0, max(2.0, 1.0 / A))
     b, C = irls(lam)
-    p_all = float(y.sum() / n.sum())
+    p_all = float((wgt * y).sum() / (wgt * n).sum())
     slope = p_all * (1 - p_all)                 # log-odds → win-rate points near the overall rate
     table = []
     for c in cards:
@@ -292,11 +326,17 @@ def propose(spec: dict) -> int:
         return float(math.sqrt(max(0.0, d @ C @ d)))
 
     base = centres[0]["main"]
-    observed = {}
+    acc = {}                 # centre -> opponent -> [games, wins], full-pilot games only
     for l in lists:
-        if l["swaps"] == 0:
-            o = observed.setdefault(l["centre"], [0, 0])
-            o[0] += sum(x[2] for x in l["cells"]); o[1] += sum(x[3] for x in l["cells"])
+        if l["swaps"] == 0 and l["src"] == 0:
+            for i, _seat, games, wins in l["cells"]:
+                c = acc.setdefault(l["centre"], {}).setdefault(i, [0, 0]); c[0] += games; c[1] += wins
+    observed = {}            # centre -> [games, wins as if every game counted its opponent's share of the field]
+    for ci, by in acc.items():
+        W = sum(g.opponents[i]["weight"] for i, c in by.items() if c[0])
+        rate = sum(g.opponents[i]["weight"] * c[1] / c[0] for i, c in by.items() if c[0]) / W
+        n = sum(c[0] for c in by.values())
+        observed[ci] = [n, rate * n]
     ranked = sorted(range(len(centres)), key=lambda i: -score(centres[i]["main"]))
 
     def climb(m, steps):
