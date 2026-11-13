@@ -240,6 +240,19 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   Race 2 dispatched 11:47 UTC: six requests `…race2.*.json`, 1,728 more games per list by weight (440, 440, 356,
   308, 112, 70), seed 5102; `rank --stage race2` adds race 1's games.
 
+- 13:25 UTC, step 4. Race 2 with race 1's games (2,158 games per list, full pilot): reference 75.3%; ref+2 82.9%,
+  +7.6 [+5.3, +10.0]; c2+3 82.7%, +7.4 [+5.0, +9.7]; ref+4 82.4%, +7.1 [+4.8, +9.5]; c1+4 80.8%, +5.5; centre2
+  78.6%, +3.3. The gain is against Riven (65% for the reference, 71-78% for the others) and Kai'Sa (79% → 85-89%).
+  These five were picked on race 1's games, which are in those numbers: the confirmation's fresh seeds decide.
+  Cheap pilot against full pilot on the fourteen raced lists (864 against 432 games each): correlation of the
+  rates 0.64, about what two noisy measures of the same thing give.
+  Confirmation dispatched 13:27 UTC: six requests `…confirm.*.json`, the reference, ref+2 (Ritualo with two Show of
+  Strength out for two Rengar), c2+3 (soldog's deck with Aurora replaced by Gentle Gemdragon, then Trinity Force,
+  Avalanche and a Portable Portal out for Seraphic Wyvern and two Blazing Scorcher) and soldog WITH Aurora as the
+  yardstick; 3,600 games per list by weight (918, 918, 744, 642, 234, 146), seed 5103, about two hours.
+  On the session's machine: a cheap-pilot race of race 2's six lists, 9,600 games per list
+  (`lab/results/*-volibear-noaurora-cards-cheaprace-*.json`, merged by `merge_results.py`).
+
 **Next, in order (each as soon as its inputs exist)**
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
@@ -248,7 +261,7 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
    race1`, commit, push, dispatch the six `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`.
 3. (done, above) Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
    --stage race2`, commit, push, dispatch the six race2 requests.
-4. Six race2 results: `rank --stage race2`, `wave --stage confirm`, commit, push, dispatch the six confirm requests.
+4. (done, above) Six race2 results: `rank --stage race2`, `wave --stage confirm`, commit, push, dispatch the six confirm requests.
 5. Six confirm results: `rank --stage confirm`, `python3 lab/tools/merge_results.py
    volibear-noaurora-cards-confirm --write`, write `lab/variants/volibear-noaurora-best.txt` if a list's interval
    against the reference is above 0, log it in section 4, dashboard, report to Jeremy (French, plain): this is the
