@@ -135,3 +135,37 @@ fine-tuning for incumbent and finalist before the confirmation; (b) paired analy
 assumption, nothing announced). Six starts of the genetic search were dispatched at 07:05 UTC and cancelled at
 07:32 once the audit above was done; the card-level search replaced them (`lab/specs/deckopt/volibear-noaurora-cards.json`,
 twelve exploration shards dispatched 07:33 UTC, results in `lab/deckopt/volibear-noaurora-cards/`).
+Scaled up at 07:50 UTC after Jeremy's remark that 20 machines make about 670,000 games a day and the searches used
+a few tens of thousands: 32 exploration shards instead of 12 (shards 12-19 with 180 lists, 20-31 with 130 once the
+first twelve end), about 89,000 games and 3,700 lists. The repository is public, so the standard runners are free;
+the limit is 20 jobs at once and 350 minutes a job.
+
+**Why so few games until now.** Not a limit, a choice of mine: each search was sized for an answer in 3-4 hours on
+6 machines (about 26,000 games). One day of all 20 machines is about 670,000 games with the full pilot.
+
+**Cheaper pilots (measured 13 Nov, this session's machine, core-seconds per game, startup included).**
+sims=50/worlds=8 (the pilot used everywhere): 6.6; sims=16/worlds=4: 2.3; sims=4/worlds=2: 0.47; sims=1/worlds=1
+(the policy net alone): 0.14, i.e. 47 times faster. Whether a cheap pilot rates the cards like the full one is
+being measured: the same exploration lists (same seed) played with sims=1 and sims=4
+(`lab/specs/deckopt/volibear-noaurora-cards-fast1.json`, `-fast4.json`, outputs under `lab/deckopt/`). If the card
+effects agree, exploration moves to the cheap pilot at 15-50 times the volume and the full pilot keeps the race
+and the confirmation.
+
+## 5. Plan agreed with Jeremy (13 Nov): alternate search and training
+
+Jeremy: "on peut alterner non ? chercher des listes, puis l'entraîner avec ces nouvelles listes/cartes, puis
+rechercher des listes, etc." Yes. One round:
+
+1. Search (section 3) with the current pilot. Outcome: the best list, the runners-up, the card table.
+2. Train the pilot (continuous training, `lab/learn/TRAINING_KNOWLEDGE.md`) on: the reference, the best lists of
+   the search, and random variations of them (each a list plus 0, 1, 2 or 4 random swaps from the search's pool),
+   so that every card the next search may try has been played in training. The reference stays in with the same
+   weight as the newcomers: a pilot trained mostly on the search's winners would make them win again for that
+   reason alone (the loop must not reward itself).
+3. Confirm again with the new pilot: the best lists of step 1 and the reference, fresh seeds. A list that was
+   ahead only because the old pilot knew it better falls back here.
+4. Search again from the lists that held. Stop when two rounds in a row keep the same best list.
+
+To build before round 2: random-variation lists in the self-play deck pool of `lab/learn/loop.py` (today a
+specialist trains on a fixed list of files). Step 2 needs Jeremy's go-ahead each time it uses the runners for
+training (he paused both tracks on purpose).
