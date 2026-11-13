@@ -213,11 +213,27 @@ S1 = `lab/specs/deckopt/volibear-noaurora-cards.json` (round 1, pilot spec_volib
   repository and moved into `lab/deckopt/volibear-noaurora-cards-fast4w/` when done). S1 now lists both cheap
   sets under `explore_from`: its model uses them with their own intercepts.
 
+- 10:45 UTC, step 2. All 20 runner shards in (2,160 lists) and 32 of the 36 local cheap-pilot shards: model on
+  4,800 lists and 115,200 games (full and cheap pilots together, each with its own intercepts). A copy of a card
+  the pilot never trained on: −2.0 points (± 0.2). Points per copy (± 0.2 to 0.5): Elder Dragon +5.1, Seraphic
+  Wyvern +2.3, Gentle Gemdragon +2.3, Blazing Scorcher +1.4, Rengar +1.3, Mobilize +1.3, Dune Drake +1.1, Deadbloom
+  Predator +1.0, Jayce +1.0; Thermo Beam −3.5, Unyielding Spirit −3.1, Trinity Force −2.7, Challenge −2.4,
+  Avalanche −2.2, Sabotage −1.9, Ravenborn Tome −1.7, Falling Star −1.5, Show of Strength −1.4, Portable Portal
+  −1.1. Starting lists as they are, full pilot, 480 games each, field-weighted: f6 79.2%, Ritualo 78.3%, f3 77.9%,
+  soldog-runner 77.6%, soldog-drake 76.8%, the rest 66-75%, oryzias 36%.
+  `propose` now charges a card the pilot does not know its measured cost and adds improvements of the reference.
+  Fourteen lists race (`lab/deckopt/volibear-noaurora-cards/candidates.json`): the reference; the starting lists
+  f6, soldog-gemdragon, soldog-topend, f3; the reference with the model's 2, 4, 6 best swaps (Show of Strength out
+  for Rengar first); f6 with 2, 4, 6, 9; soldog-gemdragon with 3, 6. The model predicts +5 to +24 points for the
+  swapped lists: additive extrapolation, not to be believed before the race.
+  Race 1 dispatched 10:47 UTC: six requests `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`, 432 games
+  per list shared out by the opponents' weights (110, 110, 90, 76, 28, 18), seed 5101.
+
 **Next, in order (each as soon as its inputs exist)**
 1. (done, above) First twelve shards in: `python3 lab/deckopt.py model S1`, tell Jeremy in three lines what the card table shows
    (preliminary) and what the cheap pilots give (`model` on the two fast specs; compare the card effects: rank
    correlation over the cards with at least 100 lists; write the answer here).
-2. All twenty shards in: `model S1`, `propose S1`, check no candidate plays Dazzling Aurora, `wave S1 --stage
+2. (done, above) All twenty shards in: `model S1`, `propose S1`, check no candidate plays Dazzling Aurora, `wave S1 --stage
    race1`, commit, push, dispatch the six `lab/specs/deckopt/volibear-noaurora-cards.race1.*.json`.
 3. Six race1 results (`lab/results/*-volibear-noaurora-cards-race1-*.json`): `rank S1 --stage race1`, `wave S1
    --stage race2`, commit, push, dispatch the six race2 requests.
