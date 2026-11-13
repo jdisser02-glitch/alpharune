@@ -53,8 +53,8 @@ DECKS = [
      "2 Decree of Focus|1 Hush|2 An Offer You Can't Refuse|1 Not So Fast|1 Rebuke|1 Star-Crossed|1 Tomb-Raider Barbara|1 Baron Nashor"),
 ]
 SUB = ("Volibear, Evelynn, Mordekaiser, then Riven, each with its sideboard; updated 13 Nov 2026 after the ban "
-       "announcement. In the Missing column, enter how many copies of the card you do not own (All missing: you own "
-       "none of that list), then export the CSV for the buying agent.")
+       "announcement. In the Missing column, enter how many copies of the card you do not own (0 and max set none or the "
+       "list's count; + goes beyond it, up to 9, if you want spare copies), then export the CSV for the buying agent.")
 
 
 def main():

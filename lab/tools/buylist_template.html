@@ -84,7 +84,8 @@ if (!miss) {
 }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(miss)); } catch (e) {} };
 const k = (d, i) => d.slug + "|" + d.cards[i].section + "|" + d.cards[i].code;
-const get = (d, i) => d.cards[i].banned ? 0 : Math.max(0, Math.min(d.cards[i].qty, miss[k(d, i)] | 0));
+const CAP = 9;   // more than the list plays is allowed (spare copies); "max" sets the list's own count
+const get = (d, i) => d.cards[i].banned ? 0 : Math.max(0, Math.min(CAP, miss[k(d, i)] | 0));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let mode = "deck", downloads = null;
 
@@ -117,7 +118,7 @@ function renderDeck(d) {
       <td class="num hide-s"><code>${esc(c.code)}</code></td>
       <td class="num hide-s">${c.number}</td>
       <td class="qty">×${c.qty}</td>
-      <td>${c.banned ? '<span class="na">not to buy</span>' : `<span class="step"><button class="edge" data-set="0" aria-label="None missing" title="None missing">0</button><button data-a="-1" aria-label="One fewer missing">−</button><input type="number" min="0" max="${c.qty}" value="${v}" aria-label="Missing copies of ${esc(c.name)}"><button data-a="1" aria-label="One more missing">+</button><button class="edge" data-set="max" aria-label="All copies missing" title="All copies missing">max</button></span>`}</td>
+      <td>${c.banned ? '<span class="na">not to buy</span>' : `<span class="step"><button class="edge" data-set="0" aria-label="None missing" title="None missing">0</button><button data-a="-1" aria-label="One fewer missing">−</button><input type="number" min="0" max="${CAP}" value="${v}" aria-label="Missing copies of ${esc(c.name)}"><button data-a="1" aria-label="One more missing">+</button><button class="edge" data-set="max" aria-label="All copies missing" title="All copies missing">max</button></span>`}</td>
     </tr>`;
   }).join("");
   return `<section id="${d.slug}">
@@ -135,7 +136,7 @@ function refresh(d) {
 function setVal(slug, i, v) {
   const d = DECKS.find(x => x.slug === slug), c = d.cards[i];
   if (c.banned) return;
-  v = Math.max(0, Math.min(c.qty, v | 0)); miss[k(d, i)] = v; if (!v) delete miss[k(d, i)]; save();
+  v = Math.max(0, Math.min(CAP, v | 0)); miss[k(d, i)] = v; if (!v) delete miss[k(d, i)]; save();
   const tr = document.querySelector(`tr[data-d="${slug}"][data-i="${i}"]`);
   tr.classList.toggle("missing", v > 0); tr.querySelector("input").value = v; refresh(d);
 }
