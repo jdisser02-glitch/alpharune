@@ -315,7 +315,9 @@ def measured_status(ladder: dict) -> dict:
     plain = [c for c in comparisons if not c.get("ga")]   # a search's finalists are measured against its base list
     if plain:
         c = plain[-1]
-        pool = [x for x in c["lists"] if "[owned]" in (x.get("label") or "")] or c["lists"]
+        # (another frame's reference shown as a yardstick is not a searched list)
+        searched = [x for x in c["lists"] if not str(x.get("label") or "").lower().startswith("reference")]
+        pool = [x for x in searched if "[owned]" in (x.get("label") or "")] or searched
         if pool:
             top = max(pool, key=lambda x: x["rate"])
             lo, hi = top["ci95"]
@@ -395,6 +397,10 @@ def measured_status(ladder: dict) -> dict:
                 rows.setdefault(digest(row.get("path")) or row.get("path"), []).append({**row, "result": c["result"], "net": c["net"]})
         pooled_rows = []
         for ms in rows.values():
+            # A list's measures are pooled only when the same pilot played them: the newest pilot that measured the
+            # list decides (14 Nov, Evelynn: +21.6 under a pilot that knew one list only, +8.5 under the pilot
+            # trained on variations; averaging the two would say +16).
+            ms = [m for m in ms if m["net"] == ms[-1]["net"]]
             ws = [1 / max(1e-9, ((m["ci95"][1] - m["ci95"][0]) / 3.92) ** 2) for m in ms]
             diff = sum(w * m["diff"] for w, m in zip(ws, ms)) / sum(ws)
             se = (1 / sum(ws)) ** 0.5

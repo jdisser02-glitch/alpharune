@@ -380,9 +380,15 @@ export const isBaseLabel = label => /^\s*(\[ref\]|base\b|control\b)|\(control\)|
 export function newestComparisonVerdict() {
   const comps = ((((D && D.measured) || {}).list || {}).comparisons) || [], c = comps[comps.length - 1];
   if (!c || !(c.lists || []).length) return "";
-  const top = [...c.lists].sort((a, b) => b.rate - a.rate)[0], f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
+  // A row labelled "reference of …" is another set-up's reference shown as a yardstick, not a searched list: it is
+  // named apart (14 Nov: "the top one beats reference" was the Deserter frame against the Shattered frame).
+  const isRef = x => /^reference/i.test(x.label || ""), f = x => `${x >= 0 ? "+" : "−"}${Math.abs(100 * x).toFixed(1)}`;
+  const searched = c.lists.filter(x => !isRef(x)), yard = c.lists.filter(isRef).sort((a, b) => b.rate - a.rate)[0];
+  const yardNote = yard ? `; ${yard.label} ${yard.ci95[0] > 0 ? "is ahead of" : yard.ci95[1] < 0 ? "is behind" : "is level with"} this one (${f(yard.diff)} points, [${f(yard.ci95[0])}, ${f(yard.ci95[1])}])` : "";
+  if (!searched.length) return yardNote.slice(2);
+  const top = [...searched].sort((a, b) => b.rate - a.rate)[0];
   const word = top.ci95[0] > 0 ? "beats" : top.ci95[1] < 0 ? "trails" : "is not separated from";
-  return `the top one ${word} ${c.reference} (${f(top.diff)} points, [${f(top.ci95[0])}, ${f(top.ci95[1])}])${c.stale ? `, measured with ${c.net}, a net no longer in use` : ""}${c.engine_commits_since ? `, before ${c.engine_commits_since} engine change${c.engine_commits_since > 1 ? "s" : ""}` : ""}`;
+  return `the top searched list ${word} ${c.reference} (${f(top.diff)} points, [${f(top.ci95[0])}, ${f(top.ci95[1])}])${c.stale ? `, measured with ${c.net}, a net no longer in use` : ""}${c.engine_commits_since ? `, before ${c.engine_commits_since} engine change${c.engine_commits_since > 1 ? "s" : ""}` : ""}${yardNote}`;
 }
 /** Legends on each side of a test: {mine:[card], theirs:[card]} (deduplicated). */
 export function testFaces(t) {

@@ -680,4 +680,8 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   Baron Nashor, +1 Evelynn, In Control, +1 Rengar, +1 Vex) is as good as the best found. `evelynn-postban-best.txt`
   stays c1+9; for Jeremy the list to quote is the six-swap one. Lesson for every legend: **a first-round gap
   against a list the pilot never trained on is mostly the pilot** (here 15 points of 21); only confirm2 rates it.
+- 14 Nov 11:45 UTC: dashboard v111 published with Riven's and Evelynn's confirm2. Three more fixes in the code: a
+  list's measures are pooled only when the same pilot played them, the newest pilot deciding (Evelynn would have
+  read +16.3, the mean of +21.6 under the old pilot and +8.5 under the new); Home's "best" and the Riven sentence
+  on the Decks page no longer take another frame's reference for a searched list.
 
