@@ -1,0 +1,1185 @@
+{
+ "id": "20261114-023429-riven-postban-deserter-confirm-g1",
+ "name": "riven-postban-deserter-confirm-g1",
+ "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage confirm: 4 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 1038 games.",
+ "started_utc": "2026-11-14T02:34:29+00:00",
+ "engine_commit": "28743c4",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 1038,
+ "threads": 4,
+ "seed": 6103,
+ "spec": {
+  "name": "riven-postban-deserter-confirm-g1",
+  "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage confirm: 4 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 1038 games.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 1038,
+  "review_games": 0,
+  "seed": 6103,
+  "decks": [
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+    "label": "ref+6"
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "reference of the shattered frame"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+    "label": "Kai'Sa (Jason Tian, post-ban)",
+    "weight": 51,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60",
+    "games": 1038
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/postban/riven_frame_deserter.txt",
+   "hash": "ad9b7c35b1",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.92,
+    "curve": {
+     "1": 6,
+     "2": 19,
+     "3": 7,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 22,
+     "gear": 3,
+     "spell": 15
+    },
+    "power_symbols": {
+     "chaos": 16,
+     "calm": 11
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 14,
+     "Action": 4,
+     "Accelerate": 3,
+     "Deflect": 1
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 1038,
+     "wins": 689,
+     "win_rate": 0.6638,
+     "ci95": [
+      0.6345,
+      0.6919
+     ],
+     "as_p1": {
+      "games": 519,
+      "wins": 355
+     },
+     "as_p2": {
+      "games": 519,
+      "wins": 334
+     },
+     "avg_turns": 12,
+     "wall_s": 2046.6,
+     "replays": "lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 6103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 56103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6638
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+   "hash": "2676f1356b",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.83,
+    "curve": {
+     "1": 2,
+     "2": 15,
+     "3": 6,
+     "4": 3,
+     "5": 6,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 31,
+     "gear": 3,
+     "spell": 6
+    },
+    "power_symbols": {
+     "chaos": 7,
+     "calm": 6
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Deflect": 7,
+     "Hidden": 5,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 9,
+     "Accelerate": 3
+    },
+    "two_drops": 17,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Pakaa Protector",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 1038,
+     "wins": 655,
+     "win_rate": 0.631,
+     "ci95": [
+      0.6012,
+      0.6598
+     ],
+     "as_p1": {
+      "games": 519,
+      "wins": 320
+     },
+     "as_p2": {
+      "games": 519,
+      "wins": 335
+     },
+     "avg_turns": 12,
+     "wall_s": 1670.8,
+     "replays": "lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/c1-9__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-deserter-cand-c1p9.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 6103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/c1-9__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/riven-postban-deserter-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 56103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/c1-9__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.631,
+   "vs_first": {
+    "reference": "reference",
+    "diff": -0.0328,
+    "ci95": [
+     -0.0738,
+     0.0083
+    ],
+    "verdict": "tie"
+   }
+  },
+  {
+   "label": "ref+6",
+   "path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+   "hash": "9ce9c094ef",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.58,
+    "curve": {
+     "1": 3,
+     "2": 17,
+     "3": 6,
+     "4": 3,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 28,
+     "gear": 3,
+     "spell": 9
+    },
+    "power_symbols": {
+     "chaos": 11,
+     "calm": 8
+    },
+    "rune_split": {
+     "calm": 5,
+     "chaos": 7
+    },
+    "keywords": {
+     "Deflect": 7,
+     "Hidden": 5,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 10,
+     "Action": 2,
+     "Accelerate": 3
+    },
+    "two_drops": 20,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Riven, Deserter",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 1038,
+     "wins": 645,
+     "win_rate": 0.6214,
+     "ci95": [
+      0.5915,
+      0.6504
+     ],
+     "as_p1": {
+      "games": 519,
+      "wins": 287
+     },
+     "as_p2": {
+      "games": 519,
+      "wins": 358
+     },
+     "avg_turns": 12,
+     "wall_s": 1730.7,
+     "replays": "lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/ref-6__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-deserter-cand-refp6.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 6103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/ref-6__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/riven-postban-deserter-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 56103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/ref-6__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6214,
+   "vs_first": {
+    "reference": "reference",
+    "diff": -0.0424,
+    "ci95": [
+     -0.0836,
+     -0.0012
+    ],
+    "verdict": "worse"
+   }
+  },
+  {
+   "label": "reference of the shattered frame",
+   "path": "lab/decks/postban/riven_frame_shattered.txt",
+   "hash": "e4982c5669",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.88,
+    "curve": {
+     "1": 6,
+     "2": 19,
+     "3": 8,
+     "5": 2,
+     "6": 1,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 22,
+     "gear": 3,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 12,
+     "chaos": 15
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 14,
+     "Action": 4,
+     "Accelerate": 3,
+     "Deflect": 1
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 1038,
+     "wins": 554,
+     "win_rate": 0.5337,
+     "ci95": [
+      0.5033,
+      0.5639
+     ],
+     "as_p1": {
+      "games": 519,
+      "wins": 274
+     },
+     "as_p2": {
+      "games": 519,
+      "wins": 280
+     },
+     "avg_turns": 12,
+     "wall_s": 1956.7,
+     "replays": "lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference-of-the-shattered-frame__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 6103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference-of-the-shattered-frame__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 519 --threads 4 --seed 56103 --render-html off --web off --review-dir lab/replays/20261114-023429-riven-postban-deserter-confirm-g1/reference-of-the-shattered-frame__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5337,
+   "vs_first": {
+    "reference": "reference",
+    "diff": -0.1301,
+    "ci95": [
+     -0.1719,
+     -0.0883
+    ],
+    "verdict": "worse"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T04:37:54+00:00"
+}
