@@ -653,4 +653,9 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   for Monday: Home's step 2 pools panels on pre-ban and post-ban lists (iterations 113-124); the "38.3% same first
   move" history in home.yml is typed; a comparison is called current when the tested list's pilot is, though
   Kai'Sa's pilot changed since (025 to 030).
+- 14 Nov 08:30 UTC: Riven's first post-ban net is committed (spec_riven_126_v0, six iterations on the two new
+  champions). **Riven confirm2 dispatched** (both searches, 4 requests each, full pilot spec_riven_126_v0 on Riven's
+  side and for the Riven opponents, 2,400 games a list, seeds 6104: the reference, c1+9, ref+6, the other
+  champion's reference). It answers two things with a pilot that has played the champions: does Deserter stay
+  ahead of Shattered, and do the searched lists still fail to beat the reference.
 
