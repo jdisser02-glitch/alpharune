@@ -658,4 +658,8 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   side and for the Riven opponents, 2,400 games a list, seeds 6104: the reference, c1+9, ref+6, the other
   champion's reference). It answers two things with a pilot that has played the champions: does Deserter stay
   ahead of Shattered, and do the searched lists still fail to beat the reference.
+- 14 Nov 09:35 UTC: Evelynn's first post-ban net is committed (spec_evelynn_024_v0: six iterations on variations of
+  Jeremy's and Dunc's lists). **Evelynn confirm2 dispatched** (4 requests, full pilot spec_evelynn_024_v0, 2,400
+  games a list, seeds 6114: Jeremy's list, c1+9, c1+6, Dunc's list as registered, Jeremy's list with six swaps).
+  The question: how much of the 21 points between Jeremy's list and c1+9 was the pilot not knowing his cards.
 
