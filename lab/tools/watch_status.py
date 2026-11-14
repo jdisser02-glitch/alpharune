@@ -53,7 +53,9 @@ def main():
         line = f"  {name:26s} {len(shards)} shards ({len(runner)} from the runners), {lists} lists"
         nxt = None
         if not (d / "candidates.json").exists():
-            nxt = "model, propose, postban.py check, wave --stage race1, dispatch" if runner else "wait for the runner shard (explore-0N.json)"
+            # a runner shard, or enough lists from the session's own machine
+            nxt = ("model, propose, postban.py check, wave --stage race1, dispatch" if runner or lists >= 1500
+                   else "wait for the runner shard (explore-0N.json), or 1,500 lists from the session's machine")
         for st in STAGES:
             reqs = glob.glob(str(ROOT / "lab/specs/deckopt" / f"{name}.{st}.*.json"))
             res = [f for f in glob.glob(str(ROOT / "lab/results" / f"*-{name}-{st}-*.json"))]

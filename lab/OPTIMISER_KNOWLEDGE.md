@@ -530,4 +530,11 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   test 2 dispatched on a runner (`lab/specs/riven_postban_frames2.json`: six different battlefields listed first).
   To decide Monday with Jeremy: draw the battlefield at random in simulations (an engine option, game flow, not
   card logic), since his real games draw it.
+- 14 Nov 00:06 UTC: the container was replaced again, this time WHILE a tracked background task was running
+  (Volibear exploration, 20 minutes in). So no local task is safe; the scratchpad files survive. Rule from now on:
+  local work is a bonus, in tasks of about an hour made of small shards (`lab/deckopt.py explore`, 120 lists a
+  shard), relaunched by the watchdog when the machine is idle and something useful exists to explore; everything
+  that matters runs on the runners. Volibear's local shards: `<scratchpad>/riven_out/volibear-postban/` (11-15 and
+  21+): copy them into `lab/deckopt/volibear-postban/` at each pass; with 1,500 lists or the runner shard (about
+  04:30), step B for Volibear.
 
