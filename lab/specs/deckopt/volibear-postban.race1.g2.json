@@ -1,0 +1,96 @@
+{
+ "name": "volibear-postban-race1-g2",
+ "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games": 596,
+ "review_games": 0,
+ "seed": 6121,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre1.txt",
+   "label": "centre1"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre2.txt",
+   "label": "centre2"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre3.txt",
+   "label": "centre3"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre4.txt",
+   "label": "centre4"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-refp2.txt",
+   "label": "ref+2"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-refp4.txt",
+   "label": "ref+4"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-refp6.txt",
+   "label": "ref+6"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c1p2.txt",
+   "label": "c1+2"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c1p4.txt",
+   "label": "c1+4"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c1p6.txt",
+   "label": "c1+6"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c1p9.txt",
+   "label": "c1+9"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p3.txt",
+   "label": "c2+3"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p6.txt",
+   "label": "c2+6"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/kennen_zombro.txt",
+   "label": "Kennen (zombro, post-ban)",
+   "weight": 44,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+   "games": 596
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+   "games": 272
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16,
+   "games": 216
+  },
+  {
+   "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+   "label": "Akali (Vincent Nguyen, post-ban)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+   "games": 108
+  }
+ ]
+}

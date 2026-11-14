@@ -544,4 +544,15 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   ref+6 = Jeremy's + 6 swaps 76.1%); Riven Shattered reference 57.2%, c1+9 70.6%, ref+6 67.1%; Riven Deserter
   reference 67.6%, c1+9 78.3%, ref+6 76.6%. Unlike Volibear's round 1, the lists with the most swaps lead: these
   three decks start further from what the pilots play well. Race 2 dispatched (3 requests a search, 12 runs).
+- 14 Nov 01:25 UTC: Mordekaiser iteration 85 accepted (post-ban, 52.5% mirror). **Mordekaiser race 2** (11,998
+  games a list with race 1's, cheap pilot): reference 79.1%; c1+9 88.7% (+9.6 [+8.8, +10.5]), c1+6 87.8%, c2+6
+  87.2%, ref+6 86.6%, c1+4 86.3%; the five differ by 0.8 point. Confirmation dispatched (4 requests, full pilot
+  spec_mordekaiser_070_v0, 3,600 games a list: reference, c1+9, c1+6).
+  **Volibear round 2, card model on the session's shards** (1,624 lists, 51,968 games, pilot spec_volibear_132_v0,
+  post-ban field): overall 89.4%; a card the pilot never trained on now costs 0.4 point (± 0.2) against 1.9 with
+  the pilot of round 1: the training on variations did its job. But every starting list sits between 89.0% and
+  93.2% (416 games each): against this field, with these opposing pilots, Volibear lists cannot be told apart
+  (ceiling). The race runs (2 requests) so the pipeline stays whole, but **no Volibear list will be named better on
+  round 2 unless its interval clears 0 in the confirmation**; the real test is round 3, after the other pilots
+  have trained against Volibear.
 
