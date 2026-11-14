@@ -593,4 +593,8 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   a few hours and the 2-runner tracks most. Not a failure; nothing to dispatch. How to find a track's run: `list_workflow_runs`
   with status "queued" (then "in_progress"), perPage 2, the LAST pages are the oldest runs; `head_commit.message` and
   `actor.login` tell which chain it is. `watch_status.py` now waits 13 hours before calling a 2-runner track STALE.
+- 14 Nov 04:10 UTC: **dashboard v109 published** with Mordekaiser's confirmation. data.json had reached 16.4 MB;
+  now 13.0 MB: a variant's text is rebuilt in the app from its `list` (lib.js `deckText`), the engine command lines
+  are kept for a test's first list only, and a test names its opponents once (`opps`, expanded by lib.js
+  `expandOpponents`). Checked in a browser: every page renders, no script error.
 

@@ -262,7 +262,7 @@ function renderDetail(container, id) {
       ${decks.map((d, i) => deckSection(d, t, i, decks.length <= 3 || i === 0)).join("")}</section>
     <details class="panel t-raw"><summary><b>Commands and raw spec</b> <span class="small muted">for rerunning this test</span></summary>
       <div class="stack" style="margin-top:12px">
-        ${commands.length ? `<div class="stack tight"><h3>Exact commands</h3><div class="log">${commands.map(esc).join("\n")}</div></div>` : ""}
+        ${commands.length ? `<div class="stack tight"><h3>Exact commands</h3><p class="small muted">Shown for the first list; the other lists ran the same commands with their own file as the deck.</p><div class="log">${commands.map(esc).join("\n")}</div></div>` : ""}
         <div class="stack tight"><h3>Spec (lab/specs format)</h3><div class="log">${esc(JSON.stringify(t.spec || {}, null, 1))}</div></div>
         <div class="row tight small muted"><span>bot: <span class="mono">${esc(t.agent)}</span></span>${oppAgents(t).some(o => o !== t.agent) ? `<span>opponent bot${oppAgents(t).length > 1 ? "s" : ""}: <span class="mono">${esc(oppAgents(t).join(" | "))}</span></span>` : ""}<span>test id <span class="mono">${esc(t.id)}</span></span></div>
       </div></details>

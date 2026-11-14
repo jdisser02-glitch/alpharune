@@ -1,7 +1,2787 @@
 {
-"generated_utc": "2026-11-13T23:25:52+00:00",
-"engine_commit": "37a1dc9",
+"generated_utc": "2026-11-14T03:37:27+00:00",
+"engine_commit": "216575d",
 "tests": [
+{
+"id": "20261114-025126-mordekaiser-postban-confirm",
+"file": "lab/results/20261114-025126-mordekaiser-postban-confirm.json",
+"name": "mordekaiser-postban-confirm",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. Merged from 4 requests, one per opponent.",
+"started_utc": "2026-11-14T01:23:07+00:00",
+"finished_utc": "2026-11-14T02:51:26+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 1038,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.8198,
+"games": 3598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9057,
+"games": 3598,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8993,
+"games": 3598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-024012-volibear-postban-race2-g3",
+"file": "lab/results/20261114-024012-volibear-postban-race2-g3.json",
+"name": "volibear-postban-race2-g3",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+"started_utc": "2026-11-14T02:40:12+00:00",
+"finished_utc": "2026-11-14T03:00:17+00:00",
+"engine_commit": "28743c4",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 1084,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.7924,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8933,
+"games": 3036,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.8824,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.8814,
+"games": 3036,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.8765,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8791,
+"games": 3036,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-023958-volibear-postban-race2-g2",
+"file": "lab/results/20261114-023958-volibear-postban-race2-g2.json",
+"name": "volibear-postban-race2-g2",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 2386 games, Rek'Sai (Rajan Nandan) 542 games, Mordekaiser (Neal) 434 games.",
+"started_utc": "2026-11-14T02:39:58+00:00",
+"finished_utc": "2026-11-14T03:19:51+00:00",
+"engine_commit": "28743c4",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2386,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.9432,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9619,
+"games": 3362,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.9616,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9652,
+"games": 3362,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.9605,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.9599,
+"games": 3362,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)"
+]
+},
+{
+"id": "20261114-023944-volibear-postban-race2-g1",
+"file": "lab/results/20261114-023944-volibear-postban-race2-g1.json",
+"name": "volibear-postban-race2-g1",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+"started_utc": "2026-11-14T02:39:44+00:00",
+"finished_utc": "2026-11-14T03:14:54+00:00",
+"engine_commit": "28743c4",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.8556,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9269,
+"games": 3200,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.9156,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9284,
+"games": 3200,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.8941,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.9219,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-013303-evelynn-postban-confirm-g4",
+"file": "lab/results/20261114-013303-evelynn-postban-confirm-g4.json",
+"name": "evelynn-postban-confirm-g4",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Deserter (post-ban frame) 406 games, Rek'Sai (Rajan Nandan) 204 games, Akali (Vincent Nguyen, post-ban) 162 games.",
+"started_utc": "2026-11-14T01:33:03+00:00",
+"finished_utc": "2026-11-14T02:52:36+00:00",
+"engine_commit": "e7aa280",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 406,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.4728,
+"games": 772,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.6993,
+"games": 772,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.6695,
+"games": 772,
+"errors": []
+},
+{
+"label": "Dunc's list as registered",
+"path": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+"weighted_win_rate": 0.6384,
+"games": 772,
+"errors": []
+},
+{
+"label": "ref+6 (Jeremy's list, six swaps)",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.667,
+"games": 772,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)"
+]
+},
+{
+"id": "20261114-013250-evelynn-postban-confirm-g3",
+"file": "lab/results/20261114-013250-evelynn-postban-confirm-g3.json",
+"name": "evelynn-postban-confirm-g3",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Volibear (lab's post-ban list) 162 games.",
+"started_utc": "2026-11-14T01:32:50+00:00",
+"finished_utc": "2026-11-14T03:29:47+00:00",
+"engine_commit": "e7aa280",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 406,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.4204,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7133,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.6708,
+"games": 894,
+"errors": []
+},
+{
+"label": "Dunc's list as registered",
+"path": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+"weighted_win_rate": 0.5835,
+"games": 894,
+"errors": []
+},
+{
+"label": "ref+6 (Jeremy's list, six swaps)",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.6552,
+"games": 894,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-012605-volibear-postban-race1-g1",
+"file": "lab/results/20261114-012605-volibear-postban-race1-g1.json",
+"name": "volibear-postban-race1-g1",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 692 games, Riven Deserter (post-ban frame) 272 games, Rek'Sai (Rajan Nandan) 136 games, Mordekaiser (Neal) 108 games.",
+"started_utc": "2026-11-14T01:26:05+00:00",
+"finished_utc": "2026-11-14T01:57:38+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.8137,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.8815,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/volibear-postban-cand-centre2.txt",
+"weighted_win_rate": 0.8625,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.8766,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/volibear-postban-cand-centre4.txt",
+"weighted_win_rate": 0.8692,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/volibear-postban-cand-refp2.txt",
+"weighted_win_rate": 0.8286,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/volibear-postban-cand-refp4.txt",
+"weighted_win_rate": 0.8526,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/volibear-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8766,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8782,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/volibear-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8667,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/volibear-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8385,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/volibear-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8013,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.8915,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8899,
+"games": 1208,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)"
+]
+},
+{
+"id": "20261114-012549-volibear-postban-race1-g2",
+"file": "lab/results/20261114-012549-volibear-postban-race1-g2.json",
+"name": "volibear-postban-race1-g2",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+"started_utc": "2026-11-14T01:25:49+00:00",
+"finished_utc": "2026-11-14T01:48:44+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 596,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.9213,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.9724,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/volibear-postban-cand-centre2.txt",
+"weighted_win_rate": 0.9557,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.9716,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/volibear-postban-cand-centre4.txt",
+"weighted_win_rate": 0.959,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/volibear-postban-cand-refp2.txt",
+"weighted_win_rate": 0.9339,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/volibear-postban-cand-refp4.txt",
+"weighted_win_rate": 0.9498,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/volibear-postban-cand-refp6.txt",
+"weighted_win_rate": 0.9557,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.9665,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/volibear-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.9514,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/volibear-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9506,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/volibear-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9213,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9623,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9682,
+"games": 1192,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-012516-mordekaiser-postban-confirm-g4",
+"file": "lab/results/20261114-012516-mordekaiser-postban-confirm-g4.json",
+"name": "mordekaiser-postban-confirm-g4",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Deserter (post-ban frame) 406 games, Rek'Sai (Rajan Nandan) 204 games, Akali (Vincent Nguyen, post-ban) 162 games.",
+"started_utc": "2026-11-14T01:25:16+00:00",
+"finished_utc": "2026-11-14T02:37:01+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 406,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.7953,
+"games": 772,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8472,
+"games": 772,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8523,
+"games": 772,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)"
+]
+},
+{
+"id": "20261114-012450-mordekaiser-postban-confirm-g3",
+"file": "lab/results/20261114-012450-mordekaiser-postban-confirm-g3.json",
+"name": "mordekaiser-postban-confirm-g3",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Volibear (lab's post-ban list) 162 games.",
+"started_utc": "2026-11-14T01:24:50+00:00",
+"finished_utc": "2026-11-14T02:28:48+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 406,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.6999,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7785,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.7595,
+"games": 894,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-012351-mordekaiser-postban-confirm-g2",
+"file": "lab/results/20261114-012351-mordekaiser-postban-confirm-g2.json",
+"name": "mordekaiser-postban-confirm-g2",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 894 games.",
+"started_utc": "2026-11-14T01:23:51+00:00",
+"finished_utc": "2026-11-14T02:51:26+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 894,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.9485,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9955,
+"games": 894,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9955,
+"games": 894,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)"
+]
+},
+{
+"id": "20261114-012307-mordekaiser-postban-confirm-g1",
+"file": "lab/results/20261114-012307-mordekaiser-postban-confirm-g1.json",
+"name": "mordekaiser-postban-confirm-g1",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 1038 games.",
+"started_utc": "2026-11-14T01:23:07+00:00",
+"finished_utc": "2026-11-14T02:32:07+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 1038,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.8304,
+"games": 1038,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9817,
+"games": 1038,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9721,
+"games": 1038,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-004028-riven-postban-deserter-race2-g3",
+"file": "lab/results/20261114-004028-riven-postban-deserter-race2-g3.json",
+"name": "riven-postban-deserter-race2-g3",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+"started_utc": "2026-11-14T00:40:28+00:00",
+"finished_utc": "2026-11-14T01:13:08+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 1084,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.5471,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.7108,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.6663,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.6126,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.6318,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.5975,
+"games": 3036,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-004017-riven-postban-shattered-race2-g2",
+"file": "lab/results/20261114-004017-riven-postban-shattered-race2-g2.json",
+"name": "riven-postban-shattered-race2-g2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 2386 games, Rek'Sai (Rajan Nandan) 542 games, Volibear (lab's post-ban list) 434 games.",
+"started_utc": "2026-11-14T00:40:17+00:00",
+"finished_utc": "2026-11-14T01:32:47+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2386,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.7074,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.8121,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.7853,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.7743,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.7169,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.7433,
+"games": 3362,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-003956-riven-postban-shattered-race2-g3",
+"file": "lab/results/20261114-003956-riven-postban-shattered-race2-g3.json",
+"name": "riven-postban-shattered-race2-g3",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+"started_utc": "2026-11-14T00:39:56+00:00",
+"finished_utc": "2026-11-14T01:12:24+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 1084,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.4397,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.5959,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.5629,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.5488,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.4872,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.4882,
+"games": 3036,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-003951-riven-postban-deserter-race2-g1",
+"file": "lab/results/20261114-003951-riven-postban-deserter-race2-g1.json",
+"name": "riven-postban-deserter-race2-g1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+"started_utc": "2026-11-14T00:39:51+00:00",
+"finished_utc": "2026-11-14T01:26:23+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.7041,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.7884,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.7787,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.7516,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.7497,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.7319,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-003950-riven-postban-deserter-race2-g2",
+"file": "lab/results/20261114-003950-riven-postban-deserter-race2-g2.json",
+"name": "riven-postban-deserter-race2-g2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 2386 games, Rek'Sai (Rajan Nandan) 542 games, Volibear (lab's post-ban list) 434 games.",
+"started_utc": "2026-11-14T00:39:50+00:00",
+"finished_utc": "2026-11-14T01:33:46+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2386,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.7746,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.8391,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.8257,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.8251,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.7921,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.79,
+"games": 3362,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-003920-riven-postban-shattered-race2-g1",
+"file": "lab/results/20261114-003920-riven-postban-shattered-race2-g1.json",
+"name": "riven-postban-shattered-race2-g1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+"started_utc": "2026-11-14T00:39:20+00:00",
+"finished_utc": "2026-11-14T01:18:48+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5637,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.7056,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.6706,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.6275,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.6106,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.6178,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-003737-evelynn-postban-race2-g3",
+"file": "lab/results/20261114-003737-evelynn-postban-race2-g3.json",
+"name": "evelynn-postban-race2-g3",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+"started_utc": "2026-11-14T00:37:37+00:00",
+"finished_utc": "2026-11-14T01:01:42+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 1084,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.4308,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.722,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.6558,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.6752,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.665,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.6488,
+"games": 3036,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-003709-evelynn-postban-race2-g2",
+"file": "lab/results/20261114-003709-evelynn-postban-race2-g2.json",
+"name": "evelynn-postban-race2-g2",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 2386 games, Rek'Sai (Rajan Nandan) 542 games, Volibear (lab's post-ban list) 434 games.",
+"started_utc": "2026-11-14T00:37:09+00:00",
+"finished_utc": "2026-11-14T01:22:46+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2386,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.821,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9346,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.92,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9182,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.9117,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.917,
+"games": 3362,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-003700-evelynn-postban-race2-g1",
+"file": "lab/results/20261114-003700-evelynn-postban-race2-g1.json",
+"name": "evelynn-postban-race2-g1",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+"started_utc": "2026-11-14T00:37:00+00:00",
+"finished_utc": "2026-11-14T01:07:16+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.4378,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7003,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.6525,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.6584,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.6359,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.6459,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-003650-mordekaiser-postban-race2-g3",
+"file": "lab/results/20261114-003650-mordekaiser-postban-race2-g3.json",
+"name": "mordekaiser-postban-race2-g3",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+"started_utc": "2026-11-14T00:36:50+00:00",
+"finished_utc": "2026-11-14T01:10:09+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 1084,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.6894,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7582,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.7414,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.748,
+"games": 3036,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.7204,
+"games": 3036,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.7158,
+"games": 3036,
+"errors": []
+}
+],
+"opponents": [
+"Master Yi (PCQ, post-ban)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-003631-mordekaiser-postban-race2-g2",
+"file": "lab/results/20261114-003631-mordekaiser-postban-race2-g2.json",
+"name": "mordekaiser-postban-race2-g2",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 2386 games, Rek'Sai (Rajan Nandan) 542 games, Volibear (lab's post-ban list) 434 games.",
+"started_utc": "2026-11-14T00:36:31+00:00",
+"finished_utc": "2026-11-14T01:10:56+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2386,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.8537,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9161,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9105,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8983,
+"games": 3362,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.9022,
+"games": 3362,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8983,
+"games": 3362,
+"errors": []
+}
+],
+"opponents": [
+"Kennen (zombro, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-003550-mordekaiser-postban-race2-g1",
+"file": "lab/results/20261114-003550-mordekaiser-postban-race2-g1.json",
+"name": "mordekaiser-postban-race2-g1",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+"started_utc": "2026-11-14T00:35:50+00:00",
+"finished_utc": "2026-11-14T01:12:52+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.8162,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9794,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.9697,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9587,
+"games": 3200,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.9625,
+"games": 3200,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.9678,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261113-233808-riven-postban-frames2",
+"file": "lab/results/20261113-233808-riven-postban-frames2.json",
+"name": "riven-postban-frames2",
+"description": "Riven after the bans, frame test 2. The first test (lab/results/20261113-222247-riven-postban-frames.json) gave the same games for every set of battlefields: the engine asks the pilot which of its three battlefields to play (game_engine.cpp, battlefield setup) and the lab's pilots always answer the first one listed, so only the first battlefield of a list is ever played. Here the same main deck for each champion with six different battlefields listed first, cheap pilot, 400 games per opponent on the same seeds.",
+"started_utc": "2026-11-13T23:38:08+00:00",
+"finished_utc": "2026-11-14T01:07:05+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 400,
+"decks": [
+{
+"label": "shattered: Hunters' Circle first (the frame)",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5621,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Rakelstake first",
+"path": "lab/variants/riven-postban-frame-shattered-first-rakelstake.txt",
+"weighted_win_rate": 0.5094,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Windswept Hillock first",
+"path": "lab/variants/riven-postban-frame-shattered-first-windswept-hillock.txt",
+"weighted_win_rate": 0.5158,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Valley of Idols first",
+"path": "lab/variants/riven-postban-frame-shattered-first-valley-of-idols.txt",
+"weighted_win_rate": 0.538,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Forge of the Fluft first",
+"path": "lab/variants/riven-postban-frame-shattered-first-forge-of-the-fluft.txt",
+"weighted_win_rate": 0.4761,
+"games": 3200,
+"errors": []
+},
+{
+"label": "shattered: Threshold of the Gray first",
+"path": "lab/variants/riven-postban-frame-shattered-first-threshold-of-the-gray.txt",
+"weighted_win_rate": 0.5274,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Hunters' Circle first (the frame)",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.6718,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Rakelstake first",
+"path": "lab/variants/riven-postban-frame-deserter-first-rakelstake.txt",
+"weighted_win_rate": 0.6262,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Windswept Hillock first",
+"path": "lab/variants/riven-postban-frame-deserter-first-windswept-hillock.txt",
+"weighted_win_rate": 0.6307,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Valley of Idols first",
+"path": "lab/variants/riven-postban-frame-deserter-first-valley-of-idols.txt",
+"weighted_win_rate": 0.6403,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Forge of the Fluft first",
+"path": "lab/variants/riven-postban-frame-deserter-first-forge-of-the-fluft.txt",
+"weighted_win_rate": 0.5877,
+"games": 3200,
+"errors": []
+},
+{
+"label": "deserter: Threshold of the Gray first",
+"path": "lab/variants/riven-postban-frame-deserter-first-threshold-of-the-gray.txt",
+"weighted_win_rate": 0.6522,
+"games": 3200,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-233707-riven-postban-deserter-race1-g2",
+"file": "lab/results/20261113-233707-riven-postban-deserter-race1-g2.json",
+"name": "riven-postban-deserter-race1-g2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+"started_utc": "2026-11-13T23:37:07+00:00",
+"finished_utc": "2026-11-13T23:59:39+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 596,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.7484,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-deserter-cand-centre2.txt",
+"weighted_win_rate": 0.7509,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-deserter-cand-centre3.txt",
+"weighted_win_rate": 0.7392,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-deserter-cand-centre4.txt",
+"weighted_win_rate": 0.6989,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.7525,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.7743,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.8238,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.8457,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-deserter-cand-c2p3.txt",
+"weighted_win_rate": 0.7106,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.7928,
+"games": 1192,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261113-233658-riven-postban-deserter-race1-g1",
+"file": "lab/results/20261113-233658-riven-postban-deserter-race1-g1.json",
+"name": "riven-postban-deserter-race1-g1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 692 games, Riven Deserter (post-ban frame) 272 games, Rek'Sai (Rajan Nandan) 136 games, Volibear (lab's post-ban list) 108 games.",
+"started_utc": "2026-11-13T23:36:58+00:00",
+"finished_utc": "2026-11-13T23:56:58+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.605,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-deserter-cand-centre2.txt",
+"weighted_win_rate": 0.6099,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-deserter-cand-centre3.txt",
+"weighted_win_rate": 0.605,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-deserter-cand-centre4.txt",
+"weighted_win_rate": 0.5934,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.6753,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.6712,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.7084,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.7216,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-deserter-cand-c2p3.txt",
+"weighted_win_rate": 0.5876,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.6786,
+"games": 1208,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-233546-riven-postban-shattered-race1-g1",
+"file": "lab/results/20261113-233546-riven-postban-shattered-race1-g1.json",
+"name": "riven-postban-shattered-race1-g1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 692 games, Riven Deserter (post-ban frame) 272 games, Rek'Sai (Rajan Nandan) 136 games, Volibear (lab's post-ban list) 108 games.",
+"started_utc": "2026-11-13T23:35:46+00:00",
+"finished_utc": "2026-11-13T23:50:23+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.4948,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-shattered-cand-centre2.txt",
+"weighted_win_rate": 0.4849,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-shattered-cand-centre3.txt",
+"weighted_win_rate": 0.4751,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-shattered-cand-centre4.txt",
+"weighted_win_rate": 0.4402,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.5412,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.5511,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.5975,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.6356,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-shattered-cand-c2p3.txt",
+"weighted_win_rate": 0.5155,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.5569,
+"games": 1208,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-233535-riven-postban-shattered-race1-g2",
+"file": "lab/results/20261113-233535-riven-postban-shattered-race1-g2.json",
+"name": "riven-postban-shattered-race1-g2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+"started_utc": "2026-11-13T23:35:35+00:00",
+"finished_utc": "2026-11-14T00:07:40+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 596,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.6493,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-shattered-cand-centre2.txt",
+"weighted_win_rate": 0.6393,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-shattered-cand-centre3.txt",
+"weighted_win_rate": 0.6024,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-shattered-cand-centre4.txt",
+"weighted_win_rate": 0.5747,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.6846,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.6996,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.7459,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.7769,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-shattered-cand-c2p3.txt",
+"weighted_win_rate": 0.6745,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.7207,
+"games": 1192,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261113-233424-evelynn-postban-race1-g2",
+"file": "lab/results/20261113-233424-evelynn-postban-race1-g2.json",
+"name": "evelynn-postban-race1-g2",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+"started_utc": "2026-11-13T23:34:24+00:00",
+"finished_utc": "2026-11-13T23:48:21+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 596,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.7493,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/evelynn-postban-cand-centre1.txt",
+"weighted_win_rate": 0.8434,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/evelynn-postban-cand-refp2.txt",
+"weighted_win_rate": 0.8659,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.8811,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8936,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/evelynn-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8518,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8778,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8819,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.9112,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/evelynn-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.876,
+"games": 1192,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261113-233341-evelynn-postban-race1-g1",
+"file": "lab/results/20261113-233341-evelynn-postban-race1-g1.json",
+"name": "evelynn-postban-race1-g1",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 692 games, Riven Deserter (post-ban frame) 272 games, Rek'Sai (Rajan Nandan) 136 games, Volibear (lab's post-ban list) 108 games.",
+"started_utc": "2026-11-13T23:33:41+00:00",
+"finished_utc": "2026-11-13T23:52:19+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.3815,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/evelynn-postban-cand-centre1.txt",
+"weighted_win_rate": 0.5015,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/evelynn-postban-cand-refp2.txt",
+"weighted_win_rate": 0.5504,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.5984,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.6307,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/evelynn-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.5487,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.586,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.6124,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.6729,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/evelynn-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.5859,
+"games": 1208,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-233201-mordekaiser-postban-race1-g2",
+"file": "lab/results/20261113-233201-mordekaiser-postban-race1-g2.json",
+"name": "mordekaiser-postban-race1-g2",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race1: 13 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+"started_utc": "2026-11-13T23:32:01+00:00",
+"finished_utc": "2026-11-13T23:50:47+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 596,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.8743,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/mordekaiser-postban-cand-centre1.txt",
+"weighted_win_rate": 0.829,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/mordekaiser-postban-cand-centre2.txt",
+"weighted_win_rate": 0.8457,
+"games": 1192,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/mordekaiser-postban-cand-centre3.txt",
+"weighted_win_rate": 0.8407,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/mordekaiser-postban-cand-refp2.txt",
+"weighted_win_rate": 0.865,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/mordekaiser-postban-cand-refp4.txt",
+"weighted_win_rate": 0.8977,
+"games": 1192,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8943,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/mordekaiser-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8633,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8725,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8976,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8952,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/mordekaiser-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.8683,
+"games": 1192,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.901,
+"games": 1192,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261113-233156-mordekaiser-postban-race1-g1",
+"file": "lab/results/20261113-233156-mordekaiser-postban-race1-g1.json",
+"name": "mordekaiser-postban-race1-g1",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race1: 13 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 692 games, Riven Deserter (post-ban frame) 272 games, Rek'Sai (Rajan Nandan) 136 games, Volibear (lab's post-ban list) 108 games.",
+"started_utc": "2026-11-13T23:31:56+00:00",
+"finished_utc": "2026-11-14T00:08:09+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.72,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/mordekaiser-postban-cand-centre1.txt",
+"weighted_win_rate": 0.7715,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/mordekaiser-postban-cand-centre2.txt",
+"weighted_win_rate": 0.7732,
+"games": 1208,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/mordekaiser-postban-cand-centre3.txt",
+"weighted_win_rate": 0.764,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/mordekaiser-postban-cand-refp2.txt",
+"weighted_win_rate": 0.7871,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/mordekaiser-postban-cand-refp4.txt",
+"weighted_win_rate": 0.8252,
+"games": 1208,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8434,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/mordekaiser-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8211,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8526,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8641,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8749,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/mordekaiser-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.8418,
+"games": 1208,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8517,
+"games": 1208,
+"errors": []
+}
+],
+"opponents": [
+"Kai'Sa (Jason Tian, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225928-meta-m0-row-orianna",
+"file": "lab/results/20261113-225928-meta-m0-row-orianna.json",
+"name": "meta-m0-row-orianna",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Orianna (luoluoluofu, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_orianna_054_v1).",
+"started_utc": "2026-11-13T22:59:28+00:00",
+"finished_utc": "2026-11-13T23:08:00+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_orianna_054_v1.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Orianna (luoluoluofu, post-ban)",
+"path": "lab/decks/postban/orianna_luoluoluofu.txt",
+"weighted_win_rate": 0.4208,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225737-meta-m0-row-evelynn_dunc",
+"file": "lab/results/20261113-225737-meta-m0-row-evelynn_dunc.json",
+"name": "meta-m0-row-evelynn_dunc",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Evelynn (Dunc) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_evelynn_018_v0).",
+"started_utc": "2026-11-13T22:57:37+00:00",
+"finished_utc": "2026-11-13T23:10:27+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Evelynn (Dunc)",
+"path": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+"weighted_win_rate": 0.6648,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225629-meta-m0-row-evelynn",
+"file": "lab/results/20261113-225629-meta-m0-row-evelynn.json",
+"name": "meta-m0-row-evelynn",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Evelynn (Jeremy, 13 Nov) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_evelynn_018_v0).",
+"started_utc": "2026-11-13T22:56:29+00:00",
+"finished_utc": "2026-11-13T23:07:24+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Evelynn (Jeremy, 13 Nov)",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.5736,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225531-meta-m0-row-volibear_ritualo",
+"file": "lab/results/20261113-225531-meta-m0-row-volibear_ritualo.json",
+"name": "meta-m0-row-volibear_ritualo",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Volibear (Ritualo + 2 Rengar) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_volibear_132_v0).",
+"started_utc": "2026-11-13T22:55:31+00:00",
+"finished_utc": "2026-11-13T23:09:16+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Volibear (Ritualo + 2 Rengar)",
+"path": "lab/variants/volibear-noaurora-cards-cand-refp2.txt",
+"weighted_win_rate": 0.8726,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225524-meta-m0-row-mordekaiser",
+"file": "lab/results/20261113-225524-meta-m0-row-mordekaiser.json",
+"name": "meta-m0-row-mordekaiser",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Mordekaiser (Neal) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_mordekaiser_070_v0).",
+"started_utc": "2026-11-13T22:55:24+00:00",
+"finished_utc": "2026-11-13T23:10:24+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Mordekaiser (Neal)",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.7825,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225520-meta-m0-row-volibear",
+"file": "lab/results/20261113-225520-meta-m0-row-volibear.json",
+"name": "meta-m0-row-volibear",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Volibear (lab's post-ban list) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_volibear_132_v0).",
+"started_utc": "2026-11-13T22:55:20+00:00",
+"finished_utc": "2026-11-13T23:05:07+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Volibear (lab's post-ban list)",
+"path": "lab/variants/volibear-noaurora-best.txt",
+"weighted_win_rate": 0.9202,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)"
+]
+},
+{
+"id": "20261113-225510-meta-m0-row-rek_sai",
+"file": "lab/results/20261113-225510-meta-m0-row-rek_sai.json",
+"name": "meta-m0-row-rek_sai",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Rek'Sai (Rajan Nandan) against the other 12 lists, 500 games per pair, cheap pilots (this list: net_164_v3).",
+"started_utc": "2026-11-13T22:55:10+00:00",
+"finished_utc": "2026-11-13T23:09:16+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Rek'Sai (Rajan Nandan)",
+"path": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+"weighted_win_rate": 0.3864,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225509-meta-m0-row-akali",
+"file": "lab/results/20261113-225509-meta-m0-row-akali.json",
+"name": "meta-m0-row-akali",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Akali (Vincent Nguyen, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_akali_008_v3).",
+"started_utc": "2026-11-13T22:55:09+00:00",
+"finished_utc": "2026-11-13T23:11:23+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Akali (Vincent Nguyen, post-ban)",
+"path": "lab/decks/postban/akali_vincent_nguyen.txt",
+"weighted_win_rate": 0.3535,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225440-meta-m0-row-master_yi",
+"file": "lab/results/20261113-225440-meta-m0-row-master_yi.json",
+"name": "meta-m0-row-master_yi",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Master Yi (PCQ, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: net_164_v3).",
+"started_utc": "2026-11-13T22:54:40+00:00",
+"finished_utc": "2026-11-13T23:04:19+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Master Yi (PCQ, post-ban)",
+"path": "lab/decks/postban/master_yi_pcq.txt",
+"weighted_win_rate": 0.6361,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225312-meta-m0-row-riven_deserter",
+"file": "lab/results/20261113-225312-meta-m0-row-riven_deserter.json",
+"name": "meta-m0-row-riven_deserter",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Riven, Deserter (post-ban frame) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_riven_120_v0).",
+"started_utc": "2026-11-13T22:53:12+00:00",
+"finished_utc": "2026-11-13T23:06:27+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Riven, Deserter (post-ban frame)",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.6873,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225307-meta-m0-row-riven_shattered",
+"file": "lab/results/20261113-225307-meta-m0-row-riven_shattered.json",
+"name": "meta-m0-row-riven_shattered",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Riven, Shattered (post-ban frame) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_riven_120_v0).",
+"started_utc": "2026-11-13T22:53:07+00:00",
+"finished_utc": "2026-11-13T23:02:59+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Riven, Shattered (post-ban frame)",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5771,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225141-meta-m0-row-kennen",
+"file": "lab/results/20261113-225141-meta-m0-row-kennen.json",
+"name": "meta-m0-row-kennen",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Kennen (zombro, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_kennen_020_v0).",
+"started_utc": "2026-11-13T22:51:41+00:00",
+"finished_utc": "2026-11-13T23:12:15+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Kennen (zombro, post-ban)",
+"path": "lab/decks/postban/kennen_zombro.txt",
+"weighted_win_rate": 0.18,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-225108-meta-m0-row-kai_sa",
+"file": "lab/results/20261113-225108-meta-m0-row-kai_sa.json",
+"name": "meta-m0-row-kai_sa",
+"description": "Post-ban matchup matrix m0 (lab/tools/meta_matrix.py): Kai'Sa (Jason Tian, post-ban) against the other 12 lists, 500 games per pair, cheap pilots (this list: spec_kai_sa_025_v1).",
+"started_utc": "2026-11-13T22:51:08+00:00",
+"finished_utc": "2026-11-13T23:07:00+00:00",
+"engine_commit": "b839c57",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60",
+"games_per_matchup": 500,
+"decks": [
+{
+"label": "Kai'Sa (Jason Tian, post-ban)",
+"path": "lab/decks/postban/kai_sa_jason_tian.txt",
+"weighted_win_rate": 0.5415,
+"games": 6000,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Evelynn (Dunc)",
+"Evelynn (Jeremy, 13 Nov)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Orianna (luoluoluofu, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven, Deserter (post-ban frame)",
+"Riven, Shattered (post-ban frame)",
+"Volibear (Ritualo + 2 Rengar)",
+"Volibear (lab's post-ban list)"
+]
+},
 {
 "id": "20261113-222247-riven-postban-frames",
 "file": "lab/results/20261113-222247-riven-postban-frames.json",
@@ -34285,6 +37065,630 @@
 "runes": {
 "Calm Rune": 5,
 "Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-c1p2.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt then the model's 2 best swaps: -1 Star-Crossed +1 Rengar, Trophy Hunter, -1 Star-Crossed +1 Evelynn, In Control).",
+"Predicted against the reference: +26.4 points (\u00b1 1.0); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.55,
+"curve": {
+"1": 1,
+"2": 2,
+"3": 24,
+"4": 6,
+"5": 5,
+"6": 1,
+"10": 1
+},
+"types": {
+"unit": 30,
+"gear": 4,
+"spell": 6
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 1,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 1,
+"Ezreal, Prodigy": 2,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kharox": 1,
+"Kinkou Initiate": 3,
+"Punch First": 1,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt then the model's 4 best swaps: -1 Star-Crossed +1 Rengar, Trophy Hunter, -1 Star-Crossed +1 Evelynn, In Control, -1 Punch First +1 Evelynn, In Control, -1 Ezreal, Prodigy +1 Evelynn, In Control).",
+"Predicted against the reference: +36.9 points (\u00b1 1.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.65,
+"curve": {
+"2": 2,
+"3": 23,
+"4": 8,
+"5": 5,
+"6": 1,
+"10": 1
+},
+"types": {
+"unit": 31,
+"gear": 4,
+"spell": 5
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 2
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 1,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Ezreal, Prodigy": 1,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kharox": 1,
+"Kinkou Initiate": 3,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt then the model's 6 best swaps: -1 Star-Crossed +1 Rengar, Trophy Hunter, -1 Star-Crossed +1 Evelynn, In Control, -1 Punch First +1 Evelynn, In Control, -1 Ezreal, Prodigy +1 Evelynn, In Control, -1 Ezreal, Prodigy +1 Baron Nashor, -1 Fizz, Trickster +1 Baron Nashor).",
+"Predicted against the reference: +45.1 points (\u00b1 1.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 4.0,
+"curve": {
+"2": 2,
+"3": 21,
+"4": 8,
+"5": 5,
+"6": 1,
+"10": 3
+},
+"types": {
+"unit": 31,
+"gear": 4,
+"spell": 5
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 2
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 3,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Fizz, Trickster": 1,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kharox": 1,
+"Kinkou Initiate": 3,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt then the model's 9 best swaps: -1 Star-Crossed +1 Rengar, Trophy Hunter, -1 Star-Crossed +1 Evelynn, In Control, -1 Punch First +1 Evelynn, In Control, -1 Ezreal, Prodigy +1 Evelynn, In Control, -1 Ezreal, Prodigy +1 Baron Nashor, -1 Fizz, Trickster +1 Baron Nashor, -1 Fizz, Trickster +1 Vex, Apathetic, -1 Hold 'Em +1 K'Sante, Courageous, -1 Hold 'Em +1 Boots of Swiftness).",
+"Predicted against the reference: +55.1 points (\u00b1 2.1); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 4.08,
+"curve": {
+"2": 2,
+"3": 19,
+"4": 9,
+"5": 6,
+"6": 1,
+"10": 3
+},
+"types": {
+"unit": 32,
+"gear": 5,
+"spell": 3
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 2
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 3,
+"Boots of Swiftness": 3,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Gutter Guardian": 3,
+"K'Sante, Courageous": 3,
+"Kharox": 1,
+"Kinkou Initiate": 3,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 3
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-c2p3.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt then the model's 3 best swaps: -1 Pack of Wonders +1 Rengar, Trophy Hunter, -1 Pack of Wonders +1 Evelynn, In Control, -1 Onslaught +1 Baron Nashor).",
+"Predicted against the reference: +31.3 points (\u00b1 1.1); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.5,
+"curve": {
+"2": 4,
+"3": 23,
+"4": 7,
+"5": 5,
+"10": 1
+},
+"types": {
+"unit": 29,
+"gear": 4,
+"spell": 7
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 4
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 1,
+"Bedeviling Stranger": 2,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kinkou Initiate": 2,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Star-Crossed": 2,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-centre1.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (starting list lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt).",
+"Predicted against the reference: +15.0 points (\u00b1 0.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.48,
+"curve": {
+"1": 1,
+"2": 2,
+"3": 26,
+"4": 5,
+"5": 4,
+"6": 1,
+"10": 1
+},
+"types": {
+"unit": 28,
+"gear": 4,
+"spell": 8
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 1,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Ezreal, Prodigy": 2,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kharox": 1,
+"Kinkou Initiate": 3,
+"Punch First": 1,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 2,
+"Star-Crossed": 2,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-refp2.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (the reference then the model's 2 best swaps: -1 Pack of Wonders +1 Rengar, Trophy Hunter, -1 Pack of Wonders +1 Evelynn, In Control).",
+"Predicted against the reference: +26.2 points (\u00b1 1.0); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.35,
+"curve": {
+"2": 4,
+"3": 23,
+"4": 8,
+"5": 5
+},
+"types": {
+"unit": 28,
+"gear": 4,
+"spell": 8
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 4
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Bedeviling Stranger": 2,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kinkou Initiate": 2,
+"Onslaught": 1,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Star-Crossed": 2,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (the reference then the model's 4 best swaps: -1 Pack of Wonders +1 Rengar, Trophy Hunter, -1 Pack of Wonders +1 Evelynn, In Control, -1 Onslaught +1 Baron Nashor, -1 Star-Crossed +1 Baron Nashor).",
+"Predicted against the reference: +35.6 points (\u00b1 1.3); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.67,
+"curve": {
+"2": 4,
+"3": 22,
+"4": 7,
+"5": 5,
+"10": 2
+},
+"types": {
+"unit": 30,
+"gear": 4,
+"spell": 6
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 4
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 2,
+"Bedeviling Stranger": 2,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Fizz, Trickster": 2,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kinkou Initiate": 2,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Star-Crossed": 1,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
+}
+}
+},
+{
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"legend": "Agony's Embrace",
+"champion": "Evelynn, Entrancing",
+"comments": [
+"Candidate of the card-level search evelynn-postban (the reference then the model's 6 best swaps: -1 Pack of Wonders +1 Rengar, Trophy Hunter, -1 Pack of Wonders +1 Evelynn, In Control, -1 Onslaught +1 Baron Nashor, -1 Star-Crossed +1 Baron Nashor, -1 Star-Crossed +1 Baron Nashor, -1 Fizz, Trickster +1 Vex, Apathetic).",
+"Predicted against the reference: +43.8 points (\u00b1 1.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.88,
+"curve": {
+"2": 4,
+"3": 20,
+"4": 8,
+"5": 5,
+"10": 3
+},
+"types": {
+"unit": 31,
+"gear": 4,
+"spell": 5
+},
+"rune_split": {
+"chaos": 8,
+"body": 4
+},
+"two_drops": 4
+},
+"list": {
+"legend": {
+"Agony's Embrace": 1
+},
+"champion": {
+"Evelynn, Entrancing": 1
+},
+"maindeck": {
+"Baron Nashor": 3,
+"Bedeviling Stranger": 2,
+"Boots of Swiftness": 2,
+"Edge of Night": 2,
+"Evelynn, In Control": 3,
+"Fizz, Trickster": 1,
+"Gutter Guardian": 3,
+"Hold 'Em": 2,
+"K'Sante, Courageous": 2,
+"Kinkou Initiate": 2,
+"Pyke, Returned": 3,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Switcheroo": 1,
+"Tail-Cloaked Matriarch": 3,
+"Tornado Warrior": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Bandle Scouts' Academy": 1,
+"Rakelstake": 1,
+"Startipped Peak": 1
+},
+"runes": {
+"Chaos Rune": 8,
+"Body Rune": 4
 }
 }
 },
@@ -106317,6 +109721,911 @@
 }
 },
 {
+"path": "lab/variants/mordekaiser-postban-best.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Best Mordekaiser list of round 1 of the post-ban search (14 Nov 2026, lab/deckopt.py, spec lab/specs/deckopt/mordekaiser-postban.json).",
+"Confirmation on fresh seeds, 3,598 games per list, full pilot spec_mordekaiser_070_v0, field without the banned cards (lab/results/20261114-025126-mordekaiser-postban-confirm.json): 90.6% against Neal's list 82.0%, difference +8.6 [+7.1, +10.1]; the runner-up (six of the nine swaps) 89.9%, not separated from it (-0.6 [-1.9, +0.6]).",
+"Against Neal's main deck: -1 Salvage, -2 Long Sword, -1 Rengar, Pouncing, -3 Honest Broker, -2 Rek'Sai, Swarm Queen, -1 Deathgrip, -1 Falling Star, -1 Perfect Execution, +2 Bilgewater Tracker, +1 Ferrous Forerunner, +1 Hidden Blade, +1 Noxus Hopeful, +3 Pyke, Dockside Butcher, +3 Trifarian Captain, +1 Vi, Peacekeeper. Neal's champion, runes and battlefields.",
+"Limits: the pilot of round 1 had not trained on list variations; the opposing pilots are of unequal strength (lab/meta/postban_meta_m0.md); sideboards are not simulated. Round 2 replays it with the pilots trained since."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.12,
+"curve": {
+"1": 2,
+"2": 17,
+"3": 7,
+"4": 7,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 30,
+"spell": 10
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 19
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 3,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c1p2.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-leader.txt then the model's 2 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner).",
+"Predicted against the reference: +12.8 points (\u00b1 0.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 5,
+"2": 19,
+"3": 8,
+"4": 1,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 24,
+"gear": 5,
+"spell": 11
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 2,
+"Concert Poster": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Long Sword": 2,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Sacrifice": 2,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-leader.txt then the model's 4 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner, -1 Long Sword +1 Rengar, Unseen, -1 Long Sword +1 Rengar, Unseen).",
+"Predicted against the reference: +18.6 points (\u00b1 1.0); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 5,
+"2": 17,
+"3": 8,
+"4": 3,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 26,
+"gear": 3,
+"spell": 11
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 2,
+"Concert Poster": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Rengar, Unseen": 2,
+"Sacrifice": 2,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-leader.txt then the model's 6 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner, -1 Long Sword +1 Rengar, Unseen, -1 Long Sword +1 Rengar, Unseen, -1 LeBlanc, Fragmented +1 Rengar, Unseen, -1 Concert Poster +1 Kai'Sa, Survivor).",
+"Predicted against the reference: +23.1 points (\u00b1 1.1); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 4,
+"2": 17,
+"3": 7,
+"4": 5,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 27,
+"gear": 2,
+"spell": 11
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 21
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 2,
+"Concert Poster": 2,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 1,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-leader.txt then the model's 9 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner, -1 Long Sword +1 Rengar, Unseen, -1 Long Sword +1 Rengar, Unseen, -1 LeBlanc, Fragmented +1 Rengar, Unseen, -1 Concert Poster +1 Kai'Sa, Survivor, -1 Concert Poster +1 Kai'Sa, Survivor, -1 Concert Poster +1 Kai'Sa, Survivor, -1 Salvage +1 Carrion Dredger).",
+"Predicted against the reference: +28.3 points (\u00b1 1.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.12,
+"curve": {
+"1": 2,
+"2": 17,
+"3": 7,
+"4": 7,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 30,
+"spell": 10
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 19
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 3,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c2p3.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-best.txt then the model's 3 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner, -1 Long Sword +1 Rengar, Unseen).",
+"Predicted against the reference: +15.0 points (\u00b1 0.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.8,
+"curve": {
+"1": 5,
+"2": 18,
+"3": 9,
+"4": 1,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 25,
+"spell": 11,
+"gear": 4
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 1,
+"Cleave": 1,
+"Concert Poster": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Long Sword": 1,
+"Punching Poro": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 3,
+"Rengar, Unseen": 1,
+"Sacrifice": 1,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (lab/variants/mordekaiser-stuttgart-2-best.txt then the model's 6 best swaps: -1 Deathgrip +1 Ferrous Forerunner, -1 Deathgrip +1 Ferrous Forerunner, -1 Long Sword +1 Rengar, Unseen, -1 Long Sword +1 Rengar, Unseen, -1 Punching Poro +1 Rengar, Unseen, -1 LeBlanc, Fragmented +1 Kai'Sa, Survivor).",
+"Predicted against the reference: +22.5 points (\u00b1 1.2); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 5,
+"2": 16,
+"3": 8,
+"4": 4,
+"5": 3,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 26,
+"spell": 11,
+"gear": 3
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 21
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 1,
+"Cleave": 1,
+"Concert Poster": 3,
+"Falling Star": 2,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 3,
+"Rengar, Unseen": 3,
+"Sacrifice": 1,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-centre1.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (starting list lab/variants/mordekaiser-stuttgart-2-leader.txt).",
+"Predicted against the reference: +4.1 points (\u00b1 0.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.58,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 8,
+"4": 1,
+"5": 3,
+"6": 1,
+"7": 1
+},
+"types": {
+"unit": 22,
+"gear": 5,
+"spell": 13
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 2,
+"Concert Poster": 3,
+"Deathgrip": 2,
+"Falling Star": 2,
+"Ferrous Forerunner": 1,
+"Hidden Blade": 3,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Long Sword": 2,
+"Noxus Hopeful": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Sacrifice": 2,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-centre2.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (starting list lab/variants/mordekaiser-stuttgart-2-best.txt).",
+"Predicted against the reference: +3.4 points (\u00b1 0.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.55,
+"curve": {
+"1": 5,
+"2": 21,
+"3": 9,
+"5": 3,
+"6": 1,
+"7": 1
+},
+"types": {
+"unit": 22,
+"spell": 13,
+"gear": 5
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 1,
+"Cleave": 1,
+"Concert Poster": 3,
+"Deathgrip": 2,
+"Falling Star": 2,
+"Ferrous Forerunner": 1,
+"Hidden Blade": 3,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Long Sword": 2,
+"Punching Poro": 1,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 3,
+"Sacrifice": 1,
+"Salvage": 1,
+"Trifarian Captain": 3,
+"Vi, Peacekeeper": 3
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-centre3.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (starting list lab/decks/meta/future_cup_fsw_evolution_cards_2026-11-01/09_cijian_baiwen_mordekaiser.txt).",
+"Predicted against the reference: +2.0 points (\u00b1 0.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 9,
+"4": 3,
+"5": 2,
+"6": 1,
+"7": 2
+},
+"types": {
+"unit": 24,
+"gear": 4,
+"spell": 12
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 2,
+"Carrion Dredger": 2,
+"Concert Poster": 2,
+"Falling Star": 2,
+"Ferrous Forerunner": 1,
+"Hidden Blade": 2,
+"Inferna": 3,
+"LeBlanc, Fragmented": 1,
+"Long Sword": 2,
+"Noxus Hopeful": 3,
+"Pyke, Dockside Butcher": 2,
+"Raucous Anthem": 1,
+"Realm of Death": 3,
+"Rengar, Pouncing": 2,
+"Sacrifice": 2,
+"Salvage": 1,
+"Shadow's Call": 1,
+"Trifarian Captain": 3,
+"Vanguard Captain": 2,
+"Vi, Peacekeeper": 2
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-refp2.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (the reference then the model's 2 best swaps: -1 Perfect Execution +1 Ferrous Forerunner, -1 Deathgrip +1 Pyke, Dockside Butcher).",
+"Predicted against the reference: +9.7 points (\u00b1 0.5); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.08,
+"curve": {
+"1": 2,
+"2": 20,
+"3": 4,
+"4": 6,
+"5": 4,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 27,
+"spell": 11,
+"gear": 2
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Carrion Dredger": 3,
+"Falling Star": 3,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 2,
+"Honest Broker": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 3,
+"Long Sword": 2,
+"Pyke, Dockside Butcher": 1,
+"Realm of Death": 3,
+"Rek'Sai, Swarm Queen": 2,
+"Rengar, Pouncing": 3,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Salvage": 1,
+"Vi, Peacekeeper": 2
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-refp4.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (the reference then the model's 4 best swaps: -1 Perfect Execution +1 Ferrous Forerunner, -1 Deathgrip +1 Pyke, Dockside Butcher, -1 Long Sword +1 Pyke, Dockside Butcher, -1 Long Sword +1 Pyke, Dockside Butcher).",
+"Predicted against the reference: +17.3 points (\u00b1 0.9); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.12,
+"curve": {
+"1": 2,
+"2": 18,
+"3": 6,
+"4": 6,
+"5": 4,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 29,
+"spell": 11
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 20
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Carrion Dredger": 3,
+"Falling Star": 3,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 2,
+"Honest Broker": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 3,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rek'Sai, Swarm Queen": 2,
+"Rengar, Pouncing": 3,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Salvage": 1,
+"Vi, Peacekeeper": 2
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"legend": "Iron Revenant",
+"champion": "Mordekaiser, Twice Slain",
+"comments": [
+"Candidate of the card-level search mordekaiser-postban (the reference then the model's 6 best swaps: -1 Perfect Execution +1 Ferrous Forerunner, -1 Deathgrip +1 Pyke, Dockside Butcher, -1 Long Sword +1 Pyke, Dockside Butcher, -1 Long Sword +1 Pyke, Dockside Butcher, -1 Rek'Sai, Swarm Queen +1 Trifarian Captain, -1 Rek'Sai, Swarm Queen +1 Trifarian Captain).",
+"Predicted against the reference: +23.3 points (\u00b1 1.1); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.98,
+"curve": {
+"1": 2,
+"2": 20,
+"3": 6,
+"4": 6,
+"5": 2,
+"6": 3,
+"7": 1
+},
+"types": {
+"unit": 29,
+"spell": 11
+},
+"rune_split": {
+"fury": 7,
+"order": 5
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Iron Revenant": 1
+},
+"champion": {
+"Mordekaiser, Twice Slain": 1
+},
+"maindeck": {
+"Carrion Dredger": 3,
+"Falling Star": 3,
+"Ferrous Forerunner": 3,
+"Hidden Blade": 2,
+"Honest Broker": 3,
+"Inferna": 3,
+"Kai'Sa, Survivor": 3,
+"Pyke, Dockside Butcher": 3,
+"Realm of Death": 3,
+"Rengar, Pouncing": 3,
+"Rengar, Unseen": 3,
+"Sacrifice": 2,
+"Salvage": 1,
+"Trifarian Captain": 2,
+"Vi, Peacekeeper": 2
+},
+"battlefields": {
+"Zaun Warrens": 1,
+"Seat of Power": 1,
+"Ruined Monastery": 1
+},
+"runes": {
+"Fury Rune": 7,
+"Order Rune": 5
+}
+}
+},
+{
 "path": "lab/variants/mordekaiser-stuttgart-1--01f99bdc90.txt",
 "legend": "Iron Revenant",
 "champion": "Mordekaiser, Twice Slain",
@@ -177402,6 +181711,994 @@
 }
 },
 {
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (lab/decks/postban/riven_frame_deserter.txt then the model's 9 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic, -1 Hush +1 Pakaa Protector, -1 Rebuke +1 Pakaa Protector, -1 Rebuke +1 Pakaa Protector).",
+"Predicted against the reference: +37.0 points (\u00b1 2.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.83,
+"curve": {
+"1": 2,
+"2": 15,
+"3": 6,
+"4": 3,
+"5": 6,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 31,
+"gear": 3,
+"spell": 6
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 17
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Discipline": 3,
+"Gust": 2,
+"Not So Fast": 1,
+"Pakaa Protector": 3,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-c2p3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (lab/decks/postban/riven_hand_draw.txt then the model's 3 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm).",
+"Predicted against the reference: +14.8 points (\u00b1 1.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.45,
+"curve": {
+"1": 3,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 26,
+"gear": 3,
+"spell": 11
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (lab/decks/postban/riven_hand_draw.txt then the model's 6 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Switcheroo +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic, -1 Hush +1 Vex, Apathetic).",
+"Predicted against the reference: +26.1 points (\u00b1 2.2); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.62,
+"curve": {
+"1": 2,
+"2": 17,
+"3": 7,
+"4": 3,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 29,
+"gear": 3,
+"spell": 8
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 19
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-centre2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (starting list lab/decks/postban/riven_hand_draw.txt).",
+"Predicted against the reference: -0.5 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 23,
+"gear": 3,
+"spell": 14
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-centre3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (starting list lab/decks/postban/riven_main_stuttgart_rc_europe_03_diamondhat_riven.txt).",
+"Predicted against the reference: -0.6 points (\u00b1 0.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 9,
+"5": 3,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"En Garde": 1,
+"Gust": 2,
+"Not So Fast": 1,
+"Rebuke": 3,
+"Reckless Innovator": 3,
+"Scuttle Crab": 2,
+"Switcheroo": 2,
+"Teemo, Scout": 1,
+"The Good Stuff": 3,
+"Tideturner": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-centre4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (starting list lab/decks/postban/riven_main_convergence_iv_01_wojciech_cetner_riven.txt).",
+"Predicted against the reference: -1.7 points (\u00b1 0.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 7,
+"2": 19,
+"3": 6,
+"4": 1,
+"5": 3,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"spell": 18,
+"gear": 3
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Battle Preparations": 2,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Charm": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Not So Fast": 1,
+"Rebuke": 3,
+"Reckless Innovator": 3,
+"Switcheroo": 2,
+"Tideturner": 3,
+"Traveling Merchant": 2,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (the reference then the model's 2 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm).",
+"Predicted against the reference: +10.2 points (\u00b1 1.1); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.27,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 24,
+"gear": 3,
+"spell": 13
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 2,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 1,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (the reference then the model's 4 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Vex, Apathetic).",
+"Predicted against the reference: +19.2 points (\u00b1 1.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.48,
+"curve": {
+"1": 3,
+"2": 19,
+"3": 6,
+"4": 1,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 26,
+"gear": 3,
+"spell": 11
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"Candidate of the card-level search riven-postban-deserter (the reference then the model's 6 best swaps: -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic).",
+"Predicted against the reference: +26.8 points (\u00b1 2.0); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_deserter.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.58,
+"curve": {
+"1": 3,
+"2": 17,
+"3": 6,
+"4": 3,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 28,
+"gear": 3,
+"spell": 9
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 20
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-deserter-first-forge-of-the-fluft.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"lab/decks/postban/riven_frame_deserter.txt with Forge of the Fluft listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Forge of the Fluft": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-deserter-first-rakelstake.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"lab/decks/postban/riven_frame_deserter.txt with Rakelstake listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Rakelstake": 1,
+"Hunters' Circle": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-deserter-first-threshold-of-the-gray.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"lab/decks/postban/riven_frame_deserter.txt with Threshold of the Gray listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Threshold of the Gray": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-deserter-first-valley-of-idols.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"lab/decks/postban/riven_frame_deserter.txt with Valley of Idols listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Valley of Idols": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-deserter-first-windswept-hillock.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Deserter",
+"comments": [
+"lab/decks/postban/riven_frame_deserter.txt with Windswept Hillock listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.92,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 5,
+"chaos": 7
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Deserter": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Windswept Hillock": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 5,
+"Chaos Rune": 7
+}
+}
+},
+{
 "path": "lab/variants/riven-postban-frame-deserter-fluft.txt",
 "legend": "Riven, The Exile",
 "champion": "Riven, Deserter",
@@ -177747,6 +183044,351 @@
 }
 },
 {
+"path": "lab/variants/riven-postban-frame-shattered-first-forge-of-the-fluft.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"lab/decks/postban/riven_frame_shattered.txt with Forge of the Fluft listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Forge of the Fluft": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-shattered-first-rakelstake.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"lab/decks/postban/riven_frame_shattered.txt with Rakelstake listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Rakelstake": 1,
+"Hunters' Circle": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-shattered-first-threshold-of-the-gray.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"lab/decks/postban/riven_frame_shattered.txt with Threshold of the Gray listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Threshold of the Gray": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-shattered-first-valley-of-idols.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"lab/decks/postban/riven_frame_shattered.txt with Valley of Idols listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Valley of Idols": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-frame-shattered-first-windswept-hillock.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"lab/decks/postban/riven_frame_shattered.txt with Windswept Hillock listed first (the lab's pilots always play their first listed battlefield): frame test 2 of 13 Nov 2026."
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 22,
+"gear": 3,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Windswept Hillock": 1,
+"Hunters' Circle": 1,
+"Rakelstake": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
 "path": "lab/variants/riven-postban-frame-shattered-fluft.txt",
 "legend": "Riven, The Exile",
 "champion": "Riven, Shattered",
@@ -178084,6 +183726,649 @@
 "Hunters' Circle": 1,
 "Rakelstake": 1,
 "Valley of Idols": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (lab/decks/postban/riven_frame_shattered.txt then the model's 9 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Angler Wyrm, -1 Rebuke +1 Vex, Apathetic, -1 Rebuke +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic, -1 Switcheroo +1 Pakaa Protector, -1 Gust +1 Pakaa Protector).",
+"Predicted against the reference: +40.0 points (\u00b1 2.3); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.77,
+"curve": {
+"1": 2,
+"2": 15,
+"3": 7,
+"4": 3,
+"5": 5,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 31,
+"gear": 3,
+"spell": 6
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 17
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Discipline": 3,
+"Gust": 1,
+"Hush": 1,
+"Not So Fast": 1,
+"Pakaa Protector": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-c2p3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (lab/decks/postban/riven_hand_draw.txt then the model's 3 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm).",
+"Predicted against the reference: +16.0 points (\u00b1 1.3); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.33,
+"curve": {
+"1": 3,
+"2": 19,
+"3": 8,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 2,
+"10": 1
+},
+"types": {
+"unit": 26,
+"gear": 3,
+"spell": 11
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 2,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (lab/decks/postban/riven_hand_draw.txt then the model's 6 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Rebuke +1 Angler Wyrm, -1 Rebuke +1 Vex, Apathetic, -1 Switcheroo +1 Vex, Apathetic).",
+"Predicted against the reference: +28.3 points (\u00b1 1.9); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.58,
+"curve": {
+"1": 3,
+"2": 16,
+"3": 8,
+"4": 2,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 29,
+"gear": 3,
+"spell": 8
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 19
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 1,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-centre2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (starting list lab/decks/postban/riven_hand_draw.txt).",
+"Predicted against the reference: -0.7 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.88,
+"curve": {
+"1": 6,
+"2": 19,
+"3": 8,
+"5": 2,
+"6": 1,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 23,
+"gear": 3,
+"spell": 14
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 25
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"Ezreal, Prodigy": 2,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 2,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-centre3.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (starting list lab/decks/postban/riven_main_stuttgart_rc_europe_03_diamondhat_riven.txt).",
+"Predicted against the reference: -2.1 points (\u00b1 0.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.83,
+"curve": {
+"1": 6,
+"2": 18,
+"3": 10,
+"5": 2,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"gear": 6,
+"spell": 15
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 24
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Defy": 3,
+"Discipline": 3,
+"En Garde": 1,
+"Gust": 2,
+"Not So Fast": 1,
+"Rebuke": 3,
+"Reckless Innovator": 3,
+"Scuttle Crab": 2,
+"Switcheroo": 2,
+"Teemo, Scout": 1,
+"The Good Stuff": 3,
+"Tideturner": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-centre4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (starting list lab/decks/postban/riven_main_convergence_iv_01_wojciech_cetner_riven.txt).",
+"Predicted against the reference: -2.8 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 2.77,
+"curve": {
+"1": 7,
+"2": 19,
+"3": 7,
+"4": 1,
+"5": 2,
+"7": 3,
+"10": 1
+},
+"types": {
+"unit": 19,
+"spell": 18,
+"gear": 3
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 26
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Battle Preparations": 2,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 2,
+"Charm": 1,
+"Defy": 3,
+"Discipline": 3,
+"Gust": 3,
+"Not So Fast": 1,
+"Rebuke": 3,
+"Reckless Innovator": 3,
+"Switcheroo": 2,
+"Tideturner": 3,
+"Traveling Merchant": 2,
+"Vex, Apathetic": 1
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (the reference then the model's 2 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm).",
+"Predicted against the reference: +11.3 points (\u00b1 0.7); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.15,
+"curve": {
+"1": 4,
+"2": 19,
+"3": 8,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 1,
+"10": 1
+},
+"types": {
+"unit": 24,
+"gear": 3,
+"spell": 13
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 23
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 1,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Defy": 1,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Star-Crossed": 1,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (the reference then the model's 4 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Angler Wyrm).",
+"Predicted against the reference: +22.1 points (\u00b1 1.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.45,
+"curve": {
+"1": 3,
+"2": 19,
+"3": 7,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 26,
+"gear": 3,
+"spell": 11
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 22
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Rebuke": 2,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
+},
+"runes": {
+"Calm Rune": 6,
+"Chaos Rune": 6
+}
+}
+},
+{
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"legend": "Riven, The Exile",
+"champion": "Riven, Shattered",
+"comments": [
+"Candidate of the card-level search riven-postban-shattered (the reference then the model's 6 best swaps: -1 Defy +1 Blitzcrank, Impassive, -1 Defy +1 Angler Wyrm, -1 Defy +1 Angler Wyrm, -1 Star-Crossed +1 Angler Wyrm, -1 Rebuke +1 Vex, Apathetic, -1 Rebuke +1 Vex, Apathetic).",
+"Predicted against the reference: +29.5 points (\u00b1 1.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/postban/riven_frame_shattered.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 3.55,
+"curve": {
+"1": 3,
+"2": 17,
+"3": 7,
+"4": 2,
+"5": 3,
+"6": 1,
+"7": 3,
+"8": 3,
+"10": 1
+},
+"types": {
+"unit": 28,
+"gear": 3,
+"spell": 9
+},
+"rune_split": {
+"calm": 6,
+"chaos": 6
+},
+"two_drops": 20
+},
+"list": {
+"legend": {
+"Riven, The Exile": 1
+},
+"champion": {
+"Riven, Shattered": 1
+},
+"maindeck": {
+"Angler Wyrm": 3,
+"Astral Heron": 3,
+"Baron Nashor": 1,
+"Bedeviling Stranger": 3,
+"Blade of the Exile": 3,
+"Blitzcrank, Impassive": 3,
+"Discipline": 3,
+"Gust": 2,
+"Hush": 1,
+"Not So Fast": 1,
+"Reckless Innovator": 3,
+"Scuttle Crab": 3,
+"Storm Raptor": 1,
+"Switcheroo": 2,
+"Tideturner": 2,
+"Traveling Merchant": 3,
+"Vex, Apathetic": 2
+},
+"battlefields": {
+"Hunters' Circle": 1,
+"Rakelstake": 1,
+"Windswept Hillock": 1
 },
 "runes": {
 "Calm Rune": 6,
@@ -216651,6 +222936,914 @@
 }
 },
 {
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-best.txt then the model's 2 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage).",
+"Predicted against the reference: +8.8 points (\u00b1 1.0); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.1,
+"curve": {
+"1": 2,
+"2": 1,
+"3": 5,
+"4": 3,
+"5": 8,
+"6": 4,
+"7": 3,
+"8": 8,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 26,
+"spell": 11,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 2,
+"Elder Dragon": 3,
+"Ferrous Forerunner": 1,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Mobilize": 1,
+"Platewyrm Egg": 3,
+"Punch First": 2,
+"Rampage": 2,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-c1p4.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-best.txt then the model's 4 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Ferrous Forerunner +1 Punch First).",
+"Predicted against the reference: +10.9 points (\u00b1 1.4); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.0,
+"curve": {
+"1": 3,
+"3": 6,
+"4": 3,
+"5": 8,
+"6": 3,
+"7": 3,
+"8": 8,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 25,
+"gear": 3,
+"spell": 12
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 2,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Platewyrm Egg": 3,
+"Punch First": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-c1p6.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-best.txt then the model's 6 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Ferrous Forerunner +1 Punch First, -1 Minotaur Reckoner +1 Avalanche, -1 Minotaur Reckoner +1 Avalanche).",
+"Predicted against the reference: +12.1 points (\u00b1 1.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.0,
+"curve": {
+"1": 3,
+"3": 6,
+"4": 3,
+"5": 8,
+"6": 3,
+"7": 3,
+"8": 8,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 23,
+"spell": 14,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Avalanche": 2,
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 2,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 1,
+"Platewyrm Egg": 3,
+"Punch First": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-c1p9.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-best.txt then the model's 9 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Ferrous Forerunner +1 Punch First, -1 Minotaur Reckoner +1 Avalanche, -1 Minotaur Reckoner +1 Avalanche, -1 Minotaur Reckoner +1 Avalanche, -1 Jayce, Hammer in Hand +1 Kadregrin the Infernal, -1 Jayce, Hammer in Hand +1 Bilgewater Tracker).",
+"Predicted against the reference: +13.5 points (\u00b1 1.9); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.1,
+"curve": {
+"1": 3,
+"3": 7,
+"4": 1,
+"5": 8,
+"6": 3,
+"7": 3,
+"8": 8,
+"9": 3,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 22,
+"spell": 15,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Avalanche": 3,
+"Bilgewater Tracker": 1,
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 2,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 1,
+"Kadregrin the Infernal": 3,
+"Platewyrm Egg": 3,
+"Punch First": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt then the model's 3 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage).",
+"Predicted against the reference: +9.0 points (\u00b1 1.3); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.1,
+"curve": {
+"2": 2,
+"3": 6,
+"4": 5,
+"5": 9,
+"7": 3,
+"8": 9,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 31,
+"gear": 3,
+"spell": 6
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 2
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Deadbloom Predator": 3,
+"Dragonsoul Sage": 2,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Herald of Scales": 3,
+"Jayce, Hammer in Hand": 2,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Platewyrm Egg": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt then the model's 6 best swaps: -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Mobilize +1 Rampage, -1 Minotaur Reckoner +1 Punch First, -1 Minotaur Reckoner +1 Punch First, -1 Minotaur Reckoner +1 Punch First).",
+"Predicted against the reference: +11.6 points (\u00b1 1.8); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 5.8,
+"curve": {
+"1": 3,
+"2": 2,
+"3": 6,
+"4": 5,
+"5": 6,
+"7": 3,
+"8": 9,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 28,
+"gear": 3,
+"spell": 9
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 5
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Deadbloom Predator": 3,
+"Dragonsoul Sage": 2,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Herald of Scales": 3,
+"Jayce, Hammer in Hand": 2,
+"Kadregrin the Infernal": 2,
+"Platewyrm Egg": 3,
+"Punch First": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (starting list lab/variants/volibear-noaurora-best.txt).",
+"Predicted against the reference: +6.6 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.05,
+"curve": {
+"1": 2,
+"2": 3,
+"3": 3,
+"4": 3,
+"5": 8,
+"6": 4,
+"7": 3,
+"8": 8,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 26,
+"spell": 11,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 5
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 2,
+"Elder Dragon": 3,
+"Ferrous Forerunner": 1,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Mobilize": 3,
+"Platewyrm Egg": 3,
+"Punch First": 2,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-centre2.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (starting list lab/variants/volibear-noaurora-cards-b-cand-c1p9.txt).",
+"Predicted against the reference: +5.8 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.03,
+"curve": {
+"2": 5,
+"3": 3,
+"4": 5,
+"5": 9,
+"7": 3,
+"8": 9,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 31,
+"spell": 6,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 5
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Deadbloom Predator": 3,
+"Dragonsoul Sage": 2,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Herald of Scales": 3,
+"Jayce, Hammer in Hand": 2,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Mobilize": 3,
+"Platewyrm Egg": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (starting list lab/variants/volibear-noaurora-cards-b-cand-c1p4.txt).",
+"Predicted against the reference: +5.7 points (\u00b1 0.5); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.28,
+"curve": {
+"2": 3,
+"3": 3,
+"4": 3,
+"5": 11,
+"6": 2,
+"7": 3,
+"8": 9,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 29,
+"spell": 8,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 3,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Mobilize": 3,
+"Platewyrm Egg": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3,
+"Stormbringer": 2
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-centre4.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (starting list lab/variants/volibear-noaurora-cards-b-cand-c1p6.txt).",
+"Predicted against the reference: +5.6 points (\u00b1 0.5); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 6.17,
+"curve": {
+"2": 3,
+"3": 3,
+"4": 5,
+"5": 11,
+"7": 3,
+"8": 9,
+"9": 2,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 31,
+"spell": 6,
+"gear": 3
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 3
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Blazing Scorcher": 2,
+"Deadbloom Predator": 3,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Gentle Gemdragon": 3,
+"Herald of Scales": 2,
+"Jayce, Hammer in Hand": 3,
+"Kadregrin the Infernal": 2,
+"Minotaur Reckoner": 3,
+"Mobilize": 3,
+"Platewyrm Egg": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-refp2.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (the reference then the model's 2 best swaps: -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Portable Portal +1 Rengar, Trophy Hunter).",
+"Predicted against the reference: +3.0 points (\u00b1 0.6); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 5.35,
+"curve": {
+"1": 3,
+"2": 10,
+"3": 3,
+"5": 8,
+"7": 3,
+"8": 6,
+"9": 3,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 27,
+"spell": 12,
+"gear": 1
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 13
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 3,
+"Blazing Scorcher": 3,
+"Dragonsoul Sage": 3,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Flurry of Blades": 3,
+"Gentle Gemdragon": 3,
+"Kadregrin the Infernal": 3,
+"Mobilize": 3,
+"Portable Portal": 1,
+"Rengar, Trophy Hunter": 2,
+"Seraphic Wyvern": 3,
+"Show of Strength": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-refp4.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (the reference then the model's 4 best swaps: -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Show of Strength +1 Rampage).",
+"Predicted against the reference: +5.6 points (\u00b1 0.9); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 5.45,
+"curve": {
+"1": 3,
+"2": 8,
+"3": 4,
+"5": 9,
+"7": 3,
+"8": 6,
+"9": 3,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 28,
+"spell": 12
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 11
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 3,
+"Blazing Scorcher": 3,
+"Dragonsoul Sage": 3,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Flurry of Blades": 3,
+"Gentle Gemdragon": 3,
+"Kadregrin the Infernal": 3,
+"Mobilize": 3,
+"Rampage": 1,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Show of Strength": 2,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
+"path": "lab/variants/volibear-postban-cand-refp6.txt",
+"legend": "Volibear, Relentless Storm",
+"champion": "Volibear, Furious",
+"comments": [
+"Candidate of the card-level search volibear-postban (the reference then the model's 6 best swaps: -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Portable Portal +1 Rengar, Trophy Hunter, -1 Show of Strength +1 Rampage, -1 Show of Strength +1 Rampage, -1 Show of Strength +1 Rampage).",
+"Predicted against the reference: +7.8 points (\u00b1 1.2); a prediction buys a place in the race, nothing more.",
+"Base: lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt \u2014 generated by lab/deckopt.py"
+],
+"errors": [],
+"stats": {
+"cards": 40,
+"avg_energy": 5.5,
+"curve": {
+"1": 3,
+"2": 6,
+"3": 6,
+"5": 9,
+"7": 3,
+"8": 6,
+"9": 3,
+"10": 1,
+"12": 3
+},
+"types": {
+"unit": 28,
+"spell": 12
+},
+"rune_split": {
+"body": 7,
+"fury": 5
+},
+"two_drops": 9
+},
+"list": {
+"legend": {
+"Volibear, Relentless Storm": 1
+},
+"champion": {
+"Volibear, Furious": 1
+},
+"maindeck": {
+"Bilgewater Tracker": 3,
+"Blazing Scorcher": 3,
+"Dragonsoul Sage": 3,
+"Dune Drake": 3,
+"Elder Dragon": 3,
+"Flurry of Blades": 3,
+"Gentle Gemdragon": 3,
+"Kadregrin the Infernal": 3,
+"Mobilize": 3,
+"Rampage": 3,
+"Rengar, Trophy Hunter": 3,
+"Seraphic Wyvern": 3,
+"Sky Splitter": 3
+},
+"battlefields": {
+"Vilemaw's Lair": 1,
+"Dragon Roost": 1,
+"Black Market": 1
+},
+"runes": {
+"Body Rune": 7,
+"Fury Rune": 5
+}
+}
+},
+{
 "path": "lab/variants/volibear-stuttgart-1--0249af9f61.txt",
 "legend": "Volibear, Relentless Storm",
 "champion": "Volibear, Furious",
@@ -223791,7 +230984,17 @@
 "worlds=8"
 ]
 ],
-"requests": 4
+"requests": 4,
+"extra": [
+{
+"deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+"label": "Dunc's list as registered"
+},
+{
+"deck": "lab/variants/evelynn-postban-cand-refp6.txt",
+"label": "ref+6 (Jeremy's list, six swaps)"
+}
+]
 }
 },
 {

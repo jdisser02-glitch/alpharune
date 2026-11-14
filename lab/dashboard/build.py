@@ -549,11 +549,17 @@ def main(argv):
         # A test's deck rows carry the list's full stats; the page reads the card list from the deck index when the
         # list is indexed (tests.js deckSection) and never reads keywords or power symbols, so those stay out of
         # data.json (the artifact's per-file limit is 16 MB; genetic searches add hundreds of rows).
-        for row in tr.get("decks") or []:
+        for n, row in enumerate(tr.get("decks") or []):
             s = row.get("stats")
             if isinstance(s, dict):
                 for k in ("keywords", "power_symbols") + (("list",) if row.get("path") in indexed else ()):
                     s.pop(k, None)
+            # 14 Nov: the engine command lines of every list against every opponent were 2.1 MB of data.json. The
+            # page shows them only as "exact commands" for a rerun: the first list's are kept, the others differ by
+            # --deck1/--deck2 alone (tests.js says so).
+            if n:
+                for m in row.get("matchups") or []:
+                    m.pop("commands", None)
         tests.append(tr)
 
     replays = []
@@ -633,8 +639,10 @@ def main(argv):
     for d in index["decks"]:
         p = ROOT / d["path"]
         text = p.read_text() if p.exists() else ""
-        if d["path"].startswith("lab/variants/"):
-            text = "".join(l for l in text.splitlines(keepends=True) if not l.lstrip().startswith("#"))
+        if d["path"].startswith("lab/variants/") and d.get("list"):
+            # 14 Nov: 2,400 variant texts were 1.2 MB of a data.json at 15.5 MB; the app rebuilds a variant's text
+            # from its `list`, section by section in the same order (app/lib.js, deckText).
+            text = ""
         d["text"] = text
 
     engine = {}
@@ -741,6 +749,19 @@ def main(argv):
                        # rules text for every card (~140 KB): the Cards drawer, the hover preview and the board's battlefield panel
                        **({"text": c["ability_text"]} if c.get("ability_text") else {})}
                       for c in reg.cards]}
+    # 14 Nov: every matchup row repeated its opponent's label and deck path (1.7 MB). A test now lists its opponents
+    # once (`opps`: [label, deck path]) and a matchup points at one (`o`); app/lib.js puts the two fields back on
+    # every matchup when it loads the data, so the views read them as before.
+    for tr in tests:
+        opps, seen = [], {}
+        for row in tr.get("decks") or []:
+            for m in row.get("matchups") or []:
+                key = (m.get("opponent"), m.get("opponent_deck"))
+                if key not in seen:
+                    seen[key] = len(opps); opps.append(list(key))
+                m["o"] = seen[key]; m.pop("opponent", None); m.pop("opponent_deck", None)
+        if opps:
+            tr["opps"] = opps
     (DIST / "data.json").write_text(json.dumps(data, separators=(",", ":")))
     for name in PAGE_FILES:
         shutil.copy(LAB / "dashboard" / name, DIST / name)

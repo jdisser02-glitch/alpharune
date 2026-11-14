@@ -37,10 +37,19 @@ export function cssOnce(url) {
 }
 
 // ── data ────────────────────────────────────────────────────────────────────
+/** A list as the deck files write it (sections in file order): data.json ships no text for generated variants. */
+const DECK_SECTIONS = [["legend", "Legend"], ["champion", "Champion"], ["maindeck", "MainDeck"], ["battlefields", "Battlefields"], ["runes", "Runes"], ["sideboard", "Sideboard"]];
+export const deckText = list => DECK_SECTIONS.filter(([k]) => list[k] && Object.keys(list[k]).length)
+  .map(([k, title]) => `${title}:\n${Object.entries(list[k]).map(([name, n]) => `${n} ${name}`).join("\n")}\n`).join("\n");
+/** data.json names a test's opponents once (`opps`: [label, deck path]); every matchup gets its two fields back here. */
+function expandOpponents(d) {
+  for (const t of d.tests || []) { if (!t.opps) continue;
+    for (const row of t.decks || []) for (const m of row.matchups || []) { const o = t.opps[m.o]; if (o) { m.opponent = o[0]; if (o[1] != null) m.opponent_deck = o[1]; } } }
+}
 let D = null, loading = null;
 /** The lab data (data.json). Resolves once; later calls return the same object. */
 export function loadData() {
-  if (!loading) loading = fetch("data.json").then(r => { if (!r.ok) throw new Error(`data.json: HTTP ${r.status}`); return r.json(); }).then(d => { D = d; index(d); return d; });
+  if (!loading) loading = fetch("data.json").then(r => { if (!r.ok) throw new Error(`data.json: HTTP ${r.status}`); return r.json(); }).then(d => { D = d; for (const k of d.decks || []) if (!k.text && k.list) k.text = deckText(k.list); expandOpponents(d); index(d); return d; });
   return loading;
 }
 /** Synchronous access after loadData() resolved (the router awaits it before rendering a view). */
