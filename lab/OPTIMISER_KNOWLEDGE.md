@@ -684,4 +684,14 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   list's measures are pooled only when the same pilot played them, the newest pilot deciding (Evelynn would have
   read +16.3, the mean of +21.6 under the old pilot and +8.5 under the new); Home's "best" and the Riven sentence
   on the Decks page no longer take another frame's reference for a searched list.
+- 14 Nov 12:35 UTC: nets committed since the start: Evelynn 024, Riven 126, Mordekaiser 090, Kai'Sa 030, Kennen 030
+  (Volibear is at iteration 142 on its 2 runners; its net 132 had already trained on variations). **Matrix m1
+  dispatched now rather than at 16:00** (decision: Volibear's post-ban net is the only one missing and matters
+  least): 15 lists (`lab/meta/postban_decks_m1.json`: round 1's best lists for Mordekaiser and Evelynn with the
+  earlier lists as extra rows of prior 0, Jeremy's Evelynn list and its six-swap version, Riven Deserter prior 30
+  and Shattered 10), 600 games a pair, **pilots at sims=16, worlds=4** (`meta_matrix.py specs --sims 16 --worlds 4`:
+  the cheap pilot cannot use reactive spells, which would tilt a matrix towards the decks of bodies), every list
+  under its legend's newest committed net. 15 requests, about 1.4 hours each.
+  **Mordekaiser confirm2 dispatched** (4 requests, full pilot spec_mordekaiser_090_v0, 2,400 games a list: Neal's
+  list, c1+9, c1+6).
 

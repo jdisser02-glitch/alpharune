@@ -35,11 +35,11 @@ sys.path.insert(0, str(ROOT / "lab" / "learn"))
 sys.path.insert(0, str(ROOT / "lab"))
 
 
-def pilots(decks, full):
+def pilots(decks, full, sims=None, worlds=None):
     import loop
     nets = loop.specialist_pilots()
     general = json.loads((ROOT / "lab/learn/ladder.json").read_text())["current_net"]
-    sims, worlds = (50, 8) if full else (4, 2)
+    sims, worlds = (sims, worlds) if sims else ((50, 8) if full else (4, 2))
     out = {}
     for d in decks:
         net = nets.get(loop.specialist_of_deck(d["deck"])) or general
@@ -47,12 +47,13 @@ def pilots(decks, full):
     return out
 
 
-def specs(tag, decks, games, full):
-    pil = pilots(decks, full)
+def specs(tag, decks, games, full, sims=None, worlds=None):
+    pil = pilots(decks, full, sims, worlds)
+    kind = f"sims={sims}, worlds={worlds}" if sims else ("full" if full else "cheap")
     for d in decks:
         t = {"name": f"meta-{tag}-row-{d['key']}",
              "description": f"Post-ban matchup matrix {tag} (lab/tools/meta_matrix.py): {d['label']} against the other "
-                            f"{len(decks) - 1} lists, {games} games per pair, {'full' if full else 'cheap'} pilots "
+                            f"{len(decks) - 1} lists, {games} games per pair, {kind} pilots "
                             f"(this list: {pil[d['key']][1]}).",
              "agent": pil[d["key"]][0], "opp_agent": pil[d["key"]][0], "games": games, "review_games": 0, "seed": 7001,
              "decks": [{"deck": d["deck"], "label": d["label"]}],
@@ -132,9 +133,12 @@ def main():
     ap.add_argument("cmd", choices=["specs", "solve"]); ap.add_argument("tag")
     ap.add_argument("--decks", required=True); ap.add_argument("--games", type=int, default=600)
     ap.add_argument("--full", action="store_true")
+    ap.add_argument("--sims", type=int, help="simulations a move (with --worlds); 14 Nov: the cheap pilot cannot use "
+                    "reactive spells, so a matrix that is read as a metagame takes at least 16 and 4")
+    ap.add_argument("--worlds", type=int, default=4)
     a = ap.parse_args()
     decks = json.loads((ROOT / a.decks).read_text())
-    specs(a.tag, decks, a.games, a.full) if a.cmd == "specs" else solve(a.tag, decks)
+    specs(a.tag, decks, a.games, a.full, a.sims, a.worlds if a.sims else None) if a.cmd == "specs" else solve(a.tag, decks)
 
 
 if __name__ == "__main__":
