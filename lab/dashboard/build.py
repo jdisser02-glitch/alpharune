@@ -71,10 +71,36 @@ def merged_parts():
     return parts
 
 
+STAGE_PART = re.compile(r"-(race\d+|cheaprace|confirm\d*|holdout)-[a-z0-9-]+$")
+
+
 def result_files():
-    """Result files, oldest first, without the parts of a merged result."""
+    """Result files, oldest first, without the parts of a merged result, and without the grouped parts of a search
+    stage (`<search>-<stage>-gN`: one machine's opponents; `deckopt.py rank` merges them into the stage's test)."""
     parts = merged_parts()
-    return [f for f in sorted((LAB / "results").glob("*.json")) if f.stem not in parts]
+    return [f for f in sorted((LAB / "results").glob("*.json"))
+            if f.stem not in parts and not re.search(r"-(race\d+|confirm\d*)-g\d+$", f.stem)]
+
+
+def not_a_rating(r):
+    """Why a multi-list result does not rate its lists (None when it does). Daily critic, 14 Nov: race stages,
+    cheap-pilot tests and frame tests were counted as "lists that beat the reference".
+      selection  a race of a list search: its leaders were picked on these very games;
+      part       one opponent's share of a stage, not merged yet;
+      cheap      played by the cheap pilot (pmcts with 8 simulations or fewer): it cannot use reactive spells, so
+                 its leads did not hold under the full pilot (Riven, 14 Nov);
+      other      not a comparison of searched lists (frame tests, the rows of a matchup matrix)."""
+    name = r.get("name", "")
+    if re.search(r"-(race\d+|cheaprace)(-|$)", name):
+        return "selection"
+    if STAGE_PART.search(name) and not r.get("merged_from"):
+        return "part"
+    if re.search(r"-frames\d*$", name) or name.startswith("meta-"):
+        return "other"
+    m = re.search(r"sims=(\d+)", r.get("agent", ""))
+    if m and int(m.group(1)) <= 8:
+        return "cheap"
+    return None
 
 
 def engine_since(when):
@@ -135,7 +161,7 @@ def measured_status(ladder: dict) -> dict:
             out["coverage"] = {"legends": jury, "games": got, "of": total, "share": round(got / total, 3) if total else None,
                                "file": cms[-1].name, "measured_utc": cm.get("measured_utc"), "matrix": Path(cm.get("matrix", "")).name,
                                "missing_top": [k for k, _ in sorted(real.items(), key=lambda kv: -kv[1]["games"]) if k != "Riven" and k not in jury][:4]}
-    def track(L, pause=None):
+    def track(L, pause, runners=20):
         its = L.get("iterations", [])
         since = 0
         for r in reversed(its):
@@ -146,7 +172,13 @@ def measured_status(ladder: dict) -> dict:
         recent = False
         if last:
             try:
-                recent = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(last)).total_seconds() < 3 * 3600
+                # "training" while the last iteration started less than three hours ago, or less than 2.5 times
+                # the longest of the last four iterations (14 Nov: 2 to 5 hours each on a share of the runners)
+                starts = [dt.datetime.fromisoformat(r["started_utc"]) for r in its[-5:] if r.get("started_utc")]
+                gaps = [(b - a).total_seconds() for a, b in zip(starts, starts[1:]) if 0 < (b - a).total_seconds() < 12 * 3600]
+                # (a track on a share of the 20 runners is slower in proportion: about 36 minutes on 20, 6 hours on 2)
+                window = max(3 * 3600, 2.5 * max(gaps[-4:] or [0]), 2.5 * 0.6 * 3600 * 20 / max(1, runners))
+                recent = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(last)).total_seconds() < window
             except ValueError:
                 pass
         paused = bool(pause and pause.exists())
@@ -171,7 +203,9 @@ def measured_status(ladder: dict) -> dict:
         return t
     out["training"] = {"general": track(ladder, LAB / "learn" / "PAUSE"), "specialists": {}}
     for f in sorted((LAB / "learn" / "specialists").glob("*/ladder.json")):
-        out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()), f.parent / "PAUSE")
+        spec_file = LAB / "specs" / f"train_spec_{f.parent.name}.json"
+        runners = int(json.loads(spec_file.read_text()).get("runners", 20)) if spec_file.exists() else 20
+        out["training"]["specialists"][f.parent.name] = track(json.loads(f.read_text()), f.parent / "PAUSE", runners)
     confirmed = []
     for f in result_files():
         r = json.loads(f.read_text())
@@ -255,14 +289,19 @@ def measured_status(ladder: dict) -> dict:
             {"result": stem, "net": net_of(r.get("agent", "")), "started_utc": r.get("started_utc"), "reference": decks[0].get("label"),
              # A race of a card-level search (lab/deckopt.py) picks its leaders on these very games: it is a
              # selection stage, never a rating (its leads are inflated). Only confirmations rate a list.
-             "selection": bool(re.search(r"-(race\d+|cheaprace)(-|$)", r.get("name", ""))),
+             "selection": bool(not_a_rating(r)), "kind": not_a_rating(r),
              "reference_path": decks[0].get("path"), "reference_rate": round(b_rate, 4), "lists": rows, "jury_legends": legends,
              "legend": sorted(legs)[0] if len(legs) == 1 else None})
-    comparisons = sorted(comparisons + ga_comps, key=lambda c: str(c.get("started_utc") or ""))
+    all_riven = sorted(comparisons + ga_comps, key=lambda c: str(c.get("started_utc") or ""))
+    # Home speaks of rated lists only: races, cheap-pilot tests, unmerged parts and frame tests stay on their own
+    # test pages (by_result below), flagged, and never feed "newest check", "best" or "lists that beat the reference".
+    comparisons = [c for c in all_riven if not c.get("selection")]
     for c in comparisons:
         if c.get("ga"):
             continue            # already counted from the search's own confirmation above
         for row in c["lists"]:
+            if str(row.get("label") or "").lower().startswith("reference"):
+                continue        # another frame's reference shown as a yardstick: not a searched list
             if row["ci95"][0] > 0:
                 confirmed.append({"result": c["result"], "label": row["label"], "diff": row["diff"], "ci95": row["ci95"], "net": c["net"]})
     # Only a confirmation played by a net still in use counts (an older bot misjudged the matchups it was played on).
@@ -303,7 +342,7 @@ def measured_status(ladder: dict) -> dict:
     # per list file, so a page that quotes the search's own confirmation can say what the re-test found.
     # Every legend's lists count here (a Volibear finalist re-measured in a Volibear test), newest last.
     retests = {}
-    every = sorted(plain + other_comps, key=lambda c: str(c.get("started_utc") or ""))
+    every = sorted([c for c in all_riven if not c.get("ga")] + other_comps, key=lambda c: str(c.get("started_utc") or ""))
     for c in every:
         if c.get("selection"):
             continue
@@ -330,7 +369,7 @@ def measured_status(ladder: dict) -> dict:
     # A multi-list test's own comparison (each list against the test's first list, same deals), by result id: the
     # test page states that, not "best of N" against whichever list came last.
     by_result = {c["result"]: {"reference": c["reference"], "reference_rate": c["reference_rate"], "lists": c["lists"],
-                               "net": c["net"], "legend": c.get("legend"), "selection": bool(c.get("selection")),
+                               "net": c["net"], "legend": c.get("legend"), "selection": bool(c.get("selection")), "kind": c.get("kind"),
                                "engine_commits_since": engine_since(c.get("started_utc"))}
                  for c in every}
     # The Decks page's optimiser tab for every legend but Riven (Riven's follows `comparisons` above): the lists of
@@ -345,11 +384,15 @@ def measured_status(ladder: dict) -> dict:
     for leg, cs in by_legend.items():
         last = cs[-1]
         rows = {}
+        # (14 Nov: every pilot's confirmations against the same reference count, so the list a legend already had
+        # stays on the page next to a newcomer measured by a newer pilot; each row says which pilots measured it)
         for c in cs:
-            if c["net"] != last["net"] or c.get("reference_path") != last.get("reference_path"):
+            if c.get("reference_path") != last.get("reference_path"):
                 continue
             for row in c["lists"]:
-                rows.setdefault(digest(row.get("path")) or row.get("path"), []).append({**row, "result": c["result"]})
+                if str(row.get("label") or "").lower().startswith("reference"):
+                    continue
+                rows.setdefault(digest(row.get("path")) or row.get("path"), []).append({**row, "result": c["result"], "net": c["net"]})
         pooled_rows = []
         for ms in rows.values():
             ws = [1 / max(1e-9, ((m["ci95"][1] - m["ci95"][0]) / 3.92) ** 2) for m in ms]
@@ -358,7 +401,8 @@ def measured_status(ladder: dict) -> dict:
             newest = ms[-1]
             pooled_rows.append({"path": newest.get("path"), "label": newest.get("label"), "diff": round(diff, 4),
                                 "ci95": [round(diff - 1.96 * se, 4), round(diff + 1.96 * se, 4)],
-                                "rate": newest.get("rate"), "measures": len(ms), "results": [m["result"] for m in ms]})
+                                "rate": newest.get("rate"), "measures": len(ms), "results": [m["result"] for m in ms],
+                                "nets": sorted({m["net"] for m in ms}), "same_deals_as": sorted({m["result"] for m in ms})})
         if not any(str(x.get("path") or "").startswith("lab/variants/") for x in pooled_rows):
             continue            # two community lists compared: no search behind it, so not on the optimiser tab
         # A search's stages call the reference list just "reference": show the name earlier tests gave that file.
@@ -512,8 +556,21 @@ def deck_legend(path: str, label: str = ""):
                 for nxt in lines[i + 1:i + 4]:
                     m = re.match(r"\s*\d+\s+([^,]+)", nxt)
                     if m:
-                        return m.group(1).strip()
+                        # a file written by the lab's tools names the legend card alone ("Iron Revenant"): the
+                        # champion's name is that card's tag ("Mordekaiser")
+                        return _legend_tag().get(m.group(1).strip().lower(), m.group(1).strip())
     return riftlab_legend(path) or riftlab_legend(label.replace(" ", "_"))
+
+
+_LEGEND_TAG = {}
+
+
+def _legend_tag():
+    if not _LEGEND_TAG:
+        for c in riftlab.Registry.load().cards:
+            if c.get("card_type") == "legend" and c.get("tags"):
+                _LEGEND_TAG[c["name"].lower()] = c["tags"][0]
+    return _LEGEND_TAG
 
 
 def riftlab_legend(path: str):

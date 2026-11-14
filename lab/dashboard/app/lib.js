@@ -338,7 +338,10 @@ export function testConclusion(t) {
     const since = C.engine_commits_since ? ` ${C.engine_commits_since} engine change${C.engine_commits_since > 1 ? "s" : ""} since.` : "";
     return `${n} lists on the same deals. Reference: ${C.reference} at ${pct0(C.reference_rate)}. `
       + C.lists.map(x => `${x.label} ${sg(x.diff)} points [${sg(x.ci95[0])}, ${sg(x.ci95[1])}], ${word(x)}`).join("; ") + "."
-      + (C.selection ? " This is a selection stage of a list search: its leaders were picked on these very games, so their leads are inflated. Only the search's confirmation, on new deals, rates a list." : "") + playedBy + since;
+      + ({ selection: " This is a selection stage of a list search: its leaders were picked on these very games, so their leads are inflated. Only the search's confirmation, on new deals, rates a list.",
+          part: " This is one machine's share of a stage, not merged with the others yet: it rates nothing by itself.",
+          cheap: " Played by the cheap pilot (a few simulations a move): it cannot use reactive spells, and its leads have not held under the full pilot. Not a rating.",
+          other: " This test compares set-ups (battlefields, runes) or fills a matchup matrix: it does not rate searched lists." }[C.kind || (C.selection ? "selection" : "")] || "") + playedBy + since;
   }
   const base = ranked.find(d => isBaseLabel(d.label)) || ranked[ranked.length - 1];
   const bp = pooled(base), sep = overlaps(tp.ci, bp.ci) ? "their intervals overlap, so the gap is not yet established" : "the intervals do not overlap";

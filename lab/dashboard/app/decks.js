@@ -98,11 +98,18 @@ function picker() {
           // difference with it is inside the noise is "as good"; the rest are no better, or worse, than the reference.
           const top = ls[0], se = x => (x.ci95[1] - x.ci95[0]) / 3.92, refName = String(o.reference || "the reference").replace(/\s*\(reference\)\s*$/, "");
           const proven = top.ci95[0] > 0, nameOf = x => { const d = deckByPath(x.path); return d ? name(d) : x.label; };
+          // "Best" is said only when the first list is separated from every other one; lists too close to tell apart
+          // are named together (14 Nov: a newcomer measured by a newer pilot was called best over the list in use).
+          const close = x => (top.diff - x.diff) - 1.96 * Math.hypot(se(top), se(x)) <= 0;
+          const tied = ls.some((x, i) => i > 0 && x.ci95[0] > 0 && close(x));
+          const pilots = [...new Set(ls.flatMap(x => x.nets || []))];
           const kind = (x, i) => x.ci95[1] < 0 ? ["worse than " + refName, "loss"] : x.ci95[0] <= 0 ? ["no better than " + refName, "neutral"]
-            : i === 0 ? ["best: play this one", "gold"] : (top.diff - x.diff) - 1.96 * Math.hypot(se(top), se(x)) <= 0 ? ["as good as the best", "win"] : ["better than " + refName + ", below the best", "win"];
-          const same = ls.filter((x, i) => i > 0 && kind(x, i)[0].startsWith("as good")).length;
+            : i === 0 ? [tied ? "ahead, not separated from the next" : "best: play this one", tied ? "win" : "gold"] : close(x) ? ["as good as the first", "win"] : ["better than " + refName + ", below the first", "win"];
+          const same = ls.filter((x, i) => i > 0 && x.ci95[0] > 0 && close(x)).length;
           const note = proven
-            ? `The list to play is the first one, ${nameOf(top)} (${top.label}): ${sg(top.diff)} points [${sg(top.ci95[0])}, ${sg(top.ci95[1])}] against ${refName}${top.measures > 1 ? `, measured ${top.measures} times` : ""}.${same ? ` The next ${same} ${same > 1 ? "are" : "is"} too close to it to tell apart.` : ""} Played by ${o.net}${o.stale ? ", a net no longer in use" : ""}${o.engine_commits_since ? `, before ${o.engine_commits_since} engine change${o.engine_commits_since > 1 ? "s" : ""}` : ""}.`
+            ? (tied ? `No single best: the first ${ls.filter((x, k) => k === 0 || (x.ci95[0] > 0 && close(x))).length} lists are too close to tell apart (first: ${nameOf(top)}, ${sg(top.diff)} points [${sg(top.ci95[0])}, ${sg(top.ci95[1])}] against ${refName}). Keep the one you already play among them.`
+                    : `The list to play is the first one, ${nameOf(top)} (${top.label}): ${sg(top.diff)} points [${sg(top.ci95[0])}, ${sg(top.ci95[1])}] against ${refName}${top.measures > 1 ? `, measured ${top.measures} times` : ""}.`)
+              + ` Played by ${pilots.length > 1 ? "several pilots (" + pilots.join(", ") + "): differences between lists measured by different pilots are indications only" : o.net}${o.stale ? ", a net no longer in use" : ""}.`
             : `No list is shown better than ${refName}: keep ${refName}. Played by ${o.net}${o.stale ? ", a net no longer in use" : ""}.`;
           return sec(leg, note, ls.map((x, i) => { const d = deckByPath(x.path), [txt, tone] = kind(x, i); return `<div class="stack tight">${tile(d)}<span style="padding:0 6px">${badge(txt, tone)}</span><span class="xs muted" style="padding:0 6px">${esc(x.label || "")} · ${sg(x.diff)} [${sg(x.ci95[0])}, ${sg(x.ci95[1])}]${x.measures > 1 ? ` · ${x.measures} measures` : ""}</span></div>`; }).join("")); }).join("");
   } else body = `<div class="dk-tiles">${list.map(tile).join("")}</div>`;

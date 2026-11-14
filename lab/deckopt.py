@@ -506,6 +506,10 @@ def rank(spec: dict, stage: str) -> int:
     rows.sort(key=lambda x: -x["shrunk"])
     out = {"stage": stage, "reference_rate": r0, "real_spread_points": 100 * math.sqrt(A), "ranking": rows}
     (out_dir(spec) / f"{stage}-rank.json").write_text(json.dumps(out, indent=1))
+    # The stage as one test for the dashboard (its per-machine parts are not tests of their own).
+    import subprocess
+    subprocess.run([sys.executable, str(LAB / "tools" / "merge_results.py"), f"{spec['name']}-{stage}", "--write"],
+                   cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print(f"stage {stage}: reference {100 * r0:.1f}%; the lists really differ by about {100 * math.sqrt(A):.1f} points (spread minus noise)")
     for x in rows:
         if x["label"] == "reference":

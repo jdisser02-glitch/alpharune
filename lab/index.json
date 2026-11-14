@@ -1,7 +1,52 @@
 {
-"generated_utc": "2026-11-14T06:13:28+00:00",
-"engine_commit": "4523cf1",
+"generated_utc": "2026-11-14T06:25:00+00:00",
+"engine_commit": "3040d1c",
 "tests": [
+{
+"id": "20261114-053426-volibear-postban-confirm",
+"file": "lab/results/20261114-053426-volibear-postban-confirm.json",
+"name": "volibear-postban-confirm",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. Merged from 4 requests, one per opponent.",
+"started_utc": "2026-11-14T03:40:45+00:00",
+"finished_utc": "2026-11-14T05:34:26+00:00",
+"engine_commit": "d0b3926",
+"agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=8,settle=60",
+"opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+"games_per_matchup": 1038,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.8546,
+"games": 3598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9224,
+"games": 3598,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9174,
+"games": 3598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
 {
 "id": "20261114-050950-riven-postban-deserter-confirm",
 "file": "lab/results/20261114-050950-riven-postban-deserter-confirm.json",
@@ -319,6 +364,72 @@
 ],
 "opponents": [
 "Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-031951-volibear-postban-race2",
+"file": "lab/results/20261114-031951-volibear-postban-race2.json",
+"name": "volibear-postban-race2",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+"started_utc": "2026-11-14T02:39:44+00:00",
+"finished_utc": "2026-11-14T03:19:51+00:00",
+"engine_commit": "28743c4",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.8663,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9285,
+"games": 9598,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.9212,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9264,
+"games": 9598,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.9117,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.9216,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
 ]
 },
 {
@@ -917,6 +1028,194 @@
 ]
 },
 {
+"id": "20261114-015738-volibear-postban-race1",
+"file": "lab/results/20261114-015738-volibear-postban-race1.json",
+"name": "volibear-postban-race1",
+"description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. Merged from 2 requests, one per opponent.",
+"started_utc": "2026-11-14T01:25:49+00:00",
+"finished_utc": "2026-11-14T01:57:38+00:00",
+"engine_commit": "20d6677",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+"weighted_win_rate": 0.8672,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/volibear-postban-cand-centre1.txt",
+"weighted_win_rate": 0.9267,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/volibear-postban-cand-centre2.txt",
+"weighted_win_rate": 0.9088,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/volibear-postban-cand-centre3.txt",
+"weighted_win_rate": 0.9238,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/volibear-postban-cand-centre4.txt",
+"weighted_win_rate": 0.9138,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/volibear-postban-cand-refp2.txt",
+"weighted_win_rate": 0.8809,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/volibear-postban-cand-refp4.txt",
+"weighted_win_rate": 0.901,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/volibear-postban-cand-refp6.txt",
+"weighted_win_rate": 0.9159,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/volibear-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.9221,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/volibear-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.9088,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/volibear-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8942,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/volibear-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8609,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/volibear-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.9267,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/volibear-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.9288,
+"games": 2400,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Mordekaiser (Neal)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)"
+]
+},
+{
+"id": "20261114-013346-riven-postban-deserter-race2",
+"file": "lab/results/20261114-013346-riven-postban-deserter-race2.json",
+"name": "riven-postban-deserter-race2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+"started_utc": "2026-11-14T00:39:50+00:00",
+"finished_utc": "2026-11-14T01:33:46+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.6791,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.7816,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.7596,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.7334,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.7272,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.7097,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
 "id": "20261114-013303-evelynn-postban-confirm-g4",
 "file": "lab/results/20261114-013303-evelynn-postban-confirm-g4.json",
 "name": "evelynn-postban-confirm-g4",
@@ -1020,6 +1319,72 @@
 ],
 "opponents": [
 "Master Yi (PCQ, post-ban)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-013247-riven-postban-shattered-race2",
+"file": "lab/results/20261114-013247-riven-postban-shattered-race2.json",
+"name": "riven-postban-shattered-race2",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+"started_utc": "2026-11-14T00:39:20+00:00",
+"finished_utc": "2026-11-14T01:32:47+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5748,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.7082,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.6767,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.654,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.6088,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.6208,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
 "Riven Shattered (post-ban frame)",
 "Volibear (lab's post-ban list)"
 ]
@@ -1518,6 +1883,138 @@
 ],
 "opponents": [
 "Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-012246-evelynn-postban-race2",
+"file": "lab/results/20261114-012246-evelynn-postban-race2.json",
+"name": "evelynn-postban-race2",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+"started_utc": "2026-11-14T00:37:00+00:00",
+"finished_utc": "2026-11-14T01:22:46+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.5698,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7892,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.7472,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.7547,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.7417,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.7418,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-011252-mordekaiser-postban-race2",
+"file": "lab/results/20261114-011252-mordekaiser-postban-race2.json",
+"name": "mordekaiser-postban-race2",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+"started_utc": "2026-11-14T00:35:50+00:00",
+"finished_utc": "2026-11-14T01:12:52+00:00",
+"engine_commit": "00252cb",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 2766,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.7892,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.8873,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8767,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8709,
+"games": 9598,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8648,
+"games": 9598,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8637,
+"games": 9598,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
 ]
 },
 {
@@ -2246,6 +2743,403 @@
 "opponents": [
 "Akali (Vincent Nguyen, post-ban)",
 "Kai'Sa (Jason Tian, post-ban)"
+]
+},
+{
+"id": "20261114-000809-mordekaiser-postban-race1",
+"file": "lab/results/20261114-000809-mordekaiser-postban-race1.json",
+"name": "mordekaiser-postban-race1",
+"description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race1: 13 lists on the same seeds, 2400 games per list shared out by the opponents' weights. Merged from 2 requests, one per opponent.",
+"started_utc": "2026-11-13T23:31:56+00:00",
+"finished_utc": "2026-11-14T00:08:09+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+"weighted_win_rate": 0.7967,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/mordekaiser-postban-cand-centre1.txt",
+"weighted_win_rate": 0.8001,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/mordekaiser-postban-cand-centre2.txt",
+"weighted_win_rate": 0.8092,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/mordekaiser-postban-cand-centre3.txt",
+"weighted_win_rate": 0.8021,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/mordekaiser-postban-cand-refp2.txt",
+"weighted_win_rate": 0.8258,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/mordekaiser-postban-cand-refp4.txt",
+"weighted_win_rate": 0.8612,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+"weighted_win_rate": 0.8687,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/mordekaiser-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.8421,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.8625,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.8807,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.885,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/mordekaiser-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.855,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+"weighted_win_rate": 0.8762,
+"games": 2400,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261114-000740-riven-postban-shattered-race1",
+"file": "lab/results/20261114-000740-riven-postban-shattered-race1.json",
+"name": "riven-postban-shattered-race1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. Merged from 2 requests, one per opponent.",
+"started_utc": "2026-11-13T23:35:35+00:00",
+"finished_utc": "2026-11-14T00:07:40+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_shattered.txt",
+"weighted_win_rate": 0.5716,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-shattered-cand-centre2.txt",
+"weighted_win_rate": 0.5616,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-shattered-cand-centre3.txt",
+"weighted_win_rate": 0.5384,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-shattered-cand-centre4.txt",
+"weighted_win_rate": 0.5071,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+"weighted_win_rate": 0.6125,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+"weighted_win_rate": 0.625,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+"weighted_win_rate": 0.6713,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+"weighted_win_rate": 0.7058,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-shattered-cand-c2p3.txt",
+"weighted_win_rate": 0.5946,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+"weighted_win_rate": 0.6383,
+"games": 2400,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-235939-riven-postban-deserter-race1",
+"file": "lab/results/20261113-235939-riven-postban-deserter-race1.json",
+"name": "riven-postban-deserter-race1",
+"description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Deserter: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. Merged from 2 requests, one per opponent.",
+"started_utc": "2026-11-13T23:36:58+00:00",
+"finished_utc": "2026-11-13T23:59:39+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/postban/riven_frame_deserter.txt",
+"weighted_win_rate": 0.6763,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre2",
+"path": "lab/variants/riven-postban-deserter-cand-centre2.txt",
+"weighted_win_rate": 0.68,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre3",
+"path": "lab/variants/riven-postban-deserter-cand-centre3.txt",
+"weighted_win_rate": 0.6717,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre4",
+"path": "lab/variants/riven-postban-deserter-cand-centre4.txt",
+"weighted_win_rate": 0.6458,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/riven-postban-deserter-cand-refp2.txt",
+"weighted_win_rate": 0.7137,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/riven-postban-deserter-cand-refp4.txt",
+"weighted_win_rate": 0.7225,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/riven-postban-deserter-cand-refp6.txt",
+"weighted_win_rate": 0.7658,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/riven-postban-deserter-cand-c1p9.txt",
+"weighted_win_rate": 0.7833,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/riven-postban-deserter-cand-c2p3.txt",
+"weighted_win_rate": 0.6487,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+6",
+"path": "lab/variants/riven-postban-deserter-cand-c2p6.txt",
+"weighted_win_rate": 0.7354,
+"games": 2400,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
+]
+},
+{
+"id": "20261113-235219-evelynn-postban-race1",
+"file": "lab/results/20261113-235219-evelynn-postban-race1.json",
+"name": "evelynn-postban-race1",
+"description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage race1: 10 lists on the same seeds, 2400 games per list shared out by the opponents' weights. Merged from 2 requests, one per opponent.",
+"started_utc": "2026-11-13T23:33:41+00:00",
+"finished_utc": "2026-11-13T23:52:19+00:00",
+"engine_commit": "9527b53",
+"agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=2,settle=60",
+"opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+"games_per_matchup": 692,
+"decks": [
+{
+"label": "reference",
+"path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+"weighted_win_rate": 0.5644,
+"games": 2400,
+"errors": []
+},
+{
+"label": "centre1",
+"path": "lab/variants/evelynn-postban-cand-centre1.txt",
+"weighted_win_rate": 0.6715,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+2",
+"path": "lab/variants/evelynn-postban-cand-refp2.txt",
+"weighted_win_rate": 0.7072,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+4",
+"path": "lab/variants/evelynn-postban-cand-refp4.txt",
+"weighted_win_rate": 0.7389,
+"games": 2400,
+"errors": []
+},
+{
+"label": "ref+6",
+"path": "lab/variants/evelynn-postban-cand-refp6.txt",
+"weighted_win_rate": 0.7614,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+2",
+"path": "lab/variants/evelynn-postban-cand-c1p2.txt",
+"weighted_win_rate": 0.6994,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+4",
+"path": "lab/variants/evelynn-postban-cand-c1p4.txt",
+"weighted_win_rate": 0.731,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+6",
+"path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+"weighted_win_rate": 0.7464,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c1+9",
+"path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+"weighted_win_rate": 0.7914,
+"games": 2400,
+"errors": []
+},
+{
+"label": "c2+3",
+"path": "lab/variants/evelynn-postban-cand-c2p3.txt",
+"weighted_win_rate": 0.7301,
+"games": 2400,
+"errors": []
+}
+],
+"opponents": [
+"Akali (Vincent Nguyen, post-ban)",
+"Kai'Sa (Jason Tian, post-ban)",
+"Kennen (zombro, post-ban)",
+"Master Yi (PCQ, post-ban)",
+"Rek'Sai (Rajan Nandan)",
+"Riven Deserter (post-ban frame)",
+"Riven Shattered (post-ban frame)",
+"Volibear (lab's post-ban list)"
 ]
 },
 {

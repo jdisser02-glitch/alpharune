@@ -1,0 +1,2877 @@
+{
+ "id": "20261114-011252-mordekaiser-postban-race2",
+ "name": "mordekaiser-postban-race2",
+ "description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. Merged from 3 requests, one per opponent.",
+ "started_utc": "2026-11-14T00:35:50+00:00",
+ "engine_commit": "00252cb",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games_per_matchup": 2766,
+ "threads": 4,
+ "seed": 6112,
+ "spec": {
+  "name": "mordekaiser-postban-race2",
+  "description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+  "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60",
+  "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+  "games": 2766,
+  "review_games": 0,
+  "seed": 6112,
+  "decks": [
+   {
+    "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+    "label": "c1+6"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+    "label": "c2+6"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+    "label": "ref+6"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+    "label": "c1+4"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+    "label": "Kai'Sa (Jason Tian, post-ban)",
+    "weight": 51,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60",
+    "games": 2766
+   },
+   {
+    "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+    "label": "Akali (Vincent Nguyen, post-ban)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+    "games": 434
+   },
+   {
+    "deck": "lab/decks/postban/kennen_zombro.txt",
+    "label": "Kennen (zombro, post-ban)",
+    "weight": 44,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+    "games": 2386
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+    "label": "Rek'Sai (Rajan Nandan)",
+    "weight": 10,
+    "games": 542
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-best.txt",
+    "label": "Volibear (lab's post-ban list)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60",
+    "games": 434
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven Shattered (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+    "games": 1084
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "Riven Deserter (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+    "games": 1084
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "games": 868
+   }
+  ],
+  "threads": 4
+ },
+ "merged_from": [
+  "20261114-003550-mordekaiser-postban-race2-g1",
+  "20261114-003631-mordekaiser-postban-race2-g2",
+  "20261114-003650-mordekaiser-postban-race2-g3"
+ ],
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+   "hash": "a29499c6a6",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 2,
+     "2": 21,
+     "3": 4,
+     "4": 6,
+     "5": 4,
+     "6": 2,
+     "7": 1
+    },
+    "types": {
+     "unit": 25,
+     "spell": 13,
+     "gear": 2
+    },
+    "power_symbols": {
+     "fury": 21,
+     "order": 10
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 7,
+     "Action": 3,
+     "Hidden": 2,
+     "Reaction": 13,
+     "Ganking": 3,
+     "Deflect": 6
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Deathgrip",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Falling Star",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Honest Broker",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Long Sword",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Perfect Execution",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rek'Sai, Swarm Queen",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 2,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2198,
+     "win_rate": 0.7946,
+     "ci95": [
+      0.7792,
+      0.8093
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1026
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1172
+     },
+     "avg_turns": 13,
+     "wall_s": 408.9,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 414,
+     "win_rate": 0.9539,
+     "ci95": [
+      0.9299,
+      0.97
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 204
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 210
+     },
+     "avg_turns": 13,
+     "wall_s": 55.4,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/reference__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2276,
+     "win_rate": 0.9539,
+     "ci95": [
+      0.9447,
+      0.9616
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1145
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1131
+     },
+     "avg_turns": 12,
+     "wall_s": 312.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 483,
+     "win_rate": 0.8911,
+     "ci95": [
+      0.8621,
+      0.9147
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 233
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 250
+     },
+     "avg_turns": 12,
+     "wall_s": 54.9,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 111,
+     "win_rate": 0.2558,
+     "ci95": [
+      0.217,
+      0.2988
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 43
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 68
+     },
+     "avg_turns": 14,
+     "wall_s": 58.4,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/reference__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 757,
+     "win_rate": 0.6983,
+     "ci95": [
+      0.6704,
+      0.7249
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 369
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 388
+     },
+     "avg_turns": 12,
+     "wall_s": 117.1,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 650,
+     "win_rate": 0.5996,
+     "ci95": [
+      0.5702,
+      0.6284
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 300
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 350
+     },
+     "avg_turns": 12,
+     "wall_s": 124.8,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 686,
+     "win_rate": 0.7903,
+     "ci95": [
+      0.762,
+      0.8161
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 339
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 347
+     },
+     "avg_turns": 13,
+     "wall_s": 91.5,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/reference__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.7892
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+   "hash": "9606784ccf",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.12,
+    "curve": {
+     "1": 2,
+     "2": 17,
+     "3": 7,
+     "4": 7,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 30,
+     "spell": 10
+    },
+    "power_symbols": {
+     "fury": 16,
+     "order": 9
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 7,
+     "Deflect": 6,
+     "Hidden": 6,
+     "Action": 3,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 19,
+    "list": [
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Noxus Hopeful",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2703,
+     "win_rate": 0.9772,
+     "ci95": [
+      0.971,
+      0.9822
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1345
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1358
+     },
+     "avg_turns": 11,
+     "wall_s": 294.6,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 431,
+     "win_rate": 0.9931,
+     "ci95": [
+      0.9799,
+      0.9976
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 215
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 216
+     },
+     "avg_turns": 12,
+     "wall_s": 39.0,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-9__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2383,
+     "win_rate": 0.9987,
+     "ci95": [
+      0.9963,
+      0.9996
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1192
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1191
+     },
+     "avg_turns": 11,
+     "wall_s": 198.0,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 471,
+     "win_rate": 0.869,
+     "ci95": [
+      0.838,
+      0.8948
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 238
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 233
+     },
+     "avg_turns": 12,
+     "wall_s": 61.0,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 226,
+     "win_rate": 0.5207,
+     "ci95": [
+      0.4738,
+      0.5674
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 99
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 127
+     },
+     "avg_turns": 13,
+     "wall_s": 56.3,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-9__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 849,
+     "win_rate": 0.7832,
+     "ci95": [
+      0.7577,
+      0.8067
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 414
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 435
+     },
+     "avg_turns": 12,
+     "wall_s": 113.3,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 814,
+     "win_rate": 0.7509,
+     "ci95": [
+      0.7243,
+      0.7758
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 399
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 415
+     },
+     "avg_turns": 12,
+     "wall_s": 122.6,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 639,
+     "win_rate": 0.7362,
+     "ci95": [
+      0.7059,
+      0.7644
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 318
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 321
+     },
+     "avg_turns": 12,
+     "wall_s": 101.2,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-9__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8873,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1631,
+    "ci95": [
+     0.149,
+     0.1773
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+6",
+   "path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+   "hash": "0d90eea317",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 4,
+     "2": 17,
+     "3": 7,
+     "4": 5,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 27,
+     "gear": 2,
+     "spell": 11
+    },
+    "power_symbols": {
+     "fury": 16,
+     "order": 10
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 5,
+     "Deflect": 5,
+     "Hidden": 6,
+     "Action": 4,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 21,
+    "list": [
+     {
+      "name": "Concert Poster",
+      "count": 2,
+      "type": "gear",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Noxus Hopeful",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2675,
+     "win_rate": 0.9671,
+     "ci95": [
+      0.9598,
+      0.9731
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1331
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1344
+     },
+     "avg_turns": 12,
+     "wall_s": 311.2,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 428,
+     "win_rate": 0.9862,
+     "ci95": [
+      0.9702,
+      0.9936
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 215
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 213
+     },
+     "avg_turns": 12,
+     "wall_s": 42.9,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2377,
+     "win_rate": 0.9962,
+     "ci95": [
+      0.9928,
+      0.998
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1190
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1187
+     },
+     "avg_turns": 11,
+     "wall_s": 207.9,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 459,
+     "win_rate": 0.8469,
+     "ci95": [
+      0.8141,
+      0.8747
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 229
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 230
+     },
+     "avg_turns": 12,
+     "wall_s": 62.5,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 225,
+     "win_rate": 0.5184,
+     "ci95": [
+      0.4715,
+      0.5651
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 111
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 114
+     },
+     "avg_turns": 13,
+     "wall_s": 56.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-6__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 868,
+     "win_rate": 0.8007,
+     "ci95": [
+      0.7759,
+      0.8234
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 438
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 430
+     },
+     "avg_turns": 12,
+     "wall_s": 113.6,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 775,
+     "win_rate": 0.7149,
+     "ci95": [
+      0.6873,
+      0.741
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 381
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 394
+     },
+     "avg_turns": 12,
+     "wall_s": 121.7,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 608,
+     "win_rate": 0.7005,
+     "ci95": [
+      0.6692,
+      0.73
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 306
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 302
+     },
+     "avg_turns": 12,
+     "wall_s": 101.3,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8767,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1534,
+    "ci95": [
+     0.1389,
+     0.168
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c2+6",
+   "path": "lab/variants/mordekaiser-postban-cand-c2p6.txt",
+   "hash": "d3f6e9393e",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.92,
+    "curve": {
+     "1": 5,
+     "2": 16,
+     "3": 8,
+     "4": 4,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 26,
+     "spell": 11,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 17,
+     "order": 10
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 5,
+     "Deflect": 4,
+     "Action": 5,
+     "Hidden": 6,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 21,
+    "list": [
+     {
+      "name": "Cleave",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Concert Poster",
+      "count": 3,
+      "type": "gear",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Sacrifice",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2640,
+     "win_rate": 0.9544,
+     "ci95": [
+      0.946,
+      0.9616
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1303
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1337
+     },
+     "avg_turns": 12,
+     "wall_s": 327.9,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 428,
+     "win_rate": 0.9862,
+     "ci95": [
+      0.9702,
+      0.9936
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 216
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 212
+     },
+     "avg_turns": 12,
+     "wall_s": 46.2,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c2-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2371,
+     "win_rate": 0.9937,
+     "ci95": [
+      0.9897,
+      0.9962
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1183
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1188
+     },
+     "avg_turns": 11,
+     "wall_s": 224.0,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 432,
+     "win_rate": 0.797,
+     "ci95": [
+      0.7612,
+      0.8288
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 204
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 228
+     },
+     "avg_turns": 12,
+     "wall_s": 60.0,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 217,
+     "win_rate": 0.5,
+     "ci95": [
+      0.4532,
+      0.5468
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 99
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 118
+     },
+     "avg_turns": 13,
+     "wall_s": 57.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c2-6__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 860,
+     "win_rate": 0.7934,
+     "ci95": [
+      0.7682,
+      0.8164
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 440
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 420
+     },
+     "avg_turns": 12,
+     "wall_s": 109.1,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 800,
+     "win_rate": 0.738,
+     "ci95": [
+      0.711,
+      0.7633
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 384
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 416
+     },
+     "avg_turns": 12,
+     "wall_s": 118.0,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 611,
+     "win_rate": 0.7039,
+     "ci95": [
+      0.6727,
+      0.7333
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 303
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 308
+     },
+     "avg_turns": 12,
+     "wall_s": 99.8,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c2p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/mordekaiser-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c2-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8709,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1425,
+    "ci95": [
+     0.1275,
+     0.1575
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+6",
+   "path": "lab/variants/mordekaiser-postban-cand-refp6.txt",
+   "hash": "9d641babf4",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 2,
+     "2": 20,
+     "3": 6,
+     "4": 6,
+     "5": 2,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 29,
+     "spell": 11
+    },
+    "power_symbols": {
+     "fury": 19,
+     "order": 8
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 7,
+     "Deflect": 6,
+     "Hidden": 5,
+     "Action": 3,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 22,
+    "list": [
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Honest Broker",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2652,
+     "win_rate": 0.9588,
+     "ci95": [
+      0.9507,
+      0.9656
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1313
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1339
+     },
+     "avg_turns": 11,
+     "wall_s": 296.4,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 428,
+     "win_rate": 0.9862,
+     "ci95": [
+      0.9702,
+      0.9936
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 213
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 215
+     },
+     "avg_turns": 12,
+     "wall_s": 41.3,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/ref-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2376,
+     "win_rate": 0.9958,
+     "ci95": [
+      0.9923,
+      0.9977
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1188
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1188
+     },
+     "avg_turns": 11,
+     "wall_s": 208.8,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 457,
+     "win_rate": 0.8432,
+     "ci95": [
+      0.8102,
+      0.8714
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 231
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 226
+     },
+     "avg_turns": 12,
+     "wall_s": 59.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 200,
+     "win_rate": 0.4608,
+     "ci95": [
+      0.4145,
+      0.5079
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 90
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 110
+     },
+     "avg_turns": 13,
+     "wall_s": 54.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/ref-6__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 817,
+     "win_rate": 0.7537,
+     "ci95": [
+      0.7272,
+      0.7784
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 398
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 419
+     },
+     "avg_turns": 12,
+     "wall_s": 109.8,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 753,
+     "win_rate": 0.6946,
+     "ci95": [
+      0.6666,
+      0.7213
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 363
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 390
+     },
+     "avg_turns": 12,
+     "wall_s": 119.9,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 617,
+     "win_rate": 0.7108,
+     "ci95": [
+      0.6798,
+      0.74
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 300
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 317
+     },
+     "avg_turns": 12,
+     "wall_s": 94.9,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-refp6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/mordekaiser-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/ref-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8648,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1463,
+    "ci95": [
+     0.1314,
+     0.1611
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+4",
+   "path": "lab/variants/mordekaiser-postban-cand-c1p4.txt",
+   "hash": "8e19365766",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.88,
+    "curve": {
+     "1": 5,
+     "2": 17,
+     "3": 8,
+     "4": 3,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 26,
+     "gear": 3,
+     "spell": 11
+    },
+    "power_symbols": {
+     "fury": 15,
+     "order": 11
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 3,
+     "Deflect": 4,
+     "Hidden": 6,
+     "Action": 4,
+     "Reaction": 10,
+     "Ganking": 5
+    },
+    "two_drops": 22,
+    "list": [
+     {
+      "name": "Concert Poster",
+      "count": 3,
+      "type": "gear",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "LeBlanc, Fragmented",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Noxus Hopeful",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kai'Sa (Jason Tian, post-ban)",
+     "opponent_deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+     "weight": 51,
+     "games": 2766,
+     "wins": 2671,
+     "win_rate": 0.9657,
+     "ci95": [
+      0.9582,
+      0.9718
+     ],
+     "as_p1": {
+      "games": 1383,
+      "wins": 1319
+     },
+     "as_p2": {
+      "games": 1383,
+      "wins": 1352
+     },
+     "avg_turns": 12,
+     "wall_s": 314.1,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__kai-sa-jason-tian-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/kai_sa_jason_tian.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__kai-sa-jason-tian-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kai_sa_jason_tian.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1383 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__kai-sa-jason-tian-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 426,
+     "win_rate": 0.9816,
+     "ci95": [
+      0.9641,
+      0.9906
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 213
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 213
+     },
+     "avg_turns": 12,
+     "wall_s": 43.9,
+     "replays": "lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003550-mordekaiser-postban-race2-g1/c1-4__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 2386,
+     "wins": 2359,
+     "win_rate": 0.9887,
+     "ci95": [
+      0.9836,
+      0.9922
+     ],
+     "as_p1": {
+      "games": 1193,
+      "wins": 1177
+     },
+     "as_p2": {
+      "games": 1193,
+      "wins": 1182
+     },
+     "avg_turns": 11,
+     "wall_s": 215.1,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 1193 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 542,
+     "wins": 442,
+     "win_rate": 0.8155,
+     "ci95": [
+      0.7807,
+      0.8459
+     ],
+     "as_p1": {
+      "games": 271,
+      "wins": 218
+     },
+     "as_p2": {
+      "games": 271,
+      "wins": 224
+     },
+     "avg_turns": 12,
+     "wall_s": 62.4,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 271 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 434,
+     "wins": 219,
+     "win_rate": 0.5046,
+     "ci95": [
+      0.4577,
+      0.5514
+     ],
+     "as_p1": {
+      "games": 217,
+      "wins": 100
+     },
+     "as_p2": {
+      "games": 217,
+      "wins": 119
+     },
+     "avg_turns": 14,
+     "wall_s": 57.2,
+     "replays": "lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 217 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003631-mordekaiser-postban-race2-g2/c1-4__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 836,
+     "win_rate": 0.7712,
+     "ci95": [
+      0.7453,
+      0.7952
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 413
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 423
+     },
+     "avg_turns": 12,
+     "wall_s": 116.8,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 738,
+     "win_rate": 0.6808,
+     "ci95": [
+      0.6525,
+      0.7079
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 361
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 377
+     },
+     "avg_turns": 12,
+     "wall_s": 120.6,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 599,
+     "win_rate": 0.6901,
+     "ci95": [
+      0.6585,
+      0.72
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 299
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 300
+     },
+     "avg_turns": 12,
+     "wall_s": 102.8,
+     "replays": "lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p4.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256112 --render-html off --web off --review-dir lab/replays/20261114-003650-mordekaiser-postban-race2-g3/c1-4__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.8637,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1516,
+    "ci95": [
+     0.1369,
+     0.1662
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T01:12:52+00:00"
+}
