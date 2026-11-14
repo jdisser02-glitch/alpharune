@@ -662,4 +662,12 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   Jeremy's and Dunc's lists). **Evelynn confirm2 dispatched** (4 requests, full pilot spec_evelynn_024_v0, 2,400
   games a list, seeds 6114: Jeremy's list, c1+9, c1+6, Dunc's list as registered, Jeremy's list with six swaps).
   The question: how much of the 21 points between Jeremy's list and c1+9 was the pilot not knowing his cards.
+- 14 Nov 10:30 UTC, **Riven confirm2** (pilot spec_riven_126_v0, six iterations on the new champions; seeds 6104,
+  2,400 games a list; `lab/results/20261114-100456-riven-postban-deserter-confirm2.json`,
+  `…-101316-riven-postban-shattered-confirm2.json`): the Deserter frame 70.5%, the Shattered frame 62.6%:
+  **Deserter +8.0 [+5.5, +10.4], it holds with a pilot that has played both** (with the old pilot: 67.5% and 57.6%,
+  +9.9). The searched lists are now below their references: Deserter c1+9 60.8% (−9.7 [−12.2, −7.3]), ref+6 69.1%
+  (−1.4); Shattered c1+9 58.7% (−3.8 [−6.4, −1.3]), ref+6 61.6% (−1.0). A pilot that knows the deck plays the
+  counters and tricks the cheap-pilot search had taken out, and misses them. Riven's list to play stays
+  `lab/decks/postban/riven_frame_deserter.txt`. Round 2 for Riven starts from that frame with sims=16 (rule of 05:35).
 
