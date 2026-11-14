@@ -632,4 +632,14 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
     after `postban_round.py`, replace `sims=4` by `sims=16` and `worlds=2` by `worlds=4` in every agent of the
     Riven `-r2` specs, set `explore.shards` to 4 and `explore.lists` to 1200, and write `requests` again. The
     confirmation stays with the full pilot for everyone, and a race result is never quoted as a gain.
+- 14 Nov 06:20 UTC: Kai'Sa's first post-ban net is committed (spec_kai_sa_030_v0); Riven 124, Evelynn 21 accepted.
+  **Volibear, round 2 confirmed** (`lab/results/20261114-053426-volibear-postban-confirm.json`, seeds 6123, 3,598
+  games a list, full pilot spec_volibear_132_v0): Ritualo's list 85.5%; c2+6 92.2% (+6.8 [+5.4, +8.2]); c2+3 91.7%
+  (+6.3 [+4.9, +7.7]); the two not separated. Both are round 1b's c1+9 with Mobilize out for Rampage (and Minotaur
+  Reckoner out for Punch First in c2+6). **The incumbent stays**: `lab/variants/volibear-noaurora-best.txt` scored
+  92.2% in the same race 2 (12,000 games, cheap pilot) and was not in this confirmation, the race could not
+  separate the five lists (0.4 point), and every list wins about 92% against this field. Naming a new best needs
+  the incumbent in the confirmation (`confirm.extra`): do that in round 3's spec. What the confirmation does say
+  again: the soldog build beats Ritualo's list as registered by 6 to 7 points in simulation.
+  Next: m1 when Evelynn ≥ 24, Riven ≥ 126, Mordekaiser ≥ 90 and Volibear ≥ 144 have committed nets, or at 16:00.
 
