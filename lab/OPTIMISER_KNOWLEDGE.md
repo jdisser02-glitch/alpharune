@@ -642,7 +642,7 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   the incumbent in the confirmation (`confirm.extra`): do that in round 3's spec. What the confirmation does say
   again: the soldog build beats Ritualo's list as registered by 6 to 7 points in simulation.
   Next: m1 when Evelynn ≥ 24, Riven ≥ 126, Mordekaiser ≥ 90 and Volibear ≥ 144 have committed nets, or at 16:00.
-- 14 Nov 07:05 UTC, **daily critic of the dashboard, v110 published.** Found and fixed in the code: Home's "58 lists
+- 14 Nov 06:30 UTC, **daily critic of the dashboard, v110 published.** Found and fixed in the code: Home's "58 lists
   beat the reference" counted race parts, cheap-pilot frame tests and another frame's reference (now 0: no
   searched Riven list beats its reference; `build.py not_a_rating`: selection / part / cheap / other, kept off
   Home and labelled on their test pages); the Decks page called a newcomer "best" over the list in use (now
