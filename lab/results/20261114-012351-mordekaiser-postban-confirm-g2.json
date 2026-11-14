@@ -1,0 +1,859 @@
+{
+ "id": "20261114-012351-mordekaiser-postban-confirm-g2",
+ "name": "mordekaiser-postban-confirm-g2",
+ "description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 894 games.",
+ "started_utc": "2026-11-14T01:23:51+00:00",
+ "engine_commit": "20d6677",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 894,
+ "threads": 4,
+ "seed": 6113,
+ "spec": {
+  "name": "mordekaiser-postban-confirm-g2",
+  "description": "Mordekaiser after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Neal's list, the three other tournament lists and the leaders of the genetic search of 9 Nov, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 894 games.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 894,
+  "review_games": 0,
+  "seed": 6113,
+  "decks": [
+   {
+    "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+    "label": "c1+6"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kennen_zombro.txt",
+    "label": "Kennen (zombro, post-ban)",
+    "weight": 44,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60",
+    "games": 894
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+   "hash": "a29499c6a6",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 2,
+     "2": 21,
+     "3": 4,
+     "4": 6,
+     "5": 4,
+     "6": 2,
+     "7": 1
+    },
+    "types": {
+     "unit": 25,
+     "spell": 13,
+     "gear": 2
+    },
+    "power_symbols": {
+     "fury": 21,
+     "order": 10
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 7,
+     "Action": 3,
+     "Hidden": 2,
+     "Reaction": 13,
+     "Ganking": 3,
+     "Deflect": 6
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Deathgrip",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Falling Star",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Honest Broker",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Long Sword",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Perfect Execution",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rek'Sai, Swarm Queen",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 2,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 894,
+     "wins": 848,
+     "win_rate": 0.9485,
+     "ci95": [
+      0.932,
+      0.9612
+     ],
+     "as_p1": {
+      "games": 447,
+      "wins": 426
+     },
+     "as_p2": {
+      "games": 447,
+      "wins": 422
+     },
+     "avg_turns": 12,
+     "wall_s": 2331.7,
+     "replays": "lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/reference__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/reference__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/reference__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9485
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/mordekaiser-postban-cand-c1p9.txt",
+   "hash": "9606784ccf",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.12,
+    "curve": {
+     "1": 2,
+     "2": 17,
+     "3": 7,
+     "4": 7,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 30,
+     "spell": 10
+    },
+    "power_symbols": {
+     "fury": 16,
+     "order": 9
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 7,
+     "Deflect": 6,
+     "Hidden": 6,
+     "Action": 3,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 19,
+    "list": [
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Noxus Hopeful",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 894,
+     "wins": 890,
+     "win_rate": 0.9955,
+     "ci95": [
+      0.9886,
+      0.9983
+     ],
+     "as_p1": {
+      "games": 447,
+      "wins": 445
+     },
+     "as_p2": {
+      "games": 447,
+      "wins": 445
+     },
+     "avg_turns": 11,
+     "wall_s": 1412.4,
+     "replays": "lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-9__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p9.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-9__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-9__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9955,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.047,
+    "ci95": [
+     0.0319,
+     0.0621
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+6",
+   "path": "lab/variants/mordekaiser-postban-cand-c1p6.txt",
+   "hash": "0d90eea317",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.98,
+    "curve": {
+     "1": 4,
+     "2": 17,
+     "3": 7,
+     "4": 5,
+     "5": 3,
+     "6": 3,
+     "7": 1
+    },
+    "types": {
+     "unit": 27,
+     "gear": 2,
+     "spell": 11
+    },
+    "power_symbols": {
+     "fury": 16,
+     "order": 10
+    },
+    "rune_split": {
+     "fury": 7,
+     "order": 5
+    },
+    "keywords": {
+     "Accelerate": 5,
+     "Deflect": 5,
+     "Hidden": 6,
+     "Action": 4,
+     "Reaction": 10,
+     "Ganking": 6
+    },
+    "two_drops": 21,
+    "list": [
+     {
+      "name": "Concert Poster",
+      "count": 2,
+      "type": "gear",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Sacrifice",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Carrion Dredger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Falling Star",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hidden Blade",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Inferna",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Realm of Death",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "fury",
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Salvage",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Trifarian Captain",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "order"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Dockside Butcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Rengar, Pouncing",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kai'Sa, Survivor",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Noxus Hopeful",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Unseen",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vi, Peacekeeper",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "order"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 3,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Mordekaiser, Twice Slain",
+      "count": 1,
+      "type": "unit",
+      "energy": 7,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 894,
+     "wins": 890,
+     "win_rate": 0.9955,
+     "ci95": [
+      0.9886,
+      0.9983
+     ],
+     "as_p1": {
+      "games": 447,
+      "wins": 446
+     },
+     "as_p2": {
+      "games": 447,
+      "wins": 444
+     },
+     "avg_turns": 11,
+     "wall_s": 1511.5,
+     "replays": "lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/mordekaiser-postban-cand-c1p6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/mordekaiser-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60 --games 447 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-012351-mordekaiser-postban-confirm-g2/c1-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9955,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.047,
+    "ci95": [
+     0.0319,
+     0.0621
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T02:51:26+00:00"
+}
