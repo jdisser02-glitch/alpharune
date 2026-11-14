@@ -1,0 +1,4750 @@
+{
+ "id": "20261114-012549-volibear-postban-race1-g2",
+ "name": "volibear-postban-race1-g2",
+ "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+ "started_utc": "2026-11-14T01:25:49+00:00",
+ "engine_commit": "20d6677",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games_per_matchup": 596,
+ "threads": 4,
+ "seed": 6121,
+ "spec": {
+  "name": "volibear-postban-race1-g2",
+  "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race1: 14 lists on the same seeds, 2400 games per list shared out by the opponents' weights. This request: Kennen (zombro, post-ban) 596 games, Riven Shattered (post-ban frame) 272 games, Master Yi (PCQ, post-ban) 216 games, Akali (Vincent Nguyen, post-ban) 108 games.",
+  "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+  "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+  "games": 596,
+  "review_games": 0,
+  "seed": 6121,
+  "decks": [
+   {
+    "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-centre1.txt",
+    "label": "centre1"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-centre2.txt",
+    "label": "centre2"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-centre3.txt",
+    "label": "centre3"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-centre4.txt",
+    "label": "centre4"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-refp2.txt",
+    "label": "ref+2"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-refp4.txt",
+    "label": "ref+4"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-refp6.txt",
+    "label": "ref+6"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c1p2.txt",
+    "label": "c1+2"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c1p4.txt",
+    "label": "c1+4"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c1p6.txt",
+    "label": "c1+6"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c2p3.txt",
+    "label": "c2+3"
+   },
+   {
+    "deck": "lab/variants/volibear-postban-cand-c2p6.txt",
+    "label": "c2+6"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/kennen_zombro.txt",
+    "label": "Kennen (zombro, post-ban)",
+    "weight": 44,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60",
+    "games": 596
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven Shattered (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+    "games": 272
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "games": 216
+   },
+   {
+    "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+    "label": "Akali (Vincent Nguyen, post-ban)",
+    "weight": 8,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+    "games": 108
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "hash": "43bda1d687",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.2,
+    "curve": {
+     "1": 3,
+     "2": 12,
+     "3": 3,
+     "5": 6,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 25,
+     "spell": 12,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 15
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Action": 3,
+     "Reaction": 9,
+     "Ganking": 3
+    },
+    "two_drops": 15,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 3,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 588,
+     "win_rate": 0.9866,
+     "ci95": [
+      0.9737,
+      0.9932
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 295
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 293
+     },
+     "avg_turns": 13,
+     "wall_s": 60.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 203,
+     "win_rate": 0.7463,
+     "ci95": [
+      0.6914,
+      0.7944
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 98
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 105
+     },
+     "avg_turns": 13,
+     "wall_s": 18.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 204,
+     "win_rate": 0.9444,
+     "ci95": [
+      0.9054,
+      0.9679
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 103
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 101
+     },
+     "avg_turns": 14,
+     "wall_s": 16.1,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 103,
+     "win_rate": 0.9537,
+     "ci95": [
+      0.8962,
+      0.9801
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 51
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 52
+     },
+     "avg_turns": 13,
+     "wall_s": 8.7,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/reference__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9213
+  },
+  {
+   "label": "centre1",
+   "path": "lab/variants/volibear-postban-cand-centre1.txt",
+   "hash": "7b35eb42ed",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.05,
+    "curve": {
+     "1": 2,
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 8,
+     "6": 4,
+     "7": 3,
+     "8": 8,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 26,
+     "spell": 11,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 16,
+     "body": 32
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 5
+    },
+    "two_drops": 5,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 593,
+     "win_rate": 0.995,
+     "ci95": [
+      0.9853,
+      0.9983
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 298
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 295
+     },
+     "avg_turns": 12,
+     "wall_s": 49.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre1.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-centre1.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 247,
+     "win_rate": 0.9081,
+     "ci95": [
+      0.8678,
+      0.937
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 126
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 121
+     },
+     "avg_turns": 13,
+     "wall_s": 16.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre1.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-centre1.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 211,
+     "win_rate": 0.9769,
+     "ci95": [
+      0.947,
+      0.9901
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 105
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 106
+     },
+     "avg_turns": 13,
+     "wall_s": 13.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre1.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-centre1.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre1.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-centre1.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre1__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9724,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0511,
+    "ci95": [
+     0.0342,
+     0.068
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "centre2",
+   "path": "lab/variants/volibear-postban-cand-centre2.txt",
+   "hash": "4b6a428408",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.03,
+    "curve": {
+     "2": 5,
+     "3": 3,
+     "4": 5,
+     "5": 9,
+     "7": 3,
+     "8": 9,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 31,
+     "spell": 6,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 9,
+     "body": 23
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Reaction": 8,
+     "Ganking": 2,
+     "Action": 3
+    },
+    "two_drops": 5,
+    "list": [
+     {
+      "name": "Dragonsoul Sage",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Herald of Scales",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 594,
+     "win_rate": 0.9966,
+     "ci95": [
+      0.9878,
+      0.9991
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 298
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 296
+     },
+     "avg_turns": 13,
+     "wall_s": 55.3,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre2.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-centre2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 230,
+     "win_rate": 0.8456,
+     "ci95": [
+      0.7979,
+      0.8837
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 113
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 117
+     },
+     "avg_turns": 13,
+     "wall_s": 17.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre2.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-centre2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 208,
+     "win_rate": 0.963,
+     "ci95": [
+      0.9286,
+      0.9811
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 101
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 107
+     },
+     "avg_turns": 14,
+     "wall_s": 14.6,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre2.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-centre2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 107,
+     "win_rate": 0.9907,
+     "ci95": [
+      0.9494,
+      0.9984
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 53
+     },
+     "avg_turns": 13,
+     "wall_s": 8.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre2.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-centre2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre2__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9557,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0343,
+    "ci95": [
+     0.0162,
+     0.0524
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "centre3",
+   "path": "lab/variants/volibear-postban-cand-centre3.txt",
+   "hash": "77a7b00d49",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.28,
+    "curve": {
+     "2": 3,
+     "3": 3,
+     "4": 3,
+     "5": 11,
+     "6": 2,
+     "7": 3,
+     "8": 9,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 29,
+     "spell": 8,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 13,
+     "body": 28
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 7,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 3
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 2,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 594,
+     "win_rate": 0.9966,
+     "ci95": [
+      0.9878,
+      0.9991
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 296
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 298
+     },
+     "avg_turns": 12,
+     "wall_s": 50.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre3.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-centre3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 243,
+     "win_rate": 0.8934,
+     "ci95": [
+      0.8511,
+      0.9247
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 123
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 120
+     },
+     "avg_turns": 13,
+     "wall_s": 16.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre3.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-centre3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 213,
+     "win_rate": 0.9861,
+     "ci95": [
+      0.96,
+      0.9953
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 107
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 106
+     },
+     "avg_turns": 14,
+     "wall_s": 13.6,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre3.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-centre3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre3.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-centre3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre3__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9716,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0502,
+    "ci95": [
+     0.0333,
+     0.0672
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "centre4",
+   "path": "lab/variants/volibear-postban-cand-centre4.txt",
+   "hash": "2e5bcdbad2",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.17,
+    "curve": {
+     "2": 3,
+     "3": 3,
+     "4": 5,
+     "5": 11,
+     "7": 3,
+     "8": 9,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 31,
+     "spell": 6,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 9,
+     "body": 24
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 7,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 3
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Herald of Scales",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 594,
+     "win_rate": 0.9966,
+     "ci95": [
+      0.9878,
+      0.9991
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 297
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 297
+     },
+     "avg_turns": 12,
+     "wall_s": 53.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre4.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-centre4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 234,
+     "win_rate": 0.8603,
+     "ci95": [
+      0.8141,
+      0.8965
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 118
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 116
+     },
+     "avg_turns": 14,
+     "wall_s": 18.3,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre4.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-centre4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 209,
+     "win_rate": 0.9676,
+     "ci95": [
+      0.9346,
+      0.9842
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 103
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 106
+     },
+     "avg_turns": 14,
+     "wall_s": 15.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre4.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-centre4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 106,
+     "win_rate": 0.9815,
+     "ci95": [
+      0.935,
+      0.9949
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 53
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 53
+     },
+     "avg_turns": 13,
+     "wall_s": 8.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-centre4.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-centre4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/centre4__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.959,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0377,
+    "ci95": [
+     0.0198,
+     0.0556
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+2",
+   "path": "lab/variants/volibear-postban-cand-refp2.txt",
+   "hash": "1711f225ce",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.35,
+    "curve": {
+     "1": 3,
+     "2": 10,
+     "3": 3,
+     "5": 8,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 27,
+     "spell": 12,
+     "gear": 1
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 17
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Reaction": 11,
+     "Ganking": 1,
+     "Action": 3
+    },
+    "two_drops": 13,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Portable Portal",
+      "count": 1,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 585,
+     "win_rate": 0.9815,
+     "ci95": [
+      0.9673,
+      0.9897
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 294
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 291
+     },
+     "avg_turns": 13,
+     "wall_s": 62.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp2.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 219,
+     "win_rate": 0.8051,
+     "ci95": [
+      0.754,
+      0.8478
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 107
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 112
+     },
+     "avg_turns": 13,
+     "wall_s": 20.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp2.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 204,
+     "win_rate": 0.9444,
+     "ci95": [
+      0.9054,
+      0.9679
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 102
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 102
+     },
+     "avg_turns": 13,
+     "wall_s": 16.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp2.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 105,
+     "win_rate": 0.9722,
+     "ci95": [
+      0.9215,
+      0.9905
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 52
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 53
+     },
+     "avg_turns": 13,
+     "wall_s": 8.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp2.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-2__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9339,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0125,
+    "ci95": [
+     -0.0071,
+     0.0322
+    ],
+    "verdict": "tie"
+   }
+  },
+  {
+   "label": "ref+4",
+   "path": "lab/variants/volibear-postban-cand-refp4.txt",
+   "hash": "dd8a64b492",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.45,
+    "curve": {
+     "1": 3,
+     "2": 8,
+     "3": 4,
+     "5": 9,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 28,
+     "spell": 12
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 17
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Reaction": 11,
+     "Action": 3
+    },
+    "two_drops": 11,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Show of Strength",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 593,
+     "win_rate": 0.995,
+     "ci95": [
+      0.9853,
+      0.9983
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 295
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 298
+     },
+     "avg_turns": 13,
+     "wall_s": 60.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp4.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 223,
+     "win_rate": 0.8199,
+     "ci95": [
+      0.7698,
+      0.861
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 110
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 113
+     },
+     "avg_turns": 13,
+     "wall_s": 19.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp4.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 211,
+     "win_rate": 0.9769,
+     "ci95": [
+      0.947,
+      0.9901
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 106
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 105
+     },
+     "avg_turns": 14,
+     "wall_s": 17.1,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp4.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 105,
+     "win_rate": 0.9722,
+     "ci95": [
+      0.9215,
+      0.9905
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 51
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 9.1,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp4.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-4__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9498,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0285,
+    "ci95": [
+     0.01,
+     0.0469
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+6",
+   "path": "lab/variants/volibear-postban-cand-refp6.txt",
+   "hash": "1c2a257f76",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.5,
+    "curve": {
+     "1": 3,
+     "2": 6,
+     "3": 6,
+     "5": 9,
+     "7": 3,
+     "8": 6,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 28,
+     "spell": 12
+    },
+    "power_symbols": {
+     "fury": 11,
+     "body": 15
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 1,
+     "Accelerate": 3,
+     "Reaction": 9,
+     "Action": 3
+    },
+    "two_drops": 9,
+    "list": [
+     {
+      "name": "Flurry of Blades",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Mobilize",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 595,
+     "win_rate": 0.9983,
+     "ci95": [
+      0.9906,
+      0.9997
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 298
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 297
+     },
+     "avg_turns": 13,
+     "wall_s": 60.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 228,
+     "win_rate": 0.8382,
+     "ci95": [
+      0.7898,
+      0.8772
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 113
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 115
+     },
+     "avg_turns": 13,
+     "wall_s": 21.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 209,
+     "win_rate": 0.9676,
+     "ci95": [
+      0.9346,
+      0.9842
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 105
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 104
+     },
+     "avg_turns": 14,
+     "wall_s": 18.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 107,
+     "win_rate": 0.9907,
+     "ci95": [
+      0.9494,
+      0.9984
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 53
+     },
+     "avg_turns": 13,
+     "wall_s": 9.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-refp6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/ref-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9557,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0343,
+    "ci95": [
+     0.0163,
+     0.0524
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+2",
+   "path": "lab/variants/volibear-postban-cand-c1p2.txt",
+   "hash": "6ef617cdce",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.1,
+    "curve": {
+     "1": 2,
+     "2": 1,
+     "3": 5,
+     "4": 3,
+     "5": 8,
+     "6": 4,
+     "7": 3,
+     "8": 8,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 26,
+     "spell": 11,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 16,
+     "body": 32
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 5
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Mobilize",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Ferrous Forerunner",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 595,
+     "win_rate": 0.9983,
+     "ci95": [
+      0.9906,
+      0.9997
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 297
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 298
+     },
+     "avg_turns": 12,
+     "wall_s": 52.7,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p2.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c1p2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 244,
+     "win_rate": 0.8971,
+     "ci95": [
+      0.8552,
+      0.9278
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 123
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 121
+     },
+     "avg_turns": 13,
+     "wall_s": 17.7,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p2.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c1p2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 205,
+     "win_rate": 0.9491,
+     "ci95": [
+      0.9111,
+      0.9713
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 101
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 104
+     },
+     "avg_turns": 14,
+     "wall_s": 15.1,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p2.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c1p2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p2.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c1p2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-2__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9665,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0452,
+    "ci95": [
+     0.0278,
+     0.0626
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+4",
+   "path": "lab/variants/volibear-postban-cand-c1p4.txt",
+   "hash": "147fdbc6db",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.0,
+    "curve": {
+     "1": 3,
+     "3": 6,
+     "4": 3,
+     "5": 8,
+     "6": 3,
+     "7": 3,
+     "8": 8,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 25,
+     "gear": 3,
+     "spell": 12
+    },
+    "power_symbols": {
+     "fury": 15,
+     "body": 34
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 6
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 593,
+     "win_rate": 0.995,
+     "ci95": [
+      0.9853,
+      0.9983
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 297
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 296
+     },
+     "avg_turns": 12,
+     "wall_s": 55.3,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p4.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 233,
+     "win_rate": 0.8566,
+     "ci95": [
+      0.81,
+      0.8933
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 115
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 118
+     },
+     "avg_turns": 13,
+     "wall_s": 18.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p4.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 200,
+     "win_rate": 0.9259,
+     "ci95": [
+      0.8831,
+      0.9539
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 100
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 100
+     },
+     "avg_turns": 14,
+     "wall_s": 15.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p4.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p4.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c1p4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-4__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9514,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0301,
+    "ci95": [
+     0.0116,
+     0.0486
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+6",
+   "path": "lab/variants/volibear-postban-cand-c1p6.txt",
+   "hash": "96a8e103e5",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.0,
+    "curve": {
+     "1": 3,
+     "3": 6,
+     "4": 3,
+     "5": 8,
+     "6": 3,
+     "7": 3,
+     "8": 8,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 23,
+     "spell": 14,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 15,
+     "body": 38
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Accelerate": 2,
+     "Ganking": 3,
+     "Reaction": 6,
+     "Action": 6
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Avalanche",
+      "count": 2,
+      "type": "spell",
+      "energy": 5,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 1,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 590,
+     "win_rate": 0.9899,
+     "ci95": [
+      0.9782,
+      0.9954
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 294
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 296
+     },
+     "avg_turns": 12,
+     "wall_s": 55.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 232,
+     "win_rate": 0.8529,
+     "ci95": [
+      0.8059,
+      0.8901
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 119
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 113
+     },
+     "avg_turns": 13,
+     "wall_s": 18.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 203,
+     "win_rate": 0.9398,
+     "ci95": [
+      0.8998,
+      0.9645
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 103
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 100
+     },
+     "avg_turns": 14,
+     "wall_s": 16.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.8,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c1p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9506,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0293,
+    "ci95": [
+     0.0107,
+     0.0478
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/volibear-postban-cand-c1p9.txt",
+   "hash": "6f2f9ba913",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.1,
+    "curve": {
+     "1": 3,
+     "3": 7,
+     "4": 1,
+     "5": 8,
+     "6": 3,
+     "7": 3,
+     "8": 8,
+     "9": 3,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 22,
+     "spell": 15,
+     "gear": 3
+    },
+    "power_symbols": {
+     "fury": 17,
+     "body": 38
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 4,
+     "Accelerate": 2,
+     "Ganking": 1,
+     "Reaction": 6,
+     "Action": 6
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bilgewater Tracker",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Avalanche",
+      "count": 3,
+      "type": "spell",
+      "energy": 5,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blazing Scorcher",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Stormbringer",
+      "count": 3,
+      "type": "spell",
+      "energy": 6,
+      "power": 2,
+      "domains": [
+       "fury",
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 2,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 3,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 584,
+     "win_rate": 0.9799,
+     "ci95": [
+      0.9651,
+      0.9884
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 291
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 293
+     },
+     "avg_turns": 13,
+     "wall_s": 59.1,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p9.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 207,
+     "win_rate": 0.761,
+     "ci95": [
+      0.7069,
+      0.8079
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 101
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 106
+     },
+     "avg_turns": 13,
+     "wall_s": 17.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 202,
+     "win_rate": 0.9352,
+     "ci95": [
+      0.8942,
+      0.961
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 98
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 104
+     },
+     "avg_turns": 14,
+     "wall_s": 15.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p9.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 105,
+     "win_rate": 0.9722,
+     "ci95": [
+      0.9215,
+      0.9905
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 51
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.9,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c1p9.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c1-9__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9213,
+   "vs_first": {
+    "reference": "reference",
+    "diff": -0.0,
+    "ci95": [
+     -0.0203,
+     0.0203
+    ],
+    "verdict": "tie"
+   }
+  },
+  {
+   "label": "c2+3",
+   "path": "lab/variants/volibear-postban-cand-c2p3.txt",
+   "hash": "8bbe93a4ef",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 6.1,
+    "curve": {
+     "2": 2,
+     "3": 6,
+     "4": 5,
+     "5": 9,
+     "7": 3,
+     "8": 9,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 31,
+     "gear": 3,
+     "spell": 6
+    },
+    "power_symbols": {
+     "fury": 9,
+     "body": 23
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Reaction": 8,
+     "Ganking": 2,
+     "Action": 3
+    },
+    "two_drops": 2,
+    "list": [
+     {
+      "name": "Dragonsoul Sage",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Herald of Scales",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Minotaur Reckoner",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "fury"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 595,
+     "win_rate": 0.9983,
+     "ci95": [
+      0.9906,
+      0.9997
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 298
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 297
+     },
+     "avg_turns": 12,
+     "wall_s": 55.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p3.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c2p3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 239,
+     "win_rate": 0.8787,
+     "ci95": [
+      0.8345,
+      0.9123
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 117
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 122
+     },
+     "avg_turns": 13,
+     "wall_s": 19.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p3.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c2p3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 206,
+     "win_rate": 0.9537,
+     "ci95": [
+      0.9169,
+      0.9747
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 103
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 103
+     },
+     "avg_turns": 14,
+     "wall_s": 15.5,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p3.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c2p3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 107,
+     "win_rate": 0.9907,
+     "ci95": [
+      0.9494,
+      0.9984
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 53
+     },
+     "avg_turns": 13,
+     "wall_s": 8.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p3.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c2p3.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-3__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9623,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.041,
+    "ci95": [
+     0.0233,
+     0.0587
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c2+6",
+   "path": "lab/variants/volibear-postban-cand-c2p6.txt",
+   "hash": "05e4832bf0",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 5.8,
+    "curve": {
+     "1": 3,
+     "2": 2,
+     "3": 6,
+     "4": 5,
+     "5": 6,
+     "7": 3,
+     "8": 9,
+     "9": 2,
+     "10": 1,
+     "12": 3
+    },
+    "types": {
+     "unit": 28,
+     "gear": 3,
+     "spell": 9
+    },
+    "power_symbols": {
+     "fury": 9,
+     "body": 29
+    },
+    "rune_split": {
+     "body": 7,
+     "fury": 5
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Reaction": 8,
+     "Ganking": 2,
+     "Action": 6
+    },
+    "two_drops": 5,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Dragonsoul Sage",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 1
+     },
+     {
+      "name": "Platewyrm Egg",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rampage",
+      "count": 3,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Herald of Scales",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Jayce, Hammer in Hand",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Dune Drake",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Seraphic Wyvern",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Deadbloom Predator",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Gentle Gemdragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Sky Splitter",
+      "count": 3,
+      "type": "spell",
+      "energy": 8,
+      "power": 1,
+      "domains": [
+       "fury"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kadregrin the Infernal",
+      "count": 2,
+      "type": "unit",
+      "energy": 9,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Volibear, Furious",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 2,
+      "domains": [
+       "fury"
+      ],
+      "might": 9
+     },
+     {
+      "name": "Elder Dragon",
+      "count": 3,
+      "type": "unit",
+      "energy": 12,
+      "power": 4,
+      "domains": [
+       "body"
+      ],
+      "might": 10
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Kennen (zombro, post-ban)",
+     "opponent_deck": "lab/decks/postban/kennen_zombro.txt",
+     "weight": 44,
+     "games": 596,
+     "wins": 594,
+     "win_rate": 0.9966,
+     "ci95": [
+      0.9878,
+      0.9991
+     ],
+     "as_p1": {
+      "games": 298,
+      "wins": 297
+     },
+     "as_p2": {
+      "games": 298,
+      "wins": 297
+     },
+     "avg_turns": 12,
+     "wall_s": 53.4,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__kennen-zombro-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p6.txt --deck2 lab/decks/postban/kennen_zombro.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 6121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__kennen-zombro-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/kennen_zombro.txt --deck2 lab/variants/volibear-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_kennen_020_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 298 --threads 4 --seed 56121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__kennen-zombro-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 272,
+     "wins": 241,
+     "win_rate": 0.886,
+     "ci95": [
+      0.8428,
+      0.9185
+     ],
+     "as_p1": {
+      "games": 136,
+      "wins": 117
+     },
+     "as_p2": {
+      "games": 136,
+      "wins": 124
+     },
+     "avg_turns": 13,
+     "wall_s": 18.0,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 106121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/volibear-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 136 --threads 4 --seed 156121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 216,
+     "wins": 211,
+     "win_rate": 0.9769,
+     "ci95": [
+      0.947,
+      0.9901
+     ],
+     "as_p1": {
+      "games": 108,
+      "wins": 106
+     },
+     "as_p2": {
+      "games": 108,
+      "wins": 105
+     },
+     "avg_turns": 14,
+     "wall_s": 15.2,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 206121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/volibear-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 108 --threads 4 --seed 256121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 108,
+     "wins": 108,
+     "win_rate": 1.0,
+     "ci95": [
+      0.9657,
+      1.0
+     ],
+     "as_p1": {
+      "games": 54,
+      "wins": 54
+     },
+     "as_p2": {
+      "games": 54,
+      "wins": 54
+     },
+     "avg_turns": 13,
+     "wall_s": 7.6,
+     "replays": "lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/volibear-postban-cand-c2p6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 306121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/volibear-postban-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60 --games 54 --threads 4 --seed 356121 --render-html off --web off --review-dir lab/replays/20261114-012549-volibear-postban-race1-g2/c2-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.9682,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0469,
+    "ci95": [
+     0.0297,
+     0.0641
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T01:48:44+00:00"
+}
