@@ -1,0 +1,53 @@
+{
+ "name": "evelynn-postban-confirm-g3",
+ "description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Volibear (lab's post-ban list) 162 games.",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 406,
+ "review_games": 0,
+ "seed": 6113,
+ "decks": [
+  {
+   "deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/evelynn-postban-cand-c1p9.txt",
+   "label": "c1+9"
+  },
+  {
+   "deck": "lab/variants/evelynn-postban-cand-c1p6.txt",
+   "label": "c1+6"
+  },
+  {
+   "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+   "label": "Dunc's list as registered"
+  },
+  {
+   "deck": "lab/variants/evelynn-postban-cand-refp6.txt",
+   "label": "ref+6 (Jeremy's list, six swaps)"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+   "games": 406
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16,
+   "games": 326
+  },
+  {
+   "deck": "lab/variants/volibear-noaurora-best.txt",
+   "label": "Volibear (lab's post-ban list)",
+   "weight": 8,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60",
+   "games": 162
+  }
+ ]
+}

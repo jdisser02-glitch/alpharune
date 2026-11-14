@@ -555,4 +555,11 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   (ceiling). The race runs (2 requests) so the pipeline stays whole, but **no Volibear list will be named better on
   round 2 unless its interval clears 0 in the confirmation**; the real test is round 3, after the other pilots
   have trained against Volibear.
+- 14 Nov 01:35 UTC: **Evelynn race 2** (11,998 games a list, cheap pilot): reference (Jeremy's list) 56.9%; c1+9
+  (Dunc's list, nine swaps: Star-Crossed, Punch First, Ezreal, Fizz and Hold 'Em out; Rengar, 3 Evelynn, In
+  Control, 2 Baron Nashor, Vex, K'Sante, Boots of Swiftness in) 79.0%; c1+6 75.3%; ref+6 (Jeremy's list, six swaps:
+  2 Pack of Wonders, Onslaught, 2 Star-Crossed, Fizz out; Rengar, Evelynn, In Control, 3 Baron Nashor, Vex in)
+  75.0%; ref+4 74.1%; c1+4 74.0%. Confirmation dispatched (4 requests, full pilot spec_evelynn_018_v0): the
+  reference, c1+9, c1+6, and as yardsticks Dunc's list as registered and ref+6 (so Jeremy's list with six swaps is
+  measured on the same games as the lists built from Dunc's).
 
