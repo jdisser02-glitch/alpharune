@@ -129,6 +129,10 @@ and report the gain on them separately. Co-evolving the field costs millions of 
 5. **Confirm** (runners): the best two + the reference (+ a yardstick), 600 games per opponent on new seeds.
    A list is "better" only if its interval against the reference is above 0 there. At most two finalists.
 
+**Cheap pilot (14 Nov): safe for exploring and racing decks of bodies (Volibear, Mordekaiser, Evelynn held under the
+full pilot); wrong for decks of reactive spells (Riven: +13 in the cheap race, +0.6 confirmed). Section 7's log,
+14 Nov 05:35, has the rule (sims=16, worlds=4 for those).**
+
 Not done yet, in order of worth: (a) the pilot fine-tuned on randomised lists before a search, and the same
 fine-tuning for incumbent and finalist before the confirmation; (b) paired analysis by seed and a coupled shuffle;
 (c) opposing lists held out of the search; (d) a sequential stopping rule for the confirmation.
@@ -606,4 +610,26 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   six-swap lists. `lab/variants/evelynn-postban-best.txt` = c1+9 (11 cards away from Jeremy's list). To read with
   two cautions written in its header: the pilot knew Dunc's cards only, and the swaps again take a reactive spell
   out for bodies. The gain against Kai'Sa is the largest (Jeremy's list won 31% of those games, c1+9 61%).
+- 14 Nov 05:35 UTC, **Riven, round 1 confirmed, and a lesson about the cheap pilot**
+  (`lab/results/20261114-043132-riven-postban-shattered-confirm.json`, `…-050950-riven-postban-deserter-confirm.json`,
+  the same opponents and seeds (6103), 3,598 games a list, full pilot spec_riven_120_v0):
+  - Champion: the Deserter frame 67.5%, the Shattered frame 57.6%: **Deserter +9.9 [+7.8, +12.0]**, with a pilot
+    that had played neither. Per opponent Deserter is ahead everywhere (Kai'Sa 66% against 53%).
+  - Lists: **nothing beats the reference**. Shattered c1+9 58.2% (+0.6 [−1.5, +2.8]), ref+6 55.6% (−2.0); Deserter
+    c1+9 68.8% (+1.3 [−0.7, +3.4]), ref+6 64.6% (−2.9 [−5.0, −0.9]). No `riven-postban-best.txt` is written: the
+    list to play is `lab/decks/postban/riven_frame_deserter.txt` (the legal cards of the best pre-ban list plus
+    Traveling Merchant, Reckless Innovator, Not So Fast and Star-Crossed in the freed slots), Hunters' Circle
+    listed first.
+  - **The cheap pilot misled the races here.** With sims=4 the same lists led by +13.4 and +10.3 over 12,000 games;
+    with sims=50 the lead is gone, while the references score the same under both pilots (57.4/57.6 and
+    67.9/67.5). The swaps took Defy, Rebuke, Switcheroo and Star-Crossed out for Angler Wyrm, Vex and Pakaa
+    Protector: a 4-simulation search cannot use a counter or a trick, so it rates them as dead cards. The check of
+    13 Nov that "the cheap pilot gives the confirmation's answer" was made on Volibear, a deck almost without
+    reactive spells; it does not carry over. Mordekaiser's and Evelynn's cheap races did hold under the full
+    pilot (+8.6 and +21.6 confirmed), so the damage depends on how much of the deck is reactive.
+  - **Rule from now on:** a search whose pool is rich in reactive spells (Riven; Kai'Sa and Kennen if they are ever
+    searched) explores and races with sims=16, worlds=4 (2.3 core-seconds a game, five times the cheap pilot):
+    after `postban_round.py`, replace `sims=4` by `sims=16` and `worlds=2` by `worlds=4` in every agent of the
+    Riven `-r2` specs, set `explore.shards` to 4 and `explore.lists` to 1200, and write `requests` again. The
+    confirmation stays with the full pilot for everyone, and a race result is never quoted as a gain.
 
