@@ -1,0 +1,51 @@
+{
+ "name": "volibear-postban-race2-g1",
+ "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Kai'Sa (Jason Tian, post-ban) 2766 games, Akali (Vincent Nguyen, post-ban) 434 games.",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games": 2766,
+ "review_games": 0,
+ "seed": 6122,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p6.txt",
+   "label": "c2+6"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre1.txt",
+   "label": "centre1"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p3.txt",
+   "label": "c2+3"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-centre3.txt",
+   "label": "centre3"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c1p2.txt",
+   "label": "c1+2"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/kai_sa_jason_tian.txt",
+   "label": "Kai'Sa (Jason Tian, post-ban)",
+   "weight": 51,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_kai_sa_025_v1.rbpn,worlds=2,settle=60",
+   "games": 2766
+  },
+  {
+   "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+   "label": "Akali (Vincent Nguyen, post-ban)",
+   "weight": 8,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=2,settle=60",
+   "games": 434
+  }
+ ]
+}

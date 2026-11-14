@@ -562,4 +562,17 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   75.0%; ref+4 74.1%; c1+4 74.0%. Confirmation dispatched (4 requests, full pilot spec_evelynn_018_v0): the
   reference, c1+9, c1+6, and as yardsticks Dunc's list as registered and ref+6 (so Jeremy's list with six swaps is
   measured on the same games as the lists built from Dunc's).
+- 14 Nov 02:30 UTC: Riven iteration 122 and Kai'Sa 29 accepted (Kennen's first still running on its 2 runners).
+  **Riven race 2** (11,998 games a list, cheap pilot of 13 Nov): Shattered reference 57.4%, c1+9 70.8% (+13.4),
+  ref+6 67.6%, c2+6 65.1%; Deserter reference 67.9%, c1+9 78.2% (+10.3), ref+6 76.1%, c2+6 73.4%. In both, the
+  model takes the reactive spells out (Defy, Rebuke, Switcheroo, Star-Crossed, Hush) for bodies (Angler Wyrm, Vex,
+  Apathetic, Pakaa Protector, Blitzcrank): to read with care, the bots play counters and tricks worse than players
+  do. Confirmations dispatched (4 requests each, full pilot spec_riven_120_v0: reference, c1+9, ref+6, the other
+  champion's reference).
+  **Riven frame test 2** (`lab/results/20261113-233808-riven-postban-frames2.json`, first battlefield varied, 3,200
+  games a list): Hunters' Circle first is the best for both champions; against it Rakelstake −5.3 / −4.6
+  (Shattered / Deserter), Windswept Hillock −4.6 / −4.1, Threshold of the Gray −3.5 / −2.0, Valley of Idols −2.4 /
+  −3.1 (intervals touch 0 for one champion each), Forge of the Fluft −8.6 / −8.4. The frame keeps Hunters' Circle.
+  **Volibear race 1** (2,400 games): reference 86.7%, the candidates 86-93%, spread minus noise 1.8 points; race 2
+  dispatched (3 requests).
 
