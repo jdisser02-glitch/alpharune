@@ -597,4 +597,13 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   now 13.0 MB: a variant's text is rebuilt in the app from its `list` (lib.js `deckText`), the engine command lines
   are kept for a test's first list only, and a test names its opponents once (`opps`, expanded by lib.js
   `expandOpponents`). Checked in a browser: every page renders, no script error.
+- 14 Nov 04:35 UTC: all six tracks have a post-ban iteration (Kennen 27, Volibear 139, Mordekaiser 86 accepted).
+  **Evelynn, round 1 confirmed** (`lab/results/20261114-042105-evelynn-postban-confirm.json`, fresh seeds 6113, 3,598
+  games a list, full pilot spec_evelynn_018_v0): Jeremy's list of 13 Nov 53.2%; Dunc's list as registered 66.5%
+  (+13.4); Dunc's with six swaps 71.5% (+18.4); **Jeremy's list with six swaps** (`…-cand-refp6.txt`: −2 Pack of
+  Wonders, −2 Star-Crossed, −1 Fizz, −1 Onslaught; +3 Baron Nashor, +1 Evelynn, In Control, +1 Rengar, +1 Vex,
+  Apathetic) 71.8% (+18.7 [+16.8, +20.6]); **c1+9 74.8%**, +21.6 [+19.7, +23.4], and +3.2 [+1.4, +5.0] over the
+  six-swap lists. `lab/variants/evelynn-postban-best.txt` = c1+9 (11 cards away from Jeremy's list). To read with
+  two cautions written in its header: the pilot knew Dunc's cards only, and the swaps again take a reactive spell
+  out for bodies. The gain against Kai'Sa is the largest (Jeremy's list won 31% of those games, c1+9 61%).
 
