@@ -1,0 +1,2131 @@
+{
+ "id": "20261114-003956-riven-postban-shattered-race2-g3",
+ "name": "riven-postban-shattered-race2-g3",
+ "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+ "started_utc": "2026-11-14T00:39:56+00:00",
+ "engine_commit": "00252cb",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games_per_matchup": 1084,
+ "threads": 4,
+ "seed": 6102,
+ "spec": {
+  "name": "riven-postban-shattered-race2-g3",
+  "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+  "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+  "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+  "games": 1084,
+  "review_games": 0,
+  "seed": 6102,
+  "decks": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+    "label": "ref+6"
+   },
+   {
+    "deck": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+    "label": "c2+6"
+   },
+   {
+    "deck": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+    "label": "ref+4"
+   },
+   {
+    "deck": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+    "label": "ref+2"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven Shattered (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+    "games": 1084
+   },
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "Riven Deserter (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+    "games": 1084
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "games": 868
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/postban/riven_frame_shattered.txt",
+   "hash": "e4982c5669",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 2.88,
+    "curve": {
+     "1": 6,
+     "2": 19,
+     "3": 8,
+     "5": 2,
+     "6": 1,
+     "7": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 22,
+     "gear": 3,
+     "spell": 15
+    },
+    "power_symbols": {
+     "calm": 12,
+     "chaos": 15
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 2,
+     "Reaction": 14,
+     "Action": 4,
+     "Accelerate": 3,
+     "Deflect": 1
+    },
+    "two_drops": 25,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 3,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 544,
+     "win_rate": 0.5018,
+     "ci95": [
+      0.4721,
+      0.5316
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 273
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 271
+     },
+     "avg_turns": 12,
+     "wall_s": 126.6,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 443,
+     "win_rate": 0.4087,
+     "ci95": [
+      0.3798,
+      0.4382
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 224
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 219
+     },
+     "avg_turns": 12,
+     "wall_s": 126.8,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 348,
+     "win_rate": 0.4009,
+     "ci95": [
+      0.3688,
+      0.4339
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 185
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 163
+     },
+     "avg_turns": 12,
+     "wall_s": 87.8,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/reference__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4397
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+   "hash": "824aa76de8",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.77,
+    "curve": {
+     "1": 2,
+     "2": 15,
+     "3": 7,
+     "4": 3,
+     "5": 5,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 31,
+     "gear": 3,
+     "spell": 6
+    },
+    "power_symbols": {
+     "calm": 10,
+     "chaos": 6
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Deflect": 7,
+     "Hidden": 5,
+     "Ganking": 3,
+     "Tank": 3,
+     "Reaction": 9,
+     "Accelerate": 3
+    },
+    "two_drops": 17,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Pakaa Protector",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 689,
+     "win_rate": 0.6356,
+     "ci95": [
+      0.6065,
+      0.6637
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 355
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 334
+     },
+     "avg_turns": 12,
+     "wall_s": 112.5,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/riven-postban-shattered-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 608,
+     "win_rate": 0.5609,
+     "ci95": [
+      0.5312,
+      0.5902
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 314
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 294
+     },
+     "avg_turns": 12,
+     "wall_s": 109.9,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/riven-postban-shattered-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 512,
+     "win_rate": 0.5899,
+     "ci95": [
+      0.5568,
+      0.6221
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 256
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 256
+     },
+     "avg_turns": 12,
+     "wall_s": 80.3,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c1p9.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/riven-postban-shattered-cand-c1p9.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c1-9__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5959,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1561,
+    "ci95": [
+     0.1314,
+     0.1809
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+6",
+   "path": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+   "hash": "8dd3072033",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.55,
+    "curve": {
+     "1": 3,
+     "2": 17,
+     "3": 7,
+     "4": 2,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 28,
+     "gear": 3,
+     "spell": 9
+    },
+    "power_symbols": {
+     "calm": 10,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 3,
+     "Reaction": 10,
+     "Accelerate": 3,
+     "Action": 2
+    },
+    "two_drops": 20,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 666,
+     "win_rate": 0.6144,
+     "ci95": [
+      0.5851,
+      0.6429
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 331
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 335
+     },
+     "avg_turns": 12,
+     "wall_s": 115.0,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/riven-postban-shattered-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 567,
+     "win_rate": 0.5231,
+     "ci95": [
+      0.4933,
+      0.5527
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 291
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 276
+     },
+     "avg_turns": 12,
+     "wall_s": 116.0,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/riven-postban-shattered-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 476,
+     "win_rate": 0.5484,
+     "ci95": [
+      0.5151,
+      0.5812
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 234
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 242
+     },
+     "avg_turns": 12,
+     "wall_s": 86.3,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/riven-postban-shattered-cand-refp6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5629,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1232,
+    "ci95": [
+     0.0983,
+     0.148
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c2+6",
+   "path": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+   "hash": "d89ca8c67d",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.58,
+    "curve": {
+     "1": 3,
+     "2": 16,
+     "3": 8,
+     "4": 2,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 29,
+     "gear": 3,
+     "spell": 8
+    },
+    "power_symbols": {
+     "calm": 10,
+     "chaos": 10
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Deflect": 6,
+     "Hidden": 6,
+     "Ganking": 3,
+     "Tank": 3,
+     "Reaction": 9,
+     "Accelerate": 2,
+     "Action": 1
+    },
+    "two_drops": 19,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ezreal, Prodigy",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 662,
+     "win_rate": 0.6107,
+     "ci95": [
+      0.5813,
+      0.6393
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 331
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 331
+     },
+     "avg_turns": 12,
+     "wall_s": 114.8,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c2p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/riven-postban-shattered-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 555,
+     "win_rate": 0.512,
+     "ci95": [
+      0.4822,
+      0.5417
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 292
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 263
+     },
+     "avg_turns": 12,
+     "wall_s": 113.4,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c2p6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/riven-postban-shattered-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 449,
+     "win_rate": 0.5173,
+     "ci95": [
+      0.484,
+      0.5504
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 216
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 233
+     },
+     "avg_turns": 12,
+     "wall_s": 86.2,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-c2p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/riven-postban-shattered-cand-c2p6.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/c2-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5488,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.109,
+    "ci95": [
+     0.0841,
+     0.1339
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+4",
+   "path": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+   "hash": "f287153717",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.45,
+    "curve": {
+     "1": 3,
+     "2": 19,
+     "3": 7,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "8": 3,
+     "10": 1
+    },
+    "types": {
+     "unit": 26,
+     "gear": 3,
+     "spell": 11
+    },
+    "power_symbols": {
+     "calm": 10,
+     "chaos": 14
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Deflect": 4,
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 3,
+     "Reaction": 10,
+     "Action": 4,
+     "Accelerate": 3
+    },
+    "two_drops": 22,
+    "list": [
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 3,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 588,
+     "win_rate": 0.5424,
+     "ci95": [
+      0.5127,
+      0.5719
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 304
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 284
+     },
+     "avg_turns": 12,
+     "wall_s": 119.3,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp4.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/riven-postban-shattered-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 516,
+     "win_rate": 0.476,
+     "ci95": [
+      0.4464,
+      0.5058
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 261
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 255
+     },
+     "avg_turns": 12,
+     "wall_s": 120.5,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp4.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/riven-postban-shattered-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 375,
+     "win_rate": 0.432,
+     "ci95": [
+      0.3994,
+      0.4652
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 203
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 172
+     },
+     "avg_turns": 12,
+     "wall_s": 87.7,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp4.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/riven-postban-shattered-cand-refp4.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-4__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4872,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0474,
+    "ci95": [
+     0.0225,
+     0.0724
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+2",
+   "path": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+   "hash": "1aaf9563fc",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.15,
+    "curve": {
+     "1": 4,
+     "2": 19,
+     "3": 8,
+     "5": 3,
+     "6": 1,
+     "7": 3,
+     "8": 1,
+     "10": 1
+    },
+    "types": {
+     "unit": 24,
+     "gear": 3,
+     "spell": 13
+    },
+    "power_symbols": {
+     "calm": 11,
+     "chaos": 15
+    },
+    "rune_split": {
+     "calm": 6,
+     "chaos": 6
+    },
+    "keywords": {
+     "Deflect": 2,
+     "Hidden": 7,
+     "Ganking": 3,
+     "Tank": 3,
+     "Reaction": 12,
+     "Action": 4,
+     "Accelerate": 3
+    },
+    "two_drops": 23,
+    "list": [
+     {
+      "name": "Defy",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gust",
+      "count": 2,
+      "type": "spell",
+      "energy": 1,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Hush",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Bedeviling Stranger",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Discipline",
+      "count": 3,
+      "type": "spell",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Not So Fast",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Rebuke",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Scuttle Crab",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 2,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tideturner",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Traveling Merchant",
+      "count": 3,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Blade of the Exile",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm",
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Reckless Innovator",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Riven, Shattered",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 1,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Blitzcrank, Impassive",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "calm"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Storm Raptor",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Astral Heron",
+      "count": 3,
+      "type": "unit",
+      "energy": 7,
+      "power": 0,
+      "domains": [
+       "calm"
+      ],
+      "might": 7
+     },
+     {
+      "name": "Angler Wyrm",
+      "count": 1,
+      "type": "unit",
+      "energy": 8,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 8
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 602,
+     "win_rate": 0.5554,
+     "ci95": [
+      0.5256,
+      0.5847
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 301
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 301
+     },
+     "avg_turns": 12,
+     "wall_s": 123.7,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp2.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 6102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/riven-postban-shattered-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 56102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 1084,
+     "wins": 502,
+     "win_rate": 0.4631,
+     "ci95": [
+      0.4336,
+      0.4929
+     ],
+     "as_p1": {
+      "games": 542,
+      "wins": 254
+     },
+     "as_p2": {
+      "games": 542,
+      "wins": 248
+     },
+     "avg_turns": 12,
+     "wall_s": 125.7,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp2.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 106102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/riven-postban-shattered-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 542 --threads 4 --seed 156102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 868,
+     "wins": 378,
+     "win_rate": 0.4355,
+     "ci95": [
+      0.4029,
+      0.4687
+     ],
+     "as_p1": {
+      "games": 434,
+      "wins": 194
+     },
+     "as_p2": {
+      "games": 434,
+      "wins": 184
+     },
+     "avg_turns": 12,
+     "wall_s": 95.4,
+     "replays": "lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/riven-postban-shattered-cand-refp2.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 206102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/riven-postban-shattered-cand-refp2.txt --agent1 pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60 --agent2 pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60 --games 434 --threads 4 --seed 256102 --render-html off --web off --review-dir lab/replays/20261114-003956-riven-postban-shattered-race2-g3/ref-2__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4882,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.0484,
+    "ci95": [
+     0.0235,
+     0.0734
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T01:12:24+00:00"
+}
