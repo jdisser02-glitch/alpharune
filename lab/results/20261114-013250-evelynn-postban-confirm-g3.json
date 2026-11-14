@@ -1,0 +1,1745 @@
+{
+ "id": "20261114-013250-evelynn-postban-confirm-g3",
+ "name": "evelynn-postban-confirm-g3",
+ "description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Volibear (lab's post-ban list) 162 games.",
+ "started_utc": "2026-11-14T01:32:50+00:00",
+ "engine_commit": "e7aa280",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 406,
+ "threads": 4,
+ "seed": 6113,
+ "spec": {
+  "name": "evelynn-postban-confirm-g3",
+  "description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Volibear (lab's post-ban list) 162 games.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 406,
+  "review_games": 0,
+  "seed": 6113,
+  "decks": [
+   {
+    "deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-c1p6.txt",
+    "label": "c1+6"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Dunc's list as registered"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-refp6.txt",
+    "label": "ref+6 (Jeremy's list, six swaps)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/riven_frame_shattered.txt",
+    "label": "Riven Shattered (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+    "games": 406
+   },
+   {
+    "deck": "lab/decks/postban/master_yi_pcq.txt",
+    "label": "Master Yi (PCQ, post-ban)",
+    "weight": 16,
+    "games": 326
+   },
+   {
+    "deck": "lab/variants/volibear-noaurora-best.txt",
+    "label": "Volibear (lab's post-ban list)",
+    "weight": 8,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60",
+    "games": 162
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+   "hash": "c92d0ca957",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.23,
+    "curve": {
+     "2": 6,
+     "3": 23,
+     "4": 7,
+     "5": 4
+    },
+    "types": {
+     "unit": 26,
+     "gear": 6,
+     "spell": 8
+    },
+    "power_symbols": {
+     "chaos": 8,
+     "body": 2
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 15,
+     "Reaction": 7,
+     "Deflect": 1,
+     "Accelerate": 2,
+     "Ganking": 2,
+     "Action": 3
+    },
+    "two_drops": 6,
+    "list": [
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Pack of Wonders",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Onslaught",
+      "count": 1,
+      "type": "spell",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 147,
+     "win_rate": 0.3621,
+     "ci95": [
+      0.3168,
+      0.4099
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 74
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 73
+     },
+     "avg_turns": 12,
+     "wall_s": 760.5,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 326,
+     "wins": 178,
+     "win_rate": 0.546,
+     "ci95": [
+      0.4917,
+      0.5992
+     ],
+     "as_p1": {
+      "games": 163,
+      "wins": 82
+     },
+     "as_p2": {
+      "games": 163,
+      "wins": 96
+     },
+     "avg_turns": 13,
+     "wall_s": 626.7,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 51,
+     "win_rate": 0.3148,
+     "ci95": [
+      0.2483,
+      0.3899
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 28
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 23
+     },
+     "avg_turns": 13,
+     "wall_s": 326.3,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/reference__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4204
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+   "hash": "a7540ef9cc",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 4.08,
+    "curve": {
+     "2": 2,
+     "3": 19,
+     "4": 9,
+     "5": 6,
+     "6": 1,
+     "10": 3
+    },
+    "types": {
+     "unit": 32,
+     "gear": 5,
+     "spell": 3
+    },
+    "power_symbols": {
+     "chaos": 14,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Ganking": 3,
+     "Accelerate": 3,
+     "Reaction": 6,
+     "Action": 1,
+     "Deflect": 3
+    },
+    "two_drops": 2,
+    "list": [
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 261,
+     "win_rate": 0.6429,
+     "ci95": [
+      0.5951,
+      0.6879
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 130
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 131
+     },
+     "avg_turns": 12,
+     "wall_s": 629.2,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 326,
+     "wins": 290,
+     "win_rate": 0.8896,
+     "ci95": [
+      0.8509,
+      0.9192
+     ],
+     "as_p1": {
+      "games": 163,
+      "wins": 143
+     },
+     "as_p2": {
+      "games": 163,
+      "wins": 147
+     },
+     "avg_turns": 12,
+     "wall_s": 396.6,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 87,
+     "win_rate": 0.537,
+     "ci95": [
+      0.4603,
+      0.6121
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 46
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 41
+     },
+     "avg_turns": 13,
+     "wall_s": 232.9,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-9__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.7133,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.293,
+    "ci95": [
+     0.2505,
+     0.3354
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+6",
+   "path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+   "hash": "50af908859",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 4.0,
+    "curve": {
+     "2": 2,
+     "3": 21,
+     "4": 8,
+     "5": 5,
+     "6": 1,
+     "10": 3
+    },
+    "types": {
+     "unit": 31,
+     "gear": 4,
+     "spell": 5
+    },
+    "power_symbols": {
+     "chaos": 15,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Ganking": 2,
+     "Action": 3,
+     "Accelerate": 2,
+     "Reaction": 6,
+     "Deflect": 2
+    },
+    "two_drops": 2,
+    "list": [
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 241,
+     "win_rate": 0.5936,
+     "ci95": [
+      0.5452,
+      0.6403
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 124
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 117
+     },
+     "avg_turns": 12,
+     "wall_s": 585.7,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 326,
+     "wins": 277,
+     "win_rate": 0.8497,
+     "ci95": [
+      0.8068,
+      0.8844
+     ],
+     "as_p1": {
+      "games": 163,
+      "wins": 131
+     },
+     "as_p2": {
+      "games": 163,
+      "wins": 146
+     },
+     "avg_turns": 12,
+     "wall_s": 433.5,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 82,
+     "win_rate": 0.5062,
+     "ci95": [
+      0.4299,
+      0.5821
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 42
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 40
+     },
+     "avg_turns": 14,
+     "wall_s": 241.4,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/c1-6__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6708,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.2505,
+    "ci95": [
+     0.2072,
+     0.2937
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "Dunc's list as registered",
+   "path": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+   "hash": "8ca33481e0",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.48,
+    "curve": {
+     "1": 1,
+     "2": 2,
+     "3": 26,
+     "4": 5,
+     "5": 4,
+     "6": 1,
+     "10": 1
+    },
+    "types": {
+     "unit": 28,
+     "spell": 8,
+     "gear": 4
+    },
+    "power_symbols": {
+     "body": 4,
+     "chaos": 11
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Action": 4,
+     "Ganking": 2,
+     "Reaction": 7,
+     "Deflect": 2,
+     "Accelerate": 2
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ezreal, Prodigy",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 204,
+     "win_rate": 0.5025,
+     "ci95": [
+      0.454,
+      0.5508
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 119
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 85
+     },
+     "avg_turns": 12,
+     "wall_s": 699.1,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 326,
+     "wins": 254,
+     "win_rate": 0.7791,
+     "ci95": [
+      0.731,
+      0.8208
+     ],
+     "as_p1": {
+      "games": 163,
+      "wins": 124
+     },
+     "as_p2": {
+      "games": 163,
+      "wins": 130
+     },
+     "avg_turns": 12,
+     "wall_s": 487.3,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 64,
+     "win_rate": 0.3951,
+     "ci95": [
+      0.323,
+      0.4719
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 33
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 31
+     },
+     "avg_turns": 13,
+     "wall_s": 286.9,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/dunc-s-list-as-registered__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.5835,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1632,
+    "ci95": [
+     0.119,
+     0.2074
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+6 (Jeremy's list, six swaps)",
+   "path": "lab/variants/evelynn-postban-cand-refp6.txt",
+   "hash": "cf16a75db9",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.88,
+    "curve": {
+     "2": 4,
+     "3": 20,
+     "4": 8,
+     "5": 5,
+     "10": 3
+    },
+    "types": {
+     "unit": 31,
+     "gear": 4,
+     "spell": 5
+    },
+    "power_symbols": {
+     "chaos": 15,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 15,
+     "Ganking": 2,
+     "Action": 3,
+     "Accelerate": 2,
+     "Reaction": 6,
+     "Deflect": 2
+    },
+    "two_drops": 4,
+    "list": [
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Shattered (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_shattered.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 236,
+     "win_rate": 0.5813,
+     "ci95": [
+      0.5327,
+      0.6283
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 126
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 110
+     },
+     "avg_turns": 12,
+     "wall_s": 644.6,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__riven-shattered-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_shattered.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__riven-shattered-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_shattered.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__riven-shattered-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Master Yi (PCQ, post-ban)",
+     "opponent_deck": "lab/decks/postban/master_yi_pcq.txt",
+     "weight": 16,
+     "games": 326,
+     "wins": 268,
+     "win_rate": 0.8221,
+     "ci95": [
+      0.7769,
+      0.8598
+     ],
+     "as_p1": {
+      "games": 163,
+      "wins": 134
+     },
+     "as_p2": {
+      "games": 163,
+      "wins": 134
+     },
+     "avg_turns": 12,
+     "wall_s": 430.8,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__master-yi-pcq-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/decks/postban/master_yi_pcq.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__master-yi-pcq-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/master_yi_pcq.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 163 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__master-yi-pcq-post-ban/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Volibear (lab's post-ban list)",
+     "opponent_deck": "lab/variants/volibear-noaurora-best.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 82,
+     "win_rate": 0.5062,
+     "ci95": [
+      0.4299,
+      0.5821
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 46
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 36
+     },
+     "avg_turns": 13,
+     "wall_s": 235.8,
+     "replays": "lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__volibear-lab-s-post-ban-list",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/variants/volibear-noaurora-best.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__volibear-lab-s-post-ban-list/seat1 --review-games 0",
+      "--deck1 lab/variants/volibear-noaurora-best.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013250-evelynn-postban-confirm-g3/ref-6-jeremy-s-list-six-swaps__vs__volibear-lab-s-post-ban-list/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6552,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.2348,
+    "ci95": [
+     0.1912,
+     0.2785
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T03:29:47+00:00"
+}
