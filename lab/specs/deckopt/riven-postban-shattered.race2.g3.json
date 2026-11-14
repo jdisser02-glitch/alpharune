@@ -1,0 +1,57 @@
+{
+ "name": "riven-postban-shattered-race2-g3",
+ "description": "Riven after the bans of 23 Nov 2026 (lab/meta/ban_watch_2026-11-13.md), champion Riven, Shattered: card-level search (lab/deckopt.py) from the tournament Riven main decks with their banned cards replaced and four hand-built lists, against a field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. The Riven pilot spec_riven_120_v0 has never played this champion: provisional until the pilot trained on these variations confirms it (stage confirm2). Jeremy, 13 Nov: 'lance des simu cette nuit'. Stage race2: 6 lists on the same seeds, 9600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 1084 games, Riven Deserter (post-ban frame) 1084 games, Master Yi (PCQ, post-ban) 868 games.",
+ "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+ "opp_agent": "pmcts:sims=4,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=2,settle=60",
+ "games": 1084,
+ "review_games": 0,
+ "seed": 6102,
+ "decks": [
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/riven-postban-shattered-cand-c1p9.txt",
+   "label": "c1+9"
+  },
+  {
+   "deck": "lab/variants/riven-postban-shattered-cand-refp6.txt",
+   "label": "ref+6"
+  },
+  {
+   "deck": "lab/variants/riven-postban-shattered-cand-c2p6.txt",
+   "label": "c2+6"
+  },
+  {
+   "deck": "lab/variants/riven-postban-shattered-cand-refp4.txt",
+   "label": "ref+4"
+  },
+  {
+   "deck": "lab/variants/riven-postban-shattered-cand-refp2.txt",
+   "label": "ref+2"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+   "games": 1084
+  },
+  {
+   "deck": "lab/decks/postban/riven_frame_deserter.txt",
+   "label": "Riven Deserter (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=4,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=2,settle=60",
+   "games": 1084
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16,
+   "games": 868
+  }
+ ]
+}

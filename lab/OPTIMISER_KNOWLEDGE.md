@@ -537,4 +537,11 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   that matters runs on the runners. Volibear's local shards: `<scratchpad>/riven_out/volibear-postban/` (11-15 and
   21+): copy them into `lab/deckopt/volibear-postban/` at each pass; with 1,500 lists or the runner shard (about
   04:30), step B for Volibear.
+- 14 Nov 00:35 UTC: first post-ban training iterations in (Evelynn 19 accepted, mirror 72.5%; Riven 121 accepted,
+  57.5%: about 1 h 40 each). **Race 1 of round 1** (2,400 games a list, cheap pilot, selection games, not ratings):
+  Mordekaiser reference 79.7%, the model's lists +2.9 to +8.8 (c1+9 88.5%, c1+6 88.1%, c2+6 87.6%, ref+6 86.9%);
+  Evelynn reference (Jeremy's list) 56.4%, Dunc's 67.1%, the model's lists 70-79% (c1+9 = Dunc's + 9 swaps 79.1%,
+  ref+6 = Jeremy's + 6 swaps 76.1%); Riven Shattered reference 57.2%, c1+9 70.6%, ref+6 67.1%; Riven Deserter
+  reference 67.6%, c1+9 78.3%, ref+6 76.6%. Unlike Volibear's round 1, the lists with the most swaps lead: these
+  three decks start further from what the pilots play well. Race 2 dispatched (3 requests a search, 12 runs).
 
