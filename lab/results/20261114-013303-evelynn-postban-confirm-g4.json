@@ -1,0 +1,1745 @@
+{
+ "id": "20261114-013303-evelynn-postban-confirm-g4",
+ "name": "evelynn-postban-confirm-g4",
+ "description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Deserter (post-ban frame) 406 games, Rek'Sai (Rajan Nandan) 204 games, Akali (Vincent Nguyen, post-ban) 162 games.",
+ "started_utc": "2026-11-14T01:33:03+00:00",
+ "engine_commit": "e7aa280",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games_per_matchup": 406,
+ "threads": 4,
+ "seed": 6113,
+ "spec": {
+  "name": "evelynn-postban-confirm-g4",
+  "description": "Evelynn after the bans (no card of its lists is banned): card-level search (lab/deckopt.py) from Jeremy's list of 13 Nov and Dunc's list, against the field without the cards banned on 23 Nov 2026 (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Volibear 8; lists patched by lab/tools/postban.py). Exploration and races with the cheap pilot (sims=4, worlds=2), confirmation with the full one. Jeremy, 13 Nov: 'focus sur Evelynn, Volibear et Mordekaiser'. The Evelynn pilot (spec_evelynn_018_v0) trained 18 iterations on Dunc's list only: every card of Jeremy's list that Dunc does not play is new to it, so the table of this search says how the cards do under a weak pilot; no training on Evelynn until Jeremy says so. Stage confirm: 5 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Deserter (post-ban frame) 406 games, Rek'Sai (Rajan Nandan) 204 games, Akali (Vincent Nguyen, post-ban) 162 games.",
+  "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60",
+  "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+  "games": 406,
+  "review_games": 0,
+  "seed": 6113,
+  "decks": [
+   {
+    "deck": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+    "label": "reference"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-c1p9.txt",
+    "label": "c1+9"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-c1p6.txt",
+    "label": "c1+6"
+   },
+   {
+    "deck": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+    "label": "Dunc's list as registered"
+   },
+   {
+    "deck": "lab/variants/evelynn-postban-cand-refp6.txt",
+    "label": "ref+6 (Jeremy's list, six swaps)"
+   }
+  ],
+  "opponents": [
+   {
+    "deck": "lab/decks/postban/riven_frame_deserter.txt",
+    "label": "Riven Deserter (post-ban frame)",
+    "weight": 20,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+    "games": 406
+   },
+   {
+    "deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+    "label": "Rek'Sai (Rajan Nandan)",
+    "weight": 10,
+    "games": 204
+   },
+   {
+    "deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+    "label": "Akali (Vincent Nguyen, post-ban)",
+    "weight": 8,
+    "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60",
+    "games": 162
+   }
+  ],
+  "threads": 4
+ },
+ "decks": [
+  {
+   "label": "reference",
+   "path": "lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt",
+   "hash": "c92d0ca957",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.23,
+    "curve": {
+     "2": 6,
+     "3": 23,
+     "4": 7,
+     "5": 4
+    },
+    "types": {
+     "unit": 26,
+     "gear": 6,
+     "spell": 8
+    },
+    "power_symbols": {
+     "chaos": 8,
+     "body": 2
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 15,
+     "Reaction": 7,
+     "Deflect": 1,
+     "Accelerate": 2,
+     "Ganking": 2,
+     "Action": 3
+    },
+    "two_drops": 6,
+    "list": [
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Pack of Wonders",
+      "count": 2,
+      "type": "gear",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Onslaught",
+      "count": 1,
+      "type": "spell",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 1,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 101,
+     "win_rate": 0.2488,
+     "ci95": [
+      0.2092,
+      0.293
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 49
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 52
+     },
+     "avg_turns": 12,
+     "wall_s": 574.6,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 204,
+     "wins": 124,
+     "win_rate": 0.6078,
+     "ci95": [
+      0.5394,
+      0.6723
+     ],
+     "as_p1": {
+      "games": 102,
+      "wins": 63
+     },
+     "as_p2": {
+      "games": 102,
+      "wins": 61
+     },
+     "avg_turns": 13,
+     "wall_s": 322.1,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 140,
+     "win_rate": 0.8642,
+     "ci95": [
+      0.8029,
+      0.9086
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 74
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 66
+     },
+     "avg_turns": 13,
+     "wall_s": 265.6,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/community/jeremy_2026-11-13/evelynn_in_control.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/reference__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.4728
+  },
+  {
+   "label": "c1+9",
+   "path": "lab/variants/evelynn-postban-cand-c1p9.txt",
+   "hash": "a7540ef9cc",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 4.08,
+    "curve": {
+     "2": 2,
+     "3": 19,
+     "4": 9,
+     "5": 6,
+     "6": 1,
+     "10": 3
+    },
+    "types": {
+     "unit": 32,
+     "gear": 5,
+     "spell": 3
+    },
+    "power_symbols": {
+     "chaos": 14,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Ganking": 3,
+     "Accelerate": 3,
+     "Reaction": 6,
+     "Action": 1,
+     "Deflect": 3
+    },
+    "two_drops": 2,
+    "list": [
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 3,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 191,
+     "win_rate": 0.4704,
+     "ci95": [
+      0.4224,
+      0.519
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 94
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 97
+     },
+     "avg_turns": 12,
+     "wall_s": 479.5,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 204,
+     "wins": 189,
+     "win_rate": 0.9265,
+     "ci95": [
+      0.8822,
+      0.9549
+     ],
+     "as_p1": {
+      "games": 102,
+      "wins": 92
+     },
+     "as_p2": {
+      "games": 102,
+      "wins": 97
+     },
+     "avg_turns": 11,
+     "wall_s": 210.6,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 160,
+     "win_rate": 0.9877,
+     "ci95": [
+      0.9561,
+      0.9966
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 79
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 81
+     },
+     "avg_turns": 11,
+     "wall_s": 150.0,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p9.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/evelynn-postban-cand-c1p9.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-9__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6993,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.2265,
+    "ci95": [
+     0.1855,
+     0.2675
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "c1+6",
+   "path": "lab/variants/evelynn-postban-cand-c1p6.txt",
+   "hash": "50af908859",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 4.0,
+    "curve": {
+     "2": 2,
+     "3": 21,
+     "4": 8,
+     "5": 5,
+     "6": 1,
+     "10": 3
+    },
+    "types": {
+     "unit": 31,
+     "gear": 4,
+     "spell": 5
+    },
+    "power_symbols": {
+     "chaos": 15,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Ganking": 2,
+     "Action": 3,
+     "Accelerate": 2,
+     "Reaction": 6,
+     "Deflect": 2
+    },
+    "two_drops": 2,
+    "list": [
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 176,
+     "win_rate": 0.4335,
+     "ci95": [
+      0.3861,
+      0.4821
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 99
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 77
+     },
+     "avg_turns": 11,
+     "wall_s": 475.7,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 204,
+     "wins": 184,
+     "win_rate": 0.902,
+     "ci95": [
+      0.8534,
+      0.9356
+     ],
+     "as_p1": {
+      "games": 102,
+      "wins": 92
+     },
+     "as_p2": {
+      "games": 102,
+      "wins": 92
+     },
+     "avg_turns": 12,
+     "wall_s": 226.2,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 157,
+     "win_rate": 0.9691,
+     "ci95": [
+      0.9298,
+      0.9867
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 77
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 80
+     },
+     "avg_turns": 12,
+     "wall_s": 160.7,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-c1p6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/evelynn-postban-cand-c1p6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/c1-6__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6695,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1967,
+    "ci95": [
+     0.1553,
+     0.2381
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "Dunc's list as registered",
+   "path": "lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt",
+   "hash": "8ca33481e0",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.48,
+    "curve": {
+     "1": 1,
+     "2": 2,
+     "3": 26,
+     "4": 5,
+     "5": 4,
+     "6": 1,
+     "10": 1
+    },
+    "types": {
+     "unit": 28,
+     "spell": 8,
+     "gear": 4
+    },
+    "power_symbols": {
+     "body": 4,
+     "chaos": 11
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 13,
+     "Action": 4,
+     "Ganking": 2,
+     "Reaction": 7,
+     "Deflect": 2,
+     "Accelerate": 2
+    },
+    "two_drops": 3,
+    "list": [
+     {
+      "name": "Punch First",
+      "count": 1,
+      "type": "spell",
+      "energy": 1,
+      "power": 2,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Ezreal, Prodigy",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Star-Crossed",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Kharox",
+      "count": 1,
+      "type": "unit",
+      "energy": 6,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 5
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 1,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 170,
+     "win_rate": 0.4187,
+     "ci95": [
+      0.3717,
+      0.4673
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 97
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 73
+     },
+     "avg_turns": 12,
+     "wall_s": 557.4,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 204,
+     "wins": 182,
+     "win_rate": 0.8922,
+     "ci95": [
+      0.8421,
+      0.9277
+     ],
+     "as_p1": {
+      "games": 102,
+      "wins": 89
+     },
+     "as_p2": {
+      "games": 102,
+      "wins": 93
+     },
+     "avg_turns": 12,
+     "wall_s": 249.1,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 141,
+     "win_rate": 0.8704,
+     "ci95": [
+      0.81,
+      0.9136
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 65
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 76
+     },
+     "avg_turns": 12,
+     "wall_s": 206.9,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/decks/meta/vegas_singles_tuesday_nexus_night_2026-10-27/01_dunc_evelynn.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/dunc-s-list-as-registered__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.6384,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1656,
+    "ci95": [
+     0.1231,
+     0.2081
+    ],
+    "verdict": "better"
+   }
+  },
+  {
+   "label": "ref+6 (Jeremy's list, six swaps)",
+   "path": "lab/variants/evelynn-postban-cand-refp6.txt",
+   "hash": "cf16a75db9",
+   "stats": {
+    "cards": 40,
+    "avg_energy": 3.88,
+    "curve": {
+     "2": 4,
+     "3": 20,
+     "4": 8,
+     "5": 5,
+     "10": 3
+    },
+    "types": {
+     "unit": 31,
+     "gear": 4,
+     "spell": 5
+    },
+    "power_symbols": {
+     "chaos": 15,
+     "body": 3
+    },
+    "rune_split": {
+     "chaos": 8,
+     "body": 4
+    },
+    "keywords": {
+     "Hidden": 15,
+     "Ganking": 2,
+     "Action": 3,
+     "Accelerate": 2,
+     "Reaction": 6,
+     "Deflect": 2
+    },
+    "two_drops": 4,
+    "list": [
+     {
+      "name": "Bedeviling Stranger",
+      "count": 2,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Evelynn, Entrancing",
+      "count": 1,
+      "type": "unit",
+      "energy": 2,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 2
+     },
+     {
+      "name": "Switcheroo",
+      "count": 1,
+      "type": "spell",
+      "energy": 2,
+      "power": 2,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Boots of Swiftness",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Edge of Night",
+      "count": 2,
+      "type": "gear",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Fizz, Trickster",
+      "count": 1,
+      "type": "unit",
+      "energy": 3,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Gutter Guardian",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Hold 'Em",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Kinkou Initiate",
+      "count": 2,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Pyke, Returned",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Rampage",
+      "count": 2,
+      "type": "spell",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 0
+     },
+     {
+      "name": "Tornado Warrior",
+      "count": 3,
+      "type": "unit",
+      "energy": 3,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 3
+     },
+     {
+      "name": "Evelynn, In Control",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 1,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Tail-Cloaked Matriarch",
+      "count": 3,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Vex, Apathetic",
+      "count": 2,
+      "type": "unit",
+      "energy": 4,
+      "power": 0,
+      "domains": [
+       "chaos"
+      ],
+      "might": 4
+     },
+     {
+      "name": "K'Sante, Courageous",
+      "count": 2,
+      "type": "unit",
+      "energy": 5,
+      "power": 0,
+      "domains": [
+       "body"
+      ],
+      "might": 4
+     },
+     {
+      "name": "Rengar, Trophy Hunter",
+      "count": 3,
+      "type": "unit",
+      "energy": 5,
+      "power": 1,
+      "domains": [
+       "body"
+      ],
+      "might": 6
+     },
+     {
+      "name": "Baron Nashor",
+      "count": 3,
+      "type": "unit",
+      "energy": 10,
+      "power": 3,
+      "domains": [
+       "chaos"
+      ],
+      "might": 12
+     }
+    ]
+   },
+   "errors": [],
+   "matchups": [
+    {
+     "opponent": "Riven Deserter (post-ban frame)",
+     "opponent_deck": "lab/decks/postban/riven_frame_deserter.txt",
+     "weight": 20,
+     "games": 406,
+     "wins": 183,
+     "win_rate": 0.4507,
+     "ci95": [
+      0.403,
+      0.4994
+     ],
+     "as_p1": {
+      "games": 203,
+      "wins": 99
+     },
+     "as_p2": {
+      "games": 203,
+      "wins": 84
+     },
+     "avg_turns": 12,
+     "wall_s": 508.7,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__riven-deserter-post-ban-frame",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/decks/postban/riven_frame_deserter.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 6113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__riven-deserter-post-ban-frame/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/riven_frame_deserter.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 203 --threads 4 --seed 56113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__riven-deserter-post-ban-frame/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Rek'Sai (Rajan Nandan)",
+     "opponent_deck": "lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt",
+     "weight": 10,
+     "games": 204,
+     "wins": 180,
+     "win_rate": 0.8824,
+     "ci95": [
+      0.8309,
+      0.9197
+     ],
+     "as_p1": {
+      "games": 102,
+      "wins": 88
+     },
+     "as_p2": {
+      "games": 102,
+      "wins": 92
+     },
+     "avg_turns": 12,
+     "wall_s": 228.5,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__rek-sai-rajan-nandan",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 106113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__rek-sai-rajan-nandan/seat1 --review-games 0",
+      "--deck1 lab/decks/meta/ldxp_sacramento_nexus_night_constructed_2026-10-24/01_rajan_nandan_rek_sai.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 102 --threads 4 --seed 156113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__rek-sai-rajan-nandan/seat2 --review-games 0"
+     ]
+    },
+    {
+     "opponent": "Akali (Vincent Nguyen, post-ban)",
+     "opponent_deck": "lab/decks/postban/akali_vincent_nguyen.txt",
+     "weight": 8,
+     "games": 162,
+     "wins": 152,
+     "win_rate": 0.9383,
+     "ci95": [
+      0.8901,
+      0.9661
+     ],
+     "as_p1": {
+      "games": 81,
+      "wins": 75
+     },
+     "as_p2": {
+      "games": 81,
+      "wins": 77
+     },
+     "avg_turns": 11,
+     "wall_s": 157.2,
+     "replays": "lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__akali-vincent-nguyen-post-ban",
+     "commands": [
+      "--deck1 lab/variants/evelynn-postban-cand-refp6.txt --deck2 lab/decks/postban/akali_vincent_nguyen.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 206113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__akali-vincent-nguyen-post-ban/seat1 --review-games 0",
+      "--deck1 lab/decks/postban/akali_vincent_nguyen.txt --deck2 lab/variants/evelynn-postban-cand-refp6.txt --agent1 pmcts:sims=50,eval=policy:lab/learn/nets/spec_akali_008_v3.rbpn,worlds=8,settle=60 --agent2 pmcts:sims=50,eval=policy:lab/learn/nets/spec_evelynn_018_v0.rbpn,worlds=8,settle=60 --games 81 --threads 4 --seed 256113 --render-html off --web off --review-dir lab/replays/20261114-013303-evelynn-postban-confirm-g4/ref-6-jeremy-s-list-six-swaps__vs__akali-vincent-nguyen-post-ban/seat2 --review-games 0"
+     ]
+    }
+   ],
+   "weighted_win_rate": 0.667,
+   "vs_first": {
+    "reference": "reference",
+    "diff": 0.1941,
+    "ci95": [
+     0.1521,
+     0.2362
+    ],
+    "verdict": "better"
+   }
+  }
+ ],
+ "finished_utc": "2026-11-14T02:52:36+00:00"
+}
