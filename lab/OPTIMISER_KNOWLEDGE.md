@@ -575,4 +575,16 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   −3.1 (intervals touch 0 for one champion each), Forge of the Fluft −8.6 / −8.4. The frame keeps Hunters' Circle.
   **Volibear race 1** (2,400 games): reference 86.7%, the candidates 86-93%, spread minus noise 1.8 points; race 2
   dispatched (3 requests).
+- 14 Nov 03:40 UTC: Evelynn iteration 20 accepted. **Mordekaiser, round 1 confirmed**
+  (`lab/results/20261114-025126-mordekaiser-postban-confirm.json`, fresh seeds 6113, 3,598 games a list, full pilot
+  spec_mordekaiser_070_v0): Neal's list 82.0%; c1+9 90.6%, +8.6 [+7.1, +10.1]; c1+6 89.9%, +8.0 [+6.5, +9.4]; the
+  two are not separated (−0.6 [−1.9, +0.6]). `lab/variants/mordekaiser-postban-best.txt` = c1+9. Against Neal's
+  main deck: −3 Honest Broker, −2 Rek'Sai, Swarm Queen, −2 Long Sword, −1 Salvage, −1 Rengar, Pouncing, −1
+  Deathgrip, −1 Falling Star, −1 Perfect Execution; +3 Pyke, Dockside Butcher, +3 Trifarian Captain, +2 Bilgewater
+  Tracker, +1 Ferrous Forerunner, +1 Hidden Blade, +1 Noxus Hopeful, +1 Vi, Peacekeeper. Against Volibear alone
+  the reference won 39% and c1+9 66% (about 160 games each: an indication, not a measure).
+  **Volibear race 2** (11,998 games): reference (Ritualo) 86.6%; c2+6 92.9%, c2+3 92.6%, round 1's confirmed list
+  92.2%, c1+2 92.2%; spread minus noise 0.4 point. Confirmation dispatched (4 requests: reference, c2+6, c2+3).
+  Kennen has no iteration yet, 5 hours after its dispatch (Kai'Sa's first took 3.6 hours on the same 2 runners):
+  its run is looked at in this pass.
 

@@ -1,0 +1,45 @@
+{
+ "name": "volibear-postban-confirm-g3",
+ "description": "Volibear after the bans of 23 Nov 2026, round 2 of the card-level search (lab/deckopt.py): from round 1's confirmed lists and round 1b's leaders, against the field without the banned cards (Kai'Sa 51, Kennen 44, the two post-ban Riven frames 20 each, Master Yi 16, Rek'Sai 10, Akali 8, Mordekaiser 8; lists patched by lab/tools/postban.py), with the pilot trained on list variations (spec_volibear_132_v0). Exploration and races with the cheap pilot, confirmation with the full one. Also the pool of the variations the Volibear training plays (loop.SPECIALISTS['volibear']['vary']). Stage confirm: 3 lists on the same seeds, 3600 games per list shared out by the opponents' weights. This request: Riven Shattered (post-ban frame) 406 games, Master Yi (PCQ, post-ban) 326 games, Mordekaiser (Neal) 162 games.",
+ "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_volibear_132_v0.rbpn,worlds=8,settle=60",
+ "opp_agent": "pmcts:sims=50,eval=policy:lab/learn/nets/net_164_v3.rbpn,worlds=8,settle=60",
+ "games": 406,
+ "review_games": 0,
+ "seed": 6123,
+ "decks": [
+  {
+   "deck": "lab/decks/community/deck_profiles_2026-11-07/ritualo_volibear_dragons.txt",
+   "label": "reference"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p6.txt",
+   "label": "c2+6"
+  },
+  {
+   "deck": "lab/variants/volibear-postban-cand-c2p3.txt",
+   "label": "c2+3"
+  }
+ ],
+ "opponents": [
+  {
+   "deck": "lab/decks/postban/riven_frame_shattered.txt",
+   "label": "Riven Shattered (post-ban frame)",
+   "weight": 20,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_riven_120_v0.rbpn,worlds=8,settle=60",
+   "games": 406
+  },
+  {
+   "deck": "lab/decks/postban/master_yi_pcq.txt",
+   "label": "Master Yi (PCQ, post-ban)",
+   "weight": 16,
+   "games": 326
+  },
+  {
+   "deck": "lab/decks/meta/ka_zhi_yu_tournoi_bo3_2026-10-24/04_neal_mordekaiser.txt",
+   "label": "Mordekaiser (Neal)",
+   "weight": 8,
+   "agent": "pmcts:sims=50,eval=policy:lab/learn/nets/spec_mordekaiser_070_v0.rbpn,worlds=8,settle=60",
+   "games": 162
+  }
+ ]
+}
