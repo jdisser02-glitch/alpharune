@@ -670,4 +670,14 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   (−1.4); Shattered c1+9 58.7% (−3.8 [−6.4, −1.3]), ref+6 61.6% (−1.0). A pilot that knows the deck plays the
   counters and tricks the cheap-pilot search had taken out, and misses them. Riven's list to play stays
   `lab/decks/postban/riven_frame_deserter.txt`. Round 2 for Riven starts from that frame with sims=16 (rule of 05:35).
+- 14 Nov 11:30 UTC, **Evelynn confirm2** (pilot spec_evelynn_024_v0, six iterations on variations of Jeremy's and
+  Dunc's lists; seeds 6114, 2,400 games a list; `lab/results/*-evelynn-postban-confirm2.json`): Jeremy's list
+  **68.0%** (53.2% under the old pilot: fifteen of the 21 points were the pilot not knowing his cards); Dunc's
+  list as registered 68.6% (+0.6 [−1.7, +2.9]: the two lists are level); c1+6 73.6% (+5.6); **Jeremy's list with
+  six swaps 75.4% (+7.4 [+5.1, +9.6])**; c1+9 76.4% (+8.5 [+6.2, +10.7]), not separated from the six-swap list
+  (+1.0). So the swaps are worth 7 to 8 points, not 21, and Jeremy's list with six swaps
+  (`lab/variants/evelynn-postban-cand-refp6.txt`: −2 Pack of Wonders, −2 Star-Crossed, −1 Fizz, −1 Onslaught; +3
+  Baron Nashor, +1 Evelynn, In Control, +1 Rengar, +1 Vex) is as good as the best found. `evelynn-postban-best.txt`
+  stays c1+9; for Jeremy the list to quote is the six-swap one. Lesson for every legend: **a first-round gap
+  against a list the pilot never trained on is mostly the pilot** (here 15 points of 21); only confirm2 rates it.
 
