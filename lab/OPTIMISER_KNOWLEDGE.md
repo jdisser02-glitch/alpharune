@@ -587,4 +587,10 @@ Runners: 20 jobs at once for everything; search requests queue behind the traini
   92.2%, c1+2 92.2%; spread minus noise 0.4 point. Confirmation dispatched (4 requests: reference, c2+6, c2+3).
   Kennen has no iteration yet, 5 hours after its dispatch (Kai'Sa's first took 3.6 hours on the same 2 runners):
   its run is looked at in this pass.
+- 14 Nov 03:50 UTC, Kennen looked at: its run (43520615880, dispatched 22:36) and Volibear's iteration 139
+  (43520651270) are alive but show as "queued": their next jobs wait for a free machine. Twenty confirmation jobs
+  of two hours each (Mordekaiser, Evelynn, both Riven, Volibear) hold the 20 slots, so every track slows down for
+  a few hours and the 2-runner tracks most. Not a failure; nothing to dispatch. How to find a track's run: `list_workflow_runs`
+  with status "queued" (then "in_progress"), perPage 2, the LAST pages are the oldest runs; `head_commit.message` and
+  `actor.login` tell which chain it is. `watch_status.py` now waits 13 hours before calling a 2-runner track STALE.
 

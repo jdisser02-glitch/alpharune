@@ -17,7 +17,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 # track -> minutes one iteration is expected to take on its share of the runners (13 Nov: 35 minutes on 20)
-TRACKS = {"evelynn": 150, "riven": 150, "mordekaiser": 180, "volibear": 300, "kai_sa": 240, "kennen": 240}
+# (14 Nov: the 2-runner tracks wait behind the search requests when 20 jobs are busy; their first iteration took 4
+# to 6 hours, so they are only called STALE after about 13 hours)
+TRACKS = {"evelynn": 150, "riven": 150, "mordekaiser": 180, "volibear": 390, "kai_sa": 390, "kennen": 390}
 SEARCHES = ["mordekaiser-postban", "evelynn-postban", "volibear-postban", "riven-postban-shattered", "riven-postban-deserter"]
 STAGES = ["race1", "race2", "confirm", "confirm2"]
 
